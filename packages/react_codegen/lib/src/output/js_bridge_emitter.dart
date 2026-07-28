@@ -51,7 +51,7 @@ final class JsBridgeEmitter {
         );
         fromJSBuffer.writeln(proxy);
       } else {
-        fromJSBuffer.writeln('final ${prop.name} = ${_accessor(prop)};');
+        fromJSBuffer.writeln('final ${prop.name} = ${_accessor(prop, component.name)};');
       }
     }
 
@@ -171,8 +171,8 @@ final class JsBridgeEmitter {
     return 'dynamic';
   }
 
-  String _accessor(ReactPropModel prop) {
-    final nullable = _isNullable(prop.type) ? '' : ', component: "${_componentName(prop)}"';
+  String _accessor(ReactPropModel prop, String componentName) {
+    final nullable = _isNullable(prop.type) ? '' : ', component: "$componentName"';
     return switch ((prop.type, prop.required)) {
       (NamedTypeRef(symbol: 'String'), true) => 'requiredJSString(js, "${prop.name}"$nullable)',
       (NamedTypeRef(symbol: 'String'), false) => 'nullableJSString(js, "${prop.name}")',
