@@ -9,4 +9,4 @@ targets:
       react_codegen|component:
         enabled: true
       react_codegen|aggregate:
-        enabled: false
+        enabled: true

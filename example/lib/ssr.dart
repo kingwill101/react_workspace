@@ -1,22 +1,28 @@
-import 'package:react/react.dart';
-import 'package:react_server/react_server.dart';
 import 'app.react.dart';
 import 'counter.react.dart';
-import 'react_components.g.dart';
+import 'package:react_server/react_server.dart';
+import 'ssr_registry.g.dart';
 
 void main() {
   initReact();
-  registerReactComponents();
-  registerGlobalRenderer((id, props) => switch (id) {
-        'package:example/lib/app.dart#App' =>
-          App(title: props['title'] as String? ?? 'hi from SSR'),
-        'package:example/lib/counter.dart#Counter' =>
-          Counter(
-            title: props['title'] as String? ?? 'Counter',
-            initialCount: props['initialCount'] as int? ?? 0,
-            subtitle: props['subtitle'] as String?,
-            onChange: (_) {},
-          ),
-        _ => const Empty(),
-      });
+  registerKnownSsComponentIds();
+
+  SsrComponentRegistry.register(
+    idApp.value,
+    (props) => App(
+      title: props['title'] as String? ?? 'hi from SSR',
+    ),
+  );
+
+  SsrComponentRegistry.register(
+    idCounter.value,
+    (props) => Counter(
+      title: props['title'] as String? ?? 'Counter',
+      initialCount: props['initialCount'] as int? ?? 0,
+      subtitle: props['subtitle'] as String?,
+      onChange: (_) {},
+    ),
+  );
+
+  registerGlobalRenderer((id, props) => SsrComponentRegistry.build(id, props));
 }
