@@ -23,3 +23,6 @@ lib/react_components.g.dart
 example/web/*.js
 example/web/*.js.map
 *.deps
+
+# Vendor
+/tool/vendor/dart_web/
