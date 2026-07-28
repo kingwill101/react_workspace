@@ -92,7 +92,7 @@ Future<void> main() async {
         try {
           final c = HttpClient();
           final proxy = await c.post('localhost', 3001, '/');
-          proxy.write(jsonEncode({'id': 'package:react_workspace/example/lib/app.dart#App', 'props': {'title': 'hi'}}));
+          proxy.write(jsonEncode({'id': 'package:example/lib/app.dart#App', 'props': {'title': 'hi'}}));
           final res = await proxy.close();
           final body = await res.transform(const Utf8Decoder()).join();
           final data = jsonDecode(body) as Map;

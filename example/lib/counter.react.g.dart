@@ -27,7 +27,7 @@ return null;
 }
 
 ({int initialCount, void Function(int)? onChange, String? subtitle, String title}) _Counter_fromJS(JSObject js) {
-final initialCount = requiredJSInt(js, "initialCount", component: "initialCount");
+final initialCount = requiredJSInt(js, "initialCount", component: "Counter");
 final _rawonChange = js.getProperty('onChange'.toJS);
 
 final void Function(int)? onChange =
@@ -43,7 +43,7 @@ final void Function(int)? onChange =
 );
           };
 final subtitle = nullableJSString(js, "subtitle");
-final title = requiredJSString(js, "title", component: "title");
+final title = requiredJSString(js, "title", component: "Counter");
   return (initialCount: initialCount, onChange: onChange, subtitle: subtitle, title: title);
 }
 
