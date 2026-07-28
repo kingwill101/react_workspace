@@ -27,6 +27,12 @@ void main() {
         return _testNewPromise(executor);
       }.toJS,
     );
+    callbacks.setProperty(
+      'invoke'.toJS,
+      (JSFunction callback, JSArray<JSAny?> args) {
+        return callback.callAsFunction(null, args);
+      }.toJS,
+    );
   });
 
   group('callbackToJS', () {
