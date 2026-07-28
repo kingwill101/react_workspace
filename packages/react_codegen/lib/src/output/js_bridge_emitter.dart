@@ -183,5 +183,4 @@ final class JsBridgeEmitter {
     };
   }
 
-  String _componentName(ReactPropModel prop) => prop.name;
 }

@@ -37,7 +37,7 @@ class AggregateBuilder implements Builder {
         final cname = name.startsWith('register') ? name.substring(8) : name;
         final prefix = cname.isEmpty ? 'c' : '${cname[0].toLowerCase()}${cname.substring(1)}';
 
-        imports.add("import '$reactDartUri' as $prefix;");
+        imports.add("import '${aid.uri}' as $prefix;");
         idImports.add("import '$reactDartUri' show id$cname;");
         idConstants.add('    id$cname.value');
       }
