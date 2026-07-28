@@ -1,5 +1,4 @@
-import 'callback.dart';
-import 'node.dart';
+import 'package:react/react.dart';
 
 const _divHost = HostType<Map<String, Object?>>('web', 'div');
 const _buttonHost = HostType<Map<String, Object?>>('web', 'button');

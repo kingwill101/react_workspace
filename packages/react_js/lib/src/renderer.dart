@@ -17,9 +17,9 @@ class JsRenderer extends ReactRenderer {
           return _react.callMethod('createElement'.toJS,
               e.comp as JSAny, jsProps as JSAny, jsChildren) as JSAny;
         }(),
-        Intrinsic(:var tag, :var props, :var children) =>
-          _react.callMethod('createElement'.toJS, tag.toJS,
-              _propsToJS(props),
+        HostNode(:var type, :var props, :var children) =>
+          _react.callMethod('createElement'.toJS, type.name.toJS,
+              _propsToJS(props as Map<String, Object?>),
               children.map((c) => toReactJS(c)!).toList().toJS) as JSAny,
         Text(:var value) => value.toJS,
         Fragment(:var children) =>

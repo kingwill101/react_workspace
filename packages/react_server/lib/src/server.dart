@@ -44,9 +44,9 @@ void registerGlobalRenderer(
 /// so React handles component context, hooks, and lifecycle properly.
 /// All other node types are flattened inline.
 JSAny? _expandTree(ReactNode node) => switch (node) {
-      Intrinsic(:var tag, :var props, :var children) =>
-        _react.callMethod('createElement'.toJS, tag.toJS,
-            _intrinsicPropsToJS(props),
+      HostNode(:var type, :var props, :var children) =>
+        _react.callMethod('createElement'.toJS, type.name.toJS,
+            _intrinsicPropsToJS(props as Map<String, Object?>),
             children.map(_expandTree).whereType<JSAny>().toList().toJS) as JSAny,
       Component(:var id, :var props, :var children) =>
         _expandComponent(id, props, children),

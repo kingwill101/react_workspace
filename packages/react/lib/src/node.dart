@@ -1,8 +1,21 @@
 import 'component_id.dart';
 sealed class ReactNode { const ReactNode(); }
-final class Intrinsic extends ReactNode {
-  final String tag; final Map<String,Object?> props; final List<ReactNode> children; final String? key;
-  const Intrinsic(this.tag, {this.props=const {}, this.children=const [], this.key});
+
+final class HostType<P extends Object?> {
+  final String namespace; final String name;
+  const HostType(this.namespace, this.name);
+  @override String toString() => '$namespace:$name';
+}
+
+final class HostNode<P extends Object?> extends ReactNode {
+  final HostType<P> type; final P props; final List<ReactNode> children; final String? key;
+  const HostNode(this.type, this.props, {this.children = const [], this.key});
+}
+
+@Deprecated('Use HostNode<Map<String, Object?>> with a HostType instead.')
+final class Intrinsic extends HostNode<Map<String, Object?>> {
+  Intrinsic(String tag, {Map<String, Object?> props = const {}, List<ReactNode> children = const [], String? key})
+      : super(HostType('web', tag), props, children: children, key: key);
 }
 final class Component<P> extends ReactNode {
   final ComponentId id; final P props; final String? key; final List<ReactNode> children;
