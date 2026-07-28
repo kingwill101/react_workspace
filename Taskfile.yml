@@ -31,7 +31,7 @@ tasks:
   client:
     desc: Compile client JavaScript
     cmds:
-      - dart compile js -O0 -o example/web/client.dart.js example/web/client.dart
+      - dart compile js -O0 -o example/web/client.js example/web/client.dart
 
   build:
     desc: Full build (generate + ssr + client)
@@ -42,13 +42,12 @@ tasks:
 
   serve:
     desc: Full build + start demo server (http://localhost:8080)
+    deps: [build]
     cmds:
-      - task: build
-      - |
-        fuser -k 3001/tcp 2>/dev/null || true
-        fuser -k 8080/tcp 2>/dev/null || true
-        sleep 1
-        dart run bin/dev.dart
+      - fuser -k 3001/tcp 2>/dev/null || true
+      - fuser -k 8080/tcp 2>/dev/null || true
+      - sleep 1
+      - dart run bin/dev.dart
 
   dev:
     desc: Quick restart dev server (no rebuild)
@@ -56,9 +55,15 @@ tasks:
       - fuser -k 3001/tcp 2>/dev/null || true
       - fuser -k 8080/tcp 2>/dev/null || true
       - sleep 1
-      - node ssr_worker.mjs &
-      - sleep 2
       - dart run bin/dev.dart
+
+  client-serve:
+    desc: Client-only mode - build client and serve example/web
+    cmds:
+      - task: client
+      - fuser -k 8080/tcp 2>/dev/null || true
+      - sleep 1
+      - python3 -m http.server 8080 --directory example/web
 
   analyze:
     desc: Run dart analyze
@@ -68,7 +73,7 @@ tasks:
   clean:
     desc: Remove compiled and generated files
     cmds:
-      - rm -f build/ssr.js example/web/client.dart.js
+      - rm -f build/ssr.js example/web/client.js
       - rm -f example/lib/*.react.dart example/lib/*.react.g.dart
       - rm -f example/lib/react_components.g.dart
       - rm -rf .dart_tool/build/generated
@@ -83,8 +88,8 @@ tasks:
         else
           echo "  SSR:  not built"
         fi
-        if [ -f example/web/client.dart.js ]; then
-          echo "  Client: example/web/client.dart.js ($(wc -c < example/web/client.dart.js | tr -d ' ') bytes)"
+        if [ -f example/web/client.js ]; then
+          echo "  Client: example/web/client.js ($(wc -c < example/web/client.js | tr -d ' ') bytes)"
         else
           echo "  Client: not built"
         fi

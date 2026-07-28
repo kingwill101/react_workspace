@@ -17,9 +17,15 @@ Map<String, dynamic> getInitialProps() {
   final el = _getById('__props');
   if (el == null) return {};
   final txt = el.getProperty('textContent'.toJS) as JSString;
-  if (txt.toDart.trim().isEmpty) return {};
-  final parsed = jsonDecode(txt.toDart);
-  return (parsed as Map<String, dynamic>?) ?? {};
+  final content = txt.toDart.trim();
+  if (content.isEmpty) return {};
+  if (content == '{{PROPS}}') return {};
+  try {
+    final parsed = jsonDecode(content);
+    return (parsed as Map<String, dynamic>?) ?? {};
+  } on Exception {
+    return {};
+  }
 }
 
 /// Mounts a React component into a fresh root (client-only rendering).
