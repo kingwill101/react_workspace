@@ -11,15 +11,14 @@ o.setProperty('src'.toJS, props.src.toJS);
   return o;
 }
 ({int size, String src}) _Avatar_fromJS(JSObject js){
-  final size = (js.getProperty('size'.toJS) as JSNumber).toDartInt;
-final src = (js.getProperty('src'.toJS) as JSString).toDart;
+  final size = requiredJSInt(js, "size", component: "size");
+final src = requiredJSString(js, "src", component: "src");
   return (size: size, src: src);
 }
 final JSFunction $Avatar = (() {
-  JSObject wrapper(JSObject p){
-    final dartProps = _Avatar_fromJS(p);
-    final tree = impl.Avatar(dartProps);
-    return toReactJS(tree) as JSObject;
+  JSAny? wrapper(JSObject props){
+    final dartProps = _Avatar_fromJS(props);
+    return toReactJS(impl.Avatar(dartProps));
   }
   return wrapper.toJS;
 })() as JSFunction;

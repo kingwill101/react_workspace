@@ -10,14 +10,13 @@ JSObject _Badge_toJS(({String label}) props){
   return o;
 }
 ({String label}) _Badge_fromJS(JSObject js){
-  final label = (js.getProperty('label'.toJS) as JSString).toDart;
+  final label = requiredJSString(js, "label", component: "label");
   return (label: label);
 }
 final JSFunction $Badge = (() {
-  JSObject wrapper(JSObject p){
-    final dartProps = _Badge_fromJS(p);
-    final tree = impl.Badge(dartProps);
-    return toReactJS(tree) as JSObject;
+  JSAny? wrapper(JSObject props){
+    final dartProps = _Badge_fromJS(props);
+    return toReactJS(impl.Badge(dartProps));
   }
   return wrapper.toJS;
 })() as JSFunction;

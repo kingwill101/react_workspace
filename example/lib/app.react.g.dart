@@ -10,14 +10,13 @@ JSObject _App_toJS(({String title}) props){
   return o;
 }
 ({String title}) _App_fromJS(JSObject js){
-  final title = (js.getProperty('title'.toJS) as JSString).toDart;
+  final title = requiredJSString(js, "title", component: "title");
   return (title: title);
 }
 final JSFunction $App = (() {
-  JSObject wrapper(JSObject p){
-    final dartProps = _App_fromJS(p);
-    final tree = impl.App(dartProps);
-    return toReactJS(tree) as JSObject;
+  JSAny? wrapper(JSObject props){
+    final dartProps = _App_fromJS(props);
+    return toReactJS(impl.App(dartProps));
   }
   return wrapper.toJS;
 })() as JSFunction;

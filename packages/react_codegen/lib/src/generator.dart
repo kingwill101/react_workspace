@@ -3,7 +3,6 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:source_gen/source_gen.dart';
 
-/// Visitor for [DartType] to decide the kind of conversion needed.
 enum _TypeKind { string, int_, double_, bool_, num_, list, function, reactNode, other }
 
 _TypeKind _kind(DartType t) {
@@ -19,8 +18,12 @@ _TypeKind _kind(DartType t) {
   return _TypeKind.other;
 }
 
-/// Generates an expression that converts a Dart expression to a JS interop value.
-/// Caller must handle nullable checking externally.
+String _typeStr(DartType t) => t.getDisplayString(withNullability: true);
+
+// ═══════════════════════════════════════════════
+// Dart→JS conversion expressions
+// ═══════════════════════════════════════════════
+
 String _toJSFor(String expr, DartType t) {
   return switch (_kind(t)) {
     _TypeKind.string || _TypeKind.bool_ || _TypeKind.int_ ||
@@ -28,71 +31,126 @@ String _toJSFor(String expr, DartType t) {
       '$expr.toJS',
     _TypeKind.list =>
       '$expr.map((e) => toReactJS(e)).toList().toJS as JSAny',
-    _TypeKind.function => '$expr.toJS as JSAny',
+    _TypeKind.function => _toJSForFn(expr, t as FunctionType),
     _TypeKind.reactNode => 'toReactJS($expr)!',
     _TypeKind.other => '$expr as JSAny',
   };
 }
 
-/// Generates a statement that reads a JS property and stores it as Dart in [fieldName].
-String _fromJSStatement(
-    String fieldName, DartType t, String fieldKey, String jsExpr) {
+String _toJSForFn(String expr, FunctionType ft) {
+  final nullable = _typeStr(ft).endsWith('?');
+  final paramTypes = ft.formalParameters
+      .map((p) => _typeStr(p.type))
+      .toList();
+  final paramNames = [for (var i = 0; i < paramTypes.length; i++) 'a$i'];
+  final returnType = _typeStr(ft.returnType);
+
+  // Build JS arrow function params
+  final jsParams =
+      paramNames.indexed.map((e) => '${paramTypes[e.$1]} ${e.$2}').join(', ');
+  // Build JS call args (Dart→JS for each)
+  final jsArgs = paramNames.indexed
+      .map((e) => _toJSFor(e.$2, ft.formalParameters[e.$1].type))
+      .join(', ');
+
+  final nullableGuard = nullable ? '($expr == null ? null : ' : '';
+  final closeParen = nullable ? ')' : '';
+
+  if (returnType == 'void') {
+    return '$nullableGuard(($jsParams) { $expr($jsArgs); }).toJS as JSAny$closeParen';
+  }
+  // Non-void return: just let the JS runtime handle the return
+  return '$nullableGuard(($jsParams) => $expr($jsArgs)).toJS as JSAny$closeParen';
+}
+
+// ═══════════════════════════════════════════════
+// JS→Dart conversion statements
+// ═══════════════════════════════════════════════
+
+String _fromJSStatement(String fieldName, DartType t, String fieldKey, String _jsVar) {
   final nullable = _typeStr(t).endsWith('?');
-  final str = t.getDisplayString(withNullability: true).replaceAll('?', '');
   final kind = _kind(t);
 
-  // Build the core conversion expression
-  String core() => switch (kind) {
-        _TypeKind.string => '($jsExpr as JSString).toDart',
-        _TypeKind.bool_ => '($jsExpr as JSBoolean).toDart',
-        _TypeKind.int_ => '($jsExpr as JSNumber).toDartInt',
-        _TypeKind.double_ || _TypeKind.num_ =>
-          '($jsExpr as JSNumber).toDartDouble',
-        _TypeKind.list => _fromJSList(t),
-        _TypeKind.function => _fromJSFunction(t),
-        _TypeKind.reactNode => '$jsExpr as ReactNode',
-        _TypeKind.other => '$jsExpr as $str',
-      };
-
-  if (nullable) {
-    return 'final $fieldName = (() { final _v = $jsExpr; return _v.isUndefined ? null : ${core()}; })();';
+  if (kind == _TypeKind.function) {
+    return _fromJSForFn(fieldName, t as FunctionType, fieldKey, _jsVar);
   }
-  return 'final $fieldName = ${core()};';
+
+  final acc = nullable ? _nullableAcc(t) : _requiredAcc(t);
+  // The accessor takes (JSObject, key) — pass the JS variable and key string.
+  return 'final $fieldName = $acc(${_jsVar}, "$fieldKey"${nullable ? '' : ', component: "$fieldName"'});';
 }
 
-/// Handle List<T> conversion.
-String _fromJSList(DartType t) {
-  final typeArg = (t as InterfaceType).typeArguments.first;
-  final elemStr = typeArg.getDisplayString(withNullability: true);
-  // For lists of primitives, we can use .toDart.cast()
-  final elemKind = _kind(typeArg);
-  switch (elemKind) {
-    case _TypeKind.string:
-      return '(\$jsExpr as JSArray).toDart.cast<JSString>().map((e) => e.toDart).toList()';
-    case _TypeKind.int_:
-      return '(\$jsExpr as JSArray).toDart.cast<JSNumber>().map((e) => e.toDartInt).toList()';
-    case _TypeKind.bool_:
-      return '(\$jsExpr as JSArray).toDart.cast<JSBoolean>().map((e) => e.toDart).toList()';
-    default:
-      return '(\$jsExpr as JSArray).toDart.cast<$elemStr>()';
-  }
-}
+String _requiredAcc(DartType t) => switch (_kind(t)) {
+      _TypeKind.string => 'requiredJSString',
+      _TypeKind.int_ => 'requiredJSInt',
+      _TypeKind.double_ || _TypeKind.num_ => 'requiredJSDouble',
+      _TypeKind.bool_ => 'requiredJSBool',
+      _ => 'jsAny',
+    };
 
-/// Handle Function type — wrap JSFunction in a Dart closure.
-String _fromJSFunction(DartType t) {
-  // For now generate a simple void callback wrapper
-  if (t.getDisplayString(withNullability: true) == 'void Function()') {
-    return '(() { final fn = \$jsExpr as JSFunction; return () => fn.callAsFunction(null); })()';
+String _nullableAcc(DartType t) => switch (_kind(t)) {
+      _TypeKind.string => 'nullableJSString',
+      _TypeKind.int_ => 'nullableJSInt',
+      _TypeKind.double_ || _TypeKind.num_ => 'nullableJSDouble',
+      _TypeKind.bool_ => 'nullableJSBool',
+      _ => 'jsAnyOrNull',
+    };
+
+String _fromJSForFn(String fieldName, FunctionType ft, String fieldKey, String jsExpr) {
+  final nullable = _typeStr(ft).endsWith('?');
+  final paramTypes =
+      ft.formalParameters.map((p) => _typeStr(p.type)).toList();
+  final paramNames = [for (var i = 0; i < paramTypes.length; i++) 'a$i'];
+  final returnType = _typeStr(ft.returnType);
+
+  // Dart-side param list for the closure
+  final dartParams =
+      paramNames.indexed.map((e) => '${paramTypes[e.$1]} ${e.$2}').join(', ');
+  // Build JS args when calling the function
+  final jsArgs = paramNames.indexed
+      .map((e) => _toJSFor(e.$2, ft.formalParameters[e.$1].type))
+      .join(', ');
+
+  final isVoid = returnType == 'void';
+
+  final nullGuard = nullable
+      ? 'final _raw = $jsExpr;\n'
+      : '';
+  final nullCheck = nullable
+      ? '  if (_raw == null || _raw.isUndefined) return null;\n  final _fn = _raw as JSFunction;\n'
+      : '  final _fn = $jsExpr as JSFunction;\n';
+  final fnVar = nullable ? '_fn' : '_fn';
+
+  if (paramTypes.isEmpty) {
+    if (isVoid) {
+      return '''
+final $fieldName = () {
+$nullGuard$nullCheck  $fnVar.callAsFunction(null);
+}''';
+    }
+    return '''
+final $fieldName = () {
+$nullGuard$nullCheck  return $fnVar.callAsFunction(null) as $returnType;
+}''';
   }
-  // General case: return a closure that calls with the right args
+
+  // Call with args
+  final call = '$fnVar.callAsFunction(null, $jsArgs)';
+  if (isVoid) {
+    return '''
+final $fieldName = ($dartParams) {
+$nullGuard$nullCheck  $call;
+}''';
+  }
   return '''
-(() {
-  final fn = \$jsExpr as JSFunction;
-  return () => fn.callAsFunction(null);
-})()''';
+final $fieldName = ($dartParams) {
+$nullGuard$nullCheck  return $call as $returnType;
+}''';
 }
 
-String _typeStr(DartType t) => t.getDisplayString(withNullability: true);
+// ═══════════════════════════════════════════════
+// Builder
+// ═══════════════════════════════════════════════
 
 class ComponentBuilder implements Builder {
   @override
@@ -108,22 +166,19 @@ class ComponentBuilder implements Builder {
       final el = ann.element as ExecutableElement;
       final r = el.formalParameters.first.type as RecordType;
       final name = el.name;
-      final id =
-          'package:${step.inputId.package}/${step.inputId.path}#$name';
+      final id = 'package:${step.inputId.package}/${step.inputId.path}#$name';
       final fields = r.namedFields;
       final inputFile = step.inputId.pathSegments.last;
       final reactFile = inputFile.replaceAll('.dart', '.react.dart');
 
       // ── .react.dart ── pure Dart, zero js_interop ─────────
       final pureParams = [
-        ...fields.map(
-            (f) => 'required ${_typeStr(f.type)} ${f.name}'),
+        ...fields.map((f) => 'required ${_typeStr(f.type)} ${f.name}'),
         'String? key',
         'List<ReactNode> children = const []',
       ].join(', ');
       final pureLit =
           '(${fields.map((f) => '${f.name}: ${f.name}').join(', ')})';
-
       final pure = [
         "import 'package:react/react.dart';",
         "const id$name = ComponentId('$id');",
@@ -145,9 +200,12 @@ class ComponentBuilder implements Builder {
       }).join('\n');
 
       final fromJSStatements = fields.map((f) {
-        return _fromJSStatement(
-            f.name, f.type, f.name, 'js.getProperty(\'${f.name}\'.toJS)');
-      }).join('\n');
+        final jsExpr = _kind(f.type) == _TypeKind.function
+            ? "js.getProperty('${f.name}'.toJS)"
+            : 'js';
+        return _fromJSStatement(f.name, f.type, f.name, jsExpr);
+      })
+          .join('\n');
 
       final fromJSReturn =
           '(${fields.map((f) => '${f.name}: ${f.name}').join(', ')})';
@@ -169,10 +227,9 @@ class ComponentBuilder implements Builder {
         '  return $fromJSReturn;',
         '}',
         'final JSFunction \$$name = (() {',
-        '  JSObject wrapper(JSObject p){',
-        '    final dartProps = _${name}_fromJS(p);',
-        '    final tree = impl.${name}(dartProps);',
-        '    return toReactJS(tree) as JSObject;',
+        '  JSAny? wrapper(JSObject props){',
+        '    final dartProps = _${name}_fromJS(props);',
+        '    return toReactJS(impl.${name}(dartProps));',
         '  }',
         '  return wrapper.toJS;',
         '})() as JSFunction;',

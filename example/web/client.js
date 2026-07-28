@@ -3991,7 +3991,8 @@
       return o;
     },
     _App_fromJS(js) {
-      return new A._Record_1_title(A.JSStringToString_get_toDart(A._asString(A.JSObjectUnsafeUtilExtension_getProperty(js, A.StringToJSString_get_toJS("title"), type$.nullable_Object))));
+      var _s5_ = "title";
+      return new A._Record_1_title(A.requiredJSString(A.JSObjectUnsafeUtilExtension_getProperty(js, A.StringToJSString_get_toJS(_s5_), type$.JSObject), _s5_, _s5_));
     },
     registerApp() {
       A.ReactRegistry_register(string$.packag, $.$get$$App(), new A.registerApp_closure(), new A.registerApp_closure0());
@@ -4011,8 +4012,9 @@
       return o;
     },
     _Avatar_fromJS(js) {
-      var t1 = type$.nullable_Object;
-      return new A._Record_2_size_src(A.JSNumberToNumber_get_toDartInt(A._asDouble(A.JSObjectUnsafeUtilExtension_getProperty(js, A.StringToJSString_get_toJS("size"), t1))), A.JSStringToString_get_toDart(A._asString(A.JSObjectUnsafeUtilExtension_getProperty(js, A.StringToJSString_get_toJS("src"), t1))));
+      var _s4_ = "size",
+        t1 = type$.JSObject;
+      return new A._Record_2_size_src(A.requiredJSInt(A.JSObjectUnsafeUtilExtension_getProperty(js, A.StringToJSString_get_toJS(_s4_), t1), _s4_, _s4_), A.requiredJSString(A.JSObjectUnsafeUtilExtension_getProperty(js, A.StringToJSString_get_toJS("src"), t1), "src", "src"));
     },
     registerAvatar() {
       A.ReactRegistry_register("package:react_workspace/example/lib/avatar.dart#Avatar", $.$get$$Avatar(), new A.registerAvatar_closure(), new A.registerAvatar_closure0());
@@ -4031,7 +4033,8 @@
       return o;
     },
     _Badge_fromJS(js) {
-      return new A._Record_1_label(A.JSStringToString_get_toDart(A._asString(A.JSObjectUnsafeUtilExtension_getProperty(js, A.StringToJSString_get_toJS("label"), type$.nullable_Object))));
+      var _s5_ = "label";
+      return new A._Record_1_label(A.requiredJSString(A.JSObjectUnsafeUtilExtension_getProperty(js, A.StringToJSString_get_toJS(_s5_), type$.JSObject), _s5_, _s5_));
     },
     registerBadge() {
       A.ReactRegistry_register("package:react_workspace/example/lib/badge.dart#Badge", $.$get$$Badge(), new A.registerBadge_closure(), new A.registerBadge_closure0());
@@ -4142,6 +4145,21 @@
       var t1 = A.ReactInternal_renderer().render$1(n);
       return t1 == null ? A._asObject(t1) : t1;
     },
+    _throwMissing(key, type, component) {
+      throw A.wrapException(A.ArgumentError$((component != null ? component + " requires" : "Required") + " a " + type + ' property named "' + key + '", but the property was missing.'));
+    },
+    requiredJSString(o, key, component) {
+      var raw = A.JSObjectUnsafeUtilExtension_getProperty(o, A.StringToJSString_get_toJS(key), type$.nullable_Object);
+      if (raw == null || A.NullableUndefineableJSAnyExtension_get_isUndefined(raw))
+        A._throwMissing(key, "String", component);
+      return A.JSStringToString_get_toDart(A._asString(raw));
+    },
+    requiredJSInt(o, key, component) {
+      var raw = A.JSObjectUnsafeUtilExtension_getProperty(o, A.StringToJSString_get_toJS(key), type$.nullable_Object);
+      if (raw == null || A.NullableUndefineableJSAnyExtension_get_isUndefined(raw))
+        A._throwMissing(key, "int", component);
+      return A.JSNumberToNumber_get_toDartInt(A._asDouble(raw));
+    },
     _mapToJS(m) {
       var o = A.JSObject_constructor_();
       m.forEach$1(0, new A._mapToJS_closure(o));
@@ -4189,6 +4207,12 @@
     },
     _createObjectLiteral() {
       return A.createObjectLiteral(type$.JSObject);
+    },
+    NullableUndefineableJSAnyExtension_get_isUndefined(_this) {
+      return A.JSAnyUtilityExtension_typeofEquals(_this, "undefined");
+    },
+    JSAnyUtilityExtension_typeofEquals(_this, typeString) {
+      return typeof _this === typeString;
     },
     ListToJSArray_get_toJS(_this, $T) {
       return type$.JSArray_nullable_Object._as(_this);
@@ -6058,8 +6082,8 @@
     $signature: 0
   };
   A.$App_closure_wrapper.prototype = {
-    call$1(p) {
-      return A._asJSObject(A.toReactJS(A.App0(A._App_fromJS(A._asJSObject(p)))));
+    call$1(props) {
+      return A.toReactJS(A.App0(A._App_fromJS(A._asJSObject(props))));
     },
     $signature: 1
   };
@@ -6082,8 +6106,8 @@
     $signature: 0
   };
   A.$Avatar_closure_wrapper.prototype = {
-    call$1(p) {
-      return A._asJSObject(A.toReactJS(A.Avatar(A._Avatar_fromJS(A._asJSObject(p)))));
+    call$1(props) {
+      return A.toReactJS(A.Avatar(A._Avatar_fromJS(A._asJSObject(props))));
     },
     $signature: 1
   };
@@ -6106,8 +6130,8 @@
     $signature: 0
   };
   A.$Badge_closure_wrapper.prototype = {
-    call$1(p) {
-      return A._asJSObject(A.toReactJS(A.Badge(A._Badge_fromJS(A._asJSObject(p)))));
+    call$1(props) {
+      return A.toReactJS(A.Badge(A._Badge_fromJS(A._asJSObject(props))));
     },
     $signature: 1
   };
@@ -6285,7 +6309,7 @@
     typeUniverse: {eC: new Map(), tR: {}, eT: {}, tPV: {}, sEA: []},
     mangledGlobalNames: {int: "int", double: "double", num: "num", String: "String", bool: "bool", Null: "Null", List: "List", Object: "Object", Map: "Map", JSObject: "JSObject"},
     mangledNames: {},
-    types: ["JavaScriptFunction()", "JSObject(JSObject)", "JSObject(Object?)", "@(@)", "~(String,Object?)", "Object(ReactNode)", "@(@,String)", "@(String)", "~(Object?,Object?)", "+title(String)(JSObject)", "+size,src(int,String)(JSObject)", "+label(String)(JSObject)", "Object()", "Object?(Object?)"],
+    types: ["JavaScriptFunction()", "Object?(JSObject)", "JSObject(Object?)", "@(@)", "~(String,Object?)", "Object(ReactNode)", "@(@,String)", "@(String)", "~(Object?,Object?)", "+title(String)(JSObject)", "+size,src(int,String)(JSObject)", "+label(String)(JSObject)", "Object()", "Object?(Object?)"],
     interceptorsByTag: null,
     leafTags: null,
     arrayRti: Symbol("$ti"),

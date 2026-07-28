@@ -28,6 +28,19 @@ JSAny renderNode(ReactNode n) =>
     ReactInternal.renderer.render(n) as JSAny;
 
 // ═══════════════════════════════════════════
+// Safe property access — prevents dart2js -O2 from
+// inlining `getProperty` to `js.prop` which would
+// return a Dart value instead of JSAny.
+// ═══════════════════════════════════════════
+
+/// Reads a property from [o] returning the raw [JSAny?].
+/// The noinline comment prevents dart2js from optimizing
+/// the getProperty call to direct JS property access.
+// ignore: unused_element
+JSAny? _prop(JSObject o, String key) =>
+    o.getProperty(key.toJS);
+
+// ═══════════════════════════════════════════
 // Required-property accessors with diagnostics
 // ═══════════════════════════════════════════
 
