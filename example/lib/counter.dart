@@ -10,7 +10,7 @@ ReactNode Counter(({String title, int initialCount, String? subtitle, void Funct
     setOther(true);
   }, []);
 
-  final inc = button(onClick: (_) {
+  final inc = button(onClick: () {
     final newCount = count + 1;
     setCount(newCount);
     props.onChange?.call(newCount);
