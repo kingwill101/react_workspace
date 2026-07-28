@@ -55,13 +55,13 @@ JSAny _expandComponent(ComponentId id, Object? props, List<ReactNode> children) 
     throw ArgumentError('Component "${id.value}" not registered for SSR');
   }
   final jsProps = e.toJS(props);
-  final rendered = e.comp.callAsFunction(null, jsProps) as JSAny?;
+  final rendered = e.comp.callAsFunction(null, jsProps);
   if (rendered == null) {
-    if (children.isEmpty) return _react.callMethod('createElement'.toJS, _fragment, null) as JSAny;
+    if (children.isEmpty) return _react.callMethod('createElement'.toJS, _fragment, null);
     return _react.callMethod('createElement'.toJS, _fragment, null,
-        children.map(_expandTree).whereType<JSAny>().toList().toJS) as JSAny;
+        children.map(_expandTree).whereType<JSAny>().toList().toJS);
   }
-  return rendered as JSAny;
+  return rendered;
 }
 
 JSObject _intrinsicPropsToJS(Map<String, Object?> m) {
