@@ -1,0 +1,12 @@
+name: example
+resolution: workspace
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+dependencies:
+  react: {path: ../packages/react}
+  react_js: {path: ../packages/react_js}
+  react_dom: {path: ../packages/react_dom}
+dev_dependencies:
+  build_runner: ^2.15.3
+  react_codegen: {path: ../packages/react_codegen}
+  lints: ^6.1.0

@@ -1,0 +1,10 @@
+targets:
+  $default:
+    sources:
+      - lib/**
+      - packages/*/lib/**
+      - example/lib/**
+      - $package$
+    builders:
+      react_codegen|component:
+        enabled: true

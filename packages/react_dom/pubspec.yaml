@@ -1,0 +1,8 @@
+name: react_dom
+resolution: workspace
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+dependencies:
+  react:
+  react_js:
+    path: ../react_js

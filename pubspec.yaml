@@ -1,0 +1,13 @@
+name: react_workspace
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+workspace:
+  - packages/react
+  - packages/react_js
+  - packages/react_dom
+  - packages/react_codegen
+  - example
+dependencies:
+  shelf: ^1.4.0
+  shelf_static: ^1.1.3
+  watcher: ^1.1.0

@@ -1,0 +1,21 @@
+# Dart build cache
+.dart_tool/
+.packages
+build/
+
+# Node
+node_modules/
+
+# Temp directory for TMP=.tmp trick
+.tmp/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

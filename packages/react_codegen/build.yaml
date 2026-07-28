@@ -1,0 +1,7 @@
+builders:
+  component:
+    import: "package:react_codegen/builder.dart"
+    builder_factories: ["componentBuilder"]
+    build_extensions: {".dart": [".react.dart", ".react.g.dart"]}
+    auto_apply: dependents
+    build_to: cache
