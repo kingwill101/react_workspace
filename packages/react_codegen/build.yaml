@@ -5,3 +5,11 @@ builders:
     build_extensions: {".dart": [".react.dart", ".react.g.dart"]}
     auto_apply: dependents
     build_to: cache
+  aggregate:
+    import: "package:react_codegen/builder.dart"
+    builder_factories: ["aggregateBuilder"]
+    build_extensions:
+      "$lib$": ["react_components.g.dart"]
+    auto_apply: dependents
+    build_to: source
+    applies_builders: ["react_codegen|component"]

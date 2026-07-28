@@ -6,3 +6,4 @@ dependencies:
   build: ">=4.0.9"
   analyzer: ">=14.1.0"
   source_gen: ">=4.2.4"
+  glob: ">=2.1.0"

@@ -11,6 +11,8 @@ JSObject getRoot(String id) => _getById(id)!;
 bool hasSSRContent(JSObject root) =>
     (root.getProperty('innerHTML'.toJS) as JSString).toDart.trim().isNotEmpty;
 
+/// Reads initial props from the [#__props] script tag placed by the SSR
+/// worker. Returns the parsed JSON Map, or an empty Map if absent/empty.
 Map<String, dynamic> getInitialProps() {
   final el = _getById('__props');
   if (el == null) return {};
@@ -20,10 +22,13 @@ Map<String, dynamic> getInitialProps() {
   return (parsed as Map<String, dynamic>?) ?? {};
 }
 
+/// Mounts a React component into a fresh root (client-only rendering).
 void mount(JSObject root, ReactNode node) =>
     _createRoot(root).callMethod(
         'render'.toJS, ReactInternal.renderer.render(node) as JSAny);
 
+/// Hydrates SSR-rendered HTML, attaching event handlers.
+/// Uses [hydrateRoot] which expects the SSR HTML to already be in [root].
 void hydrate(JSObject root, ReactNode node) =>
     _hydrateRoot(root, ReactInternal.renderer.render(node) as JSAny);
 

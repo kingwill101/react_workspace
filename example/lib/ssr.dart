@@ -1,18 +1,12 @@
 import 'package:react/react.dart';
 import 'package:react_server/react_server.dart';
 import 'app.react.dart';
-import 'app.react.g.dart' as app;
-import 'avatar.react.g.dart' as av;
-import 'badge.react.g.dart' as badge;
 import 'counter.react.dart';
-import 'counter.react.g.dart' as counter;
+import 'react_components.g.dart';
 
 void main() {
   initReact();
-  app.registerApp();
-  av.registerAvatar();
-  badge.registerBadge();
-  counter.registerCounter();
+  registerReactComponents();
   registerGlobalRenderer((id, props) => switch (id) {
         'package:react_workspace/example/lib/app.dart#App' =>
           App(title: props['title'] as String? ?? 'hi from SSR'),
