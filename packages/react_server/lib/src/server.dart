@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
-import 'package:react/react.dart';
 import 'package:react_js/react_js.dart';
 
 void initReact() => ReactInternal.init(binding: JsBinding(), renderer: JsRenderer());
