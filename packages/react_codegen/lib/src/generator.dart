@@ -45,22 +45,26 @@ String _toJSForFn(String expr, FunctionType ft) {
   final paramNames = [for (var i = 0; i < paramTypes.length; i++) 'a$i'];
   final returnType = _typeStr(ft.returnType);
 
-  // Build JS arrow function params
-  final jsParams =
+  // Build Dart arrow function params
+  final dartParams =
       paramNames.indexed.map((e) => '${paramTypes[e.$1]} ${e.$2}').join(', ');
-  // Build JS call args (Dart→JS for each)
-  final jsArgs = paramNames.indexed
-      .map((e) => _toJSFor(e.$2, ft.formalParameters[e.$1].type))
-      .join(', ');
+  // Build call args — pass Dart values directly (the closure receives
+  // Dart-converted values from dart2js, and the Dart callback expects
+  // Dart types, not JS interop types).
+  final callArgs = paramNames.join(', ');
 
   final nullableGuard = nullable ? '($expr == null ? null : ' : '';
   final closeParen = nullable ? ')' : '';
 
+  // Force non-null when nullable — outer guard ensures the expression
+  // is non-null before reaching the inner arrow function body.
+  final innerExpr = nullable ? '(${expr}!)' : expr;
+
   if (returnType == 'void') {
-    return '$nullableGuard(($jsParams) { $expr($jsArgs); }).toJS as JSAny$closeParen';
+    return '$nullableGuard(($dartParams) { $innerExpr($callArgs); }).toJS as JSAny$closeParen';
   }
   // Non-void return: just let the JS runtime handle the return
-  return '$nullableGuard(($jsParams) => $expr($jsArgs)).toJS as JSAny$closeParen';
+  return '$nullableGuard(($dartParams) => $innerExpr($callArgs)).toJS as JSAny$closeParen';
 }
 
 // ═══════════════════════════════════════════════
@@ -126,12 +130,12 @@ String _fromJSForFn(String fieldName, FunctionType ft, String fieldKey, String j
       return '''
 final $fieldName = () {
 $nullGuard$nullCheck  $fnVar.callAsFunction(null);
-}''';
+};''';
     }
     return '''
 final $fieldName = () {
 $nullGuard$nullCheck  return $fnVar.callAsFunction(null) as $returnType;
-}''';
+};''';
   }
 
   // Call with args
@@ -140,12 +144,12 @@ $nullGuard$nullCheck  return $fnVar.callAsFunction(null) as $returnType;
     return '''
 final $fieldName = ($dartParams) {
 $nullGuard$nullCheck  $call;
-}''';
+};''';
   }
   return '''
 final $fieldName = ($dartParams) {
 $nullGuard$nullCheck  return $call as $returnType;
-}''';
+};''';
 }
 
 // ═══════════════════════════════════════════════
@@ -192,11 +196,19 @@ class ComponentBuilder implements Builder {
 
       // ── .react.g.dart ── JS interop bridge ────────────────
       final toJSBody = fields.map((f) {
-        final expr = _toJSFor('props.${f.name}', f.type);
-        if (_typeStr(f.type).endsWith('?')) {
-          return 'if (props.${f.name} != null) o.setProperty(\'${f.name}\'.toJS, $expr!);';
+        final isNullable = _typeStr(f.type).endsWith('?');
+        final isFn = _kind(f.type) == _TypeKind.function;
+        if (isFn) {
+          // _toJSForFn handles null guard internally
+          final expr = _toJSFor('props.${f.name}', f.type);
+          return 'o.setProperty(\'${f.name}\'.toJS, $expr);';
         }
-        return 'o.setProperty(\'${f.name}\'.toJS, $expr);';
+        if (isNullable) {
+          // dart2js optimizes away `!` on record fields; use explicit guard.
+          // `!.toJS` avoids calling toJS on nullable type.
+          return 'if (props.${f.name} != null) o.setProperty(\'${f.name}\'.toJS, props.${f.name}!.toJS);';
+        }
+        return 'o.setProperty(\'${f.name}\'.toJS, props.${f.name}.toJS);';
       }).join('\n');
 
       final fromJSStatements = fields.map((f) {

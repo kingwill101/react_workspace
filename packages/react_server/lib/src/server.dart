@@ -9,10 +9,13 @@ void initReact() => ReactInternal.init(binding: JsBinding(), renderer: JsRendere
 /// Registers an SSR render handler.
 ///
 /// The [factory] receives a component [id] and [props], and returns a
-/// [ReactNode] tree.  The tree is expanded to JS React elements via the
-/// [JsRenderer], producing a flat intrinsic tree that
-/// [ReactDOMServer.renderToString] can serialize without re-entering
-/// component wrappers.
+/// [ReactNode] tree.  The tree is expanded to JS React elements via
+/// [React.createElement], producing a tree that
+/// [ReactDOMServer.renderToString] can serialize.
+///
+/// Component nodes are emitted as [React.createElement(comp, toJSProps)]
+/// so that React sets up the proper hooks context during rendering.
+/// Intrinsic, Text, Fragment, and Empty nodes are expanded inline.
 void registerGlobalRenderer(
     ReactNode Function(String id, Map<String, dynamic> props) factory) {
   JSAny? handler(JSObject req) {
@@ -30,9 +33,11 @@ void registerGlobalRenderer(
   _globalThis.setProperty('__REACT_RENDER__'.toJS, handler.toJS);
 }
 
-/// Recursively expands a [ReactNode] tree into JS React elements
-/// (intrinsics, not component wrappers) so SSR can serialize them
-/// without re-entering generated component functions.
+/// Recursively expands a [ReactNode] tree into JS React elements.
+///
+/// Component nodes are emitted as `React.createElement(registeredComp, …)`
+/// so React handles component context, hooks, and lifecycle properly.
+/// All other node types are flattened inline.
 JSAny? _expandTree(ReactNode node) => switch (node) {
       Intrinsic(:var tag, :var props, :var children) =>
         _react.callMethod('createElement'.toJS, tag.toJS,
@@ -47,21 +52,24 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
       Empty() => null,
     };
 
-/// Renders a Component node by calling its generated JS wrapper
-/// (which produces a flat intrinsic React element via toReactJS).
+/// Expands a Component node by creating `React.createElement(registeredFn,
+/// toJSProps)` so that React renders the component with proper hooks
+/// context.  The component's generated wrapper calls
+/// [ReactInternal.renderer.render] which invokes [_expandTree] for the
+/// returned intrinsic tree — not for sub-components (the React runtime
+/// handles those via createElement).
 JSAny _expandComponent(ComponentId id, Object? props, List<ReactNode> children) {
   final e = ReactRegistry.lookup(id.value);
   if (e == null) {
     throw ArgumentError('Component "${id.value}" not registered for SSR');
   }
+  // Create React.createElement(comp, toJSProps) so React sets up
+  // hooks context and calls the wrapper internally.
   final jsProps = e.toJS(props);
-  final rendered = e.comp.callAsFunction(null, jsProps);
-  if (rendered == null) {
-    if (children.isEmpty) return _react.callMethod('createElement'.toJS, _fragment, null);
-    return _react.callMethod('createElement'.toJS, _fragment, null,
-        children.map(_expandTree).whereType<JSAny>().toList().toJS);
-  }
-  return rendered;
+  final childrenJS =
+      children.map(_expandTree).whereType<JSAny>().toList().toJS;
+  return _react.callMethod('createElement'.toJS, e.comp, jsProps,
+      childrenJS) as JSAny;
 }
 
 JSObject _intrinsicPropsToJS(Map<String, Object?> m) {
