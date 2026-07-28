@@ -1,20 +1,28 @@
 import 'dart:js_interop';
-import 'package:react/react.dart';
+import 'dart:js_interop_unsafe';
+import 'package:react_js/react_js.dart';
 import 'badge.dart' as impl;
 import 'badge.react.dart' show idBadge;
-@JS()
-extension type BadgePropsJS._(JSObject _) implements JSObject {
-  external JSAny get label;
+
+JSObject _Badge_toJS(({String label}) props){
+  final o = JSObject();
+  o.setProperty('label'.toJS, props.label.toJS);
+  return o;
 }
-({String label}) _Badge_fromJS(BadgePropsJS js) => (
-label: js.label as String
-);
+({String label}) _Badge_fromJS(JSObject js){
+  final label = (js.getProperty('label'.toJS) as JSString).toDart;
+  return (label: label);
+}
 final JSFunction $Badge = (() {
-  JSObject wrapper(JSObject p) {
-    final props = _Badge_fromJS(p as BadgePropsJS);
-    final tree = impl.Badge(props);
-    return ReactInternal.renderer.render(tree) as JSObject;
+  JSObject wrapper(JSObject p){
+    final dartProps = _Badge_fromJS(p);
+    final tree = impl.Badge(dartProps);
+    return toReactJS(tree) as JSObject;
   }
   return wrapper.toJS;
 })() as JSFunction;
-void registerBadge() => ReactRegistry.register(idBadge.value, $Badge);
+void registerBadge(){
+  ReactRegistry.register(idBadge.value, $Badge,
+      toJS: (p) => _Badge_toJS(p as ({String label})),
+      fromJS: (js) => _Badge_fromJS(js));
+}

@@ -1,4 +1,3 @@
-import 'dart:js_interop';
 import 'node.dart';
 
 abstract class ReactBinding {
@@ -7,7 +6,7 @@ abstract class ReactBinding {
 }
 
 abstract class ReactRenderer {
-  JSAny? render(ReactNode node);
+  Object? render(ReactNode node);
 }
 
 class ReactInternal {

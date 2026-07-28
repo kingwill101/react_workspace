@@ -6,6 +6,7 @@ dependencies:
   react: {path: ../packages/react}
   react_js: {path: ../packages/react_js}
   react_dom: {path: ../packages/react_dom}
+  react_server: {path: ../packages/react_server}
 dev_dependencies:
   build_runner: ^2.15.3
   react_codegen: {path: ../packages/react_codegen}

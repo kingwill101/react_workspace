@@ -1,22 +1,30 @@
 import 'dart:js_interop';
-import 'package:react/react.dart';
+import 'dart:js_interop_unsafe';
+import 'package:react_js/react_js.dart';
 import 'avatar.dart' as impl;
 import 'avatar.react.dart' show idAvatar;
-@JS()
-extension type AvatarPropsJS._(JSObject _) implements JSObject {
-  external JSAny get size;
-  external JSAny get src;
+
+JSObject _Avatar_toJS(({int size, String src}) props){
+  final o = JSObject();
+  o.setProperty('size'.toJS, props.size.toJS);
+o.setProperty('src'.toJS, props.src.toJS);
+  return o;
 }
-({int size, String src}) _Avatar_fromJS(AvatarPropsJS js) => (
-size: js.size as int,
-src: js.src as String
-);
+({int size, String src}) _Avatar_fromJS(JSObject js){
+  final size = (js.getProperty('size'.toJS) as JSNumber).toDartInt;
+final src = (js.getProperty('src'.toJS) as JSString).toDart;
+  return (size: size, src: src);
+}
 final JSFunction $Avatar = (() {
-  JSObject wrapper(JSObject p) {
-    final props = _Avatar_fromJS(p as AvatarPropsJS);
-    final tree = impl.Avatar(props);
-    return ReactInternal.renderer.render(tree) as JSObject;
+  JSObject wrapper(JSObject p){
+    final dartProps = _Avatar_fromJS(p);
+    final tree = impl.Avatar(dartProps);
+    return toReactJS(tree) as JSObject;
   }
   return wrapper.toJS;
 })() as JSFunction;
-void registerAvatar() => ReactRegistry.register(idAvatar.value, $Avatar);
+void registerAvatar(){
+  ReactRegistry.register(idAvatar.value, $Avatar,
+      toJS: (p) => _Avatar_toJS(p as ({int size, String src})),
+      fromJS: (js) => _Avatar_fromJS(js));
+}

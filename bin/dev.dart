@@ -43,7 +43,9 @@ Future<void> main() async {
   ProcessHandle? worker;
 
   Future<void> buildAll() async {
-    final res = await Process.run('dart', ['run', 'build_runner', 'build', '--workspace', '--delete-conflicting-outputs']);
+    final env = {'TMP': '.tmp'};
+    final res = await Process.run('dart', ['run', 'build_runner', 'build', '--workspace'],
+        environment: env);
     if (res.exitCode != 0) {
       ctrl.add(BuildError(res.stdout.toString() + res.stderr.toString()));
     } else {
@@ -53,7 +55,9 @@ Future<void> main() async {
 
   Future<void> buildClient() async {
     final sw = Stopwatch()..start();
-    final res = await Process.run('dart', ['compile', 'js', '-O0', '-o', 'example/web/client.js', 'example/web/client.dart']);
+    final env = {'TMP': '.tmp'};
+    final res = await Process.run('dart', ['compile', 'js', '-O0', '-o', 'example/web/client.js', 'example/web/client.dart'],
+        environment: env);
     sw.stop();
     switch (res.exitCode) {
       case 0: ctrl.add(ClientBuilt(sw.elapsed));
@@ -63,7 +67,9 @@ Future<void> main() async {
 
   Future<void> buildSsr() async {
     final sw = Stopwatch()..start();
-    final res = await Process.run('dart', ['compile', 'js', '-O2', '-o', 'build/ssr.js', 'example/lib/ssr.dart']);
+    final env = {'TMP': '.tmp'};
+    final res = await Process.run('dart', ['compile', 'js', '-O2', '-o', 'build/ssr.js', 'example/lib/ssr.dart'],
+        environment: env);
     sw.stop();
     switch (res.exitCode) {
       case 0: ctrl.add(SsrBuilt(sw.elapsed));
@@ -78,15 +84,29 @@ Future<void> main() async {
   }
 
   Future<void> startShelf() async {
+    final indexTemplate = File('example/web/index.html').readAsStringSync();
     final staticHandler = createStaticHandler('example/web', defaultDocument: 'index.html');
     final handler = const Pipeline().addMiddleware(logRequests()).addHandler((Request req) async {
-      if (req.url.path.startsWith('api/')) {
-        final c = HttpClient();
-        final proxy = await c.post('localhost', 3001, '/');
-        proxy.write(await req.readAsString());
-        final res = await proxy.close();
-        final body = await res.transform(const Utf8Decoder()).join();
-        return Response.ok(body, headers: {'content-type': 'application/json'});
+      final isPage = req.url.path == '' || req.url.path == '/' || req.url.path == 'index.html';
+      if (isPage) {
+        try {
+          final c = HttpClient();
+          final proxy = await c.post('localhost', 3001, '/');
+          proxy.write(jsonEncode({'id': 'package:react_workspace/example/lib/app.dart#App', 'props': {'title': 'hi'}}));
+          final res = await proxy.close();
+          final body = await res.transform(const Utf8Decoder()).join();
+          final data = jsonDecode(body) as Map;
+          final html = indexTemplate
+              .replaceAll('{{SSR}}', (data['html'] as String?) ?? '')
+              .replaceAll('{{PROPS}}', jsonEncode(data['props']));
+          return Response.ok(html, headers: {'content-type': 'text/html'});
+        } catch (_) {
+          // SSR worker not available, serve plain template
+          final plain = indexTemplate
+              .replaceAll('{{SSR}}', '')
+              .replaceAll('{{PROPS}}', '{}');
+          return Response.ok(plain, headers: {'content-type': 'text/html'});
+        }
       }
       return await staticHandler(req);
     });

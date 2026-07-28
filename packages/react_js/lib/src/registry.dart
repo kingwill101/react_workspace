@@ -1,0 +1,18 @@
+import 'dart:js_interop';
+
+class _Entry {
+  final JSFunction comp;
+  final JSObject Function(Object?) toJS;
+  final Object? Function(JSObject) fromJS;
+  _Entry(this.comp, this.toJS, this.fromJS);
+}
+
+class ReactRegistry {
+  static final _m = <String, _Entry>{};
+  static void register(String id, JSFunction c,
+      {required JSObject Function(Object?) toJS,
+       required Object? Function(JSObject) fromJS}) {
+    _m[id] = _Entry(c, toJS, fromJS);
+  }
+  static _Entry? lookup(String id) => _m[id];
+}

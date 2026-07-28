@@ -1,33 +1,30 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react/react.dart';
+import 'convert.dart';
+import 'registry.dart';
 
 class JsRenderer extends ReactRenderer {
   @override
-  JSAny? render(ReactNode node) => _render(node);
+  Object? render(ReactNode node) => _render(node) as Object?;
 
   JSAny? _render(ReactNode n) => switch (n) {
-        Intrinsic(:var tag, :var props, :var children, :var key) =>
-          _react.callMethod(
-            'createElement'.toJS,
-            tag.toJS,
-            _withKey(_propsToJS(props), key),
-            _childrenToJS(children),
-          ),
-        Component(:var id, :var props, :var key, :var children) =>
-          _react.callMethod(
-            'createElement'.toJS,
-            ReactRegistry.lookup(id.value) as JSAny,
-            _withKey(_toJSObject(props), key),
-            _childrenToJS(children),
-          ),
+        Component(:var id, :var props, :var children) => () {
+          final e = ReactRegistry.lookup(id.value)!;
+          final jsProps = e.toJS(props);
+          final jsChildren =
+              children.map((c) => toReactJS(c)!).toList().toJS;
+          return _react.callMethod('createElement'.toJS,
+              e.comp as JSAny, jsProps as JSAny, jsChildren) as JSAny;
+        }(),
+        Intrinsic(:var tag, :var props, :var children) =>
+          _react.callMethod('createElement'.toJS, tag.toJS,
+              _propsToJS(props),
+              children.map((c) => toReactJS(c)!).toList().toJS) as JSAny,
         Text(:var value) => value.toJS,
-        Fragment(:var children) => _react.callMethod(
-              'createElement'.toJS,
-              _fragment,
-              null,
-              _childrenToJS(children),
-            ),
+        Fragment(:var children) =>
+          _react.callMethod('createElement'.toJS, _fragment, null,
+              children.map((c) => toReactJS(c)!).toList().toJS) as JSAny,
         Empty() => null,
       };
 
@@ -35,30 +32,10 @@ class JsRenderer extends ReactRenderer {
     final o = JSObject();
     m.forEach((k, v) {
       if (v != null) {
-        o.setProperty(k.toJS, v as JSAny);
+        o.setProperty(k.toJS, toReactJS(v)!);
       }
     });
     return o;
-  }
-
-  JSObject _toJSObject(Object? p) {
-    if (p == null) return JSObject();
-    if (p is JSObject) return p;
-    // For records, generator will produce JSObject via toJS helpers
-    // fallback
-    return JSObject();
-  }
-
-  JSObject _withKey(JSObject o, String? k) {
-    if (k != null) {
-      o.setProperty('key'.toJS, k.toJS);
-    }
-    return o;
-  }
-
-  JSAny _childrenToJS(List<ReactNode> children) {
-    final list = children.map(_render).whereType<JSAny>().toList();
-    return list.toJS;
   }
 }
 

@@ -17,11 +17,12 @@ file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/pack
 file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react/lib/src/hooks.dart
 file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react/lib/src/internal.dart
 file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react/lib/src/node.dart
-file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react/lib/src/registry.dart
 file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react_dom/lib/react_dom.dart
 file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react_dom/lib/src/mount.dart
 file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react_js/lib/react_js.dart
 file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react_js/lib/src/binding.dart
+file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react_js/lib/src/convert.dart
+file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react_js/lib/src/registry.dart
 file:///run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react_js/lib/src/renderer.dart
 org-dartlang-sdk:///lib/_http/crypto.dart
 org-dartlang-sdk:///lib/_http/embedder_config.dart
