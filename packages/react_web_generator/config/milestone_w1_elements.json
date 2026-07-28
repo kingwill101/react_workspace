@@ -1,0 +1,15 @@
+{
+  "html": [
+    "div",
+    "span",
+    "button",
+    "input",
+    "form",
+    "label",
+    "textarea",
+    "select",
+    "option",
+    "a",
+    "img"
+  ]
+}

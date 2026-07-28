@@ -1,0 +1,56 @@
+{
+  "propertyRenames": {
+    "class": "className",
+    "for": "htmlFor",
+    "tabindex": "tabIndex",
+    "readonly": "readOnly",
+    "maxlength": "maxLength",
+    "accept-charset": "acceptCharset"
+  },
+  "globalProps": [
+    "id",
+    "className",
+    "title",
+    "hidden",
+    "tabIndex",
+    "role"
+  ],
+  "events": {
+    "click": {
+      "reactName": "onClick",
+      "eventType": "ReactMouseEvent",
+      "nativeType": "MouseEvent"
+    },
+    "input": {
+      "reactName": "onInput",
+      "eventType": "ReactInputEvent",
+      "nativeType": "InputEvent"
+    },
+    "change": {
+      "reactName": "onChange",
+      "eventType": "ReactChangeEvent",
+      "nativeType": "Event"
+    },
+    "submit": {
+      "reactName": "onSubmit",
+      "eventType": "ReactFormEvent",
+      "nativeType": "SubmitEvent"
+    },
+    "keydown": {
+      "reactName": "onKeyDown",
+      "eventType": "ReactKeyboardEvent",
+      "nativeType": "KeyboardEvent"
+    },
+    "focus": {
+      "reactName": "onFocus",
+      "eventType": "ReactFocusEvent",
+      "nativeType": "FocusEvent"
+    }
+  },
+  "reactOnlyProps": [
+    "children",
+    "key",
+    "ref",
+    "dangerouslySetInnerHTML"
+  ]
+}
