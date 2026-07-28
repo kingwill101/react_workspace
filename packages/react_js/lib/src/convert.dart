@@ -19,9 +19,24 @@ JSAny? toReactJS(Object? v) => switch (v) {
       ReactNode n => renderNode(n),
       List l => l.map(toReactJS).whereType<JSAny>().toList().toJS as JSAny,
       Map m => _mapToJS(m as Map<String, Object?>),
-      Function f => (f as dynamic).toJS as JSAny,
+      Function f => _funcToJS(f),
       JSAny j => j,
     };
+
+/// Converts a Dart function to a JS function.
+/// The dummy `(() {}).toJS` call forces dart2js to retain `get$toJS()`
+/// on all `void Function()` closures in the program — without it, the
+/// tree-shaker removes the method from closures whose `.toJS` calls are
+/// only reachable through `(f as dynamic).toJS` (which erases type info).
+JSAny _funcToJS(Function f) {
+  // `_functionToJS0` in the renderer may already wrap the closure.
+  // A plain JS wrapper has no `get$toJS`, so return it as-is instead
+  // of crashing with `f.get$toJS is not a function`.
+  final asObj = f as JSObject;
+  final maybeJS = asObj.getProperty('toJS'.toJS);
+  if (maybeJS != null && !maybeJS.isUndefined) return maybeJS as JSAny;
+  return f as JSAny;
+}
 
 /// Renders a [ReactNode] to a JS React element tree.
 JSAny renderNode(ReactNode n) =>

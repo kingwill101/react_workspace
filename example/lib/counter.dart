@@ -1,11 +1,12 @@
+import 'dart:js_interop';
 import 'package:react/react.dart';
 
 /// Counter component demonstrating useState, useEffect, and props.
-/// Note: inline callbacks (onClick) in Intrinsic props are only useful
-/// for client-side hydration. dart2js tree-shakes the .toJS conversion
-/// from closures during SSR compilation (the `get$toJS` method is
-/// not retained). Callbacks still work in the browser via the
-/// generated JS bridge.
+/// Inline callbacks in Intrinsic props must be explicitly converted with
+/// `.toJS` so dart2js retains `get$toJS()` on the closure class.
+/// Without the explicit `.toJS`, the tree-shaker removes the method
+/// because `toReactJS` calls it through `(f as dynamic).toJS`, which
+/// erases the closure type information at compile time.
 @reactComponent
 ReactNode Counter(({String title, int initialCount, String? subtitle, void Function(int)? onChange}) props)
 {
@@ -16,7 +17,13 @@ ReactNode Counter(({String title, int initialCount, String? subtitle, void Funct
     setOther(true);
   }, []);
 
-  final inc = Intrinsic('button', children: [Text('+1')]);
+  // Explicit `.toJS` forces dart2js to keep `get$toJS()` on this closure.
+  void onClick() {
+    final newCount = count + 1;
+    setCount(newCount);
+    props.onChange?.call(newCount);
+  }
+  final inc = Intrinsic('button', props: {'onClick': onClick.toJS}, children: [const Text('+1')]);
 
   final sub = props.subtitle != null ? Text(props.subtitle!) : null;
 

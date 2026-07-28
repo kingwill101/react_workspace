@@ -20,3 +20,5 @@ node_modules/
 .DS_Store
 Thumbs.db
 lib/react_components.g.dart
+example/web/*.js
+example/web/*.js.map

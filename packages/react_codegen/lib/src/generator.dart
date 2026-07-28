@@ -58,7 +58,7 @@ String _toJSForFn(String expr, FunctionType ft) {
 
   // Force non-null when nullable — outer guard ensures the expression
   // is non-null before reaching the inner arrow function body.
-  final innerExpr = nullable ? '(${expr}!)' : expr;
+  final innerExpr = nullable ? '($expr!)' : expr;
 
   if (returnType == 'void') {
     return '$nullableGuard(($dartParams) { $innerExpr($callArgs); }).toJS as JSAny$closeParen';
@@ -81,7 +81,7 @@ String _fromJSStatement(String fieldName, DartType t, String fieldKey, String _j
 
   final acc = nullable ? _nullableAcc(t) : _requiredAcc(t);
   // The accessor takes (JSObject, key) — pass the JS variable and key string.
-  return 'final $fieldName = $acc(${_jsVar}, "$fieldKey"${nullable ? '' : ', component: "$fieldName"'});';
+  return 'final $fieldName = $acc($_jsVar, "$fieldKey"${nullable ? '' : ', component: "$fieldName"'});';
 }
 
 String _requiredAcc(DartType t) => switch (_kind(t)) {
@@ -241,7 +241,7 @@ class ComponentBuilder implements Builder {
         'final JSFunction \$$name = (() {',
         '  JSAny? wrapper(JSObject props){',
         '    final dartProps = _${name}_fromJS(props);',
-        '    return toReactJS(impl.${name}(dartProps));',
+        '    return toReactJS(impl.$name(dartProps));',
         '  }',
         '  return wrapper.toJS;',
         '})() as JSFunction;',
