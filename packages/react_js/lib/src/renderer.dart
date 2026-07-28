@@ -1,6 +1,7 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react/react.dart';
+import 'callback_bridge.dart';
 import 'conversion_core.dart';
 import 'registry.dart';
 
@@ -32,7 +33,12 @@ class JsRenderer extends ReactRenderer {
     final o = JSObject();
     m.forEach((k, v) {
       if (v != null) {
-        o.setProperty(k.toJS, toReactJS(v)!);
+        final jsValue = switch (v) {
+          ReactEventProp(:final callback) => callbackToJS(callback),
+          ReactRefProp(:final callback) => callbackToJS(callback),
+          _ => toReactJS(v),
+        };
+        if (jsValue != null) o.setProperty(k.toJS, jsValue);
       }
     });
     return o;

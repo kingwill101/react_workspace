@@ -130,13 +130,13 @@ final class JsBridgeEmitter {
         'num' || 'double' => ReactValueKind.number,
         'bool' => ReactValueKind.boolean,
         'ReactNode' => ReactValueKind.reactNode,
-        _ => ReactValueKind.object,
+        _ => ReactValueKind.encodedObject,
       };
 
       return ReactValueSpecModel(kind: kind, nullable: type.nullable);
     }
 
-    return const ReactValueSpecModel(kind: ReactValueKind.object, nullable: true);
+    return const ReactValueSpecModel(kind: ReactValueKind.encodedObject, nullable: true);
   }
 
   String _recordCode(ReactTypeRef type) {

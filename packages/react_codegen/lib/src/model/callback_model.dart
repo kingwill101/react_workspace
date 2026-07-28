@@ -7,19 +7,23 @@ enum ReactValueKind {
   number,
   boolean,
   reactNode,
-  syntheticEvent,
-  object,
+  hostValue,
+  encodedObject,
   any,
 }
 
 final class ReactValueSpecModel {
   final ReactValueKind kind;
   final bool nullable;
+  final String? hostNamespace;
+  final String? typeId;
   final String? codecId;
 
   const ReactValueSpecModel({
     required this.kind,
     this.nullable = false,
+    this.hostNamespace,
+    this.typeId,
     this.codecId,
   });
 }

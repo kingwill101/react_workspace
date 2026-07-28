@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_web/react_web.dart';
 
 @reactComponent
 ReactNode Counter(({String title, int initialCount, String? subtitle, void Function(int)? onChange}) props)
@@ -10,7 +10,7 @@ ReactNode Counter(({String title, int initialCount, String? subtitle, void Funct
     setOther(true);
   }, []);
 
-  final inc = button(onClick: () {
+  final inc = button(onClick: (_) {
     final newCount = count + 1;
     setCount(newCount);
     props.onChange?.call(newCount);

@@ -124,7 +124,7 @@ void main() {
       final callback = ReactCallback(
         signature: const (
           positional: [],
-          result: (kind: ReactValueKind.integer, nullable: true, codecId: null),
+          result: (kind: ReactValueKind.integer, nullable: true, hostNamespace: null, typeId: null, codecId: null),
           asynchronous: false,
         ),
         invoke: (_) => null,
@@ -147,58 +147,4 @@ void main() {
     });
   });
 
-  group('SyntheticEvent', () {
-    test('delegates preventDefault', () {
-      var prevented = false;
-      final event = SyntheticEvent(
-        _FakeHandle(preventDefault: () {
-          prevented = true;
-        }),
-      );
-
-      event.preventDefault();
-      expect(prevented, isTrue);
-    });
-
-    test('delegates stopPropagation', () {
-      var stopped = false;
-      final event = SyntheticEvent(
-        _FakeHandle(stopPropagation: () {
-          stopped = true;
-        }),
-      );
-
-      event.stopPropagation();
-      expect(stopped, isTrue);
-    });
-
-    test('exposes defaultPrevented', () {
-      final event = SyntheticEvent(
-        _FakeHandle(defaultPrevented: true),
-      );
-
-      expect(event.defaultPrevented, isTrue);
-    });
-  });
-}
-
-final class _FakeHandle implements SyntheticEventHandle {
-  _FakeHandle({
-    this._preventDefault,
-    this._stopPropagation,
-    this._defaultPrevented = false,
-  });
-
-  final void Function()? _preventDefault;
-  final void Function()? _stopPropagation;
-  final bool _defaultPrevented;
-
-  @override
-  void preventDefault() => _preventDefault?.call();
-
-  @override
-  void stopPropagation() => _stopPropagation?.call();
-
-  @override
-  bool get defaultPrevented => _defaultPrevented;
 }

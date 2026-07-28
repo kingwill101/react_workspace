@@ -143,17 +143,43 @@ final ${_callbackType(callback)} $fieldName =
   }
 
   String _valueSpec(ReactValueSpecModel spec) {
-    final constant = switch (spec.kind) {
+    return switch (spec.kind) {
       ReactValueKind.void_ => 'reactVoid',
       ReactValueKind.string => spec.nullable ? 'reactNullableString' : 'reactString',
       ReactValueKind.integer => spec.nullable ? 'reactNullableInt' : 'reactInt',
       ReactValueKind.number => spec.nullable ? 'reactNullableDouble' : 'reactDouble',
       ReactValueKind.boolean => spec.nullable ? 'reactNullableBool' : 'reactBool',
       ReactValueKind.reactNode => 'reactNodeValue',
-      _ => throw StateError('Unsupported callback value type: ${spec.kind}.'),
+      ReactValueKind.hostValue => _hostValueSpec(spec),
+      ReactValueKind.encodedObject => _encodedObjectSpec(spec),
+      ReactValueKind.any => 'reactAny',
     };
+  }
 
-    return constant;
+  String _hostValueSpec(ReactValueSpecModel spec) {
+    if (spec.hostNamespace == null && spec.typeId == null) {
+      return 'reactHostValue';
+    }
+
+    return '''
+(
+  kind: ReactValueKind.hostValue,
+  nullable: ${spec.nullable},
+  hostNamespace: '${spec.hostNamespace}',
+  typeId: '${spec.typeId}',
+  codecId: null,
+)''';
+  }
+
+  String _encodedObjectSpec(ReactValueSpecModel spec) {
+    return '''
+(
+  kind: ReactValueKind.encodedObject,
+  nullable: ${spec.nullable},
+  hostNamespace: null,
+  typeId: null,
+  codecId: '${spec.codecId}',
+)''';
   }
 
   String _typeCode(ReactTypeRef type) {

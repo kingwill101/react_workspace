@@ -12,11 +12,6 @@ final class HostNode<P extends Object?> extends ReactNode {
   const HostNode(this.type, this.props, {this.children = const [], this.key});
 }
 
-@Deprecated('Use HostNode<Map<String, Object?>> with a HostType instead.')
-final class Intrinsic extends HostNode<Map<String, Object?>> {
-  Intrinsic(String tag, {Map<String, Object?> props = const {}, List<ReactNode> children = const [], String? key})
-      : super(HostType('web', tag), props, children: children, key: key);
-}
 final class Component<P> extends ReactNode {
   final ComponentId id; final P props; final String? key; final List<ReactNode> children;
   const Component(this.id, this.props, {this.key, this.children=const []});

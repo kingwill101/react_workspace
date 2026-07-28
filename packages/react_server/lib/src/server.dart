@@ -80,9 +80,40 @@ JSAny _expandComponent(ComponentId id, Object? props, List<ReactNode> children) 
 JSObject _intrinsicPropsToJS(Map<String, Object?> m) {
   final o = JSObject();
   m.forEach((k, v) {
+    if (v is ReactEventProp || v is ReactRefProp) return;
     if (v != null) o.setProperty(k.toJS, toReactJS(v)!);
   });
   return o;
+}
+
+/// Renders [node] to an HTML string using `ReactDOMServer.renderToString`.
+///
+/// Sets up a server runtime and expands the [ReactNode] tree into JS React
+/// elements before serialization.
+String renderToString(ReactNode node) {
+  final result = runWithReactRuntime(
+    ReactRuntime(
+      target: ReactRenderTarget.server,
+      capabilities: ReactRuntimeCapabilities.server,
+      binding: JsBinding(),
+      renderer: JsRenderer(),
+    ),
+    () {
+      final expanded = _expandTree(node)!;
+      return _reactDomServer.callMethod('renderToString'.toJS, expanded);
+    },
+  );
+  return (result as JSString?)?.toDart ?? '';
+}
+
+/// Registers a handler that receives a request map and returns a [ReactNode]
+/// to render.
+///
+/// The handler is invoked within a scoped server runtime so that hooks and
+/// other renderer-specific APIs are available.
+void registerServerHandler(
+    ReactNode Function(Map<String, dynamic> request) handler) {
+  registerGlobalRenderer((id, props) => handler({'id': id, 'props': props}));
 }
 
 /// JSON-stringifies a JSObject via `JSON.stringify`.
@@ -94,6 +125,9 @@ external JSObject get _react;
 
 @JS('React.Fragment')
 external JSAny get _fragment;
+
+@JS('ReactDOMServer')
+external JSObject get _reactDomServer;
 
 @JS('globalThis')
 external JSObject get _globalThis;

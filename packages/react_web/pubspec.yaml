@@ -5,4 +5,6 @@ environment:
 dependencies:
   react:
     path: ../react
+  react_js:
+    path: ../react_js
   web: ^1.1.0

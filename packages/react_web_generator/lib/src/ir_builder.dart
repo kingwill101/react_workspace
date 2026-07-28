@@ -12,14 +12,11 @@ final class WebHostIrBuilder {
   final List<String> _elements;
 
   WebHostIrBuilder._({
-    required PackageWebResolver resolver,
-    required Map<String, dynamic> idl,
-    required Map<String, dynamic> overlay,
-    required List<String> elements,
-  })  : _resolver = resolver,
-        _idl = idl,
-        _overlay = overlay,
-        _elements = elements;
+    required this._resolver,
+    required this._idl,
+    required this._overlay,
+    required this._elements,
+  });
 
   static Future<WebHostIrBuilder> create({
     required String packageRoot,
@@ -97,7 +94,11 @@ final class WebHostIrBuilder {
       for (final item in spec) {
         if (item is Map<String, dynamic> && item['type'] == 'interface') {
           final name = item['name'] as String;
-          result[name] = item;
+          final existing = result[name];
+          // Prefer entries with inheritance chain (more complete)
+          if (existing == null || item['inheritance'] != null) {
+            result[name] = item;
+          }
         }
       }
     }
@@ -275,6 +276,11 @@ final class WebHostIrBuilder {
           import: Uri.parse('dart:core'),
           nullable: false,
         ),
+      'object' => WebDartType(
+        symbol: 'Object',
+        import: Uri.parse('dart:core'),
+        nullable: false,
+      ),
       'undefined' || 'void' => WebDartType(
         symbol: 'void',
         import: Uri.parse('dart:core'),

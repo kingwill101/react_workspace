@@ -21,11 +21,16 @@ enum ReactValueKind {
   /// A rendered React node.
   reactNode,
 
-  /// A synthetic browser event.
-  syntheticEvent,
+  /// A value owned by a renderer.
+  ///
+  /// Examples:
+  /// - a browser Event or Element
+  /// - a React synthetic event object
+  /// - a future native-renderer handle
+  hostValue,
 
-  /// A custom object handled by a registered [ReactCodecRegistry] codec.
-  object,
+  /// Structured application data converted through a registered codec.
+  encodedObject,
 }
 
 /// Specification for a single callback argument or return value.
@@ -36,7 +41,18 @@ typedef ReactValueSpec = ({
   /// Whether `null` or `undefined` is accepted.
   bool nullable,
 
-  /// The codec ID for custom [ReactValueKind.object] values.
+  /// Renderer that owns this value.
+  ///
+  /// Examples: "web", "test".
+  String? hostNamespace,
+
+  /// Stable type identifier used for diagnostics and generated adapters.
+  ///
+  /// Example:
+  /// package:react_web/events.dart#ReactMouseEvent
+  String? typeId,
+
+  /// The codec ID for custom [ReactValueKind.encodedObject] values.
   String? codecId,
 });
 
@@ -56,6 +72,8 @@ typedef ReactCallbackSignature = ({
 const reactVoid = (
   kind: ReactValueKind.void_,
   nullable: false,
+  hostNamespace: null,
+  typeId: null,
   codecId: null,
 );
 
@@ -63,6 +81,8 @@ const reactVoid = (
 const reactAny = (
   kind: ReactValueKind.any,
   nullable: true,
+  hostNamespace: null,
+  typeId: null,
   codecId: null,
 );
 
@@ -70,6 +90,8 @@ const reactAny = (
 const reactString = (
   kind: ReactValueKind.string,
   nullable: false,
+  hostNamespace: null,
+  typeId: null,
   codecId: null,
 );
 
@@ -77,6 +99,8 @@ const reactString = (
 const reactNullableString = (
   kind: ReactValueKind.string,
   nullable: true,
+  hostNamespace: null,
+  typeId: null,
   codecId: null,
 );
 
@@ -84,6 +108,8 @@ const reactNullableString = (
 const reactInt = (
   kind: ReactValueKind.integer,
   nullable: false,
+  hostNamespace: null,
+  typeId: null,
   codecId: null,
 );
 
@@ -91,15 +117,42 @@ const reactInt = (
 const reactBool = (
   kind: ReactValueKind.boolean,
   nullable: false,
+  hostNamespace: null,
+  typeId: null,
   codecId: null,
 );
 
-/// A non-null synthetic event.
-const reactSyntheticEvent = (
-  kind: ReactValueKind.syntheticEvent,
+/// A non-null host value owned by a renderer.
+const reactHostValue = (
+  kind: ReactValueKind.hostValue,
   nullable: false,
+  hostNamespace: null,
+  typeId: null,
   codecId: null,
 );
+
+/// A generic ref callback.
+typedef ReactRefCallback<T> = void Function(T? value);
+
+/// Wrapper indicating a host prop is an event callback.
+///
+/// Renderers use this wrapper to distinguish event callbacks from ordinary
+/// values during prop encoding.  Client encoders unwrap and convert the
+/// inner [ReactCallback]; server encoders omit event props entirely.
+final class ReactEventProp {
+  final ReactCallback callback;
+  const ReactEventProp(this.callback);
+}
+
+/// Wrapper indicating a host prop is a ref callback.
+///
+/// Renderers use this wrapper to distinguish ref callbacks from ordinary
+/// values during prop encoding.  Client encoders unwrap and convert the
+/// inner [ReactCallback]; server encoders omit ref props entirely.
+final class ReactRefProp {
+  final ReactCallback callback;
+  const ReactRefProp(this.callback);
+}
 
 /// Opaque callback descriptor that can be passed through the JS bridge.
 ///
@@ -112,13 +165,13 @@ const reactSyntheticEvent = (
 /// final callback = ReactCallback(
 ///   debugName: 'button.onClick',
 ///   signature: const (
-///     positional: [reactSyntheticEvent],
+///     positional: [reactHostValue],
 ///     result: reactVoid,
 ///     asynchronous: false,
 ///   ),
 ///   invoke: (arguments) {
-///     final event = arguments[0] as SyntheticEvent;
-///     event.preventDefault();
+///     final rawEvent = arguments[0];
+///     // cast and handle in renderer-specific code
 ///     return null;
 ///   },
 /// );
@@ -138,36 +191,4 @@ final class ReactCallback {
     required this.invoke,
     this.debugName,
   });
-}
-
-/// Pure-Dart contract for a synthetic event handle.
-abstract interface class SyntheticEventHandle {
-  /// Prevents the browser's default action for this event.
-  void preventDefault();
-
-  /// Stops further propagation of this event.
-  void stopPropagation();
-
-  /// Whether [preventDefault] has been called.
-  bool get defaultPrevented;
-}
-
-/// Pure-Dart wrapper around a synthetic event handle.
-///
-/// Use this type in callback signatures so application code does not
-/// depend on JS interop types.
-final class SyntheticEvent {
-  final SyntheticEventHandle _handle;
-
-  /// Creates a synthetic event wrapper around [_handle].
-  const SyntheticEvent(this._handle);
-
-  /// Prevents the browser's default action for this event.
-  void preventDefault() => _handle.preventDefault();
-
-  /// Stops further propagation of this event.
-  void stopPropagation() => _handle.stopPropagation();
-
-  /// Whether [preventDefault] has been called.
-  bool get defaultPrevented => _handle.defaultPrevented;
 }

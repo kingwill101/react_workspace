@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_web/react_web.dart';
 import 'avatar.react.dart';
 import 'badge.react.dart';
 import 'counter.react.dart';
