@@ -1,0 +1,122 @@
+import 'dart:async';
+import 'package:react/react.dart';
+import 'package:test/test.dart';
+
+void main() {
+  group('ReactRuntimeCapabilities', () {
+    test('server capabilities report no events or refs', () {
+      expect(ReactRuntimeCapabilities.server.supportsEvents, isFalse);
+      expect(ReactRuntimeCapabilities.server.supportsRefs, isFalse);
+      expect(ReactRuntimeCapabilities.server.supportsEffects, isFalse);
+    });
+
+    test('browser capabilities report events and refs', () {
+      expect(ReactRuntimeCapabilities.browser.supportsEvents, isTrue);
+      expect(ReactRuntimeCapabilities.browser.supportsRefs, isTrue);
+      expect(ReactRuntimeCapabilities.browser.supportsEffects, isTrue);
+    });
+  });
+
+  group('currentReactRuntime', () {
+    test('throws StateError outside any runtime', () {
+      expect(() => currentReactRuntime, throwsStateError);
+    });
+
+    test('hooks fail outside runtime', () {
+      expect(() => useState(0), throwsStateError);
+      expect(() => useEffect(() {}), throwsStateError);
+    });
+
+    test('returns runtime inside runWithReactRuntime', () {
+      final runtime = ReactRuntime(
+        target: ReactRenderTarget.test,
+        capabilities: ReactRuntimeCapabilities.browser,
+        binding: _TestBinding(),
+        renderer: _TestRenderer(),
+      );
+
+      ReactRuntime? captured;
+      runWithReactRuntime(runtime, () {
+        captured = currentReactRuntime;
+      });
+
+      expect(captured, same(runtime));
+    });
+
+    test('nested runtime restores parent', () {
+      final parentRuntime = ReactRuntime(
+        target: ReactRenderTarget.test,
+        capabilities: ReactRuntimeCapabilities.browser,
+        binding: _TestBinding(),
+        renderer: _TestRenderer(),
+      );
+
+      final childRuntime = ReactRuntime(
+        target: ReactRenderTarget.test,
+        capabilities: ReactRuntimeCapabilities.server,
+        binding: _TestBinding(),
+        renderer: _TestRenderer(),
+      );
+
+      ReactRuntime? insideChild;
+      ReactRuntime? afterChild;
+
+      runWithReactRuntime(parentRuntime, () {
+        runWithReactRuntime(childRuntime, () {
+          insideChild = currentReactRuntime;
+        });
+        afterChild = currentReactRuntime;
+      });
+
+      expect(insideChild, same(childRuntime));
+      expect(afterChild, same(parentRuntime));
+    });
+  });
+
+  group('runWithReactRuntime', () {
+    test('two concurrent renders do not leak state', () async {
+      final runtime1 = ReactRuntime(
+        target: ReactRenderTarget.test,
+        capabilities: ReactRuntimeCapabilities.browser,
+        binding: _TestBinding(),
+        renderer: _TestRenderer(),
+      );
+
+      final runtime2 = ReactRuntime(
+        target: ReactRenderTarget.test,
+        capabilities: ReactRuntimeCapabilities.browser,
+        binding: _TestBinding(),
+        renderer: _TestRenderer(),
+      );
+
+      Future<int> render(ReactRuntime r) => runWithReactRuntime(
+            r,
+            () => Future.value(r.binding.useState(0).$1),
+          );
+
+      final results = await Future.wait([
+        render(runtime1),
+        render(runtime2),
+        render(runtime1),
+        render(runtime2),
+      ]);
+
+      expect(results, [0, 0, 0, 0]);
+    });
+  });
+}
+
+final class _TestBinding implements ReactBinding {
+  @override
+  (T, void Function(T)) useState<T>(T initial) {
+    return (initial, (T value) {});
+  }
+
+  @override
+  void useEffect(void Function() effect, List<Object?>? deps) {}
+}
+
+final class _TestRenderer implements ReactRenderer {
+  @override
+  Object? render(ReactNode node) => null;
+}
