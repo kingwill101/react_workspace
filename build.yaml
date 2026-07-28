@@ -8,5 +8,3 @@ targets:
     builders:
       react_codegen|component:
         enabled: true
-      react_codegen|aggregate:
-        enabled: true

@@ -15,9 +15,10 @@ class AggregateBuilder implements Builder {
 
   @override
   Future<void> build(BuildStep step) async {
+    final currentPkg = step.inputId.package;
     final inputs = await step.findAssets(
       Glob('**/*.react.g.dart'),
-    ).toList();
+    ).where((a) => a.package == currentPkg).toList();
 
     if (inputs.isEmpty) return;
 
@@ -45,7 +46,7 @@ class AggregateBuilder implements Builder {
 
     if (regNames.isEmpty) return;
 
-    final pkg = inputs.first.package;
+    final pkg = currentPkg;
 
     await _writeComponentsRegistry(step, pkg, imports, regNames);
     await _writeSsRegistry(step, pkg, idImports, idConstants);
