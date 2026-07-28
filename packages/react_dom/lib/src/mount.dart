@@ -3,7 +3,17 @@ import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react_js/react_js.dart';
 
-void initReact() => ReactInternal.init(binding: JsBinding(), renderer: JsRenderer());
+void initReact() {
+  runWithReactRuntime(
+    ReactRuntime(
+      target: ReactRenderTarget.browser,
+      capabilities: ReactRuntimeCapabilities.browser,
+      binding: JsBinding(),
+      renderer: JsRenderer(),
+    ),
+    () {},
+  );
+}
 
 JSObject getRoot(String id) => _getById(id)!;
 
@@ -29,13 +39,35 @@ Map<String, dynamic> getInitialProps() {
 
 /// Mounts a React component into a fresh root (client-only rendering).
 void mount(JSObject root, ReactNode node) =>
-    _createRoot(root).callMethod(
-        'render'.toJS, ReactInternal.renderer.render(node) as JSAny);
+    runWithReactRuntime(
+      ReactRuntime(
+        target: ReactRenderTarget.browser,
+        capabilities: ReactRuntimeCapabilities.browser,
+        binding: JsBinding(),
+        renderer: JsRenderer(),
+      ),
+      () => _createRoot(root)
+          .callMethod(
+            'render'.toJS,
+            currentReactRuntime.renderer.render(node) as JSAny,
+          ),
+    );
 
 /// Hydrates SSR-rendered HTML, attaching event handlers.
 /// Uses [hydrateRoot] which expects the SSR HTML to already be in [root].
 void hydrate(JSObject root, ReactNode node) =>
-    _hydrateRoot(root, ReactInternal.renderer.render(node) as JSAny);
+    runWithReactRuntime(
+      ReactRuntime(
+        target: ReactRenderTarget.browser,
+        capabilities: ReactRuntimeCapabilities.browser,
+        binding: JsBinding(),
+        renderer: JsRenderer(),
+      ),
+      () => _hydrateRoot(
+        root,
+        currentReactRuntime.renderer.render(node) as JSAny,
+      ),
+    );
 
 @JS('document.getElementById')
 external JSObject? _getById(String id);

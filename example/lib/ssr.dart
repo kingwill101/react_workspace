@@ -4,9 +4,6 @@ import 'package:react_server/react_server.dart';
 import 'ssr_registry.g.dart';
 
 void main() {
-  initReact();
-  registerKnownSsComponentIds();
-
   SsrComponentRegistry.register(
     idApp.value,
     (props) => App(

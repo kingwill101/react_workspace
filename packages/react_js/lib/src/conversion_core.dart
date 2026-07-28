@@ -1,7 +1,6 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
-import 'package:react/react.dart';
-import 'callback_bridge.dart';
+import 'package:react_js/react_js.dart';
 
 // ═══════════════════════════════════════════
 // Core Dart → JS conversion
@@ -31,7 +30,7 @@ JSAny? toReactJS(Object? v) => switch (v) {
     };
 
 JSAny renderNode(ReactNode n) =>
-    ReactInternal.renderer.render(n) as JSAny;
+    currentReactRuntime.renderer.render(n) as JSAny;
 
 // ═══════════════════════════════════════════
 // Safe property access — prevents dart2js -O2 from

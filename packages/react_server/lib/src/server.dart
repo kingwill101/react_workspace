@@ -2,10 +2,6 @@ import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react_js/react_js.dart';
-
-void initReact() => ReactInternal.init(binding: JsBinding(), renderer: JsRenderer());
-
-/// Registers an SSR render handler.
 ///
 /// The [factory] receives a component [id] and [props], and returns a
 /// [ReactNode] tree.  The tree is expanded to JS React elements via
@@ -18,16 +14,26 @@ void initReact() => ReactInternal.init(binding: JsBinding(), renderer: JsRendere
 void registerGlobalRenderer(
     ReactNode Function(String id, Map<String, dynamic> props) factory) {
   JSAny? handler(JSObject req) {
-    final id = (req.getProperty('id'.toJS) as JSString).toDart;
-    final propsObj = req.getProperty('props'.toJS) as JSObject?;
-    Map<String, dynamic> props = {};
-    if (propsObj != null) {
-      final jsonStr = _jsonStringify(propsObj);
-      if (jsonStr.isNotEmpty) {
-        props = (jsonDecode(jsonStr) as Map<String, dynamic>?) ?? {};
-      }
-    }
-    return _expandTree(factory(id, props));
+      return runWithReactRuntime(
+      ReactRuntime(
+        target: ReactRenderTarget.server,
+        capabilities: ReactRuntimeCapabilities.server,
+        binding: JsBinding(),
+        renderer: JsRenderer(),
+      ),
+      () {
+        final id = (req.getProperty('id'.toJS) as JSString).toDart;
+        final propsObj = req.getProperty('props'.toJS) as JSObject?;
+        Map<String, dynamic> props = {};
+        if (propsObj != null) {
+          final jsonStr = _jsonStringify(propsObj);
+          if (jsonStr.isNotEmpty) {
+            props = (jsonDecode(jsonStr) as Map<String, dynamic>?) ?? {};
+          }
+        }
+        return _expandTree(factory(id, props));
+      },
+    );
   }
   _globalThis.setProperty('__REACT_RENDER__'.toJS, handler.toJS);
 }
@@ -54,7 +60,7 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
 /// Expands a Component node by creating `React.createElement(registeredFn,
 /// toJSProps)` so that React renders the component with proper hooks
 /// context.  The component's generated wrapper calls
-/// [ReactInternal.renderer.render] which invokes [_expandTree] for the
+/// [currentReactRuntime.renderer.render] which invokes [_expandTree] for the
 /// returned intrinsic tree — not for sub-components (the React runtime
 /// handles those via createElement).
 JSAny _expandComponent(ComponentId id, Object? props, List<ReactNode> children) {
