@@ -7,7 +7,18 @@ import 'counter.react.dart' show idCounter;
 JSObject _Counter_toJS(({int initialCount, void Function(int)? onChange, String? subtitle, String title}) props){
   final o = JSObject();
   o.setProperty('initialCount'.toJS, props.initialCount.toJS);
-o.setProperty('onChange'.toJS, (props.onChange == null ? null : ((int a0) { (props.onChange!)(a0); }).toJS as JSAny));
+o.setProperty('onChange'.toJS, (props.onChange == null ? null : callbackToJS(ReactCallback(
+          debugName: 'props.onChange',
+      signature: const (
+        positional: [reactInt],
+        result: reactVoid,
+        asynchronous: false,
+      ),
+    invoke: (arguments) {
+      props.onChange!(arguments[0] as int);
+      return null;
+    },
+  ))));
 if (props.subtitle != null) o.setProperty('subtitle'.toJS, props.subtitle!.toJS);
 o.setProperty('title'.toJS, props.title.toJS);
   return o;

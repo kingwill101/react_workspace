@@ -10,11 +10,11 @@ ReactNode Counter(({String title, int initialCount, String? subtitle, void Funct
     setOther(true);
   }, []);
 
-  final inc = Intrinsic('button', props: {'onClick': () {
+  final inc = button(onClick: (_) {
     final newCount = count + 1;
     setCount(newCount);
     props.onChange?.call(newCount);
-  }}, children: [const Text('+1')]);
+  }, children: [const Text('+1')]);
 
   final sub = props.subtitle != null ? Text(props.subtitle!) : null;
 
@@ -22,7 +22,7 @@ ReactNode Counter(({String title, int initialCount, String? subtitle, void Funct
     Text(props.title),
     Text('Count: $count'),
     inc,
-    if (sub != null) sub,
+    ?sub,
     Text(other ? 'effect:ran' : 'effect:pending'),
   ]);
 }

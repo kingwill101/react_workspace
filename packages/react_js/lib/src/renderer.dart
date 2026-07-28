@@ -1,7 +1,7 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react/react.dart';
-import 'convert.dart';
+import 'conversion_core.dart';
 import 'registry.dart';
 
 class JsRenderer extends ReactRenderer {

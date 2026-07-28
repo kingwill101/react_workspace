@@ -1,6 +1,7 @@
 import 'package:build/build.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:source_gen/source_gen.dart';
 
 enum _TypeKind { string, int_, double_, bool_, num_, list, function, reactNode, other }
@@ -37,41 +38,95 @@ String _toJSFor(String expr, DartType t) {
   };
 }
 
+bool _isFuture(DartType type) {
+  final display = type.getDisplayString();
+  return display == 'Future' || display.startsWith('Future<');
+}
+
+String _valueSpecFor(DartType type) {
+  final nullable = type.nullabilitySuffix == NullabilitySuffix.question;
+  if (type is VoidType) {
+    return 'reactVoid';
+  }
+  if (type.isDartCoreString) {
+    return nullable ? 'reactNullableString' : 'reactString';
+  }
+  if (type.isDartCoreBool) {
+    return nullable
+        ? '(kind: ReactValueKind.boolean, nullable: true, codecId: null)'
+        : 'reactBool';
+  }
+  if (type.isDartCoreInt) {
+    return nullable
+        ? '(kind: ReactValueKind.integer, nullable: true, codecId: null)'
+        : 'reactInt';
+  }
+  if (type.isDartCoreDouble || type.isDartCoreNum) {
+    return '(kind: ReactValueKind.number, nullable: $nullable, codecId: null)';
+  }
+  return '(kind: ReactValueKind.any, nullable: $nullable, codecId: null)';
+}
+
 String _toJSForFn(String expr, FunctionType ft) {
   final nullable = _typeStr(ft).endsWith('?');
   final paramTypes = ft.formalParameters
       .map((p) => _typeStr(p.type))
       .toList();
-  final paramNames = [for (var i = 0; i < paramTypes.length; i++) 'a$i'];
-  final returnType = _typeStr(ft.returnType);
+  final async = _isFuture(ft.returnType);
 
-  // Build Dart arrow function params
-  final dartParams =
-      paramNames.indexed.map((e) => '${paramTypes[e.$1]} ${e.$2}').join(', ');
-  // Build call args — pass Dart values directly (the closure receives
-  // Dart-converted values from dart2js, and the Dart callback expects
-  // Dart types, not JS interop types).
-  final callArgs = paramNames.join(', ');
+  final positionalSpecs = paramTypes.map((t) {
+    final index = paramTypes.indexOf(t);
+    final pt = ft.formalParameters[index].type;
+    return _valueSpecFor(pt);
+  }).join(', ');
 
-  final nullableGuard = nullable ? '($expr == null ? null : ' : '';
-  final closeParen = nullable ? ')' : '';
+  final resultSpec = _valueSpecFor(ft.returnType);
 
-  // Force non-null when nullable — outer guard ensures the expression
-  // is non-null before reaching the inner arrow function body.
-  final innerExpr = nullable ? '($expr!)' : expr;
+  final descriptorArgs = '''
+      debugName: '$expr',
+      signature: const (
+        positional: [$positionalSpecs],
+        result: $resultSpec,
+        asynchronous: $async,
+      ),''';
 
-  if (returnType == 'void') {
-    return '$nullableGuard(($dartParams) { $innerExpr($callArgs); }).toJS as JSAny$closeParen';
-  }
-  // Non-void return: just let the JS runtime handle the return
-  return '$nullableGuard(($dartParams) => $innerExpr($callArgs)).toJS as JSAny$closeParen';
+  final callExpr = nullable ? '$expr!' : expr;
+  final resultIsVoid = ft.returnType is VoidType;
+
+  final invokeBody = paramTypes.isEmpty
+      ? '$callExpr();\n      return null;'
+      : '${paramTypes.indexed.map((e) {
+          final arg = 'arguments[${e.$1}]';
+          final cast = switch (paramTypes[e.$1]) {
+            'int' => ' as int',
+            'double' => ' as double',
+            'num' => ' as num',
+            'String' => ' as String',
+            'bool' => ' as bool',
+            _ => '',
+          };
+          final call = '$callExpr($arg$cast)';
+          return resultIsVoid ? '$call;' : 'return $call;';
+        }).join('\n')}${resultIsVoid ? '\n      return null;' : ''}';
+
+  final descriptor = '''ReactCallback(
+    $descriptorArgs
+    invoke: (arguments) {
+      $invokeBody
+    },
+  )''';
+
+  final callbackExpr = 'callbackToJS($descriptor)';
+
+  return nullable ? '($expr == null ? null : $callbackExpr)' : callbackExpr;
 }
 
 // ═══════════════════════════════════════════════
 // JS→Dart conversion statements
 // ═══════════════════════════════════════════════
 
-String _fromJSStatement(String fieldName, DartType t, String fieldKey, String _jsVar, String componentName) {
+String _fromJSStatement(
+    String fieldName, DartType t, String fieldKey, String _jsVar, String componentName) {
   final nullable = _typeStr(t).endsWith('?');
   final kind = _kind(t);
 
@@ -116,7 +171,6 @@ String _fromJSForFn(String fieldName, FunctionType ft, String fieldKey, String j
       .join(', ');
 
   final isVoid = returnType == 'void';
-  final dartReturn = isVoid ? '' : ' return null;';
 
   // Put the null guard outside the closure so the closure type is
   // non-nullable and dart2js can generate a proper JS wrapper.
@@ -156,7 +210,7 @@ final $fieldName = () {
   // Call with args
   final call = '_fn.callAsFunction(null, $jsArgs)';
   final body = isVoid ? '  $call;' : '  return $call as $returnType;';
-  final closureBody = '$body';
+  final closureBody = body;
   if (isVoid) {
     return nullable
         ? '''
@@ -236,13 +290,10 @@ class ComponentBuilder implements Builder {
         final isNullable = _typeStr(f.type).endsWith('?');
         final isFn = _kind(f.type) == _TypeKind.function;
         if (isFn) {
-          // _toJSForFn handles null guard internally
           final expr = _toJSFor('props.${f.name}', f.type);
           return 'o.setProperty(\'${f.name}\'.toJS, $expr);';
         }
         if (isNullable) {
-          // dart2js optimizes away `!` on record fields; use explicit guard.
-          // `!.toJS` avoids calling toJS on nullable type.
           return 'if (props.${f.name} != null) o.setProperty(\'${f.name}\'.toJS, props.${f.name}!.toJS);';
         }
         return 'o.setProperty(\'${f.name}\'.toJS, props.${f.name}.toJS);';

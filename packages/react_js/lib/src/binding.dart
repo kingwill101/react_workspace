@@ -1,6 +1,6 @@
 import 'dart:js_interop';
 import 'package:react/react.dart';
-import 'convert.dart';
+import 'conversion_core.dart';
 
 class JsBinding extends ReactBinding {
   @override
