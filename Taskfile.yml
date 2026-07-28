@@ -31,6 +31,8 @@ tasks:
   client:
     desc: Compile client JavaScript
     cmds:
+      - rm -f example/web/callback_trampoline.mjs
+      - cp packages/react_js/js/callback_trampoline.mjs example/web/callback_trampoline.mjs
       - dart compile js -O0 -o example/web/client.js example/web/client.dart
 
   build:

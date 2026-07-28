@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 globalThis.React = React;
 
+import './packages/react_js/js/callback_trampoline.mjs';
 import './build/ssr.js';
 import http from 'http';
 
