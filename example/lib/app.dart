@@ -7,5 +7,7 @@ import 'counter.react.dart';
 ReactNode App(({String title}) props) => div(children: [
   Badge(label: props.title),
   Avatar(src: 'user.png', size: 48),
-  Counter(title: props.title, initialCount: 0, subtitle: 'from App', onChange: (_) {}),
+  Counter(title: props.title, initialCount: 0, subtitle: 'from App', onChange: (_) {
+    print("Something happened");
+  }),
 ]);

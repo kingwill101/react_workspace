@@ -13,15 +13,16 @@ o.setProperty('title'.toJS, props.title.toJS);
   return o;
 }
 ({int initialCount, void Function(int)? onChange, String? subtitle, String title}) _Counter_fromJS(JSObject js){
-  final initialCount = requiredJSInt(js, "initialCount", component: "initialCount");
-final onChange = (int a0) {
-final _raw = js.getProperty('onChange'.toJS);
-  if (_raw == null || _raw.isUndefined) return null;
-  final _fn = _raw as JSFunction;
+  final initialCount = requiredJSInt(js, "initialCount", component: "Counter");
+final _rawonChange = js.getProperty('onChange'.toJS);
+final onChange = _rawonChange == null || _rawonChange.isUndefined
+    ? null
+    : (int a0) {
+        final _fn = _rawonChange as JSFunction;
   _fn.callAsFunction(null, a0.toJS);
-};
+      };
 final subtitle = nullableJSString(js, "subtitle");
-final title = requiredJSString(js, "title", component: "title");
+final title = requiredJSString(js, "title", component: "Counter");
   return (initialCount: initialCount, onChange: onChange, subtitle: subtitle, title: title);
 }
 final JSFunction $Counter = (() {

@@ -71,17 +71,17 @@ String _toJSForFn(String expr, FunctionType ft) {
 // JS→Dart conversion statements
 // ═══════════════════════════════════════════════
 
-String _fromJSStatement(String fieldName, DartType t, String fieldKey, String _jsVar) {
+String _fromJSStatement(String fieldName, DartType t, String fieldKey, String _jsVar, String componentName) {
   final nullable = _typeStr(t).endsWith('?');
   final kind = _kind(t);
 
   if (kind == _TypeKind.function) {
-    return _fromJSForFn(fieldName, t as FunctionType, fieldKey, _jsVar);
+    return _fromJSForFn(fieldName, t as FunctionType, fieldKey, _jsVar, componentName);
   }
 
   final acc = nullable ? _nullableAcc(t) : _requiredAcc(t);
   // The accessor takes (JSObject, key) — pass the JS variable and key string.
-  return 'final $fieldName = $acc($_jsVar, "$fieldKey"${nullable ? '' : ', component: "$fieldName"'});';
+  return 'final $fieldName = $acc($_jsVar, "$fieldKey"${nullable ? '' : ', component: "$componentName"'});';
 }
 
 String _requiredAcc(DartType t) => switch (_kind(t)) {
@@ -100,7 +100,7 @@ String _nullableAcc(DartType t) => switch (_kind(t)) {
       _ => 'jsAnyOrNull',
     };
 
-String _fromJSForFn(String fieldName, FunctionType ft, String fieldKey, String jsExpr) {
+String _fromJSForFn(String fieldName, FunctionType ft, String fieldKey, String jsExpr, String componentName) {
   final nullable = _typeStr(ft).endsWith('?');
   final paramTypes =
       ft.formalParameters.map((p) => _typeStr(p.type)).toList();
@@ -116,39 +116,76 @@ String _fromJSForFn(String fieldName, FunctionType ft, String fieldKey, String j
       .join(', ');
 
   final isVoid = returnType == 'void';
+  final dartReturn = isVoid ? '' : ' return null;';
 
-  final nullGuard = nullable
-      ? 'final _raw = $jsExpr;\n'
-      : '';
-  final nullCheck = nullable
-      ? '  if (_raw == null || _raw.isUndefined) return null;\n  final _fn = _raw as JSFunction;\n'
-      : '  final _fn = $jsExpr as JSFunction;\n';
-  final fnVar = nullable ? '_fn' : '_fn';
-
+  // Put the null guard outside the closure so the closure type is
+  // non-nullable and dart2js can generate a proper JS wrapper.
   if (paramTypes.isEmpty) {
     if (isVoid) {
-      return '''
+      return nullable
+          ? '''
+final _raw$fieldName = $jsExpr;
+final $fieldName = _raw$fieldName == null || _raw$fieldName.isUndefined
+    ? null
+    : () {
+        final _fn = _raw$fieldName as JSFunction;
+        _fn.callAsFunction(null);
+      };'''
+          : '''
 final $fieldName = () {
-$nullGuard$nullCheck  $fnVar.callAsFunction(null);
+  final _fn = $jsExpr as JSFunction;
+  _fn.callAsFunction(null);
 };''';
     }
-    return '''
+    return nullable
+        ? '''
+final _raw$fieldName = $jsExpr;
+final $fieldName = _raw$fieldName == null || _raw$fieldName.isUndefined
+    ? null
+    : () {
+        final _fn = _raw$fieldName as JSFunction;
+        return _fn.callAsFunction(null) as $returnType;
+      };'''
+        : '''
 final $fieldName = () {
-$nullGuard$nullCheck  return $fnVar.callAsFunction(null) as $returnType;
+  final _fn = $jsExpr as JSFunction;
+  return _fn.callAsFunction(null) as $returnType;
 };''';
   }
 
   // Call with args
-  final call = '$fnVar.callAsFunction(null, $jsArgs)';
+  final call = '_fn.callAsFunction(null, $jsArgs)';
+  final body = isVoid ? '  $call;' : '  return $call as $returnType;';
+  final closureBody = '$body';
   if (isVoid) {
-    return '''
+    return nullable
+        ? '''
+final _raw$fieldName = $jsExpr;
+final $fieldName = _raw$fieldName == null || _raw$fieldName.isUndefined
+    ? null
+    : ($dartParams) {
+        final _fn = _raw$fieldName as JSFunction;
+$closureBody
+      };'''
+        : '''
 final $fieldName = ($dartParams) {
-$nullGuard$nullCheck  $call;
+  final _fn = $jsExpr as JSFunction;
+$closureBody
 };''';
   }
-  return '''
+  return nullable
+      ? '''
+final _raw$fieldName = $jsExpr;
+final $fieldName = _raw$fieldName == null || _raw$fieldName.isUndefined
+    ? null
+    : ($dartParams) {
+        final _fn = _raw$fieldName as JSFunction;
+$closureBody
+      };'''
+      : '''
 final $fieldName = ($dartParams) {
-$nullGuard$nullCheck  return $call as $returnType;
+  final _fn = $jsExpr as JSFunction;
+$closureBody
 };''';
 }
 
@@ -215,7 +252,7 @@ class ComponentBuilder implements Builder {
         final jsExpr = _kind(f.type) == _TypeKind.function
             ? "js.getProperty('${f.name}'.toJS)"
             : 'js';
-        return _fromJSStatement(f.name, f.type, f.name, jsExpr);
+        return _fromJSStatement(f.name, f.type, f.name, jsExpr, name!);
       })
           .join('\n');
 

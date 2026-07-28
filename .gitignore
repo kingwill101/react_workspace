@@ -22,3 +22,4 @@ Thumbs.db
 lib/react_components.g.dart
 example/web/*.js
 example/web/*.js.map
+*.deps

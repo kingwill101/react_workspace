@@ -11,8 +11,8 @@ o.setProperty('src'.toJS, props.src.toJS);
   return o;
 }
 ({int size, String src}) _Avatar_fromJS(JSObject js){
-  final size = requiredJSInt(js, "size", component: "size");
-final src = requiredJSString(js, "src", component: "src");
+  final size = requiredJSInt(js, "size", component: "Avatar");
+final src = requiredJSString(js, "src", component: "Avatar");
   return (size: size, src: src);
 }
 final JSFunction $Avatar = (() {

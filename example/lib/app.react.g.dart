@@ -10,7 +10,7 @@ JSObject _App_toJS(({String title}) props){
   return o;
 }
 ({String title}) _App_fromJS(JSObject js){
-  final title = requiredJSString(js, "title", component: "title");
+  final title = requiredJSString(js, "title", component: "App");
   return (title: title);
 }
 final JSFunction $App = (() {
