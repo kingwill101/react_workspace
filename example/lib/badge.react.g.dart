@@ -11,7 +11,7 @@ JSObject _Badge_toJS(({String label}) props) {
 }
 
 ({String label}) _Badge_fromJS(JSObject js) {
-final label = requiredJSString(js, "label", component: "Badge");
+final label = requiredJSString(js, "label", component: "label");
   return (label: label);
 }
 

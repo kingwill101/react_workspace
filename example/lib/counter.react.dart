@@ -1,6 +1,6 @@
 import 'package:react/react.dart';
 
-const idCounter = ComponentId('package:react_workspace/example/lib/counter.dart#Counter');
+const idCounter = ComponentId('package:example/lib/counter.dart#Counter');
 
 ReactNode Counter({
   required int initialCount,

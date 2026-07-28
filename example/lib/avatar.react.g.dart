@@ -12,8 +12,8 @@ JSObject _Avatar_toJS(({int size, String src}) props) {
 }
 
 ({int size, String src}) _Avatar_fromJS(JSObject js) {
-final size = requiredJSInt(js, "size", component: "Avatar");
-final src = requiredJSString(js, "src", component: "Avatar");
+final size = requiredJSInt(js, "size", component: "size");
+final src = requiredJSString(js, "src", component: "src");
   return (size: size, src: src);
 }
 
