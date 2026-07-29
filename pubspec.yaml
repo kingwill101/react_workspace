@@ -3,6 +3,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 workspace:
   - packages/react
+  - packages/react_actions
   - packages/react_js
   - packages/react_dom
   - packages/react_codegen

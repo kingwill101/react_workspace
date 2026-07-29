@@ -1,0 +1,5 @@
+name: react_actions
+resolution: workspace
+description: Browser-safe protocol types for server function invocation.
+environment:
+  sdk: ">=3.12.0 <4.0.0"

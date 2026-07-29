@@ -5,5 +5,8 @@ environment:
 dependencies:
   react:
     path: ../react
+  react_actions:
+    path: ../react_actions
   react_js:
     path: ../react_js
+  shelf: ^1.4.0

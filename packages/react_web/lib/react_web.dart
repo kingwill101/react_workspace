@@ -1,8 +1,4 @@
-/// Web host factories for React.
-///
-/// Provides the generated Web IDL bindings for HTML elements, event types,
-/// and refs.  Re-exports the core renderer-neutral API so web applications
-/// normally need only this single import.
+/// Web host factories and utilities for React.
 library;
 
 export 'package:react/react.dart';
@@ -36,4 +32,5 @@ export 'src/generated/html_interfaces.dart'
         HTMLOptionElement,
         HTMLAnchorElement,
         HTMLImageElement;
+export 'src/http_server_function_client.dart';
 export 'src/ssr_metadata.dart';
