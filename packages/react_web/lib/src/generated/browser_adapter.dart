@@ -5,6 +5,12 @@ import 'dart:js_interop';
 import 'package:react_js/react_js.dart';
 import 'package:web/web.dart' as web;
 
+final class BrowserHTMLMarqueeElement {
+  final web.HTMLMarqueeElement _element;
+  BrowserHTMLMarqueeElement(this._element);
+  web.HTMLMarqueeElement get inner => _element;
+}
+
 final class BrowserHTMLCollection {
   final web.HTMLCollection _element;
   BrowserHTMLCollection(this._element);
@@ -35,22 +41,130 @@ final class BrowserHTMLFormControlsCollection {
   web.HTMLFormControlsCollection get inner => _element;
 }
 
-final class BrowserHTMLImageElement {
-  final web.HTMLImageElement _element;
-  BrowserHTMLImageElement(this._element);
-  web.HTMLImageElement get inner => _element;
+final class BrowserHTMLFontElement {
+  final web.HTMLFontElement _element;
+  BrowserHTMLFontElement(this._element);
+  web.HTMLFontElement get inner => _element;
 }
 
-final class BrowserHTMLAnchorElement {
-  final web.HTMLAnchorElement _element;
-  BrowserHTMLAnchorElement(this._element);
-  web.HTMLAnchorElement get inner => _element;
+final class BrowserHTMLParamElement {
+  final web.HTMLParamElement _element;
+  BrowserHTMLParamElement(this._element);
+  web.HTMLParamElement get inner => _element;
+}
+
+final class BrowserHTMLFrameSetElement {
+  final web.HTMLFrameSetElement _element;
+  BrowserHTMLFrameSetElement(this._element);
+  web.HTMLFrameSetElement get inner => _element;
+}
+
+final class BrowserHTMLFrameElement {
+  final web.HTMLFrameElement _element;
+  BrowserHTMLFrameElement(this._element);
+  web.HTMLFrameElement get inner => _element;
+}
+
+final class BrowserHTMLDirectoryElement {
+  final web.HTMLDirectoryElement _element;
+  BrowserHTMLDirectoryElement(this._element);
+  web.HTMLDirectoryElement get inner => _element;
+}
+
+final class BrowserHTMLUnknownElement {
+  final web.HTMLUnknownElement _element;
+  BrowserHTMLUnknownElement(this._element);
+  web.HTMLUnknownElement get inner => _element;
+}
+
+final class BrowserHTMLCanvasElement {
+  final web.HTMLCanvasElement _element;
+  BrowserHTMLCanvasElement(this._element);
+  web.HTMLCanvasElement get inner => _element;
+}
+
+final class BrowserHTMLSlotElement {
+  final web.HTMLSlotElement _element;
+  BrowserHTMLSlotElement(this._element);
+  web.HTMLSlotElement get inner => _element;
+}
+
+final class BrowserHTMLTemplateElement {
+  final web.HTMLTemplateElement _element;
+  BrowserHTMLTemplateElement(this._element);
+  web.HTMLTemplateElement get inner => _element;
+}
+
+final class BrowserHTMLScriptElement {
+  final web.HTMLScriptElement _element;
+  BrowserHTMLScriptElement(this._element);
+  web.HTMLScriptElement get inner => _element;
+}
+
+final class BrowserHTMLDialogElement {
+  final web.HTMLDialogElement _element;
+  BrowserHTMLDialogElement(this._element);
+  web.HTMLDialogElement get inner => _element;
+}
+
+final class BrowserHTMLDetailsElement {
+  final web.HTMLDetailsElement _element;
+  BrowserHTMLDetailsElement(this._element);
+  web.HTMLDetailsElement get inner => _element;
+}
+
+final class BrowserHTMLLegendElement {
+  final web.HTMLLegendElement _element;
+  BrowserHTMLLegendElement(this._element);
+  web.HTMLLegendElement get inner => _element;
+}
+
+final class BrowserHTMLFieldSetElement {
+  final web.HTMLFieldSetElement _element;
+  BrowserHTMLFieldSetElement(this._element);
+  web.HTMLFieldSetElement get inner => _element;
+}
+
+final class BrowserHTMLMeterElement {
+  final web.HTMLMeterElement _element;
+  BrowserHTMLMeterElement(this._element);
+  web.HTMLMeterElement get inner => _element;
+}
+
+final class BrowserHTMLProgressElement {
+  final web.HTMLProgressElement _element;
+  BrowserHTMLProgressElement(this._element);
+  web.HTMLProgressElement get inner => _element;
+}
+
+final class BrowserHTMLOutputElement {
+  final web.HTMLOutputElement _element;
+  BrowserHTMLOutputElement(this._element);
+  web.HTMLOutputElement get inner => _element;
+}
+
+final class BrowserHTMLTextAreaElement {
+  final web.HTMLTextAreaElement _element;
+  BrowserHTMLTextAreaElement(this._element);
+  web.HTMLTextAreaElement get inner => _element;
 }
 
 final class BrowserHTMLOptionElement {
   final web.HTMLOptionElement _element;
   BrowserHTMLOptionElement(this._element);
   web.HTMLOptionElement get inner => _element;
+}
+
+final class BrowserHTMLOptGroupElement {
+  final web.HTMLOptGroupElement _element;
+  BrowserHTMLOptGroupElement(this._element);
+  web.HTMLOptGroupElement get inner => _element;
+}
+
+final class BrowserHTMLDataListElement {
+  final web.HTMLDataListElement _element;
+  BrowserHTMLDataListElement(this._element);
+  web.HTMLDataListElement get inner => _element;
 }
 
 final class BrowserHTMLSelectElement {
@@ -65,16 +179,10 @@ final class BrowserHTMLOptionsCollection {
   web.HTMLOptionsCollection get inner => _element;
 }
 
-final class BrowserHTMLTextAreaElement {
-  final web.HTMLTextAreaElement _element;
-  BrowserHTMLTextAreaElement(this._element);
-  web.HTMLTextAreaElement get inner => _element;
-}
-
-final class BrowserHTMLLabelElement {
-  final web.HTMLLabelElement _element;
-  BrowserHTMLLabelElement(this._element);
-  web.HTMLLabelElement get inner => _element;
+final class BrowserHTMLButtonElement {
+  final web.HTMLButtonElement _element;
+  BrowserHTMLButtonElement(this._element);
+  web.HTMLButtonElement get inner => _element;
 }
 
 final class BrowserHTMLInputElement {
@@ -83,16 +191,130 @@ final class BrowserHTMLInputElement {
   web.HTMLInputElement get inner => _element;
 }
 
-final class BrowserHTMLDataListElement {
-  final web.HTMLDataListElement _element;
-  BrowserHTMLDataListElement(this._element);
-  web.HTMLDataListElement get inner => _element;
+final class BrowserHTMLLabelElement {
+  final web.HTMLLabelElement _element;
+  BrowserHTMLLabelElement(this._element);
+  web.HTMLLabelElement get inner => _element;
 }
 
-final class BrowserHTMLButtonElement {
-  final web.HTMLButtonElement _element;
-  BrowserHTMLButtonElement(this._element);
-  web.HTMLButtonElement get inner => _element;
+final class BrowserHTMLTableCellElement {
+  final web.HTMLTableCellElement _element;
+  BrowserHTMLTableCellElement(this._element);
+  web.HTMLTableCellElement get inner => _element;
+}
+
+final class BrowserHTMLTableRowElement {
+  final web.HTMLTableRowElement _element;
+  BrowserHTMLTableRowElement(this._element);
+  web.HTMLTableRowElement get inner => _element;
+}
+
+final class BrowserHTMLTableSectionElement {
+  final web.HTMLTableSectionElement _element;
+  BrowserHTMLTableSectionElement(this._element);
+  web.HTMLTableSectionElement get inner => _element;
+}
+
+final class BrowserHTMLTableColElement {
+  final web.HTMLTableColElement _element;
+  BrowserHTMLTableColElement(this._element);
+  web.HTMLTableColElement get inner => _element;
+}
+
+final class BrowserHTMLTableCaptionElement {
+  final web.HTMLTableCaptionElement _element;
+  BrowserHTMLTableCaptionElement(this._element);
+  web.HTMLTableCaptionElement get inner => _element;
+}
+
+final class BrowserHTMLTableElement {
+  final web.HTMLTableElement _element;
+  BrowserHTMLTableElement(this._element);
+  web.HTMLTableElement get inner => _element;
+}
+
+final class BrowserHTMLAreaElement {
+  final web.HTMLAreaElement _element;
+  BrowserHTMLAreaElement(this._element);
+  web.HTMLAreaElement get inner => _element;
+}
+
+final class BrowserHTMLMapElement {
+  final web.HTMLMapElement _element;
+  BrowserHTMLMapElement(this._element);
+  web.HTMLMapElement get inner => _element;
+}
+
+final class BrowserHTMLTrackElement {
+  final web.HTMLTrackElement _element;
+  BrowserHTMLTrackElement(this._element);
+  web.HTMLTrackElement get inner => _element;
+}
+
+final class BrowserHTMLAudioElement {
+  final web.HTMLAudioElement _element;
+  BrowserHTMLAudioElement(this._element);
+  web.HTMLAudioElement get inner => _element;
+}
+
+final class BrowserHTMLMediaElement {
+  final web.HTMLMediaElement _element;
+  BrowserHTMLMediaElement(this._element);
+  web.HTMLMediaElement get inner => _element;
+}
+
+final class BrowserHTMLVideoElement {
+  final web.HTMLVideoElement _element;
+  BrowserHTMLVideoElement(this._element);
+  web.HTMLVideoElement get inner => _element;
+}
+
+final class BrowserHTMLObjectElement {
+  final web.HTMLObjectElement _element;
+  BrowserHTMLObjectElement(this._element);
+  web.HTMLObjectElement get inner => _element;
+}
+
+final class BrowserHTMLEmbedElement {
+  final web.HTMLEmbedElement _element;
+  BrowserHTMLEmbedElement(this._element);
+  web.HTMLEmbedElement get inner => _element;
+}
+
+final class BrowserHTMLIFrameElement {
+  final web.HTMLIFrameElement _element;
+  BrowserHTMLIFrameElement(this._element);
+  web.HTMLIFrameElement get inner => _element;
+}
+
+final class BrowserHTMLImageElement {
+  final web.HTMLImageElement _element;
+  BrowserHTMLImageElement(this._element);
+  web.HTMLImageElement get inner => _element;
+}
+
+final class BrowserHTMLSourceElement {
+  final web.HTMLSourceElement _element;
+  BrowserHTMLSourceElement(this._element);
+  web.HTMLSourceElement get inner => _element;
+}
+
+final class BrowserHTMLPictureElement {
+  final web.HTMLPictureElement _element;
+  BrowserHTMLPictureElement(this._element);
+  web.HTMLPictureElement get inner => _element;
+}
+
+final class BrowserHTMLModElement {
+  final web.HTMLModElement _element;
+  BrowserHTMLModElement(this._element);
+  web.HTMLModElement get inner => _element;
+}
+
+final class BrowserHTMLBRElement {
+  final web.HTMLBRElement _element;
+  BrowserHTMLBRElement(this._element);
+  web.HTMLBRElement get inner => _element;
 }
 
 final class BrowserHTMLSpanElement {
@@ -101,10 +323,130 @@ final class BrowserHTMLSpanElement {
   web.HTMLSpanElement get inner => _element;
 }
 
+final class BrowserHTMLTimeElement {
+  final web.HTMLTimeElement _element;
+  BrowserHTMLTimeElement(this._element);
+  web.HTMLTimeElement get inner => _element;
+}
+
+final class BrowserHTMLDataElement {
+  final web.HTMLDataElement _element;
+  BrowserHTMLDataElement(this._element);
+  web.HTMLDataElement get inner => _element;
+}
+
+final class BrowserHTMLAnchorElement {
+  final web.HTMLAnchorElement _element;
+  BrowserHTMLAnchorElement(this._element);
+  web.HTMLAnchorElement get inner => _element;
+}
+
 final class BrowserHTMLDivElement {
   final web.HTMLDivElement _element;
   BrowserHTMLDivElement(this._element);
   web.HTMLDivElement get inner => _element;
+}
+
+final class BrowserHTMLDListElement {
+  final web.HTMLDListElement _element;
+  BrowserHTMLDListElement(this._element);
+  web.HTMLDListElement get inner => _element;
+}
+
+final class BrowserHTMLLIElement {
+  final web.HTMLLIElement _element;
+  BrowserHTMLLIElement(this._element);
+  web.HTMLLIElement get inner => _element;
+}
+
+final class BrowserHTMLMenuElement {
+  final web.HTMLMenuElement _element;
+  BrowserHTMLMenuElement(this._element);
+  web.HTMLMenuElement get inner => _element;
+}
+
+final class BrowserHTMLUListElement {
+  final web.HTMLUListElement _element;
+  BrowserHTMLUListElement(this._element);
+  web.HTMLUListElement get inner => _element;
+}
+
+final class BrowserHTMLOListElement {
+  final web.HTMLOListElement _element;
+  BrowserHTMLOListElement(this._element);
+  web.HTMLOListElement get inner => _element;
+}
+
+final class BrowserHTMLQuoteElement {
+  final web.HTMLQuoteElement _element;
+  BrowserHTMLQuoteElement(this._element);
+  web.HTMLQuoteElement get inner => _element;
+}
+
+final class BrowserHTMLPreElement {
+  final web.HTMLPreElement _element;
+  BrowserHTMLPreElement(this._element);
+  web.HTMLPreElement get inner => _element;
+}
+
+final class BrowserHTMLHRElement {
+  final web.HTMLHRElement _element;
+  BrowserHTMLHRElement(this._element);
+  web.HTMLHRElement get inner => _element;
+}
+
+final class BrowserHTMLParagraphElement {
+  final web.HTMLParagraphElement _element;
+  BrowserHTMLParagraphElement(this._element);
+  web.HTMLParagraphElement get inner => _element;
+}
+
+final class BrowserHTMLHeadingElement {
+  final web.HTMLHeadingElement _element;
+  BrowserHTMLHeadingElement(this._element);
+  web.HTMLHeadingElement get inner => _element;
+}
+
+final class BrowserHTMLBodyElement {
+  final web.HTMLBodyElement _element;
+  BrowserHTMLBodyElement(this._element);
+  web.HTMLBodyElement get inner => _element;
+}
+
+final class BrowserHTMLStyleElement {
+  final web.HTMLStyleElement _element;
+  BrowserHTMLStyleElement(this._element);
+  web.HTMLStyleElement get inner => _element;
+}
+
+final class BrowserHTMLMetaElement {
+  final web.HTMLMetaElement _element;
+  BrowserHTMLMetaElement(this._element);
+  web.HTMLMetaElement get inner => _element;
+}
+
+final class BrowserHTMLLinkElement {
+  final web.HTMLLinkElement _element;
+  BrowserHTMLLinkElement(this._element);
+  web.HTMLLinkElement get inner => _element;
+}
+
+final class BrowserHTMLBaseElement {
+  final web.HTMLBaseElement _element;
+  BrowserHTMLBaseElement(this._element);
+  web.HTMLBaseElement get inner => _element;
+}
+
+final class BrowserHTMLTitleElement {
+  final web.HTMLTitleElement _element;
+  BrowserHTMLTitleElement(this._element);
+  web.HTMLTitleElement get inner => _element;
+}
+
+final class BrowserHTMLHtmlElement {
+  final web.HTMLHtmlElement _element;
+  BrowserHTMLHtmlElement(this._element);
+  web.HTMLHtmlElement get inner => _element;
 }
 
 final class BrowserReactCompositionEvent<T extends web.EventTarget> {
@@ -181,137 +523,558 @@ final class BrowserReactMouseEvent<T extends web.EventTarget> {
 
 void registerBrowserAdapters() {
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLCollection',
+    'web',
+    'web.HTMLMarqueeElement',
+    decoder: (value) =>
+        BrowserHTMLMarqueeElement(value as web.HTMLMarqueeElement),
+    encoder: (value) => (value as BrowserHTMLMarqueeElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLCollection',
     decoder: (value) => BrowserHTMLCollection(value as web.HTMLCollection),
     encoder: (value) => (value as BrowserHTMLCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLAllCollection',
-    decoder: (value) => BrowserHTMLAllCollection(value as web.HTMLAllCollection),
+    'web',
+    'web.HTMLAllCollection',
+    decoder: (value) =>
+        BrowserHTMLAllCollection(value as web.HTMLAllCollection),
     encoder: (value) => (value as BrowserHTMLAllCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLHeadElement',
+    'web',
+    'web.HTMLHeadElement',
     decoder: (value) => BrowserHTMLHeadElement(value as web.HTMLHeadElement),
     encoder: (value) => (value as BrowserHTMLHeadElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLFormElement',
+    'web',
+    'web.HTMLFormElement',
     decoder: (value) => BrowserHTMLFormElement(value as web.HTMLFormElement),
     encoder: (value) => (value as BrowserHTMLFormElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLFormControlsCollection',
-    decoder: (value) => BrowserHTMLFormControlsCollection(value as web.HTMLFormControlsCollection),
-    encoder: (value) => (value as BrowserHTMLFormControlsCollection)._element as JSAny?,
+    'web',
+    'web.HTMLFormControlsCollection',
+    decoder: (value) => BrowserHTMLFormControlsCollection(
+      value as web.HTMLFormControlsCollection,
+    ),
+    encoder: (value) =>
+        (value as BrowserHTMLFormControlsCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLImageElement',
-    decoder: (value) => BrowserHTMLImageElement(value as web.HTMLImageElement),
-    encoder: (value) => (value as BrowserHTMLImageElement)._element as JSAny?,
+    'web',
+    'web.HTMLFontElement',
+    decoder: (value) => BrowserHTMLFontElement(value as web.HTMLFontElement),
+    encoder: (value) => (value as BrowserHTMLFontElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLAnchorElement',
-    decoder: (value) => BrowserHTMLAnchorElement(value as web.HTMLAnchorElement),
-    encoder: (value) => (value as BrowserHTMLAnchorElement)._element as JSAny?,
+    'web',
+    'web.HTMLParamElement',
+    decoder: (value) => BrowserHTMLParamElement(value as web.HTMLParamElement),
+    encoder: (value) => (value as BrowserHTMLParamElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLOptionElement',
-    decoder: (value) => BrowserHTMLOptionElement(value as web.HTMLOptionElement),
+    'web',
+    'web.HTMLFrameSetElement',
+    decoder: (value) =>
+        BrowserHTMLFrameSetElement(value as web.HTMLFrameSetElement),
+    encoder: (value) =>
+        (value as BrowserHTMLFrameSetElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLFrameElement',
+    decoder: (value) => BrowserHTMLFrameElement(value as web.HTMLFrameElement),
+    encoder: (value) => (value as BrowserHTMLFrameElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLDirectoryElement',
+    decoder: (value) =>
+        BrowserHTMLDirectoryElement(value as web.HTMLDirectoryElement),
+    encoder: (value) =>
+        (value as BrowserHTMLDirectoryElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLUnknownElement',
+    decoder: (value) =>
+        BrowserHTMLUnknownElement(value as web.HTMLUnknownElement),
+    encoder: (value) => (value as BrowserHTMLUnknownElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLCanvasElement',
+    decoder: (value) =>
+        BrowserHTMLCanvasElement(value as web.HTMLCanvasElement),
+    encoder: (value) => (value as BrowserHTMLCanvasElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLSlotElement',
+    decoder: (value) => BrowserHTMLSlotElement(value as web.HTMLSlotElement),
+    encoder: (value) => (value as BrowserHTMLSlotElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLTemplateElement',
+    decoder: (value) =>
+        BrowserHTMLTemplateElement(value as web.HTMLTemplateElement),
+    encoder: (value) =>
+        (value as BrowserHTMLTemplateElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLScriptElement',
+    decoder: (value) =>
+        BrowserHTMLScriptElement(value as web.HTMLScriptElement),
+    encoder: (value) => (value as BrowserHTMLScriptElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLDialogElement',
+    decoder: (value) =>
+        BrowserHTMLDialogElement(value as web.HTMLDialogElement),
+    encoder: (value) => (value as BrowserHTMLDialogElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLDetailsElement',
+    decoder: (value) =>
+        BrowserHTMLDetailsElement(value as web.HTMLDetailsElement),
+    encoder: (value) => (value as BrowserHTMLDetailsElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLLegendElement',
+    decoder: (value) =>
+        BrowserHTMLLegendElement(value as web.HTMLLegendElement),
+    encoder: (value) => (value as BrowserHTMLLegendElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLFieldSetElement',
+    decoder: (value) =>
+        BrowserHTMLFieldSetElement(value as web.HTMLFieldSetElement),
+    encoder: (value) =>
+        (value as BrowserHTMLFieldSetElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLMeterElement',
+    decoder: (value) => BrowserHTMLMeterElement(value as web.HTMLMeterElement),
+    encoder: (value) => (value as BrowserHTMLMeterElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLProgressElement',
+    decoder: (value) =>
+        BrowserHTMLProgressElement(value as web.HTMLProgressElement),
+    encoder: (value) =>
+        (value as BrowserHTMLProgressElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLOutputElement',
+    decoder: (value) =>
+        BrowserHTMLOutputElement(value as web.HTMLOutputElement),
+    encoder: (value) => (value as BrowserHTMLOutputElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLTextAreaElement',
+    decoder: (value) =>
+        BrowserHTMLTextAreaElement(value as web.HTMLTextAreaElement),
+    encoder: (value) =>
+        (value as BrowserHTMLTextAreaElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLOptionElement',
+    decoder: (value) =>
+        BrowserHTMLOptionElement(value as web.HTMLOptionElement),
     encoder: (value) => (value as BrowserHTMLOptionElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLSelectElement',
-    decoder: (value) => BrowserHTMLSelectElement(value as web.HTMLSelectElement),
+    'web',
+    'web.HTMLOptGroupElement',
+    decoder: (value) =>
+        BrowserHTMLOptGroupElement(value as web.HTMLOptGroupElement),
+    encoder: (value) =>
+        (value as BrowserHTMLOptGroupElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLDataListElement',
+    decoder: (value) =>
+        BrowserHTMLDataListElement(value as web.HTMLDataListElement),
+    encoder: (value) =>
+        (value as BrowserHTMLDataListElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLSelectElement',
+    decoder: (value) =>
+        BrowserHTMLSelectElement(value as web.HTMLSelectElement),
     encoder: (value) => (value as BrowserHTMLSelectElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLOptionsCollection',
-    decoder: (value) => BrowserHTMLOptionsCollection(value as web.HTMLOptionsCollection),
-    encoder: (value) => (value as BrowserHTMLOptionsCollection)._element as JSAny?,
+    'web',
+    'web.HTMLOptionsCollection',
+    decoder: (value) =>
+        BrowserHTMLOptionsCollection(value as web.HTMLOptionsCollection),
+    encoder: (value) =>
+        (value as BrowserHTMLOptionsCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLTextAreaElement',
-    decoder: (value) => BrowserHTMLTextAreaElement(value as web.HTMLTextAreaElement),
-    encoder: (value) => (value as BrowserHTMLTextAreaElement)._element as JSAny?,
+    'web',
+    'web.HTMLButtonElement',
+    decoder: (value) =>
+        BrowserHTMLButtonElement(value as web.HTMLButtonElement),
+    encoder: (value) => (value as BrowserHTMLButtonElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLLabelElement',
-    decoder: (value) => BrowserHTMLLabelElement(value as web.HTMLLabelElement),
-    encoder: (value) => (value as BrowserHTMLLabelElement)._element as JSAny?,
-  );
-  ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLInputElement',
+    'web',
+    'web.HTMLInputElement',
     decoder: (value) => BrowserHTMLInputElement(value as web.HTMLInputElement),
     encoder: (value) => (value as BrowserHTMLInputElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLDataListElement',
-    decoder: (value) => BrowserHTMLDataListElement(value as web.HTMLDataListElement),
-    encoder: (value) => (value as BrowserHTMLDataListElement)._element as JSAny?,
+    'web',
+    'web.HTMLLabelElement',
+    decoder: (value) => BrowserHTMLLabelElement(value as web.HTMLLabelElement),
+    encoder: (value) => (value as BrowserHTMLLabelElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLButtonElement',
-    decoder: (value) => BrowserHTMLButtonElement(value as web.HTMLButtonElement),
-    encoder: (value) => (value as BrowserHTMLButtonElement)._element as JSAny?,
+    'web',
+    'web.HTMLTableCellElement',
+    decoder: (value) =>
+        BrowserHTMLTableCellElement(value as web.HTMLTableCellElement),
+    encoder: (value) =>
+        (value as BrowserHTMLTableCellElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLSpanElement',
+    'web',
+    'web.HTMLTableRowElement',
+    decoder: (value) =>
+        BrowserHTMLTableRowElement(value as web.HTMLTableRowElement),
+    encoder: (value) =>
+        (value as BrowserHTMLTableRowElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLTableSectionElement',
+    decoder: (value) =>
+        BrowserHTMLTableSectionElement(value as web.HTMLTableSectionElement),
+    encoder: (value) =>
+        (value as BrowserHTMLTableSectionElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLTableColElement',
+    decoder: (value) =>
+        BrowserHTMLTableColElement(value as web.HTMLTableColElement),
+    encoder: (value) =>
+        (value as BrowserHTMLTableColElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLTableCaptionElement',
+    decoder: (value) =>
+        BrowserHTMLTableCaptionElement(value as web.HTMLTableCaptionElement),
+    encoder: (value) =>
+        (value as BrowserHTMLTableCaptionElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLTableElement',
+    decoder: (value) => BrowserHTMLTableElement(value as web.HTMLTableElement),
+    encoder: (value) => (value as BrowserHTMLTableElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLAreaElement',
+    decoder: (value) => BrowserHTMLAreaElement(value as web.HTMLAreaElement),
+    encoder: (value) => (value as BrowserHTMLAreaElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLMapElement',
+    decoder: (value) => BrowserHTMLMapElement(value as web.HTMLMapElement),
+    encoder: (value) => (value as BrowserHTMLMapElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLTrackElement',
+    decoder: (value) => BrowserHTMLTrackElement(value as web.HTMLTrackElement),
+    encoder: (value) => (value as BrowserHTMLTrackElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLAudioElement',
+    decoder: (value) => BrowserHTMLAudioElement(value as web.HTMLAudioElement),
+    encoder: (value) => (value as BrowserHTMLAudioElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLMediaElement',
+    decoder: (value) => BrowserHTMLMediaElement(value as web.HTMLMediaElement),
+    encoder: (value) => (value as BrowserHTMLMediaElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLVideoElement',
+    decoder: (value) => BrowserHTMLVideoElement(value as web.HTMLVideoElement),
+    encoder: (value) => (value as BrowserHTMLVideoElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLObjectElement',
+    decoder: (value) =>
+        BrowserHTMLObjectElement(value as web.HTMLObjectElement),
+    encoder: (value) => (value as BrowserHTMLObjectElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLEmbedElement',
+    decoder: (value) => BrowserHTMLEmbedElement(value as web.HTMLEmbedElement),
+    encoder: (value) => (value as BrowserHTMLEmbedElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLIFrameElement',
+    decoder: (value) =>
+        BrowserHTMLIFrameElement(value as web.HTMLIFrameElement),
+    encoder: (value) => (value as BrowserHTMLIFrameElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLImageElement',
+    decoder: (value) => BrowserHTMLImageElement(value as web.HTMLImageElement),
+    encoder: (value) => (value as BrowserHTMLImageElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLSourceElement',
+    decoder: (value) =>
+        BrowserHTMLSourceElement(value as web.HTMLSourceElement),
+    encoder: (value) => (value as BrowserHTMLSourceElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLPictureElement',
+    decoder: (value) =>
+        BrowserHTMLPictureElement(value as web.HTMLPictureElement),
+    encoder: (value) => (value as BrowserHTMLPictureElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLModElement',
+    decoder: (value) => BrowserHTMLModElement(value as web.HTMLModElement),
+    encoder: (value) => (value as BrowserHTMLModElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLBRElement',
+    decoder: (value) => BrowserHTMLBRElement(value as web.HTMLBRElement),
+    encoder: (value) => (value as BrowserHTMLBRElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLSpanElement',
     decoder: (value) => BrowserHTMLSpanElement(value as web.HTMLSpanElement),
     encoder: (value) => (value as BrowserHTMLSpanElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'web.HTMLDivElement',
+    'web',
+    'web.HTMLTimeElement',
+    decoder: (value) => BrowserHTMLTimeElement(value as web.HTMLTimeElement),
+    encoder: (value) => (value as BrowserHTMLTimeElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLDataElement',
+    decoder: (value) => BrowserHTMLDataElement(value as web.HTMLDataElement),
+    encoder: (value) => (value as BrowserHTMLDataElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLAnchorElement',
+    decoder: (value) =>
+        BrowserHTMLAnchorElement(value as web.HTMLAnchorElement),
+    encoder: (value) => (value as BrowserHTMLAnchorElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLDivElement',
     decoder: (value) => BrowserHTMLDivElement(value as web.HTMLDivElement),
     encoder: (value) => (value as BrowserHTMLDivElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactCompositionEvent<web.EventTarget>',
+    'web',
+    'web.HTMLDListElement',
+    decoder: (value) => BrowserHTMLDListElement(value as web.HTMLDListElement),
+    encoder: (value) => (value as BrowserHTMLDListElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLLIElement',
+    decoder: (value) => BrowserHTMLLIElement(value as web.HTMLLIElement),
+    encoder: (value) => (value as BrowserHTMLLIElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLMenuElement',
+    decoder: (value) => BrowserHTMLMenuElement(value as web.HTMLMenuElement),
+    encoder: (value) => (value as BrowserHTMLMenuElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLUListElement',
+    decoder: (value) => BrowserHTMLUListElement(value as web.HTMLUListElement),
+    encoder: (value) => (value as BrowserHTMLUListElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLOListElement',
+    decoder: (value) => BrowserHTMLOListElement(value as web.HTMLOListElement),
+    encoder: (value) => (value as BrowserHTMLOListElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLQuoteElement',
+    decoder: (value) => BrowserHTMLQuoteElement(value as web.HTMLQuoteElement),
+    encoder: (value) => (value as BrowserHTMLQuoteElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLPreElement',
+    decoder: (value) => BrowserHTMLPreElement(value as web.HTMLPreElement),
+    encoder: (value) => (value as BrowserHTMLPreElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLHRElement',
+    decoder: (value) => BrowserHTMLHRElement(value as web.HTMLHRElement),
+    encoder: (value) => (value as BrowserHTMLHRElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLParagraphElement',
+    decoder: (value) =>
+        BrowserHTMLParagraphElement(value as web.HTMLParagraphElement),
+    encoder: (value) =>
+        (value as BrowserHTMLParagraphElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLHeadingElement',
+    decoder: (value) =>
+        BrowserHTMLHeadingElement(value as web.HTMLHeadingElement),
+    encoder: (value) => (value as BrowserHTMLHeadingElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLBodyElement',
+    decoder: (value) => BrowserHTMLBodyElement(value as web.HTMLBodyElement),
+    encoder: (value) => (value as BrowserHTMLBodyElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLStyleElement',
+    decoder: (value) => BrowserHTMLStyleElement(value as web.HTMLStyleElement),
+    encoder: (value) => (value as BrowserHTMLStyleElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLMetaElement',
+    decoder: (value) => BrowserHTMLMetaElement(value as web.HTMLMetaElement),
+    encoder: (value) => (value as BrowserHTMLMetaElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLLinkElement',
+    decoder: (value) => BrowserHTMLLinkElement(value as web.HTMLLinkElement),
+    encoder: (value) => (value as BrowserHTMLLinkElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLBaseElement',
+    decoder: (value) => BrowserHTMLBaseElement(value as web.HTMLBaseElement),
+    encoder: (value) => (value as BrowserHTMLBaseElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLTitleElement',
+    decoder: (value) => BrowserHTMLTitleElement(value as web.HTMLTitleElement),
+    encoder: (value) => (value as BrowserHTMLTitleElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'web.HTMLHtmlElement',
+    decoder: (value) => BrowserHTMLHtmlElement(value as web.HTMLHtmlElement),
+    encoder: (value) => (value as BrowserHTMLHtmlElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web',
+    'react.ReactCompositionEvent<web.EventTarget>',
     decoder: (value) => BrowserReactCompositionEvent(value as web.Event),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactSyntheticEvent<web.EventTarget>',
+    'web',
+    'react.ReactSyntheticEvent<web.EventTarget>',
     decoder: (value) => BrowserReactSyntheticEvent(value as web.Event),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactTouchEvent<web.EventTarget>',
+    'web',
+    'react.ReactTouchEvent<web.EventTarget>',
     decoder: (value) => BrowserReactTouchEvent(value as web.Event),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactPointerEvent<web.EventTarget>',
+    'web',
+    'react.ReactPointerEvent<web.EventTarget>',
     decoder: (value) => BrowserReactPointerEvent(value as web.Event),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactWheelEvent<web.EventTarget>',
+    'web',
+    'react.ReactWheelEvent<web.EventTarget>',
     decoder: (value) => BrowserReactWheelEvent(value as web.Event),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactDragEvent<web.EventTarget>',
+    'web',
+    'react.ReactDragEvent<web.EventTarget>',
     decoder: (value) => BrowserReactDragEvent(value as web.Event),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactFocusEvent<web.EventTarget>',
+    'web',
+    'react.ReactFocusEvent<web.EventTarget>',
     decoder: (value) => BrowserReactFocusEvent(value as web.Event),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactKeyboardEvent<web.EventTarget>',
+    'web',
+    'react.ReactKeyboardEvent<web.EventTarget>',
     decoder: (value) => BrowserReactKeyboardEvent(value as web.Event),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactFormEvent<web.EventTarget>',
+    'web',
+    'react.ReactFormEvent<web.EventTarget>',
     decoder: (value) => BrowserReactFormEvent(value as web.Event),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactChangeEvent<web.EventTarget>',
+    'web',
+    'react.ReactChangeEvent<web.EventTarget>',
     decoder: (value) => BrowserReactChangeEvent(value as web.Event),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactInputEvent<web.EventTarget>',
+    'web',
+    'react.ReactInputEvent<web.EventTarget>',
     decoder: (value) => BrowserReactInputEvent(value as web.Event),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'react.ReactMouseEvent<web.EventTarget>',
+    'web',
+    'react.ReactMouseEvent<web.EventTarget>',
     decoder: (value) => BrowserReactMouseEvent(value as web.Event),
   );
 }
-

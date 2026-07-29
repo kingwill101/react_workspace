@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:react_web_generator/src/resolver.dart';
+import 'package:react_web_generator/src/source/element_snapshot.dart';
 import 'package:react_web_generator/src/web_dart_type.dart';
 import 'package:react_web_generator/src/web_host_ir.dart';
 
@@ -9,20 +10,22 @@ final class WebHostIrBuilder {
   final PackageWebResolver _resolver;
   final Map<String, dynamic> _idl;
   final Map<String, dynamic> _overlay;
-  final List<String> _elements;
+  final List<RootElement> _elements;
+  final ElementSnapshot _elementSnapshot;
 
   WebHostIrBuilder._({
     required this._resolver,
     required this._idl,
     required this._overlay,
     required this._elements,
+    required this._elementSnapshot,
   });
 
   static Future<WebHostIrBuilder> create({
     required String packageRoot,
     required String webApisJsonPath,
     required String overlayPath,
-    required String elementsPath,
+    required String rootsPath,
   }) async {
     final resolver = await PackageWebResolver.create(packageRoot);
 
@@ -32,18 +35,30 @@ final class WebHostIrBuilder {
     final overlay = jsonDecode(
       await File(overlayPath).readAsString(),
     ) as Map<String, dynamic>;
-    final allowlist = jsonDecode(
-      await File(elementsPath).readAsString(),
-    ) as Map<String, dynamic>;
 
-    final elements = (allowlist['html'] as List<dynamic>).cast<String>();
+    final elements = _loadRoots(rootsPath);
+    final elementSnapshot = ElementSnapshot.load(webApisJsonPath);
 
     return WebHostIrBuilder._(
       resolver: resolver,
       idl: idlJson,
       overlay: overlay,
       elements: elements,
+      elementSnapshot: elementSnapshot,
     );
+  }
+
+  static List<RootElement> _loadRoots(String rootsPath) {
+    final file = File(rootsPath);
+    final data = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+    final items = data['elements'] as List;
+    return items.map((e) {
+      final entry = e as Map;
+      return RootElement(
+        tag: entry['tag'] as String,
+        voidElement: entry['voidElement'] as bool? ?? false,
+      );
+    }).toList();
   }
 
   List<WebHostElementIR> build() {
@@ -51,40 +66,45 @@ final class WebHostIrBuilder {
     final idlSpecs = _idl['idl'] as Map<String, dynamic>;
     final idlByName = _flattenIdl(idlSpecs);
 
-    for (final tag in _elements) {
-      final interfaceName = _interfaceName(tag);
-      final interface = idlByName[interfaceName];
+    for (final el in _elements) {
+      final interfaceName = _interfaceName(el.tag);
+      final iface = idlByName[interfaceName];
 
-      if (interface == null) {
+      if (iface == null) {
         throw StateError(
-          'IDL interface "$interfaceName" not found for element "$tag". '
-          'Check the allowlist or update web_apis.json.',
+          'IDL interface "$interfaceName" not found for element "$el.tag". '
+          'Check the roots config or update web_apis.json.',
         );
       }
 
       if (!_resolver.containsInterface(interfaceName)) {
         throw StateError(
           'package:web does not export "$interfaceName" required by '
-          'element "$tag".',
+          'element "$el.tag".',
         );
       }
 
       final elementType = _resolver.resolveInterface(interfaceName);
-      final members = _collectMembers(interface, idlByName);
-      final voidElement = _isVoidElement(tag);
+      final members = _collectMembers(iface, idlByName);
 
       result.add(WebHostElementIR(
-        tagName: tag,
-        factoryName: _camelCase(tag),
+        tagName: el.tag,
+        factoryName: _camelCase(el.tag),
         namespace: WebNamespace.html,
         elementType: elementType,
-        voidElement: voidElement,
+        voidElement: el.voidElement,
         props: _buildProps(members),
         events: _buildEvents(),
       ));
     }
 
     return result;
+  }
+
+  String _interfaceName(String tag) {
+    final iface = _elementSnapshot.tagToInterface[tag];
+    if (iface != null) return iface;
+    throw StateError('No interface mapping found for element "$tag".');
   }
 
   Map<String, Map<String, dynamic>> _flattenIdl(Map<String, dynamic> specs) {
@@ -95,7 +115,6 @@ final class WebHostIrBuilder {
         if (item is Map<String, dynamic> && item['type'] == 'interface') {
           final name = item['name'] as String;
           final existing = result[name];
-          // Prefer entries with inheritance chain (more complete)
           if (existing == null || item['inheritance'] != null) {
             result[name] = item;
           }
@@ -104,28 +123,6 @@ final class WebHostIrBuilder {
     }
     return result;
   }
-
-  static const _tagToInterface = {
-    'div': 'HTMLDivElement',
-    'span': 'HTMLSpanElement',
-    'button': 'HTMLButtonElement',
-    'input': 'HTMLInputElement',
-    'form': 'HTMLFormElement',
-    'label': 'HTMLLabelElement',
-    'textarea': 'HTMLTextAreaElement',
-    'select': 'HTMLSelectElement',
-    'option': 'HTMLOptionElement',
-    'a': 'HTMLAnchorElement',
-    'img': 'HTMLImageElement',
-  };
-
-  String _interfaceName(String tag) =>
-      _tagToInterface[tag] ??
-      'HTML${tag[0].toUpperCase()}${tag.substring(1)}Element';
-
-  bool _isVoidElement(String tag) =>
-      const {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
-        'link', 'meta', 'param', 'source', 'track', 'wbr'}.contains(tag);
 
   String _camelCase(String tag) =>
       tag.length == 1
@@ -322,4 +319,11 @@ final class WebHostIrBuilder {
 
     return result;
   }
+}
+
+final class RootElement {
+  final String tag;
+  final bool voidElement;
+
+  const RootElement({required this.tag, required this.voidElement});
 }

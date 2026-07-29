@@ -1,0 +1,15 @@
+{
+  "elements": [
+    {"tag": "div", "voidElement": false},
+    {"tag": "span", "voidElement": false},
+    {"tag": "button", "voidElement": false},
+    {"tag": "input", "voidElement": true},
+    {"tag": "form", "voidElement": false},
+    {"tag": "label", "voidElement": false},
+    {"tag": "textarea", "voidElement": false},
+    {"tag": "select", "voidElement": false},
+    {"tag": "option", "voidElement": true},
+    {"tag": "a", "voidElement": false},
+    {"tag": "img", "voidElement": true}
+  ]
+}

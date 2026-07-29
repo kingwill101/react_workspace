@@ -163,15 +163,16 @@ final class NeutralInterfaceEmitter {
 
     for (final member in decl.members) {
       if (inherited.contains(member.name)) continue;
+      final safeName = _escapeDartKeyword(member.name);
       if (member is AttributeDecl) {
         final dartType = _resolver.resolve(member.type);
         if (member.readable && member.writable) {
-          buf.writeln('  $dartType get ${member.name};');
-          buf.writeln('  set ${member.name}($dartType value);');
+          buf.writeln('  $dartType get $safeName;');
+          buf.writeln('  set $safeName($dartType value);');
         } else if (member.readable) {
-          buf.writeln('  $dartType get ${member.name};');
+          buf.writeln('  $dartType get $safeName;');
         } else if (member.writable) {
-          buf.writeln('  set ${member.name}($dartType value);');
+          buf.writeln('  set $safeName($dartType value);');
         }
       } else if (member is OperationDecl) {
         if (member.name.isEmpty || member.name == '\$') continue;
@@ -180,7 +181,7 @@ final class NeutralInterfaceEmitter {
         for (int i = 0; i < member.parameters.length; i++) {
           if (i > 0) buf.write(', ');
           final p = member.parameters[i];
-          buf.write('${_resolver.resolve(p.type)} ${p.name.isNotEmpty ? p.name : 'arg$i'}');
+          buf.write('${_resolver.resolve(p.type)} ${p.name.isNotEmpty ? _escapeDartKeyword(p.name) : 'arg$i'}');
         }
         buf.writeln(');');
       }
@@ -189,6 +190,22 @@ final class NeutralInterfaceEmitter {
     buf.writeln('}');
     return buf.toString();
   }
+
+  String _escapeDartKeyword(String name) {
+    if (_dartKeywords.contains(name)) return '${name}_';
+    return name;
+  }
+
+  static const _dartKeywords = <String>{
+    'abstract', 'as', 'assert', 'async', 'await', 'break', 'case', 'catch',
+    'class', 'const', 'continue', 'covariant', 'default', 'deferred', 'do',
+    'dynamic', 'else', 'enum', 'export', 'extends', 'extension', 'external',
+    'factory', 'false', 'final', 'finally', 'for', 'Function', 'get', 'hide',
+    'if', 'implements', 'import', 'in', 'interface', 'is', 'late', 'library',
+    'mixin', 'new', 'null', 'on', 'operator', 'out', 'part', 'required',
+    'rethrow', 'return', 'set', 'show', 'static', 'super', 'switch', 'sync',
+    'this', 'throw', 'true', 'try', 'typedef', 'var', 'void', 'while', 'with', 'yield',
+  };
 
   List<InterfaceDecl> _topologicalSort(Map<String, InterfaceDecl> types) {
     final visited = <String>{};

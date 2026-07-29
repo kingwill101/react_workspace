@@ -10,7 +10,6 @@ import 'package:react_web_generator/src/emit/ssr_metadata_emitter.dart';
 
 const webApisJson = 'tool/web_idl/snapshots/web_apis.json';
 const overlayJson = 'packages/react_web_generator/config/react_dom_overlay.json';
-const elementsJson = 'packages/react_web_generator/config/milestone_w1_elements.json';
 const neutralWebModelJson = 'packages/react_web_generator/config/neutral_web_model.json';
 const generatedDir = 'packages/react_web/lib/src/generated';
 
@@ -33,7 +32,7 @@ Future<void> main() async {
     packageRoot: Directory.current.path,
     webApisJsonPath: webApisJson,
     overlayPath: overlayJson,
-    elementsPath: elementsJson,
+    rootsPath: 'packages/react_web_generator/config/roots.json',
   );
   final elements = builder.build();
 

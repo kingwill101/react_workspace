@@ -18,6 +18,13 @@ final class SsrMetadataEmitter {
       _emitElementSsrDefinition(buf, entry.value);
     }
 
+    buf.writeln('const Map<String, WebElementSsrDefinition> ssrDefinitions = {');
+    for (final entry in model.elements.entries) {
+      buf.writeln("  '${entry.key}': ${_camelToPascal(entry.key)}SsrDefinition,");
+    }
+    buf.writeln('};');
+    buf.writeln();
+
     final file = File('$outputDir/ssr_metadata.dart');
     file.createSync(recursive: true);
     file.writeAsStringSync(buf.toString());
@@ -36,6 +43,12 @@ final class SsrMetadataEmitter {
       final ssrBehavior = _propSsrBehavior(prop);
       buf.writeln("    '${prop.name}': $ssrBehavior,");
     }
+
+    // React-specific props common to all elements
+    buf.writeln("    'key': WebSsrBehavior.unsupported,");
+    buf.writeln("    'ref': WebSsrBehavior.refOmitted,");
+    buf.writeln("    'children': WebSsrBehavior.textContent,");
+    buf.writeln("    'dangerouslySetInnerHTML': WebSsrBehavior.special,");
 
     buf.writeln('  },');
     buf.writeln(');');

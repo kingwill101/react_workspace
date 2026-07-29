@@ -1,30 +1,26 @@
 import '../model/model.dart';
 import '../source/web_idl_loader.dart';
 import '../source/react_declarations.dart';
+import '../source/element_snapshot.dart';
 import 'reachability.dart';
 
 final class ModelBuilder {
   final String webIdlPath;
-  final Set<String> rootElementNames;
+  final String rootsPath;
 
-  const ModelBuilder({
+  ModelBuilder({
     required this.webIdlPath,
-    this.rootElementNames = const {
-      'HTMLDivElement',
-      'HTMLSpanElement',
-      'HTMLButtonElement',
-      'HTMLInputElement',
-      'HTMLFormElement',
-      'HTMLLabelElement',
-      'HTMLTextAreaElement',
-      'HTMLSelectElement',
-      'HTMLOptionElement',
-      'HTMLAnchorElement',
-      'HTMLImageElement',
-    },
+    this.rootsPath = 'packages/react_web_generator/config/roots.json',
   });
 
+  static final _voidElementTags = <String>{
+    'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+    'link', 'meta', 'param', 'source', 'track', 'wbr',
+  };
+
   NeutralWebModel build() {
+    final elementSnapshot = ElementSnapshot.load(webIdlPath);
+
     // 1. Load Web IDL interfaces from relevant specs
     final webInterfaces = loadAllInterfaces(webIdlPath, specFilter: {
       'html', 'dom', 'cssom', 'cssom-view',
@@ -42,37 +38,20 @@ final class ModelBuilder {
       allTypes['react.${entry.key}'] = entry.value;
     }
 
-    // 4. Compute reachable types from roots
-    final parentTypes = <String>{};
-    for (final elName in rootElementNames) {
-      final typeId = 'web.$elName';
-      var decl = allTypes[typeId];
-      while (decl != null && parentTypes.add(decl.typeId)) {
-        bool found = false;
-        for (final ext in decl.extends_) {
-          if (ext is NamedTypeRef && allTypes.containsKey(ext.typeId)) {
-            decl = allTypes[ext.typeId];
-            found = true;
-            break;
-          }
-        }
-        if (!found) decl = null;
-      }
-    }
-
-    final reachableRoots = <String>{
-      for (final el in rootElementNames) 'web.$el',
-      for (final p in parentTypes) p,
+    // 4. Compute reachable types from all HTML elements
+    final rootTypeIds = <String>{
+      for (final tag in elementSnapshot.htmlTags)
+        if (elementSnapshot.tagToInterface[tag] case final iface?)
+          'web.$iface',
       for (final r in reactInterfaces.keys) 'react.$r',
     };
 
     final reachable = computeReachableTypes(
       allTypes: allTypes,
-      roots: reachableRoots,
+      roots: rootTypeIds,
     );
 
-    // 5. Ensure auxiliary types referenced by reachable types are included
-    // (discovered naturally by member traversal, but ensure they exist)
+    // 5. Build final type set
     final finalTypes = <String, InterfaceDecl>{};
     for (final typeId in reachable) {
       final decl = allTypes[typeId];
@@ -81,21 +60,27 @@ final class ModelBuilder {
       }
     }
 
-    // 6. Build element declarations
+    // 6. Build element declarations for ALL HTML elements
     final elements = <String, ElementDecl>{};
-    for (final elName in rootElementNames) {
-      final typeId = 'web.$elName';
+    for (final tag in elementSnapshot.htmlTags) {
+      final ifaceName = elementSnapshot.tagToInterface[tag];
+      if (ifaceName == null) continue;
+
+      final typeId = 'web.$ifaceName';
       final decl = allTypes[typeId];
-      if (decl != null) {
-        elements[_tagName(elName)] = ElementDecl(
-          tagName: _tagName(elName),
-          namespace: 'html',
-          elementType: NamedTypeRef(typeId: typeId),
-          voidElement: elName == 'HTMLImageElement' || elName == 'HTMLInputElement',
-          props: [],
-          events: [],
-        );
-      }
+      if (decl == null) continue;
+
+      final props = _collectProps(ifaceName, webInterfaces);
+      final events = _collectEvents(ifaceName, webInterfaces);
+
+      elements[tag] = ElementDecl(
+        tagName: tag,
+        namespace: 'html',
+        elementType: NamedTypeRef(typeId: typeId),
+        voidElement: _voidElementTags.contains(tag),
+        props: props,
+        events: events,
+      );
     }
 
     return NeutralWebModel(
@@ -103,31 +88,64 @@ final class ModelBuilder {
       elements: elements,
       sources: {
         'webIdlSnapshot': webIdlPath,
+        'rootsConfig': rootsPath,
       },
     );
   }
 
-  Map<String, InterfaceDecl> loadAllTypes() {
-    final webInterfaces = loadAllInterfaces(webIdlPath, specFilter: {
-      'html', 'dom', 'cssom', 'cssom-view',
-    });
-    final reactInterfaces = reactEventInterfaces();
-    final allTypes = <String, InterfaceDecl>{};
-    for (final entry in webInterfaces.entries) {
-      allTypes['web.${entry.key}'] = entry.value;
+  List<PropDecl> _collectProps(String ifaceName, Map<String, InterfaceDecl> webInterfaces) {
+    final seen = <String>{};
+    final result = <PropDecl>[];
+
+    void walk(String name) {
+      final iface = webInterfaces[name];
+      if (iface == null || !seen.add(name)) return;
+
+      for (final member in iface.members) {
+        if (member is! AttributeDecl) continue;
+        result.add(PropDecl(
+          name: member.name,
+          type: member.type,
+          required: false,
+        ));
+      }
+
+      for (final ext in iface.extends_) {
+        if (ext is NamedTypeRef && ext.typeId.startsWith('web.')) {
+          walk(ext.typeId.substring(4));
+        }
+      }
     }
-    for (final entry in reactInterfaces.entries) {
-      allTypes['react.${entry.key}'] = entry.value;
-    }
-    return allTypes;
+
+    walk(ifaceName);
+    return result;
   }
 
-  static String _tagName(String elName) {
-    if (elName == 'HTMLAnchorElement') return 'a';
-    if (elName == 'HTMLImageElement') return 'img';
-    var name = elName;
-    if (name.startsWith('HTML')) name = name.substring(4);
-    if (name.endsWith('Element')) name = name.substring(0, name.length - 7);
-    return name.toLowerCase();
+  List<EventDecl> _collectEvents(String ifaceName, Map<String, InterfaceDecl> webInterfaces) {
+    final seen = <String>{};
+    final result = <EventDecl>[];
+
+    void walk(String name) {
+      final iface = webInterfaces[name];
+      if (iface == null || !seen.add(name)) return;
+
+      for (final member in iface.members) {
+        if (member is! AttributeDecl) continue;
+        if (!member.name.startsWith('on')) continue;
+        result.add(EventDecl(
+          name: member.name,
+          eventType: member.type,
+        ));
+      }
+
+      for (final ext in iface.extends_) {
+        if (ext is NamedTypeRef && ext.typeId.startsWith('web.')) {
+          walk(ext.typeId.substring(4));
+        }
+      }
+    }
+
+    walk(ifaceName);
+    return result;
   }
 }
