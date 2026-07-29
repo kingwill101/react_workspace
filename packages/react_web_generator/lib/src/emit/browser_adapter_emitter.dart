@@ -93,6 +93,11 @@ final class BrowserAdapterEmitter {
       buf.writeln("    'web', '$typeId<web.EventTarget>',");
       buf.writeln("    decoder: (value) => Browser$name(value as web.Event),");
       buf.writeln("  );");
+
+      buf.writeln("  ReactCodecRegistry.registerHostValue(");
+      buf.writeln("    'web', '$name',");
+      buf.writeln("    decoder: (value) => Browser$name(value as web.Event),");
+      buf.writeln("  );");
     }
 
     buf.writeln('}');

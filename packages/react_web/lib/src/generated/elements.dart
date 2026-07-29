@@ -112,26 +112,17 @@ ReactNode div({
       if (tabIndex != null) 'tabIndex': tabIndex,
       if (role != null) 'role': role,
       if (onClick != null) 'onClick': ReactEventProp(_divOnClick(onClick)),
-      if (onClickCapture != null)
-        'onClickCapture': ReactEventProp(_divOnClickCapture(onClickCapture)),
+      if (onClickCapture != null) 'onClickCapture': ReactEventProp(_divOnClickCapture(onClickCapture)),
       if (onInput != null) 'onInput': ReactEventProp(_divOnInput(onInput)),
-      if (onInputCapture != null)
-        'onInputCapture': ReactEventProp(_divOnInputCapture(onInputCapture)),
+      if (onInputCapture != null) 'onInputCapture': ReactEventProp(_divOnInputCapture(onInputCapture)),
       if (onChange != null) 'onChange': ReactEventProp(_divOnChange(onChange)),
-      if (onChangeCapture != null)
-        'onChangeCapture': ReactEventProp(_divOnChangeCapture(onChangeCapture)),
+      if (onChangeCapture != null) 'onChangeCapture': ReactEventProp(_divOnChangeCapture(onChangeCapture)),
       if (onSubmit != null) 'onSubmit': ReactEventProp(_divOnSubmit(onSubmit)),
-      if (onSubmitCapture != null)
-        'onSubmitCapture': ReactEventProp(_divOnSubmitCapture(onSubmitCapture)),
-      if (onKeyDown != null)
-        'onKeyDown': ReactEventProp(_divOnKeyDown(onKeyDown)),
-      if (onKeyDownCapture != null)
-        'onKeyDownCapture': ReactEventProp(
-          _divOnKeyDownCapture(onKeyDownCapture),
-        ),
+      if (onSubmitCapture != null) 'onSubmitCapture': ReactEventProp(_divOnSubmitCapture(onSubmitCapture)),
+      if (onKeyDown != null) 'onKeyDown': ReactEventProp(_divOnKeyDown(onKeyDown)),
+      if (onKeyDownCapture != null) 'onKeyDownCapture': ReactEventProp(_divOnKeyDownCapture(onKeyDownCapture)),
       if (onFocus != null) 'onFocus': ReactEventProp(_divOnFocus(onFocus)),
-      if (onFocusCapture != null)
-        'onFocusCapture': ReactEventProp(_divOnFocusCapture(onFocusCapture)),
+      if (onFocusCapture != null) 'onFocusCapture': ReactEventProp(_divOnFocusCapture(onFocusCapture)),
       if (ref != null) 'ref': ReactRefProp(_divRef(ref)),
       ...additionalProps,
     },
@@ -248,30 +239,17 @@ ReactNode span({
       if (tabIndex != null) 'tabIndex': tabIndex,
       if (role != null) 'role': role,
       if (onClick != null) 'onClick': ReactEventProp(_spanOnClick(onClick)),
-      if (onClickCapture != null)
-        'onClickCapture': ReactEventProp(_spanOnClickCapture(onClickCapture)),
+      if (onClickCapture != null) 'onClickCapture': ReactEventProp(_spanOnClickCapture(onClickCapture)),
       if (onInput != null) 'onInput': ReactEventProp(_spanOnInput(onInput)),
-      if (onInputCapture != null)
-        'onInputCapture': ReactEventProp(_spanOnInputCapture(onInputCapture)),
+      if (onInputCapture != null) 'onInputCapture': ReactEventProp(_spanOnInputCapture(onInputCapture)),
       if (onChange != null) 'onChange': ReactEventProp(_spanOnChange(onChange)),
-      if (onChangeCapture != null)
-        'onChangeCapture': ReactEventProp(
-          _spanOnChangeCapture(onChangeCapture),
-        ),
+      if (onChangeCapture != null) 'onChangeCapture': ReactEventProp(_spanOnChangeCapture(onChangeCapture)),
       if (onSubmit != null) 'onSubmit': ReactEventProp(_spanOnSubmit(onSubmit)),
-      if (onSubmitCapture != null)
-        'onSubmitCapture': ReactEventProp(
-          _spanOnSubmitCapture(onSubmitCapture),
-        ),
-      if (onKeyDown != null)
-        'onKeyDown': ReactEventProp(_spanOnKeyDown(onKeyDown)),
-      if (onKeyDownCapture != null)
-        'onKeyDownCapture': ReactEventProp(
-          _spanOnKeyDownCapture(onKeyDownCapture),
-        ),
+      if (onSubmitCapture != null) 'onSubmitCapture': ReactEventProp(_spanOnSubmitCapture(onSubmitCapture)),
+      if (onKeyDown != null) 'onKeyDown': ReactEventProp(_spanOnKeyDown(onKeyDown)),
+      if (onKeyDownCapture != null) 'onKeyDownCapture': ReactEventProp(_spanOnKeyDownCapture(onKeyDownCapture)),
       if (onFocus != null) 'onFocus': ReactEventProp(_spanOnFocus(onFocus)),
-      if (onFocusCapture != null)
-        'onFocusCapture': ReactEventProp(_spanOnFocusCapture(onFocusCapture)),
+      if (onFocusCapture != null) 'onFocusCapture': ReactEventProp(_spanOnFocusCapture(onFocusCapture)),
       if (ref != null) 'ref': ReactRefProp(_spanRef(ref)),
       ...additionalProps,
     },
@@ -420,32 +398,17 @@ ReactNode button({
       if (tabIndex != null) 'tabIndex': tabIndex,
       if (role != null) 'role': role,
       if (onClick != null) 'onClick': ReactEventProp(_buttonOnClick(onClick)),
-      if (onClickCapture != null)
-        'onClickCapture': ReactEventProp(_buttonOnClickCapture(onClickCapture)),
+      if (onClickCapture != null) 'onClickCapture': ReactEventProp(_buttonOnClickCapture(onClickCapture)),
       if (onInput != null) 'onInput': ReactEventProp(_buttonOnInput(onInput)),
-      if (onInputCapture != null)
-        'onInputCapture': ReactEventProp(_buttonOnInputCapture(onInputCapture)),
-      if (onChange != null)
-        'onChange': ReactEventProp(_buttonOnChange(onChange)),
-      if (onChangeCapture != null)
-        'onChangeCapture': ReactEventProp(
-          _buttonOnChangeCapture(onChangeCapture),
-        ),
-      if (onSubmit != null)
-        'onSubmit': ReactEventProp(_buttonOnSubmit(onSubmit)),
-      if (onSubmitCapture != null)
-        'onSubmitCapture': ReactEventProp(
-          _buttonOnSubmitCapture(onSubmitCapture),
-        ),
-      if (onKeyDown != null)
-        'onKeyDown': ReactEventProp(_buttonOnKeyDown(onKeyDown)),
-      if (onKeyDownCapture != null)
-        'onKeyDownCapture': ReactEventProp(
-          _buttonOnKeyDownCapture(onKeyDownCapture),
-        ),
+      if (onInputCapture != null) 'onInputCapture': ReactEventProp(_buttonOnInputCapture(onInputCapture)),
+      if (onChange != null) 'onChange': ReactEventProp(_buttonOnChange(onChange)),
+      if (onChangeCapture != null) 'onChangeCapture': ReactEventProp(_buttonOnChangeCapture(onChangeCapture)),
+      if (onSubmit != null) 'onSubmit': ReactEventProp(_buttonOnSubmit(onSubmit)),
+      if (onSubmitCapture != null) 'onSubmitCapture': ReactEventProp(_buttonOnSubmitCapture(onSubmitCapture)),
+      if (onKeyDown != null) 'onKeyDown': ReactEventProp(_buttonOnKeyDown(onKeyDown)),
+      if (onKeyDownCapture != null) 'onKeyDownCapture': ReactEventProp(_buttonOnKeyDownCapture(onKeyDownCapture)),
       if (onFocus != null) 'onFocus': ReactEventProp(_buttonOnFocus(onFocus)),
-      if (onFocusCapture != null)
-        'onFocusCapture': ReactEventProp(_buttonOnFocusCapture(onFocusCapture)),
+      if (onFocusCapture != null) 'onFocusCapture': ReactEventProp(_buttonOnFocusCapture(onFocusCapture)),
       if (ref != null) 'ref': ReactRefProp(_buttonRef(ref)),
       ...additionalProps,
     },
@@ -652,32 +615,17 @@ ReactNode input({
       if (tabIndex != null) 'tabIndex': tabIndex,
       if (role != null) 'role': role,
       if (onClick != null) 'onClick': ReactEventProp(_inputOnClick(onClick)),
-      if (onClickCapture != null)
-        'onClickCapture': ReactEventProp(_inputOnClickCapture(onClickCapture)),
+      if (onClickCapture != null) 'onClickCapture': ReactEventProp(_inputOnClickCapture(onClickCapture)),
       if (onInput != null) 'onInput': ReactEventProp(_inputOnInput(onInput)),
-      if (onInputCapture != null)
-        'onInputCapture': ReactEventProp(_inputOnInputCapture(onInputCapture)),
-      if (onChange != null)
-        'onChange': ReactEventProp(_inputOnChange(onChange)),
-      if (onChangeCapture != null)
-        'onChangeCapture': ReactEventProp(
-          _inputOnChangeCapture(onChangeCapture),
-        ),
-      if (onSubmit != null)
-        'onSubmit': ReactEventProp(_inputOnSubmit(onSubmit)),
-      if (onSubmitCapture != null)
-        'onSubmitCapture': ReactEventProp(
-          _inputOnSubmitCapture(onSubmitCapture),
-        ),
-      if (onKeyDown != null)
-        'onKeyDown': ReactEventProp(_inputOnKeyDown(onKeyDown)),
-      if (onKeyDownCapture != null)
-        'onKeyDownCapture': ReactEventProp(
-          _inputOnKeyDownCapture(onKeyDownCapture),
-        ),
+      if (onInputCapture != null) 'onInputCapture': ReactEventProp(_inputOnInputCapture(onInputCapture)),
+      if (onChange != null) 'onChange': ReactEventProp(_inputOnChange(onChange)),
+      if (onChangeCapture != null) 'onChangeCapture': ReactEventProp(_inputOnChangeCapture(onChangeCapture)),
+      if (onSubmit != null) 'onSubmit': ReactEventProp(_inputOnSubmit(onSubmit)),
+      if (onSubmitCapture != null) 'onSubmitCapture': ReactEventProp(_inputOnSubmitCapture(onSubmitCapture)),
+      if (onKeyDown != null) 'onKeyDown': ReactEventProp(_inputOnKeyDown(onKeyDown)),
+      if (onKeyDownCapture != null) 'onKeyDownCapture': ReactEventProp(_inputOnKeyDownCapture(onKeyDownCapture)),
       if (onFocus != null) 'onFocus': ReactEventProp(_inputOnFocus(onFocus)),
-      if (onFocusCapture != null)
-        'onFocusCapture': ReactEventProp(_inputOnFocusCapture(onFocusCapture)),
+      if (onFocusCapture != null) 'onFocusCapture': ReactEventProp(_inputOnFocusCapture(onFocusCapture)),
       if (ref != null) 'ref': ReactRefProp(_inputRef(ref)),
       ...additionalProps,
     },
@@ -820,30 +768,17 @@ ReactNode form({
       if (tabIndex != null) 'tabIndex': tabIndex,
       if (role != null) 'role': role,
       if (onClick != null) 'onClick': ReactEventProp(_formOnClick(onClick)),
-      if (onClickCapture != null)
-        'onClickCapture': ReactEventProp(_formOnClickCapture(onClickCapture)),
+      if (onClickCapture != null) 'onClickCapture': ReactEventProp(_formOnClickCapture(onClickCapture)),
       if (onInput != null) 'onInput': ReactEventProp(_formOnInput(onInput)),
-      if (onInputCapture != null)
-        'onInputCapture': ReactEventProp(_formOnInputCapture(onInputCapture)),
+      if (onInputCapture != null) 'onInputCapture': ReactEventProp(_formOnInputCapture(onInputCapture)),
       if (onChange != null) 'onChange': ReactEventProp(_formOnChange(onChange)),
-      if (onChangeCapture != null)
-        'onChangeCapture': ReactEventProp(
-          _formOnChangeCapture(onChangeCapture),
-        ),
+      if (onChangeCapture != null) 'onChangeCapture': ReactEventProp(_formOnChangeCapture(onChangeCapture)),
       if (onSubmit != null) 'onSubmit': ReactEventProp(_formOnSubmit(onSubmit)),
-      if (onSubmitCapture != null)
-        'onSubmitCapture': ReactEventProp(
-          _formOnSubmitCapture(onSubmitCapture),
-        ),
-      if (onKeyDown != null)
-        'onKeyDown': ReactEventProp(_formOnKeyDown(onKeyDown)),
-      if (onKeyDownCapture != null)
-        'onKeyDownCapture': ReactEventProp(
-          _formOnKeyDownCapture(onKeyDownCapture),
-        ),
+      if (onSubmitCapture != null) 'onSubmitCapture': ReactEventProp(_formOnSubmitCapture(onSubmitCapture)),
+      if (onKeyDown != null) 'onKeyDown': ReactEventProp(_formOnKeyDown(onKeyDown)),
+      if (onKeyDownCapture != null) 'onKeyDownCapture': ReactEventProp(_formOnKeyDownCapture(onKeyDownCapture)),
       if (onFocus != null) 'onFocus': ReactEventProp(_formOnFocus(onFocus)),
-      if (onFocusCapture != null)
-        'onFocusCapture': ReactEventProp(_formOnFocusCapture(onFocusCapture)),
+      if (onFocusCapture != null) 'onFocusCapture': ReactEventProp(_formOnFocusCapture(onFocusCapture)),
       if (ref != null) 'ref': ReactRefProp(_formRef(ref)),
       ...additionalProps,
     },
@@ -966,32 +901,17 @@ ReactNode label({
       if (tabIndex != null) 'tabIndex': tabIndex,
       if (role != null) 'role': role,
       if (onClick != null) 'onClick': ReactEventProp(_labelOnClick(onClick)),
-      if (onClickCapture != null)
-        'onClickCapture': ReactEventProp(_labelOnClickCapture(onClickCapture)),
+      if (onClickCapture != null) 'onClickCapture': ReactEventProp(_labelOnClickCapture(onClickCapture)),
       if (onInput != null) 'onInput': ReactEventProp(_labelOnInput(onInput)),
-      if (onInputCapture != null)
-        'onInputCapture': ReactEventProp(_labelOnInputCapture(onInputCapture)),
-      if (onChange != null)
-        'onChange': ReactEventProp(_labelOnChange(onChange)),
-      if (onChangeCapture != null)
-        'onChangeCapture': ReactEventProp(
-          _labelOnChangeCapture(onChangeCapture),
-        ),
-      if (onSubmit != null)
-        'onSubmit': ReactEventProp(_labelOnSubmit(onSubmit)),
-      if (onSubmitCapture != null)
-        'onSubmitCapture': ReactEventProp(
-          _labelOnSubmitCapture(onSubmitCapture),
-        ),
-      if (onKeyDown != null)
-        'onKeyDown': ReactEventProp(_labelOnKeyDown(onKeyDown)),
-      if (onKeyDownCapture != null)
-        'onKeyDownCapture': ReactEventProp(
-          _labelOnKeyDownCapture(onKeyDownCapture),
-        ),
+      if (onInputCapture != null) 'onInputCapture': ReactEventProp(_labelOnInputCapture(onInputCapture)),
+      if (onChange != null) 'onChange': ReactEventProp(_labelOnChange(onChange)),
+      if (onChangeCapture != null) 'onChangeCapture': ReactEventProp(_labelOnChangeCapture(onChangeCapture)),
+      if (onSubmit != null) 'onSubmit': ReactEventProp(_labelOnSubmit(onSubmit)),
+      if (onSubmitCapture != null) 'onSubmitCapture': ReactEventProp(_labelOnSubmitCapture(onSubmitCapture)),
+      if (onKeyDown != null) 'onKeyDown': ReactEventProp(_labelOnKeyDown(onKeyDown)),
+      if (onKeyDownCapture != null) 'onKeyDownCapture': ReactEventProp(_labelOnKeyDownCapture(onKeyDownCapture)),
       if (onFocus != null) 'onFocus': ReactEventProp(_labelOnFocus(onFocus)),
-      if (onFocusCapture != null)
-        'onFocusCapture': ReactEventProp(_labelOnFocusCapture(onFocusCapture)),
+      if (onFocusCapture != null) 'onFocusCapture': ReactEventProp(_labelOnFocusCapture(onFocusCapture)),
       if (ref != null) 'ref': ReactRefProp(_labelRef(ref)),
       ...additionalProps,
     },
@@ -1156,38 +1076,17 @@ ReactNode textarea({
       if (tabIndex != null) 'tabIndex': tabIndex,
       if (role != null) 'role': role,
       if (onClick != null) 'onClick': ReactEventProp(_textareaOnClick(onClick)),
-      if (onClickCapture != null)
-        'onClickCapture': ReactEventProp(
-          _textareaOnClickCapture(onClickCapture),
-        ),
+      if (onClickCapture != null) 'onClickCapture': ReactEventProp(_textareaOnClickCapture(onClickCapture)),
       if (onInput != null) 'onInput': ReactEventProp(_textareaOnInput(onInput)),
-      if (onInputCapture != null)
-        'onInputCapture': ReactEventProp(
-          _textareaOnInputCapture(onInputCapture),
-        ),
-      if (onChange != null)
-        'onChange': ReactEventProp(_textareaOnChange(onChange)),
-      if (onChangeCapture != null)
-        'onChangeCapture': ReactEventProp(
-          _textareaOnChangeCapture(onChangeCapture),
-        ),
-      if (onSubmit != null)
-        'onSubmit': ReactEventProp(_textareaOnSubmit(onSubmit)),
-      if (onSubmitCapture != null)
-        'onSubmitCapture': ReactEventProp(
-          _textareaOnSubmitCapture(onSubmitCapture),
-        ),
-      if (onKeyDown != null)
-        'onKeyDown': ReactEventProp(_textareaOnKeyDown(onKeyDown)),
-      if (onKeyDownCapture != null)
-        'onKeyDownCapture': ReactEventProp(
-          _textareaOnKeyDownCapture(onKeyDownCapture),
-        ),
+      if (onInputCapture != null) 'onInputCapture': ReactEventProp(_textareaOnInputCapture(onInputCapture)),
+      if (onChange != null) 'onChange': ReactEventProp(_textareaOnChange(onChange)),
+      if (onChangeCapture != null) 'onChangeCapture': ReactEventProp(_textareaOnChangeCapture(onChangeCapture)),
+      if (onSubmit != null) 'onSubmit': ReactEventProp(_textareaOnSubmit(onSubmit)),
+      if (onSubmitCapture != null) 'onSubmitCapture': ReactEventProp(_textareaOnSubmitCapture(onSubmitCapture)),
+      if (onKeyDown != null) 'onKeyDown': ReactEventProp(_textareaOnKeyDown(onKeyDown)),
+      if (onKeyDownCapture != null) 'onKeyDownCapture': ReactEventProp(_textareaOnKeyDownCapture(onKeyDownCapture)),
       if (onFocus != null) 'onFocus': ReactEventProp(_textareaOnFocus(onFocus)),
-      if (onFocusCapture != null)
-        'onFocusCapture': ReactEventProp(
-          _textareaOnFocusCapture(onFocusCapture),
-        ),
+      if (onFocusCapture != null) 'onFocusCapture': ReactEventProp(_textareaOnFocusCapture(onFocusCapture)),
       if (ref != null) 'ref': ReactRefProp(_textareaRef(ref)),
       ...additionalProps,
     },
@@ -1338,32 +1237,17 @@ ReactNode select({
       if (tabIndex != null) 'tabIndex': tabIndex,
       if (role != null) 'role': role,
       if (onClick != null) 'onClick': ReactEventProp(_selectOnClick(onClick)),
-      if (onClickCapture != null)
-        'onClickCapture': ReactEventProp(_selectOnClickCapture(onClickCapture)),
+      if (onClickCapture != null) 'onClickCapture': ReactEventProp(_selectOnClickCapture(onClickCapture)),
       if (onInput != null) 'onInput': ReactEventProp(_selectOnInput(onInput)),
-      if (onInputCapture != null)
-        'onInputCapture': ReactEventProp(_selectOnInputCapture(onInputCapture)),
-      if (onChange != null)
-        'onChange': ReactEventProp(_selectOnChange(onChange)),
-      if (onChangeCapture != null)
-        'onChangeCapture': ReactEventProp(
-          _selectOnChangeCapture(onChangeCapture),
-        ),
-      if (onSubmit != null)
-        'onSubmit': ReactEventProp(_selectOnSubmit(onSubmit)),
-      if (onSubmitCapture != null)
-        'onSubmitCapture': ReactEventProp(
-          _selectOnSubmitCapture(onSubmitCapture),
-        ),
-      if (onKeyDown != null)
-        'onKeyDown': ReactEventProp(_selectOnKeyDown(onKeyDown)),
-      if (onKeyDownCapture != null)
-        'onKeyDownCapture': ReactEventProp(
-          _selectOnKeyDownCapture(onKeyDownCapture),
-        ),
+      if (onInputCapture != null) 'onInputCapture': ReactEventProp(_selectOnInputCapture(onInputCapture)),
+      if (onChange != null) 'onChange': ReactEventProp(_selectOnChange(onChange)),
+      if (onChangeCapture != null) 'onChangeCapture': ReactEventProp(_selectOnChangeCapture(onChangeCapture)),
+      if (onSubmit != null) 'onSubmit': ReactEventProp(_selectOnSubmit(onSubmit)),
+      if (onSubmitCapture != null) 'onSubmitCapture': ReactEventProp(_selectOnSubmitCapture(onSubmitCapture)),
+      if (onKeyDown != null) 'onKeyDown': ReactEventProp(_selectOnKeyDown(onKeyDown)),
+      if (onKeyDownCapture != null) 'onKeyDownCapture': ReactEventProp(_selectOnKeyDownCapture(onKeyDownCapture)),
       if (onFocus != null) 'onFocus': ReactEventProp(_selectOnFocus(onFocus)),
-      if (onFocusCapture != null)
-        'onFocusCapture': ReactEventProp(_selectOnFocusCapture(onFocusCapture)),
+      if (onFocusCapture != null) 'onFocusCapture': ReactEventProp(_selectOnFocusCapture(onFocusCapture)),
       if (ref != null) 'ref': ReactRefProp(_selectRef(ref)),
       ...additionalProps,
     },
@@ -1496,32 +1380,17 @@ ReactNode option({
       if (tabIndex != null) 'tabIndex': tabIndex,
       if (role != null) 'role': role,
       if (onClick != null) 'onClick': ReactEventProp(_optionOnClick(onClick)),
-      if (onClickCapture != null)
-        'onClickCapture': ReactEventProp(_optionOnClickCapture(onClickCapture)),
+      if (onClickCapture != null) 'onClickCapture': ReactEventProp(_optionOnClickCapture(onClickCapture)),
       if (onInput != null) 'onInput': ReactEventProp(_optionOnInput(onInput)),
-      if (onInputCapture != null)
-        'onInputCapture': ReactEventProp(_optionOnInputCapture(onInputCapture)),
-      if (onChange != null)
-        'onChange': ReactEventProp(_optionOnChange(onChange)),
-      if (onChangeCapture != null)
-        'onChangeCapture': ReactEventProp(
-          _optionOnChangeCapture(onChangeCapture),
-        ),
-      if (onSubmit != null)
-        'onSubmit': ReactEventProp(_optionOnSubmit(onSubmit)),
-      if (onSubmitCapture != null)
-        'onSubmitCapture': ReactEventProp(
-          _optionOnSubmitCapture(onSubmitCapture),
-        ),
-      if (onKeyDown != null)
-        'onKeyDown': ReactEventProp(_optionOnKeyDown(onKeyDown)),
-      if (onKeyDownCapture != null)
-        'onKeyDownCapture': ReactEventProp(
-          _optionOnKeyDownCapture(onKeyDownCapture),
-        ),
+      if (onInputCapture != null) 'onInputCapture': ReactEventProp(_optionOnInputCapture(onInputCapture)),
+      if (onChange != null) 'onChange': ReactEventProp(_optionOnChange(onChange)),
+      if (onChangeCapture != null) 'onChangeCapture': ReactEventProp(_optionOnChangeCapture(onChangeCapture)),
+      if (onSubmit != null) 'onSubmit': ReactEventProp(_optionOnSubmit(onSubmit)),
+      if (onSubmitCapture != null) 'onSubmitCapture': ReactEventProp(_optionOnSubmitCapture(onSubmitCapture)),
+      if (onKeyDown != null) 'onKeyDown': ReactEventProp(_optionOnKeyDown(onKeyDown)),
+      if (onKeyDownCapture != null) 'onKeyDownCapture': ReactEventProp(_optionOnKeyDownCapture(onKeyDownCapture)),
       if (onFocus != null) 'onFocus': ReactEventProp(_optionOnFocus(onFocus)),
-      if (onFocusCapture != null)
-        'onFocusCapture': ReactEventProp(_optionOnFocusCapture(onFocusCapture)),
+      if (onFocusCapture != null) 'onFocusCapture': ReactEventProp(_optionOnFocusCapture(onFocusCapture)),
       if (ref != null) 'ref': ReactRefProp(_optionRef(ref)),
       ...additionalProps,
     },
@@ -1656,26 +1525,17 @@ ReactNode a({
       if (tabIndex != null) 'tabIndex': tabIndex,
       if (role != null) 'role': role,
       if (onClick != null) 'onClick': ReactEventProp(_aOnClick(onClick)),
-      if (onClickCapture != null)
-        'onClickCapture': ReactEventProp(_aOnClickCapture(onClickCapture)),
+      if (onClickCapture != null) 'onClickCapture': ReactEventProp(_aOnClickCapture(onClickCapture)),
       if (onInput != null) 'onInput': ReactEventProp(_aOnInput(onInput)),
-      if (onInputCapture != null)
-        'onInputCapture': ReactEventProp(_aOnInputCapture(onInputCapture)),
+      if (onInputCapture != null) 'onInputCapture': ReactEventProp(_aOnInputCapture(onInputCapture)),
       if (onChange != null) 'onChange': ReactEventProp(_aOnChange(onChange)),
-      if (onChangeCapture != null)
-        'onChangeCapture': ReactEventProp(_aOnChangeCapture(onChangeCapture)),
+      if (onChangeCapture != null) 'onChangeCapture': ReactEventProp(_aOnChangeCapture(onChangeCapture)),
       if (onSubmit != null) 'onSubmit': ReactEventProp(_aOnSubmit(onSubmit)),
-      if (onSubmitCapture != null)
-        'onSubmitCapture': ReactEventProp(_aOnSubmitCapture(onSubmitCapture)),
-      if (onKeyDown != null)
-        'onKeyDown': ReactEventProp(_aOnKeyDown(onKeyDown)),
-      if (onKeyDownCapture != null)
-        'onKeyDownCapture': ReactEventProp(
-          _aOnKeyDownCapture(onKeyDownCapture),
-        ),
+      if (onSubmitCapture != null) 'onSubmitCapture': ReactEventProp(_aOnSubmitCapture(onSubmitCapture)),
+      if (onKeyDown != null) 'onKeyDown': ReactEventProp(_aOnKeyDown(onKeyDown)),
+      if (onKeyDownCapture != null) 'onKeyDownCapture': ReactEventProp(_aOnKeyDownCapture(onKeyDownCapture)),
       if (onFocus != null) 'onFocus': ReactEventProp(_aOnFocus(onFocus)),
-      if (onFocusCapture != null)
-        'onFocusCapture': ReactEventProp(_aOnFocusCapture(onFocusCapture)),
+      if (onFocusCapture != null) 'onFocusCapture': ReactEventProp(_aOnFocusCapture(onFocusCapture)),
       if (ref != null) 'ref': ReactRefProp(_aRef(ref)),
       ...additionalProps,
     },
@@ -1826,26 +1686,17 @@ ReactNode img({
       if (tabIndex != null) 'tabIndex': tabIndex,
       if (role != null) 'role': role,
       if (onClick != null) 'onClick': ReactEventProp(_imgOnClick(onClick)),
-      if (onClickCapture != null)
-        'onClickCapture': ReactEventProp(_imgOnClickCapture(onClickCapture)),
+      if (onClickCapture != null) 'onClickCapture': ReactEventProp(_imgOnClickCapture(onClickCapture)),
       if (onInput != null) 'onInput': ReactEventProp(_imgOnInput(onInput)),
-      if (onInputCapture != null)
-        'onInputCapture': ReactEventProp(_imgOnInputCapture(onInputCapture)),
+      if (onInputCapture != null) 'onInputCapture': ReactEventProp(_imgOnInputCapture(onInputCapture)),
       if (onChange != null) 'onChange': ReactEventProp(_imgOnChange(onChange)),
-      if (onChangeCapture != null)
-        'onChangeCapture': ReactEventProp(_imgOnChangeCapture(onChangeCapture)),
+      if (onChangeCapture != null) 'onChangeCapture': ReactEventProp(_imgOnChangeCapture(onChangeCapture)),
       if (onSubmit != null) 'onSubmit': ReactEventProp(_imgOnSubmit(onSubmit)),
-      if (onSubmitCapture != null)
-        'onSubmitCapture': ReactEventProp(_imgOnSubmitCapture(onSubmitCapture)),
-      if (onKeyDown != null)
-        'onKeyDown': ReactEventProp(_imgOnKeyDown(onKeyDown)),
-      if (onKeyDownCapture != null)
-        'onKeyDownCapture': ReactEventProp(
-          _imgOnKeyDownCapture(onKeyDownCapture),
-        ),
+      if (onSubmitCapture != null) 'onSubmitCapture': ReactEventProp(_imgOnSubmitCapture(onSubmitCapture)),
+      if (onKeyDown != null) 'onKeyDown': ReactEventProp(_imgOnKeyDown(onKeyDown)),
+      if (onKeyDownCapture != null) 'onKeyDownCapture': ReactEventProp(_imgOnKeyDownCapture(onKeyDownCapture)),
       if (onFocus != null) 'onFocus': ReactEventProp(_imgOnFocus(onFocus)),
-      if (onFocusCapture != null)
-        'onFocusCapture': ReactEventProp(_imgOnFocusCapture(onFocusCapture)),
+      if (onFocusCapture != null) 'onFocusCapture': ReactEventProp(_imgOnFocusCapture(onFocusCapture)),
       if (ref != null) 'ref': ReactRefProp(_imgRef(ref)),
       ...additionalProps,
     },
@@ -3001,11 +2852,7 @@ const _img_refSpec = (
 ReactCallback _divOnClick(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'div.onClick',
-    signature: const (
-      positional: [_div_onClickSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onClickSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -3016,11 +2863,7 @@ ReactCallback _divOnClick(void Function(ReactMouseEvent) callback) {
 ReactCallback _divOnClickCapture(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'div.onClickCapture',
-    signature: const (
-      positional: [_div_onClickCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onClickCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -3031,11 +2874,7 @@ ReactCallback _divOnClickCapture(void Function(ReactMouseEvent) callback) {
 ReactCallback _divOnInput(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'div.onInput',
-    signature: const (
-      positional: [_div_onInputSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onInputSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -3046,11 +2885,7 @@ ReactCallback _divOnInput(void Function(ReactInputEvent) callback) {
 ReactCallback _divOnInputCapture(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'div.onInputCapture',
-    signature: const (
-      positional: [_div_onInputCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onInputCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -3061,11 +2896,7 @@ ReactCallback _divOnInputCapture(void Function(ReactInputEvent) callback) {
 ReactCallback _divOnChange(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'div.onChange',
-    signature: const (
-      positional: [_div_onChangeSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onChangeSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -3076,11 +2907,7 @@ ReactCallback _divOnChange(void Function(ReactChangeEvent) callback) {
 ReactCallback _divOnChangeCapture(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'div.onChangeCapture',
-    signature: const (
-      positional: [_div_onChangeCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onChangeCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -3091,11 +2918,7 @@ ReactCallback _divOnChangeCapture(void Function(ReactChangeEvent) callback) {
 ReactCallback _divOnSubmit(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'div.onSubmit',
-    signature: const (
-      positional: [_div_onSubmitSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onSubmitSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -3106,11 +2929,7 @@ ReactCallback _divOnSubmit(void Function(ReactFormEvent) callback) {
 ReactCallback _divOnSubmitCapture(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'div.onSubmitCapture',
-    signature: const (
-      positional: [_div_onSubmitCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onSubmitCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -3121,11 +2940,7 @@ ReactCallback _divOnSubmitCapture(void Function(ReactFormEvent) callback) {
 ReactCallback _divOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'div.onKeyDown',
-    signature: const (
-      positional: [_div_onKeyDownSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onKeyDownSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -3136,11 +2951,7 @@ ReactCallback _divOnKeyDown(void Function(ReactKeyboardEvent) callback) {
 ReactCallback _divOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'div.onKeyDownCapture',
-    signature: const (
-      positional: [_div_onKeyDownCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onKeyDownCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -3151,11 +2962,7 @@ ReactCallback _divOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
 ReactCallback _divOnFocus(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'div.onFocus',
-    signature: const (
-      positional: [_div_onFocusSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onFocusSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -3166,11 +2973,7 @@ ReactCallback _divOnFocus(void Function(ReactFocusEvent) callback) {
 ReactCallback _divOnFocusCapture(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'div.onFocusCapture',
-    signature: const (
-      positional: [_div_onFocusCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_onFocusCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -3181,11 +2984,7 @@ ReactCallback _divOnFocusCapture(void Function(ReactFocusEvent) callback) {
 ReactCallback _divRef(void Function(HTMLDivElement?) callback) {
   return ReactCallback(
     debugName: 'div.ref',
-    signature: const (
-      positional: [_div_refSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_div_refSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       final value = arguments[0];
       callback(value == null ? null : value as HTMLDivElement);
@@ -3197,11 +2996,7 @@ ReactCallback _divRef(void Function(HTMLDivElement?) callback) {
 ReactCallback _spanOnClick(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'span.onClick',
-    signature: const (
-      positional: [_span_onClickSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onClickSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -3212,11 +3007,7 @@ ReactCallback _spanOnClick(void Function(ReactMouseEvent) callback) {
 ReactCallback _spanOnClickCapture(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'span.onClickCapture',
-    signature: const (
-      positional: [_span_onClickCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onClickCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -3227,11 +3018,7 @@ ReactCallback _spanOnClickCapture(void Function(ReactMouseEvent) callback) {
 ReactCallback _spanOnInput(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'span.onInput',
-    signature: const (
-      positional: [_span_onInputSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onInputSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -3242,11 +3029,7 @@ ReactCallback _spanOnInput(void Function(ReactInputEvent) callback) {
 ReactCallback _spanOnInputCapture(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'span.onInputCapture',
-    signature: const (
-      positional: [_span_onInputCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onInputCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -3257,11 +3040,7 @@ ReactCallback _spanOnInputCapture(void Function(ReactInputEvent) callback) {
 ReactCallback _spanOnChange(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'span.onChange',
-    signature: const (
-      positional: [_span_onChangeSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onChangeSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -3272,11 +3051,7 @@ ReactCallback _spanOnChange(void Function(ReactChangeEvent) callback) {
 ReactCallback _spanOnChangeCapture(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'span.onChangeCapture',
-    signature: const (
-      positional: [_span_onChangeCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onChangeCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -3287,11 +3062,7 @@ ReactCallback _spanOnChangeCapture(void Function(ReactChangeEvent) callback) {
 ReactCallback _spanOnSubmit(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'span.onSubmit',
-    signature: const (
-      positional: [_span_onSubmitSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onSubmitSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -3302,11 +3073,7 @@ ReactCallback _spanOnSubmit(void Function(ReactFormEvent) callback) {
 ReactCallback _spanOnSubmitCapture(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'span.onSubmitCapture',
-    signature: const (
-      positional: [_span_onSubmitCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onSubmitCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -3317,11 +3084,7 @@ ReactCallback _spanOnSubmitCapture(void Function(ReactFormEvent) callback) {
 ReactCallback _spanOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'span.onKeyDown',
-    signature: const (
-      positional: [_span_onKeyDownSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onKeyDownSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -3329,16 +3092,10 @@ ReactCallback _spanOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   );
 }
 
-ReactCallback _spanOnKeyDownCapture(
-  void Function(ReactKeyboardEvent) callback,
-) {
+ReactCallback _spanOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'span.onKeyDownCapture',
-    signature: const (
-      positional: [_span_onKeyDownCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onKeyDownCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -3349,11 +3106,7 @@ ReactCallback _spanOnKeyDownCapture(
 ReactCallback _spanOnFocus(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'span.onFocus',
-    signature: const (
-      positional: [_span_onFocusSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onFocusSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -3364,11 +3117,7 @@ ReactCallback _spanOnFocus(void Function(ReactFocusEvent) callback) {
 ReactCallback _spanOnFocusCapture(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'span.onFocusCapture',
-    signature: const (
-      positional: [_span_onFocusCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_onFocusCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -3379,11 +3128,7 @@ ReactCallback _spanOnFocusCapture(void Function(ReactFocusEvent) callback) {
 ReactCallback _spanRef(void Function(HTMLSpanElement?) callback) {
   return ReactCallback(
     debugName: 'span.ref',
-    signature: const (
-      positional: [_span_refSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_span_refSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       final value = arguments[0];
       callback(value == null ? null : value as HTMLSpanElement);
@@ -3395,11 +3140,7 @@ ReactCallback _spanRef(void Function(HTMLSpanElement?) callback) {
 ReactCallback _buttonOnClick(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'button.onClick',
-    signature: const (
-      positional: [_button_onClickSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onClickSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -3410,11 +3151,7 @@ ReactCallback _buttonOnClick(void Function(ReactMouseEvent) callback) {
 ReactCallback _buttonOnClickCapture(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'button.onClickCapture',
-    signature: const (
-      positional: [_button_onClickCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onClickCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -3425,11 +3162,7 @@ ReactCallback _buttonOnClickCapture(void Function(ReactMouseEvent) callback) {
 ReactCallback _buttonOnInput(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'button.onInput',
-    signature: const (
-      positional: [_button_onInputSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onInputSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -3440,11 +3173,7 @@ ReactCallback _buttonOnInput(void Function(ReactInputEvent) callback) {
 ReactCallback _buttonOnInputCapture(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'button.onInputCapture',
-    signature: const (
-      positional: [_button_onInputCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onInputCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -3455,11 +3184,7 @@ ReactCallback _buttonOnInputCapture(void Function(ReactInputEvent) callback) {
 ReactCallback _buttonOnChange(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'button.onChange',
-    signature: const (
-      positional: [_button_onChangeSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onChangeSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -3470,11 +3195,7 @@ ReactCallback _buttonOnChange(void Function(ReactChangeEvent) callback) {
 ReactCallback _buttonOnChangeCapture(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'button.onChangeCapture',
-    signature: const (
-      positional: [_button_onChangeCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onChangeCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -3485,11 +3206,7 @@ ReactCallback _buttonOnChangeCapture(void Function(ReactChangeEvent) callback) {
 ReactCallback _buttonOnSubmit(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'button.onSubmit',
-    signature: const (
-      positional: [_button_onSubmitSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onSubmitSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -3500,11 +3217,7 @@ ReactCallback _buttonOnSubmit(void Function(ReactFormEvent) callback) {
 ReactCallback _buttonOnSubmitCapture(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'button.onSubmitCapture',
-    signature: const (
-      positional: [_button_onSubmitCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onSubmitCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -3515,11 +3228,7 @@ ReactCallback _buttonOnSubmitCapture(void Function(ReactFormEvent) callback) {
 ReactCallback _buttonOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'button.onKeyDown',
-    signature: const (
-      positional: [_button_onKeyDownSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onKeyDownSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -3527,16 +3236,10 @@ ReactCallback _buttonOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   );
 }
 
-ReactCallback _buttonOnKeyDownCapture(
-  void Function(ReactKeyboardEvent) callback,
-) {
+ReactCallback _buttonOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'button.onKeyDownCapture',
-    signature: const (
-      positional: [_button_onKeyDownCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onKeyDownCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -3547,11 +3250,7 @@ ReactCallback _buttonOnKeyDownCapture(
 ReactCallback _buttonOnFocus(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'button.onFocus',
-    signature: const (
-      positional: [_button_onFocusSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onFocusSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -3562,11 +3261,7 @@ ReactCallback _buttonOnFocus(void Function(ReactFocusEvent) callback) {
 ReactCallback _buttonOnFocusCapture(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'button.onFocusCapture',
-    signature: const (
-      positional: [_button_onFocusCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_onFocusCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -3577,11 +3272,7 @@ ReactCallback _buttonOnFocusCapture(void Function(ReactFocusEvent) callback) {
 ReactCallback _buttonRef(void Function(HTMLButtonElement?) callback) {
   return ReactCallback(
     debugName: 'button.ref',
-    signature: const (
-      positional: [_button_refSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_button_refSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       final value = arguments[0];
       callback(value == null ? null : value as HTMLButtonElement);
@@ -3593,11 +3284,7 @@ ReactCallback _buttonRef(void Function(HTMLButtonElement?) callback) {
 ReactCallback _inputOnClick(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'input.onClick',
-    signature: const (
-      positional: [_input_onClickSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onClickSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -3608,11 +3295,7 @@ ReactCallback _inputOnClick(void Function(ReactMouseEvent) callback) {
 ReactCallback _inputOnClickCapture(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'input.onClickCapture',
-    signature: const (
-      positional: [_input_onClickCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onClickCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -3623,11 +3306,7 @@ ReactCallback _inputOnClickCapture(void Function(ReactMouseEvent) callback) {
 ReactCallback _inputOnInput(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'input.onInput',
-    signature: const (
-      positional: [_input_onInputSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onInputSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -3638,11 +3317,7 @@ ReactCallback _inputOnInput(void Function(ReactInputEvent) callback) {
 ReactCallback _inputOnInputCapture(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'input.onInputCapture',
-    signature: const (
-      positional: [_input_onInputCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onInputCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -3653,11 +3328,7 @@ ReactCallback _inputOnInputCapture(void Function(ReactInputEvent) callback) {
 ReactCallback _inputOnChange(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'input.onChange',
-    signature: const (
-      positional: [_input_onChangeSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onChangeSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -3668,11 +3339,7 @@ ReactCallback _inputOnChange(void Function(ReactChangeEvent) callback) {
 ReactCallback _inputOnChangeCapture(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'input.onChangeCapture',
-    signature: const (
-      positional: [_input_onChangeCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onChangeCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -3683,11 +3350,7 @@ ReactCallback _inputOnChangeCapture(void Function(ReactChangeEvent) callback) {
 ReactCallback _inputOnSubmit(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'input.onSubmit',
-    signature: const (
-      positional: [_input_onSubmitSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onSubmitSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -3698,11 +3361,7 @@ ReactCallback _inputOnSubmit(void Function(ReactFormEvent) callback) {
 ReactCallback _inputOnSubmitCapture(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'input.onSubmitCapture',
-    signature: const (
-      positional: [_input_onSubmitCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onSubmitCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -3713,11 +3372,7 @@ ReactCallback _inputOnSubmitCapture(void Function(ReactFormEvent) callback) {
 ReactCallback _inputOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'input.onKeyDown',
-    signature: const (
-      positional: [_input_onKeyDownSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onKeyDownSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -3725,16 +3380,10 @@ ReactCallback _inputOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   );
 }
 
-ReactCallback _inputOnKeyDownCapture(
-  void Function(ReactKeyboardEvent) callback,
-) {
+ReactCallback _inputOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'input.onKeyDownCapture',
-    signature: const (
-      positional: [_input_onKeyDownCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onKeyDownCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -3745,11 +3394,7 @@ ReactCallback _inputOnKeyDownCapture(
 ReactCallback _inputOnFocus(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'input.onFocus',
-    signature: const (
-      positional: [_input_onFocusSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onFocusSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -3760,11 +3405,7 @@ ReactCallback _inputOnFocus(void Function(ReactFocusEvent) callback) {
 ReactCallback _inputOnFocusCapture(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'input.onFocusCapture',
-    signature: const (
-      positional: [_input_onFocusCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_onFocusCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -3775,11 +3416,7 @@ ReactCallback _inputOnFocusCapture(void Function(ReactFocusEvent) callback) {
 ReactCallback _inputRef(void Function(HTMLInputElement?) callback) {
   return ReactCallback(
     debugName: 'input.ref',
-    signature: const (
-      positional: [_input_refSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_input_refSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       final value = arguments[0];
       callback(value == null ? null : value as HTMLInputElement);
@@ -3791,11 +3428,7 @@ ReactCallback _inputRef(void Function(HTMLInputElement?) callback) {
 ReactCallback _formOnClick(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'form.onClick',
-    signature: const (
-      positional: [_form_onClickSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onClickSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -3806,11 +3439,7 @@ ReactCallback _formOnClick(void Function(ReactMouseEvent) callback) {
 ReactCallback _formOnClickCapture(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'form.onClickCapture',
-    signature: const (
-      positional: [_form_onClickCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onClickCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -3821,11 +3450,7 @@ ReactCallback _formOnClickCapture(void Function(ReactMouseEvent) callback) {
 ReactCallback _formOnInput(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'form.onInput',
-    signature: const (
-      positional: [_form_onInputSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onInputSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -3836,11 +3461,7 @@ ReactCallback _formOnInput(void Function(ReactInputEvent) callback) {
 ReactCallback _formOnInputCapture(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'form.onInputCapture',
-    signature: const (
-      positional: [_form_onInputCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onInputCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -3851,11 +3472,7 @@ ReactCallback _formOnInputCapture(void Function(ReactInputEvent) callback) {
 ReactCallback _formOnChange(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'form.onChange',
-    signature: const (
-      positional: [_form_onChangeSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onChangeSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -3866,11 +3483,7 @@ ReactCallback _formOnChange(void Function(ReactChangeEvent) callback) {
 ReactCallback _formOnChangeCapture(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'form.onChangeCapture',
-    signature: const (
-      positional: [_form_onChangeCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onChangeCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -3881,11 +3494,7 @@ ReactCallback _formOnChangeCapture(void Function(ReactChangeEvent) callback) {
 ReactCallback _formOnSubmit(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'form.onSubmit',
-    signature: const (
-      positional: [_form_onSubmitSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onSubmitSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -3896,11 +3505,7 @@ ReactCallback _formOnSubmit(void Function(ReactFormEvent) callback) {
 ReactCallback _formOnSubmitCapture(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'form.onSubmitCapture',
-    signature: const (
-      positional: [_form_onSubmitCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onSubmitCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -3911,11 +3516,7 @@ ReactCallback _formOnSubmitCapture(void Function(ReactFormEvent) callback) {
 ReactCallback _formOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'form.onKeyDown',
-    signature: const (
-      positional: [_form_onKeyDownSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onKeyDownSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -3923,16 +3524,10 @@ ReactCallback _formOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   );
 }
 
-ReactCallback _formOnKeyDownCapture(
-  void Function(ReactKeyboardEvent) callback,
-) {
+ReactCallback _formOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'form.onKeyDownCapture',
-    signature: const (
-      positional: [_form_onKeyDownCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onKeyDownCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -3943,11 +3538,7 @@ ReactCallback _formOnKeyDownCapture(
 ReactCallback _formOnFocus(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'form.onFocus',
-    signature: const (
-      positional: [_form_onFocusSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onFocusSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -3958,11 +3549,7 @@ ReactCallback _formOnFocus(void Function(ReactFocusEvent) callback) {
 ReactCallback _formOnFocusCapture(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'form.onFocusCapture',
-    signature: const (
-      positional: [_form_onFocusCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_onFocusCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -3973,11 +3560,7 @@ ReactCallback _formOnFocusCapture(void Function(ReactFocusEvent) callback) {
 ReactCallback _formRef(void Function(HTMLFormElement?) callback) {
   return ReactCallback(
     debugName: 'form.ref',
-    signature: const (
-      positional: [_form_refSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_form_refSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       final value = arguments[0];
       callback(value == null ? null : value as HTMLFormElement);
@@ -3989,11 +3572,7 @@ ReactCallback _formRef(void Function(HTMLFormElement?) callback) {
 ReactCallback _labelOnClick(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'label.onClick',
-    signature: const (
-      positional: [_label_onClickSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onClickSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -4004,11 +3583,7 @@ ReactCallback _labelOnClick(void Function(ReactMouseEvent) callback) {
 ReactCallback _labelOnClickCapture(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'label.onClickCapture',
-    signature: const (
-      positional: [_label_onClickCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onClickCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -4019,11 +3594,7 @@ ReactCallback _labelOnClickCapture(void Function(ReactMouseEvent) callback) {
 ReactCallback _labelOnInput(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'label.onInput',
-    signature: const (
-      positional: [_label_onInputSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onInputSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -4034,11 +3605,7 @@ ReactCallback _labelOnInput(void Function(ReactInputEvent) callback) {
 ReactCallback _labelOnInputCapture(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'label.onInputCapture',
-    signature: const (
-      positional: [_label_onInputCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onInputCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -4049,11 +3616,7 @@ ReactCallback _labelOnInputCapture(void Function(ReactInputEvent) callback) {
 ReactCallback _labelOnChange(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'label.onChange',
-    signature: const (
-      positional: [_label_onChangeSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onChangeSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -4064,11 +3627,7 @@ ReactCallback _labelOnChange(void Function(ReactChangeEvent) callback) {
 ReactCallback _labelOnChangeCapture(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'label.onChangeCapture',
-    signature: const (
-      positional: [_label_onChangeCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onChangeCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -4079,11 +3638,7 @@ ReactCallback _labelOnChangeCapture(void Function(ReactChangeEvent) callback) {
 ReactCallback _labelOnSubmit(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'label.onSubmit',
-    signature: const (
-      positional: [_label_onSubmitSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onSubmitSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -4094,11 +3649,7 @@ ReactCallback _labelOnSubmit(void Function(ReactFormEvent) callback) {
 ReactCallback _labelOnSubmitCapture(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'label.onSubmitCapture',
-    signature: const (
-      positional: [_label_onSubmitCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onSubmitCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -4109,11 +3660,7 @@ ReactCallback _labelOnSubmitCapture(void Function(ReactFormEvent) callback) {
 ReactCallback _labelOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'label.onKeyDown',
-    signature: const (
-      positional: [_label_onKeyDownSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onKeyDownSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -4121,16 +3668,10 @@ ReactCallback _labelOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   );
 }
 
-ReactCallback _labelOnKeyDownCapture(
-  void Function(ReactKeyboardEvent) callback,
-) {
+ReactCallback _labelOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'label.onKeyDownCapture',
-    signature: const (
-      positional: [_label_onKeyDownCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onKeyDownCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -4141,11 +3682,7 @@ ReactCallback _labelOnKeyDownCapture(
 ReactCallback _labelOnFocus(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'label.onFocus',
-    signature: const (
-      positional: [_label_onFocusSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onFocusSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -4156,11 +3693,7 @@ ReactCallback _labelOnFocus(void Function(ReactFocusEvent) callback) {
 ReactCallback _labelOnFocusCapture(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'label.onFocusCapture',
-    signature: const (
-      positional: [_label_onFocusCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_onFocusCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -4171,11 +3704,7 @@ ReactCallback _labelOnFocusCapture(void Function(ReactFocusEvent) callback) {
 ReactCallback _labelRef(void Function(HTMLLabelElement?) callback) {
   return ReactCallback(
     debugName: 'label.ref',
-    signature: const (
-      positional: [_label_refSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_label_refSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       final value = arguments[0];
       callback(value == null ? null : value as HTMLLabelElement);
@@ -4187,11 +3716,7 @@ ReactCallback _labelRef(void Function(HTMLLabelElement?) callback) {
 ReactCallback _textareaOnClick(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onClick',
-    signature: const (
-      positional: [_textarea_onClickSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onClickSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -4202,11 +3727,7 @@ ReactCallback _textareaOnClick(void Function(ReactMouseEvent) callback) {
 ReactCallback _textareaOnClickCapture(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onClickCapture',
-    signature: const (
-      positional: [_textarea_onClickCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onClickCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -4217,11 +3738,7 @@ ReactCallback _textareaOnClickCapture(void Function(ReactMouseEvent) callback) {
 ReactCallback _textareaOnInput(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onInput',
-    signature: const (
-      positional: [_textarea_onInputSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onInputSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -4232,11 +3749,7 @@ ReactCallback _textareaOnInput(void Function(ReactInputEvent) callback) {
 ReactCallback _textareaOnInputCapture(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onInputCapture',
-    signature: const (
-      positional: [_textarea_onInputCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onInputCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -4247,11 +3760,7 @@ ReactCallback _textareaOnInputCapture(void Function(ReactInputEvent) callback) {
 ReactCallback _textareaOnChange(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onChange',
-    signature: const (
-      positional: [_textarea_onChangeSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onChangeSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -4259,16 +3768,10 @@ ReactCallback _textareaOnChange(void Function(ReactChangeEvent) callback) {
   );
 }
 
-ReactCallback _textareaOnChangeCapture(
-  void Function(ReactChangeEvent) callback,
-) {
+ReactCallback _textareaOnChangeCapture(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onChangeCapture',
-    signature: const (
-      positional: [_textarea_onChangeCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onChangeCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -4279,11 +3782,7 @@ ReactCallback _textareaOnChangeCapture(
 ReactCallback _textareaOnSubmit(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onSubmit',
-    signature: const (
-      positional: [_textarea_onSubmitSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onSubmitSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -4294,11 +3793,7 @@ ReactCallback _textareaOnSubmit(void Function(ReactFormEvent) callback) {
 ReactCallback _textareaOnSubmitCapture(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onSubmitCapture',
-    signature: const (
-      positional: [_textarea_onSubmitCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onSubmitCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -4309,11 +3804,7 @@ ReactCallback _textareaOnSubmitCapture(void Function(ReactFormEvent) callback) {
 ReactCallback _textareaOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onKeyDown',
-    signature: const (
-      positional: [_textarea_onKeyDownSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onKeyDownSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -4321,16 +3812,10 @@ ReactCallback _textareaOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   );
 }
 
-ReactCallback _textareaOnKeyDownCapture(
-  void Function(ReactKeyboardEvent) callback,
-) {
+ReactCallback _textareaOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onKeyDownCapture',
-    signature: const (
-      positional: [_textarea_onKeyDownCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onKeyDownCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -4341,11 +3826,7 @@ ReactCallback _textareaOnKeyDownCapture(
 ReactCallback _textareaOnFocus(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onFocus',
-    signature: const (
-      positional: [_textarea_onFocusSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onFocusSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -4356,11 +3837,7 @@ ReactCallback _textareaOnFocus(void Function(ReactFocusEvent) callback) {
 ReactCallback _textareaOnFocusCapture(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'textarea.onFocusCapture',
-    signature: const (
-      positional: [_textarea_onFocusCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_onFocusCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -4371,11 +3848,7 @@ ReactCallback _textareaOnFocusCapture(void Function(ReactFocusEvent) callback) {
 ReactCallback _textareaRef(void Function(HTMLTextAreaElement?) callback) {
   return ReactCallback(
     debugName: 'textarea.ref',
-    signature: const (
-      positional: [_textarea_refSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_textarea_refSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       final value = arguments[0];
       callback(value == null ? null : value as HTMLTextAreaElement);
@@ -4387,11 +3860,7 @@ ReactCallback _textareaRef(void Function(HTMLTextAreaElement?) callback) {
 ReactCallback _selectOnClick(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'select.onClick',
-    signature: const (
-      positional: [_select_onClickSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onClickSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -4402,11 +3871,7 @@ ReactCallback _selectOnClick(void Function(ReactMouseEvent) callback) {
 ReactCallback _selectOnClickCapture(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'select.onClickCapture',
-    signature: const (
-      positional: [_select_onClickCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onClickCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -4417,11 +3882,7 @@ ReactCallback _selectOnClickCapture(void Function(ReactMouseEvent) callback) {
 ReactCallback _selectOnInput(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'select.onInput',
-    signature: const (
-      positional: [_select_onInputSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onInputSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -4432,11 +3893,7 @@ ReactCallback _selectOnInput(void Function(ReactInputEvent) callback) {
 ReactCallback _selectOnInputCapture(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'select.onInputCapture',
-    signature: const (
-      positional: [_select_onInputCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onInputCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -4447,11 +3904,7 @@ ReactCallback _selectOnInputCapture(void Function(ReactInputEvent) callback) {
 ReactCallback _selectOnChange(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'select.onChange',
-    signature: const (
-      positional: [_select_onChangeSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onChangeSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -4462,11 +3915,7 @@ ReactCallback _selectOnChange(void Function(ReactChangeEvent) callback) {
 ReactCallback _selectOnChangeCapture(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'select.onChangeCapture',
-    signature: const (
-      positional: [_select_onChangeCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onChangeCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -4477,11 +3926,7 @@ ReactCallback _selectOnChangeCapture(void Function(ReactChangeEvent) callback) {
 ReactCallback _selectOnSubmit(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'select.onSubmit',
-    signature: const (
-      positional: [_select_onSubmitSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onSubmitSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -4492,11 +3937,7 @@ ReactCallback _selectOnSubmit(void Function(ReactFormEvent) callback) {
 ReactCallback _selectOnSubmitCapture(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'select.onSubmitCapture',
-    signature: const (
-      positional: [_select_onSubmitCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onSubmitCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -4507,11 +3948,7 @@ ReactCallback _selectOnSubmitCapture(void Function(ReactFormEvent) callback) {
 ReactCallback _selectOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'select.onKeyDown',
-    signature: const (
-      positional: [_select_onKeyDownSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onKeyDownSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -4519,16 +3956,10 @@ ReactCallback _selectOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   );
 }
 
-ReactCallback _selectOnKeyDownCapture(
-  void Function(ReactKeyboardEvent) callback,
-) {
+ReactCallback _selectOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'select.onKeyDownCapture',
-    signature: const (
-      positional: [_select_onKeyDownCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onKeyDownCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -4539,11 +3970,7 @@ ReactCallback _selectOnKeyDownCapture(
 ReactCallback _selectOnFocus(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'select.onFocus',
-    signature: const (
-      positional: [_select_onFocusSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onFocusSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -4554,11 +3981,7 @@ ReactCallback _selectOnFocus(void Function(ReactFocusEvent) callback) {
 ReactCallback _selectOnFocusCapture(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'select.onFocusCapture',
-    signature: const (
-      positional: [_select_onFocusCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_onFocusCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -4569,11 +3992,7 @@ ReactCallback _selectOnFocusCapture(void Function(ReactFocusEvent) callback) {
 ReactCallback _selectRef(void Function(HTMLSelectElement?) callback) {
   return ReactCallback(
     debugName: 'select.ref',
-    signature: const (
-      positional: [_select_refSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_select_refSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       final value = arguments[0];
       callback(value == null ? null : value as HTMLSelectElement);
@@ -4585,11 +4004,7 @@ ReactCallback _selectRef(void Function(HTMLSelectElement?) callback) {
 ReactCallback _optionOnClick(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'option.onClick',
-    signature: const (
-      positional: [_option_onClickSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onClickSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -4600,11 +4015,7 @@ ReactCallback _optionOnClick(void Function(ReactMouseEvent) callback) {
 ReactCallback _optionOnClickCapture(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'option.onClickCapture',
-    signature: const (
-      positional: [_option_onClickCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onClickCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -4615,11 +4026,7 @@ ReactCallback _optionOnClickCapture(void Function(ReactMouseEvent) callback) {
 ReactCallback _optionOnInput(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'option.onInput',
-    signature: const (
-      positional: [_option_onInputSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onInputSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -4630,11 +4037,7 @@ ReactCallback _optionOnInput(void Function(ReactInputEvent) callback) {
 ReactCallback _optionOnInputCapture(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'option.onInputCapture',
-    signature: const (
-      positional: [_option_onInputCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onInputCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -4645,11 +4048,7 @@ ReactCallback _optionOnInputCapture(void Function(ReactInputEvent) callback) {
 ReactCallback _optionOnChange(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'option.onChange',
-    signature: const (
-      positional: [_option_onChangeSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onChangeSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -4660,11 +4059,7 @@ ReactCallback _optionOnChange(void Function(ReactChangeEvent) callback) {
 ReactCallback _optionOnChangeCapture(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'option.onChangeCapture',
-    signature: const (
-      positional: [_option_onChangeCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onChangeCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -4675,11 +4070,7 @@ ReactCallback _optionOnChangeCapture(void Function(ReactChangeEvent) callback) {
 ReactCallback _optionOnSubmit(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'option.onSubmit',
-    signature: const (
-      positional: [_option_onSubmitSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onSubmitSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -4690,11 +4081,7 @@ ReactCallback _optionOnSubmit(void Function(ReactFormEvent) callback) {
 ReactCallback _optionOnSubmitCapture(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'option.onSubmitCapture',
-    signature: const (
-      positional: [_option_onSubmitCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onSubmitCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -4705,11 +4092,7 @@ ReactCallback _optionOnSubmitCapture(void Function(ReactFormEvent) callback) {
 ReactCallback _optionOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'option.onKeyDown',
-    signature: const (
-      positional: [_option_onKeyDownSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onKeyDownSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -4717,16 +4100,10 @@ ReactCallback _optionOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   );
 }
 
-ReactCallback _optionOnKeyDownCapture(
-  void Function(ReactKeyboardEvent) callback,
-) {
+ReactCallback _optionOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'option.onKeyDownCapture',
-    signature: const (
-      positional: [_option_onKeyDownCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onKeyDownCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -4737,11 +4114,7 @@ ReactCallback _optionOnKeyDownCapture(
 ReactCallback _optionOnFocus(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'option.onFocus',
-    signature: const (
-      positional: [_option_onFocusSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onFocusSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -4752,11 +4125,7 @@ ReactCallback _optionOnFocus(void Function(ReactFocusEvent) callback) {
 ReactCallback _optionOnFocusCapture(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'option.onFocusCapture',
-    signature: const (
-      positional: [_option_onFocusCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_onFocusCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -4767,11 +4136,7 @@ ReactCallback _optionOnFocusCapture(void Function(ReactFocusEvent) callback) {
 ReactCallback _optionRef(void Function(HTMLOptionElement?) callback) {
   return ReactCallback(
     debugName: 'option.ref',
-    signature: const (
-      positional: [_option_refSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_option_refSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       final value = arguments[0];
       callback(value == null ? null : value as HTMLOptionElement);
@@ -4783,11 +4148,7 @@ ReactCallback _optionRef(void Function(HTMLOptionElement?) callback) {
 ReactCallback _aOnClick(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'a.onClick',
-    signature: const (
-      positional: [_a_onClickSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onClickSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -4798,11 +4159,7 @@ ReactCallback _aOnClick(void Function(ReactMouseEvent) callback) {
 ReactCallback _aOnClickCapture(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'a.onClickCapture',
-    signature: const (
-      positional: [_a_onClickCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onClickCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -4813,11 +4170,7 @@ ReactCallback _aOnClickCapture(void Function(ReactMouseEvent) callback) {
 ReactCallback _aOnInput(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'a.onInput',
-    signature: const (
-      positional: [_a_onInputSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onInputSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -4828,11 +4181,7 @@ ReactCallback _aOnInput(void Function(ReactInputEvent) callback) {
 ReactCallback _aOnInputCapture(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'a.onInputCapture',
-    signature: const (
-      positional: [_a_onInputCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onInputCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -4843,11 +4192,7 @@ ReactCallback _aOnInputCapture(void Function(ReactInputEvent) callback) {
 ReactCallback _aOnChange(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'a.onChange',
-    signature: const (
-      positional: [_a_onChangeSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onChangeSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -4858,11 +4203,7 @@ ReactCallback _aOnChange(void Function(ReactChangeEvent) callback) {
 ReactCallback _aOnChangeCapture(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'a.onChangeCapture',
-    signature: const (
-      positional: [_a_onChangeCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onChangeCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -4873,11 +4214,7 @@ ReactCallback _aOnChangeCapture(void Function(ReactChangeEvent) callback) {
 ReactCallback _aOnSubmit(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'a.onSubmit',
-    signature: const (
-      positional: [_a_onSubmitSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onSubmitSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -4888,11 +4225,7 @@ ReactCallback _aOnSubmit(void Function(ReactFormEvent) callback) {
 ReactCallback _aOnSubmitCapture(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'a.onSubmitCapture',
-    signature: const (
-      positional: [_a_onSubmitCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onSubmitCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -4903,11 +4236,7 @@ ReactCallback _aOnSubmitCapture(void Function(ReactFormEvent) callback) {
 ReactCallback _aOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'a.onKeyDown',
-    signature: const (
-      positional: [_a_onKeyDownSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onKeyDownSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -4918,11 +4247,7 @@ ReactCallback _aOnKeyDown(void Function(ReactKeyboardEvent) callback) {
 ReactCallback _aOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'a.onKeyDownCapture',
-    signature: const (
-      positional: [_a_onKeyDownCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onKeyDownCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -4933,11 +4258,7 @@ ReactCallback _aOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
 ReactCallback _aOnFocus(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'a.onFocus',
-    signature: const (
-      positional: [_a_onFocusSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onFocusSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -4948,11 +4269,7 @@ ReactCallback _aOnFocus(void Function(ReactFocusEvent) callback) {
 ReactCallback _aOnFocusCapture(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'a.onFocusCapture',
-    signature: const (
-      positional: [_a_onFocusCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_onFocusCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -4963,11 +4280,7 @@ ReactCallback _aOnFocusCapture(void Function(ReactFocusEvent) callback) {
 ReactCallback _aRef(void Function(HTMLAnchorElement?) callback) {
   return ReactCallback(
     debugName: 'a.ref',
-    signature: const (
-      positional: [_a_refSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_a_refSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       final value = arguments[0];
       callback(value == null ? null : value as HTMLAnchorElement);
@@ -4979,11 +4292,7 @@ ReactCallback _aRef(void Function(HTMLAnchorElement?) callback) {
 ReactCallback _imgOnClick(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'img.onClick',
-    signature: const (
-      positional: [_img_onClickSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onClickSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -4994,11 +4303,7 @@ ReactCallback _imgOnClick(void Function(ReactMouseEvent) callback) {
 ReactCallback _imgOnClickCapture(void Function(ReactMouseEvent) callback) {
   return ReactCallback(
     debugName: 'img.onClickCapture',
-    signature: const (
-      positional: [_img_onClickCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onClickCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactMouseEvent);
       return null;
@@ -5009,11 +4314,7 @@ ReactCallback _imgOnClickCapture(void Function(ReactMouseEvent) callback) {
 ReactCallback _imgOnInput(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'img.onInput',
-    signature: const (
-      positional: [_img_onInputSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onInputSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -5024,11 +4325,7 @@ ReactCallback _imgOnInput(void Function(ReactInputEvent) callback) {
 ReactCallback _imgOnInputCapture(void Function(ReactInputEvent) callback) {
   return ReactCallback(
     debugName: 'img.onInputCapture',
-    signature: const (
-      positional: [_img_onInputCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onInputCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactInputEvent);
       return null;
@@ -5039,11 +4336,7 @@ ReactCallback _imgOnInputCapture(void Function(ReactInputEvent) callback) {
 ReactCallback _imgOnChange(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'img.onChange',
-    signature: const (
-      positional: [_img_onChangeSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onChangeSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -5054,11 +4347,7 @@ ReactCallback _imgOnChange(void Function(ReactChangeEvent) callback) {
 ReactCallback _imgOnChangeCapture(void Function(ReactChangeEvent) callback) {
   return ReactCallback(
     debugName: 'img.onChangeCapture',
-    signature: const (
-      positional: [_img_onChangeCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onChangeCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactChangeEvent);
       return null;
@@ -5069,11 +4358,7 @@ ReactCallback _imgOnChangeCapture(void Function(ReactChangeEvent) callback) {
 ReactCallback _imgOnSubmit(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'img.onSubmit',
-    signature: const (
-      positional: [_img_onSubmitSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onSubmitSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -5084,11 +4369,7 @@ ReactCallback _imgOnSubmit(void Function(ReactFormEvent) callback) {
 ReactCallback _imgOnSubmitCapture(void Function(ReactFormEvent) callback) {
   return ReactCallback(
     debugName: 'img.onSubmitCapture',
-    signature: const (
-      positional: [_img_onSubmitCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onSubmitCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFormEvent);
       return null;
@@ -5099,11 +4380,7 @@ ReactCallback _imgOnSubmitCapture(void Function(ReactFormEvent) callback) {
 ReactCallback _imgOnKeyDown(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'img.onKeyDown',
-    signature: const (
-      positional: [_img_onKeyDownSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onKeyDownSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -5114,11 +4391,7 @@ ReactCallback _imgOnKeyDown(void Function(ReactKeyboardEvent) callback) {
 ReactCallback _imgOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
   return ReactCallback(
     debugName: 'img.onKeyDownCapture',
-    signature: const (
-      positional: [_img_onKeyDownCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onKeyDownCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactKeyboardEvent);
       return null;
@@ -5129,11 +4402,7 @@ ReactCallback _imgOnKeyDownCapture(void Function(ReactKeyboardEvent) callback) {
 ReactCallback _imgOnFocus(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'img.onFocus',
-    signature: const (
-      positional: [_img_onFocusSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onFocusSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -5144,11 +4413,7 @@ ReactCallback _imgOnFocus(void Function(ReactFocusEvent) callback) {
 ReactCallback _imgOnFocusCapture(void Function(ReactFocusEvent) callback) {
   return ReactCallback(
     debugName: 'img.onFocusCapture',
-    signature: const (
-      positional: [_img_onFocusCaptureSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_onFocusCaptureSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       callback(arguments[0] as ReactFocusEvent);
       return null;
@@ -5159,11 +4424,7 @@ ReactCallback _imgOnFocusCapture(void Function(ReactFocusEvent) callback) {
 ReactCallback _imgRef(void Function(HTMLImageElement?) callback) {
   return ReactCallback(
     debugName: 'img.ref',
-    signature: const (
-      positional: [_img_refSpec],
-      result: reactVoid,
-      asynchronous: false,
-    ),
+    signature: const (positional: [_img_refSpec], result: reactVoid, asynchronous: false),
     invoke: (arguments) {
       final value = arguments[0];
       callback(value == null ? null : value as HTMLImageElement);
@@ -5171,3 +4432,4 @@ ReactCallback _imgRef(void Function(HTMLImageElement?) callback) {
     },
   );
 }
+

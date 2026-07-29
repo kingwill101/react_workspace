@@ -48,6 +48,7 @@ abstract interface class EventTarget {
   bool dispatchEvent();
 }
 
+
 abstract interface class Node implements EventTarget {
   int get nodeType;
   String get nodeName;
@@ -81,6 +82,7 @@ abstract interface class Node implements EventTarget {
   Node replaceChild();
   Node removeChild();
 }
+
 
 abstract interface class Element implements Node {
   String get namespaceURI;
@@ -148,6 +150,7 @@ abstract interface class Element implements Node {
   void insertAdjacentHTML();
 }
 
+
 abstract interface class HTMLElement implements Element {
   String get title;
   set title(String value);
@@ -192,6 +195,7 @@ abstract interface class HTMLElement implements Element {
   int get offsetHeight;
 }
 
+
 abstract interface class HTMLMarqueeElement implements HTMLElement {
   String get behavior;
   set behavior(String value);
@@ -219,13 +223,17 @@ abstract interface class HTMLMarqueeElement implements HTMLElement {
   void stop();
 }
 
+
 abstract interface class HTMLCollection {
   int get length;
   Element? item();
   Element? namedItem();
 }
 
-abstract interface class DocumentFragment implements Node {}
+
+abstract interface class DocumentFragment implements Node {
+}
+
 
 abstract interface class ShadowRoot implements DocumentFragment {
   ShadowRootMode get mode;
@@ -242,10 +250,12 @@ abstract interface class ShadowRoot implements DocumentFragment {
   set innerHTML(Object value);
 }
 
+
 abstract interface class NodeList {
   Node? item();
   int get length;
 }
+
 
 abstract interface class Document implements Node {
   DOMImplementation get implementation;
@@ -342,13 +352,17 @@ abstract interface class Document implements Node {
   HTMLAllCollection get all;
 }
 
+
 abstract interface class HTMLAllCollection {
   int get length;
   Object namedItem();
   Object item();
 }
 
-abstract interface class HTMLHeadElement implements HTMLElement {}
+
+abstract interface class HTMLHeadElement implements HTMLElement {
+}
+
 
 abstract interface class Location {
   String get href;
@@ -374,17 +388,20 @@ abstract interface class Location {
   DOMStringList get ancestorOrigins;
 }
 
+
 abstract interface class DOMStringList {
   int get length;
   String item();
   bool contains();
 }
 
+
 abstract interface class CaretPosition {
   Node get offsetNode;
   int get offset;
   DOMRect? getClientRect();
 }
+
 
 abstract interface class TreeWalker {
   Node get root;
@@ -401,6 +418,7 @@ abstract interface class TreeWalker {
   Node? nextNode();
 }
 
+
 abstract interface class NodeIterator {
   Node get root;
   Node get referenceNode;
@@ -412,6 +430,7 @@ abstract interface class NodeIterator {
   void detach();
 }
 
+
 abstract interface class AbstractRange {
   Node get startContainer;
   int get startOffset;
@@ -419,6 +438,7 @@ abstract interface class AbstractRange {
   int get endOffset;
   bool get collapsed;
 }
+
 
 abstract interface class Range implements AbstractRange {
   Node get commonAncestorContainer;
@@ -447,6 +467,7 @@ abstract interface class Range implements AbstractRange {
   DocumentFragment createContextualFragment();
 }
 
+
 abstract interface class Event {
   String get type;
   EventTarget? get target;
@@ -470,6 +491,7 @@ abstract interface class Event {
   void initEvent();
 }
 
+
 abstract interface class Attr implements Node {
   String get namespaceURI;
   String get prefix;
@@ -480,6 +502,7 @@ abstract interface class Attr implements Node {
   Element? get ownerElement;
   bool get specified;
 }
+
 
 abstract interface class CharacterData implements Node {
   String get data;
@@ -492,24 +515,32 @@ abstract interface class CharacterData implements Node {
   void replaceData();
 }
 
+
 abstract interface class ProcessingInstruction implements CharacterData {
   String get target;
 }
 
-abstract interface class Comment implements CharacterData {}
+
+abstract interface class Comment implements CharacterData {
+}
+
 
 abstract interface class Text implements CharacterData {
   Text splitText();
   String get wholeText;
 }
 
-abstract interface class CDATASection implements Text {}
+
+abstract interface class CDATASection implements Text {
+}
+
 
 abstract interface class DocumentType implements Node {
   String get name;
   String get publicId;
   String get systemId;
 }
+
 
 abstract interface class DOMImplementation {
   DocumentType createDocumentType();
@@ -518,7 +549,10 @@ abstract interface class DOMImplementation {
   bool hasFeature();
 }
 
-abstract interface class XMLDocument implements Document {}
+
+abstract interface class XMLDocument implements Document {
+}
+
 
 abstract interface class NamedNodeMap {
   int get length;
@@ -530,6 +564,7 @@ abstract interface class NamedNodeMap {
   Attr removeNamedItem();
   Attr removeNamedItemNS();
 }
+
 
 abstract interface class DOMTokenList {
   int get length;
@@ -543,6 +578,7 @@ abstract interface class DOMTokenList {
   String get value;
   set value(String value);
 }
+
 
 abstract interface class ElementInternals {
   ShadowRoot? get shadowRoot;
@@ -558,7 +594,10 @@ abstract interface class ElementInternals {
   CustomStateSet get states;
 }
 
-abstract interface class CustomStateSet {}
+
+abstract interface class CustomStateSet {
+}
+
 
 abstract interface class ValidityState {
   bool get valueMissing;
@@ -573,6 +612,7 @@ abstract interface class ValidityState {
   bool get customError;
   bool get valid;
 }
+
 
 abstract interface class HTMLFormElement implements HTMLElement {
   String get acceptCharset;
@@ -605,12 +645,16 @@ abstract interface class HTMLFormElement implements HTMLElement {
   bool reportValidity();
 }
 
+
 abstract interface class RadioNodeList implements NodeList {
   String get value;
   set value(String value);
 }
 
-abstract interface class HTMLFormControlsCollection implements HTMLCollection {}
+
+abstract interface class HTMLFormControlsCollection implements HTMLCollection {
+}
+
 
 abstract interface class HTMLFontElement implements HTMLElement {
   String get color;
@@ -620,6 +664,7 @@ abstract interface class HTMLFontElement implements HTMLElement {
   String get size;
   set size(String value);
 }
+
 
 abstract interface class HTMLParamElement implements HTMLElement {
   String get name;
@@ -632,12 +677,14 @@ abstract interface class HTMLParamElement implements HTMLElement {
   set valueType(String value);
 }
 
+
 abstract interface class HTMLFrameSetElement implements HTMLElement {
   String get cols;
   set cols(String value);
   String get rows;
   set rows(String value);
 }
+
 
 abstract interface class HTMLFrameElement implements HTMLElement {
   String get name;
@@ -660,12 +707,16 @@ abstract interface class HTMLFrameElement implements HTMLElement {
   set marginWidth(String value);
 }
 
+
 abstract interface class HTMLDirectoryElement implements HTMLElement {
   bool get compact;
   set compact(bool value);
 }
 
-abstract interface class HTMLUnknownElement implements HTMLElement {}
+
+abstract interface class HTMLUnknownElement implements HTMLElement {
+}
+
 
 abstract interface class HTMLCanvasElement implements HTMLElement {
   int get width;
@@ -677,6 +728,7 @@ abstract interface class HTMLCanvasElement implements HTMLElement {
   void toBlob();
   OffscreenCanvas transferControlToOffscreen();
 }
+
 
 abstract interface class OffscreenCanvas implements EventTarget {
   int get width;
@@ -692,11 +744,13 @@ abstract interface class OffscreenCanvas implements EventTarget {
   set oncontextrestored(EventHandler value);
 }
 
+
 abstract interface class ImageBitmap {
   int get width;
   int get height;
   void close();
 }
+
 
 abstract interface class HTMLSlotElement implements HTMLElement {
   String get name;
@@ -705,6 +759,7 @@ abstract interface class HTMLSlotElement implements HTMLElement {
   Element assignedElements();
   void assign();
 }
+
 
 abstract interface class HTMLTemplateElement implements HTMLElement {
   DocumentFragment get content;
@@ -717,6 +772,7 @@ abstract interface class HTMLTemplateElement implements HTMLElement {
   bool get shadowRootSerializable;
   set shadowRootSerializable(bool value);
 }
+
 
 abstract interface class HTMLScriptElement implements HTMLElement {
   String get src;
@@ -749,6 +805,7 @@ abstract interface class HTMLScriptElement implements HTMLElement {
   set htmlFor(String value);
 }
 
+
 abstract interface class HTMLDialogElement implements HTMLElement {
   bool get open;
   set open(bool value);
@@ -762,6 +819,7 @@ abstract interface class HTMLDialogElement implements HTMLElement {
   void requestClose();
 }
 
+
 abstract interface class HTMLDetailsElement implements HTMLElement {
   String get name;
   set name(String value);
@@ -769,11 +827,13 @@ abstract interface class HTMLDetailsElement implements HTMLElement {
   set open(bool value);
 }
 
+
 abstract interface class HTMLLegendElement implements HTMLElement {
   HTMLFormElement? get form;
   String get align;
   set align(String value);
 }
+
 
 abstract interface class HTMLFieldSetElement implements HTMLElement {
   bool get disabled;
@@ -791,6 +851,7 @@ abstract interface class HTMLFieldSetElement implements HTMLElement {
   void setCustomValidity();
 }
 
+
 abstract interface class HTMLMeterElement implements HTMLElement {
   double get value;
   set value(double value);
@@ -807,6 +868,7 @@ abstract interface class HTMLMeterElement implements HTMLElement {
   NodeList get labels;
 }
 
+
 abstract interface class HTMLProgressElement implements HTMLElement {
   double get value;
   set value(double value);
@@ -815,6 +877,7 @@ abstract interface class HTMLProgressElement implements HTMLElement {
   double get position;
   NodeList get labels;
 }
+
 
 abstract interface class HTMLOutputElement implements HTMLElement {
   DOMTokenList get htmlFor;
@@ -834,6 +897,7 @@ abstract interface class HTMLOutputElement implements HTMLElement {
   void setCustomValidity();
   NodeList get labels;
 }
+
 
 abstract interface class HTMLTextAreaElement implements HTMLElement {
   String get autocomplete;
@@ -885,6 +949,7 @@ abstract interface class HTMLTextAreaElement implements HTMLElement {
   void setSelectionRange();
 }
 
+
 abstract interface class HTMLOptionElement implements HTMLElement {
   bool get disabled;
   set disabled(bool value);
@@ -902,6 +967,7 @@ abstract interface class HTMLOptionElement implements HTMLElement {
   int get index;
 }
 
+
 abstract interface class HTMLOptGroupElement implements HTMLElement {
   bool get disabled;
   set disabled(bool value);
@@ -909,9 +975,11 @@ abstract interface class HTMLOptGroupElement implements HTMLElement {
   set label(String value);
 }
 
+
 abstract interface class HTMLDataListElement implements HTMLElement {
   HTMLCollection get options;
 }
+
 
 abstract interface class HTMLSelectElement implements HTMLElement {
   String get autocomplete;
@@ -950,12 +1018,14 @@ abstract interface class HTMLSelectElement implements HTMLElement {
   NodeList get labels;
 }
 
+
 abstract interface class HTMLOptionsCollection implements HTMLCollection {
   void add();
   void remove();
   int get selectedIndex;
   set selectedIndex(int value);
 }
+
 
 abstract interface class HTMLButtonElement implements HTMLElement {
   String get command;
@@ -989,6 +1059,7 @@ abstract interface class HTMLButtonElement implements HTMLElement {
   void setCustomValidity();
   NodeList get labels;
 }
+
 
 abstract interface class HTMLInputElement implements HTMLElement {
   String get accept;
@@ -1090,12 +1161,14 @@ abstract interface class HTMLInputElement implements HTMLElement {
   set useMap(String value);
 }
 
+
 abstract interface class HTMLLabelElement implements HTMLElement {
   HTMLFormElement? get form;
   String get htmlFor;
   set htmlFor(String value);
   HTMLElement? get control;
 }
+
 
 abstract interface class HTMLTableCellElement implements HTMLElement {
   int get colSpan;
@@ -1129,6 +1202,7 @@ abstract interface class HTMLTableCellElement implements HTMLElement {
   set bgColor(String value);
 }
 
+
 abstract interface class HTMLTableRowElement implements HTMLElement {
   int get rowIndex;
   int get sectionRowIndex;
@@ -1147,6 +1221,7 @@ abstract interface class HTMLTableRowElement implements HTMLElement {
   set bgColor(String value);
 }
 
+
 abstract interface class HTMLTableSectionElement implements HTMLElement {
   HTMLCollection get rows;
   HTMLTableRowElement insertRow();
@@ -1160,6 +1235,7 @@ abstract interface class HTMLTableSectionElement implements HTMLElement {
   String get vAlign;
   set vAlign(String value);
 }
+
 
 abstract interface class HTMLTableColElement implements HTMLElement {
   int get span;
@@ -1176,10 +1252,12 @@ abstract interface class HTMLTableColElement implements HTMLElement {
   set width(String value);
 }
 
+
 abstract interface class HTMLTableCaptionElement implements HTMLElement {
   String get align;
   set align(String value);
 }
+
 
 abstract interface class HTMLTableElement implements HTMLElement {
   HTMLTableCaptionElement? get caption;
@@ -1219,6 +1297,7 @@ abstract interface class HTMLTableElement implements HTMLElement {
   set cellSpacing(String value);
 }
 
+
 abstract interface class HTMLAreaElement implements HTMLElement {
   String get alt;
   set alt(String value);
@@ -1241,11 +1320,13 @@ abstract interface class HTMLAreaElement implements HTMLElement {
   set noHref(bool value);
 }
 
+
 abstract interface class HTMLMapElement implements HTMLElement {
   String get name;
   set name(String value);
   HTMLCollection get areas;
 }
+
 
 abstract interface class HTMLTrackElement implements HTMLElement {
   String get kind;
@@ -1261,6 +1342,7 @@ abstract interface class HTMLTrackElement implements HTMLElement {
   int get readyState;
   TextTrack get track;
 }
+
 
 abstract interface class TextTrack implements EventTarget {
   TextTrackKind get kind;
@@ -1278,10 +1360,12 @@ abstract interface class TextTrack implements EventTarget {
   set oncuechange(EventHandler value);
 }
 
+
 abstract interface class TextTrackCueList {
   int get length;
   TextTrackCue? getCueById();
 }
+
 
 abstract interface class TextTrackCue implements EventTarget {
   TextTrack? get track;
@@ -1298,6 +1382,7 @@ abstract interface class TextTrackCue implements EventTarget {
   EventHandler get onexit;
   set onexit(EventHandler value);
 }
+
 
 abstract interface class HTMLMediaElement implements HTMLElement {
   MediaError? get error;
@@ -1351,7 +1436,10 @@ abstract interface class HTMLMediaElement implements HTMLElement {
   TextTrack addTextTrack();
 }
 
-abstract interface class HTMLAudioElement implements HTMLMediaElement {}
+
+abstract interface class HTMLAudioElement implements HTMLMediaElement {
+}
+
 
 abstract interface class TextTrackList implements EventTarget {
   int get length;
@@ -1363,6 +1451,7 @@ abstract interface class TextTrackList implements EventTarget {
   EventHandler get onremovetrack;
   set onremovetrack(EventHandler value);
 }
+
 
 abstract interface class VideoTrackList implements EventTarget {
   int get length;
@@ -1376,6 +1465,7 @@ abstract interface class VideoTrackList implements EventTarget {
   set onremovetrack(EventHandler value);
 }
 
+
 abstract interface class VideoTrack {
   String get id;
   String get kind;
@@ -1384,6 +1474,7 @@ abstract interface class VideoTrack {
   bool get selected;
   set selected(bool value);
 }
+
 
 abstract interface class AudioTrackList implements EventTarget {
   int get length;
@@ -1396,6 +1487,7 @@ abstract interface class AudioTrackList implements EventTarget {
   set onremovetrack(EventHandler value);
 }
 
+
 abstract interface class AudioTrack {
   String get id;
   String get kind;
@@ -1405,16 +1497,19 @@ abstract interface class AudioTrack {
   set enabled(bool value);
 }
 
+
 abstract interface class TimeRanges {
   int get length;
   double start();
   double end();
 }
 
+
 abstract interface class MediaError {
   int get code;
   String get message;
 }
+
 
 abstract interface class HTMLVideoElement implements HTMLMediaElement {
   int get width;
@@ -1428,6 +1523,7 @@ abstract interface class HTMLVideoElement implements HTMLMediaElement {
   bool get playsInline;
   set playsInline(bool value);
 }
+
 
 abstract interface class HTMLObjectElement implements HTMLElement {
   String get data;
@@ -1474,6 +1570,7 @@ abstract interface class HTMLObjectElement implements HTMLElement {
   set border(String value);
 }
 
+
 abstract interface class HTMLEmbedElement implements HTMLElement {
   String get src;
   set src(String value);
@@ -1489,6 +1586,7 @@ abstract interface class HTMLEmbedElement implements HTMLElement {
   String get name;
   set name(String value);
 }
+
 
 abstract interface class HTMLIFrameElement implements HTMLElement {
   String get src;
@@ -1526,6 +1624,7 @@ abstract interface class HTMLIFrameElement implements HTMLElement {
   String get marginWidth;
   set marginWidth(String value);
 }
+
 
 abstract interface class HTMLImageElement implements HTMLElement {
   String get alt;
@@ -1577,6 +1676,7 @@ abstract interface class HTMLImageElement implements HTMLElement {
   set border(String value);
 }
 
+
 abstract interface class HTMLSourceElement implements HTMLElement {
   String get src;
   set src(String value);
@@ -1594,7 +1694,10 @@ abstract interface class HTMLSourceElement implements HTMLElement {
   set height(int value);
 }
 
-abstract interface class HTMLPictureElement implements HTMLElement {}
+
+abstract interface class HTMLPictureElement implements HTMLElement {
+}
+
 
 abstract interface class HTMLModElement implements HTMLElement {
   String get cite;
@@ -1603,22 +1706,28 @@ abstract interface class HTMLModElement implements HTMLElement {
   set dateTime(String value);
 }
 
+
 abstract interface class HTMLBRElement implements HTMLElement {
   String get clear;
   set clear(String value);
 }
 
-abstract interface class HTMLSpanElement implements HTMLElement {}
+
+abstract interface class HTMLSpanElement implements HTMLElement {
+}
+
 
 abstract interface class HTMLTimeElement implements HTMLElement {
   String get dateTime;
   set dateTime(String value);
 }
 
+
 abstract interface class HTMLDataElement implements HTMLElement {
   String get value;
   set value(String value);
 }
+
 
 abstract interface class HTMLAnchorElement implements HTMLElement {
   String get target;
@@ -1650,15 +1759,18 @@ abstract interface class HTMLAnchorElement implements HTMLElement {
   set shape(String value);
 }
 
+
 abstract interface class HTMLDivElement implements HTMLElement {
   String get align;
   set align(String value);
 }
 
+
 abstract interface class HTMLDListElement implements HTMLElement {
   bool get compact;
   set compact(bool value);
 }
+
 
 abstract interface class HTMLLIElement implements HTMLElement {
   int get value;
@@ -1667,10 +1779,12 @@ abstract interface class HTMLLIElement implements HTMLElement {
   set type(String value);
 }
 
+
 abstract interface class HTMLMenuElement implements HTMLElement {
   bool get compact;
   set compact(bool value);
 }
+
 
 abstract interface class HTMLUListElement implements HTMLElement {
   bool get compact;
@@ -1678,6 +1792,7 @@ abstract interface class HTMLUListElement implements HTMLElement {
   String get type;
   set type(String value);
 }
+
 
 abstract interface class HTMLOListElement implements HTMLElement {
   bool get reversed;
@@ -1690,15 +1805,18 @@ abstract interface class HTMLOListElement implements HTMLElement {
   set compact(bool value);
 }
 
+
 abstract interface class HTMLQuoteElement implements HTMLElement {
   String get cite;
   set cite(String value);
 }
 
+
 abstract interface class HTMLPreElement implements HTMLElement {
   int get width;
   set width(int value);
 }
+
 
 abstract interface class HTMLHRElement implements HTMLElement {
   String get align;
@@ -1713,15 +1831,18 @@ abstract interface class HTMLHRElement implements HTMLElement {
   set width(String value);
 }
 
+
 abstract interface class HTMLParagraphElement implements HTMLElement {
   String get align;
   set align(String value);
 }
 
+
 abstract interface class HTMLHeadingElement implements HTMLElement {
   String get align;
   set align(String value);
 }
+
 
 abstract interface class HTMLBodyElement implements HTMLElement {
   String get text;
@@ -1738,6 +1859,7 @@ abstract interface class HTMLBodyElement implements HTMLElement {
   set background(String value);
 }
 
+
 abstract interface class HTMLStyleElement implements HTMLElement {
   bool get disabled;
   set disabled(bool value);
@@ -1747,6 +1869,7 @@ abstract interface class HTMLStyleElement implements HTMLElement {
   String get type;
   set type(String value);
 }
+
 
 abstract interface class HTMLMetaElement implements HTMLElement {
   String get name;
@@ -1760,6 +1883,7 @@ abstract interface class HTMLMetaElement implements HTMLElement {
   String get scheme;
   set scheme(String value);
 }
+
 
 abstract interface class HTMLLinkElement implements HTMLElement {
   String get href;
@@ -1799,6 +1923,7 @@ abstract interface class HTMLLinkElement implements HTMLElement {
   set target(String value);
 }
 
+
 abstract interface class HTMLBaseElement implements HTMLElement {
   String get href;
   set href(String value);
@@ -1806,12 +1931,16 @@ abstract interface class HTMLBaseElement implements HTMLElement {
   set target(String value);
 }
 
+
 abstract interface class HTMLTitleElement implements HTMLElement {
   String get text;
   set text(String value);
 }
 
+
 abstract interface class HTMLHtmlElement implements HTMLElement {
   String get version;
   set version(String value);
 }
+
+
