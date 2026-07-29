@@ -13,7 +13,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -45,7 +45,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -70,7 +70,7 @@
           "writable": false,
           "type": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -136,6 +136,52 @@
       ],
       "exposure": "full"
     },
+    "web.EventTarget": {
+      "typeId": "web.EventTarget",
+      "kind": "interface",
+      "name": "EventTarget",
+      "sourceName": "EventTarget",
+      "members": [
+        {
+          "name": "addEventListener",
+          "kind": "operation",
+          "parameters": [],
+          "returnType": {
+            "kind": "named",
+            "typeId": "core.void",
+            "nullable": false,
+            "arguments": []
+          }
+        },
+        {
+          "name": "removeEventListener",
+          "kind": "operation",
+          "parameters": [],
+          "returnType": {
+            "kind": "named",
+            "typeId": "core.void",
+            "nullable": false,
+            "arguments": []
+          }
+        },
+        {
+          "name": "dispatchEvent",
+          "kind": "operation",
+          "parameters": [],
+          "returnType": {
+            "kind": "named",
+            "typeId": "core.bool",
+            "nullable": false,
+            "arguments": []
+          }
+        }
+      ],
+      "exposure": "full",
+      "browserBinding": {
+        "library": "package:web/web.dart",
+        "symbol": "EventTarget"
+      }
+    },
     "react.ReactTouchEvent": {
       "typeId": "react.ReactTouchEvent",
       "kind": "interface",
@@ -145,7 +191,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -177,7 +223,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -209,7 +255,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -241,7 +287,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -273,7 +319,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -301,7 +347,7 @@
           "writable": false,
           "type": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": true,
             "arguments": []
           }
@@ -318,7 +364,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -411,7 +457,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -443,7 +489,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -475,7 +521,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -520,7 +566,7 @@
           "name": "T",
           "bound": {
             "kind": "named",
-            "typeId": "web.WebEventTarget",
+            "typeId": "web.EventTarget",
             "nullable": false,
             "arguments": []
           }
@@ -615,52 +661,6 @@
         }
       ],
       "exposure": "full"
-    },
-    "web.EventTarget": {
-      "typeId": "web.EventTarget",
-      "kind": "interface",
-      "name": "EventTarget",
-      "sourceName": "EventTarget",
-      "members": [
-        {
-          "name": "addEventListener",
-          "kind": "operation",
-          "parameters": [],
-          "returnType": {
-            "kind": "named",
-            "typeId": "core.void",
-            "nullable": false,
-            "arguments": []
-          }
-        },
-        {
-          "name": "removeEventListener",
-          "kind": "operation",
-          "parameters": [],
-          "returnType": {
-            "kind": "named",
-            "typeId": "core.void",
-            "nullable": false,
-            "arguments": []
-          }
-        },
-        {
-          "name": "dispatchEvent",
-          "kind": "operation",
-          "parameters": [],
-          "returnType": {
-            "kind": "named",
-            "typeId": "core.bool",
-            "nullable": false,
-            "arguments": []
-          }
-        }
-      ],
-      "exposure": "full",
-      "browserBinding": {
-        "library": "package:web/web.dart",
-        "symbol": "EventTarget"
-      }
     },
     "web.Node": {
       "typeId": "web.Node",

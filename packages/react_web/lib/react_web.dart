@@ -7,6 +7,6 @@ library react_web;
 
 export 'package:react/react.dart';
 
-export 'src/events.dart';
+export 'src/event_interfaces.dart';
 export 'src/generated/elements.dart';
-export 'src/types/html.dart';
+export 'src/types/html_interfaces.dart' hide Text, HTMLDivElement, HTMLSpanElement, HTMLButtonElement, HTMLInputElement, HTMLFormElement, HTMLLabelElement, HTMLTextAreaElement, HTMLSelectElement, HTMLOptionElement, HTMLAnchorElement, HTMLImageElement;

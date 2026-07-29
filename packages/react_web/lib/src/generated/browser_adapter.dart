@@ -4,61 +4,23 @@ import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
 import 'package:react_js/react_js.dart';
-import 'package:react_web/src/events.dart';
-import 'package:react_web/src/types/html.dart';
+import 'package:react_web/src/event_interfaces.dart';
+import 'package:react_web/src/types/html_interfaces.dart';
 import 'package:web/web.dart' as web;
 
-final class GeneratedElement implements HTMLDivElement, HTMLSpanElement, HTMLButtonElement, HTMLInputElement, HTMLFormElement, HTMLLabelElement, HTMLTextAreaElement, HTMLSelectElement, HTMLOptionElement, HTMLAnchorElement, HTMLImageElement {
+final class GeneratedElement implements EventTarget {
   final web.HTMLElement _inner;
   GeneratedElement(this._inner);
 
   @override
-  String? get id => (_inner as dynamic).id as String?;
+  void addEventListener() => (_inner as dynamic).addEventListener();
   @override
-  void focus() => (_inner as dynamic).focus();
+  void removeEventListener() => (_inner as dynamic).removeEventListener();
   @override
-  String? get title => (_inner as dynamic).title as String?;
-  @override
-  String? get lang => (_inner as dynamic).lang as String?;
-  @override
-  bool? get hidden => (_inner as dynamic).hidden as bool?;
-  @override
-  int? get tabIndex => (_inner as dynamic).tabIndex as int?;
-  @override
-  String? get dir => (_inner as dynamic).dir as String?;
-  @override
-  bool? get disabled => (_inner as dynamic).disabled as bool?;
-  @override
-  String? get type => (_inner as dynamic).type as String?;
-  @override
-  String? get value => (_inner as dynamic).value as String?;
-  @override
-  String? get placeholder => (_inner as dynamic).placeholder as String?;
-  @override
-  String? get action => (_inner as dynamic).action as String?;
-  @override
-  String? get method => (_inner as dynamic).method as String?;
-  @override
-  String? get htmlFor => (_inner as dynamic).htmlFor as String?;
-  @override
-  bool? get selected => (_inner as dynamic).selected as bool?;
-  @override
-  String? get href => (_inner as dynamic).href as String?;
-  @override
-  String? get target => (_inner as dynamic).target as String?;
-  @override
-  String? get rel => (_inner as dynamic).rel as String?;
-  @override
-  String? get src => (_inner as dynamic).src as String?;
-  @override
-  String? get alt => (_inner as dynamic).alt as String?;
-  @override
-  int? get width => (_inner as dynamic).width as int?;
-  @override
-  int? get height => (_inner as dynamic).height as int?;
+  bool dispatchEvent() => (_inner as dynamic).dispatchEvent();
 }
 
-mixin SyntheticEventBaseMixin<T extends WebEventTarget>
+mixin SyntheticEventBaseMixin<T extends EventTarget>
     implements ReactSyntheticEvent<T> {
   JSObject get _jsEvent;
 
@@ -75,22 +37,22 @@ mixin SyntheticEventBaseMixin<T extends WebEventTarget>
   @override
   T get currentTarget => _wrapEventTarget<T>(_jsEvent);
   @override
-  WebEventTarget get target => _wrapTarget(_jsEvent);
+  EventTarget get target => _wrapTarget(_jsEvent);
 
   bool _getBool(String prop) =>
       (_jsEvent.getProperty(prop.toJS) as JSBoolean?)?.toDart ?? false;
 }
 
-mixin RelatedTargetMixin<T extends WebEventTarget> {
+mixin RelatedTargetMixin<T extends EventTarget> {
   JSObject get _jsEvent;
-  WebEventTarget? get relatedTarget {
+  EventTarget? get relatedTarget {
     final v = _jsEvent.getProperty('relatedTarget'.toJS);
     if (v == null || _isUndefinedOrNull(v)) return null;
-    return _wrapOne(v) as WebEventTarget?;
+    return _wrapOne(v) as EventTarget?;
   }
 }
 
-final class GeneratedReactSyntheticEvent<T extends WebEventTarget>
+final class GeneratedReactSyntheticEvent<T extends EventTarget>
     with SyntheticEventBaseMixin<T>
     implements ReactSyntheticEvent<T> {
   @override
@@ -98,7 +60,7 @@ final class GeneratedReactSyntheticEvent<T extends WebEventTarget>
   GeneratedReactSyntheticEvent(this._jsEvent);
 }
 
-final class GeneratedReactMouseEvent<T extends WebEventTarget>
+final class GeneratedReactMouseEvent<T extends EventTarget>
     with SyntheticEventBaseMixin<T>
     implements ReactMouseEvent<T> {
   @override
@@ -119,7 +81,7 @@ final class GeneratedReactMouseEvent<T extends WebEventTarget>
   bool get shiftKey => _getBool('shiftKey');
 }
 
-final class GeneratedReactInputEvent<T extends WebEventTarget>
+final class GeneratedReactInputEvent<T extends EventTarget>
     with SyntheticEventBaseMixin<T>
     implements ReactInputEvent<T> {
   @override
@@ -130,7 +92,7 @@ final class GeneratedReactInputEvent<T extends WebEventTarget>
   String get data => (_jsEvent.getProperty('data'.toJS) as JSString).toDart;
 }
 
-final class GeneratedReactChangeEvent<T extends WebEventTarget>
+final class GeneratedReactChangeEvent<T extends EventTarget>
     with SyntheticEventBaseMixin<T>
     implements ReactChangeEvent<T> {
   @override
@@ -139,7 +101,7 @@ final class GeneratedReactChangeEvent<T extends WebEventTarget>
 
 }
 
-final class GeneratedReactFormEvent<T extends WebEventTarget>
+final class GeneratedReactFormEvent<T extends EventTarget>
     with SyntheticEventBaseMixin<T>
     implements ReactFormEvent<T> {
   @override
@@ -148,7 +110,7 @@ final class GeneratedReactFormEvent<T extends WebEventTarget>
 
 }
 
-final class GeneratedReactKeyboardEvent<T extends WebEventTarget>
+final class GeneratedReactKeyboardEvent<T extends EventTarget>
     with SyntheticEventBaseMixin<T>
     implements ReactKeyboardEvent<T> {
   @override
@@ -167,7 +129,7 @@ final class GeneratedReactKeyboardEvent<T extends WebEventTarget>
   bool get shiftKey => _getBool('shiftKey');
 }
 
-final class GeneratedReactFocusEvent<T extends WebEventTarget>
+final class GeneratedReactFocusEvent<T extends EventTarget>
     with SyntheticEventBaseMixin<T>
     , RelatedTargetMixin<T>
     implements ReactFocusEvent<T> {
@@ -193,24 +155,24 @@ GeneratedElement _wrapElement(JSObject js) {
 Object? _wrapEventByType(JSObject js) {
   final type = (js.getProperty('type'.toJS) as JSString).toDart;
   return switch (type) {
-    'ReactMouseEvent' => GeneratedReactMouseEvent<HTMLDivElement>(js),
-    'ReactInputEvent' => GeneratedReactInputEvent<HTMLDivElement>(js),
-    'ReactChangeEvent' => GeneratedReactChangeEvent<HTMLDivElement>(js),
-    'ReactFormEvent' => GeneratedReactFormEvent<HTMLDivElement>(js),
-    'ReactKeyboardEvent' => GeneratedReactKeyboardEvent<HTMLDivElement>(js),
-    'ReactFocusEvent' => GeneratedReactFocusEvent<HTMLDivElement>(js),
-    _ => GeneratedReactSyntheticEvent<WebEventTarget>(js),
+    'ReactMouseEvent' => GeneratedReactMouseEvent<EventTarget>(js),
+    'ReactInputEvent' => GeneratedReactInputEvent<EventTarget>(js),
+    'ReactChangeEvent' => GeneratedReactChangeEvent<EventTarget>(js),
+    'ReactFormEvent' => GeneratedReactFormEvent<EventTarget>(js),
+    'ReactKeyboardEvent' => GeneratedReactKeyboardEvent<EventTarget>(js),
+    'ReactFocusEvent' => GeneratedReactFocusEvent<EventTarget>(js),
+    _ => GeneratedReactSyntheticEvent<EventTarget>(js),
   };
 }
 
-T _wrapEventTarget<T extends WebEventTarget>(JSObject js) {
+T _wrapEventTarget<T extends EventTarget>(JSObject js) {
   final el = js.getProperty('currentTarget'.toJS);
   return _wrapOne(el) as T;
 }
 
-WebEventTarget _wrapTarget(JSObject js) {
+EventTarget _wrapTarget(JSObject js) {
   final el = js.getProperty('target'.toJS);
-  return _wrapOne(el) as WebEventTarget;
+  return _wrapOne(el) as EventTarget;
 }
 
 Object? _wrapOne(JSAny? value) {
@@ -284,27 +246,27 @@ void registerBrowserAdapters() {
     encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactMouseEvent<HTMLDivElement>',
+    'web', 'ReactMouseEvent<EventTarget>',
     decoder: (value) => GeneratedReactMouseEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactInputEvent<HTMLDivElement>',
+    'web', 'ReactInputEvent<EventTarget>',
     decoder: (value) => GeneratedReactInputEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactChangeEvent<HTMLDivElement>',
+    'web', 'ReactChangeEvent<EventTarget>',
     decoder: (value) => GeneratedReactChangeEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactFormEvent<HTMLDivElement>',
+    'web', 'ReactFormEvent<EventTarget>',
     decoder: (value) => GeneratedReactFormEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactKeyboardEvent<HTMLDivElement>',
+    'web', 'ReactKeyboardEvent<EventTarget>',
     decoder: (value) => GeneratedReactKeyboardEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactFocusEvent<HTMLDivElement>',
+    'web', 'ReactFocusEvent<EventTarget>',
     decoder: (value) => GeneratedReactFocusEvent(value as JSObject),
   );
 }

@@ -27,8 +27,8 @@ final class AdapterEmitter {
     buf.writeln("import 'dart:js_interop_unsafe';");
     buf.writeln();
     buf.writeln("import 'package:react_js/react_js.dart';");
-    buf.writeln("import 'package:react_web/src/events.dart';");
-    buf.writeln("import 'package:react_web/src/types/html.dart';");
+    buf.writeln("import 'package:react_web/src/event_interfaces.dart';");
+    buf.writeln("import 'package:react_web/src/types/html_interfaces.dart';");
     buf.writeln("import 'package:web/web.dart' as web;");
     buf.writeln();
 
@@ -89,42 +89,16 @@ final class AdapterEmitter {
   };
 
   void _emitElementAdapter(StringBuffer buf) {
-    final types = _elementTypes;
-    if (types.isEmpty) return;
-
-    buf.writeln('final class GeneratedElement implements ${types.join(', ')} {');
+    buf.writeln('final class GeneratedElement implements EventTarget {');
     buf.writeln('  final web.HTMLElement _inner;');
     buf.writeln('  GeneratedElement(this._inner);');
     buf.writeln();
-
-    // Collect all members across all element types
-    final allMembers = <String, Map<String, dynamic>>{};
-    for (final t in types) {
-      for (final m in _collectedMembers(t, 'elementTypes')) {
-        final key = m['name'] as String;
-        allMembers[key] = m;
-      }
-    }
-
-    for (final entry in allMembers.entries) {
-      final name = entry.key;
-      final m = entry.value;
-      final returnType = m['returnType'] as String;
-      final kind = m['kind'] as String;
-      final webName = _webProp(name);
-
-      buf.writeln('  @override');
-      if (kind == 'method') {
-        if (returnType == 'void') {
-          buf.writeln("  void $name() => (_inner as dynamic).$webName();");
-        } else {
-          buf.writeln("  $returnType $name() => (_inner as dynamic).$webName() as $returnType;");
-        }
-      } else {
-        buf.writeln("  $returnType get $name => (_inner as dynamic).$webName as $returnType;");
-      }
-    }
-
+    buf.writeln('  @override');
+    buf.writeln("  void addEventListener() => (_inner as dynamic).addEventListener();");
+    buf.writeln('  @override');
+    buf.writeln("  void removeEventListener() => (_inner as dynamic).removeEventListener();");
+    buf.writeln('  @override');
+    buf.writeln("  bool dispatchEvent() => (_inner as dynamic).dispatchEvent();");
     buf.writeln('}');
     buf.writeln();
   }
@@ -133,7 +107,7 @@ final class AdapterEmitter {
     final events = _eventTypes;
     if (events.isEmpty) return;
 
-    final typeArg = 'T extends WebEventTarget';
+    final typeArg = 'T extends EventTarget';
 
     // Shared synthetic event base mixin
     buf.writeln('mixin SyntheticEventBaseMixin<$typeArg>');
@@ -159,7 +133,7 @@ final class AdapterEmitter {
     buf.writeln('  @override');
     buf.writeln('  T get currentTarget => _wrapEventTarget<T>(_jsEvent);');
     buf.writeln('  @override');
-    buf.writeln("  WebEventTarget get target => _wrapTarget(_jsEvent);");
+    buf.writeln("  EventTarget get target => _wrapTarget(_jsEvent);");
 
     buf.writeln();
     buf.writeln("  bool _getBool(String prop) =>");
@@ -171,10 +145,10 @@ final class AdapterEmitter {
     if (events.contains('ReactFocusEvent')) {
       buf.writeln('mixin RelatedTargetMixin<$typeArg> {');
       buf.writeln('  JSObject get _jsEvent;');
-    buf.writeln("  WebEventTarget? get relatedTarget {");
+    buf.writeln("  EventTarget? get relatedTarget {");
     buf.writeln("    final v = _jsEvent.getProperty('relatedTarget'.toJS);");
     buf.writeln('    if (v == null || _isUndefinedOrNull(v)) return null;');
-    buf.writeln('    return _wrapOne(v) as WebEventTarget?;');
+    buf.writeln('    return _wrapOne(v) as EventTarget?;');
     buf.writeln('  }');
       buf.writeln('}');
       buf.writeln();
@@ -257,23 +231,22 @@ final class AdapterEmitter {
     buf.writeln("  final type = (js.getProperty('type'.toJS) as JSString).toDart;");
     buf.writeln('  return switch (type) {');
     for (final eventType in _eventTypes) {
-      final firstEl = _elementTypes.firstOrNull ?? 'WebEventTarget';
-      buf.writeln("    '$eventType' => Generated$eventType<$firstEl>(js),");
+      buf.writeln("    '$eventType' => Generated$eventType<EventTarget>(js),");
     }
-    buf.writeln("    _ => GeneratedReactSyntheticEvent<WebEventTarget>(js),");
+    buf.writeln("    _ => GeneratedReactSyntheticEvent<EventTarget>(js),");
     buf.writeln('  };');
     buf.writeln('}');
     buf.writeln();
 
-    buf.writeln('T _wrapEventTarget<T extends WebEventTarget>(JSObject js) {');
+    buf.writeln('T _wrapEventTarget<T extends EventTarget>(JSObject js) {');
     buf.writeln("  final el = js.getProperty('currentTarget'.toJS);");
     buf.writeln('  return _wrapOne(el) as T;');
     buf.writeln('}');
     buf.writeln();
 
-    buf.writeln('WebEventTarget _wrapTarget(JSObject js) {');
+    buf.writeln('EventTarget _wrapTarget(JSObject js) {');
     buf.writeln("  final el = js.getProperty('target'.toJS);");
-    buf.writeln('  return _wrapOne(el) as WebEventTarget;');
+    buf.writeln('  return _wrapOne(el) as EventTarget;');
     buf.writeln('}');
     buf.writeln();
 
@@ -304,9 +277,8 @@ final class AdapterEmitter {
       buf.writeln('  );');
     }
     for (final et in _eventTypes) {
-      final firstEl = _elementTypes.firstOrNull ?? 'WebEventTarget';
       buf.writeln("  ReactCodecRegistry.registerHostValue(");
-      buf.writeln("    'web', '$et<$firstEl>',");
+      buf.writeln("    'web', '$et<EventTarget>',");
       buf.writeln('    decoder: (value) => Generated$et(value as JSObject),');
       buf.writeln('  );');
     }

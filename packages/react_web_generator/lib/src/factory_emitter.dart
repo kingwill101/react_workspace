@@ -12,8 +12,8 @@ final class FactoryEmitter {
     buf.writeln();
 
     buf.writeln("import 'package:react/react.dart';");
-    buf.writeln("import 'package:react_web/src/events.dart';");
-    buf.writeln("import 'package:react_web/src/types/html.dart';");
+    buf.writeln("import 'package:react_web/src/event_interfaces.dart';");
+    buf.writeln("import 'package:react_web/src/types/html_interfaces.dart';");
     buf.writeln();
 
     for (final el in elements) {

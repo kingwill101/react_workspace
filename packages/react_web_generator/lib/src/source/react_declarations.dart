@@ -7,7 +7,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     members: [
@@ -17,7 +17,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
       ),
       AttributeDecl(
         name: 'target',
-        type: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        type: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
       AttributeDecl(
         name: 'bubbles',
@@ -47,7 +47,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     extends_: [
@@ -89,7 +89,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     extends_: [
@@ -111,7 +111,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     extends_: [
@@ -127,7 +127,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     extends_: [
@@ -143,7 +143,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     extends_: [
@@ -181,7 +181,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     extends_: [
@@ -193,7 +193,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     members: [
       AttributeDecl(
         name: 'relatedTarget',
-        type: NamedTypeRef(typeId: 'web.WebEventTarget', nullable: true),
+        type: NamedTypeRef(typeId: 'web.EventTarget', nullable: true),
       ),
     ],
   ),
@@ -203,7 +203,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     extends_: [
@@ -219,7 +219,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     extends_: [
@@ -235,7 +235,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     extends_: [
@@ -251,7 +251,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     extends_: [
@@ -267,7 +267,7 @@ Map<String, InterfaceDecl> reactEventInterfaces() => {
     typeParameters: [
       TypeParameterDecl(
         name: 'T',
-        bound: NamedTypeRef(typeId: 'web.WebEventTarget'),
+        bound: NamedTypeRef(typeId: 'web.EventTarget'),
       ),
     ],
     extends_: [
