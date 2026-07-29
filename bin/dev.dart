@@ -158,7 +158,7 @@ Future<void> main() async {
           final proxy = await c.post('localhost', 3001, '/');
           proxy.write(
             jsonEncode({
-              'id': 'package:example/lib/app.dart#App',
+              'id': 'package:react_workspace/example/lib/app.dart#App',
               'props': {'title': 'hi'},
             }),
           );

@@ -1,9 +1,11 @@
 import 'app.react.dart';
 import 'counter.react.dart';
 import 'package:react_server/react_server.dart';
+import 'react_components.g.dart';
 import 'ssr_registry.g.dart';
 
 void main() {
+  registerReactComponents();
   SsrComponentRegistry.register(
     idApp.value,
     (props) => App(title: props['title'] as String? ?? 'hi from SSR'),
