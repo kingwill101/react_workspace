@@ -1,4 +1,4 @@
-import 'package:react_web_generator/src/factory_emitter.dart';
+import 'package:react_web_generator/src/emit/factory_emitter.dart';
 import 'package:react_web_generator/src/web_host_ir.dart';
 import 'package:react_web_generator/src/web_dart_type.dart';
 import 'package:test/test.dart';
@@ -175,7 +175,7 @@ void main() {
         namespace: WebNamespace.html,
         elementType: WebDartType(
           symbol: 'HTMLImageElement',
-          import: pkg('package:react_web/src/types/html.dart'),
+          import: pkg('package:react_web/src/generated/html_interfaces.dart'),
           nullable: false,
         ),
         voidElement: true,

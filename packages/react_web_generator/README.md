@@ -451,7 +451,127 @@ Check that the DOM event name is listed in `config/react_dom_overlay.json` under
 
 ---
 
-## 11. File inventory
+## 11. Design decisions
+
+### 11.1 Single source of truth: `neutral_web_model.json`
+
+All generated outputs derive from one file: `config/neutral_web_model.json`. It is
+**never hand-edited**. It is rewritten by `ModelJsonEmitter` every time the generator
+runs. Adding an element or exposing a new IDL member may expand the type graph, but it
+must never require manually adding another Dart interface or auxiliary stub.
+
+### 11.2 Structured `TypeRef` AST, not strings
+
+Types in the model are represented as structured JSON (e.g. `{"kind":"named","typeId":"web.String","nullable":true,"arguments":[]}`)
+rather than unparsed Dart strings like `"String?"` or `"T extends EventTarget"`.
+This lets every emitter resolve types independently without fragile string parsing.
+
+### 11.3 Reachability, not manual allowlisting of auxiliary types
+
+Every type referenced by the public surface (parent interfaces, return types, parameters,
+generic bounds, union options) is discovered automatically by a reachability pass from
+the configured root element names and React event interfaces.
+
+The generator fails if the closure contains an unresolved type:
+
+```text
+Unresolved neutral type: HTMLInputElement.files → FileList
+Source: Web IDL HTMLInputElement.files
+Add a mapping policy or update the source snapshot.
+```
+
+It should never silently require someone to add `abstract interface class FileList {}` by hand.
+
+### 11.4 Exposure policies
+
+Not every reachable Web API needs its complete surface generated immediately. Each
+reachable declaration receives a policy:
+
+| Policy   | Behavior |
+|----------|----------|
+| `full`   | Generate all members recursively. |
+| `opaque` | Generate only a marker interface (`abstract interface class ShadowRoot {}`). The browser adapter can still hold the underlying `web.ShadowRoot`, but shared code cannot inspect unsupported members. |
+| `excluded` | Drop any member that exposes this type, with a generator diagnostic. |
+| `mapped` | Map it to a known neutral/core type (e.g. `TrustedHTML` → `TrustedHtml`). |
+
+The policy file (`react_dom_overlay.json` or a dedicated `typePolicies` map) remains
+small and intentional. It does not duplicate Web IDL inheritance and members.
+
+### 11.5 Browser adapters per interface, not one monolith
+
+`GeneratedElement` currently implements only `EventTarget` (3 methods), not the full
+`HTMLDivElement` interface with 300+ inherited abstract members. This avoids
+`non_abstract_class_inherits_abstract_member` errors and keeps the adapter minimal.
+
+Event wrappers are generated per event type (`GeneratedReactMouseEvent<T>`,
+`GeneratedReactKeyboardEvent<T>`, …). The host-value registry registers exact neutral
+type IDs (e.g. `web.HTMLDivElement`, `react.ReactMouseEvent<EventTarget>`).
+
+### 11.6 SSR generation policy
+
+SSR does **not** construct concrete DOM or event objects (`HTMLDivElement`, `MouseEvent`,
+`FileList`). The shared interfaces exist so component source compiles:
+
+```dart
+div(
+  onClick: (event) {
+    event.currentTarget.focus();
+  },
+);
+```
+
+During SSR, `onClick` and `ref` are omitted. The server never invokes the callback and
+never needs an `HTMLDivElement` instance.
+
+SSR should generate **renderer metadata and prop lowering** from the same model:
+
+- host element metadata
+- prop filtering
+- attribute/property names
+- boolean behavior
+- void-element behavior
+- `dangerouslySetInnerHTML` handling
+
+If a future native renderer needs real server-side DOM handles, add another target
+emitter from the same model. Do not force that requirement into the current SSR
+architecture.
+
+### 11.7 React-specific data comes from React declarations
+
+Web IDL knows about browser interfaces, but it does not define:
+
+- `SyntheticEvent` / `currentTarget`
+- React event handler names (`onClickCapture`)
+- `dangerouslySetInnerHTML`
+- JSX intrinsic element mappings
+- React ref shapes
+
+That information comes from hand-authored React declarations (`source/react_declarations.dart`)
+and the overlay file (`react_dom_overlay.json`). These should be pinned just like the
+Web IDL snapshot.
+
+### 11.8 Generics are modeled explicitly
+
+Type parameters are encoded as structured declarations with bounds, not as unparsed
+strings:
+
+```json
+{
+  "typeParameters": [
+    {
+      "name": "T",
+      "bound": { "kind": "named", "typeId": "web.EventTarget", "nullable": false, "arguments": [] }
+    }
+  ]
+}
+```
+
+Type parameter references in members use `{"kind":"typeParameter","name":"T","nullable":false}`.
+Generic instantiations in `extends` use `{"kind":"named","typeId":"react.ReactSyntheticEvent","arguments":[{"kind":"typeParameter","name":"T",...}]}`.
+
+---
+
+## 12. File inventory
 
 ```
 packages/react_web_generator/

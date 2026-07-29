@@ -23,9 +23,7 @@ final class NeutralInterfaceEmitter {
     final allRefs = _collectReferencedTypes(htmlTypes)..addAll(_collectReferencedTypes(eventTypes));
     allRefs.removeWhere((id) => TypeRefResolver.isCoreType(id) || htmlTypes.containsKey(id) || eventTypes.containsKey(id));
 
-    final htmlDir = Directory('$outputDir/types');
-    htmlDir.createSync(recursive: true);
-    File('$outputDir/types/html_interfaces.dart')
+    File('$outputDir/html_interfaces.dart')
         .writeAsStringSync(_emitHtmlTypes(htmlTypes, allRefs));
 
     final eventDir = Directory(outputDir);
@@ -100,7 +98,7 @@ final class NeutralInterfaceEmitter {
     buf.writeln('/// These abstract interfaces correspond to React synthetic events.');
     buf.writeln();
 
-    buf.writeln("import 'types/html_interfaces.dart';");
+    buf.writeln("import 'html_interfaces.dart';");
     buf.writeln();
 
     final sorted = _topologicalSort(types);

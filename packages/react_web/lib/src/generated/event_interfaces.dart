@@ -2,7 +2,7 @@
 ///
 /// These abstract interfaces correspond to React synthetic events.
 
-import 'types/html_interfaces.dart';
+import 'html_interfaces.dart';
 
 abstract interface class ReactSyntheticEvent<T extends EventTarget> {
   T get currentTarget;

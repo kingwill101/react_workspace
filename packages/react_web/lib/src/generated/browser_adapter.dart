@@ -1,273 +1,317 @@
 // GENERATED CODE — DO NOT EDIT
 
 import 'dart:js_interop';
-import 'dart:js_interop_unsafe';
 
 import 'package:react_js/react_js.dart';
-import 'package:react_web/src/event_interfaces.dart';
-import 'package:react_web/src/types/html_interfaces.dart';
 import 'package:web/web.dart' as web;
 
-final class GeneratedElement implements EventTarget {
-  final web.HTMLElement _inner;
-  GeneratedElement(this._inner);
-
-  @override
-  void addEventListener() => (_inner as dynamic).addEventListener();
-  @override
-  void removeEventListener() => (_inner as dynamic).removeEventListener();
-  @override
-  bool dispatchEvent() => (_inner as dynamic).dispatchEvent();
+final class BrowserHTMLCollection {
+  final web.HTMLCollection _element;
+  BrowserHTMLCollection(this._element);
+  web.HTMLCollection get inner => _element;
 }
 
-mixin SyntheticEventBaseMixin<T extends EventTarget>
-    implements ReactSyntheticEvent<T> {
-  JSObject get _jsEvent;
-
-  @override
-  bool get bubbles => _getBool('bubbles');
-  @override
-  bool get cancelable => _getBool('cancelable');
-  @override
-  bool get defaultPrevented => _getBool('defaultPrevented');
-  @override
-  void preventDefault() => _jsEvent.callMethod('preventDefault'.toJS);
-  @override
-  void stopPropagation() => _jsEvent.callMethod('stopPropagation'.toJS);
-  @override
-  T get currentTarget => _wrapEventTarget<T>(_jsEvent);
-  @override
-  EventTarget get target => _wrapTarget(_jsEvent);
-
-  bool _getBool(String prop) =>
-      (_jsEvent.getProperty(prop.toJS) as JSBoolean?)?.toDart ?? false;
+final class BrowserHTMLAllCollection {
+  final web.HTMLAllCollection _element;
+  BrowserHTMLAllCollection(this._element);
+  web.HTMLAllCollection get inner => _element;
 }
 
-mixin RelatedTargetMixin<T extends EventTarget> {
-  JSObject get _jsEvent;
-  EventTarget? get relatedTarget {
-    final v = _jsEvent.getProperty('relatedTarget'.toJS);
-    if (v == null || _isUndefinedOrNull(v)) return null;
-    return _wrapOne(v) as EventTarget?;
-  }
+final class BrowserHTMLHeadElement {
+  final web.HTMLHeadElement _element;
+  BrowserHTMLHeadElement(this._element);
+  web.HTMLHeadElement get inner => _element;
 }
 
-final class GeneratedReactSyntheticEvent<T extends EventTarget>
-    with SyntheticEventBaseMixin<T>
-    implements ReactSyntheticEvent<T> {
-  @override
-  final JSObject _jsEvent;
-  GeneratedReactSyntheticEvent(this._jsEvent);
+final class BrowserHTMLFormElement {
+  final web.HTMLFormElement _element;
+  BrowserHTMLFormElement(this._element);
+  web.HTMLFormElement get inner => _element;
 }
 
-final class GeneratedReactMouseEvent<T extends EventTarget>
-    with SyntheticEventBaseMixin<T>
-    implements ReactMouseEvent<T> {
-  @override
-  final JSObject _jsEvent;
-  GeneratedReactMouseEvent(this._jsEvent);
-
-  @override
-  double get clientX => (_jsEvent.getProperty('clientX'.toJS) as JSNumber).toDartDouble;
-  @override
-  double get clientY => (_jsEvent.getProperty('clientY'.toJS) as JSNumber).toDartDouble;
-  @override
-  int get button => (_jsEvent.getProperty('button'.toJS) as JSNumber).toDartInt;
-  @override
-  bool get altKey => _getBool('altKey');
-  @override
-  bool get ctrlKey => _getBool('ctrlKey');
-  @override
-  bool get shiftKey => _getBool('shiftKey');
+final class BrowserHTMLFormControlsCollection {
+  final web.HTMLFormControlsCollection _element;
+  BrowserHTMLFormControlsCollection(this._element);
+  web.HTMLFormControlsCollection get inner => _element;
 }
 
-final class GeneratedReactInputEvent<T extends EventTarget>
-    with SyntheticEventBaseMixin<T>
-    implements ReactInputEvent<T> {
-  @override
-  final JSObject _jsEvent;
-  GeneratedReactInputEvent(this._jsEvent);
-
-  @override
-  String get data => (_jsEvent.getProperty('data'.toJS) as JSString).toDart;
+final class BrowserHTMLImageElement {
+  final web.HTMLImageElement _element;
+  BrowserHTMLImageElement(this._element);
+  web.HTMLImageElement get inner => _element;
 }
 
-final class GeneratedReactChangeEvent<T extends EventTarget>
-    with SyntheticEventBaseMixin<T>
-    implements ReactChangeEvent<T> {
-  @override
-  final JSObject _jsEvent;
-  GeneratedReactChangeEvent(this._jsEvent);
-
+final class BrowserHTMLAnchorElement {
+  final web.HTMLAnchorElement _element;
+  BrowserHTMLAnchorElement(this._element);
+  web.HTMLAnchorElement get inner => _element;
 }
 
-final class GeneratedReactFormEvent<T extends EventTarget>
-    with SyntheticEventBaseMixin<T>
-    implements ReactFormEvent<T> {
-  @override
-  final JSObject _jsEvent;
-  GeneratedReactFormEvent(this._jsEvent);
-
+final class BrowserHTMLOptionElement {
+  final web.HTMLOptionElement _element;
+  BrowserHTMLOptionElement(this._element);
+  web.HTMLOptionElement get inner => _element;
 }
 
-final class GeneratedReactKeyboardEvent<T extends EventTarget>
-    with SyntheticEventBaseMixin<T>
-    implements ReactKeyboardEvent<T> {
-  @override
-  final JSObject _jsEvent;
-  GeneratedReactKeyboardEvent(this._jsEvent);
-
-  @override
-  String get key => (_jsEvent.getProperty('key'.toJS) as JSString).toDart;
-  @override
-  int get keyCode => (_jsEvent.getProperty('keyCode'.toJS) as JSNumber).toDartInt;
-  @override
-  bool get altKey => _getBool('altKey');
-  @override
-  bool get ctrlKey => _getBool('ctrlKey');
-  @override
-  bool get shiftKey => _getBool('shiftKey');
+final class BrowserHTMLSelectElement {
+  final web.HTMLSelectElement _element;
+  BrowserHTMLSelectElement(this._element);
+  web.HTMLSelectElement get inner => _element;
 }
 
-final class GeneratedReactFocusEvent<T extends EventTarget>
-    with SyntheticEventBaseMixin<T>
-    , RelatedTargetMixin<T>
-    implements ReactFocusEvent<T> {
-  @override
-  final JSObject _jsEvent;
-  GeneratedReactFocusEvent(this._jsEvent);
-
+final class BrowserHTMLOptionsCollection {
+  final web.HTMLOptionsCollection _element;
+  BrowserHTMLOptionsCollection(this._element);
+  web.HTMLOptionsCollection get inner => _element;
 }
 
-Object? wrapJSValue(JSAny? value) {
-  if (value == null || _isUndefinedOrNull(value)) return null;
-  final jsObject = value as JSObject;
-  if (_hasProperty(jsObject, 'tagName')) return _wrapElement(jsObject);
-  if (_hasProperty(jsObject, 'type')) return _wrapEventByType(jsObject);
-  return jsObject;
+final class BrowserHTMLTextAreaElement {
+  final web.HTMLTextAreaElement _element;
+  BrowserHTMLTextAreaElement(this._element);
+  web.HTMLTextAreaElement get inner => _element;
 }
 
-GeneratedElement _wrapElement(JSObject js) {
-  final el = js as web.HTMLElement;
-  return GeneratedElement(el);
+final class BrowserHTMLLabelElement {
+  final web.HTMLLabelElement _element;
+  BrowserHTMLLabelElement(this._element);
+  web.HTMLLabelElement get inner => _element;
 }
 
-Object? _wrapEventByType(JSObject js) {
-  final type = (js.getProperty('type'.toJS) as JSString).toDart;
-  return switch (type) {
-    'ReactMouseEvent' => GeneratedReactMouseEvent<EventTarget>(js),
-    'ReactInputEvent' => GeneratedReactInputEvent<EventTarget>(js),
-    'ReactChangeEvent' => GeneratedReactChangeEvent<EventTarget>(js),
-    'ReactFormEvent' => GeneratedReactFormEvent<EventTarget>(js),
-    'ReactKeyboardEvent' => GeneratedReactKeyboardEvent<EventTarget>(js),
-    'ReactFocusEvent' => GeneratedReactFocusEvent<EventTarget>(js),
-    _ => GeneratedReactSyntheticEvent<EventTarget>(js),
-  };
+final class BrowserHTMLInputElement {
+  final web.HTMLInputElement _element;
+  BrowserHTMLInputElement(this._element);
+  web.HTMLInputElement get inner => _element;
 }
 
-T _wrapEventTarget<T extends EventTarget>(JSObject js) {
-  final el = js.getProperty('currentTarget'.toJS);
-  return _wrapOne(el) as T;
+final class BrowserHTMLDataListElement {
+  final web.HTMLDataListElement _element;
+  BrowserHTMLDataListElement(this._element);
+  web.HTMLDataListElement get inner => _element;
 }
 
-EventTarget _wrapTarget(JSObject js) {
-  final el = js.getProperty('target'.toJS);
-  return _wrapOne(el) as EventTarget;
+final class BrowserHTMLButtonElement {
+  final web.HTMLButtonElement _element;
+  BrowserHTMLButtonElement(this._element);
+  web.HTMLButtonElement get inner => _element;
 }
 
-Object? _wrapOne(JSAny? value) {
-  if (value == null || _isUndefinedOrNull(value)) return null;
-  final js = value as JSObject;
-  if (_hasProperty(js, 'tagName')) return _wrapElement(js);
-  if (_hasProperty(js, 'type')) return _wrapEventByType(js);
-  return js;
+final class BrowserHTMLSpanElement {
+  final web.HTMLSpanElement _element;
+  BrowserHTMLSpanElement(this._element);
+  web.HTMLSpanElement get inner => _element;
 }
 
-bool _isUndefinedOrNull(JSAny? value) =>
-    value.isUndefined || value.isNull;
+final class BrowserHTMLDivElement {
+  final web.HTMLDivElement _element;
+  BrowserHTMLDivElement(this._element);
+  web.HTMLDivElement get inner => _element;
+}
 
-bool _hasProperty(JSObject obj, String prop) =>
-    obj.hasProperty(prop.toJS).toDart;
+final class BrowserReactCompositionEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactCompositionEvent(this._event);
+  web.Event get inner => _event;
+}
+
+final class BrowserReactSyntheticEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactSyntheticEvent(this._event);
+  web.Event get inner => _event;
+}
+
+final class BrowserReactTouchEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactTouchEvent(this._event);
+  web.Event get inner => _event;
+}
+
+final class BrowserReactPointerEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactPointerEvent(this._event);
+  web.Event get inner => _event;
+}
+
+final class BrowserReactWheelEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactWheelEvent(this._event);
+  web.Event get inner => _event;
+}
+
+final class BrowserReactDragEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactDragEvent(this._event);
+  web.Event get inner => _event;
+}
+
+final class BrowserReactFocusEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactFocusEvent(this._event);
+  web.Event get inner => _event;
+}
+
+final class BrowserReactKeyboardEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactKeyboardEvent(this._event);
+  web.Event get inner => _event;
+}
+
+final class BrowserReactFormEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactFormEvent(this._event);
+  web.Event get inner => _event;
+}
+
+final class BrowserReactChangeEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactChangeEvent(this._event);
+  web.Event get inner => _event;
+}
+
+final class BrowserReactInputEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactInputEvent(this._event);
+  web.Event get inner => _event;
+}
+
+final class BrowserReactMouseEvent<T extends web.EventTarget> {
+  final web.Event _event;
+  BrowserReactMouseEvent(this._event);
+  web.Event get inner => _event;
+}
 
 void registerBrowserAdapters() {
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLDivElement',
-    decoder: (value) => GeneratedElement(value as web.HTMLElement),
-    encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
+    'web', 'web.HTMLCollection',
+    decoder: (value) => BrowserHTMLCollection(value as web.HTMLCollection),
+    encoder: (value) => (value as BrowserHTMLCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLSpanElement',
-    decoder: (value) => GeneratedElement(value as web.HTMLElement),
-    encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
+    'web', 'web.HTMLAllCollection',
+    decoder: (value) => BrowserHTMLAllCollection(value as web.HTMLAllCollection),
+    encoder: (value) => (value as BrowserHTMLAllCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLButtonElement',
-    decoder: (value) => GeneratedElement(value as web.HTMLElement),
-    encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
+    'web', 'web.HTMLHeadElement',
+    decoder: (value) => BrowserHTMLHeadElement(value as web.HTMLHeadElement),
+    encoder: (value) => (value as BrowserHTMLHeadElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLInputElement',
-    decoder: (value) => GeneratedElement(value as web.HTMLElement),
-    encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
+    'web', 'web.HTMLFormElement',
+    decoder: (value) => BrowserHTMLFormElement(value as web.HTMLFormElement),
+    encoder: (value) => (value as BrowserHTMLFormElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLFormElement',
-    decoder: (value) => GeneratedElement(value as web.HTMLElement),
-    encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
+    'web', 'web.HTMLFormControlsCollection',
+    decoder: (value) => BrowserHTMLFormControlsCollection(value as web.HTMLFormControlsCollection),
+    encoder: (value) => (value as BrowserHTMLFormControlsCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLLabelElement',
-    decoder: (value) => GeneratedElement(value as web.HTMLElement),
-    encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
+    'web', 'web.HTMLImageElement',
+    decoder: (value) => BrowserHTMLImageElement(value as web.HTMLImageElement),
+    encoder: (value) => (value as BrowserHTMLImageElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTextAreaElement',
-    decoder: (value) => GeneratedElement(value as web.HTMLElement),
-    encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
+    'web', 'web.HTMLAnchorElement',
+    decoder: (value) => BrowserHTMLAnchorElement(value as web.HTMLAnchorElement),
+    encoder: (value) => (value as BrowserHTMLAnchorElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLSelectElement',
-    decoder: (value) => GeneratedElement(value as web.HTMLElement),
-    encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
+    'web', 'web.HTMLOptionElement',
+    decoder: (value) => BrowserHTMLOptionElement(value as web.HTMLOptionElement),
+    encoder: (value) => (value as BrowserHTMLOptionElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLOptionElement',
-    decoder: (value) => GeneratedElement(value as web.HTMLElement),
-    encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
+    'web', 'web.HTMLSelectElement',
+    decoder: (value) => BrowserHTMLSelectElement(value as web.HTMLSelectElement),
+    encoder: (value) => (value as BrowserHTMLSelectElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLAnchorElement',
-    decoder: (value) => GeneratedElement(value as web.HTMLElement),
-    encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
+    'web', 'web.HTMLOptionsCollection',
+    decoder: (value) => BrowserHTMLOptionsCollection(value as web.HTMLOptionsCollection),
+    encoder: (value) => (value as BrowserHTMLOptionsCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLImageElement',
-    decoder: (value) => GeneratedElement(value as web.HTMLElement),
-    encoder: (value) => (value as GeneratedElement)._inner as JSAny?,
+    'web', 'web.HTMLTextAreaElement',
+    decoder: (value) => BrowserHTMLTextAreaElement(value as web.HTMLTextAreaElement),
+    encoder: (value) => (value as BrowserHTMLTextAreaElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactMouseEvent<EventTarget>',
-    decoder: (value) => GeneratedReactMouseEvent(value as JSObject),
+    'web', 'web.HTMLLabelElement',
+    decoder: (value) => BrowserHTMLLabelElement(value as web.HTMLLabelElement),
+    encoder: (value) => (value as BrowserHTMLLabelElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactInputEvent<EventTarget>',
-    decoder: (value) => GeneratedReactInputEvent(value as JSObject),
+    'web', 'web.HTMLInputElement',
+    decoder: (value) => BrowserHTMLInputElement(value as web.HTMLInputElement),
+    encoder: (value) => (value as BrowserHTMLInputElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactChangeEvent<EventTarget>',
-    decoder: (value) => GeneratedReactChangeEvent(value as JSObject),
+    'web', 'web.HTMLDataListElement',
+    decoder: (value) => BrowserHTMLDataListElement(value as web.HTMLDataListElement),
+    encoder: (value) => (value as BrowserHTMLDataListElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactFormEvent<EventTarget>',
-    decoder: (value) => GeneratedReactFormEvent(value as JSObject),
+    'web', 'web.HTMLButtonElement',
+    decoder: (value) => BrowserHTMLButtonElement(value as web.HTMLButtonElement),
+    encoder: (value) => (value as BrowserHTMLButtonElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactKeyboardEvent<EventTarget>',
-    decoder: (value) => GeneratedReactKeyboardEvent(value as JSObject),
+    'web', 'web.HTMLSpanElement',
+    decoder: (value) => BrowserHTMLSpanElement(value as web.HTMLSpanElement),
+    encoder: (value) => (value as BrowserHTMLSpanElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactFocusEvent<EventTarget>',
-    decoder: (value) => GeneratedReactFocusEvent(value as JSObject),
+    'web', 'web.HTMLDivElement',
+    decoder: (value) => BrowserHTMLDivElement(value as web.HTMLDivElement),
+    encoder: (value) => (value as BrowserHTMLDivElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactCompositionEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactCompositionEvent(value as web.Event),
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactSyntheticEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactSyntheticEvent(value as web.Event),
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactTouchEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactTouchEvent(value as web.Event),
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactPointerEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactPointerEvent(value as web.Event),
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactWheelEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactWheelEvent(value as web.Event),
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactDragEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactDragEvent(value as web.Event),
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactFocusEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactFocusEvent(value as web.Event),
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactKeyboardEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactKeyboardEvent(value as web.Event),
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactFormEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactFormEvent(value as web.Event),
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactChangeEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactChangeEvent(value as web.Event),
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactInputEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactInputEvent(value as web.Event),
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'react.ReactMouseEvent<web.EventTarget>',
+    decoder: (value) => BrowserReactMouseEvent(value as web.Event),
   );
 }
 

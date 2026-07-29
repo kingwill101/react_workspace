@@ -1,8 +1,8 @@
 // GENERATED CODE — DO NOT EDIT
 
 import 'package:react/react.dart';
-import 'package:react_web/src/event_interfaces.dart';
-import 'package:react_web/src/types/html_interfaces.dart';
+import 'package:react_web/src/generated/event_interfaces.dart';
+import 'package:react_web/src/generated/html_interfaces.dart';
 
 const _divHostType = HostType<Map<String, Object?>>('html', 'div');
 

@@ -1,0 +1,12 @@
+typePolicies:
+  FileList:
+    exposure: full
+  ShadowRoot:
+    exposure: opaque
+  NamedNodeMap:
+    exposure: opaque
+  Document:
+    exposure: opaque
+  TrustedHTML:
+    exposure: mapped
+    dartType: TrustedHtml
