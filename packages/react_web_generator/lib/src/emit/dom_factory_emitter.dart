@@ -77,7 +77,7 @@ final class DomFactoryEmitter {
       );
       buf.writeln("        debugName: '${el.factoryName}.${e.reactName}',");
       buf.writeln(
-        '        signature: const (positional: [], result: reactVoid, asynchronous: false),',
+        '        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),',
       );
       buf.writeln('        invoke: (args) {');
       buf.writeln('          $en(args[0] as $rt);');
@@ -89,7 +89,7 @@ final class DomFactoryEmitter {
       );
       buf.writeln("        debugName: '${el.factoryName}.${e.captureName}',");
       buf.writeln(
-        '        signature: const (positional: [], result: reactVoid, asynchronous: false),',
+        '        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),',
       );
       buf.writeln('        invoke: (args) {');
       buf.writeln('          $cn(args[0] as $rt);');
