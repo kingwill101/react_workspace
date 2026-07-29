@@ -7,6 +7,7 @@ sealed class MemberDecl {
 }
 
 final class AttributeDecl extends MemberDecl {
+  @override
   final String name;
   final bool readable;
   final bool writable;
@@ -30,6 +31,7 @@ final class AttributeDecl extends MemberDecl {
 }
 
 final class OperationDecl extends MemberDecl {
+  @override
   final String name;
   final List<ParameterDecl> parameters;
   final TypeRef returnType;
@@ -78,7 +80,8 @@ MemberDecl memberDeclFromJson(Map<String, dynamic> json) {
     ),
     'operation' => OperationDecl(
       name: json['name'] as String,
-      parameters: (json['parameters'] as List<dynamic>?)
+      parameters:
+          (json['parameters'] as List<dynamic>?)
               ?.map((p) => parameterDeclFromJson(p as Map<String, dynamic>))
               .toList() ??
           [],

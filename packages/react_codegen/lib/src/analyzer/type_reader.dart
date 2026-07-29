@@ -59,18 +59,10 @@ final class ReactTypeReader {
     final namedFields = <RecordFieldRef>[];
 
     for (final field in record.namedFields) {
-      namedFields.add(
-        RecordFieldRef(
-          name: field.name,
-          type: read(field.type),
-        ),
-      );
+      namedFields.add(RecordFieldRef(name: field.name, type: read(field.type)));
     }
 
-    return RecordTypeRef(
-      named: namedFields,
-      nullable: _isNullable(record),
-    );
+    return RecordTypeRef(named: namedFields, nullable: _isNullable(record));
   }
 
   ReactTypeRef _readFunction(FunctionType type) {
@@ -85,7 +77,8 @@ final class ReactTypeReader {
     }
 
     final returnType = type.returnType;
-    final asynchronous = returnType is InterfaceType && returnType.element.name == 'Future';
+    final asynchronous =
+        returnType is InterfaceType && returnType.element.name == 'Future';
 
     if (asynchronous) {
       throw InvalidGenerationSourceError(

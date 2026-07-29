@@ -9,13 +9,12 @@ import 'src/output/public_api_emitter.dart';
 import 'src/builder/component_builder.dart';
 import 'src/aggregate.dart';
 
-Builder componentBuilder(BuilderOptions options) =>
-    const ReactComponentBuilder(
-      ReactCompiler(
-        reader: ReactComponentReader(typeReader: ReactTypeReader()),
-        publicApiEmitter: PublicApiEmitter(),
-        jsBridgeEmitter: JsBridgeEmitter(callbackEmitter: CallbackEmitter()),
-      ),
-    );
+Builder componentBuilder(BuilderOptions options) => const ReactComponentBuilder(
+  ReactCompiler(
+    reader: ReactComponentReader(typeReader: ReactTypeReader()),
+    publicApiEmitter: PublicApiEmitter(),
+    jsBridgeEmitter: JsBridgeEmitter(callbackEmitter: CallbackEmitter()),
+  ),
+);
 
 Builder aggregateBuilder(BuilderOptions options) => AggregateBuilder();

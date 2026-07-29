@@ -7,27 +7,23 @@ import 'package:react_js/react_js.dart';
 // ═══════════════════════════════════════════
 
 JSAny? toReactJS(Object? v) => switch (v) {
-      null => null,
-      String string => string.toJS,
-      bool boolean => boolean.toJS,
-      int integer => integer.toJS,
-      double number => number.toJS,
-      ReactNode node => renderNode(node),
-      ReactCallback callback => callbackToJS(callback),
-      List values => <JSAny?>[
-          for (final value in values)
-            toReactJS(value),
-        ].toJS,
-      Map<String, Object?> map => _mapToJS(map),
-      Function function =>
-        throw UnsupportedError(
-          'Raw Dart functions cannot be used as '
-          'React properties. Use a typed '
-          'ReactCallback descriptor. Received '
-          '${function.runtimeType}.',
-        ),
-      JSAny jsValue => jsValue,
-    };
+  null => null,
+  String string => string.toJS,
+  bool boolean => boolean.toJS,
+  int integer => integer.toJS,
+  double number => number.toJS,
+  ReactNode node => renderNode(node),
+  ReactCallback callback => callbackToJS(callback),
+  List values => <JSAny?>[for (final value in values) toReactJS(value)].toJS,
+  Map<String, Object?> map => _mapToJS(map),
+  Function function => throw UnsupportedError(
+    'Raw Dart functions cannot be used as '
+    'React properties. Use a typed '
+    'ReactCallback descriptor. Received '
+    '${function.runtimeType}.',
+  ),
+  JSAny jsValue => jsValue,
+};
 
 JSAny renderNode(ReactNode n) =>
     currentReactRuntime.renderer.render(n) as JSAny;
@@ -39,8 +35,7 @@ JSAny renderNode(ReactNode n) =>
 // ═══════════════════════════════════════════
 
 // ignore: unused_element
-JSAny? _prop(JSObject o, String key) =>
-    o.getProperty(key.toJS);
+JSAny? _prop(JSObject o, String key) => o.getProperty(key.toJS);
 
 // ═══════════════════════════════════════════
 // Required-property accessors with diagnostics
@@ -48,8 +43,10 @@ JSAny? _prop(JSObject o, String key) =>
 
 void _throwMissing(String key, String type, String? component) {
   final prefix = component != null ? '$component requires' : 'Required';
-  throw ArgumentError('$prefix a $type property named "$key", '
-      'but the property was missing.');
+  throw ArgumentError(
+    '$prefix a $type property named "$key", '
+    'but the property was missing.',
+  );
 }
 
 String requiredJSString(JSObject o, String key, {String? component}) {
@@ -106,8 +103,7 @@ bool? nullableJSBool(JSObject o, String key) {
 // Unchecked accessors (fallback for complex types)
 // ═══════════════════════════════════════════
 
-JSAny jsAny(JSObject o, String key) =>
-    o.getProperty(key.toJS) as JSAny;
+JSAny jsAny(JSObject o, String key) => o.getProperty(key.toJS) as JSAny;
 
 JSAny? jsAnyOrNull(JSObject o, String key) {
   final v = o.getProperty(key.toJS);

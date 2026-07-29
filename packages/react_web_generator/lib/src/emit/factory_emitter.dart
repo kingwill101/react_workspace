@@ -12,8 +12,12 @@ final class FactoryEmitter {
     buf.writeln();
 
     buf.writeln("import 'package:react/react.dart';");
-    buf.writeln("import 'package:react_web/src/generated/event_interfaces.dart';");
-    buf.writeln("import 'package:react_web/src/generated/html_interfaces.dart';");
+    buf.writeln(
+      "import 'package:react_web/src/generated/event_interfaces.dart';",
+    );
+    buf.writeln(
+      "import 'package:react_web/src/generated/html_interfaces.dart';",
+    );
     buf.writeln();
 
     for (final el in elements) {
@@ -44,7 +48,9 @@ final class FactoryEmitter {
   void _emitElement(StringBuffer buf, WebHostElementIR el) {
     final hc = '_${el.factoryName}HostType';
 
-    buf.writeln("const $hc = HostType<Map<String, Object?>>('${el.namespace.name}', '${el.tagName}');");
+    buf.writeln(
+      "const $hc = HostType<Map<String, Object?>>('${el.namespace.name}', '${el.tagName}');",
+    );
     buf.writeln();
 
     buf.writeln("ReactNode ${el.factoryName}({");
@@ -65,13 +71,21 @@ final class FactoryEmitter {
     buf.writeln("    $hc,");
     buf.writeln("    {");
     for (final p in el.props) {
-      buf.writeln("      if (${p.reactName} != null) '${p.reactName}': ${p.reactName},");
+      buf.writeln(
+        "      if (${p.reactName} != null) '${p.reactName}': ${p.reactName},",
+      );
     }
     for (final e in el.events) {
-      buf.writeln("      if (${e.reactName} != null) '${e.reactName}': ReactEventProp(_${el.factoryName}${_pascal(e.reactName)}(${e.reactName})),");
-      buf.writeln("      if (${e.captureName} != null) '${e.captureName}': ReactEventProp(_${el.factoryName}${_pascal(e.captureName)}(${e.captureName})),");
+      buf.writeln(
+        "      if (${e.reactName} != null) '${e.reactName}': ReactEventProp(_${el.factoryName}${_pascal(e.reactName)}(${e.reactName})),",
+      );
+      buf.writeln(
+        "      if (${e.captureName} != null) '${e.captureName}': ReactEventProp(_${el.factoryName}${_pascal(e.captureName)}(${e.captureName})),",
+      );
     }
-      buf.writeln("      if (ref != null) 'ref': ReactRefProp(_${el.factoryName}Ref(ref)),");
+    buf.writeln(
+      "      if (ref != null) 'ref': ReactRefProp(_${el.factoryName}Ref(ref)),",
+    );
     buf.writeln("      ...additionalProps,");
     buf.writeln("    },");
     buf.writeln("    children: children,");
@@ -81,7 +95,11 @@ final class FactoryEmitter {
     buf.writeln();
   }
 
-  void _emitEventSpec(StringBuffer buf, WebHostElementIR el, WebEventPropIR event) {
+  void _emitEventSpec(
+    StringBuffer buf,
+    WebHostElementIR el,
+    WebEventPropIR event,
+  ) {
     final reactType = _dartTypeString(event.reactEventType);
     for (final name in [event.reactName, event.captureName]) {
       final specName = '_${el.factoryName}_${name}Spec';
@@ -107,17 +125,32 @@ final class FactoryEmitter {
     buf.writeln();
   }
 
-  void _emitEventWrapper(StringBuffer buf, WebHostElementIR el, WebEventPropIR event, String elementType) {
+  void _emitEventWrapper(
+    StringBuffer buf,
+    WebHostElementIR el,
+    WebEventPropIR event,
+    String elementType,
+  ) {
     final reactType = _dartTypeString(event.reactEventType);
     for (final entry in [
-      (name: event.reactName, specName: '_${el.factoryName}_${event.reactName}Spec'),
-      (name: event.captureName, specName: '_${el.factoryName}_${event.captureName}Spec'),
+      (
+        name: event.reactName,
+        specName: '_${el.factoryName}_${event.reactName}Spec',
+      ),
+      (
+        name: event.captureName,
+        specName: '_${el.factoryName}_${event.captureName}Spec',
+      ),
     ]) {
       final funcName = '_${el.factoryName}${_pascal(entry.name)}';
-      buf.writeln("ReactCallback $funcName(void Function($reactType) callback) {");
+      buf.writeln(
+        "ReactCallback $funcName(void Function($reactType) callback) {",
+      );
       buf.writeln("  return ReactCallback(");
       buf.writeln("    debugName: '${el.factoryName}.${entry.name}',");
-      buf.writeln("    signature: const (positional: [${entry.specName}], result: reactVoid, asynchronous: false),");
+      buf.writeln(
+        "    signature: const (positional: [${entry.specName}], result: reactVoid, asynchronous: false),",
+      );
       buf.writeln("    invoke: (arguments) {");
       buf.writeln("      callback(arguments[0] as $reactType);");
       buf.writeln("      return null;");
@@ -128,14 +161,24 @@ final class FactoryEmitter {
     }
   }
 
-  void _emitRefWrapper(StringBuffer buf, WebHostElementIR el, String elementType) {
-    buf.writeln("ReactCallback _${el.factoryName}Ref(void Function($elementType?) callback) {");
+  void _emitRefWrapper(
+    StringBuffer buf,
+    WebHostElementIR el,
+    String elementType,
+  ) {
+    buf.writeln(
+      "ReactCallback _${el.factoryName}Ref(void Function($elementType?) callback) {",
+    );
     buf.writeln("  return ReactCallback(");
     buf.writeln("    debugName: '${el.factoryName}.ref',");
-    buf.writeln("    signature: const (positional: [_${el.factoryName}_refSpec], result: reactVoid, asynchronous: false),");
+    buf.writeln(
+      "    signature: const (positional: [_${el.factoryName}_refSpec], result: reactVoid, asynchronous: false),",
+    );
     buf.writeln("    invoke: (arguments) {");
     buf.writeln("      final value = arguments[0];");
-    buf.writeln("      callback(value == null ? null : value as $elementType);");
+    buf.writeln(
+      "      callback(value == null ? null : value as $elementType);",
+    );
     buf.writeln("      return null;");
     buf.writeln("    },");
     buf.writeln("  );");
@@ -153,7 +196,7 @@ final class FactoryEmitter {
         : type.symbol;
     final base = isNullable ? '$clean?' : clean;
     if (type.typeArguments.isEmpty) return base;
-    return '${base}<${type.typeArguments.map((t) => _dartTypeString(t)).join(', ')}>';
+    return '$base<${type.typeArguments.map((t) => _dartTypeString(t)).join(', ')}>';
   }
 
   String _pascal(String s) =>

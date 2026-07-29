@@ -26,10 +26,7 @@ void main() {
         asynchronous: false,
       );
 
-      final output = emitter.jsProxy(
-        fieldName: 'onChange',
-        callback: callback,
-      );
+      final output = emitter.jsProxy(fieldName: 'onChange', callback: callback);
 
       expect(output, contains('invokeJSCallback'));
       expect(output, contains('encodeReactValue(reactInt, value)'));
@@ -58,10 +55,7 @@ void main() {
         asynchronous: false,
       );
 
-      final output = emitter.jsProxy(
-        fieldName: 'onChange',
-        callback: callback,
-      );
+      final output = emitter.jsProxy(fieldName: 'onChange', callback: callback);
 
       expect(output, contains('_rawonChange'));
       expect(output, contains('isUndefined'));
@@ -91,10 +85,7 @@ void main() {
         asynchronous: false,
       );
 
-      final output = emitter.jsProxy(
-        fieldName: 'onToggle',
-        callback: callback,
-      );
+      final output = emitter.jsProxy(fieldName: 'onToggle', callback: callback);
 
       expect(output, contains('decodeReactValue'));
       expect(output, contains('reactBool'));

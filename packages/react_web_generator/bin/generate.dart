@@ -4,8 +4,6 @@ import 'package:react_web_generator/react_web_generator.dart';
 import 'package:react_web_generator/src/normalize/model_builder.dart';
 import 'package:react_web_generator/src/emit/model_json_emitter.dart';
 import 'package:react_web_generator/src/emit/neutral_interface_emitter.dart';
-import 'package:react_web_generator/src/emit/browser_adapter_emitter.dart';
-import 'package:react_web_generator/src/emit/ssr_metadata_emitter.dart';
 import 'package:react_web_generator/src/emit/dom_factory_emitter.dart';
 
 String _findWorkspaceRoot() {
@@ -29,9 +27,9 @@ Future<void> main() async {
   );
   final model = modelBuilder.build();
 
-  ModelJsonEmitter(model).writeTo(
-    '$root/packages/react_web_generator/config/neutral_web_model.json',
-  );
+  ModelJsonEmitter(
+    model,
+  ).writeTo('$root/packages/react_web_generator/config/neutral_web_model.json');
   print(
     'Generated neutral web model → $root/packages/react_web_generator/config/neutral_web_model.json',
   );
@@ -42,14 +40,17 @@ Future<void> main() async {
   interfaceEmitter.emitToDirectory(
     '$root/packages/react_web/lib/src/generated',
   );
-  print('Generated interface files → $root/packages/react_web/lib/src/generated/');
+  print(
+    'Generated interface files → $root/packages/react_web/lib/src/generated/',
+  );
   print('  - html_interfaces.dart');
   print('  - event_interfaces.dart');
 
   final builder = await WebHostIrBuilder.create(
     packageRoot: root,
     webApisJsonPath: '$root/tool/web_idl/snapshots/web_apis.json',
-    overlayPath: '$root/packages/react_web_generator/config/react_dom_overlay.json',
+    overlayPath:
+        '$root/packages/react_web_generator/config/react_dom_overlay.json',
     rootsPath: '$root/packages/react_web_generator/config/roots.json',
   );
   final elements = builder.build();
@@ -67,10 +68,12 @@ Future<void> main() async {
   final ssrEmitter = SsrMetadataEmitter(model);
   ssrEmitter.emitToDirectory(outDir.path);
 
-  final domEmitter = DomFactoryEmitter(model);
+  final domEmitter = DomFactoryEmitter(builder.buildAll());
   domEmitter.emitToDirectory(outDir.path);
 
-  print('Generated ${elements.length} element factories → ${outDir.path}/elements.dart');
+  print(
+    'Generated ${elements.length} element factories → ${outDir.path}/elements.dart',
+  );
   print('Generated browser adapter → ${outDir.path}/browser_adapter.dart');
   print('Generated SSR metadata → ${outDir.path}/ssr_metadata.dart');
   print('Generated DOM factories → ${outDir.path}/dom.dart');

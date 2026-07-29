@@ -10,14 +10,12 @@ external JSFunction _createCallback(
 );
 
 @JS('__dartReactCallbacks.invoke')
-external JSAny? _invokeCallback(
-  JSFunction callback,
-  JSArray<JSAny?> arguments,
-);
+external JSAny? _invokeCallback(JSFunction callback, JSArray<JSAny?> arguments);
 
 /// Cache of JS callback wrappers for reusable [ReactCallback] descriptors.
-final Expando<JSFunction> _callbackCache =
-    Expando<JSFunction>('ReactCallbackJSFunction');
+final Expando<JSFunction> _callbackCache = Expando<JSFunction>(
+  'ReactCallbackJSFunction',
+);
 
 /// Decodes JS arguments, invokes a Dart callback, and encodes the result.
 JSAny? _dispatchReactCallback(
@@ -79,12 +77,6 @@ JSFunction callbackToJS(ReactCallback callback) {
 }
 
 /// Invokes an existing JavaScript callback with any number of arguments.
-JSAny? invokeJSCallback(
-  JSFunction callback,
-  List<JSAny?> arguments,
-) {
-  return _invokeCallback(
-    callback,
-    arguments.toJS,
-  );
+JSAny? invokeJSCallback(JSFunction callback, List<JSAny?> arguments) {
+  return _invokeCallback(callback, arguments.toJS);
 }

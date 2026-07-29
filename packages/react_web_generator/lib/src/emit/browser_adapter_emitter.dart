@@ -26,10 +26,15 @@ final class BrowserAdapterEmitter {
     file.writeAsStringSync(buf.toString());
   }
 
-  void _emitElementWrappers(StringBuffer buf, Map<String, InterfaceDecl> types) {
+  void _emitElementWrappers(
+    StringBuffer buf,
+    Map<String, InterfaceDecl> types,
+  ) {
     for (final entry in types.entries) {
       if (!entry.key.startsWith('web.HTML')) continue;
-      if (entry.key == 'web.Element' || entry.key == 'web.HTMLElement') continue;
+      if (entry.key == 'web.Element' || entry.key == 'web.HTMLElement') {
+        continue;
+      }
       if (entry.value.typeParameters.isNotEmpty) continue;
 
       final name = entry.value.name;
@@ -62,7 +67,9 @@ final class BrowserAdapterEmitter {
 
     for (final entry in types.entries) {
       if (!entry.key.startsWith('web.HTML')) continue;
-      if (entry.key == 'web.Element' || entry.key == 'web.HTMLElement') continue;
+      if (entry.key == 'web.Element' || entry.key == 'web.HTMLElement') {
+        continue;
+      }
       if (entry.value.typeParameters.isNotEmpty) continue;
 
       final typeId = entry.key;
@@ -70,7 +77,9 @@ final class BrowserAdapterEmitter {
       buf.writeln("  ReactCodecRegistry.registerHostValue(");
       buf.writeln("    'web', '$typeId',");
       buf.writeln("    decoder: (value) => Browser$name(value as web.$name),");
-      buf.writeln("    encoder: (value) => (value as Browser$name)._element as JSAny?,");
+      buf.writeln(
+        "    encoder: (value) => (value as Browser$name)._element as JSAny?,",
+      );
       buf.writeln("  );");
     }
 

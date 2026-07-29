@@ -8,9 +8,13 @@ ReactNode Counter({
   String? subtitle,
   required String title,
   String? key,
-  List<ReactNode> children = const []
+  List<ReactNode> children = const [],
 }) {
-  final props = (initialCount: initialCount, onChange: onChange, subtitle: subtitle, title: title);
+  final props = (
+    initialCount: initialCount,
+    onChange: onChange,
+    subtitle: subtitle,
+    title: title,
+  );
   return Component(idCounter, props, key: key, children: children);
 }
-

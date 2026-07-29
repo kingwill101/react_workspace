@@ -1,6 +1,7 @@
 /// Neutral React event interfaces — generated from neutral_web_model.json
 ///
 /// These abstract interfaces correspond to React synthetic events.
+library;
 
 import 'html_interfaces.dart';
 

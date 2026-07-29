@@ -27,7 +27,9 @@ InterfaceDecl? loadWebIdlInterface(
     typeId: typeId,
     name: name,
     sourceName: name,
-    extends_: inheritance != null ? [NamedTypeRef(typeId: 'web.$inheritance')] : [],
+    extends_: inheritance != null
+        ? [NamedTypeRef(typeId: 'web.$inheritance')]
+        : [],
     members: members,
     exposure: Exposure.full,
     browserBinding: BrowserBinding(
@@ -65,7 +67,8 @@ AttributeDecl? _parseAttribute(Map<String, dynamic> raw) {
 OperationDecl? _parseOperation(Map<String, dynamic> raw) {
   final name = raw['name'] as String? ?? '';
   final idlType = raw['idlType'] as Map<String, dynamic>? ?? {};
-  final returnType = _parseIdlType(idlType) ?? const NamedTypeRef(typeId: 'core.void');
+  final returnType =
+      _parseIdlType(idlType) ?? const NamedTypeRef(typeId: 'core.void');
   return OperationDecl(name: name, returnType: returnType);
 }
 
@@ -84,7 +87,9 @@ TypeRef? _parseIdlType(Map<String, dynamic> idlType) {
     return UnionTypeRef(nullable: nullable, options: options);
   }
 
-  if (rawType is List && rawType.isNotEmpty && rawType[0] is Map<String, dynamic>) {
+  if (rawType is List &&
+      rawType.isNotEmpty &&
+      rawType[0] is Map<String, dynamic>) {
     return _parseIdlType(rawType[0] as Map<String, dynamic>);
   }
 
@@ -93,42 +98,72 @@ TypeRef? _parseIdlType(Map<String, dynamic> idlType) {
 
   // generic types (sequence, Promise, FrozenArray, record)
   if (generic == 'sequence' || generic == 'FrozenArray') {
-    final inner = _parseIdlType({'idlType': rawType, 'nullable': false, 'union': false, 'generic': ''});
+    final inner = _parseIdlType({
+      'idlType': rawType,
+      'nullable': false,
+      'union': false,
+      'generic': '',
+    });
     // Represent as named type with list-like structure; for now just use the inner type
-    return NamedTypeRef(typeId: 'core.List', nullable: nullable, arguments: inner != null ? [inner] : []);
+    return NamedTypeRef(
+      typeId: 'core.List',
+      nullable: nullable,
+      arguments: inner != null ? [inner] : [],
+    );
   }
 
   if (generic == 'Promise') {
-    final inner = _parseIdlType({'idlType': rawType, 'nullable': false, 'union': false, 'generic': ''});
-    return NamedTypeRef(typeId: 'core.Future', nullable: nullable, arguments: inner != null ? [inner] : []);
+    final inner = _parseIdlType({
+      'idlType': rawType,
+      'nullable': false,
+      'union': false,
+      'generic': '',
+    });
+    return NamedTypeRef(
+      typeId: 'core.Future',
+      nullable: nullable,
+      arguments: inner != null ? [inner] : [],
+    );
   }
 
   // Map IDL type to Dart type
   final dartType = _idlPrimitive(typeStr);
-  if (dartType != null) return dartType.copyWith(nullable: dartType.nullable ? nullable || true : nullable);
+  if (dartType != null) {
+    return dartType.copyWith(
+      nullable: dartType.nullable ? nullable || true : nullable,
+    );
+  }
 
   return NamedTypeRef(typeId: 'web.$typeStr', nullable: nullable);
 }
 
 NamedTypeRef? _idlPrimitive(String idlType) {
   return switch (idlType) {
-    'DOMString' || 'USVString' || 'ByteString' =>
-      const NamedTypeRef(typeId: 'core.String'),
+    'DOMString' ||
+    'USVString' ||
+    'ByteString' => const NamedTypeRef(typeId: 'core.String'),
     'boolean' => const NamedTypeRef(typeId: 'core.bool'),
-    'long' || 'long long' || 'short' || 'byte' ||
-    'unsigned long' || 'unsigned long long' ||
-    'unsigned short' || 'unsigned byte' =>
-      const NamedTypeRef(typeId: 'core.int'),
-    'double' || 'float' || 'unrestricted double' =>
-      const NamedTypeRef(typeId: 'core.double'),
-    'undefined' || 'void' =>
-      const NamedTypeRef(typeId: 'core.void'),
+    'long' ||
+    'long long' ||
+    'short' ||
+    'byte' ||
+    'unsigned long' ||
+    'unsigned long long' ||
+    'unsigned short' ||
+    'unsigned byte' => const NamedTypeRef(typeId: 'core.int'),
+    'double' ||
+    'float' ||
+    'unrestricted double' => const NamedTypeRef(typeId: 'core.double'),
+    'undefined' || 'void' => const NamedTypeRef(typeId: 'core.void'),
     'object' => const NamedTypeRef(typeId: 'core.Object'),
     _ => null,
   };
 }
 
-Map<String, InterfaceDecl> loadAllInterfaces(String snapshotPath, {Set<String>? specFilter}) {
+Map<String, InterfaceDecl> loadAllInterfaces(
+  String snapshotPath, {
+  Set<String>? specFilter,
+}) {
   final file = File(snapshotPath);
   final data = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
   final idl = data['idl'] as Map<String, dynamic>? ?? {};

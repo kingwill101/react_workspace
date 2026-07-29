@@ -5,6 +5,7 @@ import 'package:react_web_generator/src/resolver.dart';
 import 'package:react_web_generator/src/source/element_snapshot.dart';
 import 'package:react_web_generator/src/web_dart_type.dart';
 import 'package:react_web_generator/src/web_host_ir.dart';
+import 'package:react_web_generator/src/normalize/model_builder.dart';
 
 final class WebHostIrBuilder {
   final PackageWebResolver _resolver;
@@ -12,6 +13,7 @@ final class WebHostIrBuilder {
   final Map<String, dynamic> _overlay;
   final List<RootElement> _elements;
   final ElementSnapshot _elementSnapshot;
+  final Set<String> _voidElementTags;
 
   WebHostIrBuilder._({
     required this._resolver,
@@ -19,6 +21,7 @@ final class WebHostIrBuilder {
     required this._overlay,
     required this._elements,
     required this._elementSnapshot,
+    required this._voidElementTags,
   });
 
   static Future<WebHostIrBuilder> create({
@@ -29,15 +32,16 @@ final class WebHostIrBuilder {
   }) async {
     final resolver = await PackageWebResolver.create(packageRoot);
 
-    final idlJson = jsonDecode(
-      await File(webApisJsonPath).readAsString(),
-    ) as Map<String, dynamic>;
-    final overlay = jsonDecode(
-      await File(overlayPath).readAsString(),
-    ) as Map<String, dynamic>;
+    final idlJson =
+        jsonDecode(await File(webApisJsonPath).readAsString())
+            as Map<String, dynamic>;
+    final overlay =
+        jsonDecode(await File(overlayPath).readAsString())
+            as Map<String, dynamic>;
 
     final elements = _loadRoots(rootsPath);
     final elementSnapshot = ElementSnapshot.load(webApisJsonPath);
+    final voidElementTags = loadVoidElements(rootsPath);
 
     return WebHostIrBuilder._(
       resolver: resolver,
@@ -45,6 +49,7 @@ final class WebHostIrBuilder {
       overlay: overlay,
       elements: elements,
       elementSnapshot: elementSnapshot,
+      voidElementTags: voidElementTags,
     );
   }
 
@@ -62,40 +67,62 @@ final class WebHostIrBuilder {
   }
 
   List<WebHostElementIR> build() {
+    return _buildElements(_elements, strict: true);
+  }
+
+  List<WebHostElementIR> buildAll() {
+    final allRoots = _elementSnapshot.htmlTags.map((tag) {
+      return RootElement(tag: tag, voidElement: _voidElementTags.contains(tag));
+    }).toList();
+    return _buildElements(allRoots, strict: false);
+  }
+
+  List<WebHostElementIR> _buildElements(
+    List<RootElement> elements, {
+    required bool strict,
+  }) {
     final result = <WebHostElementIR>[];
     final idlSpecs = _idl['idl'] as Map<String, dynamic>;
     final idlByName = _flattenIdl(idlSpecs);
 
-    for (final el in _elements) {
+    for (final el in elements) {
       final interfaceName = _interfaceName(el.tag);
       final iface = idlByName[interfaceName];
 
       if (iface == null) {
-        throw StateError(
-          'IDL interface "$interfaceName" not found for element "$el.tag". '
-          'Check the roots config or update web_apis.json.',
-        );
+        if (strict) {
+          throw StateError(
+            'IDL interface "$interfaceName" not found for element "$el.tag". '
+            'Check the roots config or update web_apis.json.',
+          );
+        }
+        continue;
       }
 
       if (!_resolver.containsInterface(interfaceName)) {
-        throw StateError(
-          'package:web does not export "$interfaceName" required by '
-          'element "$el.tag".',
-        );
+        if (strict) {
+          throw StateError(
+            'package:web does not export "$interfaceName" required by '
+            'element "$el.tag".',
+          );
+        }
+        continue;
       }
 
       final elementType = _resolver.resolveInterface(interfaceName);
       final members = _collectMembers(iface, idlByName);
 
-      result.add(WebHostElementIR(
-        tagName: el.tag,
-        factoryName: _camelCase(el.tag),
-        namespace: WebNamespace.html,
-        elementType: elementType,
-        voidElement: el.voidElement,
-        props: _buildProps(members),
-        events: _buildEvents(),
-      ));
+      result.add(
+        WebHostElementIR(
+          tagName: el.tag,
+          factoryName: _camelCase(el.tag),
+          namespace: WebNamespace.html,
+          elementType: elementType,
+          voidElement: el.voidElement,
+          props: _buildProps(members),
+          events: _buildEvents(),
+        ),
+      );
     }
 
     return result;
@@ -124,12 +151,11 @@ final class WebHostIrBuilder {
     return result;
   }
 
-  String _camelCase(String tag) =>
-      tag.length == 1
-          ? tag
-          : tag.contains('-')
-              ? tag.split('-').map((s) => s[0].toUpperCase() + s.substring(1)).join()
-              : tag;
+  String _camelCase(String tag) => tag.length == 1
+      ? tag
+      : tag.contains('-')
+      ? tag.split('-').map((s) => s[0].toUpperCase() + s.substring(1)).join()
+      : tag;
 
   Map<String, Map<String, dynamic>> _collectMembers(
     Map<String, dynamic> interface,
@@ -179,32 +205,36 @@ final class WebHostIrBuilder {
 
       final dartType = _resolveIdlType(idlType);
 
-      result.add(WebHostPropIR(
-        idlName: idlName,
-        dartName: dartName,
-        reactName: reactName,
-        dartType: dartType,
-        required: false,
-        clientOnly: false,
-        ssrBehavior: _ssrBehavior(idlType),
-      ));
+      result.add(
+        WebHostPropIR(
+          idlName: idlName,
+          dartName: dartName,
+          reactName: reactName,
+          dartType: dartType,
+          required: false,
+          clientOnly: false,
+          ssrBehavior: _ssrBehavior(idlType),
+        ),
+      );
     }
 
     for (final name in globalSet) {
       if (result.any((p) => p.reactName == name)) continue;
-      result.add(WebHostPropIR(
-        idlName: name,
-        dartName: name,
-        reactName: name,
-        dartType: WebDartType(
-          symbol: 'String',
-          import: Uri.parse('dart:core'),
-          nullable: true,
+      result.add(
+        WebHostPropIR(
+          idlName: name,
+          dartName: name,
+          reactName: name,
+          dartType: WebDartType(
+            symbol: 'String',
+            import: Uri.parse('dart:core'),
+            nullable: true,
+          ),
+          required: false,
+          clientOnly: false,
+          ssrBehavior: WebSsrBehavior.attribute,
         ),
-        required: false,
-        clientOnly: false,
-        ssrBehavior: WebSsrBehavior.attribute,
-      ));
+      );
     }
 
     return result;
@@ -259,20 +289,23 @@ final class WebHostIrBuilder {
         import: Uri.parse('dart:core'),
         nullable: false,
       ),
-      'long' || 'long long' || 'short' || 'byte' ||
-      'unsigned long' || 'unsigned long long' ||
-      'unsigned short' || 'unsigned byte' =>
-        WebDartType(
-          symbol: 'int',
-          import: Uri.parse('dart:core'),
-          nullable: false,
-        ),
-      'double' || 'float' || 'unrestricted double' =>
-        WebDartType(
-          symbol: 'double',
-          import: Uri.parse('dart:core'),
-          nullable: false,
-        ),
+      'long' ||
+      'long long' ||
+      'short' ||
+      'byte' ||
+      'unsigned long' ||
+      'unsigned long long' ||
+      'unsigned short' ||
+      'unsigned byte' => WebDartType(
+        symbol: 'int',
+        import: Uri.parse('dart:core'),
+        nullable: false,
+      ),
+      'double' || 'float' || 'unrestricted double' => WebDartType(
+        symbol: 'double',
+        import: Uri.parse('dart:core'),
+        nullable: false,
+      ),
       'object' => WebDartType(
         symbol: 'Object',
         import: Uri.parse('dart:core'),
@@ -308,13 +341,15 @@ final class WebHostIrBuilder {
 
       final nativeEventType = _resolver.resolveInterface(nativeTypeName);
 
-      result.add(WebEventPropIR(
-        domEventName: domName,
-        reactName: reactName,
-        captureName: '${reactName}Capture',
-        reactEventType: reactEventType,
-        nativeEventType: nativeEventType,
-      ));
+      result.add(
+        WebEventPropIR(
+          domEventName: domName,
+          reactName: reactName,
+          captureName: '${reactName}Capture',
+          reactEventType: reactEventType,
+          nativeEventType: nativeEventType,
+        ),
+      );
     }
 
     return result;

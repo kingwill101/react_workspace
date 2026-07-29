@@ -75,7 +75,9 @@ void main() {
       final output = FactoryEmitter([element]).emit();
       expect(
         output,
-        contains("const _divHostType = HostType<Map<String, Object?>>('html', 'div');"),
+        contains(
+          "const _divHostType = HostType<Map<String, Object?>>('html', 'div');",
+        ),
       );
     });
 
@@ -84,24 +86,41 @@ void main() {
       expect(output, contains('ReactNode div({'));
       expect(output, contains('String? id,'));
       expect(output, contains('String? className,'));
-      expect(output, contains('void Function(ReactMouseEvent<HTMLDivElement>)? onClick,'));
-      expect(output, contains('void Function(ReactMouseEvent<HTMLDivElement>)? onClickCapture,'));
+      expect(
+        output,
+        contains('void Function(ReactMouseEvent<HTMLDivElement>)? onClick,'),
+      );
+      expect(
+        output,
+        contains(
+          'void Function(ReactMouseEvent<HTMLDivElement>)? onClickCapture,',
+        ),
+      );
       expect(output, contains('void Function(HTMLDivElement?)? ref,'));
       expect(output, contains('List<ReactNode> children = const [],'));
       expect(output, contains('String? key,'));
-      expect(output, contains('Map<String, Object?> additionalProps = const {},'));
+      expect(
+        output,
+        contains('Map<String, Object?> additionalProps = const {},'),
+      );
     });
 
     test('generates HostNode return with id and className conditionals', () {
       final output = FactoryEmitter([element]).emit();
       expect(output, contains("if (id != null) 'id': id,"));
-      expect(output, contains("if (className != null) 'className': className,"));
+      expect(
+        output,
+        contains("if (className != null) 'className': className,"),
+      );
     });
 
     test('wraps event callbacks in ReactEventProp', () {
       final output = FactoryEmitter([element]).emit();
       expect(output, contains("ReactEventProp(_divOnClick(onClick))"));
-      expect(output, contains("ReactEventProp(_divOnClickCapture(onClickCapture))"));
+      expect(
+        output,
+        contains("ReactEventProp(_divOnClickCapture(onClickCapture))"),
+      );
     });
 
     test('wraps ref callbacks in ReactRefProp', () {
@@ -113,19 +132,22 @@ void main() {
       final output = FactoryEmitter([element]).emit();
       expect(output, contains('kind: ReactValueKind.hostValue,'));
       expect(output, contains("hostNamespace: 'web'"));
-      expect(
-        output,
-        contains(
-          "typeId: 'ReactMouseEvent<HTMLDivElement>'",
-        ),
-      );
+      expect(output, contains("typeId: 'ReactMouseEvent<HTMLDivElement>'"));
     });
 
     test('generates event wrapper with callback function', () {
       final output = FactoryEmitter([element]).emit();
-      expect(output, contains('ReactCallback _divOnClick(void Function(ReactMouseEvent<HTMLDivElement>) callback)'));
+      expect(
+        output,
+        contains(
+          'ReactCallback _divOnClick(void Function(ReactMouseEvent<HTMLDivElement>) callback)',
+        ),
+      );
       expect(output, contains("debugName: 'div.onClick'"));
-      expect(output, contains('callback(arguments[0] as ReactMouseEvent<HTMLDivElement>);'));
+      expect(
+        output,
+        contains('callback(arguments[0] as ReactMouseEvent<HTMLDivElement>);'),
+      );
     });
 
     test('generates capture event wrapper', () {
@@ -135,9 +157,17 @@ void main() {
 
     test('generates ref wrapper', () {
       final output = FactoryEmitter([element]).emit();
-      expect(output, contains('ReactCallback _divRef(void Function(HTMLDivElement?) callback)'));
+      expect(
+        output,
+        contains(
+          'ReactCallback _divRef(void Function(HTMLDivElement?) callback)',
+        ),
+      );
       expect(output, contains("debugName: 'div.ref'"));
-      expect(output, contains('callback(value == null ? null : value as HTMLDivElement);'));
+      expect(
+        output,
+        contains('callback(value == null ? null : value as HTMLDivElement);'),
+      );
     });
 
     test('generates deterministic output (same input, same output)', () {
@@ -165,7 +195,12 @@ void main() {
 
       final spanOutput = FactoryEmitter([span]).emit();
       expect(spanOutput, isNot(equals(divOutput)));
-      expect(spanOutput, contains("const _spanHostType = HostType<Map<String, Object?>>('html', 'span');"));
+      expect(
+        spanOutput,
+        contains(
+          "const _spanHostType = HostType<Map<String, Object?>>('html', 'span');",
+        ),
+      );
     });
 
     test('generates void elements with element type and ref', () {

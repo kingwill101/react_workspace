@@ -9,13 +9,17 @@ final class PublicApiEmitter {
     for (final component in model.components) {
       buffer.writeln("import 'package:react/react.dart';");
       buffer.writeln();
-      buffer.writeln("const id${component.name} = ComponentId('${component.componentId}');");
+      buffer.writeln(
+        "const id${component.name} = ComponentId('${component.componentId}');",
+      );
       buffer.writeln();
       buffer.writeln('ReactNode ${component.name}({');
       buffer.writeln('  ${_params(component)}');
       buffer.writeln('}) {');
       buffer.writeln('  final props = ${_propsLiteral(component)};');
-      buffer.writeln('  return Component(id${component.name}, props, key: key, children: children);');
+      buffer.writeln(
+        '  return Component(id${component.name}, props, key: key, children: children);',
+      );
       buffer.writeln('}');
       buffer.writeln();
     }
@@ -42,7 +46,9 @@ final class PublicApiEmitter {
   }
 
   String _propsLiteral(ReactComponentModel component) {
-    final parts = component.props.map((prop) => '${prop.name}: ${prop.name}').join(', ');
+    final parts = component.props
+        .map((prop) => '${prop.name}: ${prop.name}')
+        .join(', ');
     return '($parts)';
   }
 
@@ -56,7 +62,9 @@ final class PublicApiEmitter {
 
     if (type is FunctionTypeRef) {
       final params = type.positional.map((p) => _typeCode(p.type)).join(', ');
-      final named = type.named.isEmpty ? '' : '{${type.named.map((p) => '${_typeCode(p.type)} ${p.name}').join(', ')}}';
+      final named = type.named.isEmpty
+          ? ''
+          : '{${type.named.map((p) => '${_typeCode(p.type)} ${p.name}').join(', ')}}';
       final suffix = type.nullable ? '?' : '';
       return '${_typeCode(type.result)} Function($params${named.isEmpty ? '' : ' $named'})$suffix';
     }

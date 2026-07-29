@@ -5,10 +5,7 @@ final class ElementSnapshot {
   final Map<String, String> tagToInterface;
   final Set<String> htmlTags;
 
-  const ElementSnapshot({
-    required this.tagToInterface,
-    required this.htmlTags,
-  });
+  const ElementSnapshot({required this.tagToInterface, required this.htmlTags});
 
   String? interfaceFor(String tag) => tagToInterface[tag];
 
@@ -21,7 +18,8 @@ final class ElementSnapshot {
     final htmlTags = <String>{};
 
     for (final specEntry in elements.entries) {
-      for (final entry in (specEntry.value['elements'] as List<dynamic>? ?? [])) {
+      for (final entry
+          in (specEntry.value['elements'] as List<dynamic>? ?? [])) {
         final e = entry as Map<String, dynamic>;
         final name = e['name'] as String?;
         final interface = e['interface'] as String?;
@@ -34,9 +32,6 @@ final class ElementSnapshot {
       }
     }
 
-    return ElementSnapshot(
-      tagToInterface: tagToInterface,
-      htmlTags: htmlTags,
-    );
+    return ElementSnapshot(tagToInterface: tagToInterface, htmlTags: htmlTags);
   }
 }

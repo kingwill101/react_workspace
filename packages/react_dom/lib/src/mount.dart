@@ -38,36 +38,30 @@ Map<String, dynamic> getInitialProps() {
 }
 
 /// Mounts a React component into a fresh root (client-only rendering).
-void mount(JSObject root, ReactNode node) =>
-    runWithReactRuntime(
-      ReactRuntime(
-        target: ReactRenderTarget.browser,
-        capabilities: ReactRuntimeCapabilities.browser,
-        binding: JsBinding(),
-        renderer: JsRenderer(),
-      ),
-      () => _createRoot(root)
-          .callMethod(
-            'render'.toJS,
-            currentReactRuntime.renderer.render(node) as JSAny,
-          ),
-    );
+void mount(JSObject root, ReactNode node) => runWithReactRuntime(
+  ReactRuntime(
+    target: ReactRenderTarget.browser,
+    capabilities: ReactRuntimeCapabilities.browser,
+    binding: JsBinding(),
+    renderer: JsRenderer(),
+  ),
+  () => _createRoot(root).callMethod(
+    'render'.toJS,
+    currentReactRuntime.renderer.render(node) as JSAny,
+  ),
+);
 
 /// Hydrates SSR-rendered HTML, attaching event handlers.
 /// Uses [hydrateRoot] which expects the SSR HTML to already be in [root].
-void hydrate(JSObject root, ReactNode node) =>
-    runWithReactRuntime(
-      ReactRuntime(
-        target: ReactRenderTarget.browser,
-        capabilities: ReactRuntimeCapabilities.browser,
-        binding: JsBinding(),
-        renderer: JsRenderer(),
-      ),
-      () => _hydrateRoot(
-        root,
-        currentReactRuntime.renderer.render(node) as JSAny,
-      ),
-    );
+void hydrate(JSObject root, ReactNode node) => runWithReactRuntime(
+  ReactRuntime(
+    target: ReactRenderTarget.browser,
+    capabilities: ReactRuntimeCapabilities.browser,
+    binding: JsBinding(),
+    renderer: JsRenderer(),
+  ),
+  () => _hydrateRoot(root, currentReactRuntime.renderer.render(node) as JSAny),
+);
 
 @JS('document.getElementById')
 external JSObject? _getById(String id);

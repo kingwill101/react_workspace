@@ -50,10 +50,7 @@ final class RecordFieldRef {
   final String name;
   final ReactTypeRef type;
 
-  const RecordFieldRef({
-    required this.name,
-    required this.type,
-  });
+  const RecordFieldRef({required this.name, required this.type});
 }
 
 final class FunctionParameterRef {

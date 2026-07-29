@@ -21,10 +21,7 @@ final class BrowserBinding {
 
   const BrowserBinding({required this.library, required this.symbol});
 
-  Map<String, Object?> toJson() => {
-    'library': library,
-    'symbol': symbol,
-  };
+  Map<String, Object?> toJson() => {'library': library, 'symbol': symbol};
 }
 
 final class InterfaceDecl {
@@ -78,20 +75,25 @@ InterfaceDecl interfaceDeclFromJson(Map<String, dynamic> json) {
     typeId: json['typeId'] as String,
     name: json['name'] as String,
     sourceName: json['sourceName'] as String?,
-    typeParameters: (json['typeParameters'] as List<dynamic>?)
-            ?.map((tp) => TypeParameterDecl(
-              name: tp['name'] as String,
-              bound: tp['bound'] != null
-                  ? typeRefFromJson(tp['bound'] as Map<String, dynamic>)
-                  : null,
-            ))
+    typeParameters:
+        (json['typeParameters'] as List<dynamic>?)
+            ?.map(
+              (tp) => TypeParameterDecl(
+                name: tp['name'] as String,
+                bound: tp['bound'] != null
+                    ? typeRefFromJson(tp['bound'] as Map<String, dynamic>)
+                    : null,
+              ),
+            )
             .toList() ??
         [],
-    extends_: (json['extends'] as List<dynamic>?)
+    extends_:
+        (json['extends'] as List<dynamic>?)
             ?.map((e) => typeRefFromJson(e as Map<String, dynamic>))
             .toList() ??
         [],
-    members: (json['members'] as List<dynamic>?)
+    members:
+        (json['members'] as List<dynamic>?)
             ?.map((m) => memberDeclFromJson(m as Map<String, dynamic>))
             .toList() ??
         [],
@@ -100,10 +102,12 @@ InterfaceDecl interfaceDeclFromJson(Map<String, dynamic> json) {
         : Exposure.full,
     browserBinding: json['browserBinding'] != null
         ? BrowserBinding(
-            library: (json['browserBinding'] as Map<String, dynamic>)['library']
-                as String,
-            symbol: (json['browserBinding'] as Map<String, dynamic>)['symbol']
-                as String,
+            library:
+                (json['browserBinding'] as Map<String, dynamic>)['library']
+                    as String,
+            symbol:
+                (json['browserBinding'] as Map<String, dynamic>)['symbol']
+                    as String,
           )
         : null,
   );

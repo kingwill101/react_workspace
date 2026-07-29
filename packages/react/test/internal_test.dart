@@ -89,10 +89,8 @@ void main() {
         renderer: _TestRenderer(),
       );
 
-      Future<int> render(ReactRuntime r) => runWithReactRuntime(
-            r,
-            () => Future.value(r.binding.useState(0).$1),
-          );
+      Future<int> render(ReactRuntime r) =>
+          runWithReactRuntime(r, () => Future.value(r.binding.useState(0).$1));
 
       final results = await Future.wait([
         render(runtime1),

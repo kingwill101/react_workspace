@@ -69,6 +69,7 @@ final class TypeRefResolver {
         if (parent != null) walk(parent);
       }
     }
+
     final decl = typeForName(name);
     if (decl != null) walk(decl);
     return result;

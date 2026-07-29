@@ -37,13 +37,16 @@ final class PackageWebResolver {
   }
 
   Future<void> _load(String packageRoot) async {
-    final pkgConfig = File(p.join(packageRoot, '.dart_tool', 'package_config.json'));
+    final pkgConfig = File(
+      p.join(packageRoot, '.dart_tool', 'package_config.json'),
+    );
     if (!await pkgConfig.exists()) {
       _errors.add('package_config.json not found at ${pkgConfig.path}');
       return;
     }
 
-    final config = jsonDecode(await pkgConfig.readAsString()) as Map<String, dynamic>;
+    final config =
+        jsonDecode(await pkgConfig.readAsString()) as Map<String, dynamic>;
     final packages = config['packages'] as List<dynamic>;
 
     Map<String, dynamic>? webPkg;
@@ -81,9 +84,7 @@ final class PackageWebResolver {
   }
 
   void _findExtensionTypes(String source, String filePath, String libRoot) {
-    final extTypeRegex = RegExp(
-      r'extension\s+type\s+(\w+)',
-    );
+    final extTypeRegex = RegExp(r'extension\s+type\s+(\w+)');
     for (final m in extTypeRegex.allMatches(source)) {
       final name = m.group(1)!;
       if (name.startsWith('_')) continue;

@@ -10,24 +10,37 @@ class JsRenderer extends ReactRenderer {
   Object? render(ReactNode node) => _render(node) as Object?;
 
   JSAny? _render(ReactNode n) => switch (n) {
-        Component(:var id, :var props, :var children) => () {
-          final e = ReactRegistry.lookup(id.value)!;
-          final jsProps = e.toJS(props);
-          final jsChildren =
-              children.map((c) => toReactJS(c)!).toList().toJS;
-          return _react.callMethod('createElement'.toJS,
-              e.comp as JSAny, jsProps as JSAny, jsChildren) as JSAny;
-        }(),
-        HostNode(:var type, :var props, :var children) =>
-          _react.callMethod('createElement'.toJS, type.name.toJS,
-              _propsToJS(props as Map<String, Object?>),
-              children.map((c) => toReactJS(c)!).toList().toJS) as JSAny,
-        Text(:var value) => value.toJS,
-        Fragment(:var children) =>
-          _react.callMethod('createElement'.toJS, _fragment, null,
-              children.map((c) => toReactJS(c)!).toList().toJS) as JSAny,
-        Empty() => null,
-      };
+    Component(:var id, :var props, :var children) => () {
+      final e = ReactRegistry.lookup(id.value)!;
+      final jsProps = e.toJS(props);
+      final jsChildren = children.map((c) => toReactJS(c)!).toList().toJS;
+      return _react.callMethod(
+            'createElement'.toJS,
+            e.comp as JSAny,
+            jsProps as JSAny,
+            jsChildren,
+          )
+          as JSAny;
+    }(),
+    HostNode(:var type, :var props, :var children) =>
+      _react.callMethod(
+            'createElement'.toJS,
+            type.name.toJS,
+            _propsToJS(props as Map<String, Object?>),
+            children.map((c) => toReactJS(c)!).toList().toJS,
+          )
+          as JSAny,
+    Text(:var value) => value.toJS,
+    Fragment(:var children) =>
+      _react.callMethod(
+            'createElement'.toJS,
+            _fragment,
+            null,
+            children.map((c) => toReactJS(c)!).toList().toJS,
+          )
+          as JSAny,
+    Empty() => null,
+  };
 
   JSObject _propsToJS(Map<String, Object?> m) {
     final o = JSObject();

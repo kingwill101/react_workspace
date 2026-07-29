@@ -16,9 +16,10 @@ class AggregateBuilder implements Builder {
   @override
   Future<void> build(BuildStep step) async {
     final currentPkg = step.inputId.package;
-    final inputs = await step.findAssets(
-      Glob('**/*.react.g.dart'),
-    ).where((a) => a.package == currentPkg).toList();
+    final inputs = await step
+        .findAssets(Glob('**/*.react.g.dart'))
+        .where((a) => a.package == currentPkg)
+        .toList();
 
     if (inputs.isEmpty) return;
 
@@ -31,12 +32,16 @@ class AggregateBuilder implements Builder {
       final content = await step.readAsString(aid);
       final reactDartUri = _toReactDartUri(aid.uri);
 
-      for (final m in RegExp(r'void\s+(register\w+)\s*\(').allMatches(content)) {
+      for (final m in RegExp(
+        r'void\s+(register\w+)\s*\(',
+      ).allMatches(content)) {
         final name = m.group(1)!;
         if (regNames.contains(name)) continue;
         regNames.add(name);
         final cname = name.startsWith('register') ? name.substring(8) : name;
-        final prefix = cname.isEmpty ? 'c' : '${cname[0].toLowerCase()}${cname.substring(1)}';
+        final prefix = cname.isEmpty
+            ? 'c'
+            : '${cname[0].toLowerCase()}${cname.substring(1)}';
 
         imports.add("import '${aid.uri}' as $prefix;");
         idImports.add("import '$reactDartUri' show id$cname;");
@@ -72,7 +77,9 @@ class AggregateBuilder implements Builder {
     buf.writeln('void registerReactComponents() {');
     for (final name in regNames) {
       final cname = name.startsWith('register') ? name.substring(8) : name;
-      final prefix = cname.isEmpty ? 'c' : '${cname[0].toLowerCase()}${cname.substring(1)}';
+      final prefix = cname.isEmpty
+          ? 'c'
+          : '${cname[0].toLowerCase()}${cname.substring(1)}';
       buf.writeln('  $prefix.$name();');
     }
     buf.writeln('}');
@@ -99,19 +106,27 @@ class AggregateBuilder implements Builder {
     buf.writeln();
     buf.writeln('/// Maps canonical component IDs to their SSR builders.');
     buf.writeln('///');
-    buf.writeln('/// Generated from the component model. Application-specific defaults');
+    buf.writeln(
+      '/// Generated from the component model. Application-specific defaults',
+    );
     buf.writeln('/// (e.g. fallback values) are applied by the application in');
     buf.writeln('/// [registerSsrComponentBuilders].');
     buf.writeln('final class SsrComponentRegistry {');
     buf.writeln('  SsrComponentRegistry._();');
     buf.writeln();
-    buf.writeln('  static final _builders = <String, ReactNode Function(Map<String, dynamic>)>{};');
+    buf.writeln(
+      '  static final _builders = <String, ReactNode Function(Map<String, dynamic>)>{};',
+    );
     buf.writeln();
-    buf.writeln('  static void register(String id, ReactNode Function(Map<String, dynamic>) builder) {');
+    buf.writeln(
+      '  static void register(String id, ReactNode Function(Map<String, dynamic>) builder) {',
+    );
     buf.writeln('    _builders[id] = builder;');
     buf.writeln('  }');
     buf.writeln();
-    buf.writeln('  static ReactNode build(String id, Map<String, dynamic> props) {');
+    buf.writeln(
+      '  static ReactNode build(String id, Map<String, dynamic> props) {',
+    );
     buf.writeln('    final builder = _builders[id];');
     buf.writeln('    if (builder == null) return const Empty();');
     buf.writeln('    return builder(props);');
@@ -120,12 +135,18 @@ class AggregateBuilder implements Builder {
     buf.writeln('  static Set<String> get knownIds => _builders.keys.toSet();');
     buf.writeln('}');
     buf.writeln();
-    buf.writeln('/// Registers all known component ID placeholders with [SsrComponentRegistry].');
-    buf.writeln('/// Application-specific builders must be registered separately using');
+    buf.writeln(
+      '/// Registers all known component ID placeholders with [SsrComponentRegistry].',
+    );
+    buf.writeln(
+      '/// Application-specific builders must be registered separately using',
+    );
     buf.writeln('/// [SsrComponentRegistry.register].');
     buf.writeln('void registerKnownSsComponentIds() {');
     for (final constant in idConstants) {
-      buf.writeln('  SsrComponentRegistry.register($constant, (_) => const Empty());');
+      buf.writeln(
+        '  SsrComponentRegistry.register($constant, (_) => const Empty());',
+      );
     }
     buf.writeln('}');
 

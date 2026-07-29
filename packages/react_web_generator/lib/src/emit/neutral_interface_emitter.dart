@@ -5,7 +5,8 @@ import 'type_ref_resolver.dart';
 final class NeutralInterfaceEmitter {
   final NeutralWebModel model;
 
-  NeutralInterfaceEmitter(this.model) : _resolver = TypeRefResolver(model.types);
+  NeutralInterfaceEmitter(this.model)
+    : _resolver = TypeRefResolver(model.types);
 
   final TypeRefResolver _resolver;
 
@@ -20,16 +21,24 @@ final class NeutralInterfaceEmitter {
       }
     }
 
-    final allRefs = _collectReferencedTypes(htmlTypes)..addAll(_collectReferencedTypes(eventTypes));
-    allRefs.removeWhere((id) => TypeRefResolver.isCoreType(id) || htmlTypes.containsKey(id) || eventTypes.containsKey(id));
+    final allRefs = _collectReferencedTypes(htmlTypes)
+      ..addAll(_collectReferencedTypes(eventTypes));
+    allRefs.removeWhere(
+      (id) =>
+          TypeRefResolver.isCoreType(id) ||
+          htmlTypes.containsKey(id) ||
+          eventTypes.containsKey(id),
+    );
 
-    File('$outputDir/html_interfaces.dart')
-        .writeAsStringSync(_emitHtmlTypes(htmlTypes, allRefs));
+    File(
+      '$outputDir/html_interfaces.dart',
+    ).writeAsStringSync(_emitHtmlTypes(htmlTypes, allRefs));
 
     final eventDir = Directory(outputDir);
     eventDir.createSync(recursive: true);
-    File('$outputDir/event_interfaces.dart')
-        .writeAsStringSync(_emitEventTypes(eventTypes));
+    File(
+      '$outputDir/event_interfaces.dart',
+    ).writeAsStringSync(_emitEventTypes(eventTypes));
   }
 
   Set<String> _collectReferencedTypes(Map<String, InterfaceDecl> types) {
@@ -70,9 +79,13 @@ final class NeutralInterfaceEmitter {
 
   String _emitHtmlTypes(Map<String, InterfaceDecl> types, Set<String> stubs) {
     final buf = StringBuffer();
-    buf.writeln('/// Neutral Web IDL interfaces — generated from neutral_web_model.json');
+    buf.writeln(
+      '/// Neutral Web IDL interfaces — generated from neutral_web_model.json',
+    );
     buf.writeln('///');
-    buf.writeln('/// These abstract interfaces correspond to Web IDL interface types.');
+    buf.writeln(
+      '/// These abstract interfaces correspond to Web IDL interface types.',
+    );
     buf.writeln();
 
     final sorted = _topologicalSort(types);
@@ -93,9 +106,13 @@ final class NeutralInterfaceEmitter {
 
   String _emitEventTypes(Map<String, InterfaceDecl> types) {
     final buf = StringBuffer();
-    buf.writeln('/// Neutral React event interfaces — generated from neutral_web_model.json');
+    buf.writeln(
+      '/// Neutral React event interfaces — generated from neutral_web_model.json',
+    );
     buf.writeln('///');
-    buf.writeln('/// These abstract interfaces correspond to React synthetic events.');
+    buf.writeln(
+      '/// These abstract interfaces correspond to React synthetic events.',
+    );
     buf.writeln();
 
     buf.writeln("import 'html_interfaces.dart';");
@@ -116,7 +133,10 @@ final class NeutralInterfaceEmitter {
     return typeId;
   }
 
-  Set<String> _inheritedMemberNames(InterfaceDecl decl, Map<String, InterfaceDecl> allTypes) {
+  Set<String> _inheritedMemberNames(
+    InterfaceDecl decl,
+    Map<String, InterfaceDecl> allTypes,
+  ) {
     final names = <String>{};
     void walk(InterfaceDecl d) {
       for (final ext in d.extends_) {
@@ -129,11 +149,15 @@ final class NeutralInterfaceEmitter {
         }
       }
     }
+
     walk(decl);
     return names;
   }
 
-  String _emitInterface(InterfaceDecl decl, Map<String, InterfaceDecl> allTypes) {
+  String _emitInterface(
+    InterfaceDecl decl,
+    Map<String, InterfaceDecl> allTypes,
+  ) {
     final buf = StringBuffer();
     buf.write('abstract interface class ${decl.name}');
 
@@ -143,7 +167,9 @@ final class NeutralInterfaceEmitter {
         if (i > 0) buf.write(', ');
         buf.write(decl.typeParameters[i].name);
         if (decl.typeParameters[i].bound != null) {
-          buf.write(' extends ${_resolver.resolve(decl.typeParameters[i].bound!)}');
+          buf.write(
+            ' extends ${_resolver.resolve(decl.typeParameters[i].bound!)}',
+          );
         }
       }
       buf.write('>');
@@ -181,7 +207,9 @@ final class NeutralInterfaceEmitter {
         for (int i = 0; i < member.parameters.length; i++) {
           if (i > 0) buf.write(', ');
           final p = member.parameters[i];
-          buf.write('${_resolver.resolve(p.type)} ${p.name.isNotEmpty ? _escapeDartKeyword(p.name) : 'arg$i'}');
+          buf.write(
+            '${_resolver.resolve(p.type)} ${p.name.isNotEmpty ? _escapeDartKeyword(p.name) : 'arg$i'}',
+          );
         }
         buf.writeln(');');
       }
@@ -197,14 +225,70 @@ final class NeutralInterfaceEmitter {
   }
 
   static const _dartKeywords = <String>{
-    'abstract', 'as', 'assert', 'async', 'await', 'break', 'case', 'catch',
-    'class', 'const', 'continue', 'covariant', 'default', 'deferred', 'do',
-    'dynamic', 'else', 'enum', 'export', 'extends', 'extension', 'external',
-    'factory', 'false', 'final', 'finally', 'for', 'Function', 'get', 'hide',
-    'if', 'implements', 'import', 'in', 'interface', 'is', 'late', 'library',
-    'mixin', 'new', 'null', 'on', 'operator', 'out', 'part', 'required',
-    'rethrow', 'return', 'set', 'show', 'static', 'super', 'switch', 'sync',
-    'this', 'throw', 'true', 'try', 'typedef', 'var', 'void', 'while', 'with', 'yield',
+    'abstract',
+    'as',
+    'assert',
+    'async',
+    'await',
+    'break',
+    'case',
+    'catch',
+    'class',
+    'const',
+    'continue',
+    'covariant',
+    'default',
+    'deferred',
+    'do',
+    'dynamic',
+    'else',
+    'enum',
+    'export',
+    'extends',
+    'extension',
+    'external',
+    'factory',
+    'false',
+    'final',
+    'finally',
+    'for',
+    'Function',
+    'get',
+    'hide',
+    'if',
+    'implements',
+    'import',
+    'in',
+    'interface',
+    'is',
+    'late',
+    'library',
+    'mixin',
+    'new',
+    'null',
+    'on',
+    'operator',
+    'out',
+    'part',
+    'required',
+    'rethrow',
+    'return',
+    'set',
+    'show',
+    'static',
+    'super',
+    'switch',
+    'sync',
+    'this',
+    'throw',
+    'true',
+    'try',
+    'typedef',
+    'var',
+    'void',
+    'while',
+    'with',
+    'yield',
   };
 
   List<InterfaceDecl> _topologicalSort(Map<String, InterfaceDecl> types) {

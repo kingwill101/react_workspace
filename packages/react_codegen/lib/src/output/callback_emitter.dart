@@ -8,7 +8,8 @@ final class CallbackEmitter {
     required String debugName,
     required ReactCallbackModel callback,
   }) {
-    final signature = '''
+    final signature =
+        '''
 const (
   positional: [
     ${callback.positional.map((param) => _valueSpec(param.valueSpec)).join(',\n    ')},
@@ -17,9 +18,14 @@ const (
   asynchronous: ${callback.asynchronous},
 )''';
 
-    final invokeExpression = callback.nullable ? '$callbackExpression!' : callbackExpression;
+    final invokeExpression = callback.nullable
+        ? '$callbackExpression!'
+        : callbackExpression;
     final arguments = callback.positional
-        .map((param) => 'arguments[${callback.positional.indexOf(param)}] as ${_typeCode(param.type)}')
+        .map(
+          (param) =>
+              'arguments[${callback.positional.indexOf(param)}] as ${_typeCode(param.type)}',
+        )
         .join(', ');
 
     final invokeBody = callback.result.kind == ReactValueKind.void_
@@ -60,8 +66,10 @@ ReactCallback(
     String dartParameters,
   ) {
     final encodedArguments = callback.positional
-        .map((param) =>
-            'encodeReactValue(${_valueSpec(param.valueSpec)}, ${param.name})')
+        .map(
+          (param) =>
+              'encodeReactValue(${_valueSpec(param.valueSpec)}, ${param.name})',
+        )
         .join(',\n        ');
 
     final resultBody = callback.result.kind == ReactValueKind.void_
@@ -100,8 +108,10 @@ final ${_callbackType(callback)} $fieldName =
     String dartParameters,
   ) {
     final encodedArguments = callback.positional
-        .map((param) =>
-            'encodeReactValue(${_valueSpec(param.valueSpec)}, ${param.name})')
+        .map(
+          (param) =>
+              'encodeReactValue(${_valueSpec(param.valueSpec)}, ${param.name})',
+        )
         .join(',\n        ');
 
     final resultBody = callback.result.kind == ReactValueKind.void_
@@ -137,7 +147,9 @@ final ${_callbackType(callback)} $fieldName =
   }
 
   String _callbackType(ReactCallbackModel callback) {
-    final parameters = callback.positional.map((param) => _typeCode(param.type)).join(', ');
+    final parameters = callback.positional
+        .map((param) => _typeCode(param.type))
+        .join(', ');
     final suffix = callback.nullable ? '?' : '';
     return '${_typeCode(callback.resultType)} Function($parameters)$suffix';
   }
@@ -145,10 +157,13 @@ final ${_callbackType(callback)} $fieldName =
   String _valueSpec(ReactValueSpecModel spec) {
     return switch (spec.kind) {
       ReactValueKind.void_ => 'reactVoid',
-      ReactValueKind.string => spec.nullable ? 'reactNullableString' : 'reactString',
+      ReactValueKind.string =>
+        spec.nullable ? 'reactNullableString' : 'reactString',
       ReactValueKind.integer => spec.nullable ? 'reactNullableInt' : 'reactInt',
-      ReactValueKind.number => spec.nullable ? 'reactNullableDouble' : 'reactDouble',
-      ReactValueKind.boolean => spec.nullable ? 'reactNullableBool' : 'reactBool',
+      ReactValueKind.number =>
+        spec.nullable ? 'reactNullableDouble' : 'reactDouble',
+      ReactValueKind.boolean =>
+        spec.nullable ? 'reactNullableBool' : 'reactBool',
       ReactValueKind.reactNode => 'reactNodeValue',
       ReactValueKind.hostValue => _hostValueSpec(spec),
       ReactValueKind.encodedObject => _encodedObjectSpec(spec),
@@ -192,7 +207,9 @@ final ${_callbackType(callback)} $fieldName =
 
     if (type is FunctionTypeRef) {
       final params = type.positional.map((p) => _typeCode(p.type)).join(', ');
-      final named = type.named.isEmpty ? '' : '{${type.named.map((p) => '${_typeCode(p.type)} ${p.name}').join(', ')}}';
+      final named = type.named.isEmpty
+          ? ''
+          : '{${type.named.map((p) => '${_typeCode(p.type)} ${p.name}').join(', ')}}';
       final suffix = type.nullable ? '?' : '';
       return '${_typeCode(type.result)} Function($params${named.isEmpty ? '' : ' $named'})$suffix';
     }

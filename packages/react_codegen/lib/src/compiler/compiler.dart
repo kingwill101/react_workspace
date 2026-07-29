@@ -10,10 +10,7 @@ final class ReactCompileOutput {
   final String publicApi;
   final String jsBridge;
 
-  const ReactCompileOutput({
-    required this.publicApi,
-    required this.jsBridge,
-  });
+  const ReactCompileOutput({required this.publicApi, required this.jsBridge});
 }
 
 final class ReactCompiler {

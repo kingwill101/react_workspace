@@ -26,10 +26,7 @@ final class ReactComponentBuilder implements Builder {
 
   @override
   final buildExtensions = const {
-    '.dart': [
-      '.react.dart',
-      '.react.g.dart',
-    ],
+    '.dart': ['.react.dart', '.react.g.dart'],
   };
 
   @override

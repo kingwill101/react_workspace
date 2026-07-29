@@ -1,4 +1,8 @@
 {
+  "voidElements": [
+    "area", "base", "br", "col", "embed", "hr", "img", "input",
+    "link", "meta", "param", "source", "track", "wbr"
+  ],
   "elements": [
     {"tag": "div", "voidElement": false},
     {"tag": "span", "voidElement": false},

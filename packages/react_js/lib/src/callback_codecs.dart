@@ -34,10 +34,9 @@ Object? decodeReactValue(
 
     ReactValueKind.boolean => (value as JSBoolean).toDart,
 
-    ReactValueKind.reactNode =>
-      throw UnsupportedError(
-        'Decoding ReactNode arguments is not implemented.',
-      ),
+    ReactValueKind.reactNode => throw UnsupportedError(
+      'Decoding ReactNode arguments is not implemented.',
+    ),
 
     ReactValueKind.hostValue => ReactCodecRegistry.decodeHostValue(
       spec.hostNamespace!,
@@ -45,7 +44,10 @@ Object? decodeReactValue(
       value,
     ),
 
-    ReactValueKind.encodedObject => ReactCodecRegistry.decode(spec.codecId!, value),
+    ReactValueKind.encodedObject => ReactCodecRegistry.decode(
+      spec.codecId!,
+      value,
+    ),
   };
 }
 
@@ -69,13 +71,17 @@ JSAny? encodeReactValue(ReactValueSpec spec, Object? value) {
     ReactValueKind.number => (value as num).toDouble().toJS,
     ReactValueKind.boolean => (value as bool).toJS,
     ReactValueKind.reactNode => toReactJS(value as ReactNode),
-    ReactValueKind.hostValue => value is JSAny
-        ? value
-        : ReactCodecRegistry.encodeHostValue(
-            spec.hostNamespace!,
-            spec.typeId!,
-            value,
-          ),
-    ReactValueKind.encodedObject => ReactCodecRegistry.encode(spec.codecId!, value),
+    ReactValueKind.hostValue =>
+      value is JSAny
+          ? value
+          : ReactCodecRegistry.encodeHostValue(
+              spec.hostNamespace!,
+              spec.typeId!,
+              value,
+            ),
+    ReactValueKind.encodedObject => ReactCodecRegistry.encode(
+      spec.codecId!,
+      value,
+    ),
   };
 }

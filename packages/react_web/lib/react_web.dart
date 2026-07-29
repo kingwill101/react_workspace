@@ -3,12 +3,37 @@
 /// Provides the generated Web IDL bindings for HTML elements, event types,
 /// and refs.  Re-exports the core renderer-neutral API so web applications
 /// normally need only this single import.
-library react_web;
+library;
 
 export 'package:react/react.dart';
 
 export 'src/generated/event_interfaces.dart';
-export 'src/generated/elements.dart' hide div, span, button, input, form, label, textarea, select, option, a, img;
+export 'src/generated/elements.dart'
+    hide
+        div,
+        span,
+        button,
+        input,
+        form,
+        label,
+        textarea,
+        select,
+        option,
+        a,
+        img;
 export 'src/generated/dom.dart';
-export 'src/generated/html_interfaces.dart' hide Text, HTMLDivElement, HTMLSpanElement, HTMLButtonElement, HTMLInputElement, HTMLFormElement, HTMLLabelElement, HTMLTextAreaElement, HTMLSelectElement, HTMLOptionElement, HTMLAnchorElement, HTMLImageElement;
+export 'src/generated/html_interfaces.dart'
+    hide
+        Text,
+        HTMLDivElement,
+        HTMLSpanElement,
+        HTMLButtonElement,
+        HTMLInputElement,
+        HTMLFormElement,
+        HTMLLabelElement,
+        HTMLTextAreaElement,
+        HTMLSelectElement,
+        HTMLOptionElement,
+        HTMLAnchorElement,
+        HTMLImageElement;
 export 'src/ssr_metadata.dart';

@@ -62,12 +62,6 @@ ReactRuntime get currentReactRuntime {
   return runtime;
 }
 
-T runWithReactRuntime<T>(
-  ReactRuntime runtime,
-  T Function() callback,
-) {
-  return runZoned(
-    callback,
-    zoneValues: {_reactRuntimeKey: runtime},
-  );
+T runWithReactRuntime<T>(ReactRuntime runtime, T Function() callback) {
+  return runZoned(callback, zoneValues: {_reactRuntimeKey: runtime});
 }

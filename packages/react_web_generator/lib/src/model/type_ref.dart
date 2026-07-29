@@ -14,6 +14,7 @@ sealed class TypeRef {
 
 final class NamedTypeRef extends TypeRef {
   final String typeId;
+  @override
   final bool nullable;
   final List<TypeRef> arguments;
 
@@ -55,6 +56,7 @@ final class NamedTypeRef extends TypeRef {
 
 final class TypeParameterRef extends TypeRef {
   final String name;
+  @override
   final bool nullable;
 
   const TypeParameterRef({required this.name, this.nullable = false});
@@ -80,6 +82,7 @@ final class TypeParameterRef extends TypeRef {
 }
 
 final class UnionTypeRef extends TypeRef {
+  @override
   final bool nullable;
   final List<TypeRef> options;
 
@@ -111,7 +114,8 @@ TypeRef typeRefFromJson(Map<String, dynamic> json) {
     'named' => NamedTypeRef(
       typeId: json['typeId'] as String,
       nullable: json['nullable'] as bool? ?? false,
-      arguments: (json['arguments'] as List<dynamic>?)
+      arguments:
+          (json['arguments'] as List<dynamic>?)
               ?.map((a) => typeRefFromJson(a as Map<String, dynamic>))
               .toList() ??
           [],

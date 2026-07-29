@@ -1,24 +1,31 @@
 import 'dart:io';
 
-import '../model/model.dart';
+import '../web_dart_type.dart';
+import '../web_host_ir.dart';
 
 final class DomFactoryEmitter {
-  final NeutralWebModel model;
+  final List<WebHostElementIR> elements;
 
-  DomFactoryEmitter(this.model);
+  const DomFactoryEmitter(this.elements);
 
   void emitToDirectory(String outputDir) {
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
     buf.writeln();
     buf.writeln("import 'package:react/react.dart';");
+    buf.writeln(
+      "import 'package:react_web/src/generated/event_interfaces.dart';",
+    );
+    buf.writeln(
+      "import 'package:react_web/src/generated/html_interfaces.dart';",
+    );
     buf.writeln();
 
-    final sorted = model.elements.entries.toList()
-      ..sort((a, b) => a.key.compareTo(b.key));
+    final sorted = elements.toList()
+      ..sort((a, b) => a.tagName.compareTo(b.tagName));
 
-    for (final entry in sorted) {
-      _emitFactory(buf, entry.key, entry.value);
+    for (final el in sorted) {
+      _emitFactory(buf, el);
     }
 
     final file = File('$outputDir/dom.dart');
@@ -26,30 +33,108 @@ final class DomFactoryEmitter {
     file.writeAsStringSync(buf.toString());
   }
 
-  void _emitFactory(StringBuffer buf, String tagName, ElementDecl decl) {
-    final hostName = '_${_safeIdent(tagName)}Host';
+  void _emitFactory(StringBuffer buf, WebHostElementIR el) {
+    final hostName = '_${_safeIdent(el.tagName)}Host';
 
-    buf.writeln("const $hostName = HostType<Map<String, Object?>>('${decl.namespace}', '$tagName');");
+    buf.writeln(
+      "const $hostName = HostType<Map<String, Object?>>('${_ns(el.namespace)}', '${el.tagName}');",
+    );
     buf.writeln();
 
-    buf.write('ReactNode ${_safeIdent(tagName)}(');
+    buf.write('ReactNode ${_safeIdent(el.factoryName)}(');
     buf.writeln('{');
-    buf.writeln('  Map<String, Object?> props = const {},');
-    if (!decl.voidElement) {
+    for (final p in el.props) {
+      final pn = _safeIdent(p.reactName);
+      buf.writeln('  ${_dt(p.dartType, nullable: true)} $pn,');
+    }
+    for (final e in el.events) {
+      final rt = _dartTypeString(e.reactEventType);
+      final en = _safeIdent(e.reactName);
+      final cn = _safeIdent(e.captureName);
+      buf.writeln('  void Function($rt)? $en,');
+      buf.writeln('  void Function($rt)? $cn,');
+    }
+    buf.writeln('  void Function(${_dt(el.elementType)}?)? ref,');
+    if (!el.voidElement) {
       buf.writeln('  List<ReactNode> children = const [],');
     }
     buf.writeln('  String? key,');
+    buf.writeln('  Map<String, Object?> additionalProps = const {},');
     buf.writeln('}) {');
     buf.writeln('  return HostNode<Map<String, Object?>>(');
     buf.writeln('    $hostName,');
-    buf.writeln('    props,');
-    if (!decl.voidElement) {
+    buf.writeln('    {');
+    for (final p in el.props) {
+      final pn = _safeIdent(p.reactName);
+      buf.writeln("      if ($pn != null) '${p.reactName}': $pn,");
+    }
+    for (final e in el.events) {
+      final rt = _dartTypeString(e.reactEventType);
+      final en = _safeIdent(e.reactName);
+      final cn = _safeIdent(e.captureName);
+      buf.writeln(
+        "      if ($en != null) '${e.reactName}': ReactEventProp(ReactCallback(",
+      );
+      buf.writeln("        debugName: '${el.factoryName}.${e.reactName}',");
+      buf.writeln(
+        '        signature: const (positional: [], result: reactVoid, asynchronous: false),',
+      );
+      buf.writeln('        invoke: (args) {');
+      buf.writeln('          $en(args[0] as $rt);');
+      buf.writeln('          return null;');
+      buf.writeln('        },');
+      buf.writeln('      )),');
+      buf.writeln(
+        "      if ($cn != null) '${e.captureName}': ReactEventProp(ReactCallback(",
+      );
+      buf.writeln("        debugName: '${el.factoryName}.${e.captureName}',");
+      buf.writeln(
+        '        signature: const (positional: [], result: reactVoid, asynchronous: false),',
+      );
+      buf.writeln('        invoke: (args) {');
+      buf.writeln('          $cn(args[0] as $rt);');
+      buf.writeln('          return null;');
+      buf.writeln('        },');
+      buf.writeln('      )),');
+    }
+    buf.writeln("      if (ref != null) 'ref': ReactRefProp(ReactCallback(");
+    buf.writeln("        debugName: '${el.factoryName}.ref',");
+    buf.writeln(
+      '        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),',
+    );
+    buf.writeln('        invoke: (args) {');
+    buf.writeln('          ref(args[0] as ${_dt(el.elementType)}?);');
+    buf.writeln('          return null;');
+    buf.writeln('        },');
+    buf.writeln('      )),');
+    buf.writeln('      ...additionalProps,');
+    buf.writeln('    },');
+    if (!el.voidElement) {
       buf.writeln('    children: children,');
     }
     buf.writeln('    key: key,');
     buf.writeln('  );');
     buf.writeln('}');
     buf.writeln();
+  }
+
+  String _ns(WebNamespace ns) => switch (ns) {
+    WebNamespace.html => 'html',
+    WebNamespace.svg => 'svg',
+    WebNamespace.mathMl => 'mathml',
+  };
+
+  String _dt(WebDartType t, {bool nullable = false}) =>
+      _dartTypeString(t, nullable: nullable);
+
+  String _dartTypeString(WebDartType type, {bool nullable = false}) {
+    final isNullable = type.nullable || nullable;
+    final clean = type.symbol.endsWith('?')
+        ? type.symbol.substring(0, type.symbol.length - 1)
+        : type.symbol;
+    final base = isNullable ? '$clean?' : clean;
+    if (type.typeArguments.isEmpty) return base;
+    return '$base<${type.typeArguments.map((t) => _dartTypeString(t)).join(', ')}>';
   }
 
   String _safeIdent(String s) {
@@ -59,13 +144,69 @@ final class DomFactoryEmitter {
   }
 
   static const _dartKeywords = <String>{
-    'abstract', 'as', 'assert', 'async', 'await', 'break', 'case', 'catch',
-    'class', 'const', 'continue', 'covariant', 'default', 'deferred', 'do',
-    'dynamic', 'else', 'enum', 'export', 'extends', 'extension', 'external',
-    'factory', 'false', 'final', 'finally', 'for', 'Function', 'get', 'hide',
-    'if', 'implements', 'import', 'in', 'interface', 'is', 'late', 'library',
-    'mixin', 'new', 'null', 'on', 'operator', 'out', 'part', 'required',
-    'rethrow', 'return', 'set', 'show', 'static', 'super', 'switch', 'sync',
-    'this', 'throw', 'true', 'try', 'typedef', 'var', 'void', 'while', 'with', 'yield',
+    'abstract',
+    'as',
+    'assert',
+    'async',
+    'await',
+    'break',
+    'case',
+    'catch',
+    'class',
+    'const',
+    'continue',
+    'covariant',
+    'default',
+    'deferred',
+    'do',
+    'dynamic',
+    'else',
+    'enum',
+    'export',
+    'extends',
+    'extension',
+    'external',
+    'factory',
+    'false',
+    'final',
+    'finally',
+    'for',
+    'Function',
+    'get',
+    'hide',
+    'if',
+    'implements',
+    'import',
+    'in',
+    'interface',
+    'is',
+    'late',
+    'library',
+    'mixin',
+    'new',
+    'null',
+    'on',
+    'operator',
+    'out',
+    'part',
+    'required',
+    'rethrow',
+    'return',
+    'set',
+    'show',
+    'static',
+    'super',
+    'switch',
+    'sync',
+    'this',
+    'throw',
+    'true',
+    'try',
+    'typedef',
+    'var',
+    'void',
+    'while',
+    'with',
+    'yield',
   };
 }

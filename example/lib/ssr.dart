@@ -6,9 +6,7 @@ import 'ssr_registry.g.dart';
 void main() {
   SsrComponentRegistry.register(
     idApp.value,
-    (props) => App(
-      title: props['title'] as String? ?? 'hi from SSR',
-    ),
+    (props) => App(title: props['title'] as String? ?? 'hi from SSR'),
   );
 
   SsrComponentRegistry.register(

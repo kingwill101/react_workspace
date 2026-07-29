@@ -1,6 +1,7 @@
 /// Neutral Web IDL interfaces — generated from neutral_web_model.json
 ///
 /// These abstract interfaces correspond to Web IDL interface types.
+library;
 
 abstract interface class DOMRectList {}
 

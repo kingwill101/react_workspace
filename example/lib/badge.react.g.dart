@@ -11,20 +11,25 @@ JSObject _Badge_toJS(({String label}) props) {
 }
 
 ({String label}) _Badge_fromJS(JSObject js) {
-final label = requiredJSString(js, "label", component: "label");
+  final label = requiredJSString(js, "label", component: "label");
   return (label: label);
 }
 
-final JSFunction $Badge = (() {
-  JSAny? wrapper(JSObject props) {
-    final dartProps = _Badge_fromJS(props);
-    return toReactJS(impl.Badge(dartProps));
-  }
-  return wrapper.toJS;
-})() as JSFunction;
-void registerBadge(){
-  ReactRegistry.register(idBadge.value, $Badge,
-      toJS: (p) => _Badge_toJS(p as ({String label})),
-      fromJS: (js) => _Badge_fromJS(js));
-}
+final JSFunction $Badge =
+    (() {
+          JSAny? wrapper(JSObject props) {
+            final dartProps = _Badge_fromJS(props);
+            return toReactJS(impl.Badge(dartProps));
+          }
 
+          return wrapper.toJS;
+        })()
+        as JSFunction;
+void registerBadge() {
+  ReactRegistry.register(
+    idBadge.value,
+    $Badge,
+    toJS: (p) => _Badge_toJS(p as ({String label})),
+    fromJS: (js) => _Badge_fromJS(js),
+  );
+}

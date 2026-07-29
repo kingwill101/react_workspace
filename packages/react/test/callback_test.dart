@@ -65,20 +65,12 @@ void main() {
       final callback = ReactCallback(
         debugName: 'test.many',
         signature: const (
-          positional: [
-            reactInt,
-            reactInt,
-            reactInt,
-            reactInt,
-            reactInt,
-          ],
+          positional: [reactInt, reactInt, reactInt, reactInt, reactInt],
           result: reactInt,
           asynchronous: false,
         ),
         invoke: (arguments) {
-          sum = arguments
-              .cast<int>()
-              .fold(0, (a, b) => a + b);
+          sum = arguments.cast<int>().fold(0, (a, b) => a + b);
           return sum;
         },
       );
@@ -101,7 +93,7 @@ void main() {
         },
       );
 
-      final result = await callback.invoke([7]);
+      final result = callback.invoke([7]);
       expect(result, 7);
     });
   });
@@ -124,7 +116,13 @@ void main() {
       final callback = ReactCallback(
         signature: const (
           positional: [],
-          result: (kind: ReactValueKind.integer, nullable: true, hostNamespace: null, typeId: null, codecId: null),
+          result: (
+            kind: ReactValueKind.integer,
+            nullable: true,
+            hostNamespace: null,
+            typeId: null,
+            codecId: null,
+          ),
           asynchronous: false,
         ),
         invoke: (_) => null,
@@ -146,5 +144,4 @@ void main() {
       expect(callback.invoke([]), isNull);
     });
   });
-
 }

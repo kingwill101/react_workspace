@@ -8,10 +8,7 @@ class JsBinding extends ReactBinding {
     final jsArray = _useState(toReactJS(initial)!);
     final value = fromJS<T>(jsArray[0]);
     final setter = jsArray[1] as JSFunction;
-    return (
-      value,
-      (T v) => setter.callAsFunction(null, toReactJS(v)!),
-    );
+    return (value, (T v) => setter.callAsFunction(null, toReactJS(v)!));
   }
 
   @override

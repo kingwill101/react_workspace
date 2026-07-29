@@ -1,8 +1,20 @@
+import 'dart:convert';
+import 'dart:io';
+
 import '../model/model.dart';
 import '../source/web_idl_loader.dart';
 import '../source/react_declarations.dart';
 import '../source/element_snapshot.dart';
 import 'reachability.dart';
+
+Set<String> loadVoidElements(String rootsPath) {
+  final file = File(rootsPath);
+  final data = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+  return (data['voidElements'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toSet() ??
+      {};
+}
 
 final class ModelBuilder {
   final String webIdlPath;
@@ -13,18 +25,15 @@ final class ModelBuilder {
     this.rootsPath = 'packages/react_web_generator/config/roots.json',
   });
 
-  static final _voidElementTags = <String>{
-    'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
-    'link', 'meta', 'param', 'source', 'track', 'wbr',
-  };
-
   NeutralWebModel build() {
+    final voidElementTags = loadVoidElements(rootsPath);
     final elementSnapshot = ElementSnapshot.load(webIdlPath);
 
     // 1. Load Web IDL interfaces from relevant specs
-    final webInterfaces = loadAllInterfaces(webIdlPath, specFilter: {
-      'html', 'dom', 'cssom', 'cssom-view',
-    });
+    final webInterfaces = loadAllInterfaces(
+      webIdlPath,
+      specFilter: {'html', 'dom', 'cssom', 'cssom-view'},
+    );
 
     // 2. Add React event interfaces
     final reactInterfaces = reactEventInterfaces();
@@ -41,8 +50,7 @@ final class ModelBuilder {
     // 4. Compute reachable types from all HTML elements
     final rootTypeIds = <String>{
       for (final tag in elementSnapshot.htmlTags)
-        if (elementSnapshot.tagToInterface[tag] case final iface?)
-          'web.$iface',
+        if (elementSnapshot.tagToInterface[tag] case final iface?) 'web.$iface',
       for (final r in reactInterfaces.keys) 'react.$r',
     };
 
@@ -77,7 +85,7 @@ final class ModelBuilder {
         tagName: tag,
         namespace: 'html',
         elementType: NamedTypeRef(typeId: typeId),
-        voidElement: _voidElementTags.contains(tag),
+        voidElement: voidElementTags.contains(tag),
         props: props,
         events: events,
       );
@@ -86,14 +94,14 @@ final class ModelBuilder {
     return NeutralWebModel(
       types: finalTypes,
       elements: elements,
-      sources: {
-        'webIdlSnapshot': webIdlPath,
-        'rootsConfig': rootsPath,
-      },
+      sources: {'webIdlSnapshot': webIdlPath, 'rootsConfig': rootsPath},
     );
   }
 
-  List<PropDecl> _collectProps(String ifaceName, Map<String, InterfaceDecl> webInterfaces) {
+  List<PropDecl> _collectProps(
+    String ifaceName,
+    Map<String, InterfaceDecl> webInterfaces,
+  ) {
     final seen = <String>{};
     final result = <PropDecl>[];
 
@@ -103,11 +111,9 @@ final class ModelBuilder {
 
       for (final member in iface.members) {
         if (member is! AttributeDecl) continue;
-        result.add(PropDecl(
-          name: member.name,
-          type: member.type,
-          required: false,
-        ));
+        result.add(
+          PropDecl(name: member.name, type: member.type, required: false),
+        );
       }
 
       for (final ext in iface.extends_) {
@@ -121,7 +127,10 @@ final class ModelBuilder {
     return result;
   }
 
-  List<EventDecl> _collectEvents(String ifaceName, Map<String, InterfaceDecl> webInterfaces) {
+  List<EventDecl> _collectEvents(
+    String ifaceName,
+    Map<String, InterfaceDecl> webInterfaces,
+  ) {
     final seen = <String>{};
     final result = <EventDecl>[];
 
@@ -132,10 +141,7 @@ final class ModelBuilder {
       for (final member in iface.members) {
         if (member is! AttributeDecl) continue;
         if (!member.name.startsWith('on')) continue;
-        result.add(EventDecl(
-          name: member.name,
-          eventType: member.type,
-        ));
+        result.add(EventDecl(name: member.name, eventType: member.type));
       }
 
       for (final ext in iface.extends_) {

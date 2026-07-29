@@ -9,10 +9,7 @@ typedef ReactValueDecoder = Object? Function(JSAny? value);
 /// A custom codec for [ReactValueKind.encodedObject] callback values.
 final class ReactCodec {
   /// Creates a codec with [encode] and [decode] functions.
-  const ReactCodec({
-    required this.encode,
-    required this.decode,
-  });
+  const ReactCodec({required this.encode, required this.decode});
 
   /// Converts a Dart value to a JS interop value.
   final ReactValueEncoder encode;

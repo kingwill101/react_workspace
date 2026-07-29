@@ -17,7 +17,11 @@ final class PropDecl {
   final TypeRef type;
   final bool required;
 
-  const PropDecl({required this.name, required this.type, this.required = false});
+  const PropDecl({
+    required this.name,
+    required this.type,
+    this.required = false,
+  });
 
   Map<String, Object?> toJson() => {
     'name': name,

@@ -11,7 +11,9 @@ import 'type_reader.dart';
 
 final class ReactComponentReader {
   final ReactTypeReader typeReader;
-  static const _checker = TypeChecker.fromUrl('package:react/src/annotations.dart#ReactComponent');
+  static const _checker = TypeChecker.fromUrl(
+    'package:react/src/annotations.dart#ReactComponent',
+  );
 
   const ReactComponentReader({required this.typeReader});
 
@@ -57,7 +59,8 @@ final class ReactComponentReader {
               ReactPropModel(
                 name: field.name,
                 type: typeReader.read(field.type),
-                required: field.type.nullabilitySuffix != NullabilitySuffix.question,
+                required:
+                    field.type.nullabilitySuffix != NullabilitySuffix.question,
               ),
           ],
           propsRecord: typeReader.read(record),

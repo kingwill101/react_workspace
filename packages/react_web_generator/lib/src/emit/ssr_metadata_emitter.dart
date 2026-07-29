@@ -18,9 +18,13 @@ final class SsrMetadataEmitter {
       _emitElementSsrDefinition(buf, entry.value);
     }
 
-    buf.writeln('const Map<String, WebElementSsrDefinition> ssrDefinitions = {');
+    buf.writeln(
+      'const Map<String, WebElementSsrDefinition> ssrDefinitions = {',
+    );
     for (final entry in model.elements.entries) {
-      buf.writeln("  '${entry.key}': ${_camelToPascal(entry.key)}SsrDefinition,");
+      buf.writeln(
+        "  '${entry.key}': ${_camelToPascal(entry.key)}SsrDefinition,",
+      );
     }
     buf.writeln('};');
     buf.writeln();
@@ -34,7 +38,9 @@ final class SsrMetadataEmitter {
     final tagName = decl.tagName;
     final voidElement = decl.voidElement;
 
-    buf.writeln('const ${_camelToPascal(tagName)}SsrDefinition = WebElementSsrDefinition(');
+    buf.writeln(
+      'const ${_camelToPascal(tagName)}SsrDefinition = WebElementSsrDefinition(',
+    );
     buf.writeln("  tagName: '$tagName',");
     buf.writeln('  voidElement: $voidElement,');
     buf.writeln('  props: {');

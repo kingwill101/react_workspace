@@ -30,12 +30,11 @@ Future<void> _ensureVendor(String revision) async {
 }
 
 Future<void> _runGenerator() async {
-  await _run('dart', ['pub', 'get'],
-      workdir: '$_vendorDir/web_generator');
-  await _run('npm', ['install'],
-      workdir: '$_vendorDir/web_generator');
-  await _run('node', ['preparse_idls.mjs'],
-      workdir: '$_vendorDir/web_generator/bin');
+  await _run('dart', ['pub', 'get'], workdir: '$_vendorDir/web_generator');
+  await _run('npm', ['install'], workdir: '$_vendorDir/web_generator');
+  await _run('node', [
+    'preparse_idls.mjs',
+  ], workdir: '$_vendorDir/web_generator/bin');
 }
 
 Future<void> _copySnapshot() async {
@@ -55,14 +54,22 @@ Future<void> _writeProvenance(String revision) async {
   );
 }
 
-Future<void> _run(String executable, List<String> arguments,
-    {String? workdir}) async {
-  final result = await Process.run(executable, arguments,
-      workingDirectory: workdir, runInShell: true);
+Future<void> _run(
+  String executable,
+  List<String> arguments, {
+  String? workdir,
+}) async {
+  final result = await Process.run(
+    executable,
+    arguments,
+    workingDirectory: workdir,
+    runInShell: true,
+  );
   stdout.write(result.stdout as String);
   stderr.write(result.stderr as String);
   if (result.exitCode != 0) {
     throw Exception(
-        '$executable ${arguments.join(' ')} failed with exit code ${result.exitCode}');
+      '$executable ${arguments.join(' ')} failed with exit code ${result.exitCode}',
+    );
   }
 }
