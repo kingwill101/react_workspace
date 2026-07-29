@@ -1,9 +1,12 @@
 // GENERATED CODE — DO NOT EDIT
 
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:react_js/react_js.dart';
 import 'package:web/web.dart' as web;
+import 'package:react_web/src/generated/event_interfaces.dart';
+import 'package:react_web/src/generated/html_interfaces.dart';
 
 final class BrowserHTMLMarqueeElement {
   final web.HTMLMarqueeElement _element;
@@ -449,76 +452,287 @@ final class BrowserHTMLHtmlElement {
   web.HTMLHtmlElement get inner => _element;
 }
 
-final class BrowserReactCompositionEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactCompositionEvent<T extends EventTarget>
+    implements ReactCompositionEvent<T> {
+  final JSObject _event;
   BrowserReactCompositionEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  @override
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  @override
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  @override
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  @override
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  @override
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  @override
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  @override
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
 }
 
-final class BrowserReactSyntheticEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactSyntheticEvent<T extends EventTarget>
+    implements ReactSyntheticEvent<T> {
+  final JSObject _event;
   BrowserReactSyntheticEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
 }
 
-final class BrowserReactTouchEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactTouchEvent<T extends EventTarget>
+    implements ReactTouchEvent<T> {
+  final JSObject _event;
   BrowserReactTouchEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  @override
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  @override
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  @override
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  @override
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  @override
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  @override
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  @override
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
 }
 
-final class BrowserReactPointerEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactPointerEvent<T extends EventTarget>
+    implements ReactPointerEvent<T> {
+  final JSObject _event;
   BrowserReactPointerEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  @override
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  @override
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  @override
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  @override
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  @override
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  @override
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  @override
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
 }
 
-final class BrowserReactWheelEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactWheelEvent<T extends EventTarget>
+    implements ReactWheelEvent<T> {
+  final JSObject _event;
   BrowserReactWheelEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  @override
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  @override
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  @override
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  @override
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  @override
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  @override
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  @override
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
 }
 
-final class BrowserReactDragEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactDragEvent<T extends EventTarget>
+    implements ReactDragEvent<T> {
+  final JSObject _event;
   BrowserReactDragEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  @override
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  @override
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  @override
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  @override
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  @override
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  @override
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  @override
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
 }
 
-final class BrowserReactFocusEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactFocusEvent<T extends EventTarget>
+    implements ReactFocusEvent<T> {
+  final JSObject _event;
   BrowserReactFocusEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  @override
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  @override
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  @override
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  @override
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  @override
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  @override
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  @override
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
+  @override
+  EventTarget? get relatedTarget => _event.getProperty('relatedTarget'.toJS) == null || _event.getProperty('relatedTarget'.toJS).isUndefined ? null : (_event.getProperty('relatedTarget'.toJS) as JSObject) as EventTarget;
 }
 
-final class BrowserReactKeyboardEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactKeyboardEvent<T extends EventTarget>
+    implements ReactKeyboardEvent<T> {
+  final JSObject _event;
   BrowserReactKeyboardEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  @override
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  @override
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  @override
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  @override
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  @override
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  @override
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  @override
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
+  @override
+  String get key => (_event.getProperty('key'.toJS) as JSString).toDart;
+  @override
+  int get keyCode => (_event.getProperty('keyCode'.toJS) as JSNumber).toDartInt;
+  @override
+  bool get altKey => (_event.getProperty('altKey'.toJS) as JSBoolean).toDart;
+  @override
+  bool get ctrlKey => (_event.getProperty('ctrlKey'.toJS) as JSBoolean).toDart;
+  @override
+  bool get shiftKey => (_event.getProperty('shiftKey'.toJS) as JSBoolean).toDart;
 }
 
-final class BrowserReactFormEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactFormEvent<T extends EventTarget>
+    implements ReactFormEvent<T> {
+  final JSObject _event;
   BrowserReactFormEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  @override
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  @override
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  @override
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  @override
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  @override
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  @override
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  @override
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
 }
 
-final class BrowserReactChangeEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactChangeEvent<T extends EventTarget>
+    implements ReactChangeEvent<T> {
+  final JSObject _event;
   BrowserReactChangeEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  @override
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  @override
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  @override
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  @override
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  @override
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  @override
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  @override
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
 }
 
-final class BrowserReactInputEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactInputEvent<T extends EventTarget>
+    implements ReactInputEvent<T> {
+  final JSObject _event;
   BrowserReactInputEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  @override
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  @override
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  @override
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  @override
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  @override
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  @override
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  @override
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
+  @override
+  String get data => (_event.getProperty('data'.toJS) as JSString).toDart;
 }
 
-final class BrowserReactMouseEvent<T extends web.EventTarget> {
-  final web.Event _event;
+final class BrowserReactMouseEvent<T extends EventTarget>
+    implements ReactMouseEvent<T> {
+  final JSObject _event;
   BrowserReactMouseEvent(this._event);
-  web.Event get inner => _event;
+  JSObject get inner => _event;
+
+  @override
+  T get currentTarget => (_event.getProperty('currentTarget'.toJS) as JSObject) as T;
+  @override
+  EventTarget get target => (_event.getProperty('target'.toJS) as JSObject) as EventTarget;
+  @override
+  bool get bubbles => (_event.getProperty('bubbles'.toJS) as JSBoolean).toDart;
+  @override
+  bool get cancelable => (_event.getProperty('cancelable'.toJS) as JSBoolean).toDart;
+  @override
+  bool get defaultPrevented => (_event.getProperty('defaultPrevented'.toJS) as JSBoolean).toDart;
+  @override
+  void preventDefault() => _event.callMethod('preventDefault'.toJS);
+  @override
+  void stopPropagation() => _event.callMethod('stopPropagation'.toJS);
+  @override
+  double get clientX => (_event.getProperty('clientX'.toJS) as JSNumber).toDartDouble;
+  @override
+  double get clientY => (_event.getProperty('clientY'.toJS) as JSNumber).toDartDouble;
+  @override
+  int get button => (_event.getProperty('button'.toJS) as JSNumber).toDartInt;
+  @override
+  bool get altKey => (_event.getProperty('altKey'.toJS) as JSBoolean).toDart;
+  @override
+  bool get ctrlKey => (_event.getProperty('ctrlKey'.toJS) as JSBoolean).toDart;
+  @override
+  bool get shiftKey => (_event.getProperty('shiftKey'.toJS) as JSBoolean).toDart;
 }
 
 void registerBrowserAdapters() {
@@ -894,99 +1108,99 @@ void registerBrowserAdapters() {
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactCompositionEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactCompositionEvent(value as web.Event),
+    decoder: (value) => BrowserReactCompositionEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactCompositionEvent',
-    decoder: (value) => BrowserReactCompositionEvent(value as web.Event),
+    decoder: (value) => BrowserReactCompositionEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactSyntheticEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactSyntheticEvent(value as web.Event),
+    decoder: (value) => BrowserReactSyntheticEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactSyntheticEvent',
-    decoder: (value) => BrowserReactSyntheticEvent(value as web.Event),
+    decoder: (value) => BrowserReactSyntheticEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactTouchEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactTouchEvent(value as web.Event),
+    decoder: (value) => BrowserReactTouchEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactTouchEvent',
-    decoder: (value) => BrowserReactTouchEvent(value as web.Event),
+    decoder: (value) => BrowserReactTouchEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactPointerEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactPointerEvent(value as web.Event),
+    decoder: (value) => BrowserReactPointerEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactPointerEvent',
-    decoder: (value) => BrowserReactPointerEvent(value as web.Event),
+    decoder: (value) => BrowserReactPointerEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactWheelEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactWheelEvent(value as web.Event),
+    decoder: (value) => BrowserReactWheelEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactWheelEvent',
-    decoder: (value) => BrowserReactWheelEvent(value as web.Event),
+    decoder: (value) => BrowserReactWheelEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactDragEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactDragEvent(value as web.Event),
+    decoder: (value) => BrowserReactDragEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactDragEvent',
-    decoder: (value) => BrowserReactDragEvent(value as web.Event),
+    decoder: (value) => BrowserReactDragEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactFocusEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactFocusEvent(value as web.Event),
+    decoder: (value) => BrowserReactFocusEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactFocusEvent',
-    decoder: (value) => BrowserReactFocusEvent(value as web.Event),
+    decoder: (value) => BrowserReactFocusEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactKeyboardEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactKeyboardEvent(value as web.Event),
+    decoder: (value) => BrowserReactKeyboardEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactKeyboardEvent',
-    decoder: (value) => BrowserReactKeyboardEvent(value as web.Event),
+    decoder: (value) => BrowserReactKeyboardEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactFormEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactFormEvent(value as web.Event),
+    decoder: (value) => BrowserReactFormEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactFormEvent',
-    decoder: (value) => BrowserReactFormEvent(value as web.Event),
+    decoder: (value) => BrowserReactFormEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactChangeEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactChangeEvent(value as web.Event),
+    decoder: (value) => BrowserReactChangeEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactChangeEvent',
-    decoder: (value) => BrowserReactChangeEvent(value as web.Event),
+    decoder: (value) => BrowserReactChangeEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactInputEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactInputEvent(value as web.Event),
+    decoder: (value) => BrowserReactInputEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactInputEvent',
-    decoder: (value) => BrowserReactInputEvent(value as web.Event),
+    decoder: (value) => BrowserReactInputEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'react.ReactMouseEvent<web.EventTarget>',
-    decoder: (value) => BrowserReactMouseEvent(value as web.Event),
+    decoder: (value) => BrowserReactMouseEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'ReactMouseEvent',
-    decoder: (value) => BrowserReactMouseEvent(value as web.Event),
+    decoder: (value) => BrowserReactMouseEvent(value as JSObject),
   );
 }
 

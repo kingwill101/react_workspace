@@ -9,3 +9,7 @@ globalThis.__dartReactCallbacks.create = function create(reference, dispatch) {
 globalThis.__dartReactCallbacks.createPromise = function createPromise(executor) {
   return new Promise(executor);
 };
+
+globalThis.__dartReactCallbacks.invoke = function invoke(fn, args) {
+  return fn(...args);
+};
