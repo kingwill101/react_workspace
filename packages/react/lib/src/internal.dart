@@ -51,17 +51,16 @@ final class ReactRuntime {
 }
 
 final Object _reactRuntimeKey = Object();
+ReactRuntime? _globalRuntime;
 
 ReactRuntime get currentReactRuntime {
   final runtime = Zone.current[_reactRuntimeKey];
-
-  if (runtime is! ReactRuntime) {
-    throw StateError('No ReactRuntime is active.');
-  }
-
-  return runtime;
+  if (runtime is ReactRuntime) return runtime;
+  if (_globalRuntime != null) return _globalRuntime!;
+  throw StateError('No ReactRuntime is active.');
 }
 
 T runWithReactRuntime<T>(ReactRuntime runtime, T Function() callback) {
+  _globalRuntime = runtime;
   return runZoned(callback, zoneValues: {_reactRuntimeKey: runtime});
 }

@@ -101,6 +101,40 @@ void main() {
 
       expect(results, [0, 0, 0, 0]);
     });
+
+    test('global fallback persists after Zone exits', () {
+      final runtime = ReactRuntime(
+        target: ReactRenderTarget.test,
+        capabilities: ReactRuntimeCapabilities.browser,
+        binding: _TestBinding(),
+        renderer: _TestRenderer(),
+      );
+
+      runWithReactRuntime(runtime, () {});
+
+      expect(currentReactRuntime, same(runtime));
+    });
+
+    test('latest runtime replaces previous global', () {
+      final r1 = ReactRuntime(
+        target: ReactRenderTarget.test,
+        capabilities: ReactRuntimeCapabilities.browser,
+        binding: _TestBinding(),
+        renderer: _TestRenderer(),
+      );
+
+      final r2 = ReactRuntime(
+        target: ReactRenderTarget.test,
+        capabilities: ReactRuntimeCapabilities.server,
+        binding: _TestBinding(),
+        renderer: _TestRenderer(),
+      );
+
+      runWithReactRuntime(r1, () {});
+      runWithReactRuntime(r2, () {});
+
+      expect(currentReactRuntime, same(r2));
+    });
   });
 }
 
