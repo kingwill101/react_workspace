@@ -11,6 +11,7 @@ typedef CounterProps = ({
 });
 
 typedef ForwardedMarkerProps = ({String label});
+typedef LazyMarkerProps = ({String label});
 
 final forwardedMarker = forwardRef<ForwardedMarkerProps, dynamic>(
   (props, ref) => div(
@@ -18,6 +19,12 @@ final forwardedMarker = forwardRef<ForwardedMarkerProps, dynamic>(
     ref: (element) => ref.current = element,
     children: [Text(props.label)],
   ),
+);
+
+final lazyMarker = lazy<LazyMarkerProps>(
+  () async =>
+      (props) =>
+          div(className: 'section-kicker', children: [Text(props.label)]),
 );
 
 final memoizedCounter = memo<CounterProps>(
@@ -36,6 +43,14 @@ final memoizedCounter = memo<CounterProps>(
 @reactComponent
 ReactNode App(({String title}) props) {
   final markerRef = useRef<dynamic>();
+  final (showLazy, setShowLazy) = useState(false);
+
+  // renderToString cannot wait for lazy promises. Delay the browser-only
+  // transition until hydration has committed so SSR and the first client
+  // render have identical markup. See https://react.dev/reference/react/lazy.
+  useEffect(() {
+    setShowLazy(true);
+  }, []);
 
   return appAccentContext.provider('#7257ff', [
     div(
@@ -128,6 +143,19 @@ ReactNode App(({String title}) props) {
                       children: [const Text('INTERACTIVE STATE')],
                     ),
                     forwardedMarker((label: 'FORWARDED REF'), ref: markerRef),
+                    if (showLazy)
+                      suspense(
+                        fallback: div(
+                          className: 'section-kicker',
+                          children: [const Text('LAZY COMPONENT')],
+                        ),
+                        children: [lazyMarker((label: 'LAZY COMPONENT'))],
+                      )
+                    else
+                      div(
+                        className: 'section-kicker',
+                        children: [const Text('LAZY COMPONENT')],
+                      ),
                     strictMode([
                       memoizedCounter((
                         title: 'Counter',
