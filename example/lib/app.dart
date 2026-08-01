@@ -125,6 +125,7 @@ ReactNode App(({String title}) props) => appAccentContext.provider('#7257ff', [
                 ],
               ),
               errorBoundary(
+                onError: (error, _) => print('Todo boundary: $error'),
                 fallback: section(
                   className: 'surface counter-surface',
                   children: [const Text('The todo panel failed to render.')],

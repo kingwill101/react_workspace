@@ -89,11 +89,12 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
   Portal() => throw UnsupportedError(
     'Portals have no server container and are not supported during SSR.',
   ),
-  ErrorBoundary(:final children, :final fallback) => _createReactElement(
-    _getErrorBoundary(),
-    children,
-    props: _fallbackProps(fallback),
-  ),
+  ErrorBoundary(:final children, :final fallback, :final onError) =>
+    _createReactElement(
+      _getErrorBoundary(),
+      children,
+      props: _errorBoundaryProps(fallback, onError),
+    ),
   Empty() => null,
   ReactNode() => throw UnsupportedError('Unknown ReactNode implementation.'),
 };
@@ -117,6 +118,22 @@ JSAny _expandForeignComponent(
         jsChildren.toJS,
       )
       as JSAny;
+}
+
+JSObject _errorBoundaryProps(
+  ReactNode fallback,
+  void Function(Object error, StackTrace stack)? onError,
+) {
+  final props = JSObject();
+  final expanded = _expandTree(fallback);
+  if (expanded != null) props.setProperty('fallback'.toJS, expanded);
+  if (onError != null) {
+    final report = ((JSAny? error, JSAny? info) {
+      onError(error ?? 'Unknown React error', StackTrace.current);
+    }).toJS;
+    props.setProperty('onError'.toJS, report);
+  }
+  return props;
 }
 
 JSAny? _expandMemoized(

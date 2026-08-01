@@ -42,6 +42,12 @@ globalThis.__reactDartGetErrorBoundary = function getErrorBoundary() {
       return { hasError: true };
     }
 
+    componentDidCatch(error, info) {
+      if (this.props.onError) {
+        this.props.onError(error, info);
+      }
+    }
+
     render() {
       return this.state.hasError ? this.props.fallback : this.props.children;
     }

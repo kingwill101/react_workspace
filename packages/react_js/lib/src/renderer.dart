@@ -66,11 +66,12 @@ class JsRenderer extends ReactRenderer {
       container,
       key: key,
     ),
-    ErrorBoundary(:final children, :final fallback) => _createElement(
-      _getErrorBoundary(),
-      _propsToJS({'fallback': _render(fallback)}),
-      children,
-    ),
+    ErrorBoundary(:final children, :final fallback, :final onError) =>
+      _createElement(
+        _getErrorBoundary(),
+        _errorBoundaryProps(fallback, onError),
+        children,
+      ),
     Empty() => null,
     ReactNode() => throw UnsupportedError('Unknown ReactNode implementation.'),
   };
@@ -128,6 +129,21 @@ class JsRenderer extends ReactRenderer {
     final memoType = _react.callMethod('memo'.toJS, component) as JSFunction;
     byComparator[null] = memoType;
     return memoType;
+  }
+
+  JSObject _errorBoundaryProps(
+    ReactNode fallback,
+    void Function(Object error, StackTrace stack)? onError,
+  ) {
+    final props = JSObject();
+    props.setProperty('fallback'.toJS, _render(fallback));
+    if (onError != null) {
+      final report = ((JSAny? error, JSAny? info) {
+        onError(error ?? 'Unknown React error', StackTrace.current);
+      }).toJS;
+      props.setProperty('onError'.toJS, report);
+    }
+    return props;
   }
 
   JSAny _createPortal(

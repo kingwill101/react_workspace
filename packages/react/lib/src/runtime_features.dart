@@ -112,7 +112,9 @@ final class ErrorBoundary extends ReactNode {
   /// The content or builder shown after an error.
   final ReactNode fallback;
 
-  /// Receives the error and stack trace when a renderer supports boundaries.
+  /// Receives client-rendered errors and a Dart stack at the report site.
+  ///
+  /// Server renderers do not recover from render-time errors.
   final void Function(Object error, StackTrace stack)? onError;
 }
 
