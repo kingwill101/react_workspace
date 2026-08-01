@@ -55,8 +55,10 @@ class JsRenderer extends ReactRenderer {
         children,
       );
     }(),
-    Portal() => throw UnsupportedError(
-      'Portals are not implemented by JsRenderer yet.',
+    Portal(:final children, :final container, :final key) => _createPortal(
+      children,
+      container,
+      key: key,
     ),
     ErrorBoundary() => throw UnsupportedError(
       'Error boundaries are not implemented by JsRenderer yet.',
@@ -64,6 +66,30 @@ class JsRenderer extends ReactRenderer {
     Empty() => null,
     ReactNode() => throw UnsupportedError('Unknown ReactNode implementation.'),
   };
+
+  JSAny _createPortal(
+    List<ReactNode> children,
+    Object container, {
+    String? key,
+  }) {
+    final jsContainer = container as JSObject;
+    final jsChildren = children.map((child) => toReactJS(child)!).toList();
+    if (key == null) {
+      return _reactDom.callMethod(
+            'createPortal'.toJS,
+            jsChildren.toJS,
+            jsContainer,
+          )
+          as JSAny;
+    }
+    return _reactDom.callMethod(
+          'createPortal'.toJS,
+          jsChildren.toJS,
+          jsContainer,
+          key.toJS,
+        )
+        as JSAny;
+  }
 
   JSAny _createElement(
     JSAny type,
@@ -112,6 +138,9 @@ class JsRenderer extends ReactRenderer {
 
 @JS('React')
 external JSObject get _react;
+
+@JS('ReactDOM')
+external JSObject get _reactDom;
 
 @JS('React.Fragment')
 external JSAny get _fragment;
