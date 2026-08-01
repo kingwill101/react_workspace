@@ -184,6 +184,25 @@ class JsBinding extends ReactBinding {
     ),
   );
 
+  @override
+  T useSyncExternalStore<T>(
+    StoreSubscribe subscribe,
+    Snapshot<T> getSnapshot,
+    Snapshot<T>? getServerSnapshot,
+  ) {
+    final subscribeJS = ((JSFunction listener) {
+      final unsubscribe = subscribe(() => listener.callAsFunction(null));
+      return unsubscribe.toJS;
+    }).toJS;
+    final snapshotJS = (() => _toStateJS(getSnapshot())).toJS;
+    final serverSnapshotJS = getServerSnapshot == null
+        ? null
+        : (() => _toStateJS(getServerSnapshot())).toJS;
+    return _fromStateJS<T>(
+      _useSyncExternalStore(subscribeJS, snapshotJS, serverSnapshotJS),
+    );
+  }
+
   ({T value, void Function(T) setter, StateSetter<T> stateSetter})
   _readState<T>(JSArray values) {
     final value = _fromStateJS<T>(values[0]);
@@ -274,6 +293,13 @@ external JSArray _useTransition();
 
 @JS('React.useDeferredValue')
 external JSAny? _useDeferredValue(JSAny value, JSAny? options);
+
+@JS('React.useSyncExternalStore')
+external JSAny? _useSyncExternalStore(
+  JSFunction subscribe,
+  JSFunction getSnapshot,
+  JSFunction? getServerSnapshot,
+);
 
 @JS('React.useState')
 external JSArray _useState(JSAny? initial);
