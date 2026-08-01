@@ -7,9 +7,9 @@ import 'conversion_core.dart';
 import 'registry.dart';
 
 class JsRenderer extends ReactRenderer {
-  final _memoizedComponents = <String, Map<Object?, JSFunction>>{};
-  final _forwardRefComponents = <Function, JSFunction>{};
-  final _lazyComponents = <Function, JSFunction>{};
+  final _memoizedComponents = <String, Map<Object?, JSAny>>{};
+  final _forwardRefComponents = <Function, JSAny>{};
+  final _lazyComponents = <Function, JSAny>{};
 
   @override
   Object? render(ReactNode node) => _render(node) as Object?;
@@ -24,10 +24,8 @@ class JsRenderer extends ReactRenderer {
       child,
       arePropsEqual,
     ),
-    ForwardRefNode() => _renderForwardRef(
-      n as ForwardRefNode<Object?, Object?>,
-    ),
-    LazyNode() => _renderLazy(n as LazyNode<Object?>),
+    ForwardRefNodeBase() => _renderForwardRef(n),
+    LazyNodeBase() => _renderLazy(n),
     ForeignComponent(:var name, :var props, :var children, :var key) => () {
       final component = _resolveForeignComponent(name.toJS);
       if (component == null) {
@@ -82,20 +80,20 @@ class JsRenderer extends ReactRenderer {
     ReactNode() => throw UnsupportedError('Unknown ReactNode implementation.'),
   };
 
-  JSAny _renderLazy(LazyNode<Object?> node) {
-    final component = _lazyComponents.putIfAbsent(node.load, () {
+  JSAny _renderLazy(LazyNodeBase node) {
+    final component = _lazyComponents.putIfAbsent(node.loaderIdentity, () {
       final loadJS = (() {
-        return node.load().then((builder) {
+        return node.loadErased().then((builder) {
           JSAny? loaded(JSObject props) {
             final raw = props.getProperty('__dartLazy'.toJS);
             if (raw == null || !raw.isA<JSBoxedDartObject>()) {
               throw StateError('Missing lazy component payload.');
             }
             final payload = (raw as JSBoxedDartObject).toDart;
-            if (payload is! LazyNode<Object?>) {
+            if (payload is! LazyNodeBase) {
               throw StateError('Invalid lazy component payload.');
             }
-            return toReactJS(payload.buildWith(builder));
+            return toReactJS(payload.buildWithErased(builder));
           }
 
           final module = JSObject();
@@ -103,34 +101,56 @@ class JsRenderer extends ReactRenderer {
           return module;
         }).toJS;
       }).toJS;
-      return _react.callMethod('lazy'.toJS, loadJS) as JSFunction;
+      return _react.callMethod('lazy'.toJS, loadJS) as JSAny;
     });
     final props = JSObject();
     props.setProperty('__dartLazy'.toJS, node.toJSBox);
-    return _createElement(component, props, const [], key: node.key);
+    return _createElement(component, props, const [], key: node.nodeKey);
   }
 
-  JSAny _renderForwardRef(ForwardRefNode<Object?, Object?> node) {
-    final component = _forwardRefComponents.putIfAbsent(node.render, () {
-      JSAny? wrapper(JSObject props, JSAny? jsRef) {
-        final raw = props.getProperty('__dartForwardRef'.toJS);
-        if (raw == null || !raw.isA<JSBoxedDartObject>()) {
-          throw StateError('Missing forwarded-ref payload.');
+  JSAny _renderForwardRef(ForwardRefNodeBase node) {
+    final component = _forwardRefComponents.putIfAbsent(
+      node.renderIdentity,
+      () {
+        JSAny? wrapper(JSObject props, JSAny? jsRef) {
+          final raw = props.getProperty('__dartForwardRef'.toJS);
+          if (raw == null || !raw.isA<JSBoxedDartObject>()) {
+            throw StateError('Missing forwarded-ref payload.');
+          }
+          final payload = (raw as JSBoxedDartObject).toDart;
+          if (payload is! ForwardRefNodeBase) {
+            throw StateError('Invalid forwarded-ref payload.');
+          }
+          final ref = ReactRef<Object?>.linked(payload.forwardedCurrent, (
+            value,
+          ) {
+            payload.updateForwardedRef(value);
+            _writeForwardedRef(jsRef, value);
+          });
+          return toReactJS(payload.buildWithRefErased(ref));
         }
-        final payload = (raw as JSBoxedDartObject).toDart;
-        if (payload is! ForwardRefNode<Object?, Object?>) {
-          throw StateError('Invalid forwarded-ref payload.');
-        }
-        final ref = payload.ref ?? ReactRef<Object?>();
-        return toReactJS(payload.buildWithRef(ref));
-      }
 
-      final renderJS = wrapper.toJS;
-      return _react.callMethod('forwardRef'.toJS, renderJS) as JSFunction;
-    });
+        final renderJS = wrapper.toJS;
+        return _react.callMethod('forwardRef'.toJS, renderJS) as JSAny;
+      },
+    );
     final props = JSObject();
     props.setProperty('__dartForwardRef'.toJS, node.toJSBox);
+    final refBridge = ((JSAny? value) {
+      node.updateForwardedRef(value);
+    }).toJS;
+    props.setProperty('ref'.toJS, refBridge);
     return _createElement(component, props, const []);
+  }
+
+  void _writeForwardedRef(JSAny? jsRef, Object? value) {
+    if (jsRef == null || jsRef.isUndefined) return;
+    final jsValue = toReactJS(value);
+    if (jsRef.isA<JSFunction>()) {
+      (jsRef as JSFunction).callAsFunction(null, jsValue);
+    } else if (jsRef.isA<JSObject>()) {
+      (jsRef as JSObject).setProperty('current'.toJS, jsValue);
+    }
   }
 
   JSAny _renderMemoized(
@@ -155,7 +175,7 @@ class JsRenderer extends ReactRenderer {
     ),
   };
 
-  JSFunction _memoizedComponent(
+  JSAny _memoizedComponent(
     String id,
     Entry entry,
     bool Function(Object? previous, Object? next)? arePropsEqual,
@@ -173,17 +193,17 @@ class JsRenderer extends ReactRenderer {
             ).toJS;
           }).toJS;
     final memoType = compareJS == null
-        ? _react.callMethod('memo'.toJS, entry.comp) as JSFunction
-        : _react.callMethod('memo'.toJS, entry.comp, compareJS) as JSFunction;
+        ? _react.callMethod('memo'.toJS, entry.comp) as JSAny
+        : _react.callMethod('memo'.toJS, entry.comp, compareJS) as JSAny;
     byComparator[arePropsEqual] = memoType;
     return memoType;
   }
 
-  JSFunction _memoizedForeignComponent(String id, JSFunction component) {
+  JSAny _memoizedForeignComponent(String id, JSFunction component) {
     final byComparator = _memoizedComponents.putIfAbsent(id, () => {});
     final cached = byComparator[null];
     if (cached != null) return cached;
-    final memoType = _react.callMethod('memo'.toJS, component) as JSFunction;
+    final memoType = _react.callMethod('memo'.toJS, component) as JSAny;
     byComparator[null] = memoType;
     return memoType;
   }

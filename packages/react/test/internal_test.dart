@@ -44,6 +44,16 @@ void main() {
     });
   });
 
+  test('linked refs mirror writes to their bridge', () {
+    Object? mirrored;
+    final ref = ReactRef<Object?>.linked(null, (value) => mirrored = value);
+
+    ref.current = 'value';
+
+    expect(ref.current, 'value');
+    expect(mirrored, 'value');
+  });
+
   group('Component feature nodes', () {
     test('memo creates a memoized node', () {
       final component = memo<String>((value) => Text(value));

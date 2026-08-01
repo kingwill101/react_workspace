@@ -3,9 +3,9 @@ import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react_js/react_js.dart';
 
-final _memoizedComponents = <String, Map<Object?, JSFunction>>{};
-final _forwardRefComponents = <Function, JSFunction>{};
-final _lazyComponents = <Function, JSFunction>{};
+final _memoizedComponents = <String, Map<Object?, JSAny>>{};
+final _forwardRefComponents = <Function, JSAny>{};
+final _lazyComponents = <Function, JSAny>{};
 
 ///
 /// The [factory] receives a component [id] and [props], and returns a
@@ -19,7 +19,7 @@ final _lazyComponents = <Function, JSFunction>{};
 void registerGlobalRenderer(
   ReactNode Function(String id, Map<String, dynamic> props) factory,
 ) {
-  JSAny? handler(JSObject req) {
+  JSAny? renderRequest(JSObject req, {required bool fallback}) {
     return runWithReactRuntime(
       ReactRuntime(
         target: ReactRenderTarget.server,
@@ -37,12 +37,36 @@ void registerGlobalRenderer(
             props = (jsonDecode(jsonStr) as Map<String, dynamic>?) ?? {};
           }
         }
-        return _expandTree(factory(id, props));
+        final tree = factory(id, props);
+        if (!fallback) return _expandTree(tree);
+
+        final error = StateError(_requestError(req));
+        _globalThis.setProperty(
+          '__reactDartSSRBoundaryFallback'.toJS,
+          true.toJS,
+        );
+        _globalThis.setProperty(
+          '__reactDartSSRBoundaryError'.toJS,
+          error.toString().toJS,
+        );
+        final recovery = _replaceFirstErrorBoundary(
+          tree,
+          error,
+          StackTrace.current,
+        );
+        return _expandTree(recovery.replaced ? recovery.node : tree);
       },
     );
   }
 
+  JSAny? handler(JSObject req) => renderRequest(req, fallback: false);
+  JSAny? fallbackHandler(JSObject req) => renderRequest(req, fallback: true);
+
   _globalThis.setProperty('__REACT_RENDER__'.toJS, handler.toJS);
+  _globalThis.setProperty(
+    '__REACT_RENDER_FALLBACK__'.toJS,
+    fallbackHandler.toJS,
+  );
 }
 
 /// Recursively expands a [ReactNode] tree into JS React elements.
@@ -63,10 +87,8 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
     child,
     arePropsEqual,
   ),
-  ForwardRefNode() => _expandForwardRef(
-    node as ForwardRefNode<Object?, Object?>,
-  ),
-  LazyNode() => _expandLazy(node as LazyNode<Object?>),
+  ForwardRefNodeBase() => _expandForwardRef(node),
+  LazyNodeBase() => _expandLazy(node),
   ForeignComponent(:var name, :var props, :var children, :var key) =>
     _expandForeignComponent(name, props, children, key: key),
   Text(:var value) => value.toJS,
@@ -96,14 +118,144 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
     'Portals have no server container and are not supported during SSR.',
   ),
   ErrorBoundary(:final children, :final fallback, :final onError) =>
-    _createReactElement(
-      _getErrorBoundary(),
-      children,
-      props: _errorBoundaryProps(fallback, onError),
-    ),
+    _serverFallbackMode()
+        ? () {
+            onError?.call(_serverBoundaryError(), StackTrace.current);
+            return _expandTree(fallback);
+          }()
+        : _createReactElement(
+            _getErrorBoundary(),
+            children,
+            props: _errorBoundaryProps(fallback, onError),
+          ),
   Empty() => null,
   ReactNode() => throw UnsupportedError('Unknown ReactNode implementation.'),
 };
+
+bool _serverFallbackMode() {
+  final raw = _globalThis.getProperty('__reactDartSSRBoundaryFallback'.toJS);
+  return raw != null && raw.isA<JSBoolean>() && (raw as JSBoolean).toDart;
+}
+
+Object _serverBoundaryError() {
+  final raw = _globalThis.getProperty('__reactDartSSRBoundaryError'.toJS);
+  return StateError(
+    raw != null && raw.isA<JSString>()
+        ? (raw as JSString).toDart
+        : 'Unknown server rendering error',
+  );
+}
+
+String _requestError(JSObject req) {
+  final raw = req.getProperty('error'.toJS);
+  return raw.isA<JSString>()
+      ? (raw as JSString).toDart
+      : 'Unknown server rendering error';
+}
+
+({ReactNode node, bool replaced}) _replaceFirstErrorBoundary(
+  ReactNode node,
+  Object error,
+  StackTrace stack,
+) {
+  switch (node) {
+    case ErrorBoundary(:final fallback, :final onError):
+      onError?.call(error, stack);
+      return (node: fallback, replaced: true);
+    case HostNode(:final type, :final props, :final children, :final key):
+      final result = _replaceInChildren(children, error, stack);
+      return result.replaced
+          ? (
+              node: HostNode(type, props, children: result.nodes, key: key),
+              replaced: true,
+            )
+          : (node: node, replaced: false);
+    case Component(:final id, :final props, :final children, :final key):
+      final result = _replaceInChildren(children, error, stack);
+      return result.replaced
+          ? (
+              node: Component(id, props, children: result.nodes, key: key),
+              replaced: true,
+            )
+          : (node: node, replaced: false);
+    case ForeignComponent(
+      :final name,
+      :final props,
+      :final children,
+      :final key,
+    ):
+      final result = _replaceInChildren(children, error, stack);
+      return result.replaced
+          ? (
+              node: ForeignComponent(
+                name,
+                props: props,
+                children: result.nodes,
+                key: key,
+              ),
+              replaced: true,
+            )
+          : (node: node, replaced: false);
+    case Fragment(:final children, :final key):
+      final result = _replaceInChildren(children, error, stack);
+      return result.replaced
+          ? (node: Fragment(result.nodes, key: key), replaced: true)
+          : (node: node, replaced: false);
+    case StrictMode(:final children):
+      final result = _replaceInChildren(children, error, stack);
+      return result.replaced
+          ? (node: StrictMode(result.nodes), replaced: true)
+          : (node: node, replaced: false);
+    case Suspense(:final fallback, :final children):
+      final result = _replaceInChildren(children, error, stack);
+      return result.replaced
+          ? (
+              node: Suspense(fallback: fallback, children: result.nodes),
+              replaced: true,
+            )
+          : (node: node, replaced: false);
+    case ContextProvider(:final context, :final value, :final children):
+      final result = _replaceInChildren(children, error, stack);
+      return result.replaced
+          ? (
+              node: ContextProvider(context, value, result.nodes),
+              replaced: true,
+            )
+          : (node: node, replaced: false);
+    case MemoizedNode(:final child, :final arePropsEqual):
+      final result = _replaceFirstErrorBoundary(child, error, stack);
+      return result.replaced
+          ? (
+              node: MemoizedNode(result.node, arePropsEqual: arePropsEqual),
+              replaced: true,
+            )
+          : (node: node, replaced: false);
+    case Portal() ||
+        ForwardRefNodeBase() ||
+        LazyNodeBase() ||
+        Text() ||
+        Empty():
+      return (node: node, replaced: false);
+    case ReactNode():
+      return (node: node, replaced: false);
+  }
+}
+
+({List<ReactNode> nodes, bool replaced}) _replaceInChildren(
+  List<ReactNode> children,
+  Object error,
+  StackTrace stack,
+) {
+  for (var index = 0; index < children.length; index++) {
+    final result = _replaceFirstErrorBoundary(children[index], error, stack);
+    if (result.replaced) {
+      final nodes = [...children];
+      nodes[index] = result.node;
+      return (nodes: nodes, replaced: true);
+    }
+  }
+  return (nodes: children, replaced: false);
+}
 
 JSAny _expandForeignComponent(
   String name,
@@ -126,20 +278,20 @@ JSAny _expandForeignComponent(
       as JSAny;
 }
 
-JSAny _expandLazy(LazyNode<Object?> node) {
-  final component = _lazyComponents.putIfAbsent(node.load, () {
+JSAny _expandLazy(LazyNodeBase node) {
+  final component = _lazyComponents.putIfAbsent(node.loaderIdentity, () {
     final loadJS = (() {
-      return node.load().then((builder) {
+      return node.loadErased().then((builder) {
         JSAny? loaded(JSObject props) {
           final raw = props.getProperty('__dartLazy'.toJS);
           if (raw == null || !raw.isA<JSBoxedDartObject>()) {
             throw StateError('Missing lazy component payload.');
           }
           final payload = (raw as JSBoxedDartObject).toDart;
-          if (payload is! LazyNode<Object?>) {
+          if (payload is! LazyNodeBase) {
             throw StateError('Invalid lazy component payload.');
           }
-          return toReactJS(payload.buildWith(builder));
+          return toReactJS(payload.buildWithErased(builder));
         }
 
         final module = JSObject();
@@ -147,30 +299,43 @@ JSAny _expandLazy(LazyNode<Object?> node) {
         return module;
       }).toJS;
     }).toJS;
-    return _react.callMethod('lazy'.toJS, loadJS) as JSFunction;
+    return _react.callMethod('lazy'.toJS, loadJS) as JSAny;
   });
   final props = JSObject();
   props.setProperty('__dartLazy'.toJS, node.toJSBox);
   return _react.callMethod('createElement'.toJS, component, props) as JSAny;
 }
 
-JSAny _expandForwardRef(ForwardRefNode<Object?, Object?> node) {
-  final component = _forwardRefComponents.putIfAbsent(node.render, () {
+void _writeForwardedRef(JSAny? jsRef, Object? value) {
+  if (jsRef == null || jsRef.isUndefined) return;
+  final jsValue = toReactJS(value);
+  if (jsRef.isA<JSFunction>()) {
+    (jsRef as JSFunction).callAsFunction(null, jsValue);
+  } else if (jsRef.isA<JSObject>()) {
+    (jsRef as JSObject).setProperty('current'.toJS, jsValue);
+  }
+}
+
+JSAny _expandForwardRef(ForwardRefNodeBase node) {
+  final component = _forwardRefComponents.putIfAbsent(node.renderIdentity, () {
     JSAny? wrapper(JSObject props, JSAny? jsRef) {
       final raw = props.getProperty('__dartForwardRef'.toJS);
       if (raw == null || !raw.isA<JSBoxedDartObject>()) {
         throw StateError('Missing forwarded-ref payload.');
       }
       final payload = (raw as JSBoxedDartObject).toDart;
-      if (payload is! ForwardRefNode<Object?, Object?>) {
+      if (payload is! ForwardRefNodeBase) {
         throw StateError('Invalid forwarded-ref payload.');
       }
-      final ref = payload.ref ?? ReactRef<Object?>();
-      return toReactJS(payload.buildWithRef(ref));
+      final ref = ReactRef<Object?>.linked(payload.forwardedCurrent, (value) {
+        payload.updateForwardedRef(value);
+        _writeForwardedRef(jsRef, value);
+      });
+      return toReactJS(payload.buildWithRefErased(ref));
     }
 
     final renderJS = wrapper.toJS;
-    return _react.callMethod('forwardRef'.toJS, renderJS) as JSFunction;
+    return _react.callMethod('forwardRef'.toJS, renderJS) as JSAny;
   });
   final props = JSObject();
   props.setProperty('__dartForwardRef'.toJS, node.toJSBox);
@@ -223,7 +388,7 @@ JSAny? _expandMemoized(
   ),
 };
 
-JSFunction _memoizedComponent(
+JSAny _memoizedComponent(
   String id,
   Entry entry,
   bool Function(Object? previous, Object? next)? arePropsEqual,
@@ -237,17 +402,17 @@ JSFunction _memoizedComponent(
           return arePropsEqual(entry.fromJS(previous), entry.fromJS(next)).toJS;
         }).toJS;
   final memoType = compareJS == null
-      ? _react.callMethod('memo'.toJS, entry.comp) as JSFunction
-      : _react.callMethod('memo'.toJS, entry.comp, compareJS) as JSFunction;
+      ? _react.callMethod('memo'.toJS, entry.comp) as JSAny
+      : _react.callMethod('memo'.toJS, entry.comp, compareJS) as JSAny;
   byComparator[arePropsEqual] = memoType;
   return memoType;
 }
 
-JSFunction _memoizedForeignComponent(String id, JSFunction component) {
+JSAny _memoizedForeignComponent(String id, JSFunction component) {
   final byComparator = _memoizedComponents.putIfAbsent(id, () => {});
   final cached = byComparator[null];
   if (cached != null) return cached;
-  final memoType = _react.callMethod('memo'.toJS, component) as JSFunction;
+  final memoType = _react.callMethod('memo'.toJS, component) as JSAny;
   byComparator[null] = memoType;
   return memoType;
 }
@@ -359,6 +524,10 @@ JSObject _intrinsicPropsToJS(Map<String, Object?> m, {String? key}) {
 ///
 /// Sets up a server runtime and expands the [ReactNode] tree into JS React
 /// elements before serialization.
+///
+/// React does not recover render-time errors with class boundaries during SSR.
+/// This helper retries once with the first Dart [ErrorBoundary] replaced by
+/// its fallback.
 String renderToString(ReactNode node) {
   final result = runWithReactRuntime(
     ReactRuntime(
@@ -368,8 +537,15 @@ String renderToString(ReactNode node) {
       renderer: JsRenderer(),
     ),
     () {
-      final expanded = _expandTree(node)!;
-      return _reactDomServer.callMethod('renderToString'.toJS, expanded);
+      try {
+        final expanded = _expandTree(node)!;
+        return _reactDomServer.callMethod('renderToString'.toJS, expanded);
+      } catch (error, stack) {
+        final recovery = _replaceFirstErrorBoundary(node, error, stack);
+        if (!recovery.replaced) rethrow;
+        final fallback = _expandTree(recovery.node)!;
+        return _reactDomServer.callMethod('renderToString'.toJS, fallback);
+      }
     },
   );
   return (result as JSString?)?.toDart ?? '';

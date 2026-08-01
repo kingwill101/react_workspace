@@ -8,10 +8,26 @@ import 'node.dart';
 /// See https://react.dev/reference/react/useRef.
 final class ReactRef<T> {
   /// Creates a ref with [current] as its initial value.
-  ReactRef([this.current]);
+  ReactRef([T? current]) : _current = current, _onChanged = null;
+
+  /// Creates a ref whose writes are mirrored to [onChanged].
+  ///
+  /// Renderers use this constructor to bridge Dart refs to native React refs.
+  ReactRef.linked(T? current, void Function(T?) onChanged)
+    : _current = current,
+      _onChanged = onChanged;
+
+  final void Function(T?)? _onChanged;
+  T? _current;
 
   /// The value currently stored in the ref.
-  T? current;
+  T? get current => _current;
+
+  /// Updates the ref and notifies an optional renderer bridge.
+  set current(T? value) {
+    _current = value;
+    _onChanged?.call(value);
+  }
 }
 
 /// A React context definition and its default value.
@@ -92,10 +108,10 @@ final class Portal extends ReactNode {
 
 /// An error-boundary configuration.
 ///
-/// The JavaScript renderers use a small class-based boundary internally while
-/// keeping the public Dart component model functional. Server rendering can
-/// serialize the boundary, but host errors that occur during SSR are still
-/// reported by React's server renderer rather than recovered here.
+/// The JavaScript renderer uses a small class-based boundary internally while
+/// keeping the public Dart component model functional. SSR helpers retry with
+/// the first Dart fallback when a render-time error escapes React's server
+/// renderer.
 ///
 /// See https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary.
 final class ErrorBoundary extends ReactNode {
@@ -112,9 +128,10 @@ final class ErrorBoundary extends ReactNode {
   /// The content or builder shown after an error.
   final ReactNode fallback;
 
-  /// Receives client-rendered errors and a Dart stack at the report site.
+  /// Receives the error and a Dart stack at the report site.
   ///
-  /// Server renderers do not recover from render-time errors.
+  /// Client renderers receive React errors through the class boundary. SSR
+  /// helpers receive errors while retrying with the Dart fallback.
   final void Function(Object error, StackTrace stack)? onError;
 }
 
@@ -176,8 +193,24 @@ final class ForwardRefComponent<P, T> {
       ForwardRefNode(render, props, ref: ref);
 }
 
+/// The renderer-facing erased form of a forwarded-ref node.
+abstract interface class ForwardRefNodeBase extends ReactNode {
+  /// The render callback identity used to cache the React component type.
+  Function get renderIdentity;
+
+  /// The current value of the Dart ref supplied by the caller, if any.
+  Object? get forwardedCurrent;
+
+  /// Updates the caller's Dart ref through an erased bridge.
+  void updateForwardedRef(Object? value);
+
+  /// Invokes the typed render callback through an erased bridge.
+  ReactNode buildWithRefErased(ReactRef<Object?> target);
+}
+
 /// A portable node produced by [ForwardRefComponent].
-final class ForwardRefNode<P, T> extends ReactNode {
+final class ForwardRefNode<P, T> extends ReactNode
+    implements ForwardRefNodeBase {
   /// Creates a forwarded-ref node.
   const ForwardRefNode(this.render, this.props, {this.ref});
 
@@ -190,9 +223,26 @@ final class ForwardRefNode<P, T> extends ReactNode {
   /// The Dart ref receiving the rendered host value.
   final ReactRef<T>? ref;
 
+  @override
+  Function get renderIdentity => render;
+
+  @override
+  Object? get forwardedCurrent => ref?.current;
+
+  @override
+  void updateForwardedRef(Object? value) {
+    ref?.current = value as T?;
+  }
+
   /// Invokes [render] through the renderer's erased ref boundary.
-  ReactNode buildWithRef(ReactRef<Object?> target) =>
-      render(props, target as ReactRef<T>);
+  @override
+  ReactNode buildWithRefErased(ReactRef<Object?> target) {
+    final typedTarget = ReactRef<T>.linked(
+      target.current as T?,
+      (value) => target.current = value,
+    );
+    return render(props, typedTarget);
+  }
 }
 
 /// A component loader used by [lazy].
@@ -212,8 +262,23 @@ final class LazyComponent<P> {
   ReactNode call(P props, {String? key}) => LazyNode(load, props, key: key);
 }
 
+/// The renderer-facing erased form of a lazy node.
+abstract interface class LazyNodeBase extends ReactNode {
+  /// The loader identity used to cache the React lazy component type.
+  Function get loaderIdentity;
+
+  /// Loads the typed builder through an erased bridge.
+  Future<Object> loadErased();
+
+  /// Builds the typed component through an erased bridge.
+  ReactNode buildWithErased(Object builder);
+
+  /// The optional React key.
+  String? get nodeKey;
+}
+
 /// A portable node produced by [LazyComponent].
-final class LazyNode<P> extends ReactNode {
+final class LazyNode<P> extends ReactNode implements LazyNodeBase {
   /// Creates a lazy node.
   const LazyNode(this.load, this.props, {this.key});
 
@@ -226,8 +291,18 @@ final class LazyNode<P> extends ReactNode {
   /// The optional React key.
   final String? key;
 
+  @override
+  Function get loaderIdentity => load;
+
+  @override
+  String? get nodeKey => key;
+
+  @override
+  Future<Object> loadErased() async => load();
+
   /// Builds the loaded Dart component through an erased boundary.
-  ReactNode buildWith(Object builder) =>
+  @override
+  ReactNode buildWithErased(Object builder) =>
       (builder as ReactComponentBuilder<P>)(props);
 }
 

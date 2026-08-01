@@ -421,6 +421,41 @@ globalThis.__reactDartRegisterComponent = function registerComponent(name, compo
 globalThis.__reactDartResolveComponent = function resolveComponent(name) {
   return globalThis.__reactDartForeignComponents[name];
 };
+
+globalThis.__reactDartGetErrorBoundary = function getErrorBoundary() {
+  if (globalThis.__reactDartErrorBoundary) {
+    return globalThis.__reactDartErrorBoundary;
+  }
+
+  const React = globalThis.React;
+  if (!React || !React.Component) {
+    throw new Error('React must be loaded before creating an error boundary');
+  }
+
+  class DartErrorBoundary extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError() {
+      return { hasError: true };
+    }
+
+    componentDidCatch(error, info) {
+      if (this.props.onError) {
+        this.props.onError(error, info);
+      }
+    }
+
+    render() {
+      return this.state.hasError ? this.props.fallback : this.props.children;
+    }
+  }
+
+  globalThis.__reactDartErrorBoundary = DartErrorBoundary;
+  return DartErrorBoundary;
+};
 ''';
 
 const _ssrWorker = r'''import React from 'react';
@@ -446,8 +481,24 @@ http.createServer((req, res) => {
         id: request.component ?? request.id,
         props: request.props ?? {},
       };
-      const element = globalThis.__REACT_RENDER__(renderRequest);
-      const html = ReactDOMServer.renderToString(element);
+      let html;
+      try {
+        const element = globalThis.__REACT_RENDER__(renderRequest);
+        html = ReactDOMServer.renderToString(element);
+      } catch (error) {
+        const fallbackRenderer = globalThis.__REACT_RENDER_FALLBACK__;
+        if (!fallbackRenderer) throw error;
+        try {
+          const fallbackElement = fallbackRenderer({
+            ...renderRequest,
+            error: String(error?.message ?? error),
+          });
+          html = ReactDOMServer.renderToString(fallbackElement);
+        } finally {
+          globalThis.__reactDartSSRBoundaryFallback = false;
+          globalThis.__reactDartSSRBoundaryError = undefined;
+        }
+      }
       res.writeHead(200, {'content-type': 'application/json'});
       res.end(JSON.stringify({html, props: renderRequest.props}));
     } catch (error) {
