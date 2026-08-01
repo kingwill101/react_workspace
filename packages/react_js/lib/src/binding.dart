@@ -26,8 +26,6 @@ final class _RefBox {
 /// use the explicit stubs inherited from [ReactBinding] until their renderer
 /// contracts are finalized for both browser and SSR.
 class JsBinding extends ReactBinding {
-  final _callbackCache = <JSFunction, Function>{};
-
   @override
   (T, StateSetter<T>) useState<T>(T initial) {
     final state = _readState<T>(_useState(_toStateJS(initial)));
@@ -97,19 +95,6 @@ class JsBinding extends ReactBinding {
   T useMemo<T>(T Function() factory, List<Object?>? deps) {
     final compute = (() => _toStateJS(factory())).toJS;
     return _fromStateJS<T>(_useMemo(compute, _depsToJS(deps)));
-  }
-
-  @override
-  T useCallback<T extends Function>(T callback, List<Object?>? deps) {
-    final stableJSCallback = _useCallback(
-      _callbackToJS(callback),
-      _depsToJS(deps),
-    );
-    final stableCallback = _callbackCache.putIfAbsent(
-      stableJSCallback,
-      () => callback,
-    );
-    return stableCallback as T;
   }
 
   @override
@@ -186,8 +171,6 @@ class JsBinding extends ReactBinding {
 
   JSAny? _depsToJS(List<Object?>? deps) =>
       deps?.map((d) => toReactJS(d)).toList().toJS;
-
-  JSFunction _callbackToJS(Function callback) => callback.toJS as JSFunction;
 }
 
 @JS('React.useRef')
@@ -195,9 +178,6 @@ external JSObject _useRef(JSAny? initial);
 
 @JS('React.useMemo')
 external JSAny? _useMemo(JSFunction factory, JSAny? deps);
-
-@JS('React.useCallback')
-external JSFunction _useCallback(JSFunction callback, JSAny? deps);
 
 @JS('React.useId')
 external JSString _useId();
