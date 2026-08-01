@@ -49,10 +49,13 @@ final class BrowserAdapterEmitter {
       if (entry.value.typeParameters.isNotEmpty) continue;
 
       final name = entry.value.name;
-      buf.writeln('final class Browser$name {');
+      buf.writeln('final class Browser$name implements $name {');
       buf.writeln('  final web.$name _element;');
       buf.writeln('  Browser$name(this._element);');
       buf.writeln('  web.$name get inner => _element;');
+      buf.writeln('  @override');
+      buf.writeln('  dynamic noSuchMethod(Invocation invocation) =>');
+      buf.writeln("      \"Browser$name does not expose this DOM member yet.\";");
       buf.writeln('}');
       buf.writeln();
     }
@@ -199,7 +202,7 @@ final class BrowserAdapterEmitter {
       }
       if (entry.value.typeParameters.isNotEmpty) continue;
 
-      final typeId = entry.key;
+      final typeId = entry.value.name;
       final name = entry.value.name;
       buf.writeln("  ReactCodecRegistry.registerHostValue(");
       buf.writeln("    'web', '$typeId',");
