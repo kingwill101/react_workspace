@@ -26,6 +26,7 @@ final class _RefBox {
 /// contracts are finalized for both browser and SSR.
 class JsBinding extends ReactBinding {
   final _contexts = <ReactContext<Object?>, JSObject>{};
+  final _callbackCache = <JSFunction, Function>{};
   final _refCache = Expando<ReactRef<Object?>>('ReactRefJSObject');
   final _jsRefs = <ReactRef<Object?>, JSObject>{};
 
@@ -163,6 +164,15 @@ class JsBinding extends ReactBinding {
   T useMemo<T>(T Function() factory, List<Object?>? deps) {
     final compute = (() => _toStateJS(factory())).toJS;
     return _fromStateJS<T>(_useMemo(compute, _depsToJS(deps)));
+  }
+
+  @override
+  T useCallback<T extends Function>(T callback, List<Object?>? deps) {
+    // React owns the JavaScript identity; the Dart callback is returned so it
+    // can still flow through typed ReactCallback descriptors.
+    final candidate = (() {}).toJS;
+    final stable = _useCallback(candidate, _depsToJS(deps));
+    return _callbackCache.putIfAbsent(stable, () => callback) as T;
   }
 
   @override
@@ -312,6 +322,9 @@ external JSObject _useRef(JSAny? initial);
 
 @JS('React.useMemo')
 external JSAny? _useMemo(JSFunction factory, JSAny? deps);
+
+@JS('React.useCallback')
+external JSFunction _useCallback(JSFunction callback, JSAny? deps);
 
 @JS('React.useId')
 external JSString _useId();
