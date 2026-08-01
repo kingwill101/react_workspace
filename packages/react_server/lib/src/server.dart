@@ -65,9 +65,21 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
     children,
     props: _keyProps(null, props: _fallbackProps(fallback)),
   ),
-  ContextProvider() => throw UnsupportedError(
-    'Context providers are not implemented by the SSR renderer yet.',
-  ),
+  ContextProvider(:final context, :final value, :final children) => () {
+    final binding = currentReactRuntime.binding;
+    if (binding is! JsBinding) {
+      throw UnsupportedError(
+        'Context providers require the JavaScript React binding.',
+      );
+    }
+    final props = JSObject();
+    props.setProperty('value'.toJS, binding.encodeHookValue(value));
+    return _createReactElement(
+      binding.contextObject(context),
+      children,
+      props: props,
+    );
+  }(),
   Portal() => throw UnsupportedError(
     'Portals have no server container and are not supported during SSR.',
   ),

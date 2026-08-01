@@ -23,12 +23,24 @@ void main() {
       expect(ReactRuntimeCapabilities.server.supportsEvents, isFalse);
       expect(ReactRuntimeCapabilities.server.supportsRefs, isFalse);
       expect(ReactRuntimeCapabilities.server.supportsEffects, isFalse);
+      expect(ReactRuntimeCapabilities.server.supportsContext, isTrue);
     });
 
     test('browser capabilities report events and refs', () {
       expect(ReactRuntimeCapabilities.browser.supportsEvents, isTrue);
       expect(ReactRuntimeCapabilities.browser.supportsRefs, isTrue);
       expect(ReactRuntimeCapabilities.browser.supportsEffects, isTrue);
+      expect(ReactRuntimeCapabilities.browser.supportsContext, isTrue);
+    });
+  });
+
+  group('Context', () {
+    test('creates provider nodes without renderer state', () {
+      final context = createContext('default');
+      final provider = context.provider('provided', [const Text('child')]);
+
+      expect(provider, isA<ContextProvider<String>>());
+      expect((provider as ContextProvider<String>).value, 'provided');
     });
   });
 

@@ -15,17 +15,20 @@ final class _RefBox {
   final ReactRef<Object?> ref;
 
   _RefBox(Object? initialValue) : ref = ReactRef(initialValue);
-
-  _RefBox.fromRef(this.ref);
 }
 
 /// React hook binding backed by the global React JavaScript runtime.
 ///
-/// State, reducer, memoization, refs, transitions, IDs, and effect cleanup
-/// are backed by the corresponding React hooks. Other methods intentionally
+/// State, reducer, memoization, refs, context, transitions, IDs, optimistic
+/// state, and effect cleanup are backed by the corresponding React hooks.
+/// Other methods intentionally
 /// use the explicit stubs inherited from [ReactBinding] until their renderer
 /// contracts are finalized for both browser and SSR.
 class JsBinding extends ReactBinding {
+  final _contexts = <ReactContext<Object?>, JSObject>{};
+  final _refCache = Expando<ReactRef<Object?>>('ReactRefJSObject');
+  final _jsRefs = <ReactRef<Object?>, JSObject>{};
+
   @override
   (T, StateSetter<T>) useState<T>(T initial) {
     final state = _readState<T>(_useState(_toStateJS(initial)));
@@ -45,22 +48,59 @@ class JsBinding extends ReactBinding {
     return (state.value, state.stateSetter);
   }
 
+  /// Returns the JavaScript context object for [context].
+  JSObject contextObject<T>(ReactContext<T> context) {
+    final key = context as ReactContext<Object?>;
+    return _contexts.putIfAbsent(
+      key,
+      () => _createContext(_toStateJS(context.defaultValue)),
+    );
+  }
+
+  /// Encodes a hook-owned Dart value without losing its Dart identity.
+  JSAny encodeHookValue(Object? value) => _toStateJS(value);
+
   @override
   ReactRef<T> useRef<T>(T? initialValue) {
     final jsRef = _useRef(_RefBox(initialValue).toJSBox);
-    final current = jsRef.getProperty('current'.toJS);
-    if (current != null && current.isA<JSBoxedDartObject>()) {
-      final boxed = (current as JSBoxedDartObject).toDart;
-      if (boxed is _RefBox) return boxed.ref as ReactRef<T>;
-    }
+    final cached = _refCache[jsRef];
+    if (cached != null) return cached as ReactRef<T>;
 
-    final ref = ReactRef<T>(initialValue);
-    jsRef.setProperty(
-      'current'.toJS,
-      _RefBox.fromRef(ref as ReactRef<Object?>).toJSBox,
-    );
-    return ref;
+    final current = jsRef.getProperty('current'.toJS);
+    final currentDart = current != null && current.isA<JSBoxedDartObject>()
+        ? (current as JSBoxedDartObject).toDart
+        : null;
+    final ref = currentDart is _RefBox
+        ? currentDart.ref
+        : ReactRef<Object?>(initialValue);
+    _refCache[jsRef] = ref;
+    _jsRefs[ref] = jsRef;
+    return ref as ReactRef<T>;
   }
+
+  @override
+  void useImperativeHandle<T>(
+    ReactRef<T>? ref,
+    T Function() create, [
+    List<Object?>? deps,
+  ]) {
+    if (ref == null) return;
+    if (currentReactRuntime.target == ReactRenderTarget.server) return;
+    final jsRef = _jsRefs[ref as ReactRef<Object?>];
+    if (jsRef == null) {
+      unsupportedReactFeature('useImperativeHandle requires useRef');
+    }
+    final createJS = (() {
+      final value = create();
+      ref.current = value;
+      return _toStateJS(value);
+    }).toJS;
+    _useImperativeHandle(jsRef, createJS, _depsToJS(deps));
+  }
+
+  @override
+  T useContext<T>(ReactContext<T> context) =>
+      _fromStateJS<T>(_useContext(contextObject(context)));
 
   @override
   (T, void Function(A)) useReducer<T, A>(
@@ -83,6 +123,34 @@ class JsBinding extends ReactBinding {
       _toStateJS(initialState),
       initializerJS,
     );
+    final value = _fromStateJS<T>(values[0]);
+    final dispatch = values[1] as JSFunction;
+    return (
+      value,
+      (action) => dispatch.callAsFunction(null, _toStateJS(action)),
+    );
+  }
+
+  @override
+  void useDebugValue(Object? value, String Function(Object? value)? format) {
+    if (currentReactRuntime.target == ReactRenderTarget.server) return;
+    final formatJS = format == null
+        ? null
+        : ((JSAny? raw) => format(_fromStateJS<Object?>(raw)).toJS).toJS;
+    _useDebugValue(_toStateJS(value), formatJS);
+  }
+
+  @override
+  (T, void Function(A)) useOptimistic<T, A>(
+    T state,
+    T Function(T state, A action) update,
+  ) {
+    final updateJS = ((JSAny? previous, JSAny? action) {
+      return _toStateJS(
+        update(_fromStateJS<T>(previous), _fromStateJS<A>(action)),
+      );
+    }).toJS;
+    final values = _useOptimistic(_toStateJS(state), updateJS);
     final value = _fromStateJS<T>(values[0]);
     final dispatch = values[1] as JSFunction;
     return (
@@ -172,6 +240,25 @@ class JsBinding extends ReactBinding {
   JSAny? _depsToJS(List<Object?>? deps) =>
       deps?.map((d) => toReactJS(d)).toList().toJS;
 }
+
+@JS('React.createContext')
+external JSObject _createContext(JSAny? defaultValue);
+
+@JS('React.useContext')
+external JSAny? _useContext(JSObject context);
+
+@JS('React.useImperativeHandle')
+external void _useImperativeHandle(
+  JSObject ref,
+  JSFunction create,
+  JSAny? deps,
+);
+
+@JS('React.useDebugValue')
+external void _useDebugValue(JSAny? value, JSFunction? format);
+
+@JS('React.useOptimistic')
+external JSArray _useOptimistic(JSAny? state, JSFunction update);
 
 @JS('React.useRef')
 external JSObject _useRef(JSAny? initial);

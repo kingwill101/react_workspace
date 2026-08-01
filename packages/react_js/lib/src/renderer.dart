@@ -1,6 +1,7 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react/react.dart';
+import 'binding.dart';
 import 'callback_bridge.dart';
 import 'conversion_core.dart';
 import 'registry.dart';
@@ -41,9 +42,19 @@ class JsRenderer extends ReactRenderer {
       _propsToJS({'fallback': _render(fallback)}),
       children,
     ),
-    ContextProvider() => throw UnsupportedError(
-      'Context providers are not implemented by JsRenderer yet.',
-    ),
+    ContextProvider(:final context, :final value, :final children) => () {
+      final binding = currentReactRuntime.binding;
+      if (binding is! JsBinding) {
+        throw UnsupportedError(
+          'Context providers require the JavaScript React binding.',
+        );
+      }
+      return _createElement(
+        binding.contextObject(context),
+        _propsToJS({'value': binding.encodeHookValue(value)}),
+        children,
+      );
+    }(),
     Portal() => throw UnsupportedError(
       'Portals are not implemented by JsRenderer yet.',
     ),
