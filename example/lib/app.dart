@@ -156,14 +156,12 @@ ReactNode App(({String title}) props) {
                         className: 'section-kicker',
                         children: [const Text('LAZY COMPONENT')],
                       ),
-                    strictMode([
-                      memoizedCounter((
-                        title: 'Counter',
-                        initialCount: 0,
-                        subtitle: 'Dart hooks rendered through React',
-                        onChange: (_) => print('Counter changed'),
-                      )),
-                    ]),
+                    memoizedCounter((
+                      title: 'Counter',
+                      initialCount: 0,
+                      subtitle: 'Dart hooks rendered through React',
+                      onChange: (_) => print('Counter changed'),
+                    )),
                   ],
                 ),
                 errorBoundary(

@@ -20,7 +20,7 @@ ReactNode Counter(
     },
     props.initialCount,
   );
-  final (other, setOther) = useState(false);
+  final (other, setOther) = useState<bool>(false);
   final accent = useContext(appAccentContext);
   final counterId = useId();
   final countRef = useRef(count);

@@ -29,8 +29,8 @@ class JsBinding extends ReactBinding {
   final _contexts = <ReactContext<Object?>, JSObject>{};
   final _snapshotCache = <Object, JSAny>{};
   final _callbackCache = <JSFunction, Function>{};
-  final _refCache = Expando<ReactRef<Object?>>('ReactRefJSObject');
-  final _jsRefs = <ReactRef<Object?>, JSObject>{};
+  final _refCache = Expando<Object>('ReactRefJSObject');
+  final _jsRefs = <Object, JSObject>{};
 
   @override
   (T, StateSetter<T>) useState<T>(T initial) {
@@ -80,12 +80,13 @@ class JsBinding extends ReactBinding {
     final currentDart = current != null && current.isA<JSBoxedDartObject>()
         ? (current as JSBoxedDartObject).toDart
         : null;
-    final ref = currentDart is _RefBox
-        ? currentDart.ref
-        : ReactRef<Object?>(initialValue);
+    final initial = currentDart is _RefBox
+        ? currentDart.ref.current
+        : initialValue;
+    final ref = ReactRef<T>(initial as T?);
     _refCache[jsRef] = ref;
     _jsRefs[ref] = jsRef;
-    return ref as ReactRef<T>;
+    return ref;
   }
 
   @override
@@ -96,7 +97,7 @@ class JsBinding extends ReactBinding {
   ]) {
     if (ref == null) return;
     if (currentReactRuntime.target == ReactRenderTarget.server) return;
-    final jsRef = _jsRefs[ref as ReactRef<Object?>];
+    final jsRef = _jsRefs[ref];
     if (jsRef == null) {
       unsupportedReactFeature('useImperativeHandle requires useRef');
     }
@@ -128,11 +129,13 @@ class JsBinding extends ReactBinding {
         : ((JSAny? initial) {
             return _toStateJS(initializer(_fromStateJS<T>(initial)));
           }).toJS;
-    final values = _useReducer(
-      reducerJS,
-      _toStateJS(initialState),
-      initializerJS,
-    );
+    final values = initializerJS == null
+        ? _useReducer(reducerJS, _toStateJS(initialState))
+        : _useReducerWithInitializer(
+            reducerJS,
+            _toStateJS(initialState),
+            initializerJS,
+          );
     final value = _fromStateJS<T>(values[0]);
     final dispatch = values[1] as JSFunction;
     return (
@@ -305,7 +308,7 @@ class JsBinding extends ReactBinding {
 
     final jsFn = (() {
       final cleanup = effect();
-      return cleanup is EffectCleanup ? cleanup.toJS : null;
+      return cleanup is EffectCleanup ? cleanup.toJS : _jsUndefined;
     }).toJS;
     _useEffect(jsFn, _depsToJS(deps));
   }
@@ -313,6 +316,9 @@ class JsBinding extends ReactBinding {
   JSAny? _depsToJS(List<Object?>? deps) =>
       deps?.map((d) => toReactJS(d)).toList().toJS;
 }
+
+@JS('undefined')
+external JSAny? get _jsUndefined;
 
 @JS('React.createContext')
 external JSObject _createContext(JSAny? defaultValue);
@@ -369,10 +375,13 @@ external JSAny? _useSyncExternalStore(
 external JSArray _useState(JSAny? initial);
 
 @JS('React.useReducer')
-external JSArray _useReducer(
+external JSArray _useReducer(JSFunction reducer, JSAny? initialArg);
+
+@JS('React.useReducer')
+external JSArray _useReducerWithInitializer(
   JSFunction reducer,
   JSAny? initialArg,
-  JSFunction? init,
+  JSFunction initializer,
 );
 
 @JS('React.useEffect')
