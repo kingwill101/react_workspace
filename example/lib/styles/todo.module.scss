@@ -31,7 +31,7 @@ $green: #159d78;
 }
 
 .kicker {
-  color: $violet;
+  color: var(--todo-accent, $violet);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: .13em;
@@ -70,7 +70,7 @@ $green: #159d78;
 .row input {
   width: 17px;
   height: 17px;
-  accent-color: $violet;
+  accent-color: var(--todo-accent, $violet);
 }
 
 .title,
