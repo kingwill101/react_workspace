@@ -1,5 +1,9 @@
 import 'package:react_web/react_web.dart';
 
+import 'app_context.dart';
+
+enum _CounterAction { increment }
+
 @reactComponent
 ReactNode Counter(
   ({
@@ -10,8 +14,21 @@ ReactNode Counter(
   })
   props,
 ) {
-  final (count, setCount) = useState(props.initialCount);
+  final (count, dispatch) = useReducer<int, _CounterAction>(
+    (state, action) => switch (action) {
+      _CounterAction.increment => state + 1,
+    },
+    props.initialCount,
+  );
   final (other, setOther) = useState(false);
+  final accent = useContext(appAccentContext);
+  final counterId = useId();
+  final countRef = useRef(count);
+  countRef.current = count;
+  final progress = useMemo(() => '${(count % 10) * 10}%', [count]);
+  final deferredCount = useDeferredValue(count);
+  final (isPending, startTransition) = useTransition();
+  useDebugValue(count, (value) => 'counter: $value');
 
   useEffect(() {
     setOther(true);
@@ -22,7 +39,9 @@ ReactNode Counter(
     className: 'primary-button',
     onClick: (_) {
       final newCount = count + 1;
-      setCount(newCount);
+      startTransition(() {
+        dispatch(_CounterAction.increment);
+      });
       props.onChange?.call(newCount);
     },
     children: [const Text('+1')],
@@ -32,23 +51,31 @@ ReactNode Counter(
 
   return div(
     className: 'counter-widget',
-    style: {
-      '--counter-accent': count.isEven ? '#7257ff' : '#1bb7b0',
-      '--counter-progress': '${(count % 10) * 10}%',
-    },
+    style: {'--counter-accent': accent, '--counter-progress': progress},
     children: [
       div(
         key: 'title',
         className: 'widget-title',
         children: [Text(props.title)],
       ),
-      div(key: 'value', className: 'count-value', children: [Text('$count')]),
+      div(
+        key: 'value',
+        id: counterId,
+        className: 'count-value',
+        children: [Text('$deferredCount')],
+      ),
       div(key: 'actions', className: 'counter-actions', children: [inc]),
       ?sub,
       div(
         key: 'effect',
         className: 'effect-note',
-        children: [Text(other ? 'Effect ready' : 'Starting effect…')],
+        children: [
+          Text(
+            isPending
+                ? 'Transition pending…'
+                : (other ? 'Effect ready' : 'Starting effect…'),
+          ),
+        ],
       ),
     ],
   );

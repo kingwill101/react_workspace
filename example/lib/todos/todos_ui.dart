@@ -1,5 +1,6 @@
 import 'package:react_web/react_web.dart';
 
+import '../app_context.dart';
 import '../styles/todo.module.dart';
 import 'todos_contract.dart' show TodoItem;
 import 'todos_actions.client.g.dart' show listTodosAction, toggleTodoAction;
@@ -7,6 +8,17 @@ import 'todos_actions.client.g.dart' show listTodosAction, toggleTodoAction;
 @reactComponent
 ReactNode TodoApp(({String title}) props) {
   final (todos, setTodos) = useState(<TodoItem>[]);
+  final accent = useContext(appAccentContext);
+  final activityVersion = useSyncExternalStore<int>(
+    exampleActivityStore.subscribe,
+    exampleActivityStore.snapshot,
+    exampleActivityStore.snapshot,
+  );
+  final headingId = useId();
+  final deferredTodoCount = useDeferredValue(todos.length);
+  final todoCountLabel = useMemo(() => '$deferredTodoCount open', [
+    deferredTodoCount,
+  ]);
   final (loading, setLoading) = useState(true);
   final (error, setError) = useState<String?>(null);
 
@@ -15,6 +27,7 @@ ReactNode TodoApp(({String title}) props) {
     listTodosAction(completedFilter: null)
         .then((result) {
           setTodos(result.items);
+          exampleActivityStore.mark();
           setLoading(false);
         })
         .catchError((e) {
@@ -30,6 +43,7 @@ ReactNode TodoApp(({String title}) props) {
         completed: !item.completed,
       );
       setTodos(todos.map((t) => t.id == item.id ? result : t).toList());
+      exampleActivityStore.mark();
     } catch (e) {
       setError(e.toString());
     }
@@ -63,6 +77,7 @@ ReactNode TodoApp(({String title}) props) {
 
   return section(
     className: TodoModuleStyles.panel,
+    style: {'--todo-accent': accent},
     children: [
       div(
         key: 'header',
@@ -76,13 +91,13 @@ ReactNode TodoApp(({String title}) props) {
                 className: TodoModuleStyles.kicker,
                 children: [const Text('SERVER ACTIONS')],
               ),
-              h2(key: 'title', children: [Text(props.title)]),
+              h2(key: 'title', id: headingId, children: [Text(props.title)]),
             ],
           ),
           span(
             key: 'count',
             className: TodoModuleStyles.count,
-            children: [Text('${todos.length} open')],
+            children: [Text(todoCountLabel)],
           ),
         ],
       ),
@@ -124,7 +139,11 @@ ReactNode TodoApp(({String title}) props) {
         children: [
           span(
             key: 'transport',
-            children: [const Text('Changes are persisted by a typed RPC')],
+            children: [
+              Text(
+                'Changes are persisted by a typed RPC · sync $activityVersion',
+              ),
+            ],
           ),
           span(
             key: 'pulse',
