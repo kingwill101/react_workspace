@@ -47,30 +47,118 @@ void registerGlobalRenderer(
 /// so React handles component context, hooks, and lifecycle properly.
 /// All other node types are flattened inline.
 JSAny? _expandTree(ReactNode node) => switch (node) {
-  HostNode(:var type, :var props, :var children) =>
-    _react.callMethod(
-          'createElement'.toJS,
-          type.name.toJS,
-          _intrinsicPropsToJS(props as Map<String, Object?>),
-          children.map(_expandTree).whereType<JSAny>().toList().toJS,
-        )
-        as JSAny,
-  Component(:var id, :var props, :var children) => _expandComponent(
+  HostNode(:var type, :var props, :var children, :var key) =>
+    _createHostElement(type.name, props, children, key: key),
+  Component(:var id, :var props, :var children, :var key) => _expandComponent(
     id,
     props,
     children,
+    key: key,
   ),
+  ForeignComponent(:var name, :var props, :var children, :var key) =>
+    _expandForeignComponent(name, props, children, key: key),
   Text(:var value) => value.toJS,
-  Fragment(:var children) =>
-    _react.callMethod(
-          'createElement'.toJS,
-          _fragment,
-          null,
-          children.map(_expandTree).whereType<JSAny>().toList().toJS,
-        )
-        as JSAny,
+  Fragment(:var children, :var key) => _createFragment(children, key: key),
+  StrictMode(:var children) => _createReactElement(_strictMode, children),
+  Suspense(:var fallback, :var children) => _createReactElement(
+    _suspense,
+    children,
+    props: _keyProps(null, props: _fallbackProps(fallback)),
+  ),
+  ContextProvider() => throw UnsupportedError(
+    'Context providers are not implemented by the SSR renderer yet.',
+  ),
+  Portal() => throw UnsupportedError(
+    'Portals have no server container and are not supported during SSR.',
+  ),
+  ErrorBoundary() => throw UnsupportedError(
+    'Error boundaries are not implemented by the SSR renderer yet.',
+  ),
   Empty() => null,
+  ReactNode() => throw UnsupportedError('Unknown ReactNode implementation.'),
 };
+
+JSAny _expandForeignComponent(
+  String name,
+  Map<String, Object?> props,
+  List<ReactNode> children, {
+  String? key,
+}) {
+  final component = _resolveForeignComponent(name.toJS);
+  if (component == null) {
+    throw ArgumentError('Foreign React component "$name" is not registered');
+  }
+  final jsProps = _intrinsicPropsToJS(props, key: key);
+  final jsChildren = children.map(_expandTree).whereType<JSAny>().toList();
+  return _react.callMethod(
+        'createElement'.toJS,
+        component,
+        jsProps,
+        jsChildren.toJS,
+      )
+      as JSAny;
+}
+
+JSAny _createReactElement(
+  JSAny type,
+  List<ReactNode> children, {
+  JSObject? props,
+}) {
+  final jsChildren = children.map(_expandTree).whereType<JSAny>().toList();
+  if (jsChildren.isEmpty) {
+    return _react.callMethod('createElement'.toJS, type, props ?? JSObject())
+        as JSAny;
+  }
+  return _react.callMethod(
+        'createElement'.toJS,
+        type,
+        props ?? JSObject(),
+        jsChildren.toJS,
+      )
+      as JSAny;
+}
+
+JSObject _fallbackProps(ReactNode fallback) {
+  final props = JSObject();
+  final expanded = _expandTree(fallback);
+  if (expanded != null) props.setProperty('fallback'.toJS, expanded);
+  return props;
+}
+
+JSAny _createHostElement(
+  String type,
+  Object? props,
+  List<ReactNode> children, {
+  String? key,
+}) {
+  final jsProps = _intrinsicPropsToJS(props as Map<String, Object?>, key: key);
+  final jsChildren = children.map(_expandTree).whereType<JSAny>().toList();
+  if (jsChildren.isEmpty) {
+    return _react.callMethod('createElement'.toJS, type.toJS, jsProps) as JSAny;
+  }
+  return _react.callMethod(
+        'createElement'.toJS,
+        type.toJS,
+        jsProps,
+        jsChildren.toJS,
+      )
+      as JSAny;
+}
+
+JSAny _createFragment(List<ReactNode> children, {String? key}) {
+  final jsChildren = children.map(_expandTree).whereType<JSAny>().toList();
+  if (jsChildren.isEmpty) {
+    return _react.callMethod('createElement'.toJS, _fragment, _keyProps(key))
+        as JSAny;
+  }
+  return _react.callMethod(
+        'createElement'.toJS,
+        _fragment,
+        _keyProps(key),
+        jsChildren.toJS,
+      )
+      as JSAny;
+}
 
 /// Expands a Component node by creating `React.createElement(registeredFn,
 /// toJSProps)` so that React renders the component with proper hooks
@@ -81,26 +169,36 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
 JSAny _expandComponent(
   ComponentId id,
   Object? props,
-  List<ReactNode> children,
-) {
+  List<ReactNode> children, {
+  String? key,
+}) {
   final e = ReactRegistry.lookup(id.value);
   if (e == null) {
     throw ArgumentError('Component "${id.value}" not registered for SSR');
   }
   // Create React.createElement(comp, toJSProps) so React sets up
   // hooks context and calls the wrapper internally.
-  final jsProps = e.toJS(props);
+  final jsProps = _keyProps(key, props: e.toJS(props));
   final childrenJS = children.map(_expandTree).whereType<JSAny>().toList().toJS;
   return _react.callMethod('createElement'.toJS, e.comp, jsProps, childrenJS)
       as JSAny;
 }
 
-JSObject _intrinsicPropsToJS(Map<String, Object?> m) {
+JSObject _keyProps(String? key, {JSAny? props}) {
+  final object = props != null && props.isA<JSObject>()
+      ? props as JSObject
+      : JSObject();
+  if (key != null) object.setProperty('key'.toJS, key.toJS);
+  return object;
+}
+
+JSObject _intrinsicPropsToJS(Map<String, Object?> m, {String? key}) {
   final o = JSObject();
   m.forEach((k, v) {
     if (v is ReactEventProp || v is ReactRefProp) return;
     if (v != null) o.setProperty(k.toJS, toReactJS(v)!);
   });
+  if (key != null) o.setProperty('key'.toJS, key.toJS);
   return o;
 }
 
@@ -144,6 +242,15 @@ external JSObject get _react;
 
 @JS('React.Fragment')
 external JSAny get _fragment;
+
+@JS('React.StrictMode')
+external JSAny get _strictMode;
+
+@JS('React.Suspense')
+external JSAny get _suspense;
+
+@JS('globalThis.__reactDartResolveComponent')
+external JSAny? _resolveForeignComponent(JSString name);
 
 @JS('ReactDOMServer')
 external JSObject get _reactDomServer;

@@ -3,6 +3,21 @@ import 'package:react/react.dart';
 import 'package:test/test.dart';
 
 void main() {
+  group('StateSetter', () {
+    test('accepts direct and functional updates', () {
+      final values = <int>[];
+      final setter = StateSetter<int>(
+        values.add,
+        (updater) => values.add(updater(values.last)),
+      );
+
+      setter(2);
+      setter((previous) => previous + 1);
+
+      expect(values, [2, 3]);
+    });
+  });
+
   group('ReactRuntimeCapabilities', () {
     test('server capabilities report no events or refs', () {
       expect(ReactRuntimeCapabilities.server.supportsEvents, isFalse);
@@ -138,10 +153,10 @@ void main() {
   });
 }
 
-final class _TestBinding implements ReactBinding {
+final class _TestBinding extends ReactBinding {
   @override
-  (T, void Function(T)) useState<T>(T initial) {
-    return (initial, (T value) {});
+  (T, StateSetter<T>) useState<T>(T initial) {
+    return (initial, StateSetter((T value) {}, (T Function(T _) __) {}));
   }
 
   @override
