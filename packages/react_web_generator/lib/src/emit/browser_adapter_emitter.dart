@@ -41,6 +41,16 @@ final class BrowserAdapterEmitter {
     StringBuffer buf,
     Map<String, InterfaceDecl> types,
   ) {
+    buf.writeln(
+      'abstract class BrowserElementAdapter implements HTMLElement {',
+    );
+    buf.writeln('  @override');
+    buf.writeln(
+      '  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);',
+    );
+    buf.writeln('}');
+    buf.writeln();
+
     for (final entry in types.entries) {
       if (!entry.key.startsWith('web.HTML')) continue;
       if (entry.key == 'web.Element' || entry.key == 'web.HTMLElement') {
@@ -49,13 +59,12 @@ final class BrowserAdapterEmitter {
       if (entry.value.typeParameters.isNotEmpty) continue;
 
       final name = entry.value.name;
-      buf.writeln('final class Browser$name implements $name {');
+      buf.writeln('final class Browser$name extends BrowserElementAdapter');
+      buf.writeln('    implements $name {');
       buf.writeln('  final web.$name _element;');
       buf.writeln('  Browser$name(this._element);');
-      buf.writeln('  web.$name get inner => _element;');
       buf.writeln('  @override');
-      buf.writeln('  dynamic noSuchMethod(Invocation invocation) =>');
-      buf.writeln("      \"Browser$name does not expose this DOM member yet.\";");
+      buf.writeln('  web.$name get inner => _element;');
       buf.writeln('}');
       buf.writeln();
     }
@@ -143,10 +152,14 @@ final class BrowserAdapterEmitter {
     final override = isOverride ? '@override\n  ' : '';
     if (kind == 'attribute') {
       // Skip setters — React event interfaces only expose readable attributes.
-      buf.writeln('  $override$returnType get $name => ${_jsGetter(name, returnType, nullable)};');
+      buf.writeln(
+        '  $override$returnType get $name => ${_jsGetter(name, returnType, nullable)};',
+      );
     } else if (kind == 'method') {
       if (returnType == 'void') {
-        buf.writeln('  ${override}void $name() => _event.callMethod(\'$name\'.toJS);');
+        buf.writeln(
+          '  ${override}void $name() => _event.callMethod(\'$name\'.toJS);',
+        );
       } else {
         buf.writeln(
           '  $override$returnType $name() => ${_jsGetter('$name()', returnType, nullable)};',
@@ -166,10 +179,9 @@ final class BrowserAdapterEmitter {
   }
 
   String _convertJsToDart(String jsExpr, String dartType, bool nullable) {
-    final baseType =
-        nullable && dartType.endsWith('?')
-            ? dartType.substring(0, dartType.length - 1)
-            : dartType;
+    final baseType = nullable && dartType.endsWith('?')
+        ? dartType.substring(0, dartType.length - 1)
+        : dartType;
 
     String conversion(String nonNullExpr) {
       return switch (baseType) {
@@ -223,17 +235,13 @@ final class BrowserAdapterEmitter {
       // Register with the full generic form.
       buf.writeln("  ReactCodecRegistry.registerHostValue(");
       buf.writeln("    'web', '$typeId<web.EventTarget>',");
-      buf.writeln(
-        "    decoder: (value) => Browser$name(value as JSObject),",
-      );
+      buf.writeln("    decoder: (value) => Browser$name(value as JSObject),");
       buf.writeln("  );");
 
       // Register with the short name (used by generated dom.dart).
       buf.writeln("  ReactCodecRegistry.registerHostValue(");
       buf.writeln("    'web', '$name',");
-      buf.writeln(
-        "    decoder: (value) => Browser$name(value as JSObject),",
-      );
+      buf.writeln("    decoder: (value) => Browser$name(value as JSObject),");
       buf.writeln("  );");
     }
 

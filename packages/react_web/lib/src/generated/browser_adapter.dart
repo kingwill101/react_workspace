@@ -8,670 +8,601 @@ import 'package:web/web.dart' as web;
 import 'package:react_web/src/generated/event_interfaces.dart';
 import 'package:react_web/src/generated/html_interfaces.dart';
 
-final class BrowserHTMLMarqueeElement implements HTMLMarqueeElement {
+abstract class BrowserElementAdapter implements HTMLElement {
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+final class BrowserHTMLMarqueeElement extends BrowserElementAdapter
+    implements HTMLMarqueeElement {
   final web.HTMLMarqueeElement _element;
   BrowserHTMLMarqueeElement(this._element);
-  web.HTMLMarqueeElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLMarqueeElement does not expose this DOM member yet.";
+  web.HTMLMarqueeElement get inner => _element;
 }
 
-final class BrowserHTMLCollection implements HTMLCollection {
+final class BrowserHTMLCollection extends BrowserElementAdapter
+    implements HTMLCollection {
   final web.HTMLCollection _element;
   BrowserHTMLCollection(this._element);
-  web.HTMLCollection get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLCollection does not expose this DOM member yet.";
+  web.HTMLCollection get inner => _element;
 }
 
-final class BrowserHTMLAllCollection implements HTMLAllCollection {
+final class BrowserHTMLAllCollection extends BrowserElementAdapter
+    implements HTMLAllCollection {
   final web.HTMLAllCollection _element;
   BrowserHTMLAllCollection(this._element);
-  web.HTMLAllCollection get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLAllCollection does not expose this DOM member yet.";
+  web.HTMLAllCollection get inner => _element;
 }
 
-final class BrowserHTMLHeadElement implements HTMLHeadElement {
+final class BrowserHTMLHeadElement extends BrowserElementAdapter
+    implements HTMLHeadElement {
   final web.HTMLHeadElement _element;
   BrowserHTMLHeadElement(this._element);
-  web.HTMLHeadElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLHeadElement does not expose this DOM member yet.";
+  web.HTMLHeadElement get inner => _element;
 }
 
-final class BrowserHTMLFormElement implements HTMLFormElement {
+final class BrowserHTMLFormElement extends BrowserElementAdapter
+    implements HTMLFormElement {
   final web.HTMLFormElement _element;
   BrowserHTMLFormElement(this._element);
-  web.HTMLFormElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLFormElement does not expose this DOM member yet.";
+  web.HTMLFormElement get inner => _element;
 }
 
-final class BrowserHTMLFormControlsCollection implements HTMLFormControlsCollection {
+final class BrowserHTMLFormControlsCollection extends BrowserElementAdapter
+    implements HTMLFormControlsCollection {
   final web.HTMLFormControlsCollection _element;
   BrowserHTMLFormControlsCollection(this._element);
-  web.HTMLFormControlsCollection get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLFormControlsCollection does not expose this DOM member yet.";
+  web.HTMLFormControlsCollection get inner => _element;
 }
 
-final class BrowserHTMLFontElement implements HTMLFontElement {
+final class BrowserHTMLFontElement extends BrowserElementAdapter
+    implements HTMLFontElement {
   final web.HTMLFontElement _element;
   BrowserHTMLFontElement(this._element);
-  web.HTMLFontElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLFontElement does not expose this DOM member yet.";
+  web.HTMLFontElement get inner => _element;
 }
 
-final class BrowserHTMLParamElement implements HTMLParamElement {
+final class BrowserHTMLParamElement extends BrowserElementAdapter
+    implements HTMLParamElement {
   final web.HTMLParamElement _element;
   BrowserHTMLParamElement(this._element);
-  web.HTMLParamElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLParamElement does not expose this DOM member yet.";
+  web.HTMLParamElement get inner => _element;
 }
 
-final class BrowserHTMLFrameSetElement implements HTMLFrameSetElement {
+final class BrowserHTMLFrameSetElement extends BrowserElementAdapter
+    implements HTMLFrameSetElement {
   final web.HTMLFrameSetElement _element;
   BrowserHTMLFrameSetElement(this._element);
-  web.HTMLFrameSetElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLFrameSetElement does not expose this DOM member yet.";
+  web.HTMLFrameSetElement get inner => _element;
 }
 
-final class BrowserHTMLFrameElement implements HTMLFrameElement {
+final class BrowserHTMLFrameElement extends BrowserElementAdapter
+    implements HTMLFrameElement {
   final web.HTMLFrameElement _element;
   BrowserHTMLFrameElement(this._element);
-  web.HTMLFrameElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLFrameElement does not expose this DOM member yet.";
+  web.HTMLFrameElement get inner => _element;
 }
 
-final class BrowserHTMLDirectoryElement implements HTMLDirectoryElement {
+final class BrowserHTMLDirectoryElement extends BrowserElementAdapter
+    implements HTMLDirectoryElement {
   final web.HTMLDirectoryElement _element;
   BrowserHTMLDirectoryElement(this._element);
-  web.HTMLDirectoryElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLDirectoryElement does not expose this DOM member yet.";
+  web.HTMLDirectoryElement get inner => _element;
 }
 
-final class BrowserHTMLUnknownElement implements HTMLUnknownElement {
+final class BrowserHTMLUnknownElement extends BrowserElementAdapter
+    implements HTMLUnknownElement {
   final web.HTMLUnknownElement _element;
   BrowserHTMLUnknownElement(this._element);
-  web.HTMLUnknownElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLUnknownElement does not expose this DOM member yet.";
+  web.HTMLUnknownElement get inner => _element;
 }
 
-final class BrowserHTMLCanvasElement implements HTMLCanvasElement {
+final class BrowserHTMLCanvasElement extends BrowserElementAdapter
+    implements HTMLCanvasElement {
   final web.HTMLCanvasElement _element;
   BrowserHTMLCanvasElement(this._element);
-  web.HTMLCanvasElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLCanvasElement does not expose this DOM member yet.";
+  web.HTMLCanvasElement get inner => _element;
 }
 
-final class BrowserHTMLSlotElement implements HTMLSlotElement {
+final class BrowserHTMLSlotElement extends BrowserElementAdapter
+    implements HTMLSlotElement {
   final web.HTMLSlotElement _element;
   BrowserHTMLSlotElement(this._element);
-  web.HTMLSlotElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLSlotElement does not expose this DOM member yet.";
+  web.HTMLSlotElement get inner => _element;
 }
 
-final class BrowserHTMLTemplateElement implements HTMLTemplateElement {
+final class BrowserHTMLTemplateElement extends BrowserElementAdapter
+    implements HTMLTemplateElement {
   final web.HTMLTemplateElement _element;
   BrowserHTMLTemplateElement(this._element);
-  web.HTMLTemplateElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLTemplateElement does not expose this DOM member yet.";
+  web.HTMLTemplateElement get inner => _element;
 }
 
-final class BrowserHTMLScriptElement implements HTMLScriptElement {
+final class BrowserHTMLScriptElement extends BrowserElementAdapter
+    implements HTMLScriptElement {
   final web.HTMLScriptElement _element;
   BrowserHTMLScriptElement(this._element);
-  web.HTMLScriptElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLScriptElement does not expose this DOM member yet.";
+  web.HTMLScriptElement get inner => _element;
 }
 
-final class BrowserHTMLDialogElement implements HTMLDialogElement {
+final class BrowserHTMLDialogElement extends BrowserElementAdapter
+    implements HTMLDialogElement {
   final web.HTMLDialogElement _element;
   BrowserHTMLDialogElement(this._element);
-  web.HTMLDialogElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLDialogElement does not expose this DOM member yet.";
+  web.HTMLDialogElement get inner => _element;
 }
 
-final class BrowserHTMLDetailsElement implements HTMLDetailsElement {
+final class BrowserHTMLDetailsElement extends BrowserElementAdapter
+    implements HTMLDetailsElement {
   final web.HTMLDetailsElement _element;
   BrowserHTMLDetailsElement(this._element);
-  web.HTMLDetailsElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLDetailsElement does not expose this DOM member yet.";
+  web.HTMLDetailsElement get inner => _element;
 }
 
-final class BrowserHTMLLegendElement implements HTMLLegendElement {
+final class BrowserHTMLLegendElement extends BrowserElementAdapter
+    implements HTMLLegendElement {
   final web.HTMLLegendElement _element;
   BrowserHTMLLegendElement(this._element);
-  web.HTMLLegendElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLLegendElement does not expose this DOM member yet.";
+  web.HTMLLegendElement get inner => _element;
 }
 
-final class BrowserHTMLFieldSetElement implements HTMLFieldSetElement {
+final class BrowserHTMLFieldSetElement extends BrowserElementAdapter
+    implements HTMLFieldSetElement {
   final web.HTMLFieldSetElement _element;
   BrowserHTMLFieldSetElement(this._element);
-  web.HTMLFieldSetElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLFieldSetElement does not expose this DOM member yet.";
+  web.HTMLFieldSetElement get inner => _element;
 }
 
-final class BrowserHTMLMeterElement implements HTMLMeterElement {
+final class BrowserHTMLMeterElement extends BrowserElementAdapter
+    implements HTMLMeterElement {
   final web.HTMLMeterElement _element;
   BrowserHTMLMeterElement(this._element);
-  web.HTMLMeterElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLMeterElement does not expose this DOM member yet.";
+  web.HTMLMeterElement get inner => _element;
 }
 
-final class BrowserHTMLProgressElement implements HTMLProgressElement {
+final class BrowserHTMLProgressElement extends BrowserElementAdapter
+    implements HTMLProgressElement {
   final web.HTMLProgressElement _element;
   BrowserHTMLProgressElement(this._element);
-  web.HTMLProgressElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLProgressElement does not expose this DOM member yet.";
+  web.HTMLProgressElement get inner => _element;
 }
 
-final class BrowserHTMLOutputElement implements HTMLOutputElement {
+final class BrowserHTMLOutputElement extends BrowserElementAdapter
+    implements HTMLOutputElement {
   final web.HTMLOutputElement _element;
   BrowserHTMLOutputElement(this._element);
-  web.HTMLOutputElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLOutputElement does not expose this DOM member yet.";
+  web.HTMLOutputElement get inner => _element;
 }
 
-final class BrowserHTMLTextAreaElement implements HTMLTextAreaElement {
+final class BrowserHTMLTextAreaElement extends BrowserElementAdapter
+    implements HTMLTextAreaElement {
   final web.HTMLTextAreaElement _element;
   BrowserHTMLTextAreaElement(this._element);
-  web.HTMLTextAreaElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLTextAreaElement does not expose this DOM member yet.";
+  web.HTMLTextAreaElement get inner => _element;
 }
 
-final class BrowserHTMLOptionElement implements HTMLOptionElement {
+final class BrowserHTMLOptionElement extends BrowserElementAdapter
+    implements HTMLOptionElement {
   final web.HTMLOptionElement _element;
   BrowserHTMLOptionElement(this._element);
-  web.HTMLOptionElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLOptionElement does not expose this DOM member yet.";
+  web.HTMLOptionElement get inner => _element;
 }
 
-final class BrowserHTMLOptGroupElement implements HTMLOptGroupElement {
+final class BrowserHTMLOptGroupElement extends BrowserElementAdapter
+    implements HTMLOptGroupElement {
   final web.HTMLOptGroupElement _element;
   BrowserHTMLOptGroupElement(this._element);
-  web.HTMLOptGroupElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLOptGroupElement does not expose this DOM member yet.";
+  web.HTMLOptGroupElement get inner => _element;
 }
 
-final class BrowserHTMLDataListElement implements HTMLDataListElement {
+final class BrowserHTMLDataListElement extends BrowserElementAdapter
+    implements HTMLDataListElement {
   final web.HTMLDataListElement _element;
   BrowserHTMLDataListElement(this._element);
-  web.HTMLDataListElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLDataListElement does not expose this DOM member yet.";
+  web.HTMLDataListElement get inner => _element;
 }
 
-final class BrowserHTMLSelectElement implements HTMLSelectElement {
+final class BrowserHTMLSelectElement extends BrowserElementAdapter
+    implements HTMLSelectElement {
   final web.HTMLSelectElement _element;
   BrowserHTMLSelectElement(this._element);
-  web.HTMLSelectElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLSelectElement does not expose this DOM member yet.";
+  web.HTMLSelectElement get inner => _element;
 }
 
-final class BrowserHTMLOptionsCollection implements HTMLOptionsCollection {
+final class BrowserHTMLOptionsCollection extends BrowserElementAdapter
+    implements HTMLOptionsCollection {
   final web.HTMLOptionsCollection _element;
   BrowserHTMLOptionsCollection(this._element);
-  web.HTMLOptionsCollection get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLOptionsCollection does not expose this DOM member yet.";
+  web.HTMLOptionsCollection get inner => _element;
 }
 
-final class BrowserHTMLButtonElement implements HTMLButtonElement {
+final class BrowserHTMLButtonElement extends BrowserElementAdapter
+    implements HTMLButtonElement {
   final web.HTMLButtonElement _element;
   BrowserHTMLButtonElement(this._element);
-  web.HTMLButtonElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLButtonElement does not expose this DOM member yet.";
+  web.HTMLButtonElement get inner => _element;
 }
 
-final class BrowserHTMLInputElement implements HTMLInputElement {
+final class BrowserHTMLInputElement extends BrowserElementAdapter
+    implements HTMLInputElement {
   final web.HTMLInputElement _element;
   BrowserHTMLInputElement(this._element);
-  web.HTMLInputElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLInputElement does not expose this DOM member yet.";
+  web.HTMLInputElement get inner => _element;
 }
 
-final class BrowserHTMLLabelElement implements HTMLLabelElement {
+final class BrowserHTMLLabelElement extends BrowserElementAdapter
+    implements HTMLLabelElement {
   final web.HTMLLabelElement _element;
   BrowserHTMLLabelElement(this._element);
-  web.HTMLLabelElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLLabelElement does not expose this DOM member yet.";
+  web.HTMLLabelElement get inner => _element;
 }
 
-final class BrowserHTMLTableCellElement implements HTMLTableCellElement {
+final class BrowserHTMLTableCellElement extends BrowserElementAdapter
+    implements HTMLTableCellElement {
   final web.HTMLTableCellElement _element;
   BrowserHTMLTableCellElement(this._element);
-  web.HTMLTableCellElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLTableCellElement does not expose this DOM member yet.";
+  web.HTMLTableCellElement get inner => _element;
 }
 
-final class BrowserHTMLTableRowElement implements HTMLTableRowElement {
+final class BrowserHTMLTableRowElement extends BrowserElementAdapter
+    implements HTMLTableRowElement {
   final web.HTMLTableRowElement _element;
   BrowserHTMLTableRowElement(this._element);
-  web.HTMLTableRowElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLTableRowElement does not expose this DOM member yet.";
+  web.HTMLTableRowElement get inner => _element;
 }
 
-final class BrowserHTMLTableSectionElement implements HTMLTableSectionElement {
+final class BrowserHTMLTableSectionElement extends BrowserElementAdapter
+    implements HTMLTableSectionElement {
   final web.HTMLTableSectionElement _element;
   BrowserHTMLTableSectionElement(this._element);
-  web.HTMLTableSectionElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLTableSectionElement does not expose this DOM member yet.";
+  web.HTMLTableSectionElement get inner => _element;
 }
 
-final class BrowserHTMLTableColElement implements HTMLTableColElement {
+final class BrowserHTMLTableColElement extends BrowserElementAdapter
+    implements HTMLTableColElement {
   final web.HTMLTableColElement _element;
   BrowserHTMLTableColElement(this._element);
-  web.HTMLTableColElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLTableColElement does not expose this DOM member yet.";
+  web.HTMLTableColElement get inner => _element;
 }
 
-final class BrowserHTMLTableCaptionElement implements HTMLTableCaptionElement {
+final class BrowserHTMLTableCaptionElement extends BrowserElementAdapter
+    implements HTMLTableCaptionElement {
   final web.HTMLTableCaptionElement _element;
   BrowserHTMLTableCaptionElement(this._element);
-  web.HTMLTableCaptionElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLTableCaptionElement does not expose this DOM member yet.";
+  web.HTMLTableCaptionElement get inner => _element;
 }
 
-final class BrowserHTMLTableElement implements HTMLTableElement {
+final class BrowserHTMLTableElement extends BrowserElementAdapter
+    implements HTMLTableElement {
   final web.HTMLTableElement _element;
   BrowserHTMLTableElement(this._element);
-  web.HTMLTableElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLTableElement does not expose this DOM member yet.";
+  web.HTMLTableElement get inner => _element;
 }
 
-final class BrowserHTMLAreaElement implements HTMLAreaElement {
+final class BrowserHTMLAreaElement extends BrowserElementAdapter
+    implements HTMLAreaElement {
   final web.HTMLAreaElement _element;
   BrowserHTMLAreaElement(this._element);
-  web.HTMLAreaElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLAreaElement does not expose this DOM member yet.";
+  web.HTMLAreaElement get inner => _element;
 }
 
-final class BrowserHTMLMapElement implements HTMLMapElement {
+final class BrowserHTMLMapElement extends BrowserElementAdapter
+    implements HTMLMapElement {
   final web.HTMLMapElement _element;
   BrowserHTMLMapElement(this._element);
-  web.HTMLMapElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLMapElement does not expose this DOM member yet.";
+  web.HTMLMapElement get inner => _element;
 }
 
-final class BrowserHTMLTrackElement implements HTMLTrackElement {
+final class BrowserHTMLTrackElement extends BrowserElementAdapter
+    implements HTMLTrackElement {
   final web.HTMLTrackElement _element;
   BrowserHTMLTrackElement(this._element);
-  web.HTMLTrackElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLTrackElement does not expose this DOM member yet.";
+  web.HTMLTrackElement get inner => _element;
 }
 
-final class BrowserHTMLAudioElement implements HTMLAudioElement {
+final class BrowserHTMLAudioElement extends BrowserElementAdapter
+    implements HTMLAudioElement {
   final web.HTMLAudioElement _element;
   BrowserHTMLAudioElement(this._element);
-  web.HTMLAudioElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLAudioElement does not expose this DOM member yet.";
+  web.HTMLAudioElement get inner => _element;
 }
 
-final class BrowserHTMLMediaElement implements HTMLMediaElement {
+final class BrowserHTMLMediaElement extends BrowserElementAdapter
+    implements HTMLMediaElement {
   final web.HTMLMediaElement _element;
   BrowserHTMLMediaElement(this._element);
-  web.HTMLMediaElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLMediaElement does not expose this DOM member yet.";
+  web.HTMLMediaElement get inner => _element;
 }
 
-final class BrowserHTMLVideoElement implements HTMLVideoElement {
+final class BrowserHTMLVideoElement extends BrowserElementAdapter
+    implements HTMLVideoElement {
   final web.HTMLVideoElement _element;
   BrowserHTMLVideoElement(this._element);
-  web.HTMLVideoElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLVideoElement does not expose this DOM member yet.";
+  web.HTMLVideoElement get inner => _element;
 }
 
-final class BrowserHTMLObjectElement implements HTMLObjectElement {
+final class BrowserHTMLObjectElement extends BrowserElementAdapter
+    implements HTMLObjectElement {
   final web.HTMLObjectElement _element;
   BrowserHTMLObjectElement(this._element);
-  web.HTMLObjectElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLObjectElement does not expose this DOM member yet.";
+  web.HTMLObjectElement get inner => _element;
 }
 
-final class BrowserHTMLEmbedElement implements HTMLEmbedElement {
+final class BrowserHTMLEmbedElement extends BrowserElementAdapter
+    implements HTMLEmbedElement {
   final web.HTMLEmbedElement _element;
   BrowserHTMLEmbedElement(this._element);
-  web.HTMLEmbedElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLEmbedElement does not expose this DOM member yet.";
+  web.HTMLEmbedElement get inner => _element;
 }
 
-final class BrowserHTMLIFrameElement implements HTMLIFrameElement {
+final class BrowserHTMLIFrameElement extends BrowserElementAdapter
+    implements HTMLIFrameElement {
   final web.HTMLIFrameElement _element;
   BrowserHTMLIFrameElement(this._element);
-  web.HTMLIFrameElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLIFrameElement does not expose this DOM member yet.";
+  web.HTMLIFrameElement get inner => _element;
 }
 
-final class BrowserHTMLImageElement implements HTMLImageElement {
+final class BrowserHTMLImageElement extends BrowserElementAdapter
+    implements HTMLImageElement {
   final web.HTMLImageElement _element;
   BrowserHTMLImageElement(this._element);
-  web.HTMLImageElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLImageElement does not expose this DOM member yet.";
+  web.HTMLImageElement get inner => _element;
 }
 
-final class BrowserHTMLSourceElement implements HTMLSourceElement {
+final class BrowserHTMLSourceElement extends BrowserElementAdapter
+    implements HTMLSourceElement {
   final web.HTMLSourceElement _element;
   BrowserHTMLSourceElement(this._element);
-  web.HTMLSourceElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLSourceElement does not expose this DOM member yet.";
+  web.HTMLSourceElement get inner => _element;
 }
 
-final class BrowserHTMLPictureElement implements HTMLPictureElement {
+final class BrowserHTMLPictureElement extends BrowserElementAdapter
+    implements HTMLPictureElement {
   final web.HTMLPictureElement _element;
   BrowserHTMLPictureElement(this._element);
-  web.HTMLPictureElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLPictureElement does not expose this DOM member yet.";
+  web.HTMLPictureElement get inner => _element;
 }
 
-final class BrowserHTMLModElement implements HTMLModElement {
+final class BrowserHTMLModElement extends BrowserElementAdapter
+    implements HTMLModElement {
   final web.HTMLModElement _element;
   BrowserHTMLModElement(this._element);
-  web.HTMLModElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLModElement does not expose this DOM member yet.";
+  web.HTMLModElement get inner => _element;
 }
 
-final class BrowserHTMLBRElement implements HTMLBRElement {
+final class BrowserHTMLBRElement extends BrowserElementAdapter
+    implements HTMLBRElement {
   final web.HTMLBRElement _element;
   BrowserHTMLBRElement(this._element);
-  web.HTMLBRElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLBRElement does not expose this DOM member yet.";
+  web.HTMLBRElement get inner => _element;
 }
 
-final class BrowserHTMLSpanElement implements HTMLSpanElement {
+final class BrowserHTMLSpanElement extends BrowserElementAdapter
+    implements HTMLSpanElement {
   final web.HTMLSpanElement _element;
   BrowserHTMLSpanElement(this._element);
-  web.HTMLSpanElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLSpanElement does not expose this DOM member yet.";
+  web.HTMLSpanElement get inner => _element;
 }
 
-final class BrowserHTMLTimeElement implements HTMLTimeElement {
+final class BrowserHTMLTimeElement extends BrowserElementAdapter
+    implements HTMLTimeElement {
   final web.HTMLTimeElement _element;
   BrowserHTMLTimeElement(this._element);
-  web.HTMLTimeElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLTimeElement does not expose this DOM member yet.";
+  web.HTMLTimeElement get inner => _element;
 }
 
-final class BrowserHTMLDataElement implements HTMLDataElement {
+final class BrowserHTMLDataElement extends BrowserElementAdapter
+    implements HTMLDataElement {
   final web.HTMLDataElement _element;
   BrowserHTMLDataElement(this._element);
-  web.HTMLDataElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLDataElement does not expose this DOM member yet.";
+  web.HTMLDataElement get inner => _element;
 }
 
-final class BrowserHTMLAnchorElement implements HTMLAnchorElement {
+final class BrowserHTMLAnchorElement extends BrowserElementAdapter
+    implements HTMLAnchorElement {
   final web.HTMLAnchorElement _element;
   BrowserHTMLAnchorElement(this._element);
-  web.HTMLAnchorElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLAnchorElement does not expose this DOM member yet.";
+  web.HTMLAnchorElement get inner => _element;
 }
 
-final class BrowserHTMLDivElement implements HTMLDivElement {
+final class BrowserHTMLDivElement extends BrowserElementAdapter
+    implements HTMLDivElement {
   final web.HTMLDivElement _element;
   BrowserHTMLDivElement(this._element);
-  web.HTMLDivElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLDivElement does not expose this DOM member yet.";
+  web.HTMLDivElement get inner => _element;
 }
 
-final class BrowserHTMLDListElement implements HTMLDListElement {
+final class BrowserHTMLDListElement extends BrowserElementAdapter
+    implements HTMLDListElement {
   final web.HTMLDListElement _element;
   BrowserHTMLDListElement(this._element);
-  web.HTMLDListElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLDListElement does not expose this DOM member yet.";
+  web.HTMLDListElement get inner => _element;
 }
 
-final class BrowserHTMLLIElement implements HTMLLIElement {
+final class BrowserHTMLLIElement extends BrowserElementAdapter
+    implements HTMLLIElement {
   final web.HTMLLIElement _element;
   BrowserHTMLLIElement(this._element);
-  web.HTMLLIElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLLIElement does not expose this DOM member yet.";
+  web.HTMLLIElement get inner => _element;
 }
 
-final class BrowserHTMLMenuElement implements HTMLMenuElement {
+final class BrowserHTMLMenuElement extends BrowserElementAdapter
+    implements HTMLMenuElement {
   final web.HTMLMenuElement _element;
   BrowserHTMLMenuElement(this._element);
-  web.HTMLMenuElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLMenuElement does not expose this DOM member yet.";
+  web.HTMLMenuElement get inner => _element;
 }
 
-final class BrowserHTMLUListElement implements HTMLUListElement {
+final class BrowserHTMLUListElement extends BrowserElementAdapter
+    implements HTMLUListElement {
   final web.HTMLUListElement _element;
   BrowserHTMLUListElement(this._element);
-  web.HTMLUListElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLUListElement does not expose this DOM member yet.";
+  web.HTMLUListElement get inner => _element;
 }
 
-final class BrowserHTMLOListElement implements HTMLOListElement {
+final class BrowserHTMLOListElement extends BrowserElementAdapter
+    implements HTMLOListElement {
   final web.HTMLOListElement _element;
   BrowserHTMLOListElement(this._element);
-  web.HTMLOListElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLOListElement does not expose this DOM member yet.";
+  web.HTMLOListElement get inner => _element;
 }
 
-final class BrowserHTMLQuoteElement implements HTMLQuoteElement {
+final class BrowserHTMLQuoteElement extends BrowserElementAdapter
+    implements HTMLQuoteElement {
   final web.HTMLQuoteElement _element;
   BrowserHTMLQuoteElement(this._element);
-  web.HTMLQuoteElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLQuoteElement does not expose this DOM member yet.";
+  web.HTMLQuoteElement get inner => _element;
 }
 
-final class BrowserHTMLPreElement implements HTMLPreElement {
+final class BrowserHTMLPreElement extends BrowserElementAdapter
+    implements HTMLPreElement {
   final web.HTMLPreElement _element;
   BrowserHTMLPreElement(this._element);
-  web.HTMLPreElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLPreElement does not expose this DOM member yet.";
+  web.HTMLPreElement get inner => _element;
 }
 
-final class BrowserHTMLHRElement implements HTMLHRElement {
+final class BrowserHTMLHRElement extends BrowserElementAdapter
+    implements HTMLHRElement {
   final web.HTMLHRElement _element;
   BrowserHTMLHRElement(this._element);
-  web.HTMLHRElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLHRElement does not expose this DOM member yet.";
+  web.HTMLHRElement get inner => _element;
 }
 
-final class BrowserHTMLParagraphElement implements HTMLParagraphElement {
+final class BrowserHTMLParagraphElement extends BrowserElementAdapter
+    implements HTMLParagraphElement {
   final web.HTMLParagraphElement _element;
   BrowserHTMLParagraphElement(this._element);
-  web.HTMLParagraphElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLParagraphElement does not expose this DOM member yet.";
+  web.HTMLParagraphElement get inner => _element;
 }
 
-final class BrowserHTMLHeadingElement implements HTMLHeadingElement {
+final class BrowserHTMLHeadingElement extends BrowserElementAdapter
+    implements HTMLHeadingElement {
   final web.HTMLHeadingElement _element;
   BrowserHTMLHeadingElement(this._element);
-  web.HTMLHeadingElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLHeadingElement does not expose this DOM member yet.";
+  web.HTMLHeadingElement get inner => _element;
 }
 
-final class BrowserHTMLBodyElement implements HTMLBodyElement {
+final class BrowserHTMLBodyElement extends BrowserElementAdapter
+    implements HTMLBodyElement {
   final web.HTMLBodyElement _element;
   BrowserHTMLBodyElement(this._element);
-  web.HTMLBodyElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLBodyElement does not expose this DOM member yet.";
+  web.HTMLBodyElement get inner => _element;
 }
 
-final class BrowserHTMLStyleElement implements HTMLStyleElement {
+final class BrowserHTMLStyleElement extends BrowserElementAdapter
+    implements HTMLStyleElement {
   final web.HTMLStyleElement _element;
   BrowserHTMLStyleElement(this._element);
-  web.HTMLStyleElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLStyleElement does not expose this DOM member yet.";
+  web.HTMLStyleElement get inner => _element;
 }
 
-final class BrowserHTMLMetaElement implements HTMLMetaElement {
+final class BrowserHTMLMetaElement extends BrowserElementAdapter
+    implements HTMLMetaElement {
   final web.HTMLMetaElement _element;
   BrowserHTMLMetaElement(this._element);
-  web.HTMLMetaElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLMetaElement does not expose this DOM member yet.";
+  web.HTMLMetaElement get inner => _element;
 }
 
-final class BrowserHTMLLinkElement implements HTMLLinkElement {
+final class BrowserHTMLLinkElement extends BrowserElementAdapter
+    implements HTMLLinkElement {
   final web.HTMLLinkElement _element;
   BrowserHTMLLinkElement(this._element);
-  web.HTMLLinkElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLLinkElement does not expose this DOM member yet.";
+  web.HTMLLinkElement get inner => _element;
 }
 
-final class BrowserHTMLBaseElement implements HTMLBaseElement {
+final class BrowserHTMLBaseElement extends BrowserElementAdapter
+    implements HTMLBaseElement {
   final web.HTMLBaseElement _element;
   BrowserHTMLBaseElement(this._element);
-  web.HTMLBaseElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLBaseElement does not expose this DOM member yet.";
+  web.HTMLBaseElement get inner => _element;
 }
 
-final class BrowserHTMLTitleElement implements HTMLTitleElement {
+final class BrowserHTMLTitleElement extends BrowserElementAdapter
+    implements HTMLTitleElement {
   final web.HTMLTitleElement _element;
   BrowserHTMLTitleElement(this._element);
-  web.HTMLTitleElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLTitleElement does not expose this DOM member yet.";
+  web.HTMLTitleElement get inner => _element;
 }
 
-final class BrowserHTMLHtmlElement implements HTMLHtmlElement {
+final class BrowserHTMLHtmlElement extends BrowserElementAdapter
+    implements HTMLHtmlElement {
   final web.HTMLHtmlElement _element;
   BrowserHTMLHtmlElement(this._element);
-  web.HTMLHtmlElement get inner => _element;
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      "BrowserHTMLHtmlElement does not expose this DOM member yet.";
+  web.HTMLHtmlElement get inner => _element;
 }
 
 final class BrowserReactCompositionEvent<T extends EventTarget>
