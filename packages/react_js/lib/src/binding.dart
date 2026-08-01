@@ -27,6 +27,7 @@ final class _RefBox {
 /// contracts are finalized for both browser and SSR.
 class JsBinding extends ReactBinding {
   final _contexts = <ReactContext<Object?>, JSObject>{};
+  final _snapshotCache = <Object, JSAny>{};
   final _callbackCache = <JSFunction, Function>{};
   final _refCache = Expando<ReactRef<Object?>>('ReactRefJSObject');
   final _jsRefs = <ReactRef<Object?>, JSObject>{};
@@ -240,10 +241,10 @@ class JsBinding extends ReactBinding {
       final unsubscribe = subscribe(() => listener.callAsFunction(null));
       return unsubscribe.toJS;
     }).toJS;
-    final snapshotJS = (() => _toStateJS(getSnapshot())).toJS;
+    final snapshotJS = (() => _toSnapshotJS(getSnapshot())).toJS;
     final serverSnapshotJS = getServerSnapshot == null
         ? null
-        : (() => _toStateJS(getServerSnapshot())).toJS;
+        : (() => _toSnapshotJS(getServerSnapshot())).toJS;
     return _fromStateJS<T>(
       _useSyncExternalStore(subscribeJS, snapshotJS, serverSnapshotJS),
     );
@@ -271,6 +272,13 @@ class JsBinding extends ReactBinding {
   }
 
   JSAny _toStateJS(Object? value) => _StateBox(value).toJSBox;
+
+  JSAny? _toSnapshotJS(Object? value) {
+    if (value == null || value is String || value is bool || value is num) {
+      return toReactJS(value);
+    }
+    return _snapshotCache.putIfAbsent(value, () => _toStateJS(value));
+  }
 
   T _fromStateJS<T>(JSAny? value) {
     if (value != null && value.isA<JSBoxedDartObject>()) {
