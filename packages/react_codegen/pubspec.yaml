@@ -7,5 +7,8 @@ dependencies:
   analyzer: ">=14.1.0"
   source_gen: ">=4.2.4"
   glob: ">=2.1.0"
+  crypto: ">=3.0.0"
+  react_actions:
+    path: ../react_actions
 dev_dependencies:
   test: ^1.31.2

@@ -1,28 +1,43 @@
 import 'package:build/build.dart';
 import 'package:glob/glob.dart';
 
-/// Combining builder that collects all generated [.react.g.dart] files and
-/// produces [react_components.g.dart] with a single [registerReactComponents]
-/// function.
-///
-/// It also generates [ssr_registry.g.dart] that maps canonical [ComponentId]
-/// values to SSR component builders, eliminating hardcoded ID strings.
+/// Combining builder that collects generated component and server-action
+/// registries into package-level entrypoints.
 class AggregateBuilder implements Builder {
   @override
   final buildExtensions = {
-    r'$lib$': ['react_components.g.dart', 'ssr_registry.g.dart'],
+    r'$lib$': [
+      'react_components.g.dart',
+      'ssr_registry.g.dart',
+      'server_actions.g.dart',
+    ],
   };
 
   @override
   Future<void> build(BuildStep step) async {
     final currentPkg = step.inputId.package;
-    final inputs = await step
+    final componentInputs = await step
         .findAssets(Glob('**/*.react.g.dart'))
         .where((a) => a.package == currentPkg)
         .toList();
+    final actionInputs = await step
+        .findAssets(Glob('**/*.registry.g.dart'))
+        .where((a) => a.package == currentPkg)
+        .toList();
 
-    if (inputs.isEmpty) return;
+    if (componentInputs.isNotEmpty) {
+      await _writeComponentRegistries(step, currentPkg, componentInputs);
+    }
+    if (actionInputs.isNotEmpty) {
+      await _writeActionRegistry(step, currentPkg, actionInputs);
+    }
+  }
 
+  Future<void> _writeComponentRegistries(
+    BuildStep step,
+    String pkg,
+    List<AssetId> inputs,
+  ) async {
     final regNames = <String>[];
     final imports = <String>[];
     final idImports = <String>[];
@@ -38,7 +53,7 @@ class AggregateBuilder implements Builder {
         final name = m.group(1)!;
         if (regNames.contains(name)) continue;
         regNames.add(name);
-        final cname = name.startsWith('register') ? name.substring(8) : name;
+        final cname = name.substring(8);
         final prefix = cname.isEmpty
             ? 'c'
             : '${cname[0].toLowerCase()}${cname.substring(1)}';
@@ -50,11 +65,57 @@ class AggregateBuilder implements Builder {
     }
 
     if (regNames.isEmpty) return;
-
-    final pkg = currentPkg;
-
     await _writeComponentsRegistry(step, pkg, imports, regNames);
     await _writeSsRegistry(step, pkg, idImports, idConstants);
+  }
+
+  Future<void> _writeActionRegistry(
+    BuildStep step,
+    String pkg,
+    List<AssetId> inputs,
+  ) async {
+    final imports = <String>[];
+    final registrations = <String>[];
+
+    for (var index = 0; index < inputs.length; index++) {
+      final aid = inputs[index];
+      final content = await step.readAsString(aid);
+      final matches = RegExp(
+        r'void\s+(register\w+(?:Actions|Functions))\s*\(',
+      ).allMatches(content).toList();
+      if (matches.isEmpty) continue;
+
+      final prefix = 'serverActions$index';
+      imports.add("import '${aid.uri}' as $prefix;");
+      for (final match in matches) {
+        registrations.add('  $prefix.${match.group(1)!}(registry: registry);');
+      }
+    }
+
+    final buf = StringBuffer()
+      ..writeln('// GENERATED CODE — DO NOT EDIT')
+      ..writeln()
+      ..writeln("import 'package:react_server/react_server.dart';");
+    for (final imp in imports) {
+      buf.writeln(imp);
+    }
+    buf
+      ..writeln()
+      ..writeln(
+        '/// Registers every generated server-function registry in this package.',
+      )
+      ..writeln('void registerServerActions({')
+      ..writeln('  required ServerFunctionRegistry registry,')
+      ..writeln('}) {');
+    for (final registration in registrations) {
+      buf.writeln(registration);
+    }
+    buf.writeln('}');
+
+    await step.writeAsString(
+      AssetId(pkg, 'lib/server_actions.g.dart'),
+      buf.toString(),
+    );
   }
 
   String _toReactDartUri(Uri uri) =>
@@ -76,7 +137,7 @@ class AggregateBuilder implements Builder {
     buf.writeln('/// Registers all generated React components.');
     buf.writeln('void registerReactComponents() {');
     for (final name in regNames) {
-      final cname = name.startsWith('register') ? name.substring(8) : name;
+      final cname = name.substring(8);
       final prefix = cname.isEmpty
           ? 'c'
           : '${cname[0].toLowerCase()}${cname.substring(1)}';
@@ -105,12 +166,6 @@ class AggregateBuilder implements Builder {
     }
     buf.writeln();
     buf.writeln('/// Maps canonical component IDs to their SSR builders.');
-    buf.writeln('///');
-    buf.writeln(
-      '/// Generated from the component model. Application-specific defaults',
-    );
-    buf.writeln('/// (e.g. fallback values) are applied by the application in');
-    buf.writeln('/// [registerSsrComponentBuilders].');
     buf.writeln('final class SsrComponentRegistry {');
     buf.writeln('  SsrComponentRegistry._();');
     buf.writeln();
@@ -135,13 +190,6 @@ class AggregateBuilder implements Builder {
     buf.writeln('  static Set<String> get knownIds => _builders.keys.toSet();');
     buf.writeln('}');
     buf.writeln();
-    buf.writeln(
-      '/// Registers all known component ID placeholders with [SsrComponentRegistry].',
-    );
-    buf.writeln(
-      '/// Application-specific builders must be registered separately using',
-    );
-    buf.writeln('/// [SsrComponentRegistry.register].');
     buf.writeln('void registerKnownSsComponentIds() {');
     for (final constant in idConstants) {
       buf.writeln(

@@ -31,7 +31,12 @@ final class ReactComponentBuilder implements Builder {
 
   @override
   Future<void> build(BuildStep step) async {
-    if (step.inputId.path.contains('.react.')) {
+    final path = step.inputId.path;
+    // Skip generated files to avoid processing them as components
+    if (path.contains('.react.') ||
+        path.contains('.action.') ||
+        path.contains('.client.') ||
+        path.contains('.registry.')) {
       return;
     }
 

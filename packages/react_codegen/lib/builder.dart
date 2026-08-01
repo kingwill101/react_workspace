@@ -7,6 +7,7 @@ import 'src/output/callback_emitter.dart';
 import 'src/output/js_bridge_emitter.dart';
 import 'src/output/public_api_emitter.dart';
 import 'src/builder/component_builder.dart';
+import 'src/builder/server_function_builder.dart';
 import 'src/aggregate.dart';
 
 Builder componentBuilder(BuilderOptions options) => const ReactComponentBuilder(
@@ -18,3 +19,6 @@ Builder componentBuilder(BuilderOptions options) => const ReactComponentBuilder(
 );
 
 Builder aggregateBuilder(BuilderOptions options) => AggregateBuilder();
+
+Builder serverFunctionBuilder(BuilderOptions options) =>
+    const ServerFunctionBuilder();

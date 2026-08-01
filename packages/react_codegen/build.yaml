@@ -9,7 +9,19 @@ builders:
     import: "package:react_codegen/builder.dart"
     builder_factories: ["aggregateBuilder"]
     build_extensions:
-      "$lib$": ["react_components.g.dart"]
+      "$lib$": [
+        "react_components.g.dart",
+        "ssr_registry.g.dart",
+        "server_actions.g.dart"
+      ]
     auto_apply: dependents
     build_to: source
-    applies_builders: ["react_codegen|component"]
+    applies_builders:
+      - "react_codegen|component"
+      - "react_codegen|server_function"
+  server_function:
+    import: "package:react_codegen/builder.dart"
+    builder_factories: ["serverFunctionBuilder"]
+    build_extensions: {".dart": [".action.g.dart", ".client.g.dart", ".registry.g.dart"]}
+    auto_apply: dependents
+    build_to: source
