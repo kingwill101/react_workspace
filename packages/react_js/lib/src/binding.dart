@@ -59,6 +59,13 @@ class JsBinding extends ReactBinding {
     );
   }
 
+  /// Returns the React provider type for [context].
+  ///
+  /// React 18 requires `context.Provider` when creating an element; React 19
+  /// additionally permits rendering the context object directly.
+  JSObject contextProviderObject<T>(ReactContext<T> context) =>
+      contextObject(context).getProperty('Provider'.toJS) as JSObject;
+
   /// Encodes a hook-owned Dart value without losing its Dart identity.
   JSAny encodeHookValue(Object? value) => _toStateJS(value);
 

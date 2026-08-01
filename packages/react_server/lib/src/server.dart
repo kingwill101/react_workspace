@@ -109,7 +109,7 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
     final props = JSObject();
     props.setProperty('value'.toJS, binding.encodeHookValue(value));
     return _createReactElement(
-      binding.contextObject(context),
+      binding.contextProviderObject(context),
       children,
       props: props,
     );

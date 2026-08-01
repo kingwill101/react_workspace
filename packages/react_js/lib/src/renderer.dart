@@ -60,7 +60,7 @@ class JsRenderer extends ReactRenderer {
         );
       }
       return _createElement(
-        binding.contextObject(context),
+        binding.contextProviderObject(context),
         _propsToJS({'value': binding.encodeHookValue(value)}),
         children,
       );
