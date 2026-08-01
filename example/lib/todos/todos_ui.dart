@@ -21,18 +21,22 @@ ReactNode TodoApp(({String title}) props) {
   ]);
   final (loading, setLoading) = useState(true);
   final (error, setError) = useState<String?>(null);
+  final (_, startTransition) = useTransition();
 
   // Load initial data on mount
   useEffect(() {
     listTodosAction(completedFilter: null)
         .then((result) {
-          setTodos(result.items);
-          exampleActivityStore.mark();
-          setLoading(false);
+          startTransition(() {
+            setTodos(result.items);
+            setLoading(false);
+          });
         })
         .catchError((e) {
-          setError(e.toString());
-          setLoading(false);
+          startTransition(() {
+            setError(e.toString());
+            setLoading(false);
+          });
         });
   }, []);
 
@@ -42,10 +46,14 @@ ReactNode TodoApp(({String title}) props) {
         todoId: item.id,
         completed: !item.completed,
       );
-      setTodos(todos.map((t) => t.id == item.id ? result : t).toList());
-      exampleActivityStore.mark();
+      startTransition(() {
+        setTodos(todos.map((t) => t.id == item.id ? result : t).toList());
+        exampleActivityStore.mark();
+      });
     } catch (e) {
-      setError(e.toString());
+      startTransition(() {
+        setError(e.toString());
+      });
     }
   }
 

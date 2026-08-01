@@ -20,14 +20,6 @@ final forwardedMarker = forwardRef<ForwardedMarkerProps, dynamic>(
   ),
 );
 
-typedef LazyMarkerProps = ({String label});
-
-final lazyMarker = lazy<LazyMarkerProps>(
-  () async =>
-      (props) =>
-          div(className: 'section-kicker', children: [Text(props.label)]),
-);
-
 final memoizedCounter = memo<CounterProps>(
   (props) => Counter(
     title: props.title,
@@ -136,10 +128,6 @@ ReactNode App(({String title}) props) {
                       children: [const Text('INTERACTIVE STATE')],
                     ),
                     forwardedMarker((label: 'FORWARDED REF'), ref: markerRef),
-                    suspense(
-                      fallback: const Text('Loading lazy marker…'),
-                      children: [lazyMarker((label: 'LAZY COMPONENT'))],
-                    ),
                     strictMode([
                       memoizedCounter((
                         title: 'Counter',
@@ -156,15 +144,7 @@ ReactNode App(({String title}) props) {
                     className: 'surface counter-surface',
                     children: [const Text('The todo panel failed to render.')],
                   ),
-                  children: [
-                    suspense(
-                      fallback: section(
-                        className: 'surface counter-surface',
-                        children: [const Text('Loading todos…')],
-                      ),
-                      children: [TodoApp(key: 'todos', title: 'Todos')],
-                    ),
-                  ],
+                  children: [TodoApp(key: 'todos', title: 'Todos')],
                 ),
               ],
             ),
