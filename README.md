@@ -30,7 +30,15 @@ dart run packages/react_tool/bin/react.dart build
 `react build` runs code generation, compiles the client and SSR Dart bundles,
 copies static assets, compiles configured Sass stylesheets, and generates the
 Node SSR worker and callback bridge in `build/react/`. `react serve` starts both
-the native Dart server and the SSR worker. The CLI uses
+the native Dart server and the SSR worker. Add `--watch` to `build` to rebuild
+on source changes, or to `serve` to rebuild and restart both processes:
+
+```console
+dart run packages/react_tool/bin/react.dart serve --watch
+dart run packages/react_tool/bin/react.dart build --watch
+```
+
+The CLI uses
 `package:artisanal/args.dart` for its command runner.
 
 ### Styling

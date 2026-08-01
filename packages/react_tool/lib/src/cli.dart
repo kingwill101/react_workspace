@@ -81,20 +81,38 @@ final class BuildCommand extends Command<void> {
       'Generate code and compile the client and SSR bundles.';
 
   BuildCommand() {
-    argParser.addFlag(
-      'release',
-      abbr: 'r',
-      defaultsTo: false,
-      help: 'Use release optimization for the client bundle.',
-    );
+    argParser
+      ..addFlag(
+        'release',
+        abbr: 'r',
+        defaultsTo: false,
+        help: 'Use release optimization for the client bundle.',
+      )
+      ..addFlag(
+        'watch',
+        defaultsTo: false,
+        help: 'Rebuild when project files change.',
+      );
   }
 
   @override
   Future<void> run() async {
     final config = ReactProjectConfig.load();
     final release = option('release') as bool? ?? false;
-    await ReactBuilder(config: config, release: release, log: line).build();
+    final watch = option('watch') as bool? ?? false;
+    final builder = ReactBuilder(config: config, release: release, log: line);
+    await builder.build();
     info('Build complete.');
+    if (watch) {
+      await _watchProject(config, () async {
+        try {
+          await builder.build();
+          info('Build complete.');
+        } catch (error) {
+          warn('Build failed: $error');
+        }
+      });
+    }
   }
 }
 
@@ -128,6 +146,11 @@ final class ServeCommand extends Command<void> {
         'no-ssr',
         defaultsTo: false,
         help: 'Run only the Dart server without starting the SSR worker.',
+      )
+      ..addFlag(
+        'watch',
+        defaultsTo: false,
+        help: 'Rebuild and restart the server when project files change.',
       );
   }
 
@@ -136,13 +159,53 @@ final class ServeCommand extends Command<void> {
     final config = ReactProjectConfig.load();
     final release = option('release') as bool? ?? false;
     final noSsr = option('no-ssr') as bool? ?? false;
+    final watch = option('watch') as bool? ?? false;
     final port = _parsePort('port');
     final ssrPort = _parsePort('ssr-port');
+    final builder = ReactBuilder(config: config, release: release, log: line);
 
-    await ReactBuilder(config: config, release: release, log: line).build();
+    await builder.build();
 
+    if (!watch) {
+      final processes = await _startProcesses(config, noSsr, port, ssrPort);
+      try {
+        await processes.server.exitCode;
+      } finally {
+        await _stopProcess(processes.worker);
+        await _stopProcess(processes.server);
+      }
+      return;
+    }
+
+    var processes = await _startProcesses(config, noSsr, port, ssrPort);
+    try {
+      await _watchProject(config, () async {
+        // Keep the current server available if the rebuild fails.
+        try {
+          await builder.build();
+        } catch (error) {
+          warn('Build failed; keeping the current server: $error');
+          return;
+        }
+
+        await _stopProcess(processes.worker);
+        await _stopProcess(processes.server);
+        processes = await _startProcesses(config, noSsr, port, ssrPort);
+        info('Development server restarted.');
+      });
+    } finally {
+      await _stopProcess(processes.worker);
+      await _stopProcess(processes.server);
+    }
+  }
+
+  Future<({Process? worker, Process server})> _startProcesses(
+    ReactProjectConfig config,
+    bool noSsr,
+    int port,
+    int ssrPort,
+  ) async {
     Process? worker;
-    Process? server;
     try {
       final workerFile = config.file(
         '${config.outputDirectory}/ssr_worker.mjs',
@@ -172,19 +235,17 @@ final class ServeCommand extends Command<void> {
         'PORT': '$port',
         if (worker != null) 'REACT_SSR_URL': 'http://127.0.0.1:$ssrPort/',
       };
-      server = await Process.start(
+      final server = await Process.start(
         Platform.resolvedExecutable,
         ['run', serverEntrypoint],
         workingDirectory: config.root.path,
         mode: ProcessStartMode.inheritStdio,
         environment: environment,
       );
-      await server.exitCode;
-    } finally {
-      worker?.kill(ProcessSignal.sigterm);
-      server?.kill(ProcessSignal.sigterm);
-      await worker?.exitCode;
-      await server?.exitCode;
+      return (worker: worker, server: server);
+    } catch (_) {
+      await _stopProcess(worker);
+      rethrow;
     }
   }
 
@@ -195,6 +256,101 @@ final class ServeCommand extends Command<void> {
     }
     return value;
   }
+}
+
+Future<void> _stopProcess(Process? process) async {
+  if (process == null) return;
+  process.kill(ProcessSignal.sigterm);
+  try {
+    await process.exitCode.timeout(const Duration(seconds: 5));
+  } on TimeoutException {
+    process.kill(ProcessSignal.sigkill);
+    await process.exitCode;
+  }
+}
+
+Future<void> _watchProject(
+  ReactProjectConfig config,
+  Future<void> Function() onChange,
+) async {
+  // Poll instead of relying only on Directory.watch. This also works on
+  // mounted/network filesystems where native file notifications are absent.
+  var previous = await _snapshotProject(config);
+  var scanning = false;
+  final changes = StreamController<void>();
+  final poll = Timer.periodic(const Duration(milliseconds: 500), (_) async {
+    if (scanning || changes.isClosed) return;
+    scanning = true;
+    try {
+      final current = await _snapshotProject(config);
+      if (!_sameSnapshot(previous, current)) {
+        previous = current;
+        changes.add(null);
+      }
+    } finally {
+      scanning = false;
+    }
+  });
+  final signal = ProcessSignal.sigint.watch().listen((_) {
+    changes.close();
+  });
+
+  try {
+    await for (final _ in changes.stream) {
+      await onChange();
+    }
+  } finally {
+    poll.cancel();
+    await signal.cancel();
+    await changes.close();
+  }
+}
+
+Future<Map<String, int>> _snapshotProject(ReactProjectConfig config) async {
+  final files = <String, int>{};
+
+  Future<void> scan(Directory directory) async {
+    await for (final entity in directory.list(followLinks: false)) {
+      if (!_isWatchable(config, entity.path)) continue;
+      if (entity is Directory) {
+        await scan(entity);
+      } else if (entity is File) {
+        final stat = await entity.stat();
+        files[entity.path] = stat.modified.microsecondsSinceEpoch ^ stat.size;
+      }
+    }
+  }
+
+  await scan(config.root);
+  return files;
+}
+
+bool _sameSnapshot(Map<String, int> previous, Map<String, int> current) {
+  if (previous.length != current.length) return false;
+  for (final entry in previous.entries) {
+    if (current[entry.key] != entry.value) return false;
+  }
+  return true;
+}
+
+bool _isWatchable(ReactProjectConfig config, String path) {
+  final relative = p.relative(p.normalize(path), from: config.root.path);
+  if (relative == '.') return false;
+  final segments = p.split(relative);
+  if (segments.isEmpty ||
+      segments.first == '.git' ||
+      segments.first == 'build') {
+    return false;
+  }
+  if (segments.first == '.dart_tool') return false;
+
+  final name = p.basename(relative);
+  if (name.endsWith('.g.dart') ||
+      name.endsWith('.react.dart') ||
+      name.endsWith('.module.dart')) {
+    return false;
+  }
+  return true;
 }
 
 Future<void> _waitForPort(int port) async {
