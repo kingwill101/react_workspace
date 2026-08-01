@@ -8,6 +8,7 @@ import 'registry.dart';
 
 class JsRenderer extends ReactRenderer {
   final _memoizedComponents = <String, Map<Object?, JSFunction>>{};
+  final _forwardRefComponents = <Function, JSFunction>{};
 
   @override
   Object? render(ReactNode node) => _render(node) as Object?;
@@ -21,6 +22,9 @@ class JsRenderer extends ReactRenderer {
     MemoizedNode(:final child, :final arePropsEqual) => _renderMemoized(
       child,
       arePropsEqual,
+    ),
+    ForwardRefNode() => _renderForwardRef(
+      n as ForwardRefNode<Object?, Object?>,
     ),
     ForeignComponent(:var name, :var props, :var children, :var key) => () {
       final component = _resolveForeignComponent(name.toJS);
@@ -75,6 +79,29 @@ class JsRenderer extends ReactRenderer {
     Empty() => null,
     ReactNode() => throw UnsupportedError('Unknown ReactNode implementation.'),
   };
+
+  JSAny _renderForwardRef(ForwardRefNode<Object?, Object?> node) {
+    final component = _forwardRefComponents.putIfAbsent(node.render, () {
+      JSAny? wrapper(JSObject props, JSAny? jsRef) {
+        final raw = props.getProperty('__dartForwardRef'.toJS);
+        if (raw == null || !raw.isA<JSBoxedDartObject>()) {
+          throw StateError('Missing forwarded-ref payload.');
+        }
+        final payload = (raw as JSBoxedDartObject).toDart;
+        if (payload is! ForwardRefNode<Object?, Object?>) {
+          throw StateError('Invalid forwarded-ref payload.');
+        }
+        final ref = payload.ref ?? ReactRef<Object?>();
+        return toReactJS(payload.buildWithRef(ref));
+      }
+
+      final renderJS = wrapper.toJS;
+      return _react.callMethod('forwardRef'.toJS, renderJS) as JSFunction;
+    });
+    final props = JSObject();
+    props.setProperty('__dartForwardRef'.toJS, node.toJSBox);
+    return _createElement(component, props, const []);
+  }
 
   JSAny _renderMemoized(
     ReactNode child,

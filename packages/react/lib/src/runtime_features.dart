@@ -158,6 +158,43 @@ typedef ReactComponentBuilder<P> = ReactNode Function(P props);
 /// A component render function that receives a forwarded ref.
 typedef ForwardRefRender<P, T> = ReactNode Function(P props, ReactRef<T> ref);
 
+/// A forwarded-ref component definition.
+///
+/// The component is callable with an optional Dart ref. Renderers also expose
+/// it through React's `forwardRef` primitive when producing JavaScript.
+///
+/// See https://react.dev/reference/react/forwardRef.
+final class ForwardRefComponent<P, T> {
+  /// Creates a forwarded-ref component.
+  const ForwardRefComponent(this.render);
+
+  /// The render function receiving props and the forwarded ref.
+  final ForwardRefRender<P, T> render;
+
+  /// Builds a node with an optional Dart ref.
+  ReactNode call(P props, {ReactRef<T>? ref}) =>
+      ForwardRefNode(render, props, ref: ref);
+}
+
+/// A portable node produced by [ForwardRefComponent].
+final class ForwardRefNode<P, T> extends ReactNode {
+  /// Creates a forwarded-ref node.
+  const ForwardRefNode(this.render, this.props, {this.ref});
+
+  /// The render function for this node.
+  final ForwardRefRender<P, T> render;
+
+  /// The props passed to [render].
+  final P props;
+
+  /// The Dart ref receiving the rendered host value.
+  final ReactRef<T>? ref;
+
+  /// Invokes [render] through the renderer's erased ref boundary.
+  ReactNode buildWithRef(ReactRef<Object?> target) =>
+      render(props, target as ReactRef<T>);
+}
+
 /// A component loader used by [lazy].
 typedef LazyComponentLoader<P> = Future<ReactComponentBuilder<P>> Function();
 
@@ -184,10 +221,8 @@ ReactComponentBuilder<P> memo<P>(
 /// the forwarding implementation in a later phase.
 ///
 /// See https://react.dev/reference/react/forwardRef.
-ReactComponentBuilder<P> forwardRef<P, T>(ForwardRefRender<P, T> render) =>
-    throw UnsupportedError(
-      'forwardRef is not implemented by this renderer yet.',
-    );
+ForwardRefComponent<P, T> forwardRef<P, T>(ForwardRefRender<P, T> render) =>
+    ForwardRefComponent(render);
 
 /// Defers loading a component until it is rendered.
 ///

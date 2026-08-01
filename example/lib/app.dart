@@ -10,6 +10,16 @@ typedef CounterProps = ({
   void Function(int)? onChange,
 });
 
+typedef ForwardedMarkerProps = ({String label});
+
+final forwardedMarker = forwardRef<ForwardedMarkerProps, dynamic>(
+  (props, ref) => div(
+    className: 'section-kicker',
+    ref: (element) => ref.current = element,
+    children: [Text(props.label)],
+  ),
+);
+
 final memoizedCounter = memo<CounterProps>(
   (props) => Counter(
     title: props.title,
@@ -24,135 +34,140 @@ final memoizedCounter = memo<CounterProps>(
 );
 
 @reactComponent
-ReactNode App(({String title}) props) => appAccentContext.provider('#7257ff', [
-  div(
-    className: 'app-shell',
-    children: [
-      header(
-        key: 'header',
-        className: 'app-header',
-        children: [
-          div(
-            key: 'brand',
-            className: 'brand-lockup',
-            children: [
-              div(
-                key: 'brand-mark',
-                className: 'brand-mark',
-                children: [const Text('RD')],
-              ),
-              div(
-                key: 'brand-copy',
-                children: [
-                  strong(
-                    key: 'brand-name',
-                    children: [const Text('React Dart')],
-                  ),
-                  div(
-                    key: 'brand-caption',
-                    className: 'brand-caption',
-                    children: [
-                      const Text('server functions · SSR · typed DOM'),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-          span(
-            key: 'status',
-            className: 'status-pill',
-            children: [const Text('LIVE DEMO')],
-          ),
-        ],
-      ),
-      main(
-        key: 'main',
-        children: [
-          section(
-            key: 'hero',
-            className: 'hero',
-            children: [
-              div(
-                key: 'eyebrow',
-                className: 'eyebrow',
-                children: [const Text('A Dart-first React workspace')],
-              ),
-              h1(
-                key: 'headline',
-                children: [
-                  const Text('Build interfaces with '),
-                  span(
-                    key: 'hero-accent',
-                    className: 'hero-accent',
-                    children: [const Text('real React')],
-                  ),
-                  const Text('.'),
-                ],
-              ),
-              p(
-                key: 'hero-copy',
-                className: 'hero-copy',
-                children: [
-                  const Text(
-                    'Typed server actions, streaming-ready SSR, and familiar web styling in one small project.',
-                  ),
-                ],
-              ),
-            ],
-          ),
-          div(
-            key: 'dashboard',
-            className: 'dashboard-grid',
-            children: [
-              section(
-                key: 'counter',
-                className: 'surface counter-surface',
-                children: [
-                  div(
-                    key: 'counter-kicker',
-                    className: 'section-kicker',
-                    children: [const Text('INTERACTIVE STATE')],
-                  ),
-                  strictMode([
-                    memoizedCounter((
-                      title: 'Counter',
-                      initialCount: 0,
-                      subtitle: 'Dart hooks rendered through React',
-                      onChange: (_) => print('Counter changed'),
-                    )),
-                  ]),
-                ],
-              ),
-              errorBoundary(
-                onError: (error, _) => print('Todo boundary: $error'),
-                fallback: section(
-                  className: 'surface counter-surface',
-                  children: [const Text('The todo panel failed to render.')],
+ReactNode App(({String title}) props) {
+  final markerRef = useRef<dynamic>();
+
+  return appAccentContext.provider('#7257ff', [
+    div(
+      className: 'app-shell',
+      children: [
+        header(
+          key: 'header',
+          className: 'app-header',
+          children: [
+            div(
+              key: 'brand',
+              className: 'brand-lockup',
+              children: [
+                div(
+                  key: 'brand-mark',
+                  className: 'brand-mark',
+                  children: [const Text('RD')],
                 ),
-                children: [
-                  suspense(
-                    fallback: section(
-                      className: 'surface counter-surface',
-                      children: [const Text('Loading todos…')],
+                div(
+                  key: 'brand-copy',
+                  children: [
+                    strong(
+                      key: 'brand-name',
+                      children: [const Text('React Dart')],
                     ),
-                    children: [TodoApp(key: 'todos', title: 'Todos')],
+                    div(
+                      key: 'brand-caption',
+                      className: 'brand-caption',
+                      children: [
+                        const Text('server functions · SSR · typed DOM'),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            span(
+              key: 'status',
+              className: 'status-pill',
+              children: [const Text('LIVE DEMO')],
+            ),
+          ],
+        ),
+        main(
+          key: 'main',
+          children: [
+            section(
+              key: 'hero',
+              className: 'hero',
+              children: [
+                div(
+                  key: 'eyebrow',
+                  className: 'eyebrow',
+                  children: [const Text('A Dart-first React workspace')],
+                ),
+                h1(
+                  key: 'headline',
+                  children: [
+                    const Text('Build interfaces with '),
+                    span(
+                      key: 'hero-accent',
+                      className: 'hero-accent',
+                      children: [const Text('real React')],
+                    ),
+                    const Text('.'),
+                  ],
+                ),
+                p(
+                  key: 'hero-copy',
+                  className: 'hero-copy',
+                  children: [
+                    const Text(
+                      'Typed server actions, streaming-ready SSR, and familiar web styling in one small project.',
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            div(
+              key: 'dashboard',
+              className: 'dashboard-grid',
+              children: [
+                section(
+                  key: 'counter',
+                  className: 'surface counter-surface',
+                  children: [
+                    div(
+                      key: 'counter-kicker',
+                      className: 'section-kicker',
+                      children: [const Text('INTERACTIVE STATE')],
+                    ),
+                    forwardedMarker((label: 'FORWARDED REF'), ref: markerRef),
+                    strictMode([
+                      memoizedCounter((
+                        title: 'Counter',
+                        initialCount: 0,
+                        subtitle: 'Dart hooks rendered through React',
+                        onChange: (_) => print('Counter changed'),
+                      )),
+                    ]),
+                  ],
+                ),
+                errorBoundary(
+                  onError: (error, _) => print('Todo boundary: $error'),
+                  fallback: section(
+                    className: 'surface counter-surface',
+                    children: [const Text('The todo panel failed to render.')],
                   ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-      footer(
-        key: 'footer',
-        className: 'app-footer',
-        children: [
-          const Text('Rendered with React Dart'),
-          span(key: 'footer-separator', children: [const Text('•')]),
-          const Text('Actions execute on the server'),
-        ],
-      ),
-    ],
-  ),
-]);
+                  children: [
+                    suspense(
+                      fallback: section(
+                        className: 'surface counter-surface',
+                        children: [const Text('Loading todos…')],
+                      ),
+                      children: [TodoApp(key: 'todos', title: 'Todos')],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+        footer(
+          key: 'footer',
+          className: 'app-footer',
+          children: [
+            const Text('Rendered with React Dart'),
+            span(key: 'footer-separator', children: [const Text('•')]),
+            const Text('Actions execute on the server'),
+          ],
+        ),
+      ],
+    ),
+  ]);
+}
