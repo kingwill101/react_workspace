@@ -1,0 +1,10 @@
+client:
+  entrypoint: web/client.dart
+ssr:
+  entrypoint: lib/ssr.dart
+server:
+  entrypoint: bin/server.dart
+styles:
+  entrypoints:
+    - web/styles.scss
+    - lib/styles/todo.module.scss
