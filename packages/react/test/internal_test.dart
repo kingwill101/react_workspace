@@ -44,6 +44,30 @@ void main() {
     });
   });
 
+  group('Component feature nodes', () {
+    test('memo creates a memoized node', () {
+      final component = memo<String>((value) => Text(value));
+
+      expect(component('hello'), isA<MemoizedNode>());
+    });
+
+    test('forwardRef creates a forwarded-ref node', () {
+      final component = forwardRef<String, Object?>(
+        (value, ref) => Text(value),
+      );
+
+      expect(component('hello'), isA<ForwardRefNode<String, Object?>>());
+    });
+
+    test('lazy creates a lazy node', () {
+      final component = lazy<String>(
+        () => Future.value((value) => Text(value)),
+      );
+
+      expect(component('hello'), isA<LazyNode<String>>());
+    });
+  });
+
   group('currentReactRuntime', () {
     test('throws StateError outside any runtime', () {
       expect(() => currentReactRuntime, throwsStateError);
@@ -168,7 +192,7 @@ void main() {
 final class _TestBinding extends ReactBinding {
   @override
   (T, StateSetter<T>) useState<T>(T initial) {
-    return (initial, StateSetter((T value) {}, (T Function(T _) __) {}));
+    return (initial, StateSetter<T>((_) {}, (_) {}));
   }
 
   @override
