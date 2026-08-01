@@ -120,6 +120,15 @@ T fromJS<T>(JSAny? js) {
   if (T == double) return (js as JSNumber).toDartDouble as T;
   if (T == bool) return (js as JSBoolean).toDart as T;
   if (T == num) return (js as JSNumber).toDartDouble as T;
+  // JSArray implements List<E> but with a reified E that won't match
+  // the expected List<TodoItem> etc. Convert to a plain list.
+  if (js is JSArray) {
+    final result = <Object?>[];
+    for (var i = 0; i < js.length; i++) {
+      result.add(fromJS<Object?>(js[i]));
+    }
+    return (result as List<Object?>).cast<T>() as T;
+  }
   return js as T;
 }
 
