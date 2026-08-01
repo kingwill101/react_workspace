@@ -19,8 +19,9 @@ final class _RefBox {
 
 /// React hook binding backed by the global React JavaScript runtime.
 ///
-/// State, reducer, memoization, refs, context, transitions, IDs, optimistic
-/// state, and effect cleanup are backed by the corresponding React hooks.
+/// State, reducer, memoization, callback memoization, refs, context,
+/// transitions, IDs, optimistic state, and effect cleanup are backed by the
+/// corresponding React hooks.
 /// Other methods intentionally
 /// use the explicit stubs inherited from [ReactBinding] until their renderer
 /// contracts are finalized for both browser and SSR.

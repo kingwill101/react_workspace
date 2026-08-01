@@ -94,13 +94,15 @@ ReactNode App(({String title}) props) => appAccentContext.provider('#7257ff', [
                     className: 'section-kicker',
                     children: [const Text('INTERACTIVE STATE')],
                   ),
-                  Counter(
-                    key: 'counter-component',
-                    title: 'Counter',
-                    initialCount: 0,
-                    subtitle: 'Dart hooks rendered through React',
-                    onChange: (_) => print('Counter changed'),
-                  ),
+                  strictMode([
+                    Counter(
+                      key: 'counter-component',
+                      title: 'Counter',
+                      initialCount: 0,
+                      subtitle: 'Dart hooks rendered through React',
+                      onChange: (_) => print('Counter changed'),
+                    ),
+                  ]),
                 ],
               ),
               suspense(

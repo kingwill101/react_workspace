@@ -34,16 +34,18 @@ ReactNode Counter(
     setOther(true);
   }, []);
 
+  final increment = useCallback<void Function(ReactMouseEvent)>((_) {
+    final newCount = count + 1;
+    startTransition(() {
+      dispatch(_CounterAction.increment);
+    });
+    props.onChange?.call(newCount);
+  }, [count]);
+
   final inc = button(
     key: 'increment',
     className: 'primary-button',
-    onClick: (_) {
-      final newCount = count + 1;
-      startTransition(() {
-        dispatch(_CounterAction.increment);
-      });
-      props.onChange?.call(newCount);
-    },
+    onClick: increment,
     children: [const Text('+1')],
   );
 
