@@ -101,8 +101,10 @@ final class DomFactoryEmitter {
     }
     buf.writeln("      if (ref != null) 'ref': ReactRefProp(ReactCallback(");
     buf.writeln("        debugName: '${el.factoryName}.ref',");
+    final refSpec =
+        '(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: \'web\', typeId: \'${el.elementType.symbol}\', codecId: null)';
     buf.writeln(
-      '        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),',
+      '        signature: const (positional: [$refSpec], result: reactVoid, asynchronous: false),',
     );
     buf.writeln('        invoke: (args) {');
     buf.writeln('          ref(args[0] as ${_dt(el.elementType)}?);');

@@ -229,7 +229,7 @@ ReactNode a({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'a.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLAnchorElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLAnchorElement?);
           return null;
@@ -449,7 +449,7 @@ ReactNode abbr({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'abbr.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -669,7 +669,7 @@ ReactNode acronym({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'acronym.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -889,7 +889,7 @@ ReactNode address({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'address.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -1109,7 +1109,7 @@ ReactNode applet({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'applet.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLUnknownElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLUnknownElement?);
           return null;
@@ -1346,7 +1346,7 @@ ReactNode area({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'area.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLAreaElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLAreaElement?);
           return null;
@@ -1565,7 +1565,7 @@ ReactNode article({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'article.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -1785,7 +1785,7 @@ ReactNode aside({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'aside.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -2061,7 +2061,7 @@ ReactNode audio({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'audio.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLAudioElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLAudioElement?);
           return null;
@@ -2281,7 +2281,7 @@ ReactNode b({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'b.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -2504,7 +2504,7 @@ ReactNode base({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'base.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLBaseElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLBaseElement?);
           return null;
@@ -2723,7 +2723,7 @@ ReactNode basefont({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'basefont.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -2943,7 +2943,7 @@ ReactNode bdi({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'bdi.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -3163,7 +3163,7 @@ ReactNode bdo({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'bdo.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -3383,7 +3383,7 @@ ReactNode bgsound({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'bgsound.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLUnknownElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLUnknownElement?);
           return null;
@@ -3603,7 +3603,7 @@ ReactNode big({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'big.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -3823,7 +3823,7 @@ ReactNode blink({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'blink.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLUnknownElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLUnknownElement?);
           return null;
@@ -4045,7 +4045,7 @@ ReactNode blockquote({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'blockquote.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLQuoteElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLQuoteElement?);
           return null;
@@ -4265,7 +4265,7 @@ ReactNode body({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'body.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLBodyElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLBodyElement?);
           return null;
@@ -4484,7 +4484,7 @@ ReactNode br({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'br.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLBRElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLBRElement?);
           return null;
@@ -4735,7 +4735,7 @@ ReactNode button({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'button.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLButtonElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLButtonElement?);
           return null;
@@ -4959,7 +4959,7 @@ ReactNode canvas({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'canvas.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLCanvasElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLCanvasElement?);
           return null;
@@ -5179,7 +5179,7 @@ ReactNode caption({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'caption.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTableCaptionElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTableCaptionElement?);
           return null;
@@ -5399,7 +5399,7 @@ ReactNode center({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'center.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -5619,7 +5619,7 @@ ReactNode cite({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'cite.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -5839,7 +5839,7 @@ ReactNode code({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'code.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -6060,7 +6060,7 @@ ReactNode col({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'col.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTableColElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTableColElement?);
           return null;
@@ -6281,7 +6281,7 @@ ReactNode colgroup({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'colgroup.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTableColElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTableColElement?);
           return null;
@@ -6503,7 +6503,7 @@ ReactNode data({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'data.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLDataElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLDataElement?);
           return null;
@@ -6725,7 +6725,7 @@ ReactNode datalist({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'datalist.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLDataListElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLDataListElement?);
           return null;
@@ -6945,7 +6945,7 @@ ReactNode dd({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'dd.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -7169,7 +7169,7 @@ ReactNode del({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'del.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLModElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLModElement?);
           return null;
@@ -7393,7 +7393,7 @@ ReactNode details({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'details.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLDetailsElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLDetailsElement?);
           return null;
@@ -7613,7 +7613,7 @@ ReactNode dfn({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'dfn.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -7839,7 +7839,7 @@ ReactNode dialog({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'dialog.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLDialogElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLDialogElement?);
           return null;
@@ -8061,7 +8061,7 @@ ReactNode dir({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'dir.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLDirectoryElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLDirectoryElement?);
           return null;
@@ -8281,7 +8281,7 @@ ReactNode div({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'div.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLDivElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLDivElement?);
           return null;
@@ -8501,7 +8501,7 @@ ReactNode dl({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'dl.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLDListElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLDListElement?);
           return null;
@@ -8721,7 +8721,7 @@ ReactNode dt({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'dt.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -8941,7 +8941,7 @@ ReactNode em({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'em.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -9168,7 +9168,7 @@ ReactNode embed({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'embed.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLEmbedElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLEmbedElement?);
           return null;
@@ -9403,7 +9403,7 @@ ReactNode fieldset({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'fieldset.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLFieldSetElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLFieldSetElement?);
           return null;
@@ -9623,7 +9623,7 @@ ReactNode figcaption({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'figcaption.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -9843,7 +9843,7 @@ ReactNode figure({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'figure.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -10069,7 +10069,7 @@ ReactNode font({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'font.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLFontElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLFontElement?);
           return null;
@@ -10289,7 +10289,7 @@ ReactNode footer({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'footer.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -10535,7 +10535,7 @@ ReactNode form({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'form.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLFormElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLFormElement?);
           return null;
@@ -10775,7 +10775,7 @@ ReactNode frame({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'frame.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLFrameElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLFrameElement?);
           return null;
@@ -10999,7 +10999,7 @@ ReactNode frameset({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'frameset.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLFrameSetElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLFrameSetElement?);
           return null;
@@ -11219,7 +11219,7 @@ ReactNode h1({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'h1.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLHeadingElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLHeadingElement?);
           return null;
@@ -11439,7 +11439,7 @@ ReactNode h2({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'h2.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLHeadingElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLHeadingElement?);
           return null;
@@ -11659,7 +11659,7 @@ ReactNode h3({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'h3.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLHeadingElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLHeadingElement?);
           return null;
@@ -11879,7 +11879,7 @@ ReactNode h4({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'h4.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLHeadingElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLHeadingElement?);
           return null;
@@ -12099,7 +12099,7 @@ ReactNode h5({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'h5.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLHeadingElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLHeadingElement?);
           return null;
@@ -12319,7 +12319,7 @@ ReactNode h6({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'h6.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLHeadingElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLHeadingElement?);
           return null;
@@ -12539,7 +12539,7 @@ ReactNode head({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'head.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLHeadElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLHeadElement?);
           return null;
@@ -12759,7 +12759,7 @@ ReactNode header({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'header.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -12979,7 +12979,7 @@ ReactNode hgroup({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'hgroup.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -13198,7 +13198,7 @@ ReactNode hr({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'hr.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLHRElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLHRElement?);
           return null;
@@ -13417,7 +13417,7 @@ ReactNode html({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'html.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLHtmlElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLHtmlElement?);
           return null;
@@ -13637,7 +13637,7 @@ ReactNode i({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'i.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -13881,7 +13881,7 @@ ReactNode iframe({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'iframe.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLIFrameElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLIFrameElement?);
           return null;
@@ -14134,7 +14134,7 @@ ReactNode img({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'img.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLImageElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLImageElement?);
           return null;
@@ -14442,7 +14442,7 @@ ReactNode input({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'input.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLInputElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLInputElement?);
           return null;
@@ -14665,7 +14665,7 @@ ReactNode ins({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'ins.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLModElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLModElement?);
           return null;
@@ -14885,7 +14885,7 @@ ReactNode isindex({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'isindex.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLUnknownElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLUnknownElement?);
           return null;
@@ -15105,7 +15105,7 @@ ReactNode kbd({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'kbd.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -15325,7 +15325,7 @@ ReactNode keygen({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'keygen.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLUnknownElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLUnknownElement?);
           return null;
@@ -15551,7 +15551,7 @@ ReactNode label({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'label.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLLabelElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLLabelElement?);
           return null;
@@ -15773,7 +15773,7 @@ ReactNode legend({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'legend.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLLegendElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLLegendElement?);
           return null;
@@ -15995,7 +15995,7 @@ ReactNode li({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'li.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLLIElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLLIElement?);
           return null;
@@ -16246,7 +16246,7 @@ ReactNode link({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'link.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLLinkElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLLinkElement?);
           return null;
@@ -16465,7 +16465,7 @@ ReactNode listing({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'listing.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLPreElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLPreElement?);
           return null;
@@ -16685,7 +16685,7 @@ ReactNode main({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'main.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -16909,7 +16909,7 @@ ReactNode map({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'map.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLMapElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLMapElement?);
           return null;
@@ -17129,7 +17129,7 @@ ReactNode mark({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'mark.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -17371,7 +17371,7 @@ ReactNode marquee({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'marquee.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLMarqueeElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLMarqueeElement?);
           return null;
@@ -17591,7 +17591,7 @@ ReactNode menu({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'menu.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLMenuElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLMenuElement?);
           return null;
@@ -17811,7 +17811,7 @@ ReactNode menuitem({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'menuitem.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -18038,7 +18038,7 @@ ReactNode meta({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'meta.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLMetaElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLMetaElement?);
           return null;
@@ -18271,7 +18271,7 @@ ReactNode meter({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'meter.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLMeterElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLMeterElement?);
           return null;
@@ -18491,7 +18491,7 @@ ReactNode multicol({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'multicol.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLUnknownElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLUnknownElement?);
           return null;
@@ -18711,7 +18711,7 @@ ReactNode nav({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'nav.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -18931,7 +18931,7 @@ ReactNode nextid({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'nextid.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLUnknownElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLUnknownElement?);
           return null;
@@ -19151,7 +19151,7 @@ ReactNode nobr({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'nobr.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -19371,7 +19371,7 @@ ReactNode noembed({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'noembed.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -19591,7 +19591,7 @@ ReactNode noframes({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'noframes.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -19811,7 +19811,7 @@ ReactNode noscript({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'noscript.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -20053,7 +20053,7 @@ ReactNode object({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'object.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLObjectElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLObjectElement?);
           return null;
@@ -20279,7 +20279,7 @@ ReactNode ol({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'ol.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLOListElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLOListElement?);
           return null;
@@ -20503,7 +20503,7 @@ ReactNode optgroup({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'optgroup.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLOptGroupElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLOptGroupElement?);
           return null;
@@ -20739,7 +20739,7 @@ ReactNode option({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'option.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLOptionElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLOptionElement?);
           return null;
@@ -20979,7 +20979,7 @@ ReactNode output({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'output.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLOutputElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLOutputElement?);
           return null;
@@ -21199,7 +21199,7 @@ ReactNode p({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'p.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLParagraphElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLParagraphElement?);
           return null;
@@ -21426,7 +21426,7 @@ ReactNode param({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'param.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLParamElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLParamElement?);
           return null;
@@ -21645,7 +21645,7 @@ ReactNode picture({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'picture.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLPictureElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLPictureElement?);
           return null;
@@ -21865,7 +21865,7 @@ ReactNode plaintext({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'plaintext.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -22085,7 +22085,7 @@ ReactNode pre({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'pre.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLPreElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLPreElement?);
           return null;
@@ -22313,7 +22313,7 @@ ReactNode progress({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'progress.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLProgressElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLProgressElement?);
           return null;
@@ -22535,7 +22535,7 @@ ReactNode q({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'q.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLQuoteElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLQuoteElement?);
           return null;
@@ -22755,7 +22755,7 @@ ReactNode rb({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'rb.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -22975,7 +22975,7 @@ ReactNode rp({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'rp.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -23195,7 +23195,7 @@ ReactNode rt({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'rt.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -23415,7 +23415,7 @@ ReactNode rtc({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'rtc.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -23635,7 +23635,7 @@ ReactNode ruby({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'ruby.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -23855,7 +23855,7 @@ ReactNode s({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 's.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -24075,7 +24075,7 @@ ReactNode samp({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'samp.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -24317,7 +24317,7 @@ ReactNode script({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'script.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLScriptElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLScriptElement?);
           return null;
@@ -24537,7 +24537,7 @@ ReactNode search({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'search.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -24757,7 +24757,7 @@ ReactNode section({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'section.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -25011,7 +25011,7 @@ ReactNode select({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'select.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLSelectElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLSelectElement?);
           return null;
@@ -25233,7 +25233,7 @@ ReactNode slot({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'slot.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLSlotElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLSlotElement?);
           return null;
@@ -25453,7 +25453,7 @@ ReactNode small({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'small.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -25686,7 +25686,7 @@ ReactNode source({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'source.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLSourceElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLSourceElement?);
           return null;
@@ -25905,7 +25905,7 @@ ReactNode spacer({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'spacer.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLUnknownElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLUnknownElement?);
           return null;
@@ -26125,7 +26125,7 @@ ReactNode span({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'span.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLSpanElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLSpanElement?);
           return null;
@@ -26345,7 +26345,7 @@ ReactNode strike({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'strike.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -26565,7 +26565,7 @@ ReactNode strong({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'strong.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -26791,7 +26791,7 @@ ReactNode style({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'style.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLStyleElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLStyleElement?);
           return null;
@@ -27011,7 +27011,7 @@ ReactNode sub({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'sub.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -27231,7 +27231,7 @@ ReactNode summary({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'summary.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -27451,7 +27451,7 @@ ReactNode sup({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'sup.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -27681,7 +27681,7 @@ ReactNode table({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'table.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTableElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTableElement?);
           return null;
@@ -27903,7 +27903,7 @@ ReactNode tbody({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'tbody.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTableSectionElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTableSectionElement?);
           return null;
@@ -28135,7 +28135,7 @@ ReactNode td({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'td.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTableCellElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTableCellElement?);
           return null;
@@ -28365,7 +28365,7 @@ ReactNode template({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'template.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTemplateElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTemplateElement?);
           return null;
@@ -28633,7 +28633,7 @@ ReactNode textarea({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'textarea.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTextAreaElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTextAreaElement?);
           return null;
@@ -28855,7 +28855,7 @@ ReactNode tfoot({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'tfoot.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTableSectionElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTableSectionElement?);
           return null;
@@ -29087,7 +29087,7 @@ ReactNode th({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'th.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTableCellElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTableCellElement?);
           return null;
@@ -29309,7 +29309,7 @@ ReactNode thead({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'thead.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTableSectionElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTableSectionElement?);
           return null;
@@ -29531,7 +29531,7 @@ ReactNode time({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'time.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTimeElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTimeElement?);
           return null;
@@ -29753,7 +29753,7 @@ ReactNode title({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'title.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTitleElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTitleElement?);
           return null;
@@ -29979,7 +29979,7 @@ ReactNode tr({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'tr.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTableRowElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTableRowElement?);
           return null;
@@ -30212,7 +30212,7 @@ ReactNode track({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'track.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLTrackElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLTrackElement?);
           return null;
@@ -30431,7 +30431,7 @@ ReactNode tt({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'tt.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -30651,7 +30651,7 @@ ReactNode u({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'u.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -30871,7 +30871,7 @@ ReactNode ul({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'ul.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLUListElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLUListElement?);
           return null;
@@ -31091,7 +31091,7 @@ ReactNode var_({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'var.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -31379,7 +31379,7 @@ ReactNode video({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'video.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLVideoElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLVideoElement?);
           return null;
@@ -31598,7 +31598,7 @@ ReactNode wbr({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'wbr.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLElement?);
           return null;
@@ -31817,7 +31817,7 @@ ReactNode xmp({
       )),
       if (ref != null) 'ref': ReactRefProp(ReactCallback(
         debugName: 'xmp.ref',
-        signature: const (positional: [reactAny], result: reactVoid, asynchronous: false),
+        signature: const (positional: [(kind: ReactValueKind.hostValue, nullable: true, hostNamespace: 'web', typeId: 'HTMLPreElement', codecId: null)], result: reactVoid, asynchronous: false),
         invoke: (args) {
           ref(args[0] as HTMLPreElement?);
           return null;

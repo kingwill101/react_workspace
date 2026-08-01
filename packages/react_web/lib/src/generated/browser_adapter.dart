@@ -21,6 +21,22 @@ final class BrowserHTMLMarqueeElement extends BrowserElementAdapter
   web.HTMLMarqueeElement get inner => _element;
 }
 
+final class BrowserHTMLElement extends BrowserElementAdapter
+    implements HTMLElement {
+  final web.HTMLElement _element;
+  BrowserHTMLElement(this._element);
+  @override
+  web.HTMLElement get inner => _element;
+}
+
+final class BrowserElement extends BrowserElementAdapter
+    implements Element {
+  final web.Element _element;
+  BrowserElement(this._element);
+  @override
+  web.Element get inner => _element;
+}
+
 final class BrowserHTMLCollection extends BrowserElementAdapter
     implements HTMLCollection {
   final web.HTMLCollection _element;
@@ -893,6 +909,16 @@ void registerBrowserAdapters() {
     'web', 'HTMLMarqueeElement',
     decoder: (value) => BrowserHTMLMarqueeElement(value as web.HTMLMarqueeElement),
     encoder: (value) => (value as BrowserHTMLMarqueeElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'HTMLElement',
+    decoder: (value) => BrowserHTMLElement(value as web.HTMLElement),
+    encoder: (value) => (value as BrowserHTMLElement)._element as JSAny?,
+  );
+  ReactCodecRegistry.registerHostValue(
+    'web', 'Element',
+    decoder: (value) => BrowserElement(value as web.Element),
+    encoder: (value) => (value as BrowserElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
     'web', 'HTMLCollection',

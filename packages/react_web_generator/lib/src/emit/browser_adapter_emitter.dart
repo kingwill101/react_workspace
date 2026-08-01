@@ -52,8 +52,7 @@ final class BrowserAdapterEmitter {
     buf.writeln();
 
     for (final entry in types.entries) {
-      if (!entry.key.startsWith('web.HTML')) continue;
-      if (entry.key == 'web.Element' || entry.key == 'web.HTMLElement') {
+      if (!entry.key.startsWith('web.HTML') && entry.key != 'web.Element') {
         continue;
       }
       if (entry.value.typeParameters.isNotEmpty) continue;
@@ -208,8 +207,7 @@ final class BrowserAdapterEmitter {
     buf.writeln('void registerBrowserAdapters() {');
 
     for (final entry in types.entries) {
-      if (!entry.key.startsWith('web.HTML')) continue;
-      if (entry.key == 'web.Element' || entry.key == 'web.HTMLElement') {
+      if (!entry.key.startsWith('web.HTML') && entry.key != 'web.Element') {
         continue;
       }
       if (entry.value.typeParameters.isNotEmpty) continue;
