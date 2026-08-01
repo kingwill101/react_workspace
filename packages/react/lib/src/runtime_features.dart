@@ -198,6 +198,39 @@ final class ForwardRefNode<P, T> extends ReactNode {
 /// A component loader used by [lazy].
 typedef LazyComponentLoader<P> = Future<ReactComponentBuilder<P>> Function();
 
+/// A lazily loaded component definition.
+///
+/// See https://react.dev/reference/react/lazy.
+final class LazyComponent<P> {
+  /// Creates a lazy component.
+  const LazyComponent(this.load);
+
+  /// Loads the component implementation.
+  final LazyComponentLoader<P> load;
+
+  /// Creates a node that suspends until [load] resolves.
+  ReactNode call(P props, {String? key}) => LazyNode(load, props, key: key);
+}
+
+/// A portable node produced by [LazyComponent].
+final class LazyNode<P> extends ReactNode {
+  /// Creates a lazy node.
+  const LazyNode(this.load, this.props, {this.key});
+
+  /// The loader used by the renderer.
+  final LazyComponentLoader<P> load;
+
+  /// The props passed to the loaded component.
+  final P props;
+
+  /// The optional React key.
+  final String? key;
+
+  /// Builds the loaded Dart component through an erased boundary.
+  ReactNode buildWith(Object builder) =>
+      (builder as ReactComponentBuilder<P>)(props);
+}
+
 /// Marks [component] for memoization.
 ///
 /// The JavaScript and SSR renderers apply `React.memo` when [component]
@@ -217,8 +250,8 @@ ReactComponentBuilder<P> memo<P>(
 
 /// Marks a component as receiving a forwarded ref.
 ///
-/// The declaration is present for API compatibility; renderers will provide
-/// the forwarding implementation in a later phase.
+/// JavaScript and SSR renderers invoke the Dart render function through
+/// `React.forwardRef`.
 ///
 /// See https://react.dev/reference/react/forwardRef.
 ForwardRefComponent<P, T> forwardRef<P, T>(ForwardRefRender<P, T> render) =>
@@ -226,12 +259,11 @@ ForwardRefComponent<P, T> forwardRef<P, T>(ForwardRefRender<P, T> render) =>
 
 /// Defers loading a component until it is rendered.
 ///
-/// The declaration is present for API compatibility; renderers will provide
-/// the loading and Suspense integration in a later phase.
+/// JavaScript and SSR renderers resolve the loader through `React.lazy`; wrap
+/// the result in [suspense] when a visible loading state is required.
 ///
 /// See https://react.dev/reference/react/lazy.
-ReactComponentBuilder<P> lazy<P>(LazyComponentLoader<P> load) =>
-    throw UnsupportedError('lazy is not implemented by this renderer yet.');
+LazyComponent<P> lazy<P>(LazyComponentLoader<P> load) => LazyComponent(load);
 
 /// Creates a portal node.
 ///

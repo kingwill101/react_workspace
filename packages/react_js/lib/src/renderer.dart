@@ -9,6 +9,7 @@ import 'registry.dart';
 class JsRenderer extends ReactRenderer {
   final _memoizedComponents = <String, Map<Object?, JSFunction>>{};
   final _forwardRefComponents = <Function, JSFunction>{};
+  final _lazyComponents = <Function, JSFunction>{};
 
   @override
   Object? render(ReactNode node) => _render(node) as Object?;
@@ -26,6 +27,7 @@ class JsRenderer extends ReactRenderer {
     ForwardRefNode() => _renderForwardRef(
       n as ForwardRefNode<Object?, Object?>,
     ),
+    LazyNode() => _renderLazy(n as LazyNode<Object?>),
     ForeignComponent(:var name, :var props, :var children, :var key) => () {
       final component = _resolveForeignComponent(name.toJS);
       if (component == null) {
@@ -79,6 +81,34 @@ class JsRenderer extends ReactRenderer {
     Empty() => null,
     ReactNode() => throw UnsupportedError('Unknown ReactNode implementation.'),
   };
+
+  JSAny _renderLazy(LazyNode<Object?> node) {
+    final component = _lazyComponents.putIfAbsent(node.load, () {
+      final loadJS = (() {
+        return node.load().then((builder) {
+          JSAny? loaded(JSObject props) {
+            final raw = props.getProperty('__dartLazy'.toJS);
+            if (raw == null || !raw.isA<JSBoxedDartObject>()) {
+              throw StateError('Missing lazy component payload.');
+            }
+            final payload = (raw as JSBoxedDartObject).toDart;
+            if (payload is! LazyNode<Object?>) {
+              throw StateError('Invalid lazy component payload.');
+            }
+            return toReactJS(payload.buildWith(builder));
+          }
+
+          final module = JSObject();
+          module.setProperty('default'.toJS, loaded.toJS);
+          return module;
+        }).toJS;
+      }).toJS;
+      return _react.callMethod('lazy'.toJS, loadJS) as JSFunction;
+    });
+    final props = JSObject();
+    props.setProperty('__dartLazy'.toJS, node.toJSBox);
+    return _createElement(component, props, const [], key: node.key);
+  }
 
   JSAny _renderForwardRef(ForwardRefNode<Object?, Object?> node) {
     final component = _forwardRefComponents.putIfAbsent(node.render, () {

@@ -5,6 +5,7 @@ import 'package:react_js/react_js.dart';
 
 final _memoizedComponents = <String, Map<Object?, JSFunction>>{};
 final _forwardRefComponents = <Function, JSFunction>{};
+final _lazyComponents = <Function, JSFunction>{};
 
 ///
 /// The [factory] receives a component [id] and [props], and returns a
@@ -65,6 +66,7 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
   ForwardRefNode() => _expandForwardRef(
     node as ForwardRefNode<Object?, Object?>,
   ),
+  LazyNode() => _expandLazy(node as LazyNode<Object?>),
   ForeignComponent(:var name, :var props, :var children, :var key) =>
     _expandForeignComponent(name, props, children, key: key),
   Text(:var value) => value.toJS,
@@ -122,6 +124,34 @@ JSAny _expandForeignComponent(
         jsChildren.toJS,
       )
       as JSAny;
+}
+
+JSAny _expandLazy(LazyNode<Object?> node) {
+  final component = _lazyComponents.putIfAbsent(node.load, () {
+    final loadJS = (() {
+      return node.load().then((builder) {
+        JSAny? loaded(JSObject props) {
+          final raw = props.getProperty('__dartLazy'.toJS);
+          if (raw == null || !raw.isA<JSBoxedDartObject>()) {
+            throw StateError('Missing lazy component payload.');
+          }
+          final payload = (raw as JSBoxedDartObject).toDart;
+          if (payload is! LazyNode<Object?>) {
+            throw StateError('Invalid lazy component payload.');
+          }
+          return toReactJS(payload.buildWith(builder));
+        }
+
+        final module = JSObject();
+        module.setProperty('default'.toJS, loaded.toJS);
+        return module;
+      }).toJS;
+    }).toJS;
+    return _react.callMethod('lazy'.toJS, loadJS) as JSFunction;
+  });
+  final props = JSObject();
+  props.setProperty('__dartLazy'.toJS, node.toJSBox);
+  return _react.callMethod('createElement'.toJS, component, props) as JSAny;
 }
 
 JSAny _expandForwardRef(ForwardRefNode<Object?, Object?> node) {
