@@ -21,3 +21,32 @@ globalThis.__reactDartRegisterComponent = function registerComponent(name, compo
 globalThis.__reactDartResolveComponent = function resolveComponent(name) {
   return globalThis.__reactDartForeignComponents[name];
 };
+
+globalThis.__reactDartGetErrorBoundary = function getErrorBoundary() {
+  if (globalThis.__reactDartErrorBoundary) {
+    return globalThis.__reactDartErrorBoundary;
+  }
+
+  const React = globalThis.React;
+  if (!React || !React.Component) {
+    throw new Error('React must be loaded before creating an error boundary');
+  }
+
+  class DartErrorBoundary extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError() {
+      return { hasError: true };
+    }
+
+    render() {
+      return this.state.hasError ? this.props.fallback : this.props.children;
+    }
+  }
+
+  globalThis.__reactDartErrorBoundary = DartErrorBoundary;
+  return DartErrorBoundary;
+};

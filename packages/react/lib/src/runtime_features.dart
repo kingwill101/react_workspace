@@ -92,9 +92,10 @@ final class Portal extends ReactNode {
 
 /// An error-boundary configuration.
 ///
-/// Functional components cannot implement React error boundaries by
-/// themselves. This node is intentionally a placeholder until the client and
-/// server renderers provide a boundary implementation.
+/// The JavaScript renderers use a small class-based boundary internally while
+/// keeping the public Dart component model functional. Server rendering can
+/// serialize the boundary, but host errors that occur during SSR are still
+/// reported by React's server renderer rather than recovered here.
 ///
 /// See https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary.
 final class ErrorBoundary extends ReactNode {
@@ -132,6 +133,23 @@ ReactNode provideContext<T>(
 /// Describes a memoized component comparison.
 typedef PropsAreEqual<P> = bool Function(P previous, P next);
 
+/// A memoized component node.
+///
+/// Renderers use this marker to apply `React.memo` to component elements while
+/// keeping the Dart component builder portable.
+///
+/// See https://react.dev/reference/react/memo.
+final class MemoizedNode extends ReactNode {
+  /// Creates a memoized component node.
+  const MemoizedNode(this.child, {this.arePropsEqual});
+
+  /// The component element to memoize.
+  final ReactNode child;
+
+  /// An optional Dart-side props comparison supplied to `React.memo`.
+  final bool Function(Object? previous, Object? next)? arePropsEqual;
+}
+
 /// A Dart component function that receives props and returns a node.
 typedef ReactComponentBuilder<P> = ReactNode Function(P props);
 
@@ -143,14 +161,20 @@ typedef LazyComponentLoader<P> = Future<ReactComponentBuilder<P>> Function();
 
 /// Marks [component] for memoization.
 ///
-/// The declaration is present for API compatibility; renderers will provide
-/// the memoization implementation in a later phase.
+/// The JavaScript and SSR renderers apply `React.memo` when [component]
+/// produces a registered component node.
 ///
 /// See https://react.dev/reference/react/memo.
 ReactComponentBuilder<P> memo<P>(
   ReactComponentBuilder<P> component, {
   PropsAreEqual<P>? arePropsEqual,
-}) => throw UnsupportedError('memo is not implemented by this renderer yet.');
+}) =>
+    (props) => MemoizedNode(
+      component(props),
+      arePropsEqual: arePropsEqual == null
+          ? null
+          : (previous, next) => arePropsEqual(previous as P, next as P),
+    );
 
 /// Marks a component as receiving a forwarded ref.
 ///
@@ -197,7 +221,7 @@ ReactNode suspense({
 /// See https://react.dev/reference/react/StrictMode.
 ReactNode strictMode(List<ReactNode> children) => StrictMode(children);
 
-/// Creates an error-boundary placeholder node.
+/// Creates an error-boundary node.
 ///
 /// See https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary.
 ReactNode errorBoundary({

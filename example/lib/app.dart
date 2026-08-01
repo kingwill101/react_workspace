@@ -3,6 +3,26 @@ import 'app_context.dart';
 import 'counter.react.dart';
 import 'todos/todos_ui.react.dart';
 
+typedef CounterProps = ({
+  String title,
+  int initialCount,
+  String? subtitle,
+  void Function(int)? onChange,
+});
+
+final memoizedCounter = memo<CounterProps>(
+  (props) => Counter(
+    title: props.title,
+    initialCount: props.initialCount,
+    subtitle: props.subtitle,
+    onChange: props.onChange,
+  ),
+  arePropsEqual: (previous, next) =>
+      previous.title == next.title &&
+      previous.initialCount == next.initialCount &&
+      previous.subtitle == next.subtitle,
+);
+
 @reactComponent
 ReactNode App(({String title}) props) => appAccentContext.provider('#7257ff', [
   div(
@@ -95,22 +115,29 @@ ReactNode App(({String title}) props) => appAccentContext.provider('#7257ff', [
                     children: [const Text('INTERACTIVE STATE')],
                   ),
                   strictMode([
-                    Counter(
-                      key: 'counter-component',
+                    memoizedCounter((
                       title: 'Counter',
                       initialCount: 0,
                       subtitle: 'Dart hooks rendered through React',
                       onChange: (_) => print('Counter changed'),
-                    ),
+                    )),
                   ]),
                 ],
               ),
-              suspense(
+              errorBoundary(
                 fallback: section(
                   className: 'surface counter-surface',
-                  children: [const Text('Loading todos…')],
+                  children: [const Text('The todo panel failed to render.')],
                 ),
-                children: [TodoApp(key: 'todos', title: 'Todos')],
+                children: [
+                  suspense(
+                    fallback: section(
+                      className: 'surface counter-surface',
+                      children: [const Text('Loading todos…')],
+                    ),
+                    children: [TodoApp(key: 'todos', title: 'Todos')],
+                  ),
+                ],
               ),
             ],
           ),

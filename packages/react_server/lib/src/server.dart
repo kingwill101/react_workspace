@@ -3,6 +3,8 @@ import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react_js/react_js.dart';
 
+final _memoizedComponents = <String, Map<Object?, JSFunction>>{};
+
 ///
 /// The [factory] receives a component [id] and [props], and returns a
 /// [ReactNode] tree.  The tree is expanded to JS React elements via
@@ -55,6 +57,10 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
     children,
     key: key,
   ),
+  MemoizedNode(:final child, :final arePropsEqual) => _expandMemoized(
+    child,
+    arePropsEqual,
+  ),
   ForeignComponent(:var name, :var props, :var children, :var key) =>
     _expandForeignComponent(name, props, children, key: key),
   Text(:var value) => value.toJS,
@@ -83,8 +89,10 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
   Portal() => throw UnsupportedError(
     'Portals have no server container and are not supported during SSR.',
   ),
-  ErrorBoundary() => throw UnsupportedError(
-    'Error boundaries are not implemented by the SSR renderer yet.',
+  ErrorBoundary(:final children, :final fallback) => _createReactElement(
+    _getErrorBoundary(),
+    children,
+    props: _fallbackProps(fallback),
   ),
   Empty() => null,
   ReactNode() => throw UnsupportedError('Unknown ReactNode implementation.'),
@@ -109,6 +117,65 @@ JSAny _expandForeignComponent(
         jsChildren.toJS,
       )
       as JSAny;
+}
+
+JSAny? _expandMemoized(
+  ReactNode child,
+  bool Function(Object? previous, Object? next)? arePropsEqual,
+) => switch (child) {
+  Component(:var id, :var props, :var children, :var key) => () {
+    final entry = ReactRegistry.lookup(id.value)!;
+    final memoType = _memoizedComponent(id.value, entry, arePropsEqual);
+    return _createReactElement(
+      memoType,
+      children,
+      props: _keyProps(key, props: entry.toJS(props)),
+    );
+  }(),
+  ForeignComponent(:var name, :var props, :var children, :var key) => () {
+    final component = _resolveForeignComponent(name.toJS);
+    if (component == null) {
+      throw ArgumentError('Foreign React component "$name" is not registered');
+    }
+    final memoType = _memoizedForeignComponent(name, component as JSFunction);
+    return _createReactElement(
+      memoType,
+      children,
+      props: _intrinsicPropsToJS(props, key: key),
+    );
+  }(),
+  _ => throw UnsupportedError(
+    'memo currently supports registered component nodes only.',
+  ),
+};
+
+JSFunction _memoizedComponent(
+  String id,
+  Entry entry,
+  bool Function(Object? previous, Object? next)? arePropsEqual,
+) {
+  final byComparator = _memoizedComponents.putIfAbsent(id, () => {});
+  final cached = byComparator[arePropsEqual];
+  if (cached != null) return cached;
+  final compareJS = arePropsEqual == null
+      ? null
+      : ((JSObject previous, JSObject next) {
+          return arePropsEqual(entry.fromJS(previous), entry.fromJS(next)).toJS;
+        }).toJS;
+  final memoType = compareJS == null
+      ? _react.callMethod('memo'.toJS, entry.comp) as JSFunction
+      : _react.callMethod('memo'.toJS, entry.comp, compareJS) as JSFunction;
+  byComparator[arePropsEqual] = memoType;
+  return memoType;
+}
+
+JSFunction _memoizedForeignComponent(String id, JSFunction component) {
+  final byComparator = _memoizedComponents.putIfAbsent(id, () => {});
+  final cached = byComparator[null];
+  if (cached != null) return cached;
+  final memoType = _react.callMethod('memo'.toJS, component) as JSFunction;
+  byComparator[null] = memoType;
+  return memoType;
 }
 
 JSAny _createReactElement(
@@ -263,6 +330,9 @@ external JSAny get _suspense;
 
 @JS('globalThis.__reactDartResolveComponent')
 external JSAny? _resolveForeignComponent(JSString name);
+
+@JS('globalThis.__reactDartGetErrorBoundary')
+external JSFunction _getErrorBoundary();
 
 @JS('ReactDOMServer')
 external JSObject get _reactDomServer;
