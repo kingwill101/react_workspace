@@ -15,10 +15,10 @@
 ///   required bool completed,
 /// }) async { ... }
 /// ```
-const serverFunction = _ServerFunction();
+const serverFunction = ServerFunctionAnnotation();
 
-class _ServerFunction {
-  const _ServerFunction();
+class ServerFunctionAnnotation {
+  const ServerFunctionAnnotation();
 }
 
 /// Marks a class as a browser-safe data transfer type for server
@@ -48,8 +48,8 @@ class _ServerFunction {
 ///   });
 /// }
 /// ```
-const serverData = _ServerData();
+const serverData = ServerDataAnnotation();
 
-class _ServerData {
-  const _ServerData();
+class ServerDataAnnotation {
+  const ServerDataAnnotation();
 }

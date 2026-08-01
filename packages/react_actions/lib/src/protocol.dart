@@ -1,5 +1,24 @@
 import 'exceptions.dart';
 
+/// Current wire protocol version for React Dart server functions.
+const int serverFunctionProtocolVersion = 1;
+
+/// Media type for the JSON server-function envelope.
+const String serverFunctionContentType =
+    'application/vnd.react.dart.action+json';
+
+/// Header carrying the generated server-function ID.
+///
+/// This mirrors the role of Next.js's `Next-Action` header while keeping the
+/// React Dart protocol independently versioned.
+const String serverFunctionIdHeader = 'X-React-Action';
+
+/// Header carrying the generated codec contract hash.
+const String serverFunctionContractHeader = 'X-React-Action-Contract';
+
+/// Header carrying the protocol version.
+const String serverFunctionProtocolHeader = 'X-React-Protocol';
+
 /// A JSON-serializable request envelope sent from the browser to the
 /// server function endpoint.
 final class ServerFunctionRequest {
@@ -63,21 +82,28 @@ final class ServerFunctionResponse {
   final dynamic result;
   final ServerFunctionError? error;
 
-  const ServerFunctionResponse.ok(this.result)
-      : ok = true,
-        error = null;
+  const ServerFunctionResponse.ok(this.result) : ok = true, error = null;
 
-  const ServerFunctionResponse.error(this.error)
-      : ok = false,
-        result = null;
+  const ServerFunctionResponse.error(this.error) : ok = false, result = null;
 
   factory ServerFunctionResponse.fromJson(dynamic json) {
-    final m = json as Map<String, dynamic>;
-    if (m['ok'] == true) {
-      return ServerFunctionResponse.ok(m['result']);
+    if (json is! Map || json['ok'] is! bool) {
+      throw const FormatException('Invalid server function response envelope.');
+    }
+    final map = Map<String, dynamic>.from(json);
+    if (map['ok'] == true) {
+      if (!map.containsKey('result')) {
+        throw const FormatException('Successful response is missing result.');
+      }
+      return ServerFunctionResponse.ok(map['result']);
+    }
+
+    final error = map['error'];
+    if (error is! Map) {
+      throw const FormatException('Error response is missing error details.');
     }
     return ServerFunctionResponse.error(
-      ServerFunctionError.fromJson(m['error'] as Map<String, dynamic>),
+      ServerFunctionError.fromJson(Map<String, dynamic>.from(error)),
     );
   }
 
