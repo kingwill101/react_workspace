@@ -27,7 +27,7 @@ final class ServerFunctionRegistry {
   void register<TArgs, TResult>(
     ServerFunctionRef<TArgs, TResult> ref,
     FutureOr<TResult> Function(TArgs arguments, ServerFunctionContext context)
-        handler,
+    handler,
   ) {
     if (_handlers.containsKey(ref.id.value)) {
       throw StateError('Duplicate server function: ${ref.id.value}');

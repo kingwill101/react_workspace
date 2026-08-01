@@ -1,3 +1,5 @@
+import 'package:react_actions/react_actions.dart';
+
 /// Request-scoped context passed to every registered server function.
 ///
 /// Carries authentication, request metadata, cancellation, and a
@@ -24,14 +26,14 @@ final class ServerFunctionContext {
   /// status 401.
   Object requireUser() {
     if (principal == null) {
-      throw const _UnauthenticatedServerFunctionFailure();
+      throw const ServerFunctionFailure(
+        code: 'unauthenticated',
+        message: 'Authentication is required.',
+        statusCode: 401,
+      );
     }
     return principal!;
   }
-}
-
-final class _UnauthenticatedServerFunctionFailure {
-  const _UnauthenticatedServerFunctionFailure();
 }
 
 /// Mutable cancellation token for cooperative cancellation.

@@ -33,13 +33,14 @@ FutureOr<Response> Function(Request) createServerActionHandler(
 
     // Content-Type check
     final contentType = req.headers['content-type'] ?? '';
-    if (!contentType.startsWith('application/json')) {
+    if (!contentType.startsWith('application/json') &&
+        !contentType.startsWith(serverFunctionContentType)) {
       return Response(415);
     }
 
     // Body-size limit
     final body = await req.readAsString();
-    if (body.length > maxBodySize) {
+    if (utf8.encode(body).length > maxBodySize) {
       return _errorResponse('request_too_large', 'Request too large.', 413);
     }
 
@@ -51,8 +52,18 @@ FutureOr<Response> Function(Request) createServerActionHandler(
       return _errorResponse('invalid_json', 'Invalid JSON.', 400);
     }
 
-    // Protocol version
-    if (payload['protocol'] != 1) {
+    // Protocol metadata is duplicated in headers so proxies and observability
+    // tools can route actions without decoding the body. The envelope remains
+    // the canonical payload for backwards compatibility.
+    final headerProtocol = req.headers[serverFunctionProtocolHeader];
+    if (headerProtocol != null && headerProtocol != '${payload['protocol']}') {
+      return _errorResponse(
+        'protocol_mismatch',
+        'The protocol header does not match the request envelope.',
+        400,
+      );
+    }
+    if (payload['protocol'] != serverFunctionProtocolVersion) {
       return _errorResponse(
         'unsupported_protocol',
         'Unsupported protocol version.',
@@ -60,17 +71,50 @@ FutureOr<Response> Function(Request) createServerActionHandler(
       );
     }
 
-    final id = payload['id'] as String?;
-    if (id == null || id.isEmpty) {
+    final rawId = payload['id'];
+    if (rawId is! String || rawId.isEmpty) {
       return _errorResponse('missing_id', 'Missing function ID.', 400);
     }
+    final id = rawId;
+    final headerId = req.headers[serverFunctionIdHeader];
+    if (headerId != null && headerId != id) {
+      return _errorResponse(
+        'id_mismatch',
+        'The action header does not match the request envelope.',
+        400,
+      );
+    }
 
-    final contract = payload['contract'] as String?;
+    final rawContract = payload['contract'];
+    if (rawContract != null && rawContract is! String) {
+      return _errorResponse(
+        'invalid_contract',
+        'The function contract must be a string.',
+        400,
+      );
+    }
+    final contract = rawContract as String?;
+    final headerContract = req.headers[serverFunctionContractHeader];
+    if (headerContract != null && headerContract != contract) {
+      return _errorResponse(
+        'contract_mismatch',
+        'The contract header does not match the request envelope.',
+        400,
+      );
+    }
+    if (!payload.containsKey('arguments')) {
+      return _errorResponse(
+        'missing_arguments',
+        'Missing function arguments.',
+        400,
+      );
+    }
     final arguments = payload['arguments'];
 
-    // Contract hash validation
+    // Contract hash validation. Once a function is registered, the contract
+    // is mandatory so stale clients cannot silently invoke a changed codec.
     final expectedHash = registry.contractHashFor(id);
-    if (expectedHash != null && contract != null && contract != expectedHash) {
+    if (expectedHash != null && contract != expectedHash) {
       return _errorResponse(
         'contract_mismatch',
         'The action contract has changed. Please reload the page.',
@@ -95,10 +139,15 @@ FutureOr<Response> Function(Request) createServerActionHandler(
 
       return Response.ok(
         jsonEncode(ServerFunctionResponse.ok(encoded).toJson()),
-        headers: {'content-type': 'application/json'},
+        headers: {'content-type': serverFunctionContentType},
       );
     } on TimeoutException {
-      return _errorResponse('timeout', 'The action timed out.', 504);
+      return _errorResponse(
+        'timeout',
+        'The action timed out.',
+        504,
+        requestId: context.requestId,
+      );
     } on ServerFunctionFailure catch (e) {
       return Response(
         e.statusCode,
@@ -112,10 +161,14 @@ FutureOr<Response> Function(Request) createServerActionHandler(
             ),
           ).toJson(),
         ),
-        headers: {'content-type': 'application/json'},
+        headers: {'content-type': serverFunctionContentType},
       );
     } on UnknownServerFunctionException catch (e) {
-      return _errorResponse('unknown_function', 'Unknown function: ${e.id}.', 404);
+      return _errorResponse(
+        'unknown_function',
+        'Unknown function: ${e.id}.',
+        404,
+      );
     } catch (_) {
       return _errorResponse(
         'internal_error',
@@ -137,18 +190,15 @@ Response _errorResponse(
     statusCode,
     body: jsonEncode(
       ServerFunctionResponse.error(
-        ServerFunctionError(
-          code: code,
-          message: message,
-          requestId: requestId,
-        ),
+        ServerFunctionError(code: code, message: message, requestId: requestId),
       ).toJson(),
     ),
-    headers: {'content-type': 'application/json'},
+    headers: {'content-type': serverFunctionContentType},
   );
 }
 
 Object? _noopAuthenticate(Request req) => null;
 
 int _idCounter = 0;
-String _generateId() => 'req_${DateTime.now().millisecondsSinceEpoch}_${_idCounter++}';
+String _generateId() =>
+    'req_${DateTime.now().millisecondsSinceEpoch}_${_idCounter++}';
