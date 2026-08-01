@@ -134,9 +134,10 @@ final class DomFactoryEmitter {
     final clean = type.symbol.endsWith('?')
         ? type.symbol.substring(0, type.symbol.length - 1)
         : type.symbol;
-    final base = isNullable ? '$clean?' : clean;
-    if (type.typeArguments.isEmpty) return base;
-    return '$base<${type.typeArguments.map((t) => _dartTypeString(t)).join(', ')}>';
+    final base = type.typeArguments.isEmpty
+        ? clean
+        : '$clean<${type.typeArguments.map((t) => _dartTypeString(t)).join(', ')}>';
+    return isNullable ? '$base?' : base;
   }
 
   String _safeIdent(String s) {

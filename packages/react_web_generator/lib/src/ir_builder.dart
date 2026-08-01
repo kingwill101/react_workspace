@@ -194,6 +194,21 @@ final class WebHostIrBuilder {
     final globalSet = globalProps.cast<String>().toSet();
 
     final result = <WebHostPropIR>[];
+    final coreUri = Uri.parse('dart:core');
+    final styleType = WebDartType(
+      symbol: 'Map',
+      import: coreUri,
+      nullable: true,
+      typeArguments: [
+        WebDartType(symbol: 'String', import: coreUri, nullable: false),
+        WebDartType(symbol: 'Object', import: coreUri, nullable: true),
+      ],
+    );
+    final stringType = WebDartType(
+      symbol: 'String',
+      import: coreUri,
+      nullable: true,
+    );
 
     for (final entry in idlMembers.entries) {
       final idlName = entry.key;
@@ -225,11 +240,7 @@ final class WebHostIrBuilder {
           idlName: name,
           dartName: name,
           reactName: name,
-          dartType: WebDartType(
-            symbol: 'String',
-            import: Uri.parse('dart:core'),
-            nullable: true,
-          ),
+          dartType: name == 'style' ? styleType : stringType,
           required: false,
           clientOnly: false,
           ssrBehavior: WebSsrBehavior.attribute,

@@ -26,8 +26,8 @@ final class HttpServerFunctionClient implements ServerFunctionClient {
     Uri? endpoint,
     http.Client? client,
     this.requestTimeout = const Duration(seconds: 30),
-  })  : endpoint = endpoint ?? Uri.parse('/__react/actions'),
-        client = client ?? http.Client();
+  }) : endpoint = endpoint ?? Uri.parse('/__react/actions'),
+       client = client ?? http.Client();
 
   @override
   void close() {
@@ -45,12 +45,15 @@ final class HttpServerFunctionClient implements ServerFunctionClient {
       response = await client
           .post(
             endpoint,
-            headers: const {
-              'content-type': 'application/json',
-              'accept': 'application/json',
+            headers: {
+              'content-type': serverFunctionContentType,
+              'accept': serverFunctionContentType,
+              serverFunctionProtocolHeader: '$serverFunctionProtocolVersion',
+              serverFunctionIdHeader: ref.id.value,
+              serverFunctionContractHeader: ref.contractHash,
             },
             body: jsonEncode({
-              'protocol': 1,
+              'protocol': serverFunctionProtocolVersion,
               'id': ref.id.value,
               'contract': ref.contractHash,
               'arguments': ref.argumentsCodec.encode(arguments),
@@ -93,8 +96,18 @@ final class HttpServerFunctionClient implements ServerFunctionClient {
       );
     }
 
-    // Decode envelope
-    final envelope = ServerFunctionResponse.fromJson(decoded);
+    // Decode the structured envelope. A proxy or server error page can still
+    // be valid JSON without being a server-function response, so normalize
+    // envelope and codec failures as transport errors.
+    late ServerFunctionResponse envelope;
+    try {
+      envelope = ServerFunctionResponse.fromJson(decoded);
+    } catch (error) {
+      throw ServerFunctionTransportException(
+        'The server returned an invalid response envelope.',
+        cause: error,
+      );
+    }
 
     if (!envelope.ok) {
       throw RemoteServerFunctionException(
@@ -106,7 +119,14 @@ final class HttpServerFunctionClient implements ServerFunctionClient {
       );
     }
 
-    return ref.resultCodec.decode(envelope.result);
+    try {
+      return ref.resultCodec.decode(envelope.result);
+    } catch (error) {
+      throw ServerFunctionTransportException(
+        'The server returned an invalid result.',
+        cause: error,
+      );
+    }
   }
 }
 
