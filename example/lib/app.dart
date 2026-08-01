@@ -103,7 +103,13 @@ ReactNode App(({String title}) props) => appAccentContext.provider('#7257ff', [
                   ),
                 ],
               ),
-              TodoApp(key: 'todos', title: 'Todos'),
+              suspense(
+                fallback: section(
+                  className: 'surface counter-surface',
+                  children: [const Text('Loading todos…')],
+                ),
+                children: [TodoApp(key: 'todos', title: 'Todos')],
+              ),
             ],
           ),
         ],
