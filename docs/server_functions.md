@@ -13,6 +13,27 @@ The server function system is **separate from SSR rendering**:
 
 Server functions run in the same Shelf process as page rendering. The SSR worker is a separate Node.js process because it needs `ReactDOMServer` (JavaScript APIs). Server functions have no such constraint — they run as native Dart, with full access to `package:postgres`, `dart:io`, and the rest of the Dart ecosystem.
 
+The native host is standardized by `ReactServerApp` in `react_server`. It owns the
+framework routes while applications provide the static handler, action registry,
+and optional SSR worker configuration.
+
+### Protocol direction
+
+Next.js uses an action ID in the `Next-Action` header and uses the React Flight
+stream when an action also causes a route render. We follow the useful part of
+that design without coupling React Dart to Next's private Flight wire format:
+
+- `X-React-Action` identifies the generated function.
+- `X-React-Action-Contract` identifies the generated codec contract.
+- `X-React-Protocol` identifies the protocol version.
+- The versioned JSON envelope remains the canonical request and response body.
+- HTML SSR and action responses remain separate until we have a Dart-native
+  Flight/RSC implementation.
+
+This gives proxies and observability tools routable metadata while preserving a
+stable, typed protocol that can later support content negotiation for a combined
+action-plus-render response.
+
 ---
 
 ## 1. Package Architecture
@@ -86,7 +107,18 @@ lib/actions/
 ├── todos.server.dart          ← @serverFunction implementation (server-only deps)
 ├── todos.action.g.dart        ← GENERATED shared ref + codecs (imported by both sides)
 ├── todos.client.g.dart        ← GENERATED browser proxy (imports .action.g.dart)
-└── todos.registry.g.dart      ← GENERATED server registration
+└── todos.registry.g.dart      ← GENERATED per-file server registration
+
+server_actions.g.dart          ← GENERATED package-level registration entrypoint
+```
+
+The aggregate builder emits `server_actions.g.dart`, so a native server only
+needs one generated import and one registration call:
+
+```dart
+import 'package:example/server_actions.g.dart';
+
+registerServerActions(registry: registry);
 ```
 
 ---
@@ -1025,6 +1057,24 @@ Router()
 
 ## 11. Integration with SSR
 
+The reusable `react_testing` package owns this integration for tests. It uses
+`ReactBuilder`, boots the generated Node worker, starts the standardized native
+`ReactServerApp`, and exposes both a browser `baseUrl` and a
+`server_testing`/`server_testing_shelf` client:
+
+```dart
+final harness = await ReactTestHarness.start(
+  projectRoot: Directory('example'),
+  rootComponent: 'package:app/lib/app.dart#App',
+  registerActions: registerActions,
+);
+addTearDown(harness.close);
+```
+
+This keeps browser tests focused on assertions rather than build output paths,
+worker lifecycle, or Shelf adapter setup.
+
+
 ### Correct: initial data loads in Shelf before rendering
 
 React's `useEffect` does **not** run during SSR. The following does NOT preload data:
@@ -1499,12 +1549,30 @@ For progressive enhancement without JavaScript, generate `<form action="/__react
 14. Write golden tests for all three generated output files
 15. Write generation-failure tests for non-client-safe types
 
-### Phase 5: Integration
+### Phase 5: Integration ✅
 
-16. Add server function example to the example app (todo CRUD)
-17. Test end-to-end: component → click → `toggleTodoAction()` → Shelf → registry → function → JSON → component state update
-18. Add SSR + hydration + action integration test: render page with initial data, hydrate, click, verify round-trip
-19. Document the pattern with optimistic updates, error handling, and auth
+16. Add server function example to the example app (todo CRUD) — ✅ complete
+    - `@serverData` contract class (`TodoItem`, `TodoListResult`)
+    - `@serverFunction` implementation (`listTodos`, `toggleTodo`, `addTodo`)
+    - `@reactComponent TodoApp` UI with useState/useEffect
+    - Generated `.action.g.dart`, `.client.g.dart`, `.registry.g.dart`
+    - Client compilation succeeds (`dart compile js -O0 example/web/client.dart`)
+    - SSR compilation succeeds (`dart compile js -O2 example/lib/ssr.dart`)
+17. Test end-to-end (runtime) — ✅ complete
+    - `server_testing: 0.4.0` and `server_testing_shelf: 0.4.0`
+    - ephemeral HTTP server verification in `packages/react_web/test/server_function_integration_test.dart`
+    - client → Shelf → registry → typed result/error coverage
+18. Add SSR + hydration + action integration test — ✅ complete
+    - opt-in browser test: `RUN_BROWSER_E2E=1 dart test example/test/server_function_browser_test.dart`
+    - verifies SSR output, hydration, action loading, and checkbox mutation
+19. Document the pattern with optimistic updates, error handling, and auth — pending
+
+**Key fixes discovered during Phase 5 integration:**
+- `TypeChecker.fromUrl` must point to the **definition** file (e.g. `src/annotations.dart#ServerFunctionAnnotation`), not the barrel export
+- Annotation class names must match the TypeChecker fragment fragment — use a public class name, not `_Private` pattern
+- dart2js parser does not handle `>(` across line breaks when generic type arguments contain record types
+- analyzer 14.x uses `firstFragment.source.uri` instead of `element.source?.uri` for source URIs
+- Generated files with `build_to: source` are placed alongside source files; `build_to: cache` files are in `.dart_tool/build/generated/` and must be tracked in VCS for `dart compile js` to resolve them
 
 ### Phase 6 (future)
 
