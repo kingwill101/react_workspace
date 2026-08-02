@@ -1,0 +1,18 @@
+name: react_zustand
+description: Typed bindings for the zustand state-management library.
+version: 0.0.1
+publish_to: none
+resolution: workspace
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+# Declared shims are auto-imported by `react build` whenever this package is a
+# dependency; npm dependencies are provisioned automatically when missing.
+react:
+  shims:
+    - react_zustand_shim.mjs
+  npm:
+    zustand: ^5.0.2
+dependencies:
+  react: {path: ../react}
+dev_dependencies:
+  test: ^1.31.2

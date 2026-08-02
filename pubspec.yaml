@@ -13,6 +13,7 @@ workspace:
   - packages/react_tool
   - packages/react_testing
   - packages/react_router
+  - packages/react_zustand
   - example
 dependencies:
   react_server: {path: packages/react_server}
