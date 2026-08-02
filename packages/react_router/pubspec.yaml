@@ -1,0 +1,11 @@
+name: react_router
+description: Typed React Router bindings for React Dart applications.
+version: 0.0.1
+publish_to: none
+resolution: workspace
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+dependencies:
+  react: {path: ../react}
+dev_dependencies:
+  test: ^1.31.2
