@@ -1,6 +1,12 @@
+import 'package:react_bloc/react_bloc.dart' show blocProvider;
+import 'package:react_riverpod/react_riverpod.dart' show riverpodScope;
 import 'package:react_web/react_web.dart';
 import 'app_context.dart';
+import 'bloc_demo.react.dart';
+import 'bloc_demo.dart' show blocCounterBloc;
 import 'counter.react.dart';
+import 'riverpod_demo.react.dart';
+import 'riverpod_demo.dart' show riverpodContainer;
 import 'router_demo.react.dart';
 import 'todos/todos_ui.react.dart';
 import 'zustand_demo.react.dart';
@@ -183,6 +189,26 @@ ReactNode App(({String title, String path}) props) {
                   key: 'zustand-surface',
                   className: 'surface zustand-surface',
                   children: [ZustandDemo(hidden: true, key: 'zustand')],
+                ),
+                div(
+                  key: 'riverpod-surface',
+                  className: 'surface riverpod-surface',
+                  children: [
+                    riverpodScope(
+                      riverpodContainer,
+                      [RiverpodDemo(hidden: true, key: 'riverpod')],
+                    ),
+                  ],
+                ),
+                div(
+                  key: 'bloc-surface',
+                  className: 'surface bloc-surface',
+                  children: [
+                    blocProvider(
+                      blocCounterBloc,
+                      [BlocDemo(hidden: true, key: 'bloc')],
+                    ),
+                  ],
                 ),
               ],
             ),

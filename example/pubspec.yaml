@@ -11,6 +11,8 @@ dependencies:
   react_actions: {path: ../packages/react_actions}
   react_router: {path: ../packages/react_router}
   react_zustand: {path: ../packages/react_zustand}
+  react_riverpod: {path: ../packages/react_riverpod}
+  react_bloc: {path: ../packages/react_bloc}
   shelf: ^1.4.0
   shelf_static: ^1.1.3
 dev_dependencies:

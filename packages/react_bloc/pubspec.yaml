@@ -1,0 +1,16 @@
+name: react_bloc
+description: React bindings for the bloc state-management library.
+version: 0.0.1
+publish_to: none
+resolution: workspace
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+# Pure-Dart wrapper: no shim and no npm dependencies — the bloc instance
+# lives in Dart and reaches React through the portable useSyncExternalStore
+# and context hooks, so nothing needs to be bundled or installed by react
+# build.
+dependencies:
+  bloc: ^9.2.1
+  react: {path: ../react}
+dev_dependencies:
+  test: ^1.31.2

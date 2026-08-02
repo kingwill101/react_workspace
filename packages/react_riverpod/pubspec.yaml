@@ -1,0 +1,15 @@
+name: react_riverpod
+description: React bindings for the Riverpod state-management library.
+version: 0.0.1
+publish_to: none
+resolution: workspace
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+# Pure-Dart wrapper: no shim and no npm dependencies — the container lives in
+# Dart and reaches React through the portable useSyncExternalStore/context
+# hooks, so nothing needs to be bundled or installed by react build.
+dependencies:
+  react: {path: ../react}
+  riverpod: ^3.4.2
+dev_dependencies:
+  test: ^1.31.2
