@@ -149,6 +149,42 @@ final harness = await ReactTestHarness.start(
 addTearDown(harness.close);
 ```
 
+### Wrapping third-party React packages
+
+To wrap an npm package (router, forms, charts…) without touching the core
+packages, publish a wrapper Dart package that ships a self-registering shim:
+
+1. The shim imports the npm package, registers components through the generic
+   bridge, and exposes a hook bridge:
+
+   ```js
+   // lib/react_router_shim.mjs
+   import * as RRD from 'react-router-dom';
+   globalThis.__reactDartRegisterComponent?.('reactRouter.MemoryRouter', RRD.MemoryRouter);
+   globalThis.__reactDartRouter = { locationParts: () => { const l = RRD.useLocation(); return [l.pathname, l.search, l.hash, l.key]; } };
+   ```
+
+2. The wrapper's pubspec declares the shim, so depending on the package is
+   all a project needs:
+
+   ```yaml
+   # pubspec.yaml — wrapper package
+   react:
+     shims:
+       - react_router_shim.mjs
+   ```
+
+3. Dart code uses `foreignComponent(...)` from `package:react` for components
+   and its own `@JS` externals for hooks. See `packages/react_router` for a
+   complete example.
+
+At build time `react_tool` collects every dependency's declared shims,
+resolves `package:` URIs through the workspace package config, and bundles
+each shim with esbuild — inlining its npm imports while keeping
+`react`/`react-dom` external so everything shares one React instance (import
+map in the browser, node_modules in the SSR worker). No vendor directory is
+maintained by hand; `build/react/vendor/` is generated output.
+
 ## Boundary preserving
 Source:
   Avatar({required src}) in avatar.dart

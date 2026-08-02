@@ -5,6 +5,11 @@ publish_to: none
 resolution: workspace
 environment:
   sdk: ">=3.12.0 <4.0.0"
+# Declared shims are auto-imported by `react build` whenever this package is a
+# dependency, so projects only need to add the package — no react.yaml edits.
+react:
+  shims:
+    - react_router_shim.mjs
 dependencies:
   react: {path: ../react}
 dev_dependencies:

@@ -92,4 +92,56 @@ $accent: #336699;
     expect(foreignBindings, contains('bool? disabled'));
     expect(foreignBindings, contains("'Card'"));
   });
+
+  test('imports shims declared by dependency packages', () async {
+    // A fake wrapper package shipping a self-registering shim.
+    final dep = Directory('${root.path}/../fake_router');
+    await dep.create(recursive: true);
+    await File('${dep.path}/pubspec.yaml').writeAsString('''
+name: fake_router
+react:
+  shims:
+    - fake_router_shim.mjs
+''');
+    await Directory('${dep.path}/lib').create(recursive: true);
+    await File('${dep.path}/lib/fake_router_shim.mjs').writeAsString('''
+globalThis.__reactDartRegisterComponent?.(
+  'fakeRouter.Panel',
+  () => null,
+);
+''');
+
+    // package_config.json mapping `fake_router` to the dependency.
+    final dartTool = Directory('${root.path}/.dart_tool');
+    await dartTool.create(recursive: true);
+    final configDir = dartTool.parent.path;
+    await File('${dartTool.path}/package_config.json').writeAsString('''
+{
+  "configVersion": 2,
+  "packages": [
+    {"name": "sample", "rootUri": "../", "packageUri": "lib/"},
+    {"name": "fake_router", "rootUri": "../../fake_router", "packageUri": "lib/"}
+  ]
+}
+''');
+
+    final config = ReactProjectConfig.load(root);
+    final builder = ReactBuilder(config: config, release: false, log: (_) {});
+
+    await builder.build();
+
+    final foreignLoader = await File(
+      '${root.path}/build/react/foreign_components.mjs',
+    ).readAsString();
+    expect(
+      foreignLoader,
+      contains("import './vendor/fake_router_shim.mjs';"),
+    );
+    expect(
+      await File(
+        '${root.path}/build/react/vendor/fake_router_shim.mjs',
+      ).existsSync(),
+      isTrue,
+    );
+  });
 }
