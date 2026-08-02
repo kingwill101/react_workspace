@@ -8,7 +8,7 @@ import 'package:react_server/react_server.dart';
 import 'package:example/server_actions.g.dart';
 
 const _defaultRootComponent =
-    'package:react_workspace/example/lib/app.dart#App';
+    'package:example/lib/app.dart#App';
 
 Future<void> main() async {
   final port = int.tryParse(Platform.environment['PORT'] ?? '') ?? 8080;
@@ -35,7 +35,7 @@ Future<void> main() async {
     ssr: ssr,
     rootComponent:
         Platform.environment['REACT_ROOT_COMPONENT'] ?? _defaultRootComponent,
-    pageProps: (request) => {'title': 'hi'},
+    pageProps: (request) => {'title': 'hi', 'path': request.url.path},
   );
 
   final server = await io.serve(app.handler, InternetAddress.anyIPv4, port);

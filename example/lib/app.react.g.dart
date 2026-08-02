@@ -4,15 +4,17 @@ import 'package:react_js/react_js.dart';
 import 'app.dart' as impl;
 import 'app.react.dart' show idApp;
 
-JSObject _App_toJS(({String title}) props) {
+JSObject _App_toJS(({String path, String title}) props) {
   final o = JSObject();
+  o.setProperty('path'.toJS, props.path.toJS);
   o.setProperty('title'.toJS, props.title.toJS);
   return o;
 }
 
-({String title}) _App_fromJS(JSObject js) {
+({String path, String title}) _App_fromJS(JSObject js) {
+final path = requiredJSString(js, "path", component: "App");
 final title = requiredJSString(js, "title", component: "App");
-  return (title: title);
+  return (path: path, title: title);
 }
 
 final JSFunction $App = (() {
@@ -24,7 +26,7 @@ final JSFunction $App = (() {
 })() as JSFunction;
 void registerApp(){
   ReactRegistry.register(idApp.value, $App,
-      toJS: (p) => _App_toJS(p as ({String title})),
+      toJS: (p) => _App_toJS(p as ({String path, String title})),
       fromJS: (js) => _App_fromJS(js));
 }
 

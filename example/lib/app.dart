@@ -1,6 +1,7 @@
 import 'package:react_web/react_web.dart';
 import 'app_context.dart';
 import 'counter.react.dart';
+import 'router_demo.react.dart';
 import 'todos/todos_ui.react.dart';
 
 typedef CounterProps = ({
@@ -41,7 +42,7 @@ final memoizedCounter = memo<CounterProps>(
 );
 
 @reactComponent
-ReactNode App(({String title}) props) {
+ReactNode App(({String title, String path}) props) {
   final markerRef = useRef<dynamic>();
   final (showLazy, setShowLazy) = useState(false);
 
@@ -171,6 +172,11 @@ ReactNode App(({String title}) props) {
                     children: [const Text('The todo panel failed to render.')],
                   ),
                   children: [TodoApp(key: 'todos', title: 'Todos')],
+                ),
+                div(
+                  key: 'router-surface',
+                  className: 'surface router-surface',
+                  children: [RouterDemo(key: 'router', path: props.path)],
                 ),
               ],
             ),

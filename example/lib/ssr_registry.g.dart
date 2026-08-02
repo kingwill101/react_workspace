@@ -5,6 +5,9 @@ import 'package:example/app.react.dart' show idApp;
 import 'package:example/avatar.react.dart' show idAvatar;
 import 'package:example/badge.react.dart' show idBadge;
 import 'package:example/counter.react.dart' show idCounter;
+import 'package:example/route_content.react.dart' show idRouteContent;
+import 'package:example/route_item.react.dart' show idItemDetail;
+import 'package:example/router_demo.react.dart' show idRouterDemo;
 import 'package:example/todos/todos_ui.react.dart' show idTodoApp;
 
 /// Maps canonical component IDs to their SSR builders.
@@ -31,5 +34,8 @@ void registerKnownSsComponentIds() {
   SsrComponentRegistry.register(    idAvatar.value, (_) => const Empty());
   SsrComponentRegistry.register(    idBadge.value, (_) => const Empty());
   SsrComponentRegistry.register(    idCounter.value, (_) => const Empty());
+  SsrComponentRegistry.register(    idRouteContent.value, (_) => const Empty());
+  SsrComponentRegistry.register(    idItemDetail.value, (_) => const Empty());
+  SsrComponentRegistry.register(    idRouterDemo.value, (_) => const Empty());
   SsrComponentRegistry.register(    idTodoApp.value, (_) => const Empty());
 }

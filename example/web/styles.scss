@@ -252,3 +252,61 @@ h1 {
     display: none;
   }
 }
+
+// ── Router demo ──────────────────────────────────────────────
+.router-surface {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.router-nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.router-link {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid $line;
+  background: #fff;
+  color: $ink;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: .92rem;
+  transition: border-color .15s, color .15s, box-shadow .15s;
+}
+
+.router-link:hover {
+  border-color: $violet;
+  color: $violet;
+}
+
+.router-link[aria-current='page'] {
+  border-color: $violet;
+  background: rgba(114, 87, 255, .08);
+  color: $violet;
+  box-shadow: 0 0 0 3px rgba(114, 87, 255, .12);
+}
+
+.router-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.router-location {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .8rem;
+  color: $muted;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(23, 32, 51, .05);
+}
+
+.router-content a {
+  color: $violet;
+  text-decoration: none;
+  font-weight: 600;
+}

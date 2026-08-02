@@ -8,3 +8,6 @@ styles:
   entrypoints:
     - web/styles.scss
     - lib/styles/todo.module.scss
+foreign:
+  modules:
+    - package:react_router/react_router_shim.mjs

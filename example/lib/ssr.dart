@@ -9,7 +9,10 @@ void main() {
   registerReactComponents();
   SsrComponentRegistry.register(
     idApp.value,
-    (props) => App(title: props['title'] as String? ?? 'hi from SSR'),
+    (props) => App(
+      title: props['title'] as String? ?? 'hi from SSR',
+      path: props['path'] as String? ?? '/',
+    ),
   );
 
   SsrComponentRegistry.register(

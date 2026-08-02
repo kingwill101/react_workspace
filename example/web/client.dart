@@ -18,10 +18,16 @@ void main() {
       final props = getInitialProps();
       if (props.isNotEmpty) {
         // SSR content present — hydrate instead of mounting fresh.
-        hydrate(root, App(title: props['title'] as String));
+        hydrate(
+          root,
+          App(
+            title: props['title'] as String? ?? 'Hello from React',
+            path: props['path'] as String? ?? '/',
+          ),
+        );
       } else {
         // No SSR — mount fresh.
-        mount(root, App(title: 'Hello from React'));
+        mount(root, App(title: 'Hello from React', path: '/'));
       }
     },
   );
