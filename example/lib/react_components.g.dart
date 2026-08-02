@@ -8,6 +8,7 @@ import 'package:example/route_content.react.g.dart' as routeContent;
 import 'package:example/route_item.react.g.dart' as itemDetail;
 import 'package:example/router_demo.react.g.dart' as routerDemo;
 import 'package:example/todos/todos_ui.react.g.dart' as todoApp;
+import 'package:example/zustand_demo.react.g.dart' as zustandDemo;
 
 /// Registers all generated React components.
 void registerReactComponents() {
@@ -19,4 +20,5 @@ void registerReactComponents() {
   itemDetail.registerItemDetail();
   routerDemo.registerRouterDemo();
   todoApp.registerTodoApp();
+  zustandDemo.registerZustandDemo();
 }

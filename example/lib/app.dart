@@ -3,6 +3,7 @@ import 'app_context.dart';
 import 'counter.react.dart';
 import 'router_demo.react.dart';
 import 'todos/todos_ui.react.dart';
+import 'zustand_demo.react.dart';
 
 typedef CounterProps = ({
   String title,
@@ -177,6 +178,11 @@ ReactNode App(({String title, String path}) props) {
                   key: 'router-surface',
                   className: 'surface router-surface',
                   children: [RouterDemo(key: 'router', path: props.path)],
+                ),
+                div(
+                  key: 'zustand-surface',
+                  className: 'surface zustand-surface',
+                  children: [ZustandDemo(hidden: true, key: 'zustand')],
                 ),
               ],
             ),
