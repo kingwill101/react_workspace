@@ -1,5 +1,5 @@
 import 'package:react_router/react_router.dart';
-import 'package:react_router/react_router_hooks.dart';
+import 'package:react_router/react_router_hooks.dart'; // JS-only hooks (useParams)
 import 'package:react_web/react_web.dart' hide link; // <link> collides with router Link
 
 /// Renders a matched `/items/:id` route and reads `:id` with `useParams`.

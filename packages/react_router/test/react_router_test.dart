@@ -80,7 +80,7 @@ void main() {
 
     final linkNode = link(
       to: '/x',
-      relative: LinkRelative.path,
+      relative: RelativeRoutingType.path,
     ) as ForeignComponent;
     expect(linkNode.props['relative'], 'path');
   });

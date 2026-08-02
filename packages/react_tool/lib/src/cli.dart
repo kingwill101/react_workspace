@@ -220,7 +220,15 @@ final class _TsBindCommand extends Command<void> {
       ..addOption(
         'shim',
         help: 'Also write a JS shim registering the bound components at this '
-            'path (wire it into react.yaml under foreign.modules).',
+            'path (wire it into react.yaml under foreign.modules). When the '
+            'extraction includes use* hooks the shim also registers the '
+            '__reactDartHooks hook bridge.',
+      )
+      ..addOption(
+        'hooks',
+        help: 'Also write a Dart hooks file for the extracted use* hooks at '
+            'this path. Hooks run through the shim bridge during render and '
+            'decode into typed values (maps, records, value classes).',
       )
       ..addOption(
         'npm-root',
@@ -301,11 +309,59 @@ final class _TsBindCommand extends Command<void> {
       info('Wrote shim to ${shimFile.path}');
     }
 
+    final hooksPath = option('hooks') as String?;
+    if (hooksPath != null) {
+      final hooksFile = config.file(hooksPath);
+      String? bindingsImport;
+      Set<String>? reuseTypeNames;
+      final bindingsPath = option('output') as String?;
+      if (bindingsPath != null) {
+        final bindingsFile = config.file(bindingsPath);
+        if (bindingsFile.existsSync()) {
+          // The hooks file imports the bindings file and reuses its types
+          // (e.g. `RelativeRoutingType`), so both can be exported together.
+          final relative = hooksFile.parent.path == bindingsFile.parent.path
+              ? p.basename(bindingsFile.path)
+              : p.relative(bindingsFile.path, from: hooksFile.parent.path);
+          if (relative.endsWith('.dart')) {
+            bindingsImport = relative;
+            reuseTypeNames = _generatedTopLevelNames(bindingsFile.readAsStringSync());
+          }
+        }
+      }
+      final hooks = generateHooks(
+        specifier: specifier,
+        declarations: result.declarations,
+        commandLine: 'react ts bind $specifier ${names.join(' ')} --hooks',
+        entryComment: result.entry,
+        typePrefix: option('type-prefix') as String? ?? '',
+        bindingsImport: bindingsImport,
+        reuseTypeNames: reuseTypeNames,
+      );
+      hooksFile.parent.createSync(recursive: true);
+      hooksFile.writeAsStringSync(hooks);
+      info('Wrote ${result.declarations.where((d) => d.kind == 'hook').length} hook(s) to ${hooksFile.path}');
+    }
+
     info(
       'Wrote ${result.declarations.length} binding(s) '
       '(from ${result.files} type files) to ${outputFile.path}',
     );
   }
+}
+
+/// Top-level type names declared in a generated Dart file, so a sibling
+/// hooks file can reference them instead of redeclaring them.
+Set<String> _generatedTopLevelNames(String source) {
+  final names = <String>{};
+  final pattern = RegExp(
+    r'^(?:final\s+)?(?:class|enum|typedef|abstract\s+class|mixin)\s+([A-Za-z_]\w*)',
+    multiLine: true,
+  );
+  for (final match in pattern.allMatches(source)) {
+    names.add(match.group(1)!);
+  }
+  return names;
 }
 
 final class ServeCommand extends Command<void> {

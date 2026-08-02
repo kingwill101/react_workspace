@@ -1,5 +1,5 @@
 import 'package:react_router/react_router.dart';
-import 'package:react_router/react_router_hooks.dart';
+import 'package:react_router/react_router_hooks.dart'; // JS-only hooks (useLocation)
 import 'package:react_web/react_web.dart' hide link; // <link> element collides with router Link
 
 import 'route_item.react.dart';
