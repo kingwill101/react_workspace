@@ -12,6 +12,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:package_config/package_config.dart';
 import 'package:path/path.dart' as p;
 
 /// The JavaScript contract of one wrapper package (`react.js` in pubspec).
@@ -301,7 +302,7 @@ class JsEnvironmentBuilder {
     final requirements = _collectRequirements(wrappers);
     if (!required && requirements.isEmpty && wrappers.isEmpty) return null;
 
-    final toolRoot = _findToolRoot();
+    final toolRoot = await _findToolRoot();
     final root = Directory(p.join(toolRoot.path, '.dart_tool/react/js'));
 
     if (host) {
@@ -575,20 +576,11 @@ class JsEnvironmentBuilder {
   }
 
   /// The workspace root holding `.dart_tool` (found via package_config).
-  Directory _findToolRoot() {
-    var current = projectRoot;
-    while (true) {
-      if (File(
-        p.join(current.path, '.dart_tool/package_config.json'),
-      ).existsSync()) {
-        return current;
-      }
-      final parent = current.parent;
-      if (parent.path == current.path) break;
-      current = parent;
-    }
-    // Fall back to the project root.
-    return projectRoot;
+  Future<Directory> _findToolRoot() async {
+    final found = await findPackageConfigAndFile(projectRoot);
+    if (found == null) return projectRoot;
+    // package_config.json lives at <root>/.dart_tool/package_config.json.
+    return found.file.parent.parent;
   }
 
   String? _findNpmRoot() {

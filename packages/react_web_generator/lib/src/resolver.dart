@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:package_config/package_config.dart';
 import 'package:path/path.dart' as p;
 
 import 'web_dart_type.dart';
@@ -45,27 +45,23 @@ final class PackageWebResolver {
       return;
     }
 
-    final config =
-        jsonDecode(await pkgConfig.readAsString()) as Map<String, dynamic>;
-    final packages = config['packages'] as List<dynamic>;
-
-    Map<String, dynamic>? webPkg;
-    for (final pkg in packages) {
-      final pkgMap = pkg as Map<String, dynamic>;
-      if (pkgMap['name'] == 'web') {
-        webPkg = pkgMap;
-        break;
-      }
+    final PackageConfig config;
+    try {
+      config = await loadPackageConfig(pkgConfig);
+    } on Object catch (error) {
+      _errors.add('Invalid package_config.json at ${pkgConfig.path}: $error');
+      return;
     }
 
+    final webPkg = config['web'];
     if (webPkg == null) {
       _errors.add('package:web not found in package_config.json');
       return;
     }
 
-    final webRootUri = webPkg['rootUri'] as String;
-    final webPkgDir = _resolveUri(webRootUri, packageRoot);
-    final webLib = Directory(p.join(webPkgDir, 'lib'));
+    // Package.root is an absolute directory URI with rootUri resolved
+    // against the package_config.json location by the package_config package.
+    final webLib = Directory(p.join(webPkg.root.toFilePath(), 'lib'));
     if (!await webLib.exists()) {
       _errors.add('package:web lib/ not found at ${webLib.path}');
       return;
@@ -96,15 +92,5 @@ final class PackageWebResolver {
         nullable: false,
       );
     }
-  }
-
-  String _resolveUri(String uri, String basePath) {
-    if (uri.startsWith('file://')) {
-      return Uri.parse(uri).toFilePath();
-    }
-    if (uri.startsWith('package:')) {
-      return p.join(basePath, '.dart_tool', uri.replaceAll(':', '/'));
-    }
-    return uri;
   }
 }

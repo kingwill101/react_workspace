@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:package_config/package_config.dart';
 import 'package:path/path.dart' as p;
 import 'package:sass/sass.dart' as sass;
 import 'package:yaml/yaml.dart';
@@ -19,7 +20,7 @@ final class ReactBuilder {
   /// (defaults to `npm`; may be an absolute path for testing).
   final String npmCommand;
 
-  const ReactBuilder({
+  ReactBuilder({
     required this.config,
     required this.release,
     this.log = print,
@@ -462,23 +463,15 @@ final class ReactBuilder {
 
   /// Dependency packages (excluding this project) from the package config.
   Future<List<(String, String)>> _dependencyPackages() async {
-    final packageConfig = _findPackageConfig();
-    if (packageConfig == null) return const [];
-    final decoded = jsonDecode(packageConfig.readAsStringSync());
-    final packages = (decoded as Map)['packages'] as List;
-    final configDir = packageConfig.parent.path;
+    final found = await _loadPackageConfig();
+    if (found == null) return const [];
 
     final result = <(String, String)>[];
-    for (final entry in packages) {
-      final map = entry as Map;
-      final name = map['name'] as String;
-      if (name == config.packageName) continue;
-      final rootUri = map['rootUri'] as String;
-      final rootPath = rootUri.startsWith('file:')
-          ? Uri.parse(rootUri).toFilePath()
-          : p.normalize(p.joinAll([configDir, ...p.split(rootUri)]));
+    for (final package in found.config.packages) {
+      if (package.name == config.packageName) continue;
+      final rootPath = package.root.toFilePath();
       if (!File(p.join(rootPath, 'pubspec.yaml')).existsSync()) continue;
-      result.add((name, rootPath));
+      result.add((package.name, rootPath));
     }
     return result;
   }
@@ -558,7 +551,7 @@ final class ReactBuilder {
           'Expected package:name/path/to/file.mjs.',
         );
       }
-      final root = _resolvePackageRoot(match.group(1)!);
+      final root = await _resolvePackageRoot(match.group(1)!);
       final relative = match.group(2)!;
       final packagePath = relative.startsWith('lib/')
           ? relative
@@ -576,7 +569,7 @@ final class ReactBuilder {
 
   /// Resolves a wrapper's entry file (package-relative) to an absolute path.
   Future<String> _resolveWrapperEntry(String packageName, String entry) async {
-    final root = _resolvePackageRoot(packageName);
+    final root = await _resolvePackageRoot(packageName);
     final path = p.join(root, entry);
     if (!File(path).existsSync()) {
       throw ReactToolException(
@@ -588,42 +581,31 @@ final class ReactBuilder {
   }
 
   /// Absolute root directory of [packageName] from the package config.
-  String _resolvePackageRoot(String packageName) {
-    final packageConfig = _findPackageConfig();
-    if (packageConfig == null) {
+  Future<String> _resolvePackageRoot(String packageName) async {
+    final found = await _loadPackageConfig();
+    if (found == null) {
       throw ReactToolException(
         'Cannot resolve package "$packageName": missing '
         '.dart_tool/package_config.json. Run dart pub get first.',
       );
     }
-    final decoded = jsonDecode(packageConfig.readAsStringSync());
-    final packages = (decoded as Map)['packages'] as List;
-    for (final entry in packages) {
-      final map = entry as Map;
-      if (map['name'] != packageName) continue;
-      final rootUri = map['rootUri'] as String;
-      final configDir = packageConfig.parent.path;
-      return rootUri.startsWith('file:')
-          ? Uri.parse(rootUri).toFilePath()
-          : p.normalize(p.joinAll([configDir, ...p.split(rootUri)]));
+    final package = found.config[packageName];
+    if (package == null) {
+      throw ReactToolException(
+        'Package "$packageName" is not a dependency of this project.',
+      );
     }
-    throw ReactToolException(
-      'Package "$packageName" is not a dependency of this project.',
-    );
+    return package.root.toFilePath();
   }
 
-  File? _findPackageConfig() {
-    var current = config.root;
-    while (true) {
-      final candidate = File(
-        p.join(current.path, '.dart_tool/package_config.json'),
-      );
-      if (candidate.existsSync()) return candidate;
-      final parent = current.parent;
-      if (parent.path == current.path) return null;
-      current = parent;
-    }
+  /// Loads the workspace package configuration (walking up from the project
+  /// root), caching it for the duration of the build. Returns null when no
+  /// configuration file exists.
+  Future<({PackageConfig config, File file})?> _loadPackageConfig() {
+    return _cachedPackageConfig ??= findPackageConfigAndFile(config.root);
   }
+
+  Future<({PackageConfig config, File file})?>? _cachedPackageConfig;
 
   Future<void> _compile({
     required String input,
