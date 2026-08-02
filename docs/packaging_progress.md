@@ -1,5 +1,7 @@
 Your current solution is a **good proof of concept**, but I would not make automatic `package.json` mutation and per-shim bundling the permanent architecture.
 
+> **Status: implemented.** The recommended architecture below has been built (commits `0ea44a0`, `709e8d1`). Wrappers declare `react.js` schema 1 descriptors; `react build` provisions an isolated npm environment at `.dart_tool/react/js`, bundles one aggregate per target (browser/SSR) with the environment's pinned esbuild, pins one React version across browser + SSR, and fails fatally when a bundle cannot be produced. Two follow-ups remain: prebuilt wrapper distribution and TypeScript type resolution. See the completion record at the bottom.
+
 The core correction is:
 
 > Do not discover a package’s `.mjs` file yourself. Import the package by its public module specifier and let a real JS resolver interpret `exports`, conditional exports, `main`, `module`, and `browser`.
@@ -649,6 +651,8 @@ React and ReactDOM belong in the framework runtime/peer category—not duplicate
 
 # Proposed final schema
 
+Implemented fields (schema 1): `schema`, `entries` (shared/browser/ssr, `false` to disable a target), `dependencies`, `peers`, `externals` (defaults to react/react-dom), `prebuilt` (accepted; no wrapper ships one yet). `capabilities` and `assets` are not yet parsed — reserved for the prebuilt/asset work.
+
 ```yaml
 name: react_router
 
@@ -689,38 +693,57 @@ react:
       shared: lib/src/js/register.ts
 ```
 
-# Build output
+# Build output (implemented)
 
 ```text
 build/react/
-├── client.js
-├── ssr.js
-├── callback_trampoline.mjs
+├── client.js                      # dart2js browser app
+├── ssr.js                         # dart2js SSR entry (node worker)
+├── ssr_worker.mjs                 # tool-generated node worker (shims + imports)
+├── callback_trampoline.mjs        # js bridge protocol asset
 ├── foreign/
 │   ├── browser/
-│   │   ├── entry.mjs
-│   │   ├── chunk-ABC.mjs
-│   │   └── styles.css
+│   │   ├── entry.mjs              # generated aggregate input (wrapper entries)
+│   │   ├── bundle.mjs             # esbuild output (sourcemap: bundle.mjs.map)
+│   │   └── styles.css             # when a wrapper ships CSS
 │   └── ssr/
 │       ├── entry.mjs
-│       └── chunk-XYZ.mjs
-├── foreign_manifest.json
-└── ssr_worker.mjs
+│       └── bundle.mjs
+├── foreign_components.g.dart      # typed Dart bindings for foreign components
+├── index.html                     # import map + <script src="foreign/browser/bundle.mjs">
+└── manifest.json
 ```
+
+Naming note: esbuild renames `.mjs` entries to `.js` under `outdir`, so the tool passes an explicit `outfile: …/bundle.mjs`. All references (the page's script tag, the worker's import) point at `bundle.mjs`; the `entry.mjs` files are bundle inputs that may remain as dead weight.
 
 Browser:
 
 ```html
-<script type="module" src="foreign/browser/entry.mjs"></script>
+<script type="module" src="foreign/browser/bundle.mjs"></script>
 <script type="module" src="client.js"></script>
 ```
 
 SSR worker:
 
 ```js
-await import('./foreign/ssr/entry.mjs');
+globalThis.require ??= createRequire('<envNpmRoot>/x.js');  // UMD dynamic require
+await import('./foreign/ssr/bundle.mjs');
 await import('./ssr.js');
 ```
+
+# Implementation details that diverged from the design
+
+These decisions were forced by the ecosystem while implementing:
+
+* **`npm view <name> versions --json` + local range filtering** — modern npm rejects range specifiers containing spaces/`>` in `npm view pkg@range` (`EINVALIDTAGNAME`). The tool fetches the full version list once and filters locally against every wrapper's range.
+* **Driver protocol** — esbuild is invoked programmatically by a tool-owned `driver.mjs` in the environment; build options arrive as JSON argv. The npm root travels via `REACT_NPM_ROOT` because esbuild rejects unknown option keys.
+* **SSR externals via node-externals plugin** — the SSR bundle keeps `react`/`react-dom` external, so the driver's `onResolve` rewrites those bare specifiers to absolute paths inside the managed environment (`require.resolve` against the npm root), guaranteeing the worker and the foreign bundle share one React instance.
+* **Import-map pinning** — the browser import map (`https://esm.sh/react@X.Y.Z`) is rewritten to the environment's exact resolved `reactVersion` on every build (idempotent), so browser and SSR always agree on one React release.
+* **Node compat shims in `ssr_worker.mjs`** — the worker runs dart2js output in Node and needs two aliases injected by the generator:
+  * `globalThis.require ??= createRequire('<envNpmRoot>/x.js')` — react-router-dom's UMD build calls dynamic `require('react')` at init; this binds it to the same managed React instance.
+  * `globalThis.self ??= globalThis` — dart2js compiles `Random.secure()` to `self.crypto.getRandomValues(...)`; uuid (a riverpod 3 dependency) calls it at module init. Node ≥18 exposes `globalThis.crypto` (webcrypto).
+* **`.installed` marker + manifest-content comparison** — a rebuild skips `npm install` when the generated manifest content is unchanged since the last successful install; the marker file is the install record.
+* **`entries: false` for a target** — `ssr: false` / `browser: false` suppress that target for the wrapper (no entry emitted for it).
 
 # Migration from the current implementation
 
