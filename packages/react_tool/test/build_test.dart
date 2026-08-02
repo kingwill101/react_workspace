@@ -240,6 +240,88 @@ globalThis.__reactDartRegisterComponent?.(
     expect(File('${root.path}/package.json').existsSync(), isFalse);
   });
 
+  test('prebuilt wrappers ship bundles and skip npm installs', () async {
+    // A wrapper distributing already-bundled per-target artifacts: react is
+    // the only external, npm dependencies are inlined by the wrapper author.
+    final dep = Directory('${root.path}/../fake_prebuilt');
+    await dep.create(recursive: true);
+    await File('${dep.path}/pubspec.yaml').writeAsString('''
+name: fake_prebuilt
+react:
+  js:
+    schema: 1
+    prebuilt:
+      browser: lib/prebuilt.browser.mjs
+      ssr: lib/prebuilt.ssr.mjs
+    peers:
+      react: ">=18 <20"
+      react-dom: ">=18 <20"
+    externals:
+      - react
+      - react-dom
+''');
+    await Directory('${dep.path}/lib').create(recursive: true);
+    for (final target in ['browser', 'ssr']) {
+      await File('${dep.path}/lib/prebuilt.$target.mjs').writeAsString('''
+import React from 'react';
+globalThis.__reactDartRegisterComponent?.(
+  'prebuilt.$target.Panel',
+  () => React.createElement('div'),
+);
+''');
+    }
+
+    final dartTool = Directory('${root.path}/.dart_tool');
+    await dartTool.create(recursive: true);
+    await File('${dartTool.path}/package_config.json').writeAsString('''
+{
+  "configVersion": 2,
+  "packages": [
+    {"name": "sample", "rootUri": "../", "packageUri": "lib/"},
+    {"name": "fake_prebuilt", "rootUri": "../../fake_prebuilt", "packageUri": "lib/"}
+  ]
+}
+''');
+
+    final config = ReactProjectConfig.load(root);
+    final builder = ReactBuilder(
+      config: config,
+      release: false,
+      log: (_) {},
+      npmCommand: await writeNpmStub(root),
+    );
+
+    await builder.build();
+
+    // entryFor(target) picks the prebuilt artifact for each target.
+    for (final target in ['browser', 'ssr']) {
+      final entry = await File(
+        '${root.path}/build/react/foreign/$target/entry.mjs',
+      ).readAsString();
+      expect(
+        entry,
+        contains(
+          "import \"${p.normalize('${dep.path}/lib/prebuilt.$target.mjs')}\";",
+        ),
+      );
+    }
+
+    // The environment installs only the framework singletons: the prebuilt
+    // wrapper's (nonexistent) npm dependencies must not be requested, and
+    // its peers still pin react/react-dom.
+    final manifest = jsonDecode(
+      await File(
+        '${root.path}/.dart_tool/react/js/package.json',
+      ).readAsString(),
+    ) as Map;
+    final dependencies = manifest['dependencies'] as Map;
+    expect(dependencies.keys.toSet(), {'react', 'react-dom'});
+    expect(dependencies['react'], '18.3.1');
+    expect(dependencies['react-dom'], '18.3.1');
+    // Host manifest untouched.
+    expect(File('${root.path}/package.json').existsSync(), isFalse);
+  });
+
   test('accepts the legacy react.shims / react.npm fields', () async {
     final dep = Directory('${root.path}/../fake_legacy');
     await dep.create(recursive: true);

@@ -1,6 +1,6 @@
 Your current solution is a **good proof of concept**, but I would not make automatic `package.json` mutation and per-shim bundling the permanent architecture.
 
-> **Status: implemented.** The recommended architecture below has been built (commits `0ea44a0`, `709e8d1`). Wrappers declare `react.js` schema 1 descriptors; `react build` provisions an isolated npm environment at `.dart_tool/react/js`, bundles one aggregate per target (browser/SSR) with the environment's pinned esbuild, pins one React version across browser + SSR, and fails fatally when a bundle cannot be produced. Two follow-ups remain: prebuilt wrapper distribution and TypeScript type resolution. See the completion record at the bottom.
+> **Status: implemented.** The recommended architecture below has been built (commits `0ea44a0`, `709e8d1`). Wrappers declare `react.js` schema 1 descriptors; `react build` provisions an isolated npm environment at `.dart_tool/react/js`, bundles one aggregate per target (browser/SSR) with the environment's pinned esbuild, pins one React version across browser + SSR, and fails fatally when a bundle cannot be produced. One follow-up remains: TypeScript type resolution. See the completion record at the bottom.
 
 The core correction is:
 
@@ -758,7 +758,7 @@ Status (implemented):
 7. ✅ esbuild pinned as a devDependency of the managed environment (host fallback only in host mode).
 8. ✅ One resolved React version: the import map is rewritten to the exact version the environment resolved, and the SSR worker imports react/react-dom through absolute paths in that same environment.
 9. ✅ `managed` (default) and `host` JS-environment modes (`react.yaml foreign.host: true`); `react js install` / `react js sync` subcommands.
-10. ⬜ Prebuilt wrapper support — the descriptor schema accepts `prebuilt` targets and `entryFor` honors them, but no wrapper ships one yet.
+10. ✅ Prebuilt wrapper support — wrappers ship already-bundled per-target artifacts (`prebuilt.browser` / `prebuilt.ssr`); the build imports them into the aggregate and esbuild keeps react/react-dom external. A prebuilt-only wrapper contributes no npm `dependencies` (they are inlined by the wrapper author), so no installation is forced beyond the framework singletons. Verified end-to-end: the real pinned esbuild bundles a prebuilt file and the node-externals plugin rewrites its bare `react` import to the managed env path, loading against the same 18.3.1 instance.
 11. ⬜ TypeScript module resolution for `.d.ts` discovery and binding generation — future work.
 
 The existing mechanism demonstrates that wrappers can self-register and be discovered through Dart package metadata. That part is valuable. The permanent design should make the **module specifier** the contract, make esbuild the resolver, separate browser and Node outputs, and keep all automatically managed npm state out of the consumer’s source-controlled manifest.

@@ -311,13 +311,20 @@ class JsEnvironmentBuilder {
   }
 
   /// Merges every wrapper's requirements, failing on incompatible ranges.
+  ///
+  /// A wrapper whose targets are all covered by [prebuilt] entries ships
+  /// already-bundled artifacts — its npm `dependencies` are inlined and must
+  /// not force installations; only its `peers` (react/react-dom validation)
+  /// still apply.
   List<NpmRequirement> _collectRequirements(List<JsWrapperDescriptor> wrappers) {
     final merged = <String, List<NpmRequirement>>{};
     for (final wrapper in wrappers) {
-      for (final entry in wrapper.dependencies.entries) {
-        merged
-            .putIfAbsent(entry.key, () => [])
-            .add(NpmRequirement(entry.key, entry.value, wrapper.packageName));
+      if (wrapper.entries.isNotEmpty) {
+        for (final entry in wrapper.dependencies.entries) {
+          merged
+              .putIfAbsent(entry.key, () => [])
+              .add(NpmRequirement(entry.key, entry.value, wrapper.packageName));
+        }
       }
       for (final entry in wrapper.peers.entries) {
         merged
