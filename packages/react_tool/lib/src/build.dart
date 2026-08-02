@@ -385,14 +385,7 @@ final class ReactBuilder {
     final declared = await _declaredNpmDependencies();
     if (declared.isEmpty) return;
 
-    final npmRoot = _findNpmRoot();
-    if (npmRoot == null) {
-      log(
-        'No package.json or node_modules found; skipping npm provisioning for '
-        '${declared.keys.join(', ')}.',
-      );
-      return;
-    }
+    final npmRoot = _findNpmRoot() ?? config.root.path;
 
     final packageJson = File(p.join(npmRoot, 'package.json'));
     final manifest = packageJson.existsSync()
@@ -422,14 +415,20 @@ final class ReactBuilder {
     }
 
     log('Installing npm dependencies: ${missing.join(', ')}');
-    final result = await Process.run(
-      npmCommand,
-      ['install', '--no-audit', '--no-fund'],
-      workingDirectory: npmRoot,
-    );
-    if (result.exitCode != 0) {
+    try {
+      final result = await Process.run(
+        npmCommand,
+        ['install', '--no-audit', '--no-fund'],
+        workingDirectory: npmRoot,
+      );
+      if (result.exitCode != 0) {
+        throw ReactToolException(
+          'npm install failed (exit ${result.exitCode}): ${result.stderr}',
+        );
+      }
+    } on ProcessException catch (error) {
       throw ReactToolException(
-        'npm install failed (exit ${result.exitCode}): ${result.stderr}',
+        'Failed to run $npmCommand: $error. Install npm and re-run react build.',
       );
     }
     log('npm install completed.');
