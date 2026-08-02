@@ -64,6 +64,15 @@ final class ReactProjectConfig {
   /// `ESBUILD` env var, then `esbuild` on PATH).
   final String? esbuildPath;
 
+  /// Bare npm specifiers that stay external in foreign bundles, in addition
+  /// to the always-external `react` / `react-dom`.
+  final List<String> foreignExternals;
+
+  /// Whether to validate an existing host JS project instead of provisioning
+  /// the managed environment at `.dart_tool/react/js` (`react.yaml
+  /// `foreign.host`).
+  final bool jsHostMode;
+
   const ReactProjectConfig({
     required this.root,
     required this.packageName,
@@ -77,6 +86,8 @@ final class ReactProjectConfig {
     required this.foreignComponents,
     this.foreignModules = const [],
     this.esbuildPath,
+    this.foreignExternals = const [],
+    this.jsHostMode = false,
   });
 
   factory ReactProjectConfig.load([Directory? directory]) {
@@ -127,15 +138,33 @@ final class ReactProjectConfig {
           ];
     final styleOutput = _string(stylesMap['output']);
     final foreignValue = explicit['foreign'] ?? explicit['components'];
-    final foreignComponents = _foreignComponents(foreignValue);
+    final foreignMap = _map(foreignValue);
+    // A structured `foreign:` block (with `components:`/`modules:`/`host:`
+    // keys) keeps its components nested; a bare list/map of name→module pairs
+    // is the legacy inline form.
+    final isStructured = foreignValue is Map &&
+        (foreignMap.containsKey('components') ||
+            foreignMap.containsKey('host') ||
+            foreignMap.containsKey('modules') ||
+            foreignMap.containsKey('externals'));
+    final foreignComponents = isStructured
+        ? _foreignComponents(foreignMap['components'])
+        : _foreignComponents(foreignValue);
     final foreignModules = _stringList(
-      _map(foreignValue)['modules'] ??
+      foreignMap['modules'] ??
           explicit['foreignModules'] ??
           explicit['modules'],
     );
     final esbuildPath = _string(
-      _map(foreignValue)['esbuild'] ?? explicit['esbuild'],
+      foreignMap['esbuild'] ?? explicit['esbuild'],
     );
+    final foreignExternals = _stringList(
+      foreignMap['externals'],
+    );
+    final jsHostMode =
+        _boolNullable(foreignMap['host']) ??
+        _boolNullable(explicit['hostJs']) ??
+        false;
 
     return ReactProjectConfig(
       root: root,
@@ -150,6 +179,8 @@ final class ReactProjectConfig {
       foreignComponents: foreignComponents,
       foreignModules: foreignModules,
       esbuildPath: esbuildPath,
+      foreignExternals: foreignExternals,
+      jsHostMode: jsHostMode,
     );
   }
 
@@ -231,6 +262,8 @@ List<String> _stringList(Object? value) {
       if (item is String && item.trim().isNotEmpty) item.trim(),
   ];
 }
+
+bool? _boolNullable(Object? value) => value is bool ? value : null;
 
 List<ReactForeignComponentConfig> _foreignComponents(Object? value) {
   final result = <ReactForeignComponentConfig>[];

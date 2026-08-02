@@ -108,10 +108,10 @@ foreign:
     export: default
 ```
 
-The CLI emits `foreign_components.mjs` for both browser and SSR execution.
-The module is expected to be a browser-loadable ESM asset (a Vite/esbuild
-bundle may be used for `.tsx` sources). Dart code references it without
-`dart:js_interop`:
+The CLI emits per-target foreign bundles — `foreign/browser/bundle.mjs` for
+browser execution and `foreign/ssr/bundle.mjs` for SSR. The module is
+expected to be a browser-loadable ESM asset (a Vite/esbuild bundle may be
+used for `.tsx` sources). Dart code references it without `dart:js_interop`:
 
 ```dart
 foreignComponent(
@@ -149,6 +149,12 @@ final harness = await ReactTestHarness.start(
 addTearDown(harness.close);
 ```
 
+The CLI bundles each project's foreign modules and dependency shims into two
+per-target aggregates — `foreign/browser/bundle.mjs` (loaded by the page via
+import map) and `foreign/ssr/bundle.mjs` (imported by the SSR worker) —
+using esbuild with platform-appropriate conditions. `react`/`react-dom` stay
+external so everything shares one React instance in each target.
+
 ### Wrapping third-party React packages
 
 To wrap an npm package (router, forms, charts…) without touching the core
@@ -164,32 +170,42 @@ packages, publish a wrapper Dart package that ships a self-registering shim:
    globalThis.__reactDartRouter = { locationParts: () => { const l = RRD.useLocation(); return [l.pathname, l.search, l.hash, l.key]; } };
    ```
 
-2. The wrapper's pubspec declares the shim and its npm dependencies, so
-   depending on the package is all a project needs:
+2. The wrapper's pubspec declares the shim and its npm dependencies through
+   the `react.js` descriptor (schema 1), so depending on the package is all a
+   project needs:
 
    ```yaml
    # pubspec.yaml — wrapper package
    react:
-     shims:
-       - react_router_shim.mjs
-     npm:
-       react-router-dom: ^6.26.2
+     js:
+       schema: 1
+       entries:
+         shared: lib/react_router_shim.mjs   # or browser:/ssr: per target
+       dependencies:
+         react-router-dom: ^6.26.2
+       peers:
+         react: ">=18 <20"
+         react-dom: ">=18 <20"
+       externals:
+         - react
+         - react-dom
    ```
 
-   `react build` merges every declared npm dependency into the nearest
-   `package.json` and runs `npm install` automatically when a package is
-   missing from `node_modules` — no manual install steps for users.
+   `react build` provisions an isolated npm environment at
+   `.dart_tool/react/js` (never the host `package.json`), resolves one exact
+   version per package that satisfies every wrapper's ranges, and bundles the
+   entries into the two aggregates. The legacy `react.shims` / `react.npm`
+   fields are still accepted.
 
 3. Dart code uses `foreignComponent(...)` from `package:react` for components
    and its own `@JS` externals for hooks. See `packages/react_router` for a
    complete example.
 
-At build time `react_tool` collects every dependency's declared shims,
-resolves `package:` URIs through the workspace package config, and bundles
-each shim with esbuild — inlining its npm imports while keeping
-`react`/`react-dom` external so everything shares one React instance (import
-map in the browser, node_modules in the SSR worker). No vendor directory is
-maintained by hand; `build/react/vendor/` is generated output.
+`react js install` provisions the environment on its own; `react js sync`
+validates an existing host JS project when `react.yaml` sets
+`foreign.host: true`. Bundling failures are fatal — there is no unbundled
+fallback — and conflicting version requirements across wrappers fail the
+build with a diagnostic naming every declaring package.
 
 ## Boundary preserving
 Source:

@@ -5,15 +5,23 @@ publish_to: none
 resolution: workspace
 environment:
   sdk: ">=3.12.0 <4.0.0"
-# Declared shims are auto-imported by `react build` whenever this package is a
-# dependency, so projects only need to add the package — no react.yaml edits.
-# npm dependencies are provisioned (merged into package.json + installed)
-# automatically when missing from node_modules.
+# The react.js descriptor declares the wrapper's JavaScript contract. `react
+# build` provisions an isolated npm environment and bundles this entry into
+# per-target aggregates whenever this package is a dependency, so projects
+# only need to add the package — no react.yaml edits.
 react:
-  shims:
-    - react_router_shim.mjs
-  npm:
-    react-router-dom: ^6.26.2
+  js:
+    schema: 1
+    entries:
+      shared: lib/react_router_shim.mjs
+    dependencies:
+      react-router-dom: ^6.26.2
+    peers:
+      react: ">=18 <20"
+      react-dom: ">=18 <20"
+    externals:
+      - react
+      - react-dom
 dependencies:
   react: {path: ../react}
 dev_dependencies:

@@ -18,6 +18,7 @@ class ReactCommandRunner extends CommandRunner<void> {
     addCommand(BuildCommand());
     addCommand(CleanCommand());
     addCommand(ServeCommand());
+    addCommand(JsCommand());
   }
 }
 
@@ -113,6 +114,60 @@ final class BuildCommand extends Command<void> {
         }
       });
     }
+  }
+}
+
+/// `react js install` — provisions the managed JS environment (or validates
+/// the host one) without a full build, so errors surface early.
+final class JsCommand extends Command<void> {
+  @override
+  String get name => 'js';
+
+  @override
+  String get description =>
+      'Provision the JS environment for wrapper packages.';
+
+  JsCommand() {
+    addSubcommand(_JsInstallCommand());
+    addSubcommand(_JsSyncCommand());
+  }
+}
+
+final class _JsInstallCommand extends Command<void> {
+  @override
+  String get name => 'install';
+
+  @override
+  String get description =>
+      'Install exact wrapper versions into .dart_tool/react/js.';
+
+  @override
+  Future<void> run() async {
+    final config = ReactProjectConfig.load();
+    final builder = ReactBuilder(config: config, release: false, log: line);
+    await builder.ensureJsEnvironment();
+    info('JS environment ready.');
+  }
+}
+
+final class _JsSyncCommand extends Command<void> {
+  @override
+  String get name => 'sync';
+
+  @override
+  String get description =>
+      'Validate that the host JS project satisfies every wrapper.';
+
+  @override
+  Future<void> run() async {
+    final config = ReactProjectConfig.load();
+    if (!config.jsHostMode) {
+      warn('Not in host JS mode (react.yaml foreign.host is not set).');
+      return;
+    }
+    final builder = ReactBuilder(config: config, release: false, log: line);
+    await builder.ensureJsEnvironment();
+    info('Host JS environment satisfies all wrappers.');
   }
 }
 
