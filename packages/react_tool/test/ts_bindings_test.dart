@@ -201,7 +201,7 @@ void main() {
       );
       // Typed props (classes, enum, callback typedef).
       expect(code, contains('ReactNode fakePkgGreeting('));
-      expect(code, contains('  List<ReactNode> children,'));
+      expect(code, contains('  List<ReactNode> children = const [],'));
       expect(code, contains('String? name,'));
       expect(code, contains('required num count,'));
       expect(code, contains('List<String>? items,'));
@@ -280,13 +280,65 @@ void main() {
         declarations: const [greetingDecl],
         commandLine: 'x',
       );
-      expect(code, contains('  List<ReactNode> children,'));
+      expect(code, contains('  List<ReactNode> children = const [],'));
       expect(code, contains("if (badge != null) 'badge': badge,"));
       // children must NOT also appear in the props map.
       expect(
         code.split("if (children != null) 'children': children,").length,
         1,
       );
+    });
+
+    test('keys any non-function children prop as the children parameter', () {
+      final decl = TsIrDeclaration(
+        name: 'Card',
+        kind: 'component',
+        props: const [
+          TsIrProp(
+            name: 'children',
+            required: false,
+            type: TsIrType(kind: 'any'),
+          ),
+        ],
+      );
+      final code = generateBindings(
+        specifier: 'fake-pkg',
+        declarations: [decl],
+        commandLine: 'x',
+      );
+      expect(code, contains('  List<ReactNode> children = const [],'));
+      expect(code, contains('  children: children,'));
+      expect(
+        code.split("if (children != null) 'children': children,").length,
+        1,
+      );
+    });
+
+    test('generateShim registers components under the prefix', () {
+      final shim = generateShim(
+        specifier: 'fake-pkg',
+        prefix: 'fakePkg',
+        declarations: const [greetingDecl],
+        commandLine: 'react ts bind fake-pkg Greeting --shim',
+      );
+      expect(shim, contains("import * as FakePkg from 'fake-pkg';"));
+      expect(shim, contains("'fakePkg.Greeting': FakePkg.Greeting,"));
+      expect(shim, contains('__reactDartRegisterComponent'));
+    });
+
+    test('typePrefix namespaces generated type names', () {
+      final code = generateBindings(
+        specifier: 'fake-pkg',
+        declarations: const [greetingDecl],
+        commandLine: 'x',
+        typePrefix: 'Server',
+      );
+      expect(code, contains('GreetingMeta? meta,'));
+      expect(code, contains('class ServerGreetingMeta {'));
+      expect(code, contains('GreetingVariant? variant,'));
+      expect(code, contains('enum ServerGreetingVariant {'));
+      // The unprefixed names must not be emitted.
+      expect(code, contains('GreetingMeta'));
     });
   });
 

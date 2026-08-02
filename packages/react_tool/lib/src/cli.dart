@@ -210,6 +210,17 @@ final class _TsBindCommand extends Command<void> {
         help: 'Foreign-component prefix (default: the specifier, camelized).',
       )
       ..addOption(
+        'type-prefix',
+        help: 'Prefix for generated type names (classes, enums, typedefs). '
+            'Use when extracting a second module so its types do not collide '
+            'with an already-generated file.',
+      )
+      ..addOption(
+        'shim',
+        help: 'Also write a JS shim registering the bound components at this '
+            'path (wire it into react.yaml under foreign.modules).',
+      )
+      ..addOption(
         'npm-root',
         help: 'Override the npm root used for type resolution.',
       );
@@ -239,12 +250,13 @@ final class _TsBindCommand extends Command<void> {
         'No JS environment at $npmRoot. Run `react js install` first.',
       );
     }
-    final packageDir = Directory(
-      p.join(npmRoot, 'node_modules', specifier),
-    );
+    // Subpath specifiers (e.g. `react-router-dom/server`) live under the
+    // top-level package directory; check that package only.
+    final packagePart = specifier.split('/').first;
+    final packageDir = Directory(p.join(npmRoot, 'node_modules', packagePart));
     if (!packageDir.existsSync()) {
       throw ReactToolException(
-        '$specifier is not installed in the managed JS environment '
+        '$packagePart is not installed in the managed JS environment '
         '($npmRoot). Add a wrapper package that depends on it, or install '
         'it manually, then retry.',
       );
@@ -264,6 +276,7 @@ final class _TsBindCommand extends Command<void> {
       commandLine: 'react ts bind $specifier ${names.join(' ')}',
       prefix: prefix,
       entryComment: result.entry,
+      typePrefix: option('type-prefix') as String? ?? '',
     );
 
     final output = option('output') as String? ??
@@ -271,6 +284,20 @@ final class _TsBindCommand extends Command<void> {
     final outputFile = config.file(output);
     outputFile.parent.createSync(recursive: true);
     outputFile.writeAsStringSync(code);
+
+    final shimPath = option('shim') as String?;
+    if (shimPath != null) {
+      final shim = generateShim(
+        specifier: specifier,
+        prefix: prefix,
+        declarations: result.declarations,
+        commandLine: 'react ts bind $specifier ${names.join(' ')} --shim',
+      );
+      final shimFile = config.file(shimPath);
+      shimFile.parent.createSync(recursive: true);
+      shimFile.writeAsStringSync(shim);
+      info('Wrote shim to ${shimFile.path}');
+    }
 
     info(
       'Wrote ${result.declarations.length} binding(s) '

@@ -158,7 +158,7 @@ enum TyExpr {
 
 #[derive(Clone)]
 enum TsDecl {
-    Interface { props: Vec<TsProp>, extends: Vec<String> },
+    Interface { props: Vec<TsProp>, extends: Vec<Heritage> },
     Alias { ty: TyExpr },
     Component { props: Option<TyExpr> },
 }
@@ -283,27 +283,38 @@ fn extract_decl(decl: &Declaration, exported: bool, out: &mut ParsedFile) {
 
 fn extract_interface(i: &TSInterfaceDeclaration, out: &mut ParsedFile) {
     let props = props_from_signatures(&i.body.body);
-    let extends = i
-        .extends
-        .iter()
-        .filter_map(heritage_name)
-        .collect();
+    let extends = i.extends.iter().filter_map(heritage).collect();
     out.decls.push((
         i.id.name.as_str().to_string(),
         TsDecl::Interface { props, extends },
     ));
 }
 
-/// The referenced name of an interface `extends` clause entry.
-fn heritage_name(h: &TSInterfaceHeritage) -> Option<String> {
-    match &h.expression {
-        Expression::Identifier(id) => Some(id.name.as_str().to_string()),
+/// One `extends` / `implements` clause entry, e.g. `Omit<LinkProps, "href">`
+/// carries both the referenced name and its type arguments.
+#[derive(Clone)]
+struct Heritage {
+    name: String,
+    args: Vec<TyExpr>,
+}
+
+/// The referenced name and type arguments of an interface `extends` entry
+/// (e.g. `Omit<LinkProps, "href">` → name `Omit`, args `[LinkProps, "href"]`).
+fn heritage(h: &TSInterfaceHeritage) -> Option<Heritage> {
+    let name = match &h.expression {
+        Expression::Identifier(id) => id.name.as_str().to_string(),
         Expression::TSInstantiationExpression(e) => match &e.expression {
-            Expression::Identifier(id) => Some(id.name.as_str().to_string()),
-            _ => None,
+            Expression::Identifier(id) => id.name.as_str().to_string(),
+            _ => return None,
         },
-        _ => None,
-    }
+        _ => return None,
+    };
+    let args = h
+        .type_arguments
+        .as_ref()
+        .map(|tp| tp.params.iter().map(ty_to_expr).collect())
+        .unwrap_or_default();
+    Some(Heritage { name, args })
 }
 
 fn extract_type_alias(a: &TSTypeAliasDeclaration, out: &mut ParsedFile) {
@@ -538,10 +549,12 @@ fn literal_to_string(lit: &TSLiteral) -> String {
 }
 
 /// Returns the bare last identifier of a (possibly namespace-qualified) name.
+/// The rightmost segment of a type name: `React.ForwardRefExoticComponent`
+/// → `ForwardRefExoticComponent`, `Partial` → `Partial`.
 fn type_name_base(name: &TSTypeName) -> String {
     match name {
         TSTypeName::IdentifierReference(id) => id.name.as_str().to_string(),
-        TSTypeName::QualifiedName(q) => type_name_base(&q.left),
+        TSTypeName::QualifiedName(q) => q.right.name.as_str().to_string(),
         TSTypeName::ThisExpression(_) => "this".to_string(),
     }
 }
@@ -716,6 +729,20 @@ fn extract(
 ) -> Result<serde_json::Value, String> {
     let entry = if let Some(e) = entry_override {
         e
+    } else if specifier.contains('/') {
+        // Subpath export (e.g. `react-router-dom/server`): resolve through
+        // the package exports map so the types entry of the submodule is
+        // found instead of the top-level package types.
+        let (pkg, _) = specifier
+            .split_once('/')
+            .ok_or_else(|| format!("invalid specifier: {specifier}"))?;
+        let pkg_dir = find_package_dir(npm_root, pkg)
+            .ok_or_else(|| format!("package not found in npm root: {pkg}"))?;
+        let resolver = make_resolver(npm_root);
+        match resolver.resolve(&pkg_dir.join("package.json"), specifier) {
+            Ok(res) => res.path().to_path_buf(),
+            Err(e) => return Err(format!("cannot resolve subpath {specifier}: {e}")),
+        }
     } else {
         let pkg_dir = find_package_dir(npm_root, specifier)
             .ok_or_else(|| format!("package not found in npm root: {specifier}"))?;
@@ -828,7 +855,20 @@ fn props_for_expr(
     visiting: &mut HashSet<String>,
 ) -> Vec<TsProp> {
     match ty {
-        TyExpr::Object(ps) => ps.clone(),
+        TyExpr::Object(ps) => {
+            // `__ref` markers come from intersections of named types
+            // (LinkProps & RefAttributes): resolve each marker to the
+            // referenced declaration's props.
+            let mut out: Vec<TsProp> = Vec::new();
+            for p in ps.iter() {
+                if p.name == "__ref" {
+                    out.extend(props_for_expr(&p.ty, store, visiting));
+                } else {
+                    out.push(p.clone());
+                }
+            }
+            out
+        }
         TyExpr::Named(n) => {
             if visiting.contains(n) {
                 return Vec::new();
@@ -883,27 +923,101 @@ fn props_for_expr(
 /// clauses. Own props win on name clashes.
 fn resolve_interface_props(
     props: &[TsProp],
-    extends: &[String],
+    extends: &[Heritage],
     store: &DeclStore,
     visiting: &mut HashSet<String>,
 ) -> Vec<TsProp> {
     let mut map: HashMap<String, TsProp> = HashMap::new();
-    for e in extends {
-        if visiting.contains(e) {
-            continue;
-        }
-        if let Some(TsDecl::Interface { props: ps, extends: es }) = store.decls.get(e) {
-            visiting.insert(e.clone());
-            for p in resolve_interface_props(ps, es, store, visiting) {
-                map.insert(p.name.clone(), p);
-            }
-            visiting.remove(e);
+    for h in extends {
+        for p in inherited_props(h, store, visiting) {
+            map.insert(p.name.clone(), p);
         }
     }
     for p in props {
         map.insert(p.name.clone(), p.clone());
     }
     map.into_values().collect()
+}
+
+/// Members an interface inherits from one `extends` clause entry.
+fn inherited_props(
+    h: &Heritage,
+    store: &DeclStore,
+    visiting: &mut HashSet<String>,
+) -> Vec<TsProp> {
+    let keys = |args: &[TyExpr]| -> HashSet<String> {
+        args.iter()
+            .filter_map(|a| match a {
+                TyExpr::Literal(s) => Some(s.trim_matches('"').to_string()),
+                _ => None,
+            })
+            .collect()
+    };
+    match h.name.as_str() {
+        "Omit" if h.args.len() >= 2 => {
+            let omitted = keys(&h.args[1..]);
+            base_members(&h.args[0], store, visiting)
+                .into_iter()
+                .filter(|p| !omitted.contains(&p.name))
+                .collect()
+        }
+        "Pick" if h.args.len() >= 2 => {
+            let wanted = keys(&h.args[1..]);
+            base_members(&h.args[0], store, visiting)
+                .into_iter()
+                .filter(|p| wanted.contains(&p.name))
+                .collect()
+        }
+        _ => base_members(&TyExpr::Named(h.name.clone()), store, visiting),
+    }
+}
+
+/// Members of a named type: a store interface, or the curated DOM attribute
+/// table for `*HTMLAttributes` types that live in @types/react (which the
+/// managed environment does not install).
+fn base_members(ty: &TyExpr, store: &DeclStore, visiting: &mut HashSet<String>) -> Vec<TsProp> {
+    let TyExpr::Named(n) = ty else { return Vec::new() };
+    if visiting.contains(n) {
+        return Vec::new();
+    }
+    match store.decls.get(n) {
+        Some(TsDecl::Interface { props, extends }) => {
+            visiting.insert(n.clone());
+            let out = resolve_interface_props(props, extends, store, visiting);
+            visiting.remove(n);
+            out
+        }
+        _ => dom_attribute_members(n),
+    }
+}
+
+/// Curated members for DOM attribute interfaces (children, className, …).
+/// @types/react is not part of the managed JS environment, so these are
+/// provided here instead of being resolved from the React type sources.
+fn dom_attribute_members(base: &str) -> Vec<TsProp> {
+    if !(base.ends_with("HTMLAttributes") || base == "AriaAttributes") {
+        return Vec::new();
+    }
+    let mut v = Vec::new();
+    let mut push = |name: &str, ty: TyExpr| {
+        v.push(TsProp { name: name.to_string(), optional: true, ty });
+    };
+    push("children", TyExpr::ReactNode);
+    push("className", TyExpr::Prim("string"));
+    push("style", TyExpr::Object(Vec::new()));
+    push("id", TyExpr::Prim("string"));
+    push("title", TyExpr::Prim("string"));
+    push("lang", TyExpr::Prim("string"));
+    push("dir", TyExpr::Prim("string"));
+    push("hidden", TyExpr::Prim("boolean"));
+    push("tabIndex", TyExpr::Prim("number"));
+    push("role", TyExpr::Prim("string"));
+    push("href", TyExpr::Prim("string"));
+    push("target", TyExpr::Prim("string"));
+    push("rel", TyExpr::Prim("string"));
+    push("download", TyExpr::Prim("boolean"));
+    push("onClick", TyExpr::Event);
+    v
 }
 
 fn serialize_props(
@@ -1141,6 +1255,52 @@ mod tests {
         let out = extract("react-router-dom", &names, &root, None).expect("extract");
         let d = &out["declarations"][0];
         assert_eq!(d["kind"], "interface");
+    }
+
+    #[test]
+    fn extracts_link_via_forward_ref_exotic_component() {
+        let root = npm_root();
+        if !root.join("node_modules/react-router-dom/package.json").is_file() {
+            return;
+        }
+        // Link is `export declare const Link: React.ForwardRefExoticComponent<...>`
+        // — requires the rightmost-segment base-name resolution.
+        let out = extract("react-router-dom", &["Link".to_string()], &root, None)
+            .expect("extract");
+        let d = &out["declarations"][0];
+        assert_eq!(d["name"], "Link");
+        assert_eq!(d["kind"], "component");
+        let props = d["props"].as_array().unwrap();
+        let names: Vec<&str> = props.iter().map(|p| p["name"].as_str().unwrap()).collect();
+        assert!(names.contains(&"to"), "props: {names:?}");
+        // `children` is inherited from Omit<AnchorHTMLAttributes, "href"> via
+        // the curated DOM attribute table.
+        assert!(names.contains(&"children"), "props: {names:?}");
+        // The `__ref` placeholder must be flattened away.
+        assert!(!names.contains(&"__ref"), "props: {names:?}");
+    }
+
+    #[test]
+    fn extracts_static_router_from_server_subpath() {
+        let root = npm_root();
+        if !root.join("node_modules/react-router-dom/package.json").is_file() {
+            return;
+        }
+        // StaticRouter is exported from `react-router-dom/server`, not the
+        // top-level entry — the subpath must resolve through exports.
+        let out = extract(
+            "react-router-dom/server",
+            &["StaticRouter".to_string()],
+            &root,
+            None,
+        )
+        .expect("extract subpath");
+        let d = &out["declarations"][0];
+        assert_eq!(d["name"], "StaticRouter");
+        assert_eq!(d["kind"], "component");
+        let props = d["props"].as_array().unwrap();
+        let names: Vec<&str> = props.iter().map(|p| p["name"].as_str().unwrap()).collect();
+        assert!(names.contains(&"location"), "props: {names:?}");
     }
 
     #[test]

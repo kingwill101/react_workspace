@@ -195,10 +195,18 @@ String upperCamel(String name) {
 /// generator discovers while walking the IR. Deduplicated so identical types
 /// emit once, deterministically.
 final class _TypeRegistry {
+  final String typePrefix;
   final Map<String, String> _nameByKey = {};
   final Map<String, _ClassDef> classes = {};
   final Map<String, _EnumDef> enums = {};
   final Map<String, _TypedefDef> typedefs = {};
+
+  _TypeRegistry({this.typePrefix = ''});
+
+  /// Prefix applied to every generated type name, used to namespace the
+  /// types of a second extraction run (e.g. `--type-prefix Server` keeps the
+  /// server subpath bindings' `FutureConfig` distinct from the main file's).
+  String _typed(String name) => '$typePrefix$name';
 
   /// Resolves the Dart class name for an object type, registering it (and
   /// walking its members) if unseen. [declName] + [path] synthesize names for
@@ -209,8 +217,8 @@ final class _TypeRegistry {
     if (existing != null) return existing;
 
     final name = type.name != null
-        ? _uniqueName(upperCamel(type.name!))
-        : _uniqueName('${upperCamel(declName)}${path.map(upperCamel).join()}');
+        ? _typed(_uniqueName(upperCamel(type.name!)))
+        : _typed(_uniqueName('${upperCamel(declName)}${path.map(upperCamel).join()}'));
     _nameByKey[key] = name;
     final def = _ClassDef(name, type);
     classes[name] = def;
@@ -221,7 +229,9 @@ final class _TypeRegistry {
     final key = 'literal:${(type.literals ?? const []).join('|')}';
     final existing = _nameByKey[key];
     if (existing != null) return existing;
-    final name = _uniqueName('${upperCamel(declName)}${path.map(upperCamel).join()}');
+    final name = _typed(
+      _uniqueName('${upperCamel(declName)}${path.map(upperCamel).join()}'),
+    );
     _nameByKey[key] = name;
     enums[name] = _EnumDef(name, type.literals ?? const []);
     return name;
@@ -231,8 +241,8 @@ final class _TypeRegistry {
     final key = 'function:${_signature(type)}';
     final existing = _nameByKey[key];
     if (existing != null) return existing;
-    final name = _uniqueName(
-      '${upperCamel(declName)}${path.map(upperCamel).join()}Callback',
+    final name = _typed(
+      _uniqueName('${upperCamel(declName)}${path.map(upperCamel).join()}Callback'),
     );
     _nameByKey[key] = name;
     typedefs[name] = _TypedefDef(name, type);
@@ -245,7 +255,7 @@ final class _TypeRegistry {
     final key = 'named:$declName';
     final existing = _nameByKey[key];
     if (existing != null) return existing;
-    final name = _uniqueName(upperCamel(declName));
+    final name = _typed(_uniqueName(upperCamel(declName)));
     _nameByKey[key] = name;
     final def = _ClassDef(name, TsIrType(kind: 'object', name: declName, members: props));
     classes[name] = def;
@@ -257,7 +267,7 @@ final class _TypeRegistry {
     final key = 'alias:$declName';
     final existing = _nameByKey[key];
     if (existing != null) return existing;
-    final name = _uniqueName(upperCamel(declName));
+    final name = _typed(_uniqueName(upperCamel(declName)));
     _nameByKey[key] = name;
     typedefs[name] = _TypedefDef(name, valueProp.type, isPlainAlias: true);
     return name;
@@ -450,9 +460,10 @@ String generateBindings({
   required String commandLine,
   String? prefix,
   String? entryComment,
+  String typePrefix = '',
 }) {
   final resolvedPrefix = prefix ?? lowerCamel(specifier);
-  final registry = _TypeRegistry();
+  final registry = _TypeRegistry(typePrefix: typePrefix);
 
   final buffer = StringBuffer()
     ..writeln('// GENERATED CODE — DO NOT EDIT.')
@@ -498,9 +509,11 @@ void _emitDeclaration(
   final functionName = lowerCamel('${prefix}_${declaration.name}');
   final props = declaration.props;
 
-  // `children` as a ReactNode prop becomes the node children parameter.
+  // A `children` prop becomes the node children parameter, except when it
+  // is exclusively a function (a render-prop). ReactNode, `any`, unions of
+  // node types, etc. all funnel into the typed children list.
   final hasChildren = props.any(
-    (p) => p.name == 'children' && p.type.kind == 'reactNode',
+    (p) => p.name == 'children' && p.type.kind != 'function',
   );
   final propParams = props.where((p) => !(hasChildren && p.name == 'children'));
 
@@ -511,32 +524,31 @@ void _emitDeclaration(
 
   switch (declaration.kind) {
     case 'component':
+      final childrenRequired = hasChildren &&
+          props.firstWhere((p) => p.name == 'children').required;
       buffer
         ..writeln('/// Typed helper for the `$foreignName` foreign component.')
         ..writeln('///')
         ..writeln('/// Props from `${declaration.name}`:')
         ..writeln('///')
         ..writeln('/// ${_propsDoc(props)}')
-        ..writeln('ReactNode $functionName(');
+        ..writeln('ReactNode $functionName({')
+        ..writeln('  String? key,');
       if (hasChildren) {
-        buffer.writeln('  List<ReactNode> children,');
+        buffer.writeln(
+          childrenRequired
+              ? '  required List<ReactNode> children,'
+              : '  List<ReactNode> children = const [],',
+        );
       }
-      if (propParams.isNotEmpty) {
-        buffer.writeln('  {');
-        buffer.writeln('  String? key,');
-        for (final prop in propParams) {
-          _emitParam(buffer, prop, declaration.name, registry);
-        }
-        buffer.writeln('  }');
-        buffer.writeln(') => foreignComponent(');
-      } else {
-        // No props besides the optional key.
-        buffer.writeln('  {String? key}');
-        buffer.writeln('}) => foreignComponent(');
+      for (final prop in propParams) {
+        _emitParam(buffer, prop, declaration.name, registry);
       }
-      buffer.writeln("  '$foreignName',");
-      buffer.writeln('  key: key,');
-      buffer.writeln('  props: {');
+      buffer
+        ..writeln('}) => foreignComponent(')
+        ..writeln("  '$foreignName',")
+        ..writeln('  key: key,')
+        ..writeln('  props: {');
       for (final prop in propParams) {
         buffer.writeln('    ${_propsMapEntry(prop)}');
       }
@@ -895,7 +907,9 @@ String _emitEnum(_EnumDef def) {
       i++;
     }
     used.add(candidate);
-    members.add("$candidate('$literal')");
+    // Decode the serialized literal ("route" → route) so `.value` carries
+    // the actual value the JS side expects.
+    members.add("$candidate('${_literalValue(literal)}')");
   }
   final buffer = StringBuffer()
     ..writeln('/// Literal union: ${def.literals.join(' | ')}')
@@ -950,6 +964,49 @@ String _emitClass(_ClassDef def, _TypeRegistry registry) {
   }
   buffer
     ..writeln('  };')
+    ..writeln('}');
+  return buffer.toString();
+}
+
+/// Generates a JS shim module that registers the bound components for the
+/// foreign-component bridge (`__reactDartRegisterComponent`), so
+/// `foreignComponent('prefix.Name', ...)` resolves at runtime.
+///
+/// The module imports [specifier] from the managed npm environment and must be
+/// wired into `react.yaml`:
+///
+/// ```yaml
+/// foreign:
+///   modules:
+///     - path/to/generated_shim.mjs
+/// ```
+String generateShim({
+  required String specifier,
+  required String prefix,
+  required List<TsIrDeclaration> declarations,
+  String? commandLine,
+}) {
+  final components = declarations.where((d) => d.kind == 'component');
+  final importName = upperCamel(specifier);
+  final buffer = StringBuffer()
+    ..writeln('// GENERATED CODE — DO NOT EDIT.')
+    ..writeln('// Generated by: ${commandLine ?? 'react ts bind --shim'}')
+    ..writeln('//')
+    ..writeln('// Registers the bound `$specifier` components under the')
+    ..writeln('// `$prefix.*` names used by the generated Dart helpers.')
+    ..writeln('// Wire this module into react.yaml under `foreign.modules`.')
+    ..writeln()
+    ..writeln("import * as $importName from '$specifier';")
+    ..writeln()
+    ..writeln('const components = {');
+  for (final declaration in components) {
+    buffer.writeln("  '$prefix.${declaration.name}': $importName.${declaration.name},");
+  }
+  buffer
+    ..writeln('};')
+    ..writeln()
+    ..writeln('for (const [name, component] of Object.entries(components)) {')
+    ..writeln('  globalThis.__reactDartRegisterComponent?.(name, component);')
     ..writeln('}');
   return buffer.toString();
 }

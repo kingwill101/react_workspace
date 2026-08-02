@@ -1,6 +1,6 @@
 import 'package:react_router/react_router.dart';
 import 'package:react_router/react_router_hooks.dart';
-import 'package:react_web/react_web.dart' hide link; // <link> collides with router Link
+import 'package:react_web/react_web.dart';
 
 import 'route_item.react.dart';
 
@@ -18,21 +18,21 @@ ReactNode RouteContent(({bool hidden}) props) {
         className: 'router-location',
         children: [Text('location: ${location.fullPath}')],
       ),
-      routes([
-        route(
+      reactRouterRoutes(children: [
+        reactRouterRoute(
           path: '/',
           element: div(key: 'route-home', children: [
             const Text('Home route — pick a destination above.'),
           ]),
         ),
-        route(
+        reactRouterRoute(
           path: '/about',
           element: div(key: 'route-about', children: [
             const Text('About route — rendered by react-router-dom.'),
           ]),
         ),
-        route(path: '/items/:id', element: ItemDetail(hidden: true)),
-        route(
+        reactRouterRoute(path: '/items/:id', element: ItemDetail(hidden: true)),
+        reactRouterRoute(
           path: '*',
           element: div(key: 'route-missing', children: [
             const Text('No route matched.'),

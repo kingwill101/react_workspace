@@ -1,17 +1,33 @@
-// Typed bindings for [react-router-dom](https://reactrouter.com) v6.
-//
-// Components are rendered through the generic foreign-component bridge
-// (`foreignComponent`). Hooks live in `react_router_hooks.dart` and run
-// through the shim's hook bridge.
-//
-// The shim is imported automatically when `react.yaml` declares:
-//
-// ```yaml
-// foreign:
-//   modules:
-//     - package:react_router/react_router_shim.mjs
-// ```
-import 'package:react/react.dart';
+/// Typed React Router bindings for [react-router-dom](https://reactrouter.com)
+/// v6, generated from the package's TypeScript declarations.
+///
+/// ```sh
+/// react ts bind react-router-dom BrowserRouter MemoryRouter Routes Route \
+///   Link NavLink Outlet Navigate --prefix reactRouter \
+///   -o lib/react_router_bindings.g.dart \
+///   --shim lib/react_router_bindings_shim.mjs
+/// react ts bind react-router-dom/server StaticRouter --prefix reactRouter \
+///   --type-prefix Server \
+///   -o lib/react_router_server_bindings.g.dart \
+///   --shim lib/react_router_server_shim.mjs
+/// ```
+///
+/// Components are rendered through the generic foreign-component bridge
+/// (`foreignComponent`); the shims register the `reactRouter.*` names and are
+/// bundled automatically via the react.js descriptor entry. Hooks live in
+/// `react_router_hooks.dart` and run through the shim's hook bridge.
+///
+/// The second extraction uses `--type-prefix Server` because react-router and
+/// @remix-run/router each declare their own `FutureConfig`; the server
+/// bindings therefore expose `ServerFutureConfig`.
+library;
+
+/// Typed helpers for the `reactRouter.*` components.
+export 'react_router_bindings.g.dart';
+
+/// Typed helpers for the `react-router-dom/server` components
+/// (`reactRouterStaticRouter` is the SSR counterpart of the browser router).
+export 'react_router_server_bindings.g.dart';
 
 /// A normalized React Router location.
 ///
@@ -37,128 +53,3 @@ final class ReactRouterLocation {
   @override
   String toString() => fullPath;
 }
-
-/// A URL path pattern for [route].
-typedef RoutePath = String;
-
-// ═══════════════════════════════════════════
-// Components
-// ═══════════════════════════════════════════
-
-/// A router that keeps history in the browser URL.
-///
-/// See https://reactrouter.com/router-components/browser-router.
-ReactNode browserRouter(List<ReactNode> children, {String? basename}) =>
-    foreignComponent(
-      'reactRouter.BrowserRouter',
-      props: {'basename': basename},
-      children: children,
-    );
-
-/// A router that keeps history in memory — useful for SSR and tests.
-///
-/// See https://reactrouter.com/router-components/memory-router.
-ReactNode memoryRouter(
-  List<ReactNode> children, {
-  List<String>? initialEntries,
-  int? initialIndex,
-}) => foreignComponent(
-  'reactRouter.MemoryRouter',
-  props: {
-    'initialEntries': initialEntries,
-    'initialIndex': initialIndex,
-  },
-  children: children,
-);
-
-/// A router that renders at a fixed [location] — the SSR counterpart of
-/// [browserRouter].
-///
-/// See https://reactrouter.com/router-components/static-router.
-ReactNode staticRouter(
-  String location,
-  List<ReactNode> children, {
-  String? basename,
-}) => foreignComponent(
-  'reactRouter.StaticRouter',
-  props: {'location': location, 'basename': basename},
-  children: children,
-);
-
-/// A route-matching region. Render [route] children inside it.
-///
-/// See https://reactrouter.com/router-components/routes.
-ReactNode routes(List<ReactNode> children, {String? key}) => foreignComponent(
-  'reactRouter.Routes',
-  children: children,
-  key: key,
-);
-
-/// A single route definition.
-///
-/// See https://reactrouter.com/router-components/route.
-ReactNode route({
-  String? path,
-  bool? index,
-  ReactNode? element,
-  List<ReactNode> children = const [],
-  String? key,
-}) => foreignComponent(
-  'reactRouter.Route',
-  props: {
-    'path': path,
-    'index': index,
-    'element': element,
-  },
-  children: children,
-  key: key,
-);
-
-/// An anchor that navigates with the router.
-///
-/// See https://reactrouter.com/components/link.
-ReactNode link(
-  String to, {
-  List<ReactNode> children = const [],
-  String? className,
-  String? key,
-}) => foreignComponent(
-  'reactRouter.Link',
-  props: {'to': to, 'className': className},
-  children: children,
-  key: key,
-);
-
-/// A link that tracks whether its destination is active.
-///
-/// Active links receive `aria-current="page"` so they can be styled with an
-/// attribute selector.
-///
-/// See https://reactrouter.com/components/nav-link.
-ReactNode navLink(
-  String to, {
-  List<ReactNode> children = const [],
-  String? className,
-  String? key,
-  bool? end,
-}) => foreignComponent(
-  'reactRouter.NavLink',
-  props: {'to': to, 'className': className, 'end': end},
-  children: children,
-  key: key,
-);
-
-/// Renders the matched child route — the layout counterpart of nested routes.
-///
-/// See https://reactrouter.com/components/outlet.
-ReactNode outlet({String? key}) =>
-    foreignComponent('reactRouter.Outlet', key: key);
-
-/// Navigates to [to] during render.
-///
-/// See https://reactrouter.com/components/navigate.
-ReactNode navigate(String to, {bool? replace, String? key}) => foreignComponent(
-  'reactRouter.Navigate',
-  props: {'to': to, 'replace': replace},
-  key: key,
-);

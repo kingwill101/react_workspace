@@ -1,34 +1,21 @@
-// react_router shim — imports react-router-dom and self-registers.
+// react_router shim — component registration + the hook bridge.
 //
-// This file is imported by `react build` through the `foreign.modules` entry
-// in react.yaml (resolved as `package:react_router/react_router_shim.mjs`).
-// react_tool bundles it with esbuild, inlining react-router-dom; the bare
-// `react`/`react-dom` imports stay external and resolve through the page
-// import map (browser) or node_modules (SSR worker).
-//
+// The generated shims (from `react ts bind --shim`) register the bound
+// components; this file imports them and adds the hook bridge that
+// react_router_hooks.dart calls during render. `react build` bundles this
+// module through the `entries.shared` react.js descriptor entry; esbuild
+// follows the relative imports and inlines the generated shims, keeping
+// bare `react`/`react-dom` external.
+
+import './react_router_bindings_shim.mjs';
+import './react_router_server_shim.mjs';
+
+import * as RRD from 'react-router-dom';
+
 // Hook bridge: the Dart side declares @JS externals against these members and
 // calls them during render, exactly like the core react_js hook binding. The
 // wrappers decode results into primitives/arrays because dart2js cannot cast
 // a raw `callAsFunction` return value to JSObject/JSArray.
-
-import * as RRD from 'react-router-dom';
-
-const components = {
-  'reactRouter.BrowserRouter': RRD.BrowserRouter,
-  'reactRouter.MemoryRouter': RRD.MemoryRouter,
-  'reactRouter.StaticRouter': RRD.StaticRouter,
-  'reactRouter.Routes': RRD.Routes,
-  'reactRouter.Route': RRD.Route,
-  'reactRouter.Link': RRD.Link,
-  'reactRouter.NavLink': RRD.NavLink,
-  'reactRouter.Outlet': RRD.Outlet,
-  'reactRouter.Navigate': RRD.Navigate,
-};
-
-for (const [name, component] of Object.entries(components)) {
-  globalThis.__reactDartRegisterComponent?.(name, component);
-}
-
 globalThis.__reactDartRouter = {
   navigate(to, options) {
     RRD.useNavigate()(to, options);

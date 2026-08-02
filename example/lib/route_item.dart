@@ -13,7 +13,9 @@ ReactNode ItemDetail(({bool hidden}) props) {
     children: [
       Text('Item #$id — useParams works: ${params.entries.map((e) => '${e.key}=${e.value}').join(', ')}'),
       div(children: [
-        link('/items/7', children: [const Text('← back to item 7')]),
+        reactRouterLink(to: '/items/7', children: [
+          const Text('← back to item 7'),
+        ]),
       ]),
     ],
   );
