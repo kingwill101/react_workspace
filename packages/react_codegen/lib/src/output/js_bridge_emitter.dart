@@ -7,7 +7,15 @@ final class JsBridgeEmitter {
   const JsBridgeEmitter({required this.callbackEmitter});
 
   String emit(ReactLibraryModel model) {
-    final buffer = StringBuffer();
+    final buffer = StringBuffer()
+      ..writeln("import 'dart:js_interop';")
+      ..writeln("import 'dart:js_interop_unsafe';")
+      ..writeln("import 'package:react_js/react_js.dart';")
+      ..writeln("import '${model.inputFile}' as impl;");
+    for (final component in model.components) {
+      buffer.writeln("import '${model.reactFile}' show id${component.name};");
+    }
+    buffer.writeln();
 
     for (final component in model.components) {
       buffer.writeln(_componentSource(model, component));
@@ -100,12 +108,6 @@ final class JsBridgeEmitter {
     registrationBuffer.writeln('}');
 
     return [
-      "import 'dart:js_interop';",
-      "import 'dart:js_interop_unsafe';",
-      "import 'package:react_js/react_js.dart';",
-      "import '${model.inputFile}' as impl;",
-      "import '${model.reactFile}' show id${component.name};",
-      '',
       toJSBuffer.toString(),
       fromJSBuffer.toString(),
       registrationBuffer.toString(),

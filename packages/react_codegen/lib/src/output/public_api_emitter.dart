@@ -4,15 +4,16 @@ final class PublicApiEmitter {
   const PublicApiEmitter();
 
   String emit(ReactLibraryModel model) {
-    final buffer = StringBuffer();
+    final buffer = StringBuffer()
+      ..writeln("import 'package:react/react.dart';")
+      ..writeln();
 
     for (final component in model.components) {
-      buffer.writeln("import 'package:react/react.dart';");
-      buffer.writeln();
-      buffer.writeln(
-        "const id${component.name} = ComponentId('${component.componentId}');",
-      );
-      buffer.writeln();
+      buffer
+        ..writeln(
+          "const id${component.name} = ComponentId('${component.componentId}');",
+        )
+        ..writeln();
       buffer.writeln('ReactNode ${component.name}({');
       buffer.writeln('  ${_params(component)}');
       buffer.writeln('}) {');
