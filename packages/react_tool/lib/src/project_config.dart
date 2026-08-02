@@ -53,6 +53,17 @@ final class ReactProjectConfig {
   final String? styleOutput;
   final List<ReactForeignComponentConfig> foreignComponents;
 
+  /// Side-effect module imports resolved into the foreign bundle.
+  ///
+  /// Each entry may be a relative path or a `package:` URI. Wrapper packages
+  /// (for example `react_router`) ship a self-registering `.mjs` shim here so
+  /// projects never need to copy package-internal JavaScript by hand.
+  final List<String> foreignModules;
+
+  /// Optional esbuild binary used to bundle foreign shims (defaults to
+  /// `ESBUILD` env var, then `esbuild` on PATH).
+  final String? esbuildPath;
+
   const ReactProjectConfig({
     required this.root,
     required this.packageName,
@@ -64,6 +75,8 @@ final class ReactProjectConfig {
     required this.styleEntrypoints,
     required this.styleOutput,
     required this.foreignComponents,
+    this.foreignModules = const [],
+    this.esbuildPath,
   });
 
   factory ReactProjectConfig.load([Directory? directory]) {
@@ -113,8 +126,15 @@ final class ReactProjectConfig {
             ..._discoverCssModules(root, staticDirectory),
           ];
     final styleOutput = _string(stylesMap['output']);
-    final foreignComponents = _foreignComponents(
-      explicit['foreign'] ?? explicit['components'],
+    final foreignValue = explicit['foreign'] ?? explicit['components'];
+    final foreignComponents = _foreignComponents(foreignValue);
+    final foreignModules = _stringList(
+      _map(foreignValue)['modules'] ??
+          explicit['foreignModules'] ??
+          explicit['modules'],
+    );
+    final esbuildPath = _string(
+      _map(foreignValue)['esbuild'] ?? explicit['esbuild'],
     );
 
     return ReactProjectConfig(
@@ -128,6 +148,8 @@ final class ReactProjectConfig {
       styleEntrypoints: styleEntrypoints,
       styleOutput: styleOutput,
       foreignComponents: foreignComponents,
+      foreignModules: foreignModules,
+      esbuildPath: esbuildPath,
     );
   }
 
@@ -173,6 +195,7 @@ final class ReactProjectConfig {
     'foreignComponents': [
       for (final component in foreignComponents) component.toJson(),
     ],
+    'foreignModules': foreignModules,
   };
 
   String toJsonString() => const JsonEncoder.withIndent('  ').convert(toJson());
