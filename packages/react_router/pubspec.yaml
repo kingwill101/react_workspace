@@ -13,7 +13,7 @@ react:
   js:
     schema: 1
     entries:
-      shared: lib/react_router_shim.mjs
+      shared: lib/react_router_shi         m.mjs
     dependencies:
       react-router-dom: ^6.26.2
     peers:

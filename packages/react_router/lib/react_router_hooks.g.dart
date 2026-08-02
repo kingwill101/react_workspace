@@ -11,6 +11,9 @@ import 'react_router_bindings.g.dart';
 // in JavaScript targets (browser client and Node SSR worker);
 // it calls into the shim bridge (`globalThis.__reactDartHooks`)
 // and runs inside React's render call stack.
+//
+// Hooks are scoped under `globalThis.__reactDartBindings.reactRouter`
+// so multiple wrappers can coexist without collisions.
 
 // Shared decode helpers: the shim returns primitives or `[[key, value],
 // ...]` pairs (recursively converted by `toPairs`), and these reshape them
@@ -49,7 +52,7 @@ List<T> _decodeList<T>(JSArray raw, T Function(JSAny? item) decode) {
 /// useHref(to: any, arg?: { relative?: "route" | "path" }) => string
 ///
 /// See https://reactrouter.com/hooks/href.
-@JS('globalThis.__reactDartHooks.useHref')
+@JS('globalThis.__reactDartBindings.reactRouter.useHref')
 external JSString _useHrefRaw(JSAny? a0, JSAny? a1);
 
 String useHref(Object? to, {RelativeRoutingType? relative}) {
@@ -60,7 +63,7 @@ String useHref(Object? to, {RelativeRoutingType? relative}) {
 /// useInRouterContext() => boolean
 ///
 /// See https://reactrouter.com/hooks/inroutercontext.
-@JS('globalThis.__reactDartHooks.useInRouterContext')
+@JS('globalThis.__reactDartBindings.reactRouter.useInRouterContext')
 external JSBoolean _useInRouterContextRaw();
 
 bool useInRouterContext() {
@@ -70,7 +73,7 @@ bool useInRouterContext() {
 /// useLocation() => { pathname: string; search: string; hash: string; state: any; key: string }
 ///
 /// See https://reactrouter.com/hooks/location.
-@JS('globalThis.__reactDartHooks.useLocation')
+@JS('globalThis.__reactDartBindings.reactRouter.useLocation')
 external JSArray _useLocationRaw();
 
 Location useLocation() {
@@ -80,7 +83,7 @@ Location useLocation() {
 /// useNavigate() => (to: any, options: { replace?: boolean; state?: any; preventScrollReset?: boolean; relative?: "route" | "path"; unstable_flushSync?: boolean; unstable_viewTransition?: boolean }) => void
 ///
 /// See https://reactrouter.com/hooks/navigate.
-@JS('globalThis.__reactDartHooks.useNavigate')
+@JS('globalThis.__reactDartBindings.reactRouter.useNavigate')
 external JSFunction _useNavigateRaw();
 
 void Function(Object? to, {bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_flushSync, bool? unstable_viewTransition}) useNavigate() {
@@ -91,7 +94,7 @@ void Function(Object? to, {bool? replace, Object? state, bool? preventScrollRese
 /// useNavigationType() => "POP" | "PUSH" | "REPLACE"
 ///
 /// See https://reactrouter.com/hooks/navigationtype.
-@JS('globalThis.__reactDartHooks.useNavigationType')
+@JS('globalThis.__reactDartBindings.reactRouter.useNavigationType')
 external JSString _useNavigationTypeRaw();
 
 NavigationType useNavigationType() {
@@ -101,7 +104,7 @@ NavigationType useNavigationType() {
 /// useOutlet(context?: unknown) => any
 ///
 /// See https://reactrouter.com/hooks/outlet.
-@JS('globalThis.__reactDartHooks.useOutlet')
+@JS('globalThis.__reactDartBindings.reactRouter.useOutlet')
 external JSAny? _useOutletRaw(JSAny? a0);
 
 Object? useOutlet([Object? context]) {
@@ -111,7 +114,7 @@ Object? useOutlet([Object? context]) {
 /// useParams() => unknown
 ///
 /// See https://reactrouter.com/hooks/params.
-@JS('globalThis.__reactDartHooks.useParams')
+@JS('globalThis.__reactDartBindings.reactRouter.useParams')
 external JSArray _useParamsRaw();
 
 Map<String, String> useParams() {
@@ -121,7 +124,7 @@ Map<String, String> useParams() {
 /// useSearchParams(defaultInit?: any) => unknown
 ///
 /// See https://reactrouter.com/hooks/searchparams.
-@JS('globalThis.__reactDartHooks.useSearchParams')
+@JS('globalThis.__reactDartBindings.reactRouter.useSearchParams')
 external JSArray _useSearchParamsRaw(JSAny? a0);
 
 (Map<String, String>, void Function(Object? nextInit, {bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_flushSync, bool? unstable_viewTransition})) useSearchParams([Object? defaultInit]) {
@@ -132,7 +135,7 @@ external JSArray _useSearchParamsRaw(JSAny? a0);
 /// useMatches() => { id: string; pathname: string; params: unknown; data: any; handle: any }[]
 ///
 /// See https://reactrouter.com/hooks/matches.
-@JS('globalThis.__reactDartHooks.useMatches')
+@JS('globalThis.__reactDartBindings.reactRouter.useMatches')
 external JSArray _useMatchesRaw();
 
 List<UIMatch> useMatches() {
@@ -142,7 +145,7 @@ List<UIMatch> useMatches() {
 /// useNavigation() => { state: "idle" | "loading" | "submitting"; location: { pathname: string; search: string; hash: string; state: any; key: string }; formMethod: Record<string, unknown>; formAction: string; formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; formData: any; json: Record<string, unknown>; text: string }
 ///
 /// See https://reactrouter.com/hooks/navigation.
-@JS('globalThis.__reactDartHooks.useNavigation')
+@JS('globalThis.__reactDartBindings.reactRouter.useNavigation')
 external JSArray _useNavigationRaw();
 
 NavigationReturn useNavigation() {
@@ -152,7 +155,7 @@ NavigationReturn useNavigation() {
 /// useRevalidator() => { revalidate: () => void; state: "idle" | "loading" }
 ///
 /// See https://reactrouter.com/hooks/revalidator.
-@JS('globalThis.__reactDartHooks.useRevalidator')
+@JS('globalThis.__reactDartBindings.reactRouter.useRevalidator')
 external JSArray _useRevalidatorRaw();
 
 RevalidatorReturn useRevalidator() {
@@ -162,7 +165,7 @@ RevalidatorReturn useRevalidator() {
 /// useResolvedPath(to: any, arg?: { relative?: "route" | "path" }) => { pathname: string; search: string; hash: string }
 ///
 /// See https://reactrouter.com/hooks/resolvedpath.
-@JS('globalThis.__reactDartHooks.useResolvedPath')
+@JS('globalThis.__reactDartBindings.reactRouter.useResolvedPath')
 external JSArray _useResolvedPathRaw(JSAny? a0, JSAny? a1);
 
 Path useResolvedPath(Object? to, {RelativeRoutingType? relative}) {
@@ -173,7 +176,7 @@ Path useResolvedPath(Object? to, {RelativeRoutingType? relative}) {
 /// useRouteError() => unknown
 ///
 /// See https://reactrouter.com/hooks/routeerror.
-@JS('globalThis.__reactDartHooks.useRouteError')
+@JS('globalThis.__reactDartBindings.reactRouter.useRouteError')
 external JSAny? _useRouteErrorRaw();
 
 Object? useRouteError() {
@@ -183,7 +186,7 @@ Object? useRouteError() {
 /// useRouteLoaderData(routeId: string) => unknown
 ///
 /// See https://reactrouter.com/hooks/routeloaderdata.
-@JS('globalThis.__reactDartHooks.useRouteLoaderData')
+@JS('globalThis.__reactDartBindings.reactRouter.useRouteLoaderData')
 external JSAny? _useRouteLoaderDataRaw(JSAny? a0);
 
 Object? useRouteLoaderData(String routeId) {
@@ -193,7 +196,7 @@ Object? useRouteLoaderData(String routeId) {
 /// useRoutes(routes: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; index: true | false; children?: any[]; element?: React.ReactNode; hydrateFallbackElement?: React.ReactNode; errorElement?: React.ReactNode; Component?: any; HydrateFallback?: any; ErrorBoundary?: any; lazy?: () => any }[], locationArg?: any) => any
 ///
 /// See https://reactrouter.com/hooks/routes.
-@JS('globalThis.__reactDartHooks.useRoutes')
+@JS('globalThis.__reactDartBindings.reactRouter.useRoutes')
 external JSAny? _useRoutesRaw(JSAny? a0, JSAny? a1);
 
 Object? useRoutes(List<Object?> routes, [Object? locationArg]) {
@@ -203,7 +206,7 @@ Object? useRoutes(List<Object?> routes, [Object? locationArg]) {
 /// useBlocker(shouldBlock: any) => { state: "unblocked" | "blocked" | "proceeding"; reset: () => void; proceed: () => void; location: { pathname: string; search: string; hash: string; state: any; key: string } }
 ///
 /// See https://reactrouter.com/hooks/blocker.
-@JS('globalThis.__reactDartHooks.useBlocker')
+@JS('globalThis.__reactDartBindings.reactRouter.useBlocker')
 external JSArray _useBlockerRaw(JSAny? a0);
 
 BlockerReturn useBlocker(Object? shouldBlock) {
@@ -213,7 +216,7 @@ BlockerReturn useBlocker(Object? shouldBlock) {
 /// useFetcher(arg?: { key?: string }) => { state: "idle" | "loading" | "submitting"; formMethod: Record<string, unknown>; formAction: string; formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; text: string; formData: any; json: Record<string, unknown>; data: any; Form: { method?: Record<string, unknown>; encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain"; action?: string; relative?: "route" | "path"; preventScrollReset?: boolean; onSubmit?: any }; submit: (target: any, options: { method?: Record<string, unknown>; action?: string; encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; relative?: "route" | "path"; preventScrollReset?: boolean; unstable_flushSync?: boolean }) => void; load: (href: string, opts: { unstable_flushSync?: boolean }) => void }
 ///
 /// See https://reactrouter.com/hooks/fetcher.
-@JS('globalThis.__reactDartHooks.useFetcher')
+@JS('globalThis.__reactDartBindings.reactRouter.useFetcher')
 external JSArray _useFetcherRaw(JSAny? a0);
 
 FetcherReturn useFetcher({String? elementKey}) {
@@ -224,7 +227,7 @@ FetcherReturn useFetcher({String? elementKey}) {
 /// useFetchers() => { state: "idle" | "loading" | "submitting"; formMethod: Record<string, unknown>; formAction: string; formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; text: string; formData: any; json: Record<string, unknown>; data: any; key: string }[]
 ///
 /// See https://reactrouter.com/hooks/fetchers.
-@JS('globalThis.__reactDartHooks.useFetchers')
+@JS('globalThis.__reactDartBindings.reactRouter.useFetchers')
 external JSArray _useFetchersRaw();
 
 List<FetchersReturnElement> useFetchers() {
@@ -234,7 +237,7 @@ List<FetchersReturnElement> useFetchers() {
 /// useFormAction(action?: string, arg?: { relative?: "route" | "path" }) => string
 ///
 /// See https://reactrouter.com/hooks/formaction.
-@JS('globalThis.__reactDartHooks.useFormAction')
+@JS('globalThis.__reactDartBindings.reactRouter.useFormAction')
 external JSString _useFormActionRaw(JSAny? a0, JSAny? a1);
 
 String useFormAction(String? action, {RelativeRoutingType? relative}) {
@@ -245,7 +248,7 @@ String useFormAction(String? action, {RelativeRoutingType? relative}) {
 /// useLinkClickHandler(to: any, arg?: { target?: any; replace?: boolean; state?: any; preventScrollReset?: boolean; relative?: "route" | "path"; unstable_viewTransition?: boolean }) => (event: host value) => void
 ///
 /// See https://reactrouter.com/hooks/linkclickhandler.
-@JS('globalThis.__reactDartHooks.useLinkClickHandler')
+@JS('globalThis.__reactDartBindings.reactRouter.useLinkClickHandler')
 external JSFunction _useLinkClickHandlerRaw(JSAny? a0, JSAny? a1);
 
 void Function(Object? event) useLinkClickHandler(Object? to, {Object? target, bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_viewTransition}) {
@@ -257,7 +260,7 @@ void Function(Object? event) useLinkClickHandler(Object? to, {Object? target, bo
 /// useLoaderData() => unknown
 ///
 /// See https://reactrouter.com/hooks/loaderdata.
-@JS('globalThis.__reactDartHooks.useLoaderData')
+@JS('globalThis.__reactDartBindings.reactRouter.useLoaderData')
 external JSAny? _useLoaderDataRaw();
 
 Object? useLoaderData() {
@@ -267,7 +270,7 @@ Object? useLoaderData() {
 /// useSubmit() => (target: any, options: { method?: Record<string, unknown>; action?: string; encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; relative?: "route" | "path"; preventScrollReset?: boolean; unstable_flushSync?: boolean; replace?: boolean; state?: any; fetcherKey?: string; navigate?: boolean; unstable_viewTransition?: boolean }) => void
 ///
 /// See https://reactrouter.com/hooks/submit.
-@JS('globalThis.__reactDartHooks.useSubmit')
+@JS('globalThis.__reactDartBindings.reactRouter.useSubmit')
 external JSFunction _useSubmitRaw();
 
 void Function(Object? target, {Object? method, String? action, FormEncType? encType, RelativeRoutingType? relative, bool? preventScrollReset, bool? unstable_flushSync, bool? replace, Object? state, String? fetcherKey, bool? navigate, bool? unstable_viewTransition}) useSubmit() {
@@ -278,7 +281,7 @@ void Function(Object? target, {Object? method, String? action, FormEncType? encT
 /// useActionData() => unknown
 ///
 /// See https://reactrouter.com/hooks/actiondata.
-@JS('globalThis.__reactDartHooks.useActionData')
+@JS('globalThis.__reactDartBindings.reactRouter.useActionData')
 external JSAny? _useActionDataRaw();
 
 Object? useActionData() {
@@ -288,7 +291,7 @@ Object? useActionData() {
 /// useOutletContext() => any
 ///
 /// See https://reactrouter.com/hooks/outletcontext.
-@JS('globalThis.__reactDartHooks.useOutletContext')
+@JS('globalThis.__reactDartBindings.reactRouter.useOutletContext')
 external JSAny? _useOutletContextRaw();
 
 Object? useOutletContext() {
@@ -298,7 +301,7 @@ Object? useOutletContext() {
 /// useAsyncValue() => unknown
 ///
 /// See https://reactrouter.com/hooks/asyncvalue.
-@JS('globalThis.__reactDartHooks.useAsyncValue')
+@JS('globalThis.__reactDartBindings.reactRouter.useAsyncValue')
 external JSAny? _useAsyncValueRaw();
 
 Object? useAsyncValue() {
@@ -308,7 +311,7 @@ Object? useAsyncValue() {
 /// useAsyncError() => unknown
 ///
 /// See https://reactrouter.com/hooks/asyncerror.
-@JS('globalThis.__reactDartHooks.useAsyncError')
+@JS('globalThis.__reactDartBindings.reactRouter.useAsyncError')
 external JSAny? _useAsyncErrorRaw();
 
 Object? useAsyncError() {

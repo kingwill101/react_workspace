@@ -22,6 +22,9 @@ for (const [name, component] of Object.entries(components)) {
   globalThis.__reactDartRegisterComponent?.(name, component);
 }
 
+globalThis.__reactDartBindings ??= Object.create(null);
+globalThis.__reactDartBindings.reactRouter = {};
+
 // Hook bridge: the generated Dart hooks (`--hooks` output) call
 // these members during render. Results are decoded into
 // primitives or `[[key, value], ...]` pairs (via `toPairs`)
@@ -65,4 +68,4 @@ const hooks = {
   useAsyncError: () => ReactRouterDom.useAsyncError(),
 };
 
-globalThis.__reactDartHooks = hooks;
+globalThis.__reactDartBindings.reactRouter = hooks;

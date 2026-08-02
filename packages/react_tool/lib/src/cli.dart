@@ -233,6 +233,15 @@ final class _TsBindCommand extends Command<void> {
       ..addOption(
         'npm-root',
         help: 'Override the npm root used for type resolution.',
+      )
+      ..addOption(
+        'namespace',
+        help: 'Namespace for hook bridge registration under '
+            'globalThis.__reactDartBindings[namespace]. '
+            'When set, hooks register under '
+            'globalThis.__reactDartBindings.<namespace> instead of '
+            'globalThis.__reactDartHooks, preventing collisions '
+            'when multiple wrappers are loaded.',
       );
   }
 
@@ -302,6 +311,7 @@ final class _TsBindCommand extends Command<void> {
         prefix: prefix,
         declarations: result.declarations,
         commandLine: 'react ts bind $specifier ${names.join(' ')} --shim',
+        namespace: option('namespace') as String? ?? '',
       );
       final shimFile = config.file(shimPath);
       shimFile.parent.createSync(recursive: true);
@@ -337,6 +347,7 @@ final class _TsBindCommand extends Command<void> {
         typePrefix: option('type-prefix') as String? ?? '',
         bindingsImport: bindingsImport,
         reuseTypeNames: reuseTypeNames,
+        namespace: option('namespace') as String? ?? '',
       );
       hooksFile.parent.createSync(recursive: true);
       hooksFile.writeAsStringSync(hooks);

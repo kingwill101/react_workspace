@@ -1060,7 +1060,7 @@ String _emitClass(_ClassDef def, _TypeRegistry registry) {
 //
 // `use*` declarations carry per-hook params + a return type. Hooks run inside
 // React's render call stack, so each generated Dart hook calls a bridge
-// member on `globalThis.__reactDartHooks` (registered by the generated shim)
+// member on `globalThis.__reactDartHooks` or `globalThis.__reactDartBindings[namespace]` (registered by the generated shim)
 // and decodes the shim's primitives/arrays into typed Dart values:
 //
 //   - primitives → direct casts (the external's return type is already JSX)
@@ -1085,6 +1085,7 @@ String generateHooks({
   String typePrefix = '',
   String? bindingsImport,
   Set<String>? reuseTypeNames,
+  String namespace = '',
 }) {
   final hooks = declarations.where((d) => d.kind == 'hook').toList();
   final registry = _TypeRegistry(
@@ -1119,7 +1120,7 @@ String generateHooks({
     ..writeln()
     ..writeln('// Hook bindings for `$specifier`. Each hook is only available')
     ..writeln('// in JavaScript targets (browser client and Node SSR worker);')
-    ..writeln('// it calls into the shim bridge (`globalThis.__reactDartHooks`)')
+    ..writeln('// it calls into the shim bridge (`$bridgeTarget`)')
     ..writeln('// and runs inside React\'s render call stack.')
     ..writeln();
 
@@ -1508,7 +1509,7 @@ String _emitHook(TsIrDeclaration hook, _TypeRegistry registry) {
     for (var i = 0; i < positional.length + (hasOptions ? 1 : 0); i++) 'JSAny? a$i',
   ].join(', ');
   final external = StringBuffer()
-    ..writeln("@JS('globalThis.__reactDartHooks.$name')")
+    ..writeln("@JS('globalThis.$bridgeTarget.$name')")
     ..writeln('external ${_hookExternalReturn(returns)} $rawName($extArgs);')
     ..writeln();
 
@@ -1709,8 +1710,9 @@ String _hookMemberDecode(
 /// `foreignComponent('prefix.Name', ...)` resolves at runtime.
 ///
 /// When [declarations] contains `use*` hooks, the module also registers the
-/// hook bridge (`__reactDartHooks`) that the generated hooks file calls
-/// during render.
+/// hook bridge under [namespace] (`globalThis.__reactDartBindings[namespace]`)
+/// that the generated hooks file calls during render. When [namespace] is
+/// empty, hooks register at `globalThis.__reactDartHooks` (legacy).
 ///
 /// The module imports [specifier] from the managed npm environment and must be
 /// wired into `react.yaml`:
@@ -1725,6 +1727,7 @@ String generateShim({
   required String prefix,
   required List<TsIrDeclaration> declarations,
   String? commandLine,
+  String namespace = '',
 }) {
   final components = declarations.where((d) => d.kind == 'component');
   final hooks = declarations.where((d) => d.kind == 'hook').toList();
@@ -1751,6 +1754,9 @@ String generateShim({
     ..writeln('}');
 
   if (hooks.isNotEmpty) {
+    final bridgeTarget = namespace.isNotEmpty
+        ? '__reactDartBindings.$namespace'
+        : '__reactDartHooks';
     buffer
       ..writeln()
       ..writeln('// Hook bridge: the generated Dart hooks (`--hooks` output) call')
@@ -1773,8 +1779,15 @@ String generateShim({
     }
     buffer
       ..writeln('};')
-      ..writeln()
-      ..writeln('globalThis.__reactDartHooks = hooks;');
+      ..writeln();
+    if (namespace.isNotEmpty) {
+      buffer
+        ..writeln('globalThis.__reactDartBindings ??= Object.create(null);')
+        ..writeln('globalThis.__reactDartBindings.$namespace = hooks;')
+        ..writeln();
+    } else {
+      buffer.writeln('globalThis.__reactDartHooks = hooks;');
+    }
   }
   return buffer.toString();
 }

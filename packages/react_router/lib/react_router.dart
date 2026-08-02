@@ -21,7 +21,8 @@
 /// Components are rendered through the generic foreign-component bridge
 /// (`foreignComponent`); the shims register the `reactRouter.*` names and are
 /// bundled automatically via the react.js descriptor entry. Hooks are also
-/// generated: they run through the shim's `__reactDartHooks` bridge during
+/// generated: they run through the shim's
+/// `globalThis.__reactDartBindings.reactRouter` bridge during
 /// render and decode into typed values (maps, records, value classes with
 /// `fromParts`, enums with `fromValue`, captured closures for function
 /// returns).
