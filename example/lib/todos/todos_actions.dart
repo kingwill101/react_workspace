@@ -71,7 +71,7 @@ Future<TodoItem> addTodo(
   await Future.delayed(const Duration(milliseconds: 10));
 
   if (title.trim().isEmpty) {
-    throw ServerFunctionFailure(
+    throw const ServerFunctionFailure(
       code: 'invalid_title',
       message: 'Todo title must not be empty.',
       statusCode: 422,
