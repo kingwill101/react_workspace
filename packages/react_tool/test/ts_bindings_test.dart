@@ -200,7 +200,7 @@ void main() {
         commandLine: 'react ts bind fake-pkg Greeting',
       );
       // Typed props (classes, enum, callback typedef).
-      expect(code, contains('ReactNode fakePkgGreeting('));
+      expect(code, contains('ReactNode greeting('));
       expect(code, contains('  List<ReactNode> children = const [],'));
       expect(code, contains('String? name,'));
       expect(code, contains('required num count,'));
@@ -290,10 +290,10 @@ void main() {
     });
 
     test('keys any non-function children prop as the children parameter', () {
-      final decl = TsIrDeclaration(
+      const decl = TsIrDeclaration(
         name: 'Card',
         kind: 'component',
-        props: const [
+        props: [
           TsIrProp(
             name: 'children',
             required: false,

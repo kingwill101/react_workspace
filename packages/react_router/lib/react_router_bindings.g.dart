@@ -10,22 +10,21 @@ import 'package:react/react.dart';
 ///
 /// Props from `BrowserRouter`:
 ///
-/// basename?: string
-/// future?: { v7_startTransition?: boolean; v7_relativeSplatPath?: boolean }
-/// children?: React.ReactNode; window?: any
-ReactNode reactRouterBrowserRouter({
+/// future?: { v7_relativeSplatPath?: boolean; v7_startTransition?: boolean }
+/// children?: React.ReactNode; window?: any; basename?: string
+ReactNode browserRouter({
   String? key,
   List<ReactNode> children = const [],
-    String? basename,
     FutureConfig? future,
     Object? window,
+    String? basename,
 }) => foreignComponent(
   'reactRouter.BrowserRouter',
   key: key,
   props: {
-    if (basename != null) 'basename': basename,
     if (future != null) 'future': future.toJson(),
     if (window != null) 'window': window,
+    if (basename != null) 'basename': basename,
   },
   children: children,
 );
@@ -34,24 +33,24 @@ ReactNode reactRouterBrowserRouter({
 ///
 /// Props from `MemoryRouter`:
 ///
-/// initialEntries?: any[]; children?: React.ReactNode; basename?: string
-/// initialIndex?: number
 /// future?: { v7_relativeSplatPath?: boolean; v7_startTransition?: boolean }
-ReactNode reactRouterMemoryRouter({
+/// basename?: string; children?: React.ReactNode; initialEntries?: any[]
+/// initialIndex?: number
+ReactNode memoryRouter({
   String? key,
   List<ReactNode> children = const [],
-    List<Object?>? initialEntries,
-    String? basename,
-    num? initialIndex,
     FutureConfig? future,
+    String? basename,
+    List<Object?>? initialEntries,
+    num? initialIndex,
 }) => foreignComponent(
   'reactRouter.MemoryRouter',
   key: key,
   props: {
-    if (initialEntries != null) 'initialEntries': initialEntries,
-    if (basename != null) 'basename': basename,
-    if (initialIndex != null) 'initialIndex': initialIndex,
     if (future != null) 'future': future.toJson(),
+    if (basename != null) 'basename': basename,
+    if (initialEntries != null) 'initialEntries': initialEntries,
+    if (initialIndex != null) 'initialIndex': initialIndex,
   },
   children: children,
 );
@@ -61,7 +60,7 @@ ReactNode reactRouterMemoryRouter({
 /// Props from `Routes`:
 ///
 /// children?: React.ReactNode; location?: any
-ReactNode reactRouterRoutes({
+ReactNode routes({
   String? key,
   List<ReactNode> children = const [],
     Object? location,
@@ -78,51 +77,51 @@ ReactNode reactRouterRoutes({
 ///
 /// Props from `Route`:
 ///
-/// element?: React.ReactNode; errorElement?: React.ReactNode; action?: any
-/// ErrorBoundary?: any; index?: false; loader?: any; id?: any
-/// hasErrorBoundary?: any; path?: any; shouldRevalidate?: any
-/// lazy?: Record<string, unknown>; handle?: any; Component?: any
-/// HydrateFallback?: any; caseSensitive?: any; children?: React.ReactNode
-/// hydrateFallbackElement?: React.ReactNode
-ReactNode reactRouterRoute({
+/// id?: any; index?: false; shouldRevalidate?: any; action?: any
+/// errorElement?: React.ReactNode; handle?: any; hasErrorBoundary?: any
+/// Component?: any; loader?: any; path?: any
+/// hydrateFallbackElement?: React.ReactNode; children?: React.ReactNode
+/// ErrorBoundary?: any; caseSensitive?: any; element?: React.ReactNode
+/// lazy?: Record<string, unknown>; HydrateFallback?: any
+ReactNode route({
   String? key,
   List<ReactNode> children = const [],
-    ReactNode? element,
-    ReactNode? errorElement,
-    Object? action,
-    Object? ErrorBoundary,
-    bool? index,
-    Object? loader,
     Object? id,
-    Object? hasErrorBoundary,
-    Object? path,
+    bool? index,
     Object? shouldRevalidate,
-    Object? lazy,
+    Object? action,
+    ReactNode? errorElement,
     Object? handle,
+    Object? hasErrorBoundary,
     Object? Component,
-    Object? HydrateFallback,
-    Object? caseSensitive,
+    Object? loader,
+    Object? path,
     ReactNode? hydrateFallbackElement,
+    Object? ErrorBoundary,
+    Object? caseSensitive,
+    ReactNode? element,
+    Object? lazy,
+    Object? HydrateFallback,
 }) => foreignComponent(
   'reactRouter.Route',
   key: key,
   props: {
-    if (element != null) 'element': element,
-    if (errorElement != null) 'errorElement': errorElement,
-    if (action != null) 'action': action,
-    if (ErrorBoundary != null) 'ErrorBoundary': ErrorBoundary,
-    if (index != null) 'index': index,
-    if (loader != null) 'loader': loader,
     if (id != null) 'id': id,
-    if (hasErrorBoundary != null) 'hasErrorBoundary': hasErrorBoundary,
-    if (path != null) 'path': path,
+    if (index != null) 'index': index,
     if (shouldRevalidate != null) 'shouldRevalidate': shouldRevalidate,
-    if (lazy != null) 'lazy': lazy,
+    if (action != null) 'action': action,
+    if (errorElement != null) 'errorElement': errorElement,
     if (handle != null) 'handle': handle,
+    if (hasErrorBoundary != null) 'hasErrorBoundary': hasErrorBoundary,
     if (Component != null) 'Component': Component,
-    if (HydrateFallback != null) 'HydrateFallback': HydrateFallback,
-    if (caseSensitive != null) 'caseSensitive': caseSensitive,
+    if (loader != null) 'loader': loader,
+    if (path != null) 'path': path,
     if (hydrateFallbackElement != null) 'hydrateFallbackElement': hydrateFallbackElement,
+    if (ErrorBoundary != null) 'ErrorBoundary': ErrorBoundary,
+    if (caseSensitive != null) 'caseSensitive': caseSensitive,
+    if (element != null) 'element': element,
+    if (lazy != null) 'lazy': lazy,
+    if (HydrateFallback != null) 'HydrateFallback': HydrateFallback,
   },
   children: children,
 );
@@ -131,60 +130,59 @@ ReactNode reactRouterRoute({
 ///
 /// Props from `Link`:
 ///
-/// preventScrollReset?: boolean; relative?: "route" | "path"; to: any
-/// target?: string; role?: string; children?: React.ReactNode
-/// className?: string; id?: string; replace?: boolean; rel?: string
-/// title?: string; tabIndex?: number; download?: boolean; onClick?: host value
-/// unstable_viewTransition?: boolean; style?: Record<string, unknown>
-/// lang?: string; hidden?: boolean; dir?: string; reloadDocument?: boolean
-/// state?: any
-ReactNode reactRouterLink({
+/// rel?: string; replace?: boolean; dir?: string; relative?: "route" | "path"
+/// children?: React.ReactNode; download?: boolean; reloadDocument?: boolean
+/// id?: string; title?: string; role?: string; state?: any; target?: string
+/// preventScrollReset?: boolean; lang?: string; onClick?: host value
+/// hidden?: boolean; style?: Record<string, unknown>; className?: string
+/// tabIndex?: number; to: any; unstable_viewTransition?: boolean
+ReactNode link({
   String? key,
   List<ReactNode> children = const [],
-    bool? preventScrollReset,
-    LinkRelative? relative,
-    required Object to,
-    String? target,
-    String? role,
-    String? className,
-    String? id,
-    bool? replace,
     String? rel,
-    String? title,
-    num? tabIndex,
-    bool? download,
-    Object? onClick,
-    bool? unstable_viewTransition,
-    Object? style,
-    String? lang,
-    bool? hidden,
+    bool? replace,
     String? dir,
+    LinkRelative? relative,
+    bool? download,
     bool? reloadDocument,
+    String? id,
+    String? title,
+    String? role,
     Object? state,
+    String? target,
+    bool? preventScrollReset,
+    String? lang,
+    Object? onClick,
+    bool? hidden,
+    Object? style,
+    String? className,
+    num? tabIndex,
+    required Object to,
+    bool? unstable_viewTransition,
 }) => foreignComponent(
   'reactRouter.Link',
   key: key,
   props: {
-    if (preventScrollReset != null) 'preventScrollReset': preventScrollReset,
-    if (relative != null) 'relative': relative.value,
-    'to': to,
-    if (target != null) 'target': target,
-    if (role != null) 'role': role,
-    if (className != null) 'className': className,
-    if (id != null) 'id': id,
-    if (replace != null) 'replace': replace,
     if (rel != null) 'rel': rel,
-    if (title != null) 'title': title,
-    if (tabIndex != null) 'tabIndex': tabIndex,
-    if (download != null) 'download': download,
-    if (onClick != null) 'onClick': onClick,
-    if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition,
-    if (style != null) 'style': style,
-    if (lang != null) 'lang': lang,
-    if (hidden != null) 'hidden': hidden,
+    if (replace != null) 'replace': replace,
     if (dir != null) 'dir': dir,
+    if (relative != null) 'relative': relative.value,
+    if (download != null) 'download': download,
     if (reloadDocument != null) 'reloadDocument': reloadDocument,
+    if (id != null) 'id': id,
+    if (title != null) 'title': title,
+    if (role != null) 'role': role,
     if (state != null) 'state': state,
+    if (target != null) 'target': target,
+    if (preventScrollReset != null) 'preventScrollReset': preventScrollReset,
+    if (lang != null) 'lang': lang,
+    if (onClick != null) 'onClick': onClick,
+    if (hidden != null) 'hidden': hidden,
+    if (style != null) 'style': style,
+    if (className != null) 'className': className,
+    if (tabIndex != null) 'tabIndex': tabIndex,
+    'to': to,
+    if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition,
   },
   children: children,
 );
@@ -193,64 +191,64 @@ ReactNode reactRouterLink({
 ///
 /// Props from `NavLink`:
 ///
-/// style?: any; hidden?: boolean; preventScrollReset?: boolean
-/// onClick?: host value; title?: string; reloadDocument?: boolean
-/// className?: any; role?: string; state?: any; caseSensitive?: boolean
-/// replace?: boolean; children?: any; id?: string; end?: boolean; rel?: string
-/// target?: string; relative?: "route" | "path"
-/// unstable_viewTransition?: boolean; download?: boolean; lang?: string
-/// to: any; tabIndex?: number; dir?: string
-ReactNode reactRouterNavLink({
+/// children?: any; title?: string; tabIndex?: number; id?: string
+/// caseSensitive?: boolean; replace?: boolean; style?: any; role?: string
+/// target?: string; rel?: string; download?: boolean; state?: any; to: any
+/// reloadDocument?: boolean; relative?: "route" | "path"; end?: boolean
+/// dir?: string; onClick?: host value; className?: any
+/// preventScrollReset?: boolean; hidden?: boolean
+/// unstable_viewTransition?: boolean; lang?: string
+ReactNode navLink({
   String? key,
   List<ReactNode> children = const [],
-    Object? style,
-    bool? hidden,
-    bool? preventScrollReset,
-    Object? onClick,
     String? title,
-    bool? reloadDocument,
-    Object? className,
-    String? role,
-    Object? state,
+    num? tabIndex,
+    String? id,
     bool? caseSensitive,
     bool? replace,
-    String? id,
-    bool? end,
-    String? rel,
+    Object? style,
+    String? role,
     String? target,
-    LinkRelative? relative,
-    bool? unstable_viewTransition,
+    String? rel,
     bool? download,
-    String? lang,
+    Object? state,
     required Object to,
-    num? tabIndex,
+    bool? reloadDocument,
+    LinkRelative? relative,
+    bool? end,
     String? dir,
+    Object? onClick,
+    Object? className,
+    bool? preventScrollReset,
+    bool? hidden,
+    bool? unstable_viewTransition,
+    String? lang,
 }) => foreignComponent(
   'reactRouter.NavLink',
   key: key,
   props: {
-    if (style != null) 'style': style,
-    if (hidden != null) 'hidden': hidden,
-    if (preventScrollReset != null) 'preventScrollReset': preventScrollReset,
-    if (onClick != null) 'onClick': onClick,
     if (title != null) 'title': title,
-    if (reloadDocument != null) 'reloadDocument': reloadDocument,
-    if (className != null) 'className': className,
-    if (role != null) 'role': role,
-    if (state != null) 'state': state,
+    if (tabIndex != null) 'tabIndex': tabIndex,
+    if (id != null) 'id': id,
     if (caseSensitive != null) 'caseSensitive': caseSensitive,
     if (replace != null) 'replace': replace,
-    if (id != null) 'id': id,
-    if (end != null) 'end': end,
-    if (rel != null) 'rel': rel,
+    if (style != null) 'style': style,
+    if (role != null) 'role': role,
     if (target != null) 'target': target,
-    if (relative != null) 'relative': relative.value,
-    if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition,
+    if (rel != null) 'rel': rel,
     if (download != null) 'download': download,
-    if (lang != null) 'lang': lang,
+    if (state != null) 'state': state,
     'to': to,
-    if (tabIndex != null) 'tabIndex': tabIndex,
+    if (reloadDocument != null) 'reloadDocument': reloadDocument,
+    if (relative != null) 'relative': relative.value,
+    if (end != null) 'end': end,
     if (dir != null) 'dir': dir,
+    if (onClick != null) 'onClick': onClick,
+    if (className != null) 'className': className,
+    if (preventScrollReset != null) 'preventScrollReset': preventScrollReset,
+    if (hidden != null) 'hidden': hidden,
+    if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition,
+    if (lang != null) 'lang': lang,
   },
   children: children,
 );
@@ -260,7 +258,7 @@ ReactNode reactRouterNavLink({
 /// Props from `Outlet`:
 ///
 /// context?: unknown
-ReactNode reactRouterOutlet({
+ReactNode outlet({
   String? key,
     Object? context,
 }) => foreignComponent(
@@ -275,21 +273,21 @@ ReactNode reactRouterOutlet({
 ///
 /// Props from `Navigate`:
 ///
-/// to: any; state?: any; replace?: boolean; relative?: "route" | "path"
-ReactNode reactRouterNavigate({
+/// replace?: boolean; state?: any; relative?: "route" | "path"; to: any
+ReactNode navigate({
   String? key,
-    required Object to,
-    Object? state,
     bool? replace,
+    Object? state,
     LinkRelative? relative,
+    required Object to,
 }) => foreignComponent(
   'reactRouter.Navigate',
   key: key,
   props: {
-    'to': to,
-    if (state != null) 'state': state,
     if (replace != null) 'replace': replace,
+    if (state != null) 'state': state,
     if (relative != null) 'relative': relative.value,
+    'to': to,
   },
 );
 
@@ -303,23 +301,23 @@ enum LinkRelative {
 
 /// Typed props for `FutureConfig`.
 ///
-/// v7_startTransition?: boolean; v7_relativeSplatPath?: boolean
+/// v7_relativeSplatPath?: boolean; v7_startTransition?: boolean
 class FutureConfig {
   const FutureConfig({
-    bool? this.v7_startTransition,
     bool? this.v7_relativeSplatPath,
+    bool? this.v7_startTransition,
   });
-
-  /// TS: boolean
-  final bool? v7_startTransition;
 
   /// TS: boolean
   final bool? v7_relativeSplatPath;
 
+  /// TS: boolean
+  final bool? v7_startTransition;
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
-    if (v7_startTransition != null) 'v7_startTransition': v7_startTransition,
     if (v7_relativeSplatPath != null) 'v7_relativeSplatPath': v7_relativeSplatPath,
+    if (v7_startTransition != null) 'v7_startTransition': v7_startTransition,
   };
 }
 

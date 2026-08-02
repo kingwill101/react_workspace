@@ -10,24 +10,24 @@ import 'package:react/react.dart';
 ///
 /// Props from `MemoryRouter`:
 ///
-/// children?: React.ReactNode; initialEntries?: any[]; basename?: string
-/// initialIndex?: number
-/// future?: { v7_relativeSplatPath?: boolean; v7_startTransition?: boolean }
-ReactNode reactRouterDomMemoryRouter({
+/// basename?: string
+/// future?: { v7_startTransition?: boolean; v7_relativeSplatPath?: boolean }
+/// children?: React.ReactNode; initialEntries?: any[]; initialIndex?: number
+ReactNode memoryRouter({
   String? key,
   List<ReactNode> children = const [],
-    List<Object?>? initialEntries,
     String? basename,
-    num? initialIndex,
     FutureConfig? future,
+    List<Object?>? initialEntries,
+    num? initialIndex,
 }) => foreignComponent(
   'reactRouterDom.MemoryRouter',
   key: key,
   props: {
-    if (initialEntries != null) 'initialEntries': initialEntries,
     if (basename != null) 'basename': basename,
-    if (initialIndex != null) 'initialIndex': initialIndex,
     if (future != null) 'future': future.toJson(),
+    if (initialEntries != null) 'initialEntries': initialEntries,
+    if (initialIndex != null) 'initialIndex': initialIndex,
   },
   children: children,
 );
@@ -36,51 +36,51 @@ ReactNode reactRouterDomMemoryRouter({
 ///
 /// Props from `Route`:
 ///
-/// hasErrorBoundary?: any; errorElement?: React.ReactNode; loader?: any
-/// HydrateFallback?: any; Component?: any; lazy?: Record<string, unknown>
-/// handle?: any; action?: any; id?: any; path?: any; children?: React.ReactNode
-/// shouldRevalidate?: any; element?: React.ReactNode; index?: false
-/// caseSensitive?: any; ErrorBoundary?: any
-/// hydrateFallbackElement?: React.ReactNode
-ReactNode reactRouterDomRoute({
+/// shouldRevalidate?: any; element?: React.ReactNode; HydrateFallback?: any
+/// id?: any; lazy?: Record<string, unknown>
+/// hydrateFallbackElement?: React.ReactNode; errorElement?: React.ReactNode
+/// Component?: any; action?: any; path?: any; index?: false
+/// hasErrorBoundary?: any; handle?: any; caseSensitive?: any; loader?: any
+/// children?: React.ReactNode; ErrorBoundary?: any
+ReactNode route({
   String? key,
   List<ReactNode> children = const [],
-    Object? hasErrorBoundary,
-    ReactNode? errorElement,
-    Object? loader,
-    Object? HydrateFallback,
-    Object? Component,
-    Object? lazy,
-    Object? handle,
-    Object? action,
-    Object? id,
-    Object? path,
     Object? shouldRevalidate,
     ReactNode? element,
-    bool? index,
-    Object? caseSensitive,
-    Object? ErrorBoundary,
+    Object? HydrateFallback,
+    Object? id,
+    Object? lazy,
     ReactNode? hydrateFallbackElement,
+    ReactNode? errorElement,
+    Object? Component,
+    Object? action,
+    Object? path,
+    bool? index,
+    Object? hasErrorBoundary,
+    Object? handle,
+    Object? caseSensitive,
+    Object? loader,
+    Object? ErrorBoundary,
 }) => foreignComponent(
   'reactRouterDom.Route',
   key: key,
   props: {
-    if (hasErrorBoundary != null) 'hasErrorBoundary': hasErrorBoundary,
-    if (errorElement != null) 'errorElement': errorElement,
-    if (loader != null) 'loader': loader,
-    if (HydrateFallback != null) 'HydrateFallback': HydrateFallback,
-    if (Component != null) 'Component': Component,
-    if (lazy != null) 'lazy': lazy,
-    if (handle != null) 'handle': handle,
-    if (action != null) 'action': action,
-    if (id != null) 'id': id,
-    if (path != null) 'path': path,
     if (shouldRevalidate != null) 'shouldRevalidate': shouldRevalidate,
     if (element != null) 'element': element,
-    if (index != null) 'index': index,
-    if (caseSensitive != null) 'caseSensitive': caseSensitive,
-    if (ErrorBoundary != null) 'ErrorBoundary': ErrorBoundary,
+    if (HydrateFallback != null) 'HydrateFallback': HydrateFallback,
+    if (id != null) 'id': id,
+    if (lazy != null) 'lazy': lazy,
     if (hydrateFallbackElement != null) 'hydrateFallbackElement': hydrateFallbackElement,
+    if (errorElement != null) 'errorElement': errorElement,
+    if (Component != null) 'Component': Component,
+    if (action != null) 'action': action,
+    if (path != null) 'path': path,
+    if (index != null) 'index': index,
+    if (hasErrorBoundary != null) 'hasErrorBoundary': hasErrorBoundary,
+    if (handle != null) 'handle': handle,
+    if (caseSensitive != null) 'caseSensitive': caseSensitive,
+    if (loader != null) 'loader': loader,
+    if (ErrorBoundary != null) 'ErrorBoundary': ErrorBoundary,
   },
   children: children,
 );
@@ -96,23 +96,23 @@ enum NavigatePropsRelative {
 
 /// Typed props for `FutureConfig`.
 ///
-/// v7_relativeSplatPath?: boolean; v7_startTransition?: boolean
+/// v7_startTransition?: boolean; v7_relativeSplatPath?: boolean
 class FutureConfig {
   const FutureConfig({
-    bool? this.v7_relativeSplatPath,
     bool? this.v7_startTransition,
+    bool? this.v7_relativeSplatPath,
   });
-
-  /// TS: boolean
-  final bool? v7_relativeSplatPath;
 
   /// TS: boolean
   final bool? v7_startTransition;
 
+  /// TS: boolean
+  final bool? v7_relativeSplatPath;
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
-    if (v7_relativeSplatPath != null) 'v7_relativeSplatPath': v7_relativeSplatPath,
     if (v7_startTransition != null) 'v7_startTransition': v7_startTransition,
+    if (v7_relativeSplatPath != null) 'v7_relativeSplatPath': v7_relativeSplatPath,
   };
 }
 

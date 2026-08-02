@@ -26,7 +26,7 @@ library;
 export 'react_router_bindings.g.dart';
 
 /// Typed helpers for the `react-router-dom/server` components
-/// (`reactRouterStaticRouter` is the SSR counterpart of the browser router).
+/// (`staticRouter` is the SSR counterpart of `browserRouter`).
 export 'react_router_server_bindings.g.dart';
 
 /// A normalized React Router location.

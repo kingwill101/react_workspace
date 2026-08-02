@@ -10,9 +10,10 @@ import 'package:react/react.dart';
 ///
 /// Props from `StaticRouter`:
 ///
-/// children?: React.ReactNode; basename?: string; location: any
-/// future?: { v7_prependBasename?: boolean; v7_relativeSplatPath?: boolean; v7_fetcherPersist?: boolean; v7_skipActionErrorRevalidation?: boolean; v7_partialHydration?: boolean; v7_normalizeFormMethod?: boolean }
-ReactNode reactRouterStaticRouter({
+/// basename?: string; location: any
+/// future?: { v7_normalizeFormMethod?: boolean; v7_prependBasename?: boolean; v7_skipActionErrorRevalidation?: boolean; v7_partialHydration?: boolean; v7_relativeSplatPath?: boolean; v7_fetcherPersist?: boolean }
+/// children?: React.ReactNode
+ReactNode staticRouter({
   String? key,
   List<ReactNode> children = const [],
     String? basename,
@@ -31,27 +32,24 @@ ReactNode reactRouterStaticRouter({
 
 /// Typed props for `FutureConfig`.
 ///
-/// v7_prependBasename?: boolean; v7_relativeSplatPath?: boolean
-/// v7_fetcherPersist?: boolean; v7_skipActionErrorRevalidation?: boolean
-/// v7_partialHydration?: boolean; v7_normalizeFormMethod?: boolean
+/// v7_normalizeFormMethod?: boolean; v7_prependBasename?: boolean
+/// v7_skipActionErrorRevalidation?: boolean; v7_partialHydration?: boolean
+/// v7_relativeSplatPath?: boolean; v7_fetcherPersist?: boolean
 class ServerFutureConfig {
   const ServerFutureConfig({
+    bool? this.v7_normalizeFormMethod,
     bool? this.v7_prependBasename,
-    bool? this.v7_relativeSplatPath,
-    bool? this.v7_fetcherPersist,
     bool? this.v7_skipActionErrorRevalidation,
     bool? this.v7_partialHydration,
-    bool? this.v7_normalizeFormMethod,
+    bool? this.v7_relativeSplatPath,
+    bool? this.v7_fetcherPersist,
   });
 
   /// TS: boolean
+  final bool? v7_normalizeFormMethod;
+
+  /// TS: boolean
   final bool? v7_prependBasename;
-
-  /// TS: boolean
-  final bool? v7_relativeSplatPath;
-
-  /// TS: boolean
-  final bool? v7_fetcherPersist;
 
   /// TS: boolean
   final bool? v7_skipActionErrorRevalidation;
@@ -60,16 +58,19 @@ class ServerFutureConfig {
   final bool? v7_partialHydration;
 
   /// TS: boolean
-  final bool? v7_normalizeFormMethod;
+  final bool? v7_relativeSplatPath;
+
+  /// TS: boolean
+  final bool? v7_fetcherPersist;
 
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
+    if (v7_normalizeFormMethod != null) 'v7_normalizeFormMethod': v7_normalizeFormMethod,
     if (v7_prependBasename != null) 'v7_prependBasename': v7_prependBasename,
-    if (v7_relativeSplatPath != null) 'v7_relativeSplatPath': v7_relativeSplatPath,
-    if (v7_fetcherPersist != null) 'v7_fetcherPersist': v7_fetcherPersist,
     if (v7_skipActionErrorRevalidation != null) 'v7_skipActionErrorRevalidation': v7_skipActionErrorRevalidation,
     if (v7_partialHydration != null) 'v7_partialHydration': v7_partialHydration,
-    if (v7_normalizeFormMethod != null) 'v7_normalizeFormMethod': v7_normalizeFormMethod,
+    if (v7_relativeSplatPath != null) 'v7_relativeSplatPath': v7_relativeSplatPath,
+    if (v7_fetcherPersist != null) 'v7_fetcherPersist': v7_fetcherPersist,
   };
 }
 

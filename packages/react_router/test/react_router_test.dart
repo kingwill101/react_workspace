@@ -3,8 +3,8 @@ import 'package:react_router/react_router.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('reactRouterLink builds a typed foreign component node', () {
-    final node = reactRouterLink(
+  test('link builds a typed foreign component node', () {
+    final node = link(
       to: '/about',
       children: [const Text('About')],
     );
@@ -15,8 +15,8 @@ void main() {
     expect(component.children, hasLength(1));
   });
 
-  test('reactRouterNavLink passes className and end', () {
-    final node = reactRouterNavLink(
+  test('navLink passes className and end', () {
+    final node = navLink(
       to: '/',
       className: 'nav',
       end: true,
@@ -26,9 +26,9 @@ void main() {
     expect(node.props['end'], true);
   });
 
-  test('reactRouterRoute carries element and index flags', () {
+  test('route carries element and index flags', () {
     const element = Text('Home');
-    final indexRoute = reactRouterRoute(
+    final indexRoute = route(
       index: true,
       element: element,
     ) as ForeignComponent;
@@ -36,13 +36,13 @@ void main() {
     expect(indexRoute.props['index'], true);
     expect(indexRoute.props['element'], same(element));
 
-    final pathRoute = reactRouterRoute(path: '/items/:id', element: element)
+    final pathRoute = route(path: '/items/:id', element: element)
         as ForeignComponent;
     expect(pathRoute.props['path'], '/items/:id');
   });
 
-  test('reactRouterMemoryRouter passes initialEntries', () {
-    final node = reactRouterMemoryRouter(
+  test('memoryRouter passes initialEntries', () {
+    final node = memoryRouter(
       children: [const Text('x')],
       initialEntries: ['/', '/about'],
     ) as ForeignComponent;
@@ -50,11 +50,11 @@ void main() {
     expect(node.props['initialEntries'], ['/', '/about']);
   });
 
-  test('reactRouterOutlet and reactRouterNavigate build nodes', () {
-    final outletNode = reactRouterOutlet() as ForeignComponent;
+  test('outlet and navigate build nodes', () {
+    final outletNode = outlet() as ForeignComponent;
     expect(outletNode.name, 'reactRouter.Outlet');
 
-    final navigateNode = reactRouterNavigate(
+    final navigateNode = navigate(
       to: '/login',
       replace: true,
     ) as ForeignComponent;
@@ -62,8 +62,8 @@ void main() {
     expect(navigateNode.props['replace'], true);
   });
 
-  test('reactRouterStaticRouter carries location and children', () {
-    final node = reactRouterStaticRouter(
+  test('staticRouter carries location and children', () {
+    final node = staticRouter(
       location: '/about',
       children: [const Text('About')],
     ) as ForeignComponent;
@@ -73,12 +73,12 @@ void main() {
   });
 
   test('helpers pass through the generated prop classes via toJson', () {
-    final node = reactRouterMemoryRouter(
+    final node = memoryRouter(
       future: const FutureConfig(v7_startTransition: true),
     ) as ForeignComponent;
     expect(node.props['future'], {'v7_startTransition': true});
 
-    final linkNode = reactRouterLink(
+    final linkNode = link(
       to: '/x',
       relative: LinkRelative.path,
     ) as ForeignComponent;

@@ -506,7 +506,10 @@ void _emitDeclaration(
   _TypeRegistry registry,
 ) {
   final foreignName = '$prefix.${declaration.name}';
-  final functionName = lowerCamel('${prefix}_${declaration.name}');
+  // Dart helpers keep the bare component name (lowerCamel); the prefix only
+  // namespaces the JS registration key used by the shim, so generated APIs
+  // read like `outlet()` / `memoryRouter(...)` instead of `xOutlet()`.
+  final functionName = lowerCamel(declaration.name);
   final props = declaration.props;
 
   // A `children` prop becomes the node children parameter, except when it

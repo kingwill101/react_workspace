@@ -207,7 +207,9 @@ final class _TsBindCommand extends Command<void> {
       )
       ..addOption(
         'prefix',
-        help: 'Foreign-component prefix (default: the specifier, camelized).',
+        help: 'JS registration namespace (default: the specifier, camelized). '
+            'Prefixes the `prefix.Name` keys registered by the shim; Dart '
+            'helpers always use the bare component name.',
       )
       ..addOption(
         'type-prefix',
