@@ -1067,7 +1067,7 @@ String _emitClass(_ClassDef def, _TypeRegistry registry) {
 //   - literal unions → enums with `fromValue`
 //   - records / URLSearchParams → `Map<String, String>` pairs
 //   - tuples → Dart records (useSearchParams → (pairs, setter))
-//   - objects → generated value classes with `fromParts(JSArray)` factories
+//   - objects → generated extension types + value classes with `fromJs(JSObject)` factories
 //   - functions → closures over a JSFunction captured *during render*, so
 //     navigating later from an event handler never calls the hook again
 // ---------------------------------------------------------------------------
@@ -1143,33 +1143,11 @@ String generateHooks({
 }
 
 String _hookHelpers() {
-  return '''// Shared decode helpers: the shim returns primitives or `[[key, value],
-// ...]` pairs (recursively converted by `toPairs`), and these reshape them
-// into typed Dart values.
-Map<String, JSAny?> _pairsMap(JSArray pairs) {
-  final map = <String, JSAny?>{};
-  for (var i = 0; i < pairs.length; i++) {
-    final pair = pairs[i] as JSArray;
-    var value = pair[1];
-    if (value == null || value.isUndefined == true) value = null;
-    map[(pair[0] as JSString).toDart] = value;
-  }
-  return map;
-}
-
-Map<String, String> _decodePairs(JSArray pairs) {
-  final result = <String, String>{};
-  for (var i = 0; i < pairs.length; i++) {
-    final pair = pairs[i] as JSArray;
-    final value = pair[1];
-    result[(pair[0] as JSString).toDart] =
-        value == null || value.isUndefined == true
-            ? ''
-            : (value as JSString).toDart;
-  }
-  return result;
-}
-
+  return '''// Shared decode helpers for hook return values.
+// Primitives and literals are decoded directly by the external's
+// return type; objects with known shape use generated extension
+// types (see below) for direct property access instead of
+// converting to/from [[key, value]] pairs.
 List<T> _decodeList<T>(JSArray raw, T Function(JSAny? item) decode) {
   final result = <T>[];
   for (var i = 0; i < raw.length; i++) {
@@ -1439,7 +1417,7 @@ String _elemDecode(TsIrType type, String expr, _TypeRegistry registry) {
       return '_decodePairs($expr as JSArray)';
     case 'object':
       if ((type.members ?? const <TsIrProp>[]).isEmpty) return expr;
-      return '${_objectNameFor(type, registry)}.fromParts($expr as JSArray)';
+      return '${_objectNameFor(type, registry)}.fromJs($expr)';
     case 'array':
       final element = type.element ?? const TsIrType(kind: 'any');
       return '_decodeList($expr as JSArray, (e) => ${_elemDecode(element, 'e', registry)})';
@@ -1595,7 +1573,7 @@ String _topDecode(TsIrType? returns, String call, _TypeRegistry registry) {
       return '_decodePairs($call)';
     case 'object':
       if ((returns!.members ?? const <TsIrProp>[]).isEmpty) return call;
-      return '${_objectNameFor(returns, registry)}.fromParts($call)';
+      return '${_objectNameFor(returns, registry)}.fromJs($call)';
     case 'array':
       final element = returns!.element ?? const TsIrType(kind: 'any');
       return '_decodeList($call, (e) => ${_elemDecode(element, 'e', registry)})';
@@ -1617,62 +1595,79 @@ String _hookDoc(TsIrDeclaration hook) {
 String _hookUrl(String name) =>
     name.replaceFirst('use', '').toLowerCase().replaceAll(' ', '-');
 
-/// Emits a value class with a `fromParts(JSArray)` factory for hook decode.
+/// Emits an extension type for direct JS property access and a value
+/// class that wraps it for hook decode. The extension type provides
+/// typed getters on the raw JS object, avoiding the generic
+/// [[key, value]] pairs conversion.
 String _emitHookClass(_ClassDef def, _TypeRegistry registry) {
   final props = def.type.members ?? const <TsIrProp>[];
   final className = def.name;
+  final extName = '_${className}Js';
   final buffer = StringBuffer()
+    ..writeln('/// Typed JS interop extension for `$className` hook return values.')
+    ..writeln('///')
+    ..writeln('/// Direct property access on the raw JS object avoids the')
+    ..writeln('/// generic [[key, value]] pairs conversion used by')
+    ..writeln('/// `_pairsMap` (removed in this generation).')
+    ..writeln('extension type $extName(JSObject _) implements JSObject {')
+    for (final prop in props) {
+      final n = _safeParamName(prop.name);
+      final dartType = _hookDartType(prop.type, registry);
+      if (prop.type.kind == 'function') {
+        buffer.writeln('  external JSFunction get $n;');
+      } else {
+        buffer.writeln('  external ${_nullableType(dartType, prop.required)} get $n;');
+      }
+    }
+    buffer.writeln('}')
+    ..writeln()
     ..writeln('/// Value class for `$className` (decoded from the hook shim).')
     ..writeln('///')
     ..writeln('/// ${_propsDoc(props)}')
     ..writeln('final class $className {')
-    ..writeln('  const $className({');
-  for (final prop in props) {
-    final n = _safeParamName(prop.name);
-    buffer.writeln(
-      '    ${prop.required ? 'required ' : ''}${_nullableType(_hookDartType(prop.type, registry), prop.required)} this.$n,',
-    );
-  }
-  buffer.writeln('  });');
-
-  buffer
+    ..writeln('  const $className._(this._value);')
     ..writeln()
-    ..writeln("  /// Decodes the shim's `[[key, value], ...]` pairs.")
-    ..writeln('  factory $className.fromParts(JSArray pairs) {')
-    ..writeln('    final map = _pairsMap(pairs);');
-  for (final prop in props.where((p) => p.type.kind == 'function')) {
-    final n = _safeParamName(prop.name);
-    final cast = prop.required
-        ? "map['${prop.name}']! as JSFunction"
-        : "map['${prop.name}'] == null ? null : map['${prop.name}']! as JSFunction";
-    buffer.writeln('    final _p$n = $cast;');
-  }
-  buffer.writeln('    return $className(');
-  for (final prop in props) {
-    final n = _safeParamName(prop.name);
-    buffer.writeln(
-      '      $n: ${_hookMemberDecode(prop, 'map[\'${prop.name}\']', '_p$n', registry)},',
-    );
-  }
-  buffer
-    ..writeln('    );')
-    ..writeln('  }');
+    ..writeln('  final $extName _value;')
+    ..writeln();
 
   for (final prop in props) {
     final n = _safeParamName(prop.name);
     buffer
-      ..writeln()
       ..writeln('  /// TS: ${_tsTypeDoc(prop.type)}')
       ..writeln(
         '  final ${_nullableType(_hookDartType(prop.type, registry), prop.required)} $n;',
       );
   }
 
+  // Constructor that decodes from the extension type
+  buffer.writeln()
+    ..writeln('  $className($extName value) : this._(value);')
+    ..writeln();
+
+  // Factory from raw JSObject (for use with extension type)
+  buffer.writeln("  /// Decodes the shim's raw JS object.")
+    ..writeln('  factory $className.fromJs(JSObject js) => $className($extName(js));')
+    ..writeln();
+
+  // Generate getters that delegate to the extension type
+  for (final prop in props) {
+    final n = _safeParamName(prop.name);
+    final dartType = _hookDartType(prop.type, registry);
+    if (prop.type.kind == 'function') {
+      buffer.writeln('  /// TS: ${_tsTypeDoc(prop.type)}')
+        ..writeln('  ${_nullableType(dartType, prop.required)} get $n => _value.$n;')
+        ..writeln();
+    } else {
+      buffer.writeln('  /// TS: ${_tsTypeDoc(prop.type)}')
+        ..writeln('  ${_nullableType(dartType, prop.required)} get $n => _value.$n.toDart;')
+        ..writeln();
+    }
+  }
+
   if (def.type.name == 'Location') {
     buffer
-      ..writeln()
       ..writeln('  /// The full path including the query string.')
-      ..writeln('  String get fullPath => \'\$pathname\$search\$hash\';')
+      ..writeln("  String get fullPath => '\$pathname\$search\$hash';")
       ..writeln()
       ..writeln('  @override')
       ..writeln('  String toString() => fullPath;');
@@ -1814,8 +1809,11 @@ String _jsDecodeExpr(TsIrType type, String expr) {
     case 'record':
       return 'toPairs($expr ?? {})';
     case 'urlSearchParams':
-    case 'object':
       return 'toPairs($expr)';
+    case 'object':
+      // Known-shape objects are passed as raw JS objects; the
+      // generated extension type provides typed property access.
+      return expr;
     case 'array':
       return '($expr ?? []).map((x) => toPairs(x))';
     case 'tuple':

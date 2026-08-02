@@ -15,33 +15,10 @@ import 'react_router_bindings.g.dart';
 // Hooks are scoped under `globalThis.__reactDartBindings.reactRouter`
 // so multiple wrappers can coexist without collisions.
 
-// Shared decode helpers: the shim returns primitives or `[[key, value],
-// ...]` pairs (recursively converted by `toPairs`), and these reshape them
-// into typed Dart values.
-Map<String, JSAny?> _pairsMap(JSArray pairs) {
-  final map = <String, JSAny?>{};
-  for (var i = 0; i < pairs.length; i++) {
-    final pair = pairs[i] as JSArray;
-    var value = pair[1];
-    if (value == null || value.isUndefined == true) value = null;
-    map[(pair[0] as JSString).toDart] = value;
-  }
-  return map;
-}
-
-Map<String, String> _decodePairs(JSArray pairs) {
-  final result = <String, String>{};
-  for (var i = 0; i < pairs.length; i++) {
-    final pair = pairs[i] as JSArray;
-    final value = pair[1];
-    result[(pair[0] as JSString).toDart] =
-        value == null || value.isUndefined == true
-            ? ''
-            : (value as JSString).toDart;
-  }
-  return result;
-}
-
+// Shared decode helpers for hook return values.
+// Primitives and literals are decoded directly by the external's
+// return type; objects with known shape use generated extension
+// types for direct property access.
 List<T> _decodeList<T>(JSArray raw, T Function(JSAny? item) decode) {
   final result = <T>[];
   for (var i = 0; i < raw.length; i++) {
@@ -77,7 +54,7 @@ bool useInRouterContext() {
 external JSArray _useLocationRaw();
 
 Location useLocation() {
-  return Location.fromParts(_useLocationRaw());
+  return Location.fromJs(_useLocationRaw());
 }
 
 /// useNavigate() => (to: any, options: { replace?: boolean; state?: any; preventScrollReset?: boolean; relative?: "route" | "path"; unstable_flushSync?: boolean; unstable_viewTransition?: boolean }) => void
@@ -118,7 +95,7 @@ Object? useOutlet([Object? context]) {
 external JSArray _useParamsRaw();
 
 Map<String, String> useParams() {
-  return _decodePairs(_useParamsRaw());
+  return Map<String, String>.from((_useParamsRaw() as JSObject).toDart as Map);
 }
 
 /// useSearchParams(defaultInit?: any) => unknown
@@ -139,7 +116,7 @@ external JSArray _useSearchParamsRaw(JSAny? a0);
 external JSArray _useMatchesRaw();
 
 List<UIMatch> useMatches() {
-  return _decodeList(_useMatchesRaw(), (e) => UIMatch.fromParts(e as JSArray));
+  return _decodeList(_useMatchesRaw(), (e) => UIMatch.fromJs(e as JSArray));
 }
 
 /// useNavigation() => { state: "idle" | "loading" | "submitting"; location: { pathname: string; search: string; hash: string; state: any; key: string }; formMethod: Record<string, unknown>; formAction: string; formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; formData: any; json: Record<string, unknown>; text: string }
@@ -149,7 +126,7 @@ List<UIMatch> useMatches() {
 external JSArray _useNavigationRaw();
 
 NavigationReturn useNavigation() {
-  return NavigationReturn.fromParts(_useNavigationRaw());
+  return NavigationReturn.fromJs(_useNavigationRaw());
 }
 
 /// useRevalidator() => { revalidate: () => void; state: "idle" | "loading" }
@@ -159,7 +136,7 @@ NavigationReturn useNavigation() {
 external JSArray _useRevalidatorRaw();
 
 RevalidatorReturn useRevalidator() {
-  return RevalidatorReturn.fromParts(_useRevalidatorRaw());
+  return RevalidatorReturn.fromJs(_useRevalidatorRaw());
 }
 
 /// useResolvedPath(to: any, arg?: { relative?: "route" | "path" }) => { pathname: string; search: string; hash: string }
@@ -170,7 +147,7 @@ external JSArray _useResolvedPathRaw(JSAny? a0, JSAny? a1);
 
 Path useResolvedPath(Object? to, {RelativeRoutingType? relative}) {
   final options = <String, Object?>{if (relative != null) 'relative': relative.value};
-  return Path.fromParts(_useResolvedPathRaw(to.jsify(), options.jsify()));
+  return Path.fromJs(_useResolvedPathRaw(to.jsify(), options.jsify()));
 }
 
 /// useRouteError() => unknown
@@ -210,7 +187,7 @@ Object? useRoutes(List<Object?> routes, [Object? locationArg]) {
 external JSArray _useBlockerRaw(JSAny? a0);
 
 BlockerReturn useBlocker(Object? shouldBlock) {
-  return BlockerReturn.fromParts(_useBlockerRaw(shouldBlock.jsify()));
+  return BlockerReturn.fromJs(_useBlockerRaw(shouldBlock.jsify()));
 }
 
 /// useFetcher(arg?: { key?: string }) => { state: "idle" | "loading" | "submitting"; formMethod: Record<string, unknown>; formAction: string; formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; text: string; formData: any; json: Record<string, unknown>; data: any; Form: { method?: Record<string, unknown>; encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain"; action?: string; relative?: "route" | "path"; preventScrollReset?: boolean; onSubmit?: any }; submit: (target: any, options: { method?: Record<string, unknown>; action?: string; encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; relative?: "route" | "path"; preventScrollReset?: boolean; unstable_flushSync?: boolean }) => void; load: (href: string, opts: { unstable_flushSync?: boolean }) => void }
@@ -221,7 +198,7 @@ external JSArray _useFetcherRaw(JSAny? a0);
 
 FetcherReturn useFetcher({String? elementKey}) {
   final options = <String, Object?>{if (elementKey != null) 'key': elementKey};
-  return FetcherReturn.fromParts(_useFetcherRaw(options.jsify()));
+  return FetcherReturn.fromJs(_useFetcherRaw(options.jsify()));
 }
 
 /// useFetchers() => { state: "idle" | "loading" | "submitting"; formMethod: Record<string, unknown>; formAction: string; formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; text: string; formData: any; json: Record<string, unknown>; data: any; key: string }[]
@@ -231,7 +208,7 @@ FetcherReturn useFetcher({String? elementKey}) {
 external JSArray _useFetchersRaw();
 
 List<FetchersReturnElement> useFetchers() {
-  return _decodeList(_useFetchersRaw(), (e) => FetchersReturnElement.fromParts(e as JSArray));
+  return _decodeList(_useFetchersRaw(), (e) => FetchersReturnElement.fromJs(e as JSArray));
 }
 
 /// useFormAction(action?: string, arg?: { relative?: "route" | "path" }) => string
@@ -332,7 +309,7 @@ final class BlockerReturn {
   });
 
   /// Decodes the shim's `[[key, value], ...]` pairs.
-  factory BlockerReturn.fromParts(JSArray pairs) {
+  factory BlockerReturn.fromJs(JSArray pairs) {
     final map = _pairsMap(pairs);
     final _preset = map['reset']! as JSFunction;
     final _pproceed = map['proceed']! as JSFunction;
@@ -340,7 +317,7 @@ final class BlockerReturn {
       state: BlockerReturnState.fromValue((map['state']! as JSString).toDart),
       reset: () { _preset.callAsFunction(null); },
       proceed: () { _pproceed.callAsFunction(null); },
-      location: Location.fromParts(map['location']! as JSArray),
+      location: Location.fromJs(map['location']! as JSArray),
     );
   }
 
@@ -382,7 +359,7 @@ final class FetcherReturn {
   });
 
   /// Decodes the shim's `[[key, value], ...]` pairs.
-  factory FetcherReturn.fromParts(JSArray pairs) {
+  factory FetcherReturn.fromJs(JSArray pairs) {
     final map = _pairsMap(pairs);
     final _psubmit = map['submit']! as JSFunction;
     final _pload = map['load']! as JSFunction;
@@ -395,7 +372,7 @@ final class FetcherReturn {
       formData: map['formData']!,
       json: map['json']!,
       data: map['data']!,
-      Form: FetcherReturnForm.fromParts(map['Form']! as JSArray),
+      Form: FetcherReturnForm.fromJs(map['Form']! as JSArray),
       submit: (Object? target, {Object? method, String? action, FormEncType? encType, RelativeRoutingType? relative, bool? preventScrollReset, bool? unstable_flushSync}) { _psubmit.callAsFunction(null, target.jsify(), <String, Object?>{if (method != null) 'method': method, if (action != null) 'action': action, if (encType != null) 'encType': encType.value, if (relative != null) 'relative': relative.value, if (preventScrollReset != null) 'preventScrollReset': preventScrollReset, if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync}.jsify()); },
       load: (String href, {bool? unstable_flushSync}) { _pload.callAsFunction(null, href.toJS, <String, Object?>{if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync}.jsify()); },
     );
@@ -452,7 +429,7 @@ final class FetcherReturnForm {
   });
 
   /// Decodes the shim's `[[key, value], ...]` pairs.
-  factory FetcherReturnForm.fromParts(JSArray pairs) {
+  factory FetcherReturnForm.fromJs(JSArray pairs) {
     final map = _pairsMap(pairs);
     return FetcherReturnForm(
       method: map['method'] == null ? null : map['method']!,
@@ -504,7 +481,7 @@ final class FetchersReturnElement {
   });
 
   /// Decodes the shim's `[[key, value], ...]` pairs.
-  factory FetchersReturnElement.fromParts(JSArray pairs) {
+  factory FetchersReturnElement.fromJs(JSArray pairs) {
     final map = _pairsMap(pairs);
     return FetchersReturnElement(
       state: NavigationReturnState.fromValue((map['state']! as JSString).toDart),
@@ -560,7 +537,7 @@ final class Location {
   });
 
   /// Decodes the shim's `[[key, value], ...]` pairs.
-  factory Location.fromParts(JSArray pairs) {
+  factory Location.fromJs(JSArray pairs) {
     final map = _pairsMap(pairs);
     return Location(
       pathname: (map['pathname']! as JSString).toDart,
@@ -613,11 +590,11 @@ final class NavigationReturn {
   });
 
   /// Decodes the shim's `[[key, value], ...]` pairs.
-  factory NavigationReturn.fromParts(JSArray pairs) {
+  factory NavigationReturn.fromJs(JSArray pairs) {
     final map = _pairsMap(pairs);
     return NavigationReturn(
       state: NavigationReturnState.fromValue((map['state']! as JSString).toDart),
-      location: Location.fromParts(map['location']! as JSArray),
+      location: Location.fromJs(map['location']! as JSArray),
       formMethod: map['formMethod']!,
       formAction: (map['formAction']! as JSString).toDart,
       formEncType: FormEncType.fromValue((map['formEncType']! as JSString).toDart),
@@ -663,7 +640,7 @@ final class Path {
   });
 
   /// Decodes the shim's `[[key, value], ...]` pairs.
-  factory Path.fromParts(JSArray pairs) {
+  factory Path.fromJs(JSArray pairs) {
     final map = _pairsMap(pairs);
     return Path(
       pathname: (map['pathname']! as JSString).toDart,
@@ -692,7 +669,7 @@ final class RevalidatorReturn {
   });
 
   /// Decodes the shim's `[[key, value], ...]` pairs.
-  factory RevalidatorReturn.fromParts(JSArray pairs) {
+  factory RevalidatorReturn.fromJs(JSArray pairs) {
     final map = _pairsMap(pairs);
     final _prevalidate = map['revalidate']! as JSFunction;
     return RevalidatorReturn(
@@ -721,7 +698,7 @@ final class UIMatch {
   });
 
   /// Decodes the shim's `[[key, value], ...]` pairs.
-  factory UIMatch.fromParts(JSArray pairs) {
+  factory UIMatch.fromJs(JSArray pairs) {
     final map = _pairsMap(pairs);
     return UIMatch(
       id: (map['id']! as JSString).toDart,
