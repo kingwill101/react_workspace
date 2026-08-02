@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:react_tool/react_tool.dart';
@@ -102,6 +103,8 @@ name: fake_router
 react:
   shims:
     - fake_router_shim.mjs
+  npm:
+    fake-widget-lib: ^2.1.0
 ''');
     await Directory('${dep.path}/lib').create(recursive: true);
     await File('${dep.path}/lib/fake_router_shim.mjs').writeAsString('''
@@ -114,7 +117,6 @@ globalThis.__reactDartRegisterComponent?.(
     // package_config.json mapping `fake_router` to the dependency.
     final dartTool = Directory('${root.path}/.dart_tool');
     await dartTool.create(recursive: true);
-    final configDir = dartTool.parent.path;
     await File('${dartTool.path}/package_config.json').writeAsString('''
 {
   "configVersion": 2,
@@ -125,8 +127,23 @@ globalThis.__reactDartRegisterComponent?.(
 }
 ''');
 
+    // The npm dependency is already installed, so npm is skipped but the
+    // declared range is still merged into package.json.
+    await Directory('${root.path}/node_modules/fake-widget-lib').create(
+      recursive: true,
+    );
+    await File(
+      '${root.path}/node_modules/fake-widget-lib/package.json',
+    ).writeAsString('{}');
+    await File('${root.path}/package.json').writeAsString('{"name": "sample"}\n');
+
+    final logs = <String>[];
     final config = ReactProjectConfig.load(root);
-    final builder = ReactBuilder(config: config, release: false, log: (_) {});
+    final builder = ReactBuilder(
+      config: config,
+      release: false,
+      log: logs.add,
+    );
 
     await builder.build();
 
@@ -138,10 +155,84 @@ globalThis.__reactDartRegisterComponent?.(
       contains("import './vendor/fake_router_shim.mjs';"),
     );
     expect(
-      await File(
+      File(
         '${root.path}/build/react/vendor/fake_router_shim.mjs',
       ).existsSync(),
       isTrue,
     );
+    final manifest = jsonDecode(
+      await File('${root.path}/package.json').readAsString(),
+    ) as Map;
+    expect(manifest['dependencies'], {
+      'fake-widget-lib': '^2.1.0',
+    });
+    expect(logs, contains('npm dependencies present: fake-widget-lib'));
+  });
+
+  test('installs missing npm dependencies through the package manager',
+      () async {
+    final dep = Directory('${root.path}/../fake_router_install');
+    await dep.create(recursive: true);
+    await File('${dep.path}/pubspec.yaml').writeAsString('''
+name: fake_router_install
+react:
+  shims:
+    - fake_router_shim.mjs
+  npm:
+    missing-widget: ^1.0.0
+''');
+    await Directory('${dep.path}/lib').create(recursive: true);
+    await File('${dep.path}/lib/fake_router_shim.mjs').writeAsString('''
+globalThis.__reactDartRegisterComponent?.(
+  'fakeRouter.Install',
+  () => null,
+);
+''');
+
+    final dartTool = Directory('${root.path}/.dart_tool');
+    await dartTool.create(recursive: true);
+    await File('${dartTool.path}/package_config.json').writeAsString('''
+{
+  "configVersion": 2,
+  "packages": [
+    {"name": "sample", "rootUri": "../", "packageUri": "lib/"},
+    {"name": "fake_router_install", "rootUri": "../../fake_router_install", "packageUri": "lib/"}
+  ]
+}
+''');
+    await File('${root.path}/package.json').writeAsString('{"name": "sample"}\n');
+
+    // Stub package manager that provisions the missing dependency.
+    final npmStub = File('${root.path}/stub_npm.sh');
+    await npmStub.writeAsString('''#!/bin/sh
+mkdir -p node_modules/missing-widget
+echo '{}' > node_modules/missing-widget/package.json
+exit 0
+''');
+    await Process.run('chmod', ['+x', npmStub.path]);
+
+    final logs = <String>[];
+    final config = ReactProjectConfig.load(root);
+    final builder = ReactBuilder(
+      config: config,
+      release: false,
+      log: logs.add,
+      npmCommand: npmStub.path,
+    );
+
+    await builder.build();
+
+    expect(logs, contains('Installing npm dependencies: missing-widget'));
+    expect(logs, contains('npm install completed.'));
+    expect(
+      File('${root.path}/node_modules/missing-widget/package.json').existsSync(),
+      isTrue,
+    );
+    final manifest = jsonDecode(
+      await File('${root.path}/package.json').readAsString(),
+    ) as Map;
+    expect(manifest['dependencies'], {
+      'missing-widget': '^1.0.0',
+    });
   });
 }

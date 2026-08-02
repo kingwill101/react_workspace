@@ -14,13 +14,20 @@ final class ReactBuilder {
   final bool release;
   final void Function(String message) log;
 
+  /// Package manager command used to provision missing npm dependencies
+  /// (defaults to `npm`; may be an absolute path for testing).
+  final String npmCommand;
+
   const ReactBuilder({
     required this.config,
     required this.release,
     this.log = print,
+    this.npmCommand = 'npm',
   });
 
   Future<void> build() async {
+    await _ensureNpmDependencies();
+
     // Generate style bindings before code generation so client entrypoints may
     // import them during the same build.
     await _compileStylesheets();
@@ -300,13 +307,54 @@ final class ReactBuilder {
   }
 
   Future<List<String>> _discoverDependencyShims() async {
+    final shims = <String>[];
+    for (final (name, rootPath) in await _dependencyPackages()) {
+      final declared = _pubspecReactField(rootPath, 'shims');
+      if (declared is! List) continue;
+      for (final shim in declared) {
+        if (shim is! String || shim.trim().isEmpty) continue;
+        shims.add('package:$name/${shim.trim()}');
+      }
+    }
+    return shims;
+  }
+
+  /// npm dependencies declared by this project and by wrapper packages
+  /// (`react.npm` in pubspec), merged across the dependency graph.
+  Future<Map<String, String>> _declaredNpmDependencies() async {
+    final result = <String, String>{};
+
+    // The project's own pubspec may declare npm deps for project-local shims.
+    final own = _pubspecReactField(config.root.path, 'npm');
+    if (own is Map) {
+      for (final entry in own.entries) {
+        if (entry.key is String && entry.value is String) {
+          result[entry.key as String] = entry.value as String;
+        }
+      }
+    }
+
+    for (final (_, rootPath) in await _dependencyPackages()) {
+      final declared = _pubspecReactField(rootPath, 'npm');
+      if (declared is! Map) continue;
+      for (final entry in declared.entries) {
+        if (entry.key is String && entry.value is String) {
+          result[entry.key as String] ??= entry.value as String;
+        }
+      }
+    }
+    return result;
+  }
+
+  /// Dependency packages (excluding this project) from the package config.
+  Future<List<(String, String)>> _dependencyPackages() async {
     final packageConfig = _findPackageConfig();
     if (packageConfig == null) return const [];
     final decoded = jsonDecode(packageConfig.readAsStringSync());
     final packages = (decoded as Map)['packages'] as List;
     final configDir = packageConfig.parent.path;
 
-    final shims = <String>[];
+    final result = <(String, String)>[];
     for (final entry in packages) {
       final map = entry as Map;
       final name = map['name'] as String;
@@ -315,18 +363,98 @@ final class ReactBuilder {
       final rootPath = rootUri.startsWith('file:')
           ? Uri.parse(rootUri).toFilePath()
           : p.normalize(p.joinAll([configDir, ...p.split(rootUri)]));
-      final pubspec = File(p.join(rootPath, 'pubspec.yaml'));
-      if (!pubspec.existsSync()) continue;
-      final yaml = loadYaml(pubspec.readAsStringSync());
-      final react = yaml is Map ? yaml['react'] : null;
-      final declared = react is Map ? react['shims'] : null;
-      if (declared is! List) continue;
-      for (final shim in declared) {
-        if (shim is! String || shim.trim().isEmpty) continue;
-        shims.add('package:$name/${shim.trim()}');
+      if (!File(p.join(rootPath, 'pubspec.yaml')).existsSync()) continue;
+      result.add((name, rootPath));
+    }
+    return result;
+  }
+
+  /// Reads a field from the `react:` section of a package's pubspec.
+  dynamic _pubspecReactField(String rootPath, String field) {
+    final pubspec = File(p.join(rootPath, 'pubspec.yaml'));
+    if (!pubspec.existsSync()) return null;
+    final yaml = loadYaml(pubspec.readAsStringSync());
+    final react = yaml is Map ? yaml['react'] : null;
+    return react is Map ? react[field] : null;
+  }
+
+  /// Makes sure every npm dependency declared by wrapper packages is
+  /// installed: merges them into the nearest package.json and runs the package
+  /// manager when anything is missing from node_modules.
+  Future<void> _ensureNpmDependencies() async {
+    final declared = await _declaredNpmDependencies();
+    if (declared.isEmpty) return;
+
+    final npmRoot = _findNpmRoot();
+    if (npmRoot == null) {
+      log(
+        'No package.json or node_modules found; skipping npm provisioning for '
+        '${declared.keys.join(', ')}.',
+      );
+      return;
+    }
+
+    final packageJson = File(p.join(npmRoot, 'package.json'));
+    final manifest = packageJson.existsSync()
+        ? jsonDecode(packageJson.readAsStringSync()) as Map<String, dynamic>
+        : <String, dynamic>{};
+    manifest['dependencies'] ??= <String, dynamic>{};
+    final dependencies = manifest['dependencies'] as Map<String, dynamic>;
+    var changed = false;
+    for (final entry in declared.entries) {
+      if (!dependencies.containsKey(entry.key)) {
+        dependencies[entry.key] = entry.value;
+        changed = true;
       }
     }
-    return shims;
+    if (changed) {
+      const encoder = JsonEncoder.withIndent('  ');
+      packageJson.writeAsStringSync('${encoder.convert(manifest)}\n');
+    }
+
+    final missing = <String>[
+      for (final name in declared.keys)
+        if (!_npmResolvable(npmRoot, name)) name,
+    ];
+    if (missing.isEmpty) {
+      log('npm dependencies present: ${declared.keys.join(', ')}');
+      return;
+    }
+
+    log('Installing npm dependencies: ${missing.join(', ')}');
+    final result = await Process.run(
+      npmCommand,
+      ['install', '--no-audit', '--no-fund'],
+      workingDirectory: npmRoot,
+    );
+    if (result.exitCode != 0) {
+      throw ReactToolException(
+        'npm install failed (exit ${result.exitCode}): ${result.stderr}',
+      );
+    }
+    log('npm install completed.');
+  }
+
+  /// Nearest ancestor of the project containing a package.json or node_modules.
+  String? _findNpmRoot() {
+    var current = config.root.path;
+    while (true) {
+      if (File(p.join(current, 'package.json')).existsSync() ||
+          Directory(p.join(current, 'node_modules')).existsSync()) {
+        return current;
+      }
+      final parent = p.dirname(current);
+      if (parent == current) return null;
+      current = parent;
+    }
+  }
+
+  bool _npmResolvable(String npmRoot, String name) {
+    final segments = name.split('/');
+    final path = segments.length > 1
+        ? p.joinAll(['node_modules', ...segments])
+        : p.join('node_modules', name);
+    return File(p.join(npmRoot, path, 'package.json')).existsSync();
   }
 
   Future<void> _writeForeignBindings() async {

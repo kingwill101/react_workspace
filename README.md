@@ -164,15 +164,21 @@ packages, publish a wrapper Dart package that ships a self-registering shim:
    globalThis.__reactDartRouter = { locationParts: () => { const l = RRD.useLocation(); return [l.pathname, l.search, l.hash, l.key]; } };
    ```
 
-2. The wrapper's pubspec declares the shim, so depending on the package is
-   all a project needs:
+2. The wrapper's pubspec declares the shim and its npm dependencies, so
+   depending on the package is all a project needs:
 
    ```yaml
    # pubspec.yaml — wrapper package
    react:
      shims:
        - react_router_shim.mjs
+     npm:
+       react-router-dom: ^6.26.2
    ```
+
+   `react build` merges every declared npm dependency into the nearest
+   `package.json` and runs `npm install` automatically when a package is
+   missing from `node_modules` — no manual install steps for users.
 
 3. Dart code uses `foreignComponent(...)` from `package:react` for components
    and its own `@JS` externals for hooks. See `packages/react_router` for a

@@ -7,9 +7,13 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 # Declared shims are auto-imported by `react build` whenever this package is a
 # dependency, so projects only need to add the package — no react.yaml edits.
+# npm dependencies are provisioned (merged into package.json + installed)
+# automatically when missing from node_modules.
 react:
   shims:
     - react_router_shim.mjs
+  npm:
+    react-router-dom: ^6.26.2
 dependencies:
   react: {path: ../react}
 dev_dependencies:
