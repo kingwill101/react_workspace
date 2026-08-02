@@ -5,6 +5,7 @@ import 'package:artisanal/args.dart';
 import 'package:path/path.dart' as p;
 import 'build.dart';
 import 'project_config.dart';
+import 'ts_bindings.dart';
 
 /// Runs the React CLI programmatically.
 Future<void> runReactTool(List<String> args) async {
@@ -19,6 +20,7 @@ class ReactCommandRunner extends CommandRunner<void> {
     addCommand(CleanCommand());
     addCommand(ServeCommand());
     addCommand(JsCommand());
+    addCommand(TsCommand());
   }
 }
 
@@ -168,6 +170,112 @@ final class _JsSyncCommand extends Command<void> {
     final builder = ReactBuilder(config: config, release: false, log: line);
     await builder.ensureJsEnvironment();
     info('Host JS environment satisfies all wrappers.');
+  }
+}
+
+/// `react ts bind <specifier> <names...>` — generates typed Dart foreign-
+/// component helpers from a package's TypeScript declarations, using the
+/// native oxc extractor.
+final class TsCommand extends Command<void> {
+  @override
+  String get name => 'ts';
+
+  @override
+  String get description =>
+      'Generate typed Dart bindings from TypeScript declarations.';
+
+  TsCommand() {
+    addSubcommand(_TsBindCommand());
+  }
+}
+
+final class _TsBindCommand extends Command<void> {
+  @override
+  String get name => 'bind';
+
+  @override
+  String get description =>
+      'Extract declarations from an npm package and emit Dart helpers.';
+
+  _TsBindCommand() {
+    argParser
+      ..addOption(
+        'output',
+        abbr: 'o',
+        help: 'Where to write the generated file (default: '
+            'lib/<specifier>_bindings.g.dart).',
+      )
+      ..addOption(
+        'prefix',
+        help: 'Foreign-component prefix (default: the specifier, camelized).',
+      )
+      ..addOption(
+        'npm-root',
+        help: 'Override the npm root used for type resolution.',
+      );
+  }
+
+  @override
+  String get invocation => 'react ts bind <specifier> <name...>';
+
+  @override
+  Future<void> run() async {
+    final rest = argResults!.rest;
+    if (rest.length < 2) {
+      usageException('Expected: react ts bind <specifier> <name...>');
+    }
+    final specifier = rest.first;
+    final names = rest.skip(1).toList();
+
+    final config = ReactProjectConfig.load();
+    final builder = ReactBuilder(config: config, release: false, log: line);
+
+    final npmRoot = option('npm-root') as String? ??
+        (await builder.ensureJsEnvironment())?.npmRoot ??
+        p.join('.dart_tool', 'react', 'js');
+    final npmRootDir = Directory(npmRoot);
+    if (!npmRootDir.existsSync()) {
+      throw ReactToolException(
+        'No JS environment at $npmRoot. Run `react js install` first.',
+      );
+    }
+    final packageDir = Directory(
+      p.join(npmRoot, 'node_modules', specifier),
+    );
+    if (!packageDir.existsSync()) {
+      throw ReactToolException(
+        '$specifier is not installed in the managed JS environment '
+        '($npmRoot). Add a wrapper package that depends on it, or install '
+        'it manually, then retry.',
+      );
+    }
+
+    info('Extracting $names from $specifier…');
+    final extractor = TsBindingExtractor(npmRoot);
+    final result = await extractor.extract(
+      specifier: specifier,
+      names: names,
+    );
+
+    final prefix = option('prefix') as String? ?? lowerCamel(specifier);
+    final code = generateBindings(
+      specifier: specifier,
+      declarations: result.declarations,
+      commandLine: 'react ts bind $specifier ${names.join(' ')}',
+      prefix: prefix,
+      entryComment: result.entry,
+    );
+
+    final output = option('output') as String? ??
+        p.join('lib', '${lowerCamel(specifier)}_bindings.g.dart');
+    final outputFile = config.file(output);
+    outputFile.parent.createSync(recursive: true);
+    outputFile.writeAsStringSync(code);
+
+    info(
+      'Wrote ${result.declarations.length} binding(s) '
+      '(from ${result.files} type files) to ${outputFile.path}',
+    );
   }
 }
 

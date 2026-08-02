@@ -1,0 +1,18 @@
+[package]
+name = "react-ts-bindings"
+version = "0.1.0"
+description = "TypeScript declaration extraction for react_tool, powered by oxc."
+edition = "2021"
+rust-version = "1.88"
+
+[lib]
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+oxc_allocator = "0.142.0"
+oxc_ast = "0.142.0"
+oxc_parser = "0.142.0"
+oxc_resolver = "11.24.2"
+oxc_span = "0.142.0"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

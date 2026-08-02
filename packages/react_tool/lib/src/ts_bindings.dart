@@ -1,0 +1,955 @@
+import 'dart:convert';
+import 'dart:ffi';
+
+import 'package:ffi/ffi.dart';
+
+import 'ts_bindings.g.dart';
+
+/// Thrown when TypeScript extraction or binding generation fails.
+final class TsBindingException implements Exception {
+  final String message;
+  const TsBindingException(this.message);
+
+  @override
+  String toString() => 'TsBindingException: $message';
+}
+
+/// A serialized TypeScript type, as produced by the native extractor.
+final class TsIrType {
+  final String kind;
+
+  /// Resolved declaration name when this type came from a named TS
+  /// interface/alias (e.g. `FutureConfig`); null for anonymous objects.
+  final String? name;
+  final TsIrType? element;
+  final List<TsIrProp>? members;
+  final List<TsIrProp>? params;
+  final TsIrType? returns;
+  final List<String>? literals;
+
+  const TsIrType({
+    required this.kind,
+    this.name,
+    this.element,
+    this.members,
+    this.params,
+    this.returns,
+    this.literals,
+  });
+
+  factory TsIrType.fromJson(Map<String, dynamic> json) => TsIrType(
+    kind: json['kind'] as String,
+    name: json['name'] as String?,
+    element: json['element'] == null
+        ? null
+        : TsIrType.fromJson(json['element'] as Map<String, dynamic>),
+    members: (json['members'] as List<dynamic>?)
+        ?.map((m) => TsIrProp.fromJson(m as Map<String, dynamic>))
+        .toList(),
+    params: (json['params'] as List<dynamic>?)
+        ?.map((m) => TsIrProp.fromJson(m as Map<String, dynamic>))
+        .toList(),
+    returns: json['returns'] == null
+        ? null
+        : TsIrType.fromJson(json['returns'] as Map<String, dynamic>),
+    literals: (json['literals'] as List<dynamic>?)
+        ?.map((l) => l as String)
+        .toList(),
+  );
+}
+
+/// A single property of an interface, alias, or component props type.
+final class TsIrProp {
+  final String name;
+  final bool required;
+  final TsIrType type;
+
+  const TsIrProp({required this.name, required this.required, required this.type});
+
+  factory TsIrProp.fromJson(Map<String, dynamic> json) => TsIrProp(
+    name: json['name'] as String,
+    required: json['required'] as bool,
+    type: TsIrType.fromJson(json['ty'] as Map<String, dynamic>),
+  );
+}
+
+/// One requested exported declaration.
+final class TsIrDeclaration {
+  final String name;
+  final String kind; // "component" | "interface" | "alias"
+  final List<TsIrProp> props;
+
+  const TsIrDeclaration({
+    required this.name,
+    required this.kind,
+    required this.props,
+  });
+
+  factory TsIrDeclaration.fromJson(Map<String, dynamic> json) =>
+      TsIrDeclaration(
+        name: json['name'] as String,
+        kind: json['kind'] as String,
+        props: (json['props'] as List<dynamic>)
+            .map((p) => TsIrProp.fromJson(p as Map<String, dynamic>))
+            .toList(),
+      );
+}
+
+/// The result of a successful extraction run.
+final class TsBindingsResult {
+  final String entry;
+  final int files;
+  final List<TsIrDeclaration> declarations;
+
+  const TsBindingsResult({
+    required this.entry,
+    required this.files,
+    required this.declarations,
+  });
+
+  factory TsBindingsResult.fromJson(Map<String, dynamic> json) =>
+      TsBindingsResult(
+        entry: json['entry'] as String,
+        files: json['files'] as int,
+        declarations: (json['declarations'] as List<dynamic>)
+            .map((d) => TsIrDeclaration.fromJson(d as Map<String, dynamic>))
+            .toList(),
+      );
+}
+
+/// Runs the native oxc extractor over the managed npm environment.
+final class TsBindingExtractor {
+  final String npmRoot;
+
+  const TsBindingExtractor(this.npmRoot);
+
+  /// Extracts [names] exported by [specifier] and returns the parsed IR.
+  Future<TsBindingsResult> extract({
+    required String specifier,
+    required List<String> names,
+  }) async {
+    final request = jsonEncode({'specifier': specifier, 'names': names});
+    final requestC = request.toNativeUtf8();
+    final rootC = npmRoot.toNativeUtf8();
+    try {
+      final ptr = tsb_extract(requestC.cast(), rootC.cast());
+      if (ptr == nullptr) {
+        throw const TsBindingException('native extractor returned null.');
+      }
+      try {
+        final text = ptr.cast<Utf8>().toDartString();
+        final decoded = jsonDecode(text) as Map<String, dynamic>;
+        final error = decoded['error'];
+        if (error != null) {
+          throw TsBindingException(error as String);
+        }
+        return TsBindingsResult.fromJson(
+          decoded['ok'] as Map<String, dynamic>,
+        );
+      } finally {
+        tsb_free_string(ptr);
+      }
+    } finally {
+      malloc.free(requestC);
+      malloc.free(rootC);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Dart code generation
+// ---------------------------------------------------------------------------
+
+const _kReservedWords = {
+  'assert', 'break', 'case', 'catch', 'class', 'const', 'continue', 'default',
+  'do', 'else', 'enum', 'extends', 'false', 'final', 'finally', 'for', 'if',
+  'in', 'is', 'new', 'null', 'rethrow', 'return', 'super', 'switch', 'this',
+  'throw', 'true', 'try', 'var', 'void', 'while', 'with', 'yield',
+};
+
+/// Camel-cases a declaration name: `MemoryRouter` → `memoryRouter`.
+String lowerCamel(String name) {
+  final cleaned = name.replaceAll(RegExp(r'[^A-Za-z0-9]'), ' ');
+  final words = cleaned
+      .split(' ')
+      .where((w) => w.isNotEmpty)
+      .toList();
+  if (words.isEmpty) return 'x';
+  final buffer = StringBuffer(words.first[0].toLowerCase());
+  buffer.write(words.first.substring(1));
+  for (final word in words.skip(1)) {
+    buffer.write(word[0].toUpperCase());
+    buffer.write(word.substring(1));
+  }
+  return buffer.toString();
+}
+
+/// Pascal-cases a name: `react-router-dom` → `ReactRouterDom`.
+String upperCamel(String name) {
+  final camel = lowerCamel(name);
+  if (camel.isEmpty) return 'X';
+  return camel[0].toUpperCase() + camel.substring(1);
+}
+
+/// Registry of named Dart types (classes, enums, callback typedefs) that the
+/// generator discovers while walking the IR. Deduplicated so identical types
+/// emit once, deterministically.
+final class _TypeRegistry {
+  final Map<String, String> _nameByKey = {};
+  final Map<String, _ClassDef> classes = {};
+  final Map<String, _EnumDef> enums = {};
+  final Map<String, _TypedefDef> typedefs = {};
+
+  /// Resolves the Dart class name for an object type, registering it (and
+  /// walking its members) if unseen. [declName] + [path] synthesize names for
+  /// anonymous objects.
+  String objectName(TsIrType type, String declName, List<String> path) {
+    final key = type.name != null ? 'named:${type.name}' : 'anon:${_signature(type)}';
+    final existing = _nameByKey[key];
+    if (existing != null) return existing;
+
+    final name = type.name != null
+        ? _uniqueName(upperCamel(type.name!))
+        : _uniqueName('${upperCamel(declName)}${path.map(upperCamel).join()}');
+    _nameByKey[key] = name;
+    final def = _ClassDef(name, type);
+    classes[name] = def;
+    return name;
+  }
+
+  String enumName(TsIrType type, String declName, List<String> path) {
+    final key = 'literal:${(type.literals ?? const []).join('|')}';
+    final existing = _nameByKey[key];
+    if (existing != null) return existing;
+    final name = _uniqueName('${upperCamel(declName)}${path.map(upperCamel).join()}');
+    _nameByKey[key] = name;
+    enums[name] = _EnumDef(name, type.literals ?? const []);
+    return name;
+  }
+
+  String typedefName(TsIrType type, String declName, List<String> path) {
+    final key = 'function:${_signature(type)}';
+    final existing = _nameByKey[key];
+    if (existing != null) return existing;
+    final name = _uniqueName(
+      '${upperCamel(declName)}${path.map(upperCamel).join()}Callback',
+    );
+    _nameByKey[key] = name;
+    typedefs[name] = _TypedefDef(name, type);
+    return name;
+  }
+
+  /// Registers a class for an interface/alias declaration so component props
+  /// that reference the same named type share it.
+  String declarationClass(String declName, List<TsIrProp> props) {
+    final key = 'named:$declName';
+    final existing = _nameByKey[key];
+    if (existing != null) return existing;
+    final name = _uniqueName(upperCamel(declName));
+    _nameByKey[key] = name;
+    final def = _ClassDef(name, TsIrType(kind: 'object', name: declName, members: props));
+    classes[name] = def;
+    return name;
+  }
+
+  /// Registers a plain typedef for a prim/array alias (`type ID = string`).
+  String declarationTypedef(String declName, TsIrProp valueProp) {
+    final key = 'alias:$declName';
+    final existing = _nameByKey[key];
+    if (existing != null) return existing;
+    final name = _uniqueName(upperCamel(declName));
+    _nameByKey[key] = name;
+    typedefs[name] = _TypedefDef(name, valueProp.type, isPlainAlias: true);
+    return name;
+  }
+
+  String _uniqueName(String base) {
+    var candidate = base;
+    var i = 2;
+    while (_nameByKey.containsValue(candidate)) {
+      candidate = '$base$i';
+      i++;
+    }
+    return candidate;
+  }
+
+  List<String> sortedClassNames() => classes.keys.toList()..sort();
+  List<String> sortedEnumNames() => enums.keys.toList()..sort();
+  List<String> sortedTypedefNames() => typedefs.keys.toList()..sort();
+}
+
+String _signature(TsIrType type) {
+  final buffer = StringBuffer(type.kind);
+  if (type.name != null) buffer.write('@${type.name}');
+  if (type.element != null) buffer.write('<${_signature(type.element!)}>');
+  if (type.members != null) {
+    buffer.write('{');
+    for (final m in type.members!) {
+      buffer.write('${m.name}${m.required ? '' : '?'}:${_signature(m.type)};');
+    }
+    buffer.write('}');
+  }
+  if (type.params != null) {
+    buffer.write('(');
+    for (final p in type.params!) {
+      buffer.write('${p.name}:${_signature(p.type)};');
+    }
+    buffer.write(')');
+  }
+  if (type.returns != null) buffer.write('->${_signature(type.returns!)}');
+  if (type.literals != null) {
+    final lits = [...type.literals!]..sort();
+    buffer.write(lits.join('|'));
+  }
+  return buffer.toString();
+}
+
+final class _ClassDef {
+  final String name;
+  final TsIrType type;
+  const _ClassDef(this.name, this.type);
+}
+
+final class _EnumDef {
+  final String name;
+  final List<String> literals;
+  const _EnumDef(this.name, this.literals);
+}
+
+final class _TypedefDef {
+  final String name;
+  final TsIrType type;
+
+  /// A plain value alias (`typedef X = String;`) vs a callback typedef with a
+  /// [ReactCallback] factory.
+  final bool isPlainAlias;
+  const _TypedefDef(this.name, this.type, {this.isPlainAlias = false});
+}
+
+/// Maps an IR type to a Dart type name (nullability applied by the caller).
+String _dartType(TsIrType type, _TypeRegistry registry, {int depth = 0}) {
+  switch (type.kind) {
+    case 'string':
+      return 'String';
+    case 'number':
+      return 'num';
+    case 'boolean':
+      return 'bool';
+    case 'reactNode':
+      return 'ReactNode';
+    case 'hostValue':
+    case 'any':
+    case 'unknown':
+    case 'void':
+    case 'null':
+    case 'union':
+      return 'Object';
+    case 'function':
+      return _typedefNameFor(type, registry);
+    case 'object':
+      if ((type.members ?? const <TsIrProp>[]).isEmpty) return 'Object';
+      return _objectNameFor(type, registry);
+    case 'array':
+      if (depth >= 3) return 'List<Object?>';
+      final inner = _dartType(
+        type.element ?? const TsIrType(kind: 'any'),
+        registry,
+        depth: depth + 1,
+      );
+      if (inner == 'Object?' || inner == 'Object') return 'List<Object?>';
+      return 'List<$inner>';
+    case 'literal':
+      final literals = type.literals ?? const [];
+      if (literals.length >= 2) return _enumNameFor(type, registry);
+      return _literalDartType(literals);
+    default:
+      return 'Object?';
+  }
+}
+
+/// Looks up (or registers on demand) the Dart name for a referenced type.
+/// On-demand registration uses a synthetic declaration/path context; the
+/// registry key ensures dedup against the real registration.
+String _objectNameFor(TsIrType type, _TypeRegistry registry) {
+  final key = type.name != null ? 'named:${type.name}' : 'anon:${_signature(type)}';
+  final existing = registry._nameByKey[key];
+  if (existing != null) return existing;
+  // Referenced before the walk saw it (should not happen): register with a
+  // synthetic name derived from the type name or its signature hash.
+  final name = type.name != null
+      ? registry._uniqueName(upperCamel(type.name!))
+      : registry._uniqueName('Anon${type.kind}${_signature(type).hashCode.abs()}');
+  registry._nameByKey[key] = name;
+  registry.classes[name] = _ClassDef(name, type);
+  return name;
+}
+
+String _enumNameFor(TsIrType type, _TypeRegistry registry) {
+  final key = 'literal:${(type.literals ?? const []).join('|')}';
+  final existing = registry._nameByKey[key];
+  if (existing != null) return existing;
+  final name = registry._uniqueName('Literal${type.kind}${_signature(type).hashCode.abs()}');
+  registry._nameByKey[key] = name;
+  registry.enums[name] = _EnumDef(name, type.literals ?? const []);
+  return name;
+}
+
+String _typedefNameFor(TsIrType type, _TypeRegistry registry) {
+  final key = 'function:${_signature(type)}';
+  final existing = registry._nameByKey[key];
+  if (existing != null) return existing;
+  final name = registry._uniqueName('Callback${_signature(type).hashCode.abs()}');
+  registry._nameByKey[key] = name;
+  registry.typedefs[name] = _TypedefDef(name, type);
+  return name;
+}
+
+String _literalDartType(List<String> literals) {
+  if (literals.isEmpty) return 'Object';
+  var allString = true;
+  var allNum = true;
+  var allBool = true;
+  for (final literal in literals) {
+    final value = _literalValue(literal);
+    if (value is String) {
+      allNum = false;
+      allBool = false;
+    } else if (value is num) {
+      allString = false;
+      allBool = false;
+    } else if (value is bool) {
+      allString = false;
+      allNum = false;
+    } else {
+      return 'Object';
+    }
+  }
+  if (allString) return 'String';
+  if (allNum) return 'num';
+  if (allBool) return 'bool';
+  return 'Object';
+}
+
+/// Parses a serialized TS literal (`"foo"`, `3`, `true`) to a Dart value.
+Object? _literalValue(String literal) {
+  if (literal.length >= 2 &&
+      literal.startsWith('"') &&
+      literal.endsWith('"')) {
+    return literal.substring(1, literal.length - 1);
+  }
+  if (literal == 'true') return true;
+  if (literal == 'false') return false;
+  final num = int.tryParse(literal) ?? double.tryParse(literal);
+  return num;
+}
+
+/// Generates a Dart source file with typed foreign-component helpers.
+String generateBindings({
+  required String specifier,
+  required List<TsIrDeclaration> declarations,
+  required String commandLine,
+  String? prefix,
+  String? entryComment,
+}) {
+  final resolvedPrefix = prefix ?? lowerCamel(specifier);
+  final registry = _TypeRegistry();
+
+  final buffer = StringBuffer()
+    ..writeln('// GENERATED CODE — DO NOT EDIT.')
+    ..writeln('// Generated by: $commandLine')
+    ..writeln('// Source: $specifier')
+    ..writeln('// (extracted from ${entryComment ?? 'the package types entry'})')
+    ..writeln('// ignore_for_file: type=lint')
+    ..writeln()
+    ..writeln("import 'package:react/react.dart';")
+    ..writeln();
+
+  // First pass: emit helpers and register all referenced types.
+  final helperText = StringBuffer();
+  for (final declaration in declarations) {
+    _emitDeclaration(helperText, declaration, resolvedPrefix, registry);
+    helperText.writeln();
+  }
+  buffer.write(helperText);
+
+  // Second pass: typedefs, enums, classes (sorted for determinism).
+  for (final name in registry.sortedTypedefNames()) {
+    buffer.write(_emitTypedef(registry.typedefs[name]!));
+    buffer.writeln();
+  }
+  for (final name in registry.sortedEnumNames()) {
+    buffer.write(_emitEnum(registry.enums[name]!));
+    buffer.writeln();
+  }
+  for (final name in registry.sortedClassNames()) {
+    buffer.write(_emitClass(registry.classes[name]!, registry));
+    buffer.writeln();
+  }
+  return buffer.toString();
+}
+
+void _emitDeclaration(
+  StringBuffer buffer,
+  TsIrDeclaration declaration,
+  String prefix,
+  _TypeRegistry registry,
+) {
+  final foreignName = '$prefix.${declaration.name}';
+  final functionName = lowerCamel('${prefix}_${declaration.name}');
+  final props = declaration.props;
+
+  // `children` as a ReactNode prop becomes the node children parameter.
+  final hasChildren = props.any(
+    (p) => p.name == 'children' && p.type.kind == 'reactNode',
+  );
+  final propParams = props.where((p) => !(hasChildren && p.name == 'children'));
+
+  // Register nested types before emitting so type names resolve.
+  for (final prop in propParams) {
+    _collectTypes(prop.type, declaration.name, [prop.name], registry);
+  }
+
+  switch (declaration.kind) {
+    case 'component':
+      buffer
+        ..writeln('/// Typed helper for the `$foreignName` foreign component.')
+        ..writeln('///')
+        ..writeln('/// Props from `${declaration.name}`:')
+        ..writeln('///')
+        ..writeln('/// ${_propsDoc(props)}')
+        ..writeln('ReactNode $functionName(');
+      if (hasChildren) {
+        buffer.writeln('  List<ReactNode> children,');
+      }
+      if (propParams.isNotEmpty) {
+        buffer.writeln('  {');
+        buffer.writeln('  String? key,');
+        for (final prop in propParams) {
+          _emitParam(buffer, prop, declaration.name, registry);
+        }
+        buffer.writeln('  }');
+        buffer.writeln(') => foreignComponent(');
+      } else {
+        // No props besides the optional key.
+        buffer.writeln('  {String? key}');
+        buffer.writeln('}) => foreignComponent(');
+      }
+      buffer.writeln("  '$foreignName',");
+      buffer.writeln('  key: key,');
+      buffer.writeln('  props: {');
+      for (final prop in propParams) {
+        buffer.writeln('    ${_propsMapEntry(prop)}');
+      }
+      buffer.writeln('  },');
+      if (hasChildren) {
+        buffer.writeln('  children: children,');
+      }
+      buffer.writeln(');');
+    case 'interface':
+      // Registers the class; the second pass emits all classes once.
+      registry.declarationClass(declaration.name, declaration.props);
+    case 'alias':
+      if (props.length == 1 && props.single.name == 'value') {
+        // `type X = string` style alias → plain Dart typedef.
+        final typedefName = registry.declarationTypedef(
+          declaration.name,
+          props.single,
+        );
+        // Register types referenced by the alias target (e.g. arrays).
+        _collectTypes(
+          props.single.type,
+          declaration.name,
+          const ['value'],
+          registry,
+        );
+        buffer
+          ..writeln('/// Typed alias for `${declaration.name}`.')
+          ..writeln('///')
+          ..writeln('/// ${_tsTypeDoc(props.single.type)}')
+          ..writeln('typedef $typedefName = ${_typedefTargetType(props.single.type, registry)};');
+      } else {
+        registry.declarationClass(declaration.name, declaration.props);
+      }
+  }
+}
+
+/// Walks a type tree registering classes/enums/typedefs. Callback params and
+/// returns are NOT walked: their object values arrive as raw host values.
+void _collectTypes(
+  TsIrType type,
+  String declName,
+  List<String> path,
+  _TypeRegistry registry,
+) {
+  switch (type.kind) {
+    case 'object':
+      // Call-signature / opaque interfaces have no members; they behave as
+      // opaque values (e.g. LazyRouteFunction) rather than props classes.
+      if ((type.members ?? const <TsIrProp>[]).isEmpty) break;
+      registry.objectName(type, declName, path);
+      for (final member in type.members ?? const <TsIrProp>[]) {
+        _collectTypes(member.type, declName, [...path, member.name], registry);
+      }
+    case 'function':
+      registry.typedefName(type, declName, path);
+    case 'array':
+      _collectTypes(
+        type.element ?? const TsIrType(kind: 'any'),
+        declName,
+        path,
+        registry,
+      );
+    case 'literal':
+      if ((type.literals ?? const []).length >= 2) {
+        registry.enumName(type, declName, path);
+      }
+    default:
+      break;
+  }
+}
+
+void _emitParam(
+  StringBuffer buffer,
+  TsIrProp prop,
+  String declName,
+  _TypeRegistry registry,
+) {
+  final dartName = _safeParamName(prop.name);
+  final type = _dartType(prop.type, registry);
+  final nullable = prop.required ? '' : '?';
+  final requiredPrefix = prop.required ? 'required ' : '';
+  if (prop.type.kind == 'function') {
+    buffer
+      ..writeln('    /// TS: ${_functionDoc(prop.type)}')
+      ..writeln('    $requiredPrefix$type$nullable $dartName,');
+  } else {
+    buffer.writeln('    $requiredPrefix$type$nullable $dartName,');
+  }
+}
+
+String _propsMapEntry(TsIrProp prop) {
+  final name = _safeParamName(prop.name);
+  final value = _jsonExpr(name, prop.type);
+  return prop.required ? "'${prop.name}': $value," : "if ($name != null) '${prop.name}': $value,";
+}
+
+/// The expression that encodes [source] (a Dart variable or member) into a
+/// JSON-safe value for the props map / toJson.
+String _jsonExpr(String source, TsIrType type) {
+  switch (type.kind) {
+    case 'object':
+      if ((type.members ?? const <TsIrProp>[]).isEmpty) return source;
+      return '$source.toJson()';
+    case 'array':
+      final element = type.element;
+      if (element == null) return source;
+      if (element.kind == 'object') {
+        return '$source.map((e) => e.toJson()).toList()';
+      }
+      if (element.kind == 'literal' && (element.literals ?? const []).length >= 2) {
+        return '$source.map((e) => e.value).toList()';
+      }
+      return source;
+    case 'literal':
+      if ((type.literals ?? const []).length >= 2) return '$source.value';
+      return source;
+    default:
+      return source;
+  }
+}
+
+/// Like [_jsonExpr] but promotes the receiver for method calls, for use on
+/// non-promotable public fields inside `if (x != null)` collection entries.
+String _jsonExprPromoted(String source, TsIrType type) {
+  switch (type.kind) {
+    case 'object':
+      if ((type.members ?? const <TsIrProp>[]).isEmpty) return source;
+      return '$source!.toJson()';
+    case 'array':
+      final element = type.element;
+      if (element == null) return source;
+      if (element.kind == 'object') {
+        return '$source!.map((e) => e.toJson()).toList()';
+      }
+      if (element.kind == 'literal' && (element.literals ?? const []).length >= 2) {
+        return '$source!.map((e) => e.value).toList()';
+      }
+      return source;
+    case 'literal':
+      if ((type.literals ?? const []).length >= 2) return '$source!.value';
+      return source;
+    default:
+      return source;
+  }
+}
+
+String _safeParamName(String name) {
+  if (_kReservedWords.contains(name)) return '${name}_';
+  if (name == 'key') return 'elementKey';
+  return name;
+}
+
+String _propsDoc(List<TsIrProp> props) {
+  if (props.isEmpty) return 'No props.';
+  final parts = props.map((p) {
+    final tsType = _tsTypeDoc(p.type);
+    return '${p.name}${p.required ? '' : '?'}: $tsType';
+  });
+  final lines = <String>[];
+  var line = '';
+  for (final part in parts) {
+    if (line.isNotEmpty && line.length + part.length + 2 > 76) {
+      lines.add(line);
+      line = part;
+    } else {
+      line = line.isEmpty ? part : '$line; $part';
+    }
+  }
+  if (line.isNotEmpty) lines.add(line);
+  return lines.join('\n/// ');
+}
+
+String _tsTypeDoc(TsIrType type) {
+  switch (type.kind) {
+    case 'string':
+      return 'string';
+    case 'number':
+      return 'number';
+    case 'boolean':
+      return 'boolean';
+    case 'reactNode':
+      return 'React.ReactNode';
+    case 'hostValue':
+      return 'host value';
+    case 'any':
+      return 'any';
+    case 'void':
+      return 'void';
+    case 'unknown':
+      return 'unknown';
+    case 'null':
+      return 'null';
+    case 'array':
+      return '${_tsTypeDoc(type.element ?? const TsIrType(kind: 'any'))}[]';
+    case 'object':
+      final members = type.members ?? const <TsIrProp>[];
+      if (members.isEmpty) return 'Record<string, unknown>';
+      final parts = members
+          .map((p) => '${p.name}${p.required ? '' : '?'}: ${_tsTypeDoc(p.type)}')
+          .join('; ');
+      return '{ $parts }';
+    case 'function':
+      return _functionDoc(type);
+    case 'literal':
+      return (type.literals ?? const []).join(' | ');
+    case 'union':
+      return 'union';
+    default:
+      return 'unknown';
+  }
+}
+
+String _functionDoc(TsIrType type) {
+  final params = (type.params ?? const <TsIrProp>[])
+      .map((p) => '${p.name}: ${_tsTypeDoc(p.type)}')
+      .join(', ');
+  final returns = type.returns == null
+      ? 'void'
+      : _tsTypeDoc(type.returns!);
+  return '($params) => $returns';
+}
+
+// ---------------------------------------------------------------------------
+// Typedef / enum / class emission
+// ---------------------------------------------------------------------------
+
+String _emitTypedef(_TypedefDef def) {
+  if (def.isPlainAlias) {
+    final target = _typedefTargetType(def.type, _emptyRegistryFor(def));
+    return '/// Typed alias.\n'
+        'typedef ${def.name} = $target;\n';
+  }
+  final type = def.type;
+  final params = type.params ?? const <TsIrProp>[];
+  final paramSpecs = <String>[];
+  final paramCasts = <String>[];
+  for (var i = 0; i < params.length; i++) {
+    final p = params[i];
+    paramSpecs.add(_callbackSpec(p.type));
+    paramCasts.add(_callbackArg(p.name, p.type, i));
+  }
+  final returns = type.returns;
+  final resultSpec = returns == null || returns.kind == 'void' ? 'reactVoid' : 'reactAny';
+  final factoryName = lowerCamel(def.name);
+
+  final buffer = StringBuffer()
+    ..writeln('/// TS: ${_functionDoc(type)}')
+    ..writeln(
+      'typedef ${def.name} = ${_callbackReturnType(returns)} Function('
+      '${params.map((p) => '${_callbackParamType(p.type)} ${_safeParamName(p.name)}').join(', ')});',
+    )
+    ..writeln()
+    ..writeln('/// Wraps a [${def.name}] into a [ReactCallback] for prop encoding.')
+    ..writeln('ReactCallback $factoryName(${def.name} fn) => ReactCallback(')
+    ..writeln("  debugName: '${def.name}',")
+    ..writeln('  signature: const (')
+    ..writeln('    positional: [${paramSpecs.join(', ')}],')
+    ..writeln('    result: $resultSpec,')
+    ..writeln('    asynchronous: false,')
+    ..writeln('  ),')
+    ..writeln('  invoke: (arguments) {');
+  if (returns == null || returns.kind == 'void') {
+    buffer
+      ..writeln('    fn(${paramCasts.join(', ')});')
+      ..writeln('    return null;');
+  } else {
+    buffer.writeln('    return fn(${paramCasts.join(', ')});');
+  }
+  buffer
+    ..writeln('  },')
+    ..writeln(');');
+  return buffer.toString();
+}
+
+/// Registry used to resolve names in a plain-alias typedef without mutating
+/// the main registry (the alias target was already collected).
+_TypeRegistry _emptyRegistryFor(_TypedefDef def) => _TypeRegistry();
+
+String _typedefTargetType(TsIrType type, _TypeRegistry registry) {
+  final base = _dartType(type, registry);
+  if (base == 'Object?' && type.kind != 'array') return 'Object';
+  return base;
+}
+
+String _callbackParamType(TsIrType type) {
+  switch (type.kind) {
+    case 'string':
+      return 'String';
+    case 'number':
+      return 'num';
+    case 'boolean':
+      return 'bool';
+    default:
+      return 'Object?';
+  }
+}
+
+String _callbackReturnType(TsIrType? returns) {
+  if (returns == null || returns.kind == 'void') return 'void';
+  switch (returns.kind) {
+    case 'string':
+      return 'String';
+    case 'number':
+      return 'num';
+    case 'boolean':
+      return 'bool';
+    case 'reactNode':
+      return 'ReactNode';
+    default:
+      return 'Object?';
+  }
+}
+
+String _callbackSpec(TsIrType type) {
+  switch (type.kind) {
+    case 'string':
+      return 'reactString';
+    case 'number':
+    case 'boolean':
+    case 'literal':
+      return 'reactAny';
+    default:
+      return 'reactAny';
+  }
+}
+
+String _callbackArg(String name, TsIrType type, int index) {
+  final arg = 'arguments[$index]';
+  switch (type.kind) {
+    case 'string':
+      return '$arg as String';
+    case 'number':
+      return '$arg as num';
+    case 'boolean':
+      return '$arg as bool';
+    default:
+      return arg;
+  }
+}
+
+String _emitEnum(_EnumDef def) {
+  final members = <String>[];
+  final used = <String>{};
+  for (final literal in def.literals) {
+    var memberName = lowerCamel(_literalValue(literal).toString());
+    if (memberName.isEmpty || !RegExp(r'^[a-zA-Z]').hasMatch(memberName)) {
+      memberName = 'v$memberName';
+    }
+    if (memberName.isEmpty || memberName == 'v') {
+      memberName = 'v${used.length}';
+    }
+    var candidate = memberName;
+    var i = 2;
+    while (used.contains(candidate)) {
+      candidate = '$memberName$i';
+      i++;
+    }
+    used.add(candidate);
+    members.add("$candidate('$literal')");
+  }
+  final buffer = StringBuffer()
+    ..writeln('/// Literal union: ${def.literals.join(' | ')}')
+    ..writeln('enum ${def.name} {')
+    ..writeln('  ${members.join(',\n  ')};')
+    ..writeln('  const ${def.name}(this.value);')
+    ..writeln('  final String value;')
+    ..writeln('}');
+  return buffer.toString();
+}
+
+String _emitClass(_ClassDef def, _TypeRegistry registry) {
+  final props = def.type.members ?? const <TsIrProp>[];
+  final buffer = StringBuffer()
+    ..writeln('/// Typed props for `${def.type.name ?? def.name}`.')
+    ..writeln('///')
+    ..writeln('/// ${_propsDoc(props)}')
+    ..writeln('class ${def.name} {')
+    ..writeln('  const ${def.name}({');
+  for (final prop in props) {
+    final name = _safeParamName(prop.name);
+    buffer.writeln(
+      '    ${prop.required ? 'required ' : ''}${_dartType(prop.type, registry)}${prop.required ? '' : '?'} this.$name,',
+    );
+  }
+  if (props.isEmpty) {
+    buffer.writeln('  });'.replaceFirst('({', ''));
+  } else {
+    buffer.writeln('  });');
+  }
+  for (final prop in props) {
+    final name = _safeParamName(prop.name);
+    buffer
+      ..writeln()
+      ..writeln('  /// TS: ${_tsTypeDoc(prop.type)}')
+      ..writeln('  final ${_dartType(prop.type, registry)}${prop.required ? '' : '?'} $name;');
+  }
+  buffer
+    ..writeln()
+    ..writeln('  /// JSON-safe map for prop encoding through the JS bridge.')
+    ..writeln('  Map<String, Object?> toJson() => {');
+  for (final prop in props) {
+    final name = _safeParamName(prop.name);
+    // Public fields don't promote after a null check, so method calls in
+    // optional entries promote the receiver with `!`.
+    final value = prop.required
+        ? _jsonExpr(name, prop.type)
+        : _jsonExprPromoted(name, prop.type);
+    buffer.writeln(
+      '    ${prop.required ? "'${prop.name}': $value" : "if ($name != null) '${prop.name}': $value"},',
+    );
+  }
+  buffer
+    ..writeln('  };')
+    ..writeln('}');
+  return buffer.toString();
+}
