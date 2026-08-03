@@ -337,7 +337,9 @@ Do that in stages:
 
 7. Add target-specific foreign usage data. ✅ `bundle_report.json` per-target `usedComponents`/`usedHooks` from a scan of the compiled Dart output.
 
-8. Only after measuring, decide whether physically inlining `client.js` and `ssr.js` into final bundles is worthwhile.
+8. Apply that usage data to the aggregate entry: prune each generated wrapper shim to its used component/hook subset (and materialize pruned copies of aggregator wrappers), so Rolldown tree-shakes the unused rest of the npm package. ✅ `parseForeignShim`/`pruneShim` rewrite the generated shim template structurally; project-level `foreign.components` are dropped when the key never appears in the target's compiled output. Example release build: browser 32.8 → 22.7 KiB, SSR 156.3 → 149.6 KiB (server_boot_test green against the pruned bundles).
+
+9. Only after measuring, decide whether physically inlining `client.js` and `ssr.js` into final bundles is worthwhile.
 
 ## Bottom line
 

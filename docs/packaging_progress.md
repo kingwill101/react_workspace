@@ -801,7 +801,12 @@ Post-12 roadmap (bundler recommendations, in order):
 
 16. ✅ Per-target usage data — each `bundle_report.json` target now carries `usedComponents` (retained keys whose quoted literal appears in the compiled `client.js`/`ssr.js` Dart output) and `usedHooks` (`<namespace>.<hook>` paths from the `__reactDartBindings` JS-interop bridge). `dart compile js` preserves these string literals while tree-shaking unused helpers, so the scan reports what the app actually renders per target (verified on the example: browser uses `MemoryRouter/Routes/Route/Link/NavLink`, SSR additionally calls `useLocation`/`useParams`).
 
-17. ⏳ Application-level DCE — prune the aggregate entry to only the used components/hooks from item 16.
+17. ✅ Application-level DCE — the aggregate entry for each target now imports only the foreign surface the compiled Dart output references. The build runs the Dart compilation first, scans `client.js`/`ssr.js` for used component keys and hook paths, and:
+    * rewrites generated wrapper shims (`parseForeignShim` + `pruneShim` in `react_tool/lib/src/bundler/shim_pruning.dart`) to import and register only the used subset — filtered import line, filtered `components`/`hooks` object literals, whole hook bridge dropped when unused — so the bundler tree-shakes the rest of the npm package;
+    * follows aggregator wrapper entries (files that only import local modules, like `react_router_shim.mjs`) recursively, materializing pruned copies under `foreign/<target>/<package>/`;
+    * drops project-level `foreign.components` whose key never appears in the target's compiled output, and emits an empty bundle when everything is pruned so bootstraps and `bundle_report.json` still resolve `foreign/<target>/bundle.mjs`.
+    Pruning is skipped for a target whose Dart entrypoint was not compiled (no scan → keep everything).
+    Measured on the example release build: browser bundle 32.8 → 22.7 KiB (11.6 → 8.4 KiB gzip) and retained exports 8 → 5 (`MemoryRouter`/`Routes`/`Route`/`Link`/`NavLink`); SSR 156.3 → 149.6 KiB, dropping `StaticRouter` and all unused hooks. SSR gains are smaller because the router runtime dominates and is largely shared; browser gains come from tree-shaking the unused `use*` hooks out of `react-router-dom`. `server_boot_test` passes against the pruned bundles.
 
 The existing mechanism demonstrates that wrappers can self-register and be discovered through Dart package metadata. That part is valuable. The permanent design should make the **module specifier** the contract, make esbuild the resolver, separate browser and Node outputs, and keep all automatically managed npm state out of the consumer’s source-controlled manifest.
 
