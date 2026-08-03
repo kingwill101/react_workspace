@@ -64,6 +64,41 @@ styles:
     expect(config.styleOutput, 'assets/theme.css');
   });
 
+  test('selects the bundling backend from react.yaml', () async {
+    await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
+    await File('${root.path}/react.yaml').writeAsString('''
+bundling:
+  backend: rolldown
+''');
+
+    final config = ReactProjectConfig.load(root);
+
+    expect(config.bundlingBackend, 'rolldown');
+  });
+
+  test('defaults to esbuild and rejects unknown backends', () async {
+    await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
+    await File('${root.path}/react.yaml').writeAsString('''
+bundling:
+  backend: webpack
+''');
+
+    expect(
+      () => ReactProjectConfig.load(root),
+      throwsA(
+        isA<ReactToolException>().having(
+          (e) => e.message,
+          'message',
+          contains('Unsupported bundling backend'),
+        ),
+      ),
+    );
+
+    await File('${root.path}/react.yaml').writeAsString('name: sample\n');
+    final defaults = ReactProjectConfig.load(root);
+    expect(defaults.bundlingBackend, 'esbuild');
+  });
+
   test('reads foreign component module mappings', () async {
     await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
     await File('${root.path}/react.yaml').writeAsString('''

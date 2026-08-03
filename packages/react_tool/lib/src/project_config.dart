@@ -73,6 +73,10 @@ final class ReactProjectConfig {
   /// `foreign.host`).
   final bool jsHostMode;
 
+  /// The JavaScript bundler backend used for foreign aggregates
+  /// (`react.yaml `bundling.backend`): `esbuild` (default) or `rolldown`.
+  final String bundlingBackend;
+
   const ReactProjectConfig({
     required this.root,
     required this.packageName,
@@ -88,6 +92,7 @@ final class ReactProjectConfig {
     this.esbuildPath,
     this.foreignExternals = const [],
     this.jsHostMode = false,
+    this.bundlingBackend = 'esbuild',
   });
 
   factory ReactProjectConfig.load([Directory? directory]) {
@@ -165,6 +170,16 @@ final class ReactProjectConfig {
         _boolNullable(foreignMap['host']) ??
         _boolNullable(explicit['hostJs']) ??
         false;
+    final bundlingBackend =
+        _string(_map(explicit['bundling'])['backend']) ??
+        _string(explicit['backend']) ??
+        'esbuild';
+    if (bundlingBackend != 'esbuild' && bundlingBackend != 'rolldown') {
+      throw ReactToolException(
+        'Unsupported bundling backend "$bundlingBackend". '
+        'Expected `esbuild` or `rolldown`.',
+      );
+    }
 
     return ReactProjectConfig(
       root: root,
@@ -181,6 +196,7 @@ final class ReactProjectConfig {
       esbuildPath: esbuildPath,
       foreignExternals: foreignExternals,
       jsHostMode: jsHostMode,
+      bundlingBackend: bundlingBackend,
     );
   }
 

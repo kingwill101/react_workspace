@@ -240,6 +240,21 @@ final class JsEnvironment {
     );
   }
 
+  /// Entry module of the pinned `rolldown` package (managed environment or the
+  /// host project), loaded by [RolldownBundler]'s driver.
+  File rolldownEntry() {
+    for (final rootPath in [root.path, npmRoot]) {
+      final candidate = File(
+        p.join(rootPath, 'node_modules/rolldown/dist/index.mjs'),
+      );
+      if (candidate.existsSync()) return candidate;
+    }
+    throw const JsEnvironmentException(
+      'rolldown is unavailable. Set `bundling.backend: rolldown` in '
+      'react.yaml and run: react js install',
+    );
+  }
+
   /// Resolves a bare specifier to an absolute file through the environment's
   /// npm root (exports-aware), for imports that must stay external.
   String resolveForNode(String specifier) {
@@ -283,6 +298,10 @@ class JsEnvironmentBuilder {
   final void Function(String message) log;
   final String npmCommand;
 
+  /// Selected bundler backend (`esbuild` or `rolldown`); decides which bundler
+  /// is installed into the managed environment.
+  final String bundlingBackend;
+
   JsEnvironmentBuilder({
     required this.projectRoot,
     required this.packageName,
@@ -290,6 +309,7 @@ class JsEnvironmentBuilder {
     this.host = false,
     this.log = print,
     this.npmCommand = 'npm',
+    this.bundlingBackend = 'esbuild',
   });
 
   /// Creates the environment, resolving exact versions and installing when
@@ -460,12 +480,20 @@ class JsEnvironmentBuilder {
     final esbuild = _resolveExact('esbuild', [
       const NpmRequirement('esbuild', '>=0.20 <1', 'react_tool'),
     ]);
+    final rolldown = bundlingBackend == 'rolldown'
+        ? _resolveExact('rolldown', [
+            const NpmRequirement('rolldown', '>=1 <2', 'react_tool'),
+          ])
+        : null;
     return const JsonEncoder.withIndent('  ').convert({
       'name': '@react-dart/generated-js-environment',
       'private': true,
       'type': 'module',
       'dependencies': dependencies,
-      'devDependencies': {'esbuild': esbuild},
+      'devDependencies': {
+        'esbuild': esbuild,
+        'rolldown': ?rolldown,
+      },
     });
   }
 

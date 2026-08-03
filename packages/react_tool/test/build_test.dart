@@ -17,6 +17,7 @@ if [ "$1" = "view" ]; then
   case "$name" in
     react|react-dom) ver="18.3.1" ;;
     esbuild) ver="0.28.1" ;;
+    rolldown) ver="1.2.1" ;;
     *) ver="2.1.0" ;;
   esac
   case "$*" in
@@ -44,6 +45,31 @@ JS
 echo 'export default {};' > "$rootdir/node_modules/react/index.js"
 echo 'export default {};' > "$rootdir/node_modules/react-dom/index.js"
 echo 'export default {};' > "$rootdir/node_modules/react-dom/server.js"
+mkdir -p "$rootdir/node_modules/rolldown/dist"
+cat > "$rootdir/node_modules/rolldown/package.json" <<JSON
+{"name":"rolldown","version":"1.2.1","type":"module"}
+JSON
+cat > "$rootdir/node_modules/rolldown/dist/index.mjs" <<'JS'
+import { readFileSync } from 'node:fs';
+export const rolldown = async (options) => ({
+  async generate(generateOptions) {
+    const entry = options.input[0];
+    const code = readFileSync(entry, 'utf8');
+    const map = generateOptions.sourcemap
+      ? JSON.stringify({ version: 3, sources: [entry], mappings: '' })
+      : null;
+    return {
+      output: [{
+        type: 'chunk',
+        isEntry: true,
+        fileName: entry,
+        code,
+        map,
+      }],
+    };
+  },
+});
+JS
 for name in fake-widget-lib missing-widget zustand react-router-dom; do
   if [ ! -d "$rootdir/node_modules/$name" ]; then
     mkdir -p "$rootdir/node_modules/$name"
@@ -545,4 +571,69 @@ globalThis.ReactDOM = ReactDOM;
       }
     },
   );
+
+  test('builds through the rolldown backend via the node driver', () async {
+    await Directory('${root.path}/lib').create(recursive: true);
+    await File(
+      '${root.path}/web/client.dart',
+    ).writeAsString('void main() {}\n');
+    await File('${root.path}/lib/ssr.dart').writeAsString('void main() {}\n');
+    await File('${root.path}/react.yaml').writeAsString('''
+bundling:
+  backend: rolldown
+foreign:
+  - name: Card
+    module: web/card.js
+    props:
+      label: String
+''');
+    final config = ReactProjectConfig.load(root);
+    expect(config.bundlingBackend, 'rolldown');
+
+    final builder = ReactBuilder(
+      config: config,
+      release: false,
+      log: (_) {},
+      npmCommand: await writeNpmStub(root),
+    );
+
+    await builder.build();
+
+    expect(
+      File('${root.path}/.dart_tool/react/js/rolldown_driver.mjs').existsSync(),
+      isTrue,
+    );
+    for (final target in ['browser', 'ssr']) {
+      final bundle = await File(
+        '${root.path}/build/react/foreign/$target/bundle.mjs',
+      ).readAsString();
+      expect(bundle, contains("__reactDartRegisterComponent('Card'"));
+    }
+
+    final manifest =
+        jsonDecode(
+              await File(
+                '${root.path}/build/react/bundle_manifest.json',
+              ).readAsString(),
+            )
+            as Map;
+    expect(manifest['bundler'], 'rolldown');
+
+    final report =
+        jsonDecode(
+              await File(
+                '${root.path}/build/react/bundle_report.json',
+              ).readAsString(),
+            )
+            as Map;
+    for (final target in ['browser', 'ssr']) {
+      final targetReport = report[target] as Map;
+      expect(
+        (targetReport['artifacts'] as int),
+        greaterThanOrEqualTo(1),
+      );
+      expect((targetReport['uncompressedBytes'] as int), greaterThan(0));
+      expect(targetReport['retainedExports'], contains('Card'));
+    }
+  });
 }

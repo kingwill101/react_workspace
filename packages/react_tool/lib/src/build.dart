@@ -11,6 +11,7 @@ import 'bundler/bundle_request.dart';
 import 'bundler/bundle_result.dart';
 import 'bundler/bundler.dart';
 import 'bundler/esbuild_bundler.dart';
+import 'bundler/rolldown_bundler.dart';
 import 'js_environment.dart';
 import 'project_config.dart';
 import 'styles.dart';
@@ -43,9 +44,13 @@ final class ReactBuilder {
 
   Future<void> build() async {
     final jsEnvironment = await _prepareJsEnvironment();
-    _bundler = jsEnvironment == null
-        ? null
-        : EsbuildBundler(environment: jsEnvironment);
+    _bundler = switch (jsEnvironment) {
+      null => null,
+      final environment => switch (config.bundlingBackend) {
+        'rolldown' => RolldownBundler(environment: environment),
+        _ => EsbuildBundler(environment: environment),
+      },
+    };
 
     // Generate style bindings before code generation so client entrypoints may
     // import them during the same build.
@@ -423,7 +428,7 @@ final class ReactBuilder {
       ),
     );
     for (final warning in result.warnings) {
-      log('esbuild warning ($target): $warning');
+      log('${_bundler?.name ?? 'bundler'} warning ($target): $warning');
     }
     log(
       'Bundled ${result.outputFile} '
@@ -468,6 +473,7 @@ final class ReactBuilder {
       host: config.jsHostMode,
       log: log,
       npmCommand: npmCommand,
+      bundlingBackend: config.bundlingBackend,
     );
     return builder.ensure(wrappers, required: needsEnvironment);
   }
