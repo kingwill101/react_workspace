@@ -1,0 +1,35 @@
+# {{ title }}
+
+A React Dart application with server-side rendering and server functions.
+
+## Setup
+
+```sh
+dart pub get
+```
+
+## Build
+
+```sh
+dart run react_tool:react build
+```
+
+## Run
+
+```sh
+dart run react_tool:react serve
+```
+
+The server runs on `http://localhost:8080` and the SSR worker on port
+`3001`. Server functions live in `lib/greeting.dart` and are called from
+the browser through the generated client (`lib/greeting.client.g.dart`).
+
+## Docker
+
+The multi-stage `Dockerfile` builds the server binary and JS bundles in
+stage 1 and runs them in a slim Node runtime. Build it from the workspace
+root so the context includes the `packages/` directory:
+
+```sh
+docker build -f {{ name }}/Dockerfile .
+```

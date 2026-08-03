@@ -54,6 +54,25 @@ v.G.globalThis.__reactDartBindings.reactRouter.useParams()
       );
     });
 
+    test('matches unoptimized _getPropertyTrustType chains', () {
+      const dartJs = r'''
+A._callMethodUnchecked0(A._getPropertyTrustType(A._getPropertyTrustType(
+    A._getPropertyTrustType(A.staticInteropGlobalContext(), "globalThis", t1),
+    "__reactDartBindings", t1),
+    "reactRouter", t1),
+    "useLocation", type$.JSObject));
+A._callMethodUnchecked1(A._getPropertyTrustType(A._getPropertyTrustType(
+    A._getPropertyTrustType(A.staticInteropGlobalContext(), "globalThis", t1),
+    "__reactDartBindings", t1),
+    "reactRouter", t1),
+    "useSearchParams", A.NullableObjectUtilExtension_jsify(null), t2);
+''';
+      expect(
+        usedHooksIn(dartJs, const ['reactRouter']),
+        ['reactRouter.useLocation', 'reactRouter.useSearchParams'],
+      );
+    });
+
     test('matches the legacy __reactDartHooks bridge', () {
       const dartJs = 'globalThis.__reactDartHooks.useThing()';
       expect(usedHooksIn(dartJs, const ['reactRouter']), ['useThing']);

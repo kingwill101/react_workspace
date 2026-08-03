@@ -22,6 +22,11 @@ import 'styles.dart';
 final class ReactBuilder {
   final ReactProjectConfig config;
   final bool release;
+
+  /// Whether to compile the server entrypoint to a native binary with
+  /// `dart compile exe` (deployment artifact that needs no Dart runtime).
+  final bool server;
+
   final void Function(String message) log;
 
   /// Package manager command used to provision missing npm dependencies
@@ -36,6 +41,7 @@ final class ReactBuilder {
   ReactBuilder({
     required this.config,
     required this.release,
+    this.server = false,
     this.log = print,
     this.npmCommand = 'npm',
   });
@@ -111,11 +117,43 @@ final class ReactBuilder {
 
     await _bundleForeignTargets(jsEnvironment);
 
+    final serverBinary = server ? await _compileServer() : null;
+
     await File(
       p.join(output.path, 'manifest.json'),
     ).writeAsString('${config.toJsonString()}\n');
-    await _writeBundleManifest(hasClient: hasClient, hasSsr: hasSsr);
+    await _writeBundleManifest(
+      hasClient: hasClient,
+      hasSsr: hasSsr,
+      serverBinary: serverBinary,
+    );
     await _writeBundleReport(hasClient: hasClient, hasSsr: hasSsr);
+  }
+
+  /// Compiles the server entrypoint to a native binary with `dart compile exe`.
+  ///
+  /// Returns the binary's path relative to the output directory, or null when
+  /// the entrypoint is not configured (or missing) and nothing was built.
+  Future<String?> _compileServer() async {
+    final server = config.serverEntrypoint;
+    if (server == null || !config.file(server).existsSync()) {
+      log('Skipping server compile: ${server ?? '(not configured)'} not found.');
+      return null;
+    }
+    final output = config.directory(config.outputDirectory);
+    await output.create(recursive: true);
+    final name = Platform.isWindows ? 'server.exe' : 'server';
+    final relative = p.join('.', name);
+    final outputPath = p.join(output.path, relative);
+    log('Compiling $server → $outputPath');
+    await _runDart([
+      'compile',
+      'exe',
+      '-o',
+      outputPath,
+      config.pathFor(server),
+    ]);
+    return relative;
   }
 
   /// Copies build_runner outputs (`.react.dart`, `.action.g.dart`, …) from
@@ -614,6 +652,9 @@ final class ReactBuilder {
     final needsEnvironment =
         config.foreignComponents.isNotEmpty ||
         config.foreignModules.isNotEmpty ||
+        // The SSR bootstrap always imports React and ReactDOM/server, so the
+        // worker needs a JS environment even without foreign modules.
+        config.ssrEntrypoint != null ||
         wrappers.any((w) => !w.isEmpty);
     if (!needsEnvironment) return null;
     final builder = JsEnvironmentBuilder(
@@ -852,11 +893,7 @@ final class ReactBuilder {
       p.join(output.path, 'callback_trampoline.mjs'),
     ).writeAsString(_callbackTrampoline);
 
-    final wrappers = await _discoverWrappers();
-    final hasForeign =
-        config.foreignComponents.isNotEmpty ||
-        config.foreignModules.isNotEmpty ||
-        wrappers.any((w) => !w.isEmpty);
+    final hasForeign = await _hasForeignSurface();
 
     // The entry absorbs the inline React bootstrap that used to live in
     // index.html: it sets globalThis.React/ReactDOM before importing the
@@ -937,6 +974,15 @@ final class ReactBuilder {
     await index.writeAsString(source);
   }
 
+  /// Whether the project declares any foreign components/modules or ships a
+  /// wrapper package, i.e. whether foreign aggregate bundles are produced.
+  Future<bool> _hasForeignSurface() async {
+    final wrappers = await _discoverWrappers();
+    return config.foreignComponents.isNotEmpty ||
+        config.foreignModules.isNotEmpty ||
+        wrappers.any((w) => !w.isEmpty);
+  }
+
   Future<void> _writeSsrBootstrap(JsEnvironment? environment) async {
     final output = config.directory(config.outputDirectory);
     var entry = _ssrEntry;
@@ -959,6 +1005,14 @@ final class ReactBuilder {
                 "${jsonEncode(p.join(environment.npmRoot, 'x.js'))});",
           );
     }
+    if (!await _hasForeignSurface()) {
+      entry = entry.replaceAll(
+        "if (process.env.REACT_FOREIGN_COMPONENTS !== 'false') {\n"
+        "  await import('./foreign/ssr/bundle.mjs');\n"
+        '}\n',
+        '',
+      );
+    }
     await File(p.join(output.path, 'ssr.entry.mjs')).writeAsString(entry);
     await File(
       p.join(output.path, 'ssr_runtime.mjs'),
@@ -974,6 +1028,7 @@ final class ReactBuilder {
   Future<void> _writeBundleManifest({
     required bool hasClient,
     required bool hasSsr,
+    String? serverBinary,
   }) async {
     final output = config.directory(config.outputDirectory);
     final manifest = <String, Object?>{
@@ -1008,6 +1063,12 @@ final class ReactBuilder {
           'dart': await dart.length(),
           if (foreign.existsSync()) 'foreign': await foreign.length(),
         },
+      };
+    }
+
+    if (serverBinary != null) {
+      manifest['server'] = <String, Object?>{
+        'binary': serverBinary,
       };
     }
 
@@ -1070,13 +1131,28 @@ final class ReactBuilder {
     final bundleFile = File(
       p.join(output.path, 'foreign', target, 'bundle.mjs'),
     );
+    final result = _bundleResults[target];
+    final dartJs = _compiledDartFor(output, target);
+    if (!await bundleFile.exists()) {
+      // No foreign components or wrappers for this target, so no aggregate
+      // bundle was emitted.
+      return BundleReportTarget(
+        artifacts: 0,
+        uncompressedBytes: 0,
+        gzipBytes: 0,
+        sourceMapBytes: null,
+        externals: await _mergedExternals(),
+        retainedExports: const [],
+        retainedHookNamespaces: const [],
+        usedComponents: const [],
+        usedHooks: const [],
+      );
+    }
     final mapFile = File('${bundleFile.path}.map');
     final text = await bundleFile.readAsString();
-    final result = _bundleResults[target];
     final outputs = result?.outputs ?? const <String>[];
     final retainedExports = _retainedWrapperExports(text);
     final retainedHookNamespaces = _retainedHookNamespaces(text);
-    final dartJs = _compiledDartFor(output, target);
     return BundleReportTarget(
       artifacts: outputs.isEmpty ? 1 : outputs.length,
       uncompressedBytes: await bundleFile.length(),

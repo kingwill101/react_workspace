@@ -25,8 +25,9 @@ List<String> usedComponentsIn(
 /// `<namespace>.<hook>` keys whose hook-bridge path appears in [dartJs].
 ///
 /// Matches the `@JS('globalThis.__reactDartBindings.<ns>.<hook>')` interop
-/// form emitted by `react ts bind --hooks` in both its dot-access and
-/// bracket-access compiled shapes, plus the legacy `__reactDartHooks` bridge.
+/// form emitted by `react ts bind --hooks` in its dot-access, bracket-access,
+/// and unoptimized `-O0` `_getPropertyTrustType`-chain compiled shapes, plus
+/// the legacy `__reactDartHooks` bridge.
 List<String> usedHooksIn(
   String dartJs,
   List<String> namespaces,
@@ -40,10 +41,16 @@ List<String> usedHooksIn(
       "__reactDartBindings\\[[\"']${RegExp.escape(ns)}[\"']\\]"
       "\\s*\\[\\s*[\"'](use\\w+)[\"']\\s*\\]",
     );
+    final chain = RegExp(
+      '"__reactDartBindings"[^"]*"${RegExp.escape(ns)}"[^"]*"(use\\w+)"',
+    );
     for (final match in dot.allMatches(dartJs)) {
       used.add('$ns.${match.group(1)}');
     }
     for (final match in bracket.allMatches(dartJs)) {
+      used.add('$ns.${match.group(1)}');
+    }
+    for (final match in chain.allMatches(dartJs)) {
       used.add('$ns.${match.group(1)}');
     }
   }

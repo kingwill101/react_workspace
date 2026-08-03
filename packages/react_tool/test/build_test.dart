@@ -166,6 +166,61 @@ $accent: #336699;
   });
 
   test(
+    'compiles the server entrypoint to a native binary with --server',
+    () async {
+      await Directory('${root.path}/bin').create(recursive: true);
+      await File(
+        '${root.path}/bin/server.dart',
+      ).writeAsString('void main() {}\n');
+      final config = ReactProjectConfig.load(root);
+      final builder = ReactBuilder(
+        config: config,
+        release: false,
+        server: true,
+        log: (_) {},
+        npmCommand: await writeNpmStub(root),
+      );
+
+      await builder.build();
+
+      final binary = Platform.isWindows ? 'server.exe' : 'server';
+      final serverFile = File('${root.path}/build/react/$binary');
+      expect(serverFile.existsSync(), isTrue,
+          reason: 'expected server binary at build/react/$binary');
+      final manifest = jsonDecode(
+        await File(
+          '${root.path}/build/react/bundle_manifest.json',
+        ).readAsString(),
+      ) as Map<String, Object?>;
+      expect(manifest['server'], {'binary': './$binary'});
+    },
+  );
+
+  test(
+    'skips the server compile when the entrypoint is missing',
+    () async {
+      final config = ReactProjectConfig.load(root);
+      final builder = ReactBuilder(
+        config: config,
+        release: false,
+        server: true,
+        log: (_) {},
+        npmCommand: await writeNpmStub(root),
+      );
+
+      await builder.build();
+
+      expect(File('${root.path}/build/react/server').existsSync(), isFalse);
+      final manifest = jsonDecode(
+        await File(
+          '${root.path}/build/react/bundle_manifest.json',
+        ).readAsString(),
+      ) as Map<String, Object?>;
+      expect(manifest.containsKey('server'), isFalse);
+    },
+  );
+
+  test(
     'bundles project foreign components into per-target aggregates',
     () async {
       final config = ReactProjectConfig.load(root);

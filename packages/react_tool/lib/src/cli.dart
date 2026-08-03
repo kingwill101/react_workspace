@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'build.dart';
 import 'bundler/bundle_manifest.dart';
 import 'project_config.dart';
+import 'scaffold.dart';
 import 'ts_bindings.dart';
 
 /// Runs the React CLI programmatically.
@@ -17,6 +18,7 @@ class ReactCommandRunner extends CommandRunner<void> {
   ReactCommandRunner()
     : super('react', 'Build and run React Dart applications.') {
     addCommand(DoctorCommand());
+    addCommand(InitCommand());
     addCommand(BuildCommand());
     addCommand(CleanCommand());
     addCommand(ServeCommand());
@@ -82,7 +84,8 @@ final class BuildCommand extends Command<void> {
 
   @override
   String get description =>
-      'Generate code and compile the client and SSR bundles.';
+      'Generate code and compile the client and SSR bundles, and optionally '
+      'the server binary.';
 
   BuildCommand() {
     argParser
@@ -91,6 +94,12 @@ final class BuildCommand extends Command<void> {
         abbr: 'r',
         defaultsTo: false,
         help: 'Use release optimization for the client bundle.',
+      )
+      ..addFlag(
+        'server',
+        defaultsTo: false,
+        help: 'Compile the server entrypoint to a native binary with '
+            'dart compile exe.',
       )
       ..addFlag(
         'watch',
@@ -103,8 +112,14 @@ final class BuildCommand extends Command<void> {
   Future<void> run() async {
     final config = ReactProjectConfig.load();
     final release = option('release') as bool? ?? false;
+    final server = option('server') as bool? ?? false;
     final watch = option('watch') as bool? ?? false;
-    final builder = ReactBuilder(config: config, release: release, log: line);
+    final builder = ReactBuilder(
+      config: config,
+      release: release,
+      server: server,
+      log: line,
+    );
     await builder.build();
     info('Build complete.');
     if (watch) {
