@@ -74,6 +74,17 @@ Future<void> main() async {
     timeout: const Duration(seconds: 30),
   );
 
+  browserTest(
+    'home page invokes greetAction and displays the greeting',
+    (browser) async {
+      await browser.visit('/');
+      await browser.waitForText('Hello, world!');
+    },
+    headless: true,
+    baseUrl: baseUrl,
+    timeout: const Duration(seconds: 30),
+  );
+
   tearDownAll(harness.close);
 }
 

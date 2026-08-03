@@ -113,4 +113,38 @@ void main() {
     missing.assertStatus(200);
     expect(missing.body, contains('No route matched this location.'));
   });
+
+  test('router section SSR-renders the overview and sub-routes', () async {
+    final client = harness.createClient();
+
+    final overview = await client.get('/router');
+    overview.assertStatus(200);
+    expect(_normalizeHtml(overview.body), contains('Router playground'));
+    expect(_normalizeHtml(overview.body), contains('location: /router'));
+
+    final items = await client.get('/router/items/42');
+    items.assertStatus(200);
+    expect(_normalizeHtml(items.body), contains('Item #42'));
+    expect(_normalizeHtml(items.body), contains('useParams works: id=42'));
+
+    final search = await client.get('/router/search?q=ssr');
+    search.assertStatus(200);
+    expect(_normalizeHtml(search.body), contains('q = "ssr"'));
+
+    final programmatic = await client.get('/router/programmatic');
+    programmatic.assertStatus(200);
+    expect(_normalizeHtml(programmatic.body), contains('useNavigate'));
+
+    final redirect = await client.get('/router/redirect');
+    redirect.assertStatus(200);
+    expect(_normalizeHtml(redirect.body), contains('Redirect'));
+  });
+
+  test('home page renders with server-function loading state', () async {
+    final client = harness.createClient();
+    final response = await client.get('/');
+    response.assertStatus(200);
+    expect(_normalizeHtml(response.body), contains('Hello from SSR'));
+    expect(response.body, contains('id="__props"'));
+  });
 }
