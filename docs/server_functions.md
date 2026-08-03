@@ -116,7 +116,7 @@ The aggregate builder emits `server_actions.g.dart`, so a native server only
 needs one generated import and one registration call:
 
 ```dart
-import 'package:example/server_actions.g.dart';
+import 'package:examples/ssr/server_actions.g.dart';
 
 registerServerActions(registry: registry);
 ```
@@ -1556,14 +1556,14 @@ For progressive enhancement without JavaScript, generate `<form action="/__react
     - `@serverFunction` implementation (`listTodos`, `toggleTodo`, `addTodo`)
     - `@reactComponent TodoApp` UI with useState/useEffect
     - Generated `.action.g.dart`, `.client.g.dart`, `.registry.g.dart`
-    - Client compilation succeeds (`dart compile js -O0 example/web/client.dart`)
-    - SSR compilation succeeds (`dart compile js -O2 example/lib/ssr.dart`)
+    - Client compilation succeeds (`dart compile js -O0 examples/ssr/web/client.dart`)
+    - SSR compilation succeeds (`dart compile js -O2 examples/ssr/lib/ssr.dart`)
 17. Test end-to-end (runtime) — ✅ complete
     - `server_testing: 0.4.0` and `server_testing_shelf: 0.4.0`
     - ephemeral HTTP server verification in `packages/react_web/test/server_function_integration_test.dart`
     - client → Shelf → registry → typed result/error coverage
 18. Add SSR + hydration + action integration test — ✅ complete
-    - opt-in browser test: `RUN_BROWSER_E2E=1 dart test example/test/server_function_browser_test.dart`
+    - opt-in browser test: `RUN_BROWSER_E2E=1 dart test examples/ssr/test/server_function_browser_test.dart`
     - verifies SSR output, hydration, action loading, and checkbox mutation
 19. Document the pattern with optimistic updates, error handling, and auth — pending
 

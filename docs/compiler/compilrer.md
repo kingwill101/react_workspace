@@ -645,7 +645,7 @@ A future React outline could contain:
 
 ```dart
 const idCounter = ComponentId(
-  'package:example/counter.dart#Counter',
+  'package:examples/ssr/counter.dart#Counter',
 );
 
 ReactNode Counter({

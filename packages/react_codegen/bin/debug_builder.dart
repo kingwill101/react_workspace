@@ -11,7 +11,7 @@ import 'package:react_codegen/src/server_function/server_function_model.dart';
 import 'package:react_codegen/src/server_function/server_function_reader.dart';
 
 Future<void> main(List<String> args) async {
-  final target = args.isNotEmpty ? args[0] : 'example/lib/todos/todos_actions.dart';
+  final target = args.isNotEmpty ? args[0] : 'examples/ssr/lib/todos/todos_actions.dart';
   final filePath = File(target).absolute.path;
 
   final collection = AnalysisContextCollection(
@@ -25,7 +25,7 @@ Future<void> main(List<String> args) async {
   final library = result.libraryElement;
 
   // Check @serverData resolution by looking at contract file
-  final contractPath = File('example/lib/todos/todos_contract.dart').absolute.path;
+  final contractPath = File('examples/ssr/lib/todos/todos_contract.dart').absolute.path;
   final contractResult = await session.getResolvedUnit(contractPath) as ResolvedUnitResult;
   final contractLib = contractResult.libraryElement;
 

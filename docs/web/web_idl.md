@@ -982,7 +982,7 @@ Change `_accessor` to receive both component and prop.
 
 ## Canonicalize component IDs
 
-Generated factories and the manual SSR switch currently use different package IDs. The SSR switch still contains `package:react_workspace/...`, while generated output uses `package:example/...`.
+Generated factories and the manual SSR switch currently use different package IDs. The SSR switch still contains `package:react_workspace/...`, while generated output uses `package:examples/ssr/...`.
 
 Generate the server registry from the same component model as the client registry.
 

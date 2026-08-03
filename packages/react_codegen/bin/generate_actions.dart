@@ -20,7 +20,7 @@ import 'package:react_codegen/src/server_function/server_function_reader.dart';
 Future<void> main(List<String> args) async {
   final target = args.isNotEmpty
       ? args[0]
-      : 'example/lib/todos/todos_actions.dart';
+      : 'examples/ssr/lib/todos/todos_actions.dart';
 
   // Resolve the file using the analyzer
   final file = File(target);

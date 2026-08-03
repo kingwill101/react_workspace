@@ -20,7 +20,7 @@ void main() {
     () async {
       // Use the analyzer to resolve the todo actions file
       final result = await resolveFile(
-        path: File('example/lib/todos/todos_actions.dart').absolute.path,
+        path: File('examples/ssr/lib/todos/todos_actions.dart').absolute.path,
       );
 
       expect(result, isA<ResolvedUnitResult>());

@@ -16,11 +16,13 @@ workspace:
   - packages/react_zustand
   - packages/react_riverpod
   - packages/react_bloc
-  - example
+  - examples/ssr
+  - examples/client
 dependencies:
   react_server: {path: packages/react_server}
   react_tool: {path: packages/react_tool}
-  example: {path: example}
+  example: {path: examples/ssr}
+  client: {path: examples/client}
   shelf: ^1.4.0
   shelf_static: ^1.1.3
   watcher: ^1.1.0

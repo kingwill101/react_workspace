@@ -1591,10 +1591,10 @@ Copy it during the build:
 client:
   cmds:
     - cp packages/react_js/js/callback_trampoline.js
-        example/web/react_callback_trampoline.js
+        examples/ssr/web/react_callback_trampoline.js
     - dart compile js -O0
-        -o example/web/client.dart.js
-        example/web/client.dart
+        -o examples/ssr/web/client.dart.js
+        examples/ssr/web/client.dart
 ```
 
 SSR worker:

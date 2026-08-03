@@ -9,9 +9,10 @@ import 'project_config.dart';
 
 const _templatesPackageUri = 'package:react_tool/src/scaffold/templates/';
 
-/// Scaffold templates, mapped from template name (including the `.liquid`
-/// extension) to the relative path written into the generated project.
-const _templateOutputs = <String, String>{
+/// Scaffold templates for a full SSR project, mapped from template name
+/// (including the `.liquid` extension) to the relative path written into
+/// the generated project.
+const _ssrTemplateOutputs = <String, String>{
   'pubspec.yaml.liquid': 'pubspec.yaml',
   'analysis_options.yaml.liquid': 'analysis_options.yaml',
   '.gitignore.liquid': '.gitignore',
@@ -29,6 +30,21 @@ const _templateOutputs = <String, String>{
   'README.md.liquid': 'README.md',
 };
 
+/// Scaffold templates for a client-only project (no SSR, no server).
+const _clientTemplateOutputs = <String, String>{
+  'pubspec.client.yaml.liquid': 'pubspec.yaml',
+  'analysis_options.yaml.liquid': 'analysis_options.yaml',
+  '.gitignore.liquid': '.gitignore',
+  'react.client.yaml.liquid': 'react.yaml',
+  'package.json.liquid': 'package.json',
+  'web/index.client.html.liquid': 'web/index.html',
+  'web/styles.scss.liquid': 'web/styles.scss',
+  'web/client.dart.liquid': 'web/client.dart',
+  'lib/app.client.dart.liquid': 'lib/app.dart',
+  'lib/greeting.client.dart.liquid': 'lib/greeting.dart',
+  'README.client.md.liquid': 'README.md',
+};
+
 /// Generates a new React Dart project from Liquid templates.
 final class ScaffoldGenerator {
   ScaffoldGenerator({void Function(Object)? log}) : log = log ?? print;
@@ -38,11 +54,14 @@ final class ScaffoldGenerator {
 
   /// Renders every template into [target]. Throws [ReactToolException] if
   /// [target] already exists unless [force] is set.
+  ///
+  /// [template] selects the scaffold variant: `'ssr'` (default) or `'client'`.
   Future<void> generate({
     required String name,
     required String packagesPath,
     required Directory target,
     bool force = false,
+    String template = 'ssr',
   }) async {
     if (target.existsSync() && !force) {
       throw ReactToolException(
@@ -57,12 +76,16 @@ final class ScaffoldGenerator {
       'title': _humanize(name),
     };
 
-    for (final entry in _templateOutputs.entries) {
+    final outputs = template == 'client'
+        ? _clientTemplateOutputs
+        : _ssrTemplateOutputs;
+
+    for (final entry in outputs.entries) {
       final source = File(p.join(templatesDir.path, entry.key));
-      final template = Template.parse(source.readAsStringSync(), data: data);
+      final rendered = Template.parse(source.readAsStringSync(), data: data);
       final output = File(p.join(target.path, entry.value));
       output.parent.createSync(recursive: true);
-      output.writeAsStringSync(template.render());
+      output.writeAsStringSync(rendered.render());
     }
   }
 
@@ -88,15 +111,14 @@ final class ScaffoldGenerator {
       .join(' ');
 }
 
-/// `react init <project-name>` — scaffolds a minimal React Dart project with
-/// SSR and server functions.
+/// `react init <project-name>` — scaffolds a minimal React Dart project.
 final class InitCommand extends Command<void> {
   @override
   String get name => 'init';
 
   @override
   String get description =>
-      'Scaffold a new React Dart project with SSR and server functions.';
+      'Scaffold a new React Dart project (SSR or client-only).';
 
   @override
   String get invocation => 'react init <project-name>';
@@ -109,6 +131,13 @@ final class InitCommand extends Command<void> {
         defaultsTo: '../packages',
         help: 'Path to the react_* package directories referenced by the '
             'generated pubspec (default: ../packages).',
+      )
+      ..addOption(
+        'template',
+        defaultsTo: 'ssr',
+        allowed: ['ssr', 'client'],
+        help: 'Scaffold template variant: "ssr" (default) includes SSR and '
+            'server functions; "client" scaffolds a client-only project.',
       )
       ..addFlag(
         'force',
@@ -131,6 +160,7 @@ final class InitCommand extends Command<void> {
 
     final packagesPath = option('packages') as String? ?? '../packages';
     final force = option('force') as bool? ?? false;
+    final template = option('template') as String? ?? 'ssr';
     final target = Directory(p.join(_workingDirectory.path, name));
 
     await ScaffoldGenerator(log: line).generate(
@@ -138,6 +168,7 @@ final class InitCommand extends Command<void> {
       packagesPath: packagesPath,
       target: target,
       force: force,
+      template: template,
     );
 
     info('Created $name/.');

@@ -7,7 +7,7 @@ Dart >=3.12.0 <4.0.0 + pub workspace, no melos.
 - packages/react_js - JsBinding, JsRenderer exhaustive switch
 - packages/react_dom - mount Attach/Hydrate
 - packages/react_codegen - generates .react.dart (pure factory returning Component with key+children) + .react.g.dart (JS wrapper extension type PropsJS + fromJS/toJS + $Component + register)
-- example - Avatar, App, client.dart, ssr.dart
+- examples/ssr - SSR demo (Avatar, App, client.dart, ssr.dart)
 
 ## First run
 ```
@@ -159,7 +159,7 @@ browser and HTTP tests:
 
 ```dart
 final harness = await ReactTestHarness.start(
-  projectRoot: Directory('example'),
+  projectRoot: Directory('examples/ssr'),
   rootComponent: 'package:app/lib/app.dart#App',
   registerActions: registerActions,
 );

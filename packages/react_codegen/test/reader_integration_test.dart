@@ -10,7 +10,7 @@ void main() {
   test(
     'reader finds @serverFunction in todos_actions.dart',
     () async {
-      final todosFile = File('example/lib/todos/todos_actions.dart').absolute;
+      final todosFile = File('examples/ssr/lib/todos/todos_actions.dart').absolute;
       final result = await resolveFile(path: todosFile.path);
 
       expect(result, isA<ResolvedUnitResult>());

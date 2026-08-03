@@ -472,7 +472,7 @@ final class ServeCommand extends Command<void> {
 
   @override
   String get description =>
-      'Build the project and run the standardized Dart server and SSR worker.';
+      'Build the project and run the Dart server (and SSR worker if configured).';
 
   ServeCommand() {
     argParser
@@ -575,31 +575,129 @@ final class ServeCommand extends Command<void> {
       }
 
       final serverEntrypoint = config.serverEntrypoint;
-      if (serverEntrypoint == null ||
-          !config.file(serverEntrypoint).existsSync()) {
-        throw const ReactToolException(
-          'No server entrypoint found. Expected bin/server.dart or configure '
-          'server.entrypoint in react.yaml.',
+      if (serverEntrypoint != null &&
+          config.file(serverEntrypoint).existsSync()) {
+        final environment = <String, String>{
+          ...Platform.environment,
+          'PORT': '$port',
+          if (worker != null) 'REACT_SSR_URL': 'http://127.0.0.1:$ssrPort/',
+        };
+        final server = await Process.start(
+          Platform.resolvedExecutable,
+          ['run', serverEntrypoint],
+          workingDirectory: config.root.path,
+          mode: ProcessStartMode.inheritStdio,
+          environment: environment,
         );
+        return (worker: worker, server: server);
       }
 
-      final environment = <String, String>{
-        ...Platform.environment,
-        'PORT': '$port',
-        if (worker != null) 'REACT_SSR_URL': 'http://127.0.0.1:$ssrPort/',
-      };
-      final server = await Process.start(
-        Platform.resolvedExecutable,
-        ['run', serverEntrypoint],
-        workingDirectory: config.root.path,
-        mode: ProcessStartMode.inheritStdio,
-        environment: environment,
+      info(
+        'No server entrypoint found — starting a static file server '
+        'for the client build.',
       );
-      return (worker: worker, server: server);
+      final staticServer = await _startStaticServer(config, port);
+      return (worker: worker, server: staticServer);
     } catch (_) {
       await _stopProcess(worker);
       rethrow;
     }
+  }
+
+  static const _staticServerScript = '''
+import "dart:io";
+
+void main() async {
+  final port = int.tryParse(Platform.environment["PORT"] ?? "") ?? 8080;
+  final root = Directory("build/react");
+  if (!root.existsSync()) {
+    final web = Directory("web");
+    if (web.existsSync()) {
+      root = web;
+    }
+  }
+  final server = await HttpServer.bind("0.0.0.0", port);
+  print("Static server running on http://localhost:\$port");
+  await for (final request in server) {
+    final filePath = request.uri.path;
+    final file = File("\${root.path}/\$filePath");
+    if (await file.exists()) {
+      final bytes = await file.readAsBytes();
+      final ext = filePath.split(".").last.toLowerCase();
+      request.response.headers.contentType = _contentType(ext);
+      request.response.add(bytes);
+    } else {
+      final index = File("\${root.path}/index.html");
+      if (await index.exists()) {
+        final bytes = await index.readAsBytes();
+        request.response.headers.contentType = ContentType.html;
+        request.response.add(bytes);
+      } else {
+        request.response.statusCode = 404;
+      }
+    }
+    request.response.close();
+  }
+}
+
+ContentType _contentType(String ext) {
+  switch (ext) {
+    case "html":
+      return ContentType.html;
+    case "js":
+      return ContentType.js;
+    case "mjs":
+      return ContentType("application", "javascript");
+    case "css":
+      return ContentType.css;
+    case "json":
+      return ContentType.json;
+    case "png":
+      return ContentType.imagePng;
+    case "jpg":
+    case "jpeg":
+      return ContentType.imageJpeg;
+    case "gif":
+      return ContentType.imageGif;
+    case "svg":
+      return ContentType("image", "svg+xml");
+    case "wasm":
+      return ContentType("application", "wasm");
+    case "woff":
+      return ContentType("font", "woff");
+    case "woff2":
+      return ContentType("font", "woff2");
+    case "ttf":
+      return ContentType("font", "ttf");
+    case "ico":
+      return ContentType("image", "x-icon");
+    case "map":
+      return ContentType("application", "json");
+    default:
+      return ContentType.binary;
+  }
+}
+''';
+
+  static Future<Process> _startStaticServer(
+    ReactProjectConfig config,
+    int port,
+  ) async {
+    final script = File(
+      p.join(config.root.path, '.dart_tool', 'react', 'static_server.dart'),
+    );
+    script.parent.createSync(recursive: true);
+    script.writeAsStringSync(_staticServerScript);
+    return Process.start(
+      Platform.resolvedExecutable,
+      [script.path],
+      workingDirectory: config.root.path,
+      mode: ProcessStartMode.inheritStdio,
+      environment: {
+        ...Platform.environment,
+        'PORT': '$port',
+      },
+    );
   }
 
   int _parsePort(String name) {

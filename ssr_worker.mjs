@@ -9,7 +9,7 @@ import http from 'http';
 http.createServer((req, res) => {
   let b = ''; req.on('data', c => b += c); req.on('end', () => {
     try {
-      const {id, props} = JSON.parse(b || '{"id":"package:react_workspace/example/lib/app.dart#App","props":{"title":"hi"}}');
+      const {id, props} = JSON.parse(b || '{"id":"package:react_workspace/examples/ssr/lib/app.dart#App","props":{"title":"hi"}}');
       const element = globalThis.__REACT_RENDER__({id, props});
       const html = ReactDOMServer.renderToString(element);
       res.writeHead(200, {'Content-Type': 'application/json'});

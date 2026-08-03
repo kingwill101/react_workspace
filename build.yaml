@@ -3,7 +3,7 @@ targets:
     sources:
       - lib/**
       - packages/*/lib/**
-      - example/lib/**
+      - examples/*/lib/**
       - $package$
     builders:
       react_codegen|component:
