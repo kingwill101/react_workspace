@@ -566,12 +566,18 @@ globalThis.ReactDOM = ReactDOM;
         expect((targetReport['gzipBytes'] as int), greaterThan(0));
         expect(targetReport['externals'], contains('react'));
         expect(targetReport['externals'], contains('react-dom'));
-        expect(targetReport['retainedExports'], contains('Card'));
+        // The stub app is `void main() {}`, so application-level pruning
+        // drops the unused `Card` registration from both targets.
+        expect(targetReport['retainedExports'], isEmpty);
         expect(targetReport['retainedHookNamespaces'], isEmpty);
-        // The stub app is `void main() {}`, so nothing is used on either
-        // target.
         expect(targetReport['usedComponents'], isEmpty);
         expect(targetReport['usedHooks'], isEmpty);
+      }
+      for (final target in ['browser', 'ssr']) {
+        final bundle = await File(
+          '${root.path}/build/react/foreign/$target/bundle.mjs',
+        ).readAsString();
+        expect(bundle, isNot(contains("__reactDartRegisterComponent('Card'")));
       }
     },
   );
@@ -611,7 +617,8 @@ foreign:
       final bundle = await File(
         '${root.path}/build/react/foreign/$target/bundle.mjs',
       ).readAsString();
-      expect(bundle, contains("__reactDartRegisterComponent('Card'"));
+      // The stub app uses no foreign components, so the aggregate is pruned.
+      expect(bundle, isNot(contains("__reactDartRegisterComponent('Card'")));
     }
 
     final manifest =
@@ -637,7 +644,7 @@ foreign:
         greaterThanOrEqualTo(1),
       );
       expect((targetReport['uncompressedBytes'] as int), greaterThan(0));
-      expect(targetReport['retainedExports'], contains('Card'));
+      expect(targetReport['retainedExports'], isEmpty);
     }
   });
 }

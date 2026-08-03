@@ -12,6 +12,7 @@ import 'bundler/bundle_result.dart';
 import 'bundler/bundler.dart';
 import 'bundler/esbuild_bundler.dart';
 import 'bundler/rolldown_bundler.dart';
+import 'bundler/shim_pruning.dart';
 import 'bundler/usage_scan.dart';
 import 'js_environment.dart';
 import 'project_config.dart';
@@ -74,6 +75,10 @@ final class ReactBuilder {
     await output.create(recursive: true);
     await _copyStaticAssets(output);
     await _writeStylesheetLinks(output);
+
+    // Foreign bindings must exist before the Dart entrypoints compile (they
+    // import the generated helpers). The foreign *bundles* are built after
+    // compilation so they can be pruned to what the app actually uses.
     await _writeForeignComponents(jsEnvironment);
 
     var hasClient = false;
@@ -103,6 +108,8 @@ final class ReactBuilder {
     } else {
       log('Skipping SSR build: ${ssr ?? '(not configured)'} not found.');
     }
+
+    await _bundleForeignTargets(jsEnvironment);
 
     await File(
       p.join(output.path, 'manifest.json'),
@@ -283,56 +290,107 @@ final class ReactBuilder {
     await index.writeAsString(source);
   }
 
+  /// Generates `lib/foreign_components.g.dart` from the project-level
+  /// `foreign.components` list. Runs before the Dart entrypoints are compiled
+  /// so they may import the generated helpers.
   Future<void> _writeForeignComponents(JsEnvironment? environment) async {
     final wrappers = await _discoverWrappers();
     final hasProjectModules =
         config.foreignModules.isNotEmpty || config.foreignComponents.isNotEmpty;
     if (!hasProjectModules && wrappers.every((w) => w.isEmpty)) return;
+    await _writeForeignBindings();
+  }
 
-    // Per-target aggregate entries: absolute import paths so esbuild resolves
-    // each wrapper's public npm specifiers through the managed environment.
-    final entries = <String, List<String>>{'browser': [], 'ssr': []};
-    final componentRegistrations =
-        <({String path, String name, String? export})>[];
-
-    // Project-level foreign modules (react.yaml) apply to both targets.
-    for (final module in config.foreignModules) {
-      final path = await _resolveModulePath(module);
-      entries['browser']!.add(path);
-      entries['ssr']!.add(path);
-    }
-
-    for (final component in config.foreignComponents) {
-      final path = await _resolveModulePath(component.module);
-      componentRegistrations.add((
-        path: path,
-        name: component.name,
-        export: component.exportName,
-      ));
-      entries['browser']!.add(path);
-      entries['ssr']!.add(path);
-    }
-
-    // Wrapper entries per target (shared applies to both).
-    for (final wrapper in wrappers) {
-      for (final target in wrapper.targets) {
-        if (!entries.containsKey(target)) continue;
-        final entry = wrapper.entryFor(target);
-        if (entry == null) continue;
-        final path = await _resolveWrapperEntry(wrapper.packageName, entry);
-        entries[target]!.add(path);
-      }
-    }
+  /// Builds the per-target aggregate entries and bundles them through the
+  /// selected JavaScript bundler.
+  ///
+  /// Runs after the Dart entrypoints are compiled so the aggregate can be
+  /// pruned to the foreign surface the compiled `client.js`/`ssr.js` actually
+  /// reference per target: generated wrapper shims are rewritten to import and
+  /// register only the used components/hooks (letting the bundler tree-shake
+  /// the rest of the npm package), and project-level foreign components whose
+  /// key never appears are dropped entirely. When a target was not compiled,
+  /// its aggregate is emitted unpruned.
+  Future<void> _bundleForeignTargets(JsEnvironment? environment) async {
+    final wrappers = await _discoverWrappers();
+    final hasProjectModules =
+        config.foreignModules.isNotEmpty || config.foreignComponents.isNotEmpty;
+    if (!hasProjectModules && wrappers.every((w) => w.isEmpty)) return;
 
     final output = config.directory(config.outputDirectory);
     final foreignDir = Directory(p.join(output.path, 'foreign'));
     await foreignDir.create(recursive: true);
 
     for (final target in const ['browser', 'ssr']) {
-      final targetEntries = entries[target]!;
-      if (targetEntries.isEmpty) continue;
+      final dartJs = _compiledDartFor(output, target);
+
+      // Absolute import paths so the bundler resolves each wrapper's public
+      // npm specifiers through the managed environment.
+      final targetEntries = <String>[];
+      final componentRegistrations =
+          <({String path, String name, String? export})>[];
+
+      // Project-level foreign modules (react.yaml) apply to both targets.
+      // Bare side-effect imports cannot be pruned.
+      for (final module in config.foreignModules) {
+        targetEntries.add(await _resolveModulePath(module));
+      }
+
+      // Project-level foreign components: drop those the compiled Dart output
+      // never references on this target.
+      final componentKeys = [
+        for (final component in config.foreignComponents) component.name,
+      ];
+      final usedComponents = dartJs == null
+          ? componentKeys.toSet()
+          : usedComponentsIn(dartJs, componentKeys).toSet();
+      for (final component in config.foreignComponents) {
+        if (!usedComponents.contains(component.name)) continue;
+        final path = await _resolveModulePath(component.module);
+        componentRegistrations.add((
+          path: path,
+          name: component.name,
+          export: component.exportName,
+        ));
+        targetEntries.add(path);
+      }
+
+      // Wrapper entries per target (shared applies to both). Generated shims
+      // are pruned to the used registration surface and aggregator modules
+      // (files that only import local modules) are rewritten to import the
+      // pruned copies; opaque entries (raw registration modules, prebuilt
+      // bundles) are imported as-is.
+      for (final wrapper in wrappers) {
+        final entry = wrapper.entryFor(target);
+        if (entry == null) continue;
+        final path = await _resolveWrapperEntry(wrapper.packageName, entry);
+        targetEntries.add(
+          await _materializeWrapperEntry(
+            entryPath: path,
+            packageName: wrapper.packageName,
+            target: target,
+            foreignDir: foreignDir,
+            dartJs: dartJs,
+          ),
+        );
+      }
+
       final entryDir = Directory(p.join(foreignDir.path, target));
       await entryDir.create(recursive: true);
+      final entryFile = File(p.join(entryDir.path, 'entry.mjs'));
+      if (targetEntries.isEmpty) {
+        // Application-level pruning dropped every registration for this
+        // target. Still emit an empty bundle so the target bootstraps and
+        // bundle_report.json can resolve `foreign/<target>/bundle.mjs`.
+        await entryFile.writeAsString('// Generated by react_tool.\n');
+        _bundleResults[target] = await _bundleTarget(
+          environment: environment,
+          target: target,
+          entry: entryFile.path,
+          outfile: p.join(entryDir.path, 'bundle.mjs'),
+        );
+        continue;
+      }
 
       final buffer = StringBuffer()..writeln('// Generated by react_tool.');
       for (final path in targetEntries) {
@@ -379,7 +437,6 @@ final class ReactBuilder {
         }
       }
 
-      final entryFile = File(p.join(entryDir.path, 'entry.mjs'));
       await entryFile.writeAsString(buffer.toString());
       _bundleResults[target] = await _bundleTarget(
         environment: environment,
@@ -392,8 +449,100 @@ final class ReactBuilder {
         '${p.join(config.outputDirectory, 'foreign', target, 'bundle.mjs')}',
       );
     }
-    await _writeForeignBindings();
   }
+
+  /// Recursively materializes a wrapper entry for [target] under
+  /// `foreign/<target>/<package>/`, returning the path the aggregate entry
+  /// should import.
+  ///
+  /// Generated shims are pruned to the used components/hooks of the compiled
+  /// Dart output; aggregator modules (files whose only content is local
+  /// imports) are copied with their imports rewritten to the materialized
+  /// copies; any other file is opaque and returned unchanged.
+  Future<String> _materializeWrapperEntry({
+    required String entryPath,
+    required String packageName,
+    required String target,
+    required Directory foreignDir,
+    required String? dartJs,
+  }) async {
+    final source = await File(entryPath).readAsString();
+    final dir = Directory(p.join(foreignDir.path, target, packageName));
+    await dir.create(recursive: true);
+    final outPath = p.join(dir.path, p.basename(entryPath));
+
+    final shim = parseForeignShim(source);
+    if (shim != null) {
+      final usedComponents = dartJs == null
+          ? shim.componentKeys.toSet()
+          : usedComponentsIn(dartJs, shim.componentKeys).toSet();
+      final usedHooks = dartJs == null
+          ? _allHookKeys(shim)
+          : usedHooksIn(dartJs, [
+              if (shim.namespace != null) shim.namespace!,
+            ]).where(_allHookKeys(shim).contains).toSet();
+      await File(outPath).writeAsString(
+        pruneShim(
+          source,
+          shim: shim,
+          usedComponents: usedComponents,
+          usedHooks: usedHooks,
+        ),
+      );
+      return outPath;
+    }
+
+    // Aggregator detection: every non-blank, non-comment line is a local
+    // import. Anything else makes the file opaque.
+    final lines = source.split('\n');
+    final localImports = <String>[];
+    for (final line in lines) {
+      final trimmed = line.trim();
+      if (trimmed.isEmpty || trimmed.startsWith('//')) continue;
+      final match = _localImportRe.firstMatch(trimmed);
+      if (match == null) return entryPath;
+      localImports.add(match.group(1)!);
+    }
+    if (localImports.isEmpty) return entryPath;
+
+    final rewritten = StringBuffer();
+    for (final line in lines) {
+      final match = _localImportRe.firstMatch(line.trim());
+      if (match == null) {
+        rewritten.writeln(line);
+        continue;
+      }
+      final specifier = match.group(1)!;
+      if (!specifier.startsWith('.') || specifier.startsWith('..')) {
+        rewritten.writeln(line);
+        continue;
+      }
+      final resolved = p.normalize(p.join(p.dirname(entryPath), specifier));
+      final materialized = await _materializeWrapperEntry(
+        entryPath: resolved,
+        packageName: packageName,
+        target: target,
+        foreignDir: foreignDir,
+        dartJs: dartJs,
+      );
+      var relative = p.relative(materialized, from: dir.path);
+      if (!relative.startsWith('.')) relative = './$relative';
+      rewritten.writeln("import ${jsonEncode(relative)};");
+    }
+    await File(outPath).writeAsString(rewritten.toString());
+    return outPath;
+  }
+
+  /// A local module import (`import './x.mjs';`), as found in aggregator
+  /// wrapper entries.
+  static final _localImportRe = RegExp(r"^import\s+'([^']+)';?$");
+
+  /// All hook keys a shim can expose: `namespace.useX`, or bare `useX` for the
+  /// legacy `__reactDartHooks` bridge.
+  Set<String> _allHookKeys(ForeignShim shim) => {
+    for (final name in shim.hookNames)
+      if (shim.namespace == null) name else '${shim.namespace}.$name',
+  };
 
   /// Bundles one target aggregate through the selected JavaScript bundler
   /// under the target's platform conditions. Failure is fatal — there is no
