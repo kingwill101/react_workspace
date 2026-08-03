@@ -69,6 +69,17 @@ class AggregateBuilder implements Builder {
     await _writeSsRegistry(step, pkg, idImports, idConstants);
   }
 
+  /// Registry-file registration functions emitted by `RegistryFileEmitter`,
+  /// e.g. `registerTodosActions` or `registerGreeting`.
+  ///
+  /// The name is derived from the source library (see
+  /// `registry_file_emitter.dart`), so any `register` function in a
+  /// `*.registry.g.dart` file is a candidate.
+  static List<String> registrationFunctions(String content) =>
+      RegExp(
+        r'void\s+(register\w+)\s*\(',
+      ).allMatches(content).map((m) => m.group(1)!).toList();
+
   Future<void> _writeActionRegistry(
     BuildStep step,
     String pkg,
@@ -80,15 +91,13 @@ class AggregateBuilder implements Builder {
     for (var index = 0; index < inputs.length; index++) {
       final aid = inputs[index];
       final content = await step.readAsString(aid);
-      final matches = RegExp(
-        r'void\s+(register\w+(?:Actions|Functions))\s*\(',
-      ).allMatches(content).toList();
+      final matches = registrationFunctions(content);
       if (matches.isEmpty) continue;
 
       final prefix = 'serverActions$index';
       imports.add("import '${aid.uri}' as $prefix;");
       for (final match in matches) {
-        registrations.add('  $prefix.${match.group(1)!}(registry: registry);');
+        registrations.add('  $prefix.$match(registry: registry);');
       }
     }
 
