@@ -1,0 +1,82 @@
+---
+sidebar_position: 4
+---
+
+# Testing
+
+React Dart provides two testing packages: `server_testing` and `react_testing`.
+
+## Testing SSR apps
+
+Use `ReactTestHarness` from `react_testing` to build and boot a full test app:
+
+```dart
+import 'package:react_testing/react_testing.dart';
+import 'package:server_testing/server_testing.dart';
+
+void main() {
+  late ReactTestHarness harness;
+
+  setUpAll(() async {
+    harness = await ReactTestHarness.start(
+      projectRoot: Directory('examples/ssr'),
+      rootComponent: 'package:my_app/lib/app.dart#App',
+      registerActions: (registry) => registerServerActions(registry: registry),
+      pageProps: (request) => {'title': 'Test'},
+    );
+  });
+
+  tearDownAll(() => harness.close());
+
+  serverTest('SSR renders the home page', (client, _) async {
+    final response = await client.get('/');
+    response.assertStatus(200);
+    expect(response.body, contains('site-nav'));
+  }, handler: harness.createHandler());
+}
+```
+
+## Testing client-only apps
+
+For client-only projects, use `server_testing` directly with a static file handler:
+
+```dart
+import 'package:server_testing/server_testing.dart';
+import 'package:test/test.dart';
+
+import '_static_handler.dart';
+
+void main() {
+  final handler = StaticFileHandler(Directory('build/react'));
+
+  setUpAll(() async {
+    await handler.startServer();
+  });
+
+  tearDownAll(() => handler.close());
+
+  serverTest('serves the home page', (client, _) async {
+    final response = await client.get('/');
+    response.assertStatus(200);
+    expect(response.body, contains('app'));
+  }, handler: handler);
+}
+```
+
+## Browser E2E tests
+
+Use `browserTest` for end-to-end browser testing:
+
+```dart
+browserTest(
+  'client hydrates and renders',
+  (browser) async {
+    await browser.visit('/');
+    await browser.waitForText('Hello from the client');
+  },
+  headless: true,
+  baseUrl: baseUrl,
+);
+```
+
+Browser tests are opt-in — set `RUN_BROWSER_E2E=1` to enable them.

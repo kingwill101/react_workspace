@@ -1,0 +1,35 @@
+---
+sidebar_position: 1
+---
+
+# Server-Side Rendering
+
+React Dart renders components on the server and sends the resulting HTML to the browser. The client bundle then hydrates the markup, making it interactive.
+
+## How it works
+
+1. The SSR entrypoint (`lib/ssr.dart`) registers components with `SsrComponentRegistry`.
+2. On a request, the SSR worker calls `renderToString` for the matched route.
+3. The server sends the HTML to the browser.
+4. The client bundle hydrates the same components, attaching event handlers.
+
+## Per-route SSR
+
+React Dart supports per-route SSR with deep links. Each route renders its own component tree on the server, so bookmarks and shared links work correctly.
+
+## Props during SSR
+
+The `pageProps` function provides props to components during SSR:
+
+```dart
+pageProps: (request) => {
+  'title': 'My App',
+  'path': request.uri.path,
+},
+```
+
+Props are embedded in the HTML as a JSON script tag (`<script id="__props">`) and read by the client during hydration.
+
+## SSR + Server Functions
+
+Server functions work seamlessly with SSR. When a component calls a server function during SSR, the function executes on the server and the result is embedded in the HTML. On the client, the same function call goes through the action router.

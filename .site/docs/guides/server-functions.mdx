@@ -1,0 +1,46 @@
+---
+sidebar_position: 3
+---
+
+# Server Functions
+
+Call Dart functions from the browser with full type safety.
+
+## Defining a server function
+
+Annotate a Dart function with `@serverFunction`:
+
+```dart
+import 'package:react_actions/react_actions.dart';
+import 'package:react_server/react_server.dart';
+
+@serverFunction
+Future<String> greet(
+  ServerFunctionContext context, {
+  required String name,
+}) async {
+  return 'Hello, $name!';
+}
+```
+
+## Calling from the browser
+
+The code generator creates a typed client binding in `greeting.client.g.dart`:
+
+```dart
+import 'package:my_app/greeting.client.g.dart' show greetAction;
+
+// Inside a component or event handler:
+final result = await greetAction(name: 'World');
+```
+
+## How it works
+
+1. The server function is registered in `ServerFunctionRegistry`.
+2. The client sends a POST request to `/__react/actions` with the action ID, contract hash, and encoded arguments.
+3. The server validates the contract hash, decodes the arguments, and executes the function.
+4. The result is encoded and returned to the client.
+
+## Contract validation
+
+Each action has a contract hash that is verified on the server. If the client sends a request with an invalid hash, the server rejects it. This ensures that stale clients cannot call functions that have changed.

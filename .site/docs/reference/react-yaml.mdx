@@ -1,0 +1,39 @@
+---
+sidebar_position: 1
+---
+
+# react.yaml Reference
+
+The `react.yaml` file configures how React Dart builds and serves your project.
+
+## Schema
+
+```yaml
+client:
+  entrypoint: web/client.dart
+ssr:
+  entrypoint: lib/ssr.dart
+server:
+  entrypoint: bin/server.dart
+styles:
+  entrypoints:
+    - web/styles.scss
+```
+
+## Fields
+
+### `client.entrypoint`
+
+**Required.** The path to the client bootstrap file, relative to the project root. This file calls `initReact()` and `registerReactComponents()`, then mounts or hydrates the root component.
+
+### `ssr.entrypoint`
+
+**Optional.** The path to the SSR entrypoint. If omitted or the file doesn't exist, SSR is disabled. The entrypoint registers components with `SsrComponentRegistry` and sets up a global renderer.
+
+### `server.entrypoint`
+
+**Optional.** The path to the server entrypoint. If omitted or the file doesn't exist, no server binary is built and `react serve` falls back to a static file server.
+
+### `styles.entrypoints`
+
+**Optional.** A list of Sass/SCSS files to compile into CSS. The compiled CSS is included in the client bundle.

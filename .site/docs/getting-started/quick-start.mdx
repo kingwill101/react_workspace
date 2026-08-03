@@ -1,0 +1,56 @@
+---
+sidebar_position: 1
+---
+
+# Quick Start
+
+Get a React Dart project running in under two minutes.
+
+## 1. Scaffold a project
+
+```bash
+dart run react_tool:react init my_app
+```
+
+This creates a new directory `my_app/` with:
+
+- `pubspec.yaml` — Dart dependencies
+- `react.yaml` — Project configuration
+- `lib/app.dart` — Root component
+- `lib/ssr.dart` — SSR entrypoint
+- `bin/server.dart` — Server entrypoint
+- `web/client.dart` — Client bootstrap
+- `web/index.html` — HTML template
+
+## 2. Install dependencies
+
+```bash
+cd my_app
+dart pub get
+```
+
+## 3. Build
+
+```bash
+dart run react_tool:react build
+```
+
+This compiles the client JS bundle, the SSR bundle (if configured), and the server binary (if configured).
+
+## 4. Serve
+
+```bash
+dart run react_tool:react serve
+```
+
+The app is available at `http://localhost:8080`.
+
+## Client-only variant
+
+Skip SSR and server functions entirely:
+
+```bash
+dart run react_tool:react init my_app --template client
+```
+
+This generates a project with only the client bundle and a static file server — no SSR worker, no server binary, no Dockerfile.

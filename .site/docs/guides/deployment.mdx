@@ -1,0 +1,50 @@
+---
+sidebar_position: 5
+---
+
+# Deployment
+
+## Docker
+
+The scaffold generates a multi-stage `Dockerfile`:
+
+```dockerfile
+# Stage 1: build
+FROM dart:stable AS build
+COPY . /workspace
+WORKDIR /workspace/my_app
+RUN dart pub get
+RUN dart run react_tool:react build --server
+
+# Stage 2: runtime
+FROM node:20-bookworm-slim AS runtime
+COPY --from=build /workspace/my_app/build/ ./build/
+EXPOSE 8080
+CMD ["sh", "-c", "node build/react/ssr.entry.mjs & exec ./build/react/server"]
+```
+
+Build and run:
+
+```bash
+docker build -f my_app/Dockerfile .
+docker run -p 8080:8080 my_app
+```
+
+## Static hosting (client-only)
+
+For client-only projects, build the client bundle and serve `build/react/` with any static file server:
+
+```bash
+dart run react_tool:react build
+# Serve build/react/ with nginx, Netlify, Vercel, etc.
+```
+
+## `react serve`
+
+For development and simple deployments, use the built-in serve command:
+
+```bash
+dart run react_tool:react serve
+```
+
+This starts the SSR worker (if configured) and the Dart server on port 8080.

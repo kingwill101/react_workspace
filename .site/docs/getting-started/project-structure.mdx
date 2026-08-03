@@ -1,0 +1,56 @@
+---
+sidebar_position: 2
+---
+
+# Project Structure
+
+## Generated files
+
+After `dart run react_tool:react build`, the following files are generated:
+
+| File | Description |
+|---|---|
+| `build/react/client.js` | Compiled client JavaScript bundle |
+| `build/react/browser.entry.mjs` | Browser entry module |
+| `build/react/ssr.entry.mjs` | SSR entry module (if SSR is configured) |
+| `build/react/ssr_runtime.mjs` | SSR runtime (HTTP server + render) |
+| `build/react/server` | Compiled Dart server binary (if server is configured) |
+| `build/react/bundle_manifest.json` | Bundle manifest with entry points and sizes |
+| `build/react/foreign/` | Bundled foreign component shims |
+| `lib/*.react.dart` | Generated component bindings |
+| `lib/*.react.g.dart` | Generated codegen output |
+| `lib/server_actions.g.dart` | Generated server action registry |
+| `lib/ssr_registry.g.dart` | Generated SSR component registry |
+
+## react.yaml
+
+The `react.yaml` file configures the project:
+
+```yaml
+client:
+  entrypoint: web/client.dart
+ssr:
+  entrypoint: lib/ssr.dart
+server:
+  entrypoint: bin/server.dart
+styles:
+  entrypoints:
+    - web/styles.scss
+```
+
+- `client.entrypoint` — Required. The client bootstrap file.
+- `ssr.entrypoint` — Optional. The SSR entrypoint. If omitted, SSR is disabled.
+- `server.entrypoint` — Optional. The server entrypoint. If omitted, no server binary is built.
+- `styles.entrypoints` — Sass/SCSS files to compile into CSS.
+
+## react_tool CLI
+
+| Command | Description |
+|---|---|
+| `react init <name>` | Scaffold a new project |
+| `react build` | Build client, SSR, and server bundles |
+| `react serve` | Build and serve the project |
+| `react clean` | Remove build artifacts |
+| `react doctor` | Inspect project configuration |
+| `react js` | Generate JavaScript bindings |
+| `react ts` | Generate TypeScript bindings |

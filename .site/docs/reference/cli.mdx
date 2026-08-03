@@ -1,0 +1,75 @@
+---
+sidebar_position: 2
+---
+
+# CLI Reference
+
+## `react init`
+
+Scaffold a new React Dart project.
+
+```bash
+react init <project-name> [options]
+```
+
+### Options
+
+| Option | Default | Description |
+|---|---|---|
+| `--packages <path>` | `../packages` | Path to react_* package directories |
+| `--template <variant>` | `ssr` | Scaffold variant: `ssr` or `client` |
+| `--force` | `false` | Overwrite an existing directory |
+
+### Examples
+
+```bash
+# Scaffold an SSR project (default)
+react init my_app
+
+# Scaffold a client-only project
+react init my_app --template client
+
+# Scaffold with custom packages path
+react init my_app --packages ../../packages
+```
+
+## `react build`
+
+Build the project — compiles client JS, SSR JS (if configured), and server binary (if configured).
+
+```bash
+react build [--server] [--release]
+```
+
+### Options
+
+| Option | Default | Description |
+|---|---|---|
+| `--server` | `false` | Build the server binary |
+| `--release` | `false` | Use release optimization |
+
+## `react serve`
+
+Build and serve the project.
+
+```bash
+react serve [options]
+```
+
+### Options
+
+| Option | Default | Description |
+|---|---|---|
+| `--port <port>` | `8080` | Port for the Dart server |
+| `--ssr-port <port>` | `3001` | Port for the SSR worker |
+| `--release` | `false` | Use release optimization |
+| `--no-ssr` | `false` | Skip the SSR worker |
+| `--watch` | `false` | Rebuild and restart on file changes |
+
+## `react clean`
+
+Remove build artifacts.
+
+## `react doctor`
+
+Inspect the current project configuration.

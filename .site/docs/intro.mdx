@@ -1,0 +1,52 @@
+---
+sidebar_position: 1
+---
+
+# React Dart
+
+Build React interfaces with Dart — full SSR, typed server functions, and contract-based client/server communication.
+
+## What is React Dart?
+
+React Dart is a framework for building React applications in Dart. It provides:
+
+- **Server-side rendering** — render React components on the server and hydrate them on the client
+- **Typed server functions** — call Dart functions from the browser with full type safety and contract validation
+- **Code generation** — automatic generation of client bindings, SSR registries, and action codecs
+- **Testing infrastructure** — `server_testing` and `react_testing` packages for reliable integration and E2E tests
+
+## Quick Start
+
+```bash
+# Scaffold a new project
+dart run react_tool:react init my_app
+
+# Build and serve
+cd my_app
+dart pub get
+dart run react_tool:react build
+dart run react_tool:react serve
+```
+
+## Project Structure
+
+A React Dart project contains:
+
+- `lib/` — Dart source code (components, server functions, SSR entrypoint)
+- `web/` — Client-side assets (HTML, styles, client bootstrap)
+- `react.yaml` — Project configuration (entrypoints, styles)
+- `pubspec.yaml` — Dart package configuration
+
+## Key Concepts
+
+### SSR (Server-Side Rendering)
+
+React Dart renders components on the server using `renderToString`, sends the HTML to the browser, and hydrates the client bundle. This gives you fast initial loads and SEO-friendly pages.
+
+### Server Functions
+
+Annotate Dart functions with `@serverFunction` to make them callable from the browser. React Dart generates typed client bindings with contract hashes and codecs, so calls are type-safe and validated.
+
+### Client-Only Mode
+
+Skip SSR entirely and serve a static client bundle. Use `react init --template client` to scaffold a client-only project.

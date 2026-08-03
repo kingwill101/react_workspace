@@ -1,0 +1,43 @@
+---
+sidebar_position: 2
+---
+
+# Client-Only Projects
+
+Skip SSR and serve a static client bundle. Use this for marketing sites, dashboards, or any app where server rendering isn't needed.
+
+## Creating a client-only project
+
+```bash
+dart run react_tool:react init my_app --template client
+```
+
+This generates a project with:
+
+- No `lib/ssr.dart`
+- No `bin/server.dart`
+- No `Dockerfile`
+- A static file server instead of a full server binary
+
+## Configuration
+
+The generated `react.yaml` has no `ssr` or `server` sections:
+
+```yaml
+client:
+  entrypoint: web/client.dart
+styles:
+  entrypoints:
+    - web/styles.scss
+```
+
+## How serving works
+
+For client-only projects, `react serve` starts a static file server that serves the `build/react/` directory. No SSR worker or Dart server process is started.
+
+## When to use client-only
+
+- Marketing landing pages
+- Internal dashboards
+- Apps that don't need SEO
+- Prototyping and rapid iteration

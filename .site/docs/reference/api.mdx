@@ -1,0 +1,60 @@
+---
+sidebar_position: 3
+---
+
+# API Reference
+
+## `@serverFunction`
+
+Annotate a Dart function to make it callable from the browser:
+
+```dart
+@serverFunction
+Future<String> greet(
+  ServerFunctionContext context, {
+  required String name,
+}) async {
+  return 'Hello, $name!';
+}
+```
+
+The code generator creates:
+- A typed client binding in `greeting.client.g.dart`
+- A server action registration in `server_actions.g.dart`
+
+## `ServerFunctionContext`
+
+Provides request context to server functions:
+
+- `request` — The incoming HTTP request
+- `cookies` — Request cookies
+- `headers` — Request headers
+
+## `ReactTestHarness`
+
+From `package:react_testing/react_testing.dart`. Boots a full test app for integration testing:
+
+```dart
+final harness = await ReactTestHarness.start(
+  projectRoot: Directory('examples/ssr'),
+  rootComponent: 'package:my_app/lib/app.dart#App',
+  registerActions: (registry) => registerServerActions(registry: registry),
+  pageProps: (request) => {'title': 'Test'},
+);
+```
+
+### Methods
+
+- `harness.createClient()` — Returns a `TestClient` for making HTTP requests
+- `harness.createHandler()` — Returns a `RequestHandler` for `server_testing`
+- `harness.close()` — Shuts down the test server and SSR worker
+
+## `ReactProjectConfig`
+
+From `package:react_tool/react_tool.dart`. Loads project configuration from `react.yaml` or `pubspec.yaml` defaults:
+
+- `clientEntrypoint` — Path to the client bootstrap
+- `ssrEntrypoint` — Path to the SSR entrypoint (null if not configured)
+- `serverEntrypoint` — Path to the server entrypoint (null if not configured)
+- `styleEntrypoints` — List of style entrypoints
+- `root` — The project root directory
