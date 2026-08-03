@@ -29,7 +29,24 @@ dart run packages/react_tool/bin/react.dart build
 
 `react build` runs code generation, compiles the client and SSR Dart bundles,
 copies static assets, compiles configured Sass stylesheets, and generates the
-Node SSR worker and callback bridge in `build/react/`. `react serve` starts both
+target bootstraps, SSR worker runtime, and callback bridge in `build/react/`:
+
+```text
+build/react/
+├── browser.entry.mjs   # sets React globals, then loads trampoline/foreign/client.js
+├── ssr.entry.mjs       # sets React globals, loads trampoline/foreign/ssr.js + runtime
+├── ssr_runtime.mjs     # HTTP worker (server + error-boundary fallback)
+├── foreign/browser/bundle.mjs
+├── foreign/ssr/bundle.mjs
+├── client.js, ssr.js   # dart compile js outputs
+├── bundle_manifest.json
+└── index.html          # import map + single browser.entry.mjs script tag
+```
+
+`bundle_manifest.json` records every runtime artifact per target (entry, Dart
+output, foreign bundle, SSR runtime, byte sizes) plus the bundler and mode.
+`react serve` and `react_testing` resolve the SSR entry from it at runtime, so
+servers and tooling never hardcode module names. `react serve` starts both
 the native Dart server and the SSR worker. Add `--watch` to `build` to rebuild
 on source changes, or to `serve` to rebuild and restart both processes:
 
@@ -151,9 +168,11 @@ addTearDown(harness.close);
 
 The CLI bundles each project's foreign modules and dependency shims into two
 per-target aggregates — `foreign/browser/bundle.mjs` (loaded by the page via
-import map) and `foreign/ssr/bundle.mjs` (imported by the SSR worker) —
+import map) and `foreign/ssr/bundle.mjs` (imported by the SSR bootstrap) —
 using esbuild with platform-appropriate conditions. `react`/`react-dom` stay
-external so everything shares one React instance in each target.
+external so everything shares one React instance in each target. Bundling is
+contained behind a `JavaScriptBundler` interface, so an alternative backend
+(e.g. Rolldown) can be swapped in without touching `ReactBuilder`.
 
 ### Wrapping third-party React packages
 
