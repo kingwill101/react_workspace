@@ -339,7 +339,7 @@ Do that in stages:
 
 8. Apply that usage data to the aggregate entry: prune each generated wrapper shim to its used component/hook subset (and materialize pruned copies of aggregator wrappers), so Rolldown tree-shakes the unused rest of the npm package. ✅ `parseForeignShim`/`pruneShim` rewrite the generated shim template structurally; project-level `foreign.components` are dropped when the key never appears in the target's compiled output. Example release build: browser 32.8 → 22.7 KiB, SSR 156.3 → 149.6 KiB (server_boot_test green against the pruned bundles).
 
-9. Only after measuring, decide whether physically inlining `client.js` and `ssr.js` into final bundles is worthwhile.
+9. Only after measuring, decide whether physically inlining `client.js` and `ssr.js` into final bundles is worthwhile. **Measured → decided: keep them separate.** The example release build ships `client.js` (390 KiB) / `ssr.js` (312 KiB) of dart2js output next to a tree-shaken foreign bundle (browser 22.7 KiB, SSR 149.6 KiB); the Dart output already dominates and esbuild cannot shrink minified dart2js, so a combined file saves only one HTTP request at the cost of wrapping a classic-script IIFE into ESM — and re-risks global-init ordering and duplicate-loading of the shared router code (the SSR foreign bundle embeds `react-dom/server`; sharing it with the browser target would force browser clients to download it too). Left as an optional future packaging mode (`react.bundling.combineDartOutput`).
 
 ## Bottom line
 
@@ -1097,13 +1097,13 @@ Keep the first implementation narrow:
 7. Emit `bundle_manifest.json`.
 8. Add snapshot tests for browser and SSR requests.
 
-Do **not** include in that PR:
+Do **not** include in that PR (status as of the roadmap's close):
 
-* Rolldown.
-* Cross-language usage manifests.
-* Combining Dart and foreign bundles.
-* Hook bridge redesign.
-* Code splitting.
-* Automatic chunk loading.
+* Rolldown. ✅ done — `RolldownBundler` behind `JavaScriptBundler`.
+* Cross-language usage manifests. ✅ done — per-target `usedComponents`/`usedHooks` driving application-level DCE.
+* Combining Dart and foreign bundles. ✅ decided — not worthwhile (measured above); optional `combineDartOutput` mode left for later.
+* Hook bridge redesign. Deferred — the `__reactDartBindings` bridge works and is covered by the DCE (whole bridge pruned when unused); a cleaner calling convention is possible but has no measured payoff yet.
+* Code splitting. Deferred — dart2js has no stable per-import split for a single-entry app; the foreign bundle is already per-target and tree-shaken.
+* Automatic chunk loading. Deferred — needs code splitting first.
 
 That first step gives you a stable seam. Everything more ambitious becomes an implementation of `JavaScriptBundler` or a consumer of `BundleResult`, rather than another large rewrite inside `ReactBuilder`.
