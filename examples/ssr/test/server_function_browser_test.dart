@@ -20,7 +20,7 @@ Future<void> main() async {
   }
 
   final harness = await ReactTestHarness.start(
-    projectRoot: Directory('example'),
+    projectRoot: Directory('examples/ssr'),
     rootComponent: _appId,
     registerActions: (registry) => registerServerActions(registry: registry),
     pageProps: (request) => {'title': 'hi'},

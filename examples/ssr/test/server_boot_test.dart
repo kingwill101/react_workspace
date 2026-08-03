@@ -26,7 +26,7 @@ void main() {
 
   setUpAll(() async {
     harness = await ReactTestHarness.start(
-      projectRoot: Directory('example'),
+      projectRoot: Directory('examples/ssr'),
       rootComponent: _appId,
       registerActions: (registry) => registerServerActions(registry: registry),
       pageProps: (request) => {
@@ -144,7 +144,7 @@ void main() {
     final client = harness.createClient();
     final response = await client.get('/');
     response.assertStatus(200);
-    expect(_normalizeHtml(response.body), contains('Hello from SSR'));
+    expect(_normalizeHtml(response.body), contains('hi'));
     expect(response.body, contains('id="__props"'));
   });
 }

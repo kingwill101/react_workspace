@@ -15,7 +15,7 @@ Future<void> main() async {
     return;
   }
 
-  final handler = StaticFileHandler(Directory('build/react'));
+  final handler = StaticFileHandler(Directory('examples/client/build/react'));
   final port = await handler.startServer();
   final baseUrl = 'http://127.0.0.1:$port';
 
