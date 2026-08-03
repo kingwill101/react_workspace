@@ -6,15 +6,12 @@ import 'package:test/test.dart';
 
 /// Writes a fixture npm root with a small two-file TypeScript package.
 Future<String> writeFixtureNpmRoot(Directory root) async {
-  final pkgDir = Directory(
-    p.join(root.path, 'node_modules', 'fake-pkg'),
-  )..createSync(recursive: true);
+  final pkgDir = Directory(p.join(root.path, 'node_modules', 'fake-pkg'))
+    ..createSync(recursive: true);
   File(p.join(pkgDir.path, 'package.json')).writeAsStringSync('''
 {"name":"fake-pkg","version":"1.0.0","types":"./dist/index.d.ts"}
 ''');
-  File(
-    p.join(pkgDir.path, 'dist', 'index.d.ts'),
-  ).createSync(recursive: true);
+  File(p.join(pkgDir.path, 'dist', 'index.d.ts')).createSync(recursive: true);
   File(p.join(pkgDir.path, 'dist', 'index.d.ts')).writeAsStringSync('''
 import type { Shared } from "./shared";
 export declare function Greeting(props: GreetingProps): React.ReactElement;
@@ -57,9 +54,7 @@ void main() {
       expect(decl.name, 'Greeting');
       expect(decl.kind, 'component');
 
-      final byName = {
-        for (final prop in decl.props) prop.name: prop,
-      };
+      final byName = {for (final prop in decl.props) prop.name: prop};
       expect(byName['name']!.type.kind, 'string');
       expect(byName['name']!.required, isFalse);
       expect(byName['count']!.type.kind, 'number');
@@ -156,7 +151,11 @@ void main() {
           type: TsIrType(
             kind: 'function',
             params: [
-              TsIrProp(name: 'item', required: true, type: TsIrType(kind: 'string')),
+              TsIrProp(
+                name: 'item',
+                required: true,
+                type: TsIrType(kind: 'string'),
+              ),
               TsIrProp(
                 name: 'index',
                 required: true,
@@ -219,10 +218,17 @@ void main() {
       expect(code, contains('class GreetingMeta {'));
       expect(code, contains('class GreetingAction {'));
       expect(code, contains('enum GreetingVariant {'));
-      expect(code, contains('typedef GreetingOnSelectCallback = void Function(String item, num index);'));
       expect(
         code,
-        contains('ReactCallback greetingOnSelectCallback(GreetingOnSelectCallback fn)'),
+        contains(
+          'typedef GreetingOnSelectCallback = void Function(String item, num index);',
+        ),
+      );
+      expect(
+        code,
+        contains(
+          'ReactCallback greetingOnSelectCallback(GreetingOnSelectCallback fn)',
+        ),
       );
     });
 
@@ -247,10 +253,7 @@ void main() {
       expect(code, contains('class GreetingProps {'));
       expect(code, contains('String? this.name,'));
       expect(code, contains('final String? name;'));
-      expect(
-        code,
-        contains("if (name != null) 'name': name,"),
-      );
+      expect(code, contains("if (name != null) 'name': name,"));
     });
 
     test('emits a typedef for primitive aliases', () {
@@ -326,6 +329,41 @@ void main() {
       expect(shim, contains('__reactDartRegisterComponent'));
     });
 
+    test('hooks extension types bind renamed props back to the JS name', () {
+      const decl = TsIrDeclaration(
+        name: 'useLocation',
+        kind: 'hook',
+        props: [],
+        params: [],
+        returns: TsIrType(
+          kind: 'object',
+          name: 'Location',
+          members: [
+            TsIrProp(
+              name: 'pathname',
+              required: true,
+              type: TsIrType(kind: 'string'),
+            ),
+            TsIrProp(
+              name: 'key',
+              required: true,
+              type: TsIrType(kind: 'string'),
+            ),
+          ],
+        ),
+      );
+      final code = generateHooks(
+        specifier: 'fake-pkg',
+        declarations: const [decl],
+        commandLine: 'react ts bind fake-pkg useLocation --hooks',
+      );
+      // The Dart-safe name renames `key` → `elementKey`…
+      expect(code, contains('external JSString get elementKey;'));
+      // …but the extension getter must read the real JS property `key`.
+      expect(code, contains("@JS('key') external JSString get elementKey;"));
+      expect(code, contains('elementKey: (v.elementKey as JSString).toDart,'));
+    });
+
     test('typePrefix namespaces generated type names', () {
       final code = generateBindings(
         specifier: 'fake-pkg',
@@ -344,12 +382,11 @@ void main() {
 
   group('live react-router-dom extraction', () {
     test('extracts MemoryRouter from the managed env', () async {
-      final workspace = p.normalize(
-        p.join(Directory.current.path, '..', '..'),
-      );
+      final workspace = p.normalize(p.join(Directory.current.path, '..', '..'));
       final npmRoot = p.join(workspace, '.dart_tool', 'react', 'js');
-      if (!File(p.join(npmRoot, 'node_modules', 'react-router-dom', 'package.json'))
-          .existsSync()) {
+      if (!File(
+        p.join(npmRoot, 'node_modules', 'react-router-dom', 'package.json'),
+      ).existsSync()) {
         markTestSkipped('managed env react-router-dom not installed');
         return;
       }

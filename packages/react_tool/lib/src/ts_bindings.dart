@@ -71,7 +71,11 @@ final class TsIrProp {
   final bool required;
   final TsIrType type;
 
-  const TsIrProp({required this.name, required this.required, required this.type});
+  const TsIrProp({
+    required this.name,
+    required this.required,
+    required this.type,
+  });
 
   factory TsIrProp.fromJson(Map<String, dynamic> json) => TsIrProp(
     name: json['name'] as String,
@@ -107,9 +111,10 @@ final class TsIrDeclaration {
         props: (json['props'] as List<dynamic>)
             .map((p) => TsIrProp.fromJson(p as Map<String, dynamic>))
             .toList(),
-        params: (json['params'] as List<dynamic>?)
-            ?.map((p) => TsIrProp.fromJson(p as Map<String, dynamic>))
-            .toList() ??
+        params:
+            (json['params'] as List<dynamic>?)
+                ?.map((p) => TsIrProp.fromJson(p as Map<String, dynamic>))
+                .toList() ??
             const [],
         returns: json['returns'] == null
             ? null
@@ -165,9 +170,7 @@ final class TsBindingExtractor {
         if (error != null) {
           throw TsBindingException(error as String);
         }
-        return TsBindingsResult.fromJson(
-          decoded['ok'] as Map<String, dynamic>,
-        );
+        return TsBindingsResult.fromJson(decoded['ok'] as Map<String, dynamic>);
       } finally {
         tsb_free_string(ptr);
       }
@@ -183,19 +186,46 @@ final class TsBindingExtractor {
 // ---------------------------------------------------------------------------
 
 const _kReservedWords = {
-  'assert', 'break', 'case', 'catch', 'class', 'const', 'continue', 'default',
-  'do', 'else', 'enum', 'extends', 'false', 'final', 'finally', 'for', 'if',
-  'in', 'is', 'new', 'null', 'rethrow', 'return', 'super', 'switch', 'this',
-  'throw', 'true', 'try', 'var', 'void', 'while', 'with', 'yield',
+  'assert',
+  'break',
+  'case',
+  'catch',
+  'class',
+  'const',
+  'continue',
+  'default',
+  'do',
+  'else',
+  'enum',
+  'extends',
+  'false',
+  'final',
+  'finally',
+  'for',
+  'if',
+  'in',
+  'is',
+  'new',
+  'null',
+  'rethrow',
+  'return',
+  'super',
+  'switch',
+  'this',
+  'throw',
+  'true',
+  'try',
+  'var',
+  'void',
+  'while',
+  'with',
+  'yield',
 };
 
 /// Camel-cases a declaration name: `MemoryRouter` → `memoryRouter`.
 String lowerCamel(String name) {
   final cleaned = name.replaceAll(RegExp(r'[^A-Za-z0-9]'), ' ');
-  final words = cleaned
-      .split(' ')
-      .where((w) => w.isNotEmpty)
-      .toList();
+  final words = cleaned.split(' ').where((w) => w.isNotEmpty).toList();
   if (words.isEmpty) return 'x';
   final buffer = StringBuffer(words.first[0].toLowerCase());
   buffer.write(words.first.substring(1));
@@ -230,7 +260,7 @@ final class _TypeRegistry {
   final Map<String, _TypedefDef> typedefs = {};
 
   _TypeRegistry({this.typePrefix = '', Set<String>? reusedTypeNames})
-      : reusedTypeNames = reusedTypeNames ?? <String>{};
+    : reusedTypeNames = reusedTypeNames ?? <String>{};
 
   /// Prefix applied to every generated type name, used to namespace the
   /// types of a second extraction run (e.g. `--type-prefix Server` keeps the
@@ -241,13 +271,19 @@ final class _TypeRegistry {
   /// walking its members) if unseen. [declName] + [path] synthesize names for
   /// anonymous objects.
   String objectName(TsIrType type, String declName, List<String> path) {
-    final key = type.name != null ? 'named:${type.name}' : 'anon:${_signature(type)}';
+    final key = type.name != null
+        ? 'named:${type.name}'
+        : 'anon:${_signature(type)}';
     final existing = _nameByKey[key];
     if (existing != null) return existing;
 
     final name = type.name != null
         ? _typed(_uniqueName(upperCamel(type.name!)))
-        : _typed(_uniqueName('${upperCamel(declName)}${path.map(upperCamel).join()}'));
+        : _typed(
+            _uniqueName(
+              '${upperCamel(declName)}${path.map(upperCamel).join()}',
+            ),
+          );
     if (reusedTypeNames.contains(name)) return name;
     _nameByKey[key] = name;
     final def = _ClassDef(name, type);
@@ -256,13 +292,16 @@ final class _TypeRegistry {
   }
 
   String enumName(TsIrType type, String declName, List<String> path) {
-    final key = 'literal:${_uniqueLiterals(type.literals ?? const []).join('|')}';
+    final key =
+        'literal:${_uniqueLiterals(type.literals ?? const []).join('|')}';
     final existing = _nameByKey[key];
     if (existing != null) return existing;
     final name = type.name != null
         ? _typed(_uniqueName(upperCamel(type.name!)))
         : _typed(
-            _uniqueName('${upperCamel(declName)}${path.map(upperCamel).join()}'),
+            _uniqueName(
+              '${upperCamel(declName)}${path.map(upperCamel).join()}',
+            ),
           );
     if (reusedTypeNames.contains(name)) return name;
     _nameByKey[key] = name;
@@ -275,7 +314,9 @@ final class _TypeRegistry {
     final existing = _nameByKey[key];
     if (existing != null) return existing;
     final name = _typed(
-      _uniqueName('${upperCamel(declName)}${path.map(upperCamel).join()}Callback'),
+      _uniqueName(
+        '${upperCamel(declName)}${path.map(upperCamel).join()}Callback',
+      ),
     );
     _nameByKey[key] = name;
     typedefs[name] = _TypedefDef(name, type);
@@ -290,7 +331,10 @@ final class _TypeRegistry {
     if (existing != null) return existing;
     final name = _typed(_uniqueName(upperCamel(declName)));
     _nameByKey[key] = name;
-    final def = _ClassDef(name, TsIrType(kind: 'object', name: declName, members: props));
+    final def = _ClassDef(
+      name,
+      TsIrType(kind: 'object', name: declName, members: props),
+    );
     classes[name] = def;
     return name;
   }
@@ -415,14 +459,18 @@ String _dartType(TsIrType type, _TypeRegistry registry, {int depth = 0}) {
 /// On-demand registration uses a synthetic declaration/path context; the
 /// registry key ensures dedup against the real registration.
 String _objectNameFor(TsIrType type, _TypeRegistry registry) {
-  final key = type.name != null ? 'named:${type.name}' : 'anon:${_signature(type)}';
+  final key = type.name != null
+      ? 'named:${type.name}'
+      : 'anon:${_signature(type)}';
   final existing = registry._nameByKey[key];
   if (existing != null) return existing;
   // Referenced before the walk saw it (should not happen): register with a
   // synthetic name derived from the type name or its signature hash.
   final name = type.name != null
       ? registry._uniqueName(upperCamel(type.name!))
-      : registry._uniqueName('Anon${type.kind}${_signature(type).hashCode.abs()}');
+      : registry._uniqueName(
+          'Anon${type.kind}${_signature(type).hashCode.abs()}',
+        );
   if (registry.reusedTypeNames.contains(name)) return name;
   registry._nameByKey[key] = name;
   registry.classes[name] = _ClassDef(name, type);
@@ -435,7 +483,9 @@ String _enumNameFor(TsIrType type, _TypeRegistry registry) {
   if (existing != null) return existing;
   final name = type.name != null
       ? registry._uniqueName(upperCamel(type.name!))
-      : registry._uniqueName('Literal${type.kind}${_signature(type).hashCode.abs()}');
+      : registry._uniqueName(
+          'Literal${type.kind}${_signature(type).hashCode.abs()}',
+        );
   if (registry.reusedTypeNames.contains(name)) return name;
   registry._nameByKey[key] = name;
   registry.enums[name] = _EnumDef(name, type.literals ?? const []);
@@ -446,7 +496,9 @@ String _typedefNameFor(TsIrType type, _TypeRegistry registry) {
   final key = 'function:${_signature(type)}';
   final existing = registry._nameByKey[key];
   if (existing != null) return existing;
-  final name = registry._uniqueName('Callback${_signature(type).hashCode.abs()}');
+  final name = registry._uniqueName(
+    'Callback${_signature(type).hashCode.abs()}',
+  );
   if (registry.reusedTypeNames.contains(name)) return name;
   registry._nameByKey[key] = name;
   registry.typedefs[name] = _TypedefDef(name, type);
@@ -491,9 +543,7 @@ String _literalDartType(List<String> literals) {
 
 /// Parses a serialized TS literal (`"foo"`, `3`, `true`) to a Dart value.
 Object? _literalValue(String literal) {
-  if (literal.length >= 2 &&
-      literal.startsWith('"') &&
-      literal.endsWith('"')) {
+  if (literal.length >= 2 && literal.startsWith('"') && literal.endsWith('"')) {
     return literal.substring(1, literal.length - 1);
   }
   if (literal == 'true') return true;
@@ -518,7 +568,9 @@ String generateBindings({
     ..writeln('// GENERATED CODE — DO NOT EDIT.')
     ..writeln('// Generated by: $commandLine')
     ..writeln('// Source: $specifier')
-    ..writeln('// (extracted from ${entryComment ?? 'the package types entry'})')
+    ..writeln(
+      '// (extracted from ${entryComment ?? 'the package types entry'})',
+    )
     ..writeln('// ignore_for_file: type=lint')
     ..writeln()
     ..writeln("import 'package:react/react.dart';")
@@ -580,8 +632,8 @@ void _emitDeclaration(
       // emitted into the component bindings.
       return;
     case 'component':
-      final childrenRequired = hasChildren &&
-          props.firstWhere((p) => p.name == 'children').required;
+      final childrenRequired =
+          hasChildren && props.firstWhere((p) => p.name == 'children').required;
       buffer
         ..writeln('/// Typed helper for the `$foreignName` foreign component.')
         ..writeln('///')
@@ -624,17 +676,16 @@ void _emitDeclaration(
           props.single,
         );
         // Register types referenced by the alias target (e.g. arrays).
-        _collectTypes(
-          props.single.type,
-          declaration.name,
-          const ['value'],
-          registry,
-        );
+        _collectTypes(props.single.type, declaration.name, const [
+          'value',
+        ], registry);
         buffer
           ..writeln('/// Typed alias for `${declaration.name}`.')
           ..writeln('///')
           ..writeln('/// ${_tsTypeDoc(props.single.type)}')
-          ..writeln('typedef $typedefName = ${_typedefTargetType(props.single.type, registry)};');
+          ..writeln(
+            'typedef $typedefName = ${_typedefTargetType(props.single.type, registry)};',
+          );
       } else {
         registry.declarationClass(declaration.name, declaration.props);
       }
@@ -699,7 +750,9 @@ void _emitParam(
 String _propsMapEntry(TsIrProp prop) {
   final name = _safeParamName(prop.name);
   final value = _jsonExpr(name, prop.type);
-  return prop.required ? "'${prop.name}': $value," : "if ($name != null) '${prop.name}': $value,";
+  return prop.required
+      ? "'${prop.name}': $value,"
+      : "if ($name != null) '${prop.name}': $value,";
 }
 
 /// The expression that encodes [source] (a Dart variable or member) into a
@@ -719,16 +772,18 @@ String _jsonExpr(String source, TsIrType type) {
           _isBoolUnion(_uniqueLiterals(element.literals ?? const []))) {
         return source;
       }
-      if (element.kind == 'literal' && (element.literals ?? const []).length >= 2) {
+      if (element.kind == 'literal' &&
+          (element.literals ?? const []).length >= 2) {
         return '$source.map((e) => e.value).toList()';
       }
       return source;
-    case 'literal': {
-      final literals = _uniqueLiterals(type.literals ?? const []);
-      if (_isBoolUnion(literals)) return source;
-      if (literals.length >= 2) return '$source.value';
-      return source;
-    }
+    case 'literal':
+      {
+        final literals = _uniqueLiterals(type.literals ?? const []);
+        if (_isBoolUnion(literals)) return source;
+        if (literals.length >= 2) return '$source.value';
+        return source;
+      }
     default:
       return source;
   }
@@ -751,16 +806,18 @@ String _jsonExprPromoted(String source, TsIrType type) {
           _isBoolUnion(_uniqueLiterals(element.literals ?? const []))) {
         return source;
       }
-      if (element.kind == 'literal' && (element.literals ?? const []).length >= 2) {
+      if (element.kind == 'literal' &&
+          (element.literals ?? const []).length >= 2) {
         return '$source!.map((e) => e.value).toList()';
       }
       return source;
-    case 'literal': {
-      final literals = _uniqueLiterals(type.literals ?? const []);
-      if (_isBoolUnion(literals)) return source;
-      if (literals.length >= 2) return '$source!.value';
-      return source;
-    }
+    case 'literal':
+      {
+        final literals = _uniqueLiterals(type.literals ?? const []);
+        if (_isBoolUnion(literals)) return source;
+        if (literals.length >= 2) return '$source!.value';
+        return source;
+      }
     default:
       return source;
   }
@@ -818,7 +875,9 @@ String _tsTypeDoc(TsIrType type) {
       final members = type.members ?? const <TsIrProp>[];
       if (members.isEmpty) return 'Record<string, unknown>';
       final parts = members
-          .map((p) => '${p.name}${p.required ? '' : '?'}: ${_tsTypeDoc(p.type)}')
+          .map(
+            (p) => '${p.name}${p.required ? '' : '?'}: ${_tsTypeDoc(p.type)}',
+          )
           .join('; ');
       return '{ $parts }';
     case 'function':
@@ -836,9 +895,7 @@ String _functionDoc(TsIrType type) {
   final params = (type.params ?? const <TsIrProp>[])
       .map((p) => '${p.name}: ${_tsTypeDoc(p.type)}')
       .join(', ');
-  final returns = type.returns == null
-      ? 'void'
-      : _tsTypeDoc(type.returns!);
+  final returns = type.returns == null ? 'void' : _tsTypeDoc(type.returns!);
   return '($params) => $returns';
 }
 
@@ -862,7 +919,9 @@ String _emitTypedef(_TypedefDef def) {
     paramCasts.add(_callbackArg(p.name, p.type, i));
   }
   final returns = type.returns;
-  final resultSpec = returns == null || returns.kind == 'void' ? 'reactVoid' : 'reactAny';
+  final resultSpec = returns == null || returns.kind == 'void'
+      ? 'reactVoid'
+      : 'reactAny';
   final factoryName = lowerCamel(def.name);
 
   final buffer = StringBuffer()
@@ -872,7 +931,9 @@ String _emitTypedef(_TypedefDef def) {
       '${params.map((p) => '${_callbackParamType(p.type)} ${_safeParamName(p.name)}').join(', ')});',
     )
     ..writeln()
-    ..writeln('/// Wraps a [${def.name}] into a [ReactCallback] for prop encoding.')
+    ..writeln(
+      '/// Wraps a [${def.name}] into a [ReactCallback] for prop encoding.',
+    )
     ..writeln('ReactCallback $factoryName(${def.name} fn) => ReactCallback(')
     ..writeln("  debugName: '${def.name}',")
     ..writeln('  signature: const (')
@@ -990,9 +1051,13 @@ String _emitEnum(_EnumDef def) {
     ..writeln('  final String value;')
     ..writeln()
     ..writeln('  /// Decodes a JS string value into this enum.')
-    ..writeln('  static ${def.name} fromValue(String value) => values.firstWhere(')
+    ..writeln(
+      '  static ${def.name} fromValue(String value) => values.firstWhere(',
+    )
     ..writeln('    (e) => e.value == value,')
-    ..writeln("    orElse: () => throw ArgumentError.value(value, 'value', 'Unknown ${def.name}'),")
+    ..writeln(
+      "    orElse: () => throw ArgumentError.value(value, 'value', 'Unknown ${def.name}'),",
+    )
     ..writeln('  );')
     ..writeln('}');
   return buffer.toString();
@@ -1032,7 +1097,9 @@ String _emitClass(_ClassDef def, _TypeRegistry registry) {
     buffer
       ..writeln()
       ..writeln('  /// TS: ${_tsTypeDoc(prop.type)}')
-      ..writeln('  final ${_dartType(prop.type, registry)}${prop.required ? '' : '?'} $name;');
+      ..writeln(
+        '  final ${_dartType(prop.type, registry)}${prop.required ? '' : '?'} $name;',
+      );
   }
   buffer
     ..writeln()
@@ -1092,6 +1159,9 @@ String generateHooks({
     typePrefix: typePrefix,
     reusedTypeNames: reuseTypeNames,
   );
+  final bridgeTarget = namespace.isNotEmpty
+      ? '__reactDartBindings.$namespace'
+      : '__reactDartHooks';
 
   // First pass: register every value type referenced by return values.
   // Param types are inputs (encoded with jsify), so only their literals are
@@ -1109,7 +1179,9 @@ String generateHooks({
     ..writeln('// GENERATED CODE — DO NOT EDIT.')
     ..writeln('// Generated by: $commandLine')
     ..writeln('// Source: $specifier')
-    ..writeln('// (extracted from ${entryComment ?? 'the package types entry'})')
+    ..writeln(
+      '// (extracted from ${entryComment ?? 'the package types entry'})',
+    )
     ..writeln('// ignore_for_file: type=lint')
     ..writeln()
     ..writeln("import 'dart:js_interop';");
@@ -1127,7 +1199,7 @@ String generateHooks({
   buffer.write(_hookHelpers());
 
   for (final hook in hooks) {
-    buffer.write(_emitHook(hook, registry));
+    buffer.write(_emitHook(hook, registry, bridgeTarget: bridgeTarget));
     buffer.writeln();
   }
 
@@ -1147,7 +1219,18 @@ String _hookHelpers() {
 // Primitives and literals are decoded directly by the external's
 // return type; objects with known shape use generated extension
 // types (see below) for direct property access instead of
-// converting to/from [[key, value]] pairs.
+// converting to/from [[key, value]] pairs. Record / URLSearchParams
+// types are still encoded as `[[k, v], ...]` pairs by the shim
+// (via `toPairs`) until the shim learns to pass raw JS objects.
+Map<String, String> _decodePairs(JSArray raw) {
+  final result = <String, String>{};
+  for (var i = 0; i < raw.length; i++) {
+    final entry = (raw[i] as JSArray);
+    result[(entry[0] as JSString).toDart] = (entry[1] as JSString).toDart;
+  }
+  return result;
+}
+
 List<T> _decodeList<T>(JSArray raw, T Function(JSAny? item) decode) {
   final result = <T>[];
   for (var i = 0; i < raw.length; i++) {
@@ -1172,12 +1255,10 @@ void _collectHookTypes(
       if ((type.members ?? const <TsIrProp>[]).isEmpty) break;
       registry.objectName(type, declName, path);
       for (final member in type.members ?? const <TsIrProp>[]) {
-        _collectHookTypes(
-          member.type,
-          declName,
-          [...path, member.name],
-          registry,
-        );
+        _collectHookTypes(member.type, declName, [
+          ...path,
+          member.name,
+        ], registry);
       }
     case 'literal':
       if (_isBoolUnion(_uniqueLiterals(type.literals ?? const []))) break;
@@ -1185,28 +1266,19 @@ void _collectHookTypes(
         registry.enumName(type, declName, path);
       }
     case 'array':
-      _collectHookTypes(
-        type.element ?? const TsIrType(kind: 'any'),
-        declName,
-        [...path, 'element'],
-        registry,
-      );
+      _collectHookTypes(type.element ?? const TsIrType(kind: 'any'), declName, [
+        ...path,
+        'element',
+      ], registry);
     case 'record':
-      _collectHookTypes(
-        type.element ?? const TsIrType(kind: 'any'),
-        declName,
-        [...path, 'value'],
-        registry,
-      );
+      _collectHookTypes(type.element ?? const TsIrType(kind: 'any'), declName, [
+        ...path,
+        'value',
+      ], registry);
     case 'tuple':
       final elements = type.elements ?? const <TsIrType>[];
       for (var i = 0; i < elements.length; i++) {
-        _collectHookTypes(
-          elements[i],
-          declName,
-          [...path, 'item$i'],
-          registry,
-        );
+        _collectHookTypes(elements[i], declName, [...path, 'item$i'], registry);
       }
     default:
       break;
@@ -1327,8 +1399,10 @@ String _hookFnSignature(TsIrType type, _TypeRegistry registry) {
   if (spreadIdx >= 0) {
     final members = params[spreadIdx].type.members ?? const <TsIrProp>[];
     final named = members
-        .map((m) =>
-            '${_nullableType(_hookDartType(m.type, registry), false)} ${_safeParamName(m.name)}')
+        .map(
+          (m) =>
+              '${_nullableType(_hookDartType(m.type, registry), false)} ${_safeParamName(m.name)}',
+        )
         .join(', ');
     if (named.isNotEmpty) parts.add('{$named}');
   }
@@ -1382,10 +1456,11 @@ String _hookExternalReturn(TsIrType? returns) {
       return 'JSBoolean';
     case 'record':
     case 'urlSearchParams':
-    case 'object':
-    case 'array':
     case 'tuple':
+    case 'array':
       return 'JSArray';
+    case 'object':
+      return 'JSObject';
     case 'function':
       return 'JSFunction';
     default:
@@ -1417,7 +1492,7 @@ String _elemDecode(TsIrType type, String expr, _TypeRegistry registry) {
       return '_decodePairs($expr as JSArray)';
     case 'object':
       if ((type.members ?? const <TsIrProp>[]).isEmpty) return expr;
-      return '${_objectNameFor(type, registry)}.fromJs($expr)';
+      return '${_objectNameFor(type, registry)}.fromJs($expr as JSObject)';
     case 'array':
       final element = type.element ?? const TsIrType(kind: 'any');
       return '_decodeList($expr as JSArray, (e) => ${_elemDecode(element, 'e', registry)})';
@@ -1449,8 +1524,10 @@ String _fnClosure(TsIrType type, String fnExpr, _TypeRegistry registry) {
   if (spreadIdx >= 0) {
     final members = params[spreadIdx].type.members ?? const <TsIrProp>[];
     final named = members
-        .map((m) =>
-            '${_nullableType(_hookDartType(m.type, registry), false)} ${_safeParamName(m.name)}')
+        .map(
+          (m) =>
+              '${_nullableType(_hookDartType(m.type, registry), false)} ${_safeParamName(m.name)}',
+        )
         .join(', ');
     if (named.isNotEmpty) sig.add('{$named}');
     callArgs.add('${_optionsMapLiteral(members)}.jsify()');
@@ -1464,7 +1541,11 @@ String _fnClosure(TsIrType type, String fnExpr, _TypeRegistry registry) {
 }
 
 /// Emits one hook: the `@JS` external + the typed public function.
-String _emitHook(TsIrDeclaration hook, _TypeRegistry registry) {
+String _emitHook(
+  TsIrDeclaration hook,
+  _TypeRegistry registry, {
+  required String bridgeTarget,
+}) {
   final name = hook.name;
   final rawName = '_${name}Raw';
   final params = hook.params;
@@ -1484,7 +1565,8 @@ String _emitHook(TsIrDeclaration hook, _TypeRegistry registry) {
   // External declaration — every arg is JSAny?, the return is typed so
   // dart2js never has to cast a raw callAsFunction result.
   final extArgs = [
-    for (var i = 0; i < positional.length + (hasOptions ? 1 : 0); i++) 'JSAny? a$i',
+    for (var i = 0; i < positional.length + (hasOptions ? 1 : 0); i++)
+      'JSAny? a$i',
   ].join(', ');
   final external = StringBuffer()
     ..writeln("@JS('globalThis.$bridgeTarget.$name')")
@@ -1510,12 +1592,16 @@ String _emitHook(TsIrDeclaration hook, _TypeRegistry registry) {
   if (hasOptions) {
     final members = options!.type.members ?? const <TsIrProp>[];
     final named = members
-        .map((m) =>
-            '${_nullableType(_hookDartType(m.type, registry), false)} ${_safeParamName(m.name)}')
+        .map(
+          (m) =>
+              '${_nullableType(_hookDartType(m.type, registry), false)} ${_safeParamName(m.name)}',
+        )
         .join(', ');
     if (named.isNotEmpty) sig.add('{$named}');
   }
-  final returnType = returns == null ? 'Object?' : _hookDartType(returns, registry);
+  final returnType = returns == null
+      ? 'Object?'
+      : _hookDartType(returns, registry);
 
   final buffer = StringBuffer()
     ..writeln('/// ${_hookDoc(hook)}')
@@ -1586,9 +1672,7 @@ String _hookDoc(TsIrDeclaration hook) {
   final params = hook.params
       .map((p) => '${p.name}${p.required ? '' : '?'}: ${_tsTypeDoc(p.type)}')
       .join(', ');
-  final returns = hook.returns == null
-      ? 'void'
-      : _tsTypeDoc(hook.returns!);
+  final returns = hook.returns == null ? 'void' : _tsTypeDoc(hook.returns!);
   return '${hook.name}($params) => $returns';
 }
 
@@ -1604,65 +1688,69 @@ String _emitHookClass(_ClassDef def, _TypeRegistry registry) {
   final className = def.name;
   final extName = '_${className}Js';
   final buffer = StringBuffer()
-    ..writeln('/// Typed JS interop extension for `$className` hook return values.')
+    ..writeln(
+      '/// Typed JS interop extension for `$className` hook return values.',
+    )
     ..writeln('///')
     ..writeln('/// Direct property access on the raw JS object avoids the')
     ..writeln('/// generic [[key, value]] pairs conversion used by')
     ..writeln('/// `_pairsMap` (removed in this generation).')
-    ..writeln('extension type $extName(JSObject _) implements JSObject {')
-    for (final prop in props) {
-      final n = _safeParamName(prop.name);
-      final dartType = _hookDartType(prop.type, registry);
-      if (prop.type.kind == 'function') {
-        buffer.writeln('  external JSFunction get $n;');
-      } else {
-        buffer.writeln('  external ${_nullableType(dartType, prop.required)} get $n;');
-      }
-    }
-    buffer.writeln('}')
-    ..writeln()
-    ..writeln('/// Value class for `$className` (decoded from the hook shim).')
-    ..writeln('///')
-    ..writeln('/// ${_propsDoc(props)}')
-    ..writeln('final class $className {')
-    ..writeln('  const $className._(this._value);')
-    ..writeln()
-    ..writeln('  final $extName _value;')
-    ..writeln();
-
+    ..writeln('extension type $extName(JSObject _) implements JSObject {');
   for (final prop in props) {
     final n = _safeParamName(prop.name);
-    buffer
-      ..writeln('  /// TS: ${_tsTypeDoc(prop.type)}')
-      ..writeln(
-        '  final ${_nullableType(_hookDartType(prop.type, registry), prop.required)} $n;',
+    final extType = _hookExtType(prop.type);
+    // The getter is also the JS property name in dart:js_interop; when the
+    // Dart-safe name differs (e.g. `key` → `elementKey`), bind it back to
+    // the real JS property with `@JS('...')`.
+    final jsBinding = n == prop.name ? '' : "@JS('${prop.name}') ";
+    if (prop.type.kind == 'function') {
+      buffer.writeln('  ${jsBinding}external JSFunction get $n;');
+    } else {
+      buffer.writeln(
+        '  ${jsBinding}external ${_nullableType(extType, prop.required)} get $n;',
       );
+    }
   }
+  buffer.writeln('}');
+  buffer.writeln();
+  buffer.writeln(
+    '/// Value class for `$className` (decoded from the hook shim).',
+  );
+  buffer.writeln('///');
+  buffer.writeln('/// ${_propsDoc(props)}');
+  buffer.writeln('final class $className {');
+  buffer.writeln('  $className._(this._value, {');
+  for (final prop in props) {
+    final n = _safeParamName(prop.name);
+    buffer.writeln('    required this.$n,');
+  }
+  buffer.writeln('  });');
+  buffer.writeln();
+  buffer.writeln('  final $extName _value;');
+  buffer.writeln();
 
-  // Constructor that decodes from the extension type
-  buffer.writeln()
-    ..writeln('  $className($extName value) : this._(value);')
-    ..writeln();
-
-  // Factory from raw JSObject (for use with extension type)
-  buffer.writeln("  /// Decodes the shim's raw JS object.")
-    ..writeln('  factory $className.fromJs(JSObject js) => $className($extName(js));')
-    ..writeln();
-
-  // Generate getters that delegate to the extension type
   for (final prop in props) {
     final n = _safeParamName(prop.name);
     final dartType = _hookDartType(prop.type, registry);
-    if (prop.type.kind == 'function') {
-      buffer.writeln('  /// TS: ${_tsTypeDoc(prop.type)}')
-        ..writeln('  ${_nullableType(dartType, prop.required)} get $n => _value.$n;')
-        ..writeln();
-    } else {
-      buffer.writeln('  /// TS: ${_tsTypeDoc(prop.type)}')
-        ..writeln('  ${_nullableType(dartType, prop.required)} get $n => _value.$n.toDart;')
-        ..writeln();
-    }
+    final nullable = _nullableType(dartType, prop.required);
+    buffer
+      ..writeln('  /// TS: ${_tsTypeDoc(prop.type)}')
+      ..writeln('  final $nullable $n;');
   }
+
+  // Factory from raw JSObject (for use with extension type)
+  buffer.writeln();
+  buffer.writeln("  /// Decodes the shim's raw JS object.");
+  buffer.writeln('  factory $className.fromJs(JSObject js) {');
+  buffer.writeln('    final v = $extName(js);');
+  buffer.writeln('    return $className._(v,');
+  for (final prop in props) {
+    final n = _safeParamName(prop.name);
+    buffer.writeln('      $n: ${_hookExtMemberDecode(prop, 'v', registry)},');
+  }
+  buffer.writeln('    );');
+  buffer.writeln('  }');
+  buffer.writeln();
 
   if (def.type.name == 'Location') {
     buffer
@@ -1676,29 +1764,76 @@ String _emitHookClass(_ClassDef def, _TypeRegistry registry) {
   return buffer.toString();
 }
 
+/// Decode one member from the extension type (`v.$n`) into its Dart value.
+/// The extension type already provides typed property access; for object
+/// members we wrap the raw JSObject in the generated value class.
+String _hookExtMemberDecode(
+  TsIrProp prop,
+  String extVar,
+  _TypeRegistry registry,
+) {
+  final n = _safeParamName(prop.name);
+  final raw = '$extVar.$n';
+  if (prop.type.kind == 'function') {
+    if (prop.required) {
+      return _fnClosure(prop.type, raw, registry);
+    }
+    return '$raw == null ? null : ${_fnClosure(prop.type, '($raw as JSFunction)', registry)}';
+  }
+  if (prop.type.kind == 'object' &&
+      (prop.type.members ?? const <TsIrProp>[]).isNotEmpty) {
+    final target = _objectNameFor(prop.type, registry);
+    if (prop.required) {
+      return '$target.fromJs($raw as JSObject)';
+    }
+    return '$raw == null ? null : $target.fromJs($raw as JSObject)';
+  }
+  final decode = _elemDecode(prop.type, raw, registry);
+  if (prop.required) return decode;
+  return '$raw == null ? null : $decode';
+}
+
+String _hookExtType(TsIrType type) {
+  switch (type.kind) {
+    case 'string':
+      return 'JSString';
+    case 'number':
+      return 'JSNumber';
+    case 'boolean':
+      return 'JSBoolean';
+    case 'any':
+    case 'unknown':
+    case 'hostValue':
+    case 'void':
+    case 'null':
+    case 'reactNode':
+    case 'union':
+    case 'indexedAccess':
+      return 'JSAny?';
+    case 'literal':
+      final literals = _uniqueLiterals(type.literals ?? const []);
+      if (_isBoolUnion(literals)) return 'JSBoolean';
+      if (literals.length >= 2) return 'JSString';
+      return _literalDartType(literals) == 'String' ? 'JSString' : 'JSNumber';
+    case 'record':
+    case 'urlSearchParams':
+      return 'JSArray';
+    case 'object':
+    case 'array':
+    case 'tuple':
+      return 'JSObject';
+    case 'function':
+      return 'JSFunction';
+    default:
+      return 'JSObject';
+  }
+}
+
 /// Adds `?` to [type] unless it is already nullable; required props keep
 /// their declared type (`Object? state` stays `Object? state`, `String key`
 /// stays `String key`).
 String _nullableType(String type, bool required) =>
     required || type.endsWith('?') ? type : '$type?';
-
-/// Decode for one class member (from the pairs map).
-String _hookMemberDecode(
-  TsIrProp prop,
-  String source,
-  String fnVar,
-  _TypeRegistry registry,
-) {
-  if (prop.type.kind == 'function') {
-    if (prop.required) {
-      return _fnClosure(prop.type, fnVar, registry);
-    }
-    return '$source == null ? null : ${_fnClosure(prop.type, '($fnVar as JSFunction)', registry)}';
-  }
-  final decode = _elemDecode(prop.type, '$source!', registry);
-  if (prop.required) return decode;
-  return '$source == null ? null : $decode';
-}
 
 /// Generates a JS shim module that registers the bound components for the
 /// foreign-component bridge (`__reactDartRegisterComponent`), so
@@ -1739,7 +1874,9 @@ String generateShim({
     ..writeln()
     ..writeln('const components = {');
   for (final declaration in components) {
-    buffer.writeln("  '$prefix.${declaration.name}': $importName.${declaration.name},");
+    buffer.writeln(
+      "  '$prefix.${declaration.name}': $importName.${declaration.name},",
+    );
   }
   buffer
     ..writeln('};')
@@ -1749,12 +1886,11 @@ String generateShim({
     ..writeln('}');
 
   if (hooks.isNotEmpty) {
-    final bridgeTarget = namespace.isNotEmpty
-        ? '__reactDartBindings.$namespace'
-        : '__reactDartHooks';
     buffer
       ..writeln()
-      ..writeln('// Hook bridge: the generated Dart hooks (`--hooks` output) call')
+      ..writeln(
+        '// Hook bridge: the generated Dart hooks (`--hooks` output) call',
+      )
       ..writeln('// these members during render. Results are decoded into')
       ..writeln('// primitives or `[[key, value], ...]` pairs (via `toPairs`)')
       ..writeln('// because dart2js cannot cast a raw callAsFunction result.')
@@ -1762,8 +1898,12 @@ String generateShim({
       ..writeln('  if (v == null) return v;')
       ..writeln('  if (Array.isArray(v)) return v.map(toPairs);')
       ..writeln("  if (typeof v === 'object') {")
-      ..writeln("    if (typeof v.entries === 'function') return [...v.entries()];")
-      ..writeln("    return Object.entries(v).map(([k, val]) => [k, toPairs(val)]);")
+      ..writeln(
+        "    if (typeof v.entries === 'function') return [...v.entries()];",
+      )
+      ..writeln(
+        "    return Object.entries(v).map(([k, val]) => [k, toPairs(val)]);",
+      )
       ..writeln('  }')
       ..writeln('  return v;')
       ..writeln('};')
@@ -1793,8 +1933,17 @@ String _jsHookBody(TsIrDeclaration hook, String mod) {
   final call = '$mod.${hook.name}($args)';
   final returns = hook.returns;
   const simple = {
-    'string', 'number', 'boolean', 'any', 'unknown', 'void', 'null',
-    'reactNode', 'hostValue', 'literal', 'function',
+    'string',
+    'number',
+    'boolean',
+    'any',
+    'unknown',
+    'void',
+    'null',
+    'reactNode',
+    'hostValue',
+    'literal',
+    'function',
   };
   if (returns == null || simple.contains(returns.kind)) {
     return '($args) => $call';
@@ -1815,6 +1964,11 @@ String _jsDecodeExpr(TsIrType type, String expr) {
       // generated extension type provides typed property access.
       return expr;
     case 'array':
+      final element = type.element ?? const TsIrType(kind: 'any');
+      if (element.kind == 'object' &&
+          (element.members ?? const <TsIrProp>[]).isNotEmpty) {
+        return '($expr ?? []).map((x) => x)';
+      }
       return '($expr ?? []).map((x) => toPairs(x))';
     case 'tuple':
       final elements = type.elements ?? const <TsIrType>[];

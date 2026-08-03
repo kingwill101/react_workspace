@@ -22,9 +22,6 @@ for (const [name, component] of Object.entries(components)) {
   globalThis.__reactDartRegisterComponent?.(name, component);
 }
 
-globalThis.__reactDartBindings ??= Object.create(null);
-globalThis.__reactDartBindings.reactRouter = {};
-
 // Hook bridge: the generated Dart hooks (`--hooks` output) call
 // these members during render. Results are decoded into
 // primitives or `[[key, value], ...]` pairs (via `toPairs`)
@@ -42,22 +39,22 @@ const toPairs = (v) => {
 const hooks = {
   useHref: (a0, a1) => ReactRouterDom.useHref(a0, a1),
   useInRouterContext: () => ReactRouterDom.useInRouterContext(),
-  useLocation: () => ReactRouterDom.useLocation(),
+  useLocation: () => { const v = ReactRouterDom.useLocation(); return v; },
   useNavigate: () => ReactRouterDom.useNavigate(),
   useNavigationType: () => ReactRouterDom.useNavigationType(),
   useOutlet: (a0) => ReactRouterDom.useOutlet(a0),
-  useParams: () => ReactRouterDom.useParams(),
-  useSearchParams: (a0) => ReactRouterDom.useSearchParams(a0),
-  useMatches: () => ReactRouterDom.useMatches(),
-  useNavigation: () => ReactRouterDom.useNavigation(),
-  useRevalidator: () => ReactRouterDom.useRevalidator(),
-  useResolvedPath: (a0, a1) => ReactRouterDom.useResolvedPath(a0, a1),
+  useParams: () => { const v = ReactRouterDom.useParams(); return toPairs(v ?? {}); },
+  useSearchParams: (a0) => { const v = ReactRouterDom.useSearchParams(a0); return [toPairs(v[0]), v[1]]; },
+  useMatches: () => { const v = ReactRouterDom.useMatches(); return (v ?? []).map((x) => x); },
+  useNavigation: () => { const v = ReactRouterDom.useNavigation(); return v; },
+  useRevalidator: () => { const v = ReactRouterDom.useRevalidator(); return v; },
+  useResolvedPath: (a0, a1) => { const v = ReactRouterDom.useResolvedPath(a0, a1); return v; },
   useRouteError: () => ReactRouterDom.useRouteError(),
   useRouteLoaderData: (a0) => ReactRouterDom.useRouteLoaderData(a0),
   useRoutes: (a0, a1) => ReactRouterDom.useRoutes(a0, a1),
-  useBlocker: (a0) => ReactRouterDom.useBlocker(a0),
-  useFetcher: (a0) => ReactRouterDom.useFetcher(a0),
-  useFetchers: () => ReactRouterDom.useFetchers(),
+  useBlocker: (a0) => { const v = ReactRouterDom.useBlocker(a0); return v; },
+  useFetcher: (a0) => { const v = ReactRouterDom.useFetcher(a0); return v; },
+  useFetchers: () => { const v = ReactRouterDom.useFetchers(); return (v ?? []).map((x) => x); },
   useFormAction: (a0, a1) => ReactRouterDom.useFormAction(a0, a1),
   useLinkClickHandler: (a0, a1) => ReactRouterDom.useLinkClickHandler(a0, a1),
   useLoaderData: () => ReactRouterDom.useLoaderData(),
@@ -68,4 +65,6 @@ const hooks = {
   useAsyncError: () => ReactRouterDom.useAsyncError(),
 };
 
+globalThis.__reactDartBindings ??= Object.create(null);
 globalThis.__reactDartBindings.reactRouter = hooks;
+

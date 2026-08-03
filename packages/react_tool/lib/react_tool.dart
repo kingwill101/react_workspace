@@ -16,4 +16,5 @@ export 'src/ts_bindings.dart'
         TsIrProp,
         TsIrType,
         generateBindings,
+        generateHooks,
         generateShim;

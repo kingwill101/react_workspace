@@ -5,7 +5,7 @@ import 'package:example/server_actions.g.dart';
 import 'package:react_testing/react_testing.dart';
 import 'package:server_testing/server_testing.dart';
 
-const _appId = 'package:react_workspace/example/lib/app.dart#App';
+const _appId = 'package:example/lib/app.dart#App';
 
 Future<void> main() async {
   // Browser tests require a local Chromium/Chrome binary and the WebDriver
@@ -36,7 +36,8 @@ Future<void> main() async {
         if (File('/usr/bin/chromium').existsSync())
           'chromium': '/usr/bin/chromium',
       },
-      loggingEnabled: false,
+      loggingEnabled: true,
+      logDir: '/tmp/opencode/react_e2e_logs',
       defaultWaitTimeout: const Duration(seconds: 20),
     ),
   );
@@ -45,10 +46,11 @@ Future<void> main() async {
     'SSR hydrates and invokes a generated server function',
     (browser) async {
       final page = await _get('$baseUrl/');
-      expect(page, contains('Loading...'));
+      expect(page, contains('location: /'));
+      expect(page, contains('Home route — pick a destination above.'));
 
       await browser.visit('/');
-      await browser.waitForText('4 items');
+      await browser.waitForText('4 open');
       await browser.waitForText('Build server functions');
 
       final initiallyChecked = await browser.executeScript(
