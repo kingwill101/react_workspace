@@ -68,7 +68,7 @@ When esbuild is unavailable or bundling fails, the code copies the shim verbatim
 But the router shim contains:
 
 ```js
-import * as RRD from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 ```
 
 The browser import map currently only maps `react` and `react-dom`, not `react-router-dom`.
@@ -780,7 +780,7 @@ Status (implemented):
     * **Subpath specifiers** — `react ts bind react-router-dom/server StaticRouter` resolves through the package `exports` map via `oxc_resolver` instead of reading the top-level types entry; the CLI validates the top-level package directory for `a/b` specifiers.
     * **`ForwardRefExoticComponent` / qualified type names** — `type_name_base` now returns the *rightmost* segment (`React.ForwardRefExoticComponent` → `ForwardRefExoticComponent`), so `export declare const Link: React.ForwardRefExoticComponent<LinkProps & …>` extracts as a component; the `__ref` intersection marker is flattened in `props_for_expr`.
     * **Curated DOM attribute table** — `extends: Omit<AnchorHTMLAttributes<…>, "href">` clauses resolve against a curated member table (children, className, style, href, onClick, …) since `@types/react` is not installed in the managed environment; `Omit`/`Pick` key filtering is honored. This restores inherited props like `children` on `Link`.
-    * **`--shim`** — `generateShim()` emits a self-registering `.mjs` module (`import * as X from '…'; globalThis.__reactDartRegisterComponent?.(…)`) that esbuild inlines into the wrapper bundle; the CLI writes it alongside the bindings.
+    * **`--shim`** — `generateShim()` emits a self-registering `.mjs` module that imports only the referenced declarations as individual named imports (aliased `__reactDart<Name>`, so bundlers can tree-shake the rest of the package instead of pulling the whole namespace in) and calls `globalThis.__reactDartRegisterComponent?.(…)`; the CLI writes it alongside the bindings.
     * **`--type-prefix`** — namespaces generated type names so a second extraction (e.g. the `react-router-dom/server` subpath, whose `FutureConfig` differs from react-router's) cannot collide with the first file.
     * **Children param** — a `children` prop of any non-function kind becomes the typed `List<ReactNode> children = const []` parameter instead of a props-map entry; enum values are decoded (`"path"` → `path`) so `.value` matches what the JS side expects.
 

@@ -184,9 +184,9 @@ packages, publish a wrapper Dart package that ships a self-registering shim:
 
    ```js
    // lib/react_router_shim.mjs
-   import * as RRD from 'react-router-dom';
-   globalThis.__reactDartRegisterComponent?.('reactRouter.MemoryRouter', RRD.MemoryRouter);
-   globalThis.__reactDartRouter = { locationParts: () => { const l = RRD.useLocation(); return [l.pathname, l.search, l.hash, l.key]; } };
+   import { MemoryRouter, useLocation } from 'react-router-dom';
+   globalThis.__reactDartRegisterComponent?.('reactRouter.MemoryRouter', MemoryRouter);
+   globalThis.__reactDartRouter = { locationParts: () => { const l = useLocation(); return [l.pathname, l.search, l.hash, l.key]; } };
    ```
 
 2. The wrapper's pubspec declares the shim and its npm dependencies through

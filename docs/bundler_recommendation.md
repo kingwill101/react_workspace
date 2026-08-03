@@ -213,7 +213,7 @@ Avoid passing resolver or plugin callbacks repeatedly across FFI.
 
 ## The real tree-shaking problem
 
-The current design resembles:
+The original generated shim registered everything through a namespace import:
 
 ```javascript
 import * as Router from 'react-router-dom';
@@ -240,18 +240,18 @@ JS bundling knows which JS imports appear.
 Neither side currently communicates that information.
 ```
 
-A scalable generated shim should support individual imports:
+`generateShim()` now emits individual named imports (aliased `__reactDart<Name>`) for only the referenced declarations:
 
 ```javascript
 import {
-  Route,
-  useLocation,
-  useNavigate,
+  Route as __reactDartRoute,
+  useLocation as __reactDartUseLocation,
+  useNavigate as __reactDartUseNavigate,
 } from 'react-router-dom';
 
-registerComponent('reactRouter.Route', Route);
-registerHook('reactRouter.useLocation', useLocation);
-registerHook('reactRouter.useNavigate', useNavigate);
+registerComponent('reactRouter.Route', __reactDartRoute);
+registerHook('reactRouter.useLocation', __reactDartUseLocation);
+registerHook('reactRouter.useNavigate', __reactDartUseNavigate);
 ```
 
 However, direct imports alone are insufficient if every registration is still emitted. To get application-level tree shaking, the builder eventually needs a usage manifest:

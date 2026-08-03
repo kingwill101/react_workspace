@@ -324,9 +324,39 @@ void main() {
         declarations: const [greetingDecl],
         commandLine: 'react ts bind fake-pkg Greeting --shim',
       );
-      expect(shim, contains("import * as FakePkg from 'fake-pkg';"));
-      expect(shim, contains("'fakePkg.Greeting': FakePkg.Greeting,"));
+      expect(
+        shim,
+        contains("import { Greeting as __reactDartGreeting } from 'fake-pkg';"),
+      );
+      expect(shim, contains("'fakePkg.Greeting': __reactDartGreeting,"));
       expect(shim, contains('__reactDartRegisterComponent'));
+    });
+
+    test('generateShim imports only the referenced exports', () {
+      const decl = TsIrDeclaration(
+        name: 'useThing',
+        kind: 'hook',
+        props: [],
+        params: [TsIrProp(name: 'key', required: true, type: TsIrType(kind: 'string'))],
+        returns: TsIrType(kind: 'string'),
+      );
+      final shim = generateShim(
+        specifier: 'fake-pkg',
+        prefix: 'fakePkg',
+        declarations: const [greetingDecl, decl],
+        commandLine: 'x',
+      );
+      // No namespace import; both referenced exports are named imports.
+      expect(shim, isNot(contains('import * as')));
+      expect(
+        shim,
+        contains(
+          "import { Greeting as __reactDartGreeting, "
+          "useThing as __reactDartUseThing } from 'fake-pkg';",
+        ),
+      );
+      // Hook bodies call the aliased import, not a namespace member.
+      expect(shim, contains('useThing: (a0) => __reactDartUseThing(a0),'));
     });
 
     test('hooks extension types bind renamed props back to the JS name', () {

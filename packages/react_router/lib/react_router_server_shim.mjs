@@ -5,10 +5,10 @@
 // `reactRouter.*` names used by the generated Dart helpers.
 // Wire this module into react.yaml under `foreign.modules`.
 
-import * as ReactRouterDomServer from 'react-router-dom/server';
+import { StaticRouter as __reactDartStaticRouter } from 'react-router-dom/server';
 
 const components = {
-  'reactRouter.StaticRouter': ReactRouterDomServer.StaticRouter,
+  'reactRouter.StaticRouter': __reactDartStaticRouter,
 };
 
 for (const [name, component] of Object.entries(components)) {

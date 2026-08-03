@@ -5,17 +5,17 @@
 // `reactRouter.*` names used by the generated Dart helpers.
 // Wire this module into react.yaml under `foreign.modules`.
 
-import * as ReactRouterDom from 'react-router-dom';
+import { BrowserRouter as __reactDartBrowserRouter, MemoryRouter as __reactDartMemoryRouter, Routes as __reactDartRoutes, Route as __reactDartRoute, Link as __reactDartLink, NavLink as __reactDartNavLink, Outlet as __reactDartOutlet, Navigate as __reactDartNavigate, useHref as __reactDartUseHref, useInRouterContext as __reactDartUseInRouterContext, useLocation as __reactDartUseLocation, useNavigate as __reactDartUseNavigate, useNavigationType as __reactDartUseNavigationType, useOutlet as __reactDartUseOutlet, useParams as __reactDartUseParams, useSearchParams as __reactDartUseSearchParams, useMatches as __reactDartUseMatches, useNavigation as __reactDartUseNavigation, useRevalidator as __reactDartUseRevalidator, useResolvedPath as __reactDartUseResolvedPath, useRouteError as __reactDartUseRouteError, useRouteLoaderData as __reactDartUseRouteLoaderData, useRoutes as __reactDartUseRoutes, useBlocker as __reactDartUseBlocker, useFetcher as __reactDartUseFetcher, useFetchers as __reactDartUseFetchers, useFormAction as __reactDartUseFormAction, useLinkClickHandler as __reactDartUseLinkClickHandler, useLoaderData as __reactDartUseLoaderData, useSubmit as __reactDartUseSubmit, useActionData as __reactDartUseActionData, useOutletContext as __reactDartUseOutletContext, useAsyncValue as __reactDartUseAsyncValue, useAsyncError as __reactDartUseAsyncError } from 'react-router-dom';
 
 const components = {
-  'reactRouter.BrowserRouter': ReactRouterDom.BrowserRouter,
-  'reactRouter.MemoryRouter': ReactRouterDom.MemoryRouter,
-  'reactRouter.Routes': ReactRouterDom.Routes,
-  'reactRouter.Route': ReactRouterDom.Route,
-  'reactRouter.Link': ReactRouterDom.Link,
-  'reactRouter.NavLink': ReactRouterDom.NavLink,
-  'reactRouter.Outlet': ReactRouterDom.Outlet,
-  'reactRouter.Navigate': ReactRouterDom.Navigate,
+  'reactRouter.BrowserRouter': __reactDartBrowserRouter,
+  'reactRouter.MemoryRouter': __reactDartMemoryRouter,
+  'reactRouter.Routes': __reactDartRoutes,
+  'reactRouter.Route': __reactDartRoute,
+  'reactRouter.Link': __reactDartLink,
+  'reactRouter.NavLink': __reactDartNavLink,
+  'reactRouter.Outlet': __reactDartOutlet,
+  'reactRouter.Navigate': __reactDartNavigate,
 };
 
 for (const [name, component] of Object.entries(components)) {
@@ -37,32 +37,32 @@ const toPairs = (v) => {
 };
 
 const hooks = {
-  useHref: (a0, a1) => ReactRouterDom.useHref(a0, a1),
-  useInRouterContext: () => ReactRouterDom.useInRouterContext(),
-  useLocation: () => { const v = ReactRouterDom.useLocation(); return v; },
-  useNavigate: () => ReactRouterDom.useNavigate(),
-  useNavigationType: () => ReactRouterDom.useNavigationType(),
-  useOutlet: (a0) => ReactRouterDom.useOutlet(a0),
-  useParams: () => { const v = ReactRouterDom.useParams(); return toPairs(v ?? {}); },
-  useSearchParams: (a0) => { const v = ReactRouterDom.useSearchParams(a0); return [toPairs(v[0]), v[1]]; },
-  useMatches: () => { const v = ReactRouterDom.useMatches(); return (v ?? []).map((x) => x); },
-  useNavigation: () => { const v = ReactRouterDom.useNavigation(); return v; },
-  useRevalidator: () => { const v = ReactRouterDom.useRevalidator(); return v; },
-  useResolvedPath: (a0, a1) => { const v = ReactRouterDom.useResolvedPath(a0, a1); return v; },
-  useRouteError: () => ReactRouterDom.useRouteError(),
-  useRouteLoaderData: (a0) => ReactRouterDom.useRouteLoaderData(a0),
-  useRoutes: (a0, a1) => ReactRouterDom.useRoutes(a0, a1),
-  useBlocker: (a0) => { const v = ReactRouterDom.useBlocker(a0); return v; },
-  useFetcher: (a0) => { const v = ReactRouterDom.useFetcher(a0); return v; },
-  useFetchers: () => { const v = ReactRouterDom.useFetchers(); return (v ?? []).map((x) => x); },
-  useFormAction: (a0, a1) => ReactRouterDom.useFormAction(a0, a1),
-  useLinkClickHandler: (a0, a1) => ReactRouterDom.useLinkClickHandler(a0, a1),
-  useLoaderData: () => ReactRouterDom.useLoaderData(),
-  useSubmit: () => ReactRouterDom.useSubmit(),
-  useActionData: () => ReactRouterDom.useActionData(),
-  useOutletContext: () => ReactRouterDom.useOutletContext(),
-  useAsyncValue: () => ReactRouterDom.useAsyncValue(),
-  useAsyncError: () => ReactRouterDom.useAsyncError(),
+  useHref: (a0, a1) => __reactDartUseHref(a0, a1),
+  useInRouterContext: () => __reactDartUseInRouterContext(),
+  useLocation: () => { const v = __reactDartUseLocation(); return v; },
+  useNavigate: () => __reactDartUseNavigate(),
+  useNavigationType: () => __reactDartUseNavigationType(),
+  useOutlet: (a0) => __reactDartUseOutlet(a0),
+  useParams: () => { const v = __reactDartUseParams(); return toPairs(v ?? {}); },
+  useSearchParams: (a0) => { const v = __reactDartUseSearchParams(a0); return [toPairs(v[0]), v[1]]; },
+  useMatches: () => { const v = __reactDartUseMatches(); return (v ?? []).map((x) => x); },
+  useNavigation: () => { const v = __reactDartUseNavigation(); return v; },
+  useRevalidator: () => { const v = __reactDartUseRevalidator(); return v; },
+  useResolvedPath: (a0, a1) => { const v = __reactDartUseResolvedPath(a0, a1); return v; },
+  useRouteError: () => __reactDartUseRouteError(),
+  useRouteLoaderData: (a0) => __reactDartUseRouteLoaderData(a0),
+  useRoutes: (a0, a1) => __reactDartUseRoutes(a0, a1),
+  useBlocker: (a0) => { const v = __reactDartUseBlocker(a0); return v; },
+  useFetcher: (a0) => { const v = __reactDartUseFetcher(a0); return v; },
+  useFetchers: () => { const v = __reactDartUseFetchers(); return (v ?? []).map((x) => x); },
+  useFormAction: (a0, a1) => __reactDartUseFormAction(a0, a1),
+  useLinkClickHandler: (a0, a1) => __reactDartUseLinkClickHandler(a0, a1),
+  useLoaderData: () => __reactDartUseLoaderData(),
+  useSubmit: () => __reactDartUseSubmit(),
+  useActionData: () => __reactDartUseActionData(),
+  useOutletContext: () => __reactDartUseOutletContext(),
+  useAsyncValue: () => __reactDartUseAsyncValue(),
+  useAsyncError: () => __reactDartUseAsyncError(),
 };
 
 globalThis.__reactDartBindings ??= Object.create(null);
