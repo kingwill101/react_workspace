@@ -12,6 +12,23 @@ environment:
 react:
   js:
     schema: 1
+    # `react ts bind` (no arguments) regenerates these groups. `names` is
+    # omitted so the extractor discovers the exported components and hooks
+    # itself, filtering out exports that don't return a React node.
+    bind:
+      - specifier: react-router-dom
+        output: lib/react_router_bindings.g.dart
+        shim: lib/react_router_bindings_shim.mjs
+        hooks: lib/react_router_hooks.g.dart
+        namespace: reactRouter
+        prefix: reactRouter
+      - specifier: react-router-dom/server
+        output: lib/react_router_server_bindings.g.dart
+        shim: lib/react_router_server_shim.mjs
+        prefix: reactRouter
+        # Keeps the server file's generated types distinct from the main
+        # file's (both extract `FutureConfig` from react-router-dom).
+        typePrefix: Server
     entries:
       browser: lib/react_router_bindings_shim.mjs
       ssr: lib/react_router_shim.mjs
@@ -26,4 +43,5 @@ react:
 dependencies:
   react: {path: ../react}
 dev_dependencies:
+  react_tool: {path: ../react_tool}
   test: ^1.31.2
