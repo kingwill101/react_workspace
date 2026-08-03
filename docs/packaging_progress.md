@@ -699,7 +699,9 @@ react:
 build/react/
 ├── client.js                      # dart2js browser app
 ├── ssr.js                         # dart2js SSR entry (node worker)
-├── ssr_worker.mjs                 # tool-generated node worker (shims + imports)
+├── browser.entry.mjs              # target bootstrap: sets React globals, then loads trampoline/foreign/client
+├── ssr.entry.mjs                  # target bootstrap: sets React globals, loads trampoline/foreign/ssr.js + runtime
+├── ssr_runtime.mjs                # HTTP worker (server + error-boundary fallback)
 ├── callback_trampoline.mjs        # js bridge protocol asset
 ├── foreign/
 │   ├── browser/
@@ -710,26 +712,36 @@ build/react/
 │       ├── entry.mjs
 │       └── bundle.mjs
 ├── foreign_components.g.dart      # typed Dart bindings for foreign components
-├── index.html                     # import map + <script src="foreign/browser/bundle.mjs">
+├── bundle_manifest.json           # deterministic artifact manifest (entries, bytes, bundler, mode)
+├── index.html                     # import map + single <script src="browser.entry.mjs">
 └── manifest.json
 ```
 
-Naming note: esbuild renames `.mjs` entries to `.js` under `outdir`, so the tool passes an explicit `outfile: …/bundle.mjs`. All references (the page's script tag, the worker's import) point at `bundle.mjs`; the `entry.mjs` files are bundle inputs that may remain as dead weight.
+Naming note: esbuild renames `.mjs` entries to `.js` under `outdir`, so the tool passes an explicit `outfile: …/bundle.mjs`. All references (the entry bootstrap, the worker's import) point at `bundle.mjs`; the `entry.mjs` files are bundle inputs that may remain as dead weight.
+
+The `browser.entry.mjs` bootstrap absorbs the inline `globalThis.React` bootstrap that used to live in `index.html`: it sets the React/ReactDOM globals, then dynamically imports the trampoline, the foreign bundle, and `client.js`. Dynamic imports are required because ES module semantics hoist static imports ahead of the body — the foreign graph and Dart app must not run before the globals are set (a static-import variant produced a broken hydration pass). The importmap stays in `index.html` because the browser resolves the bare `react`/`react-dom` specifiers, not the bundler.
+
+`ssr.entry.mjs` does the same for the node target and hands off to `ssr_runtime.mjs` for the HTTP server and error-boundary fallback.
 
 Browser:
 
 ```html
-<script type="module" src="foreign/browser/bundle.mjs"></script>
-<script type="module" src="client.js"></script>
+<script type="importmap">{…react/react-dom pinned…}</script>
+<script type="module" src="browser.entry.mjs"></script>
 ```
 
-SSR worker:
+SSR bootstrap (`ssr.entry.mjs`):
 
 ```js
 globalThis.require ??= createRequire('<envNpmRoot>/x.js');  // UMD dynamic require
+globalThis.self ??= globalThis;                             // dart2js crypto access
+await import('./callback_trampoline.mjs');
 await import('./foreign/ssr/bundle.mjs');
 await import('./ssr.js');
+await import('./ssr_runtime.mjs');
 ```
+
+`react serve` and the `react_testing` harness resolve the SSR entry (and, by extension, all target artifacts) from `bundle_manifest.json` via `BundleManifest.load`, falling back to the legacy `ssr.entry.mjs` name when no manifest was emitted.
 
 # Implementation details that diverged from the design
 
@@ -738,10 +750,10 @@ These decisions were forced by the ecosystem while implementing:
 * **Rust/oxc instead of the managed-JS `typescript` package for item 11** — the design phase planned a Node-side extraction driver (tool-owned `typescript` devDependency + `createProgram` + `checker.getExportsOfModule`). The user directed a native approach instead: `oxc_parser` 0.142 + `oxc_resolver` 11.24 (`resolve_dts`, which matches `ts.resolveModuleName` with bundler resolution and always adds the `types` condition) compiled as a code asset via `native_toolchain_rust` (the pattern from `keyring_native`). Trade-offs: a cargo/rustup requirement on machines that build `react_tool` (native assets build once per config, cached in `.dart_tool`), but no Node toolchain in the build path and a much smaller extracted surface (the driver only walks exports + type imports, so heavy runtime graphs like `@remix-run/router` are bounded by a 400-file cap and a depth limit). The FFI externals are hand-written (`src/ts_bindings.g.dart`), mirroring the `@ffi.Native` + assetName convention; the externals' file path must match the `RustBuilder` assetName for the VM to link them.
 
 * **`npm view <name> versions --json` + local range filtering** — modern npm rejects range specifiers containing spaces/`>` in `npm view pkg@range` (`EINVALIDTAGNAME`). The tool fetches the full version list once and filters locally against every wrapper's range.
-* **Driver protocol** — esbuild is invoked programmatically by a tool-owned `driver.mjs` in the environment; build options arrive as JSON argv. The npm root travels via `REACT_NPM_ROOT` because esbuild rejects unknown option keys.
+* **Driver protocol** — esbuild is invoked programmatically by a tool-owned `esbuild_driver.mjs` in the environment; build options arrive as JSON argv. The npm root travels via `REACT_NPM_ROOT` because esbuild rejects unknown option keys.
 * **SSR externals via node-externals plugin** — the SSR bundle keeps `react`/`react-dom` external, so the driver's `onResolve` rewrites those bare specifiers to absolute paths inside the managed environment (`require.resolve` against the npm root), guaranteeing the worker and the foreign bundle share one React instance.
 * **Import-map pinning** — the browser import map (`https://esm.sh/react@X.Y.Z`) is rewritten to the environment's exact resolved `reactVersion` on every build (idempotent), so browser and SSR always agree on one React release.
-* **Node compat shims in `ssr_worker.mjs`** — the worker runs dart2js output in Node and needs two aliases injected by the generator:
+* **Node compat shims in `ssr.entry.mjs`** — the bootstrap runs dart2js output in Node and needs two aliases injected by the generator:
   * `globalThis.require ??= createRequire('<envNpmRoot>/x.js')` — react-router-dom's UMD build calls dynamic `require('react')` at init; this binds it to the same managed React instance.
   * `globalThis.self ??= globalThis` — dart2js compiles `Random.secure()` to `self.crypto.getRandomValues(...)`; uuid (a riverpod 3 dependency) calls it at module init. Node ≥18 exposes `globalThis.crypto` (webcrypto).
 * **`.installed` marker + manifest-content comparison** — a rebuild skips `npm install` when the generated manifest content is unchanged since the last successful install; the marker file is the install record.
@@ -753,12 +765,12 @@ Status (implemented):
 
 1. ✅ `react.shims` / `react.npm` replaced by the versioned `react.js` descriptor (schema 1); the old fields are still accepted for compatibility (`JsWrapperDescriptor.parse`).
 2. ✅ Separate browser and SSR aggregate entry files (`foreign/browser/entry.mjs`, `foreign/ssr/entry.mjs`).
-3. ✅ One esbuild run per target (`driver.mjs` + JSON options, pinned esbuild from the managed environment).
+3. ✅ One esbuild run per target (`esbuild_driver.mjs` + JSON options, pinned esbuild from the managed environment).
 4. ✅ The copy fallback is removed — bundling failures are fatal.
 5. ✅ Dependency provenance and version-conflict diagnostics (`NpmRequirement` + `JsDependencyConflict`, listing every declaring wrapper).
 6. ✅ Automatic installations moved into `.dart_tool/react/js` (never the host `package.json`); reinstall detection via manifest-content comparison + `.installed` marker.
 7. ✅ esbuild pinned as a devDependency of the managed environment (host fallback only in host mode).
-8. ✅ One resolved React version: the import map is rewritten to the exact version the environment resolved, and the SSR worker imports react/react-dom through absolute paths in that same environment.
+8. ✅ One resolved React version: the import map is rewritten to the exact version the environment resolved, and the SSR bootstrap imports react/react-dom through absolute paths in that same environment.
 9. ✅ `managed` (default) and `host` JS-environment modes (`react.yaml foreign.host: true`); `react js install` / `react js sync` subcommands.
 10. ✅ Prebuilt wrapper support — wrappers ship already-bundled per-target artifacts (`prebuilt.browser` / `prebuilt.ssr`); the build imports them into the aggregate and esbuild keeps react/react-dom external. A prebuilt-only wrapper contributes no npm `dependencies` (they are inlined by the wrapper author), so no installation is forced beyond the framework singletons. Verified end-to-end: the real pinned esbuild bundles a prebuilt file and the node-externals plugin rewrites its bare `react` import to the managed env path, loading against the same 18.3.1 instance.
 11. ✅ TypeScript module resolution for `.d.ts` discovery and binding generation — a native **oxc**-based extractor ships inside `react_tool` as a code asset (`native/`, built via `native_toolchain_rust` + `hook/build.dart`; crate `react-ts-bindings`, C ABI: `tsb_extract(requestJson, npmRoot)`). It resolves a package's types entry (`types`/`typings`/`exports["."]`), loads the `.d.ts` graph with `oxc_resolver::resolve_dts` (types-condition + relative/bare imports), and serializes requested exported declarations to a JSON IR (props, optionality, string/number/boolean/any/array/object/union/function/reactNode/literal kinds; `Partial<T>`, interface `extends`, unions-of-interfaces, and cross-file references resolved against the declaration store; depth/cycle guarded; named interface references carry their TS name). `react ts bind <specifier> <names...>` (CLI) pipes that IR through `generateBindings` (Dart) into **strongly-typed** helpers: components become `foreignComponent('prefix.Name', ...)` functions with a Dart class per object prop (nested members, `toJson()` for the JS bridge), literal unions become enums, callbacks become typedefs + `ReactCallback` factories, and prim aliases become typedefs. Verified end-to-end against `react-router-dom`: `MemoryRouter`/`Route`/`NavigateProps` extracted (10 type files); `example/lib/reactRouterDom_bindings.g.dart` emits `FutureConfig`, `NavigateProps`, `NavigatePropsRelative`, analyzes clean, and a runtime smoke test exercises the helpers. The managed-JS `typescript`-package plan from the research phase was **rejected in favor of this Rust design** (user-directed): oxc gives a single dependency-free binary, no Node toolchain needed for the build tool, and it stays strictly inside `react_tool` — never in exposed packages, no FFI in browser contexts.
@@ -775,6 +787,8 @@ Status (implemented):
     **`react_router` is now generated**: `lib/react_router_bindings.g.dart` (BrowserRouter, MemoryRouter, Routes, Route, Link, NavLink, Outlet, Navigate) + `lib/react_router_server_bindings.g.dart` (StaticRouter, `--type-prefix Server`), with shims registered through the handwritten `react_router_shim.mjs` (which imports both generated shims and still owns the `__reactDartRouter` hook bridge for `react_router_hooks.dart`). `react_router.dart` re-exports the generated helpers; example callsites (`router_demo.dart`, `route_content.dart`, `route_item.dart`) and the package tests were migrated to the generated names. Verified: `react_router` 7/7 tests, SSR worker renders the router demo through the new bundles (`location: /`, route matching, `router-link` markup).
 
     **Dart helpers carry the bare component name** (`outlet()`, `navigate()`, `memoryRouter(children:, initialEntries:)`, `route(path:, element:)`, `link(to:, children:)`, …) — the `--prefix` value is used *only* for the JS registration keys (`reactRouter.*`) the shim registers and the Dart `foreignComponent('reactRouter.Name', …)` lookups reference; it never leaks into Dart function names, so generated APIs read like handwritten ones. (A `hide link` is still needed where `react_web`'s `<link>` element helper is imported alongside the router's `Link`.)
+
+12. ✅ Bundler abstraction + target-aware packaging layer — `JavaScriptBundler` interface with the existing esbuild path contained behind it (`EsbuildBundler`, `packages/react_tool/lib/src/bundler/`), explicit per-target bootstrap entries (`browser.entry.mjs`, `ssr.entry.mjs` + `ssr_runtime.mjs` split), a deterministic `bundle_manifest.json` (schema 1, bundler, mode, per-target entry/dart/runtime/foreign + byte sizes), and a `BundleManifest` model consumed by `react serve` and the `react_testing` harness (falling back to legacy names). esbuild metafiles enabled with output size + duration logging. Foreign bundles verified byte-for-byte identical to the pre-refactor output (browser `1e4b38e3…`, ssr `c8a81a5e…`); browser E2E (hydration + server function) green. Design record: `docs/bundler_recommendation.md`.
 
 The existing mechanism demonstrates that wrappers can self-register and be discovered through Dart package metadata. That part is valuable. The permanent design should make the **module specifier** the contract, make esbuild the resolver, separate browser and Node outputs, and keep all automatically managed npm state out of the consumer’s source-controlled manifest.
 
