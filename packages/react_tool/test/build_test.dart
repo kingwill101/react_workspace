@@ -519,6 +519,12 @@ globalThis.ReactDOM = ReactDOM;
       expect(ssr['dart'], 'ssr.js');
       expect(ssr['runtime'], 'ssr_runtime.mjs');
       expect(ssr['foreign'], 'foreign/ssr/bundle.mjs');
+
+      final parsed = BundleManifest.load(Directory('${root.path}/build/react'));
+      expect(parsed.bundler, 'esbuild');
+      expect(parsed.browserEntry, 'browser.entry.mjs');
+      expect(parsed.ssrEntry, 'ssr.entry.mjs');
+      expect(parsed.ssr?.runtime, 'ssr_runtime.mjs');
     },
   );
 }

@@ -49,8 +49,11 @@ final class ReactTestHarness {
     ReactSsrClient? ssrClient;
     try {
       if (ssr) {
+        final manifest = BundleManifest.load(
+          config.directory(config.outputDirectory),
+        );
         final workerFile = config.file(
-          '${config.outputDirectory}/ssr.entry.mjs',
+          '${config.outputDirectory}/${manifest.ssrEntry ?? 'ssr.entry.mjs'}',
         );
         if (!workerFile.existsSync()) {
           throw ReactToolException(

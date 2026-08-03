@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:artisanal/args.dart';
 import 'package:path/path.dart' as p;
 import 'build.dart';
+import 'bundler/bundle_manifest.dart';
 import 'project_config.dart';
 import 'ts_bindings.dart';
 
@@ -466,8 +467,11 @@ final class ServeCommand extends Command<void> {
   ) async {
     Process? worker;
     try {
+      final manifest = BundleManifest.load(
+        config.directory(config.outputDirectory),
+      );
       final workerFile = config.file(
-        '${config.outputDirectory}/ssr.entry.mjs',
+        '${config.outputDirectory}/${manifest.ssrEntry ?? 'ssr.entry.mjs'}',
       );
       if (!noSsr && workerFile.existsSync()) {
         worker = await Process.start(

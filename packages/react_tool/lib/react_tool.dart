@@ -1,6 +1,8 @@
 /// Public APIs for the React Dart project tool.
 library;
 
+export 'src/bundler/bundle_manifest.dart'
+    show BundleManifest, BundleManifestTarget;
 export 'src/build.dart' show ReactBuilder;
 export 'src/cli.dart' show ReactCommandRunner, runReactTool;
 export 'src/js_environment.dart'
