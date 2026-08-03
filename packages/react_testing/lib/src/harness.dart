@@ -50,7 +50,7 @@ final class ReactTestHarness {
     try {
       if (ssr) {
         final workerFile = config.file(
-          '${config.outputDirectory}/ssr_worker.mjs',
+          '${config.outputDirectory}/ssr.entry.mjs',
         );
         if (!workerFile.existsSync()) {
           throw ReactToolException(

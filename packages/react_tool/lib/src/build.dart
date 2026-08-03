@@ -6,6 +6,10 @@ import 'package:path/path.dart' as p;
 import 'package:sass/sass.dart' as sass;
 import 'package:yaml/yaml.dart';
 
+import 'bundler/bundle_request.dart';
+import 'bundler/bundle_result.dart';
+import 'bundler/bundler.dart';
+import 'bundler/esbuild_bundler.dart';
 import 'js_environment.dart';
 import 'project_config.dart';
 import 'styles.dart';
@@ -20,6 +24,8 @@ final class ReactBuilder {
   /// (defaults to `npm`; may be an absolute path for testing).
   final String npmCommand;
 
+  JavaScriptBundler? _bundler;
+
   ReactBuilder({
     required this.config,
     required this.release,
@@ -33,6 +39,9 @@ final class ReactBuilder {
 
   Future<void> build() async {
     final jsEnvironment = await _prepareJsEnvironment();
+    _bundler = jsEnvironment == null
+        ? null
+        : EsbuildBundler(environment: jsEnvironment);
 
     // Generate style bindings before code generation so client entrypoints may
     // import them during the same build.
@@ -57,6 +66,7 @@ final class ReactBuilder {
     await _writeStylesheetLinks(output);
     await _writeForeignComponents(jsEnvironment);
 
+    var hasClient = false;
     final client = config.clientEntrypoint;
     if (client != null && config.file(client).existsSync()) {
       await _compile(
@@ -64,11 +74,13 @@ final class ReactBuilder {
         output: p.join(config.outputDirectory, 'client.js'),
         optimization: release ? '-O2' : '-O0',
       );
-      await _writeBrowserRuntime(jsEnvironment);
+      hasClient = true;
+      await _writeBrowserEntry(jsEnvironment);
     } else {
       log('Skipping client build: ${client ?? '(not configured)'} not found.');
     }
 
+    var hasSsr = false;
     final ssr = config.ssrEntrypoint;
     if (ssr != null && config.file(ssr).existsSync()) {
       await _compile(
@@ -76,7 +88,8 @@ final class ReactBuilder {
         output: p.join(config.outputDirectory, 'ssr.js'),
         optimization: '-O2',
       );
-      await _writeSsrWorker(jsEnvironment);
+      hasSsr = true;
+      await _writeSsrBootstrap(jsEnvironment);
     } else {
       log('Skipping SSR build: ${ssr ?? '(not configured)'} not found.');
     }
@@ -84,6 +97,7 @@ final class ReactBuilder {
     await File(
       p.join(output.path, 'manifest.json'),
     ).writeAsString('${config.toJsonString()}\n');
+    await _writeBundleManifest(hasClient: hasClient, hasSsr: hasSsr);
   }
 
   /// Copies build_runner outputs (`.react.dart`, `.action.g.dart`, …) from
@@ -325,8 +339,10 @@ final class ReactBuilder {
         if (isDefault && registered.length == 1) {
           buffer
             ..writeln("import _foreignDefault from ${jsonEncode(path)};")
-            ..writeln("globalThis.__reactDartRegisterComponent("
-                "'${registered.single.name}', _foreignDefault);");
+            ..writeln(
+              "globalThis.__reactDartRegisterComponent("
+              "'${registered.single.name}', _foreignDefault);",
+            );
           continue;
         }
         for (final r in registered) {
@@ -334,14 +350,20 @@ final class ReactBuilder {
           if (r.export == null || r.export == 'default') {
             buffer
               ..writeln("import $local from ${jsonEncode(path)};")
-              ..writeln("globalThis.__reactDartRegisterComponent("
-                  "'${r.name}', $local);");
+              ..writeln(
+                "globalThis.__reactDartRegisterComponent("
+                "'${r.name}', $local);",
+              );
           } else {
             buffer
-              ..writeln("import { ${r.export} as $local } "
-                  "from ${jsonEncode(path)};")
-              ..writeln("globalThis.__reactDartRegisterComponent("
-                  "'${r.name}', $local);");
+              ..writeln(
+                "import { ${r.export} as $local } "
+                "from ${jsonEncode(path)};",
+              )
+              ..writeln(
+                "globalThis.__reactDartRegisterComponent("
+                "'${r.name}', $local);",
+              );
           }
         }
       }
@@ -362,56 +384,55 @@ final class ReactBuilder {
     await _writeForeignBindings();
   }
 
-  /// Bundles one target aggregate with esbuild under the target's platform
-  /// conditions. Failure is fatal — there is no unbundled fallback.
-  Future<void> _bundleTarget({
+  /// Bundles one target aggregate through the selected JavaScript bundler
+  /// under the target's platform conditions. Failure is fatal — there is no
+  /// unbundled fallback.
+  Future<BundleResult> _bundleTarget({
     required JsEnvironment? environment,
     required String target,
     required String entry,
     required String outfile,
   }) async {
-    if (environment == null) {
+    final bundler = _bundler;
+    if (environment == null || bundler == null) {
       throw const ReactToolException(
         'Foreign modules require a managed JS environment, but none was '
         'provisioned. Run: react js install',
       );
     }
-    final esbuildEntry = await environment.esbuildEntry();
-    final driver = File(p.join(environment.root.path, 'driver.mjs'));
-    await driver.parent.create(recursive: true);
-    // Always refresh: the driver is tool-owned protocol and may evolve
-    // between react_tool versions.
-    await driver.writeAsString(_esbuildDriver);
 
-    final externals = await _mergedExternals();
-    final options = {
-      'entryPoints': [entry],
-      'outfile': outfile,
-      'bundle': true,
-      'format': 'esm',
-      'platform': target == 'ssr' ? 'node' : 'browser',
-      if (target == 'ssr') 'target': ['node20'],
-      'external': externals,
-      'conditions': [release ? 'production' : 'development'],
-      'minify': release,
-      'sourcemap': release ? false : 'linked',
-      'logLevel': 'info',
-      'nodePaths': [environment.npmRoot],
-    };
-    final result = await Process.run('node', [
-      driver.path,
-      esbuildEntry.path,
-      jsonEncode(options),
-    ], environment: {
-      ...Platform.environment,
-      // Consumed by the driver's node-externals plugin.
-      'REACT_NPM_ROOT': environment.npmRoot,
-    });
-    if (result.exitCode != 0) {
-      throw ReactToolException(
-        'esbuild $target bundle failed:\n${result.stderr}',
-      );
+    final result = await bundler.bundle(
+      BundleRequest(
+        name: 'foreign-$target',
+        target: target == 'ssr'
+            ? JavaScriptTarget.node
+            : JavaScriptTarget.browser,
+        entryPoints: [entry],
+        outputFile: outfile,
+        workingDirectory: config.root.path,
+        npmRoot: environment.npmRoot,
+        externals: await _mergedExternals(),
+        conditions: [release ? 'production' : 'development'],
+        minify: release,
+        sourceMaps: !release,
+      ),
+    );
+    for (final warning in result.warnings) {
+      log('esbuild warning ($target): $warning');
     }
+    log(
+      'Bundled ${result.outputFile} '
+      '(${_formatBytes(result.outputBytes)}, '
+      '${result.duration.inMilliseconds} ms)',
+    );
+    return result;
+  }
+
+  String _formatBytes(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    final kib = bytes / 1024;
+    if (kib < 1024) return '${kib.toStringAsFixed(1)} KiB';
+    return '${(kib / 1024).toStringAsFixed(1)} MiB';
   }
 
   /// Externals declared by the project and every wrapper (deduplicated),
@@ -430,7 +451,8 @@ final class ReactBuilder {
   /// project declares foreign modules/components directly.
   Future<JsEnvironment?> _prepareJsEnvironment() async {
     final wrappers = await _discoverWrappers();
-    final needsEnvironment = config.foreignComponents.isNotEmpty ||
+    final needsEnvironment =
+        config.foreignComponents.isNotEmpty ||
         config.foreignModules.isNotEmpty ||
         wrappers.any((w) => !w.isEmpty);
     if (!needsEnvironment) return null;
@@ -648,11 +670,45 @@ final class ReactBuilder {
     }
   }
 
-  Future<void> _writeBrowserRuntime(JsEnvironment? environment) async {
+  Future<void> _writeBrowserEntry(JsEnvironment? environment) async {
     final output = config.directory(config.outputDirectory);
     await File(
       p.join(output.path, 'callback_trampoline.mjs'),
     ).writeAsString(_callbackTrampoline);
+
+    final wrappers = await _discoverWrappers();
+    final hasForeign =
+        config.foreignComponents.isNotEmpty ||
+        config.foreignModules.isNotEmpty ||
+        wrappers.any((w) => !w.isEmpty);
+
+    // The entry absorbs the inline React bootstrap that used to live in
+    // index.html: it sets globalThis.React/ReactDOM before importing the
+    // trampoline, the foreign bundle, and the Dart client output. The
+    // importmap stays in index.html because the browser resolves the bare
+    // react specifier, not esbuild.
+    //
+    // The trampoline/foreign/client are loaded with dynamic imports: static
+    // imports are hoisted and evaluated before this module's body runs, which
+    // would execute the foreign graph and client.js with globalThis.React
+    // still unset. Dynamic imports preserve the old inline-bootstrap ordering
+    // (globals first, then registrations, then the Dart app).
+    final buffer = StringBuffer()
+      ..writeln('// Generated by react_tool.')
+      ..writeln("import React from 'react';")
+      ..writeln("import ReactDOM from 'react-dom/client';")
+      ..writeln()
+      ..writeln('globalThis.React = React;')
+      ..writeln('globalThis.ReactDOM = ReactDOM;')
+      ..writeln()
+      ..writeln("await import('./callback_trampoline.mjs');");
+    if (hasForeign) {
+      buffer.writeln("await import('./foreign/browser/bundle.mjs');");
+    }
+    buffer.writeln("await import('./client.js');");
+    final entryFile = File(p.join(output.path, 'browser.entry.mjs'));
+    await entryFile.writeAsString(buffer.toString());
+    log('Generated ${p.join(config.outputDirectory, 'browser.entry.mjs')}');
 
     final index = File(p.join(output.path, 'index.html'));
     if (!index.existsSync()) return;
@@ -667,38 +723,51 @@ final class ReactBuilder {
             'https://esm.sh/${match.group(1)}@${environment.reactVersion}',
       );
     }
-    if (source.contains('callback_trampoline.mjs')) {
+    if (source.contains('browser.entry.mjs')) {
       await index.writeAsString(source);
       return;
     }
 
-    const clientScript = '<script type="module" src="client.js"></script>';
-    const runtimeScript =
-        '<script type="module" src="callback_trampoline.mjs"></script>';
-    final wrappers = await _discoverWrappers();
-    final hasForeign = config.foreignComponents.isNotEmpty ||
-        config.foreignModules.isNotEmpty ||
-        wrappers.any((w) => !w.isEmpty);
-    final foreignScript = hasForeign
-        ? '<script type="module" src="foreign/browser/bundle.mjs"></script>'
-        : '';
-    final scripts = [
-      runtimeScript,
-      if (foreignScript.isNotEmpty) foreignScript,
-    ].join('\n');
-    final updated = source.contains(clientScript)
-        ? source.replaceFirst(clientScript, '$scripts\n$clientScript')
-        : '$source\n$scripts\n';
-    await index.writeAsString(updated);
+    // Replace the inline React bootstrap and the per-file module tags with a
+    // single entry module (idempotent; also handles fresh templates that only
+    // contain the inline bootstrap and the client tag).
+    source = source
+        .replaceAll(
+          RegExp(
+            r'<script[^>]*src="callback_trampoline\.mjs"[^>]*>\s*</script>',
+          ),
+          '',
+        )
+        .replaceAll(
+          RegExp(
+            r'<script[^>]*src="foreign/browser/bundle\.mjs"[^>]*>\s*</script>',
+          ),
+          '',
+        )
+        .replaceAll(
+          RegExp(r'<script[^>]*src="client\.js"[^>]*>\s*</script>'),
+          '',
+        );
+    source = source.replaceAllMapped(
+      RegExp(r'<script[^>]*>([\s\S]*?)</script>'),
+      (match) =>
+          match.group(1)!.contains('globalThis.React') ? '' : match.group(0)!,
+    );
+    const entryScript =
+        '<script type="module" src="browser.entry.mjs"></script>';
+    source = source.contains('</body>')
+        ? source.replaceFirst('</body>', '$entryScript\n</body>')
+        : '$source\n$entryScript';
+    await index.writeAsString(source);
   }
 
-  Future<void> _writeSsrWorker(JsEnvironment? environment) async {
+  Future<void> _writeSsrBootstrap(JsEnvironment? environment) async {
     final output = config.directory(config.outputDirectory);
-    var worker = _ssrWorker;
+    var entry = _ssrEntry;
     if (environment != null) {
       // Import React through the environment's exact versions so the worker
       // shares one instance with the foreign bundle.
-      worker = worker
+      entry = entry
           .replaceFirst(
             "import React from 'react';",
             "import React from '${environment.resolveForNode('react')}';",
@@ -706,31 +775,70 @@ final class ReactBuilder {
           .replaceFirst(
             "import ReactDOMServer from 'react-dom/server';",
             "import ReactDOMServer from "
-            "'${environment.resolveForNode('react-dom/server')}';",
+                "'${environment.resolveForNode('react-dom/server')}';",
           )
           .replaceFirst(
-            "import http from 'node:http';",
-            "import http from 'node:http';\n"
-                "import { createRequire } from 'node:module';\n"
-                // The node bundles keep react/react-dom external; some
-                // packages (e.g. react-router-dom's UMD build) require them
-                // dynamically at init. Bind require to the environment's npm
-                // root so it resolves the SAME installed instances.
-                "globalThis.require ??= createRequire("
-                "${jsonEncode(p.join(environment.npmRoot, 'x.js'))});\n"
-                // dart2js's Random.secure() reads `self.crypto` (uuid, used
-                // by riverpod 3 for element ids, calls it at startup). Node
-                // has no `self`; alias it to the global, whose `crypto` is
-                // node's webcrypto.
-                "globalThis.self ??= globalThis;",
-          )
-          .replaceFirst(
-            "./foreign_components.mjs",
-            './foreign/ssr/bundle.mjs',
+            "globalThis.require ??= createRequire('./x.js');",
+            "globalThis.require ??= createRequire("
+                "${jsonEncode(p.join(environment.npmRoot, 'x.js'))});",
           );
     }
-    await File(p.join(output.path, 'ssr_worker.mjs')).writeAsString(worker);
-    log('Generated ${p.join(config.outputDirectory, 'ssr_worker.mjs')}');
+    await File(p.join(output.path, 'ssr.entry.mjs')).writeAsString(entry);
+    await File(
+      p.join(output.path, 'ssr_runtime.mjs'),
+    ).writeAsString(_ssrRuntime);
+    log(
+      'Generated ${p.join(config.outputDirectory, 'ssr.entry.mjs')} and '
+      'ssr_runtime.mjs',
+    );
+  }
+
+  /// Emits a deterministic manifest of every runtime artifact for a target so
+  /// servers and tooling can load modules without hardcoding file names.
+  Future<void> _writeBundleManifest({
+    required bool hasClient,
+    required bool hasSsr,
+  }) async {
+    final output = config.directory(config.outputDirectory);
+    final manifest = <String, Object?>{
+      'schema': 1,
+      'bundler': _bundler?.name ?? 'none',
+      'mode': release ? 'release' : 'development',
+    };
+
+    if (hasClient) {
+      final dart = File(p.join(output.path, 'client.js'));
+      final foreign = File(p.join(output.path, 'foreign/browser/bundle.mjs'));
+      manifest['browser'] = <String, Object?>{
+        'entry': 'browser.entry.mjs',
+        'dart': 'client.js',
+        if (foreign.existsSync()) 'foreign': 'foreign/browser/bundle.mjs',
+        'bytes': {
+          'dart': await dart.length(),
+          if (foreign.existsSync()) 'foreign': await foreign.length(),
+        },
+      };
+    }
+
+    if (hasSsr) {
+      final dart = File(p.join(output.path, 'ssr.js'));
+      final foreign = File(p.join(output.path, 'foreign/ssr/bundle.mjs'));
+      manifest['ssr'] = <String, Object?>{
+        'entry': 'ssr.entry.mjs',
+        'dart': 'ssr.js',
+        'runtime': 'ssr_runtime.mjs',
+        if (foreign.existsSync()) 'foreign': 'foreign/ssr/bundle.mjs',
+        'bytes': {
+          'dart': await dart.length(),
+          if (foreign.existsSync()) 'foreign': await foreign.length(),
+        },
+      };
+    }
+
+    await File(p.join(output.path, 'bundle_manifest.json')).writeAsString(
+      '${const JsonEncoder.withIndent('  ').convert(manifest)}\n',
+    );
+    log('Generated ${p.join(config.outputDirectory, 'bundle_manifest.json')}');
   }
 }
 
@@ -796,16 +904,25 @@ globalThis.__reactDartGetErrorBoundary = function getErrorBoundary() {
 };
 ''';
 
-const _ssrWorker = r'''import React from 'react';
+const _ssrEntry = r'''import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import http from 'node:http';
+import { createRequire } from 'node:module';
 
+globalThis.require ??= createRequire('./x.js');
+globalThis.self ??= globalThis;
 globalThis.React = React;
+globalThis.ReactDOMServer = ReactDOMServer;
+
 await import('./callback_trampoline.mjs');
 if (process.env.REACT_FOREIGN_COMPONENTS !== 'false') {
   await import('./foreign/ssr/bundle.mjs');
 }
 await import('./ssr.js');
+
+await import('./ssr_runtime.mjs');
+''';
+
+const _ssrRuntime = r'''import http from 'node:http';
 
 const port = Number(process.env.REACT_SSR_PORT ?? 3001);
 
@@ -822,7 +939,7 @@ http.createServer((req, res) => {
       let html;
       try {
         const element = globalThis.__REACT_RENDER__(renderRequest);
-        html = ReactDOMServer.renderToString(element);
+        html = globalThis.ReactDOMServer.renderToString(element);
       } catch (error) {
         const fallbackRenderer = globalThis.__REACT_RENDER_FALLBACK__;
         if (!fallbackRenderer) throw error;
@@ -831,7 +948,7 @@ http.createServer((req, res) => {
             ...renderRequest,
             error: String(error?.message ?? error),
           });
-          html = ReactDOMServer.renderToString(fallbackElement);
+          html = globalThis.ReactDOMServer.renderToString(fallbackElement);
         } finally {
           globalThis.__reactDartSSRBoundaryFallback = false;
           globalThis.__reactDartSSRBoundaryError = undefined;
@@ -846,56 +963,4 @@ http.createServer((req, res) => {
     }
   });
 }).listen(port, () => console.log(`React SSR worker :${port}`));
-''';
-
-/// Node driver that runs the environment's esbuild programmatically. Options
-/// arrive as JSON argv; for the node platform it adds an onResolve plugin that
-/// rewrites external bare specifiers to absolute paths through the
-/// environment's npm root, so the worker never depends on a node_modules
-/// walk-up.
-const _esbuildDriver = r'''
-import { pathToFileURL } from 'node:url';
-import { createRequire } from 'node:module';
-
-const [esbuildEntry, json] = process.argv.slice(2);
-const { build } = await import(pathToFileURL(esbuildEntry).href);
-const opts = JSON.parse(json);
-
-const require = createRequire(process.cwd() + '/x.js');
-const npmRoot = process.env.REACT_NPM_ROOT || opts.npmRoot;
-if (opts.platform === 'node' && Array.isArray(opts.external)) {
-  const externals = opts.external;
-  opts.plugins = [{
-    name: 'react-node-externals',
-    setup(build) {
-      build.onResolve({ filter: /.*/ }, (args) => {
-        for (const spec of externals) {
-          if (args.path === spec || args.path.startsWith(spec + '/')) {
-            try {
-              return {
-                path: require.resolve(args.path, { paths: [npmRoot] }),
-                external: true,
-              };
-            } catch (error) {
-              return {
-                errors: [{
-                  text: `Cannot resolve external "${args.path}" in the JS environment: ${error.message}`,
-                }],
-              };
-            }
-          }
-        }
-        return null;
-      });
-    },
-  }];
-}
-
-try {
-  await build(opts);
-} catch (error) {
-  const lines = error?.errors?.map((e) => e.text) ?? [String(error)];
-  console.error(lines.join('\n'));
-  process.exit(1);
-}
 ''';

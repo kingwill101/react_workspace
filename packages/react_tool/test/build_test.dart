@@ -35,7 +35,11 @@ for pkg in esbuild react react-dom; do
 JSON
 done
 cat > "$rootdir/node_modules/esbuild/lib/main.js" <<'JS'
-export const build = async (options) => {};
+import { writeFileSync } from 'node:fs';
+export const build = async (options) => {
+  writeFileSync(options.outfile, 'export default {};\n');
+  return { metafile: { inputs: {}, outputs: {} }, warnings: [] };
+};
 JS
 echo 'export default {};' > "$rootdir/node_modules/react/index.js"
 echo 'export default {};' > "$rootdir/node_modules/react-dom/index.js"
@@ -135,49 +139,49 @@ $accent: #336699;
     );
   });
 
-  test('bundles project foreign components into per-target aggregates',
-      () async {
-    final config = ReactProjectConfig.load(root);
-    final builder = ReactBuilder(
-      config: config,
-      release: false,
-      log: (_) {},
-      npmCommand: await writeNpmStub(root),
-    );
-
-    await builder.build();
-
-    final cardPath = '${root.path}/web/card.js';
-    for (final target in ['browser', 'ssr']) {
-      final entry = await File(
-        '${root.path}/build/react/foreign/$target/entry.mjs',
-      ).readAsString();
-      expect(entry, contains("import _foreignDefault from \"$cardPath\";"));
-      expect(
-        entry,
-        contains("__reactDartRegisterComponent('Card'"),
+  test(
+    'bundles project foreign components into per-target aggregates',
+    () async {
+      final config = ReactProjectConfig.load(root);
+      final builder = ReactBuilder(
+        config: config,
+        release: false,
+        log: (_) {},
+        npmCommand: await writeNpmStub(root),
       );
-    }
-    final foreignBindings = await File(
-      '${root.path}/lib/foreign_components.g.dart',
-    ).readAsString();
-    expect(foreignBindings, contains('required String label'));
-    expect(foreignBindings, contains('bool? disabled'));
-    expect(foreignBindings, contains("'Card'"));
-    // The managed environment was provisioned, not the host package.json.
-    expect(
-      File('${root.path}/.dart_tool/react/js/package.json').existsSync(),
-      isTrue,
-    );
-    expect(File('${root.path}/package.json').existsSync(), isFalse);
-  });
 
-  test('bundles shims declared by dependency packages (react.js schema)',
-      () async {
-    // A fake wrapper package shipping a self-registering shim.
-    final dep = Directory('${root.path}/../fake_router');
-    await dep.create(recursive: true);
-    await File('${dep.path}/pubspec.yaml').writeAsString('''
+      await builder.build();
+
+      final cardPath = '${root.path}/web/card.js';
+      for (final target in ['browser', 'ssr']) {
+        final entry = await File(
+          '${root.path}/build/react/foreign/$target/entry.mjs',
+        ).readAsString();
+        expect(entry, contains("import _foreignDefault from \"$cardPath\";"));
+        expect(entry, contains("__reactDartRegisterComponent('Card'"));
+      }
+      final foreignBindings = await File(
+        '${root.path}/lib/foreign_components.g.dart',
+      ).readAsString();
+      expect(foreignBindings, contains('required String label'));
+      expect(foreignBindings, contains('bool? disabled'));
+      expect(foreignBindings, contains("'Card'"));
+      // The managed environment was provisioned, not the host package.json.
+      expect(
+        File('${root.path}/.dart_tool/react/js/package.json').existsSync(),
+        isTrue,
+      );
+      expect(File('${root.path}/package.json').existsSync(), isFalse);
+    },
+  );
+
+  test(
+    'bundles shims declared by dependency packages (react.js schema)',
+    () async {
+      // A fake wrapper package shipping a self-registering shim.
+      final dep = Directory('${root.path}/../fake_router');
+      await dep.create(recursive: true);
+      await File('${dep.path}/pubspec.yaml').writeAsString('''
 name: fake_router
 react:
   js:
@@ -192,18 +196,18 @@ react:
       - react
       - react-dom
 ''');
-    await Directory('${dep.path}/lib').create(recursive: true);
-    await File('${dep.path}/lib/fake_router_shim.mjs').writeAsString('''
+      await Directory('${dep.path}/lib').create(recursive: true);
+      await File('${dep.path}/lib/fake_router_shim.mjs').writeAsString('''
 globalThis.__reactDartRegisterComponent?.(
   'fakeRouter.Panel',
   () => null,
 );
 ''');
 
-    // package_config.json mapping `fake_router` to the dependency.
-    final dartTool = Directory('${root.path}/.dart_tool');
-    await dartTool.create(recursive: true);
-    await File('${dartTool.path}/package_config.json').writeAsString('''
+      // package_config.json mapping `fake_router` to the dependency.
+      final dartTool = Directory('${root.path}/.dart_tool');
+      await dartTool.create(recursive: true);
+      await File('${dartTool.path}/package_config.json').writeAsString('''
 {
   "configVersion": 2,
   "packages": [
@@ -213,32 +217,36 @@ globalThis.__reactDartRegisterComponent?.(
 }
 ''');
 
-    final logs = <String>[];
-    final config = ReactProjectConfig.load(root);
-    final builder = ReactBuilder(
-      config: config,
-      release: false,
-      log: logs.add,
-      npmCommand: await writeNpmStub(root),
-    );
+      final logs = <String>[];
+      final config = ReactProjectConfig.load(root);
+      final builder = ReactBuilder(
+        config: config,
+        release: false,
+        log: logs.add,
+        npmCommand: await writeNpmStub(root),
+      );
 
-    await builder.build();
+      await builder.build();
 
-    final shimPath = '${dep.path}/lib/fake_router_shim.mjs';
-    for (final target in ['browser', 'ssr']) {
-      final entry = await File(
-        '${root.path}/build/react/foreign/$target/entry.mjs',
-      ).readAsString();
-      expect(entry, contains("import \"${p.normalize(shimPath)}\";"));
-    }
-    expect(logs.any((l) => l.startsWith("Installing JS environment into")), isTrue);
-    expect(
-      File('${root.path}/.dart_tool/react/js/.installed').existsSync(),
-      isTrue,
-    );
-    // The host package.json is never mutated.
-    expect(File('${root.path}/package.json').existsSync(), isFalse);
-  });
+      final shimPath = '${dep.path}/lib/fake_router_shim.mjs';
+      for (final target in ['browser', 'ssr']) {
+        final entry = await File(
+          '${root.path}/build/react/foreign/$target/entry.mjs',
+        ).readAsString();
+        expect(entry, contains("import \"${p.normalize(shimPath)}\";"));
+      }
+      expect(
+        logs.any((l) => l.startsWith("Installing JS environment into")),
+        isTrue,
+      );
+      expect(
+        File('${root.path}/.dart_tool/react/js/.installed').existsSync(),
+        isTrue,
+      );
+      // The host package.json is never mutated.
+      expect(File('${root.path}/package.json').existsSync(), isFalse);
+    },
+  );
 
   test('prebuilt wrappers ship bundles and skip npm installs', () async {
     // A wrapper distributing already-bundled per-target artifacts: react is
@@ -309,11 +317,13 @@ globalThis.__reactDartRegisterComponent?.(
     // The environment installs only the framework singletons: the prebuilt
     // wrapper's (nonexistent) npm dependencies must not be requested, and
     // its peers still pin react/react-dom.
-    final manifest = jsonDecode(
-      await File(
-        '${root.path}/.dart_tool/react/js/package.json',
-      ).readAsString(),
-    ) as Map;
+    final manifest =
+        jsonDecode(
+              await File(
+                '${root.path}/.dart_tool/react/js/package.json',
+              ).readAsString(),
+            )
+            as Map;
     final dependencies = manifest['dependencies'] as Map;
     expect(dependencies.keys.toSet(), {'react', 'react-dom'});
     expect(dependencies['react'], '18.3.1');
@@ -367,11 +377,13 @@ react:
       ).readAsString();
       expect(entry, contains("import \"${p.normalize(shimPath)}\";"));
     }
-    final manifest = jsonDecode(
-      await File(
-        '${root.path}/.dart_tool/react/js/package.json',
-      ).readAsString(),
-    ) as Map;
+    final manifest =
+        jsonDecode(
+              await File(
+                '${root.path}/.dart_tool/react/js/package.json',
+              ).readAsString(),
+            )
+            as Map;
     // Managed mode resolves exact versions (never mutating the host
     // package.json); the stub npm reports 2.1.0 for every `npm view`.
     expect((manifest['dependencies'] as Map)['fake-widget-lib'], '2.1.0');
@@ -397,4 +409,116 @@ foreign:
 
     await expectLater(builder.build(), throwsA(isA<JsEnvironmentException>()));
   });
+
+  test(
+    'generates target bootstraps, index rewrite, and bundle manifest',
+    () async {
+      await File('${root.path}/react.yaml').writeAsString('''
+client:
+  entrypoint: web/client.dart
+ssr:
+  entrypoint: lib/ssr.dart
+foreign:
+  - name: Card
+    module: web/card.js
+    props:
+      label: String
+''');
+      await File(
+        '${root.path}/web/client.dart',
+      ).writeAsString('void main() {}\n');
+      await Directory('${root.path}/lib').create(recursive: true);
+      await File('${root.path}/lib/ssr.dart').writeAsString('void main() {}\n');
+      await File('${root.path}/web/index.html').writeAsString('''<!doctype html>
+<html>
+<head>
+<script type="importmap">
+{"imports":{"react":"https://esm.sh/react@18.2.0","react-dom":"https://esm.sh/react-dom@18.2.0","react-dom/":"https://esm.sh/react-dom@18.2.0/"}}
+</script>
+</head>
+<body>
+<div id="app">{{SSR}}</div>
+<script id="__props" type="application/json">{{PROPS}}</script>
+<script type="module">
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+globalThis.React = React;
+globalThis.ReactDOM = ReactDOM;
+</script>
+<script type="module" src="client.js"></script>
+</body>
+</html>
+''');
+
+      final config = ReactProjectConfig.load(root);
+      final builder = ReactBuilder(
+        config: config,
+        release: false,
+        log: (_) {},
+        npmCommand: await writeNpmStub(root),
+      );
+
+      await builder.build();
+
+      final browserEntry = await File(
+        '${root.path}/build/react/browser.entry.mjs',
+      ).readAsString();
+      expect(browserEntry, contains("import React from 'react';"));
+      expect(browserEntry, contains('globalThis.React = React;'));
+      expect(
+        browserEntry,
+        contains("await import('./callback_trampoline.mjs');"),
+      );
+      expect(
+        browserEntry,
+        contains("await import('./foreign/browser/bundle.mjs');"),
+      );
+      expect(browserEntry, contains("await import('./client.js');"));
+
+      final index = await File(
+        '${root.path}/build/react/index.html',
+      ).readAsString();
+      expect(index, contains('<script type="module" src="browser.entry.mjs">'));
+      expect(index, isNot(contains('src="client.js"')));
+      expect(index, isNot(contains('globalThis.React')));
+      expect(index, contains('react@18.3.1'));
+      expect(index, contains('react-dom@18.3.1'));
+
+      final ssrEntry = await File(
+        '${root.path}/build/react/ssr.entry.mjs',
+      ).readAsString();
+      expect(ssrEntry, contains('node_modules/react/index.js'));
+      expect(ssrEntry, contains('node_modules/react-dom/server.js'));
+      expect(ssrEntry, contains('createRequire'));
+      expect(ssrEntry, contains("await import('./ssr_runtime.mjs');"));
+
+      final ssrRuntime = await File(
+        '${root.path}/build/react/ssr_runtime.mjs',
+      ).readAsString();
+      expect(ssrRuntime, contains('http.createServer'));
+      expect(ssrRuntime, contains('__REACT_RENDER_FALLBACK__'));
+      expect(ssrRuntime, contains('globalThis.ReactDOMServer.renderToString'));
+
+      final manifest =
+          jsonDecode(
+                await File(
+                  '${root.path}/build/react/bundle_manifest.json',
+                ).readAsString(),
+              )
+              as Map;
+      expect(manifest['schema'], 1);
+      expect(manifest['bundler'], 'esbuild');
+      expect(manifest['mode'], 'development');
+      final browser = manifest['browser'] as Map;
+      expect(browser['entry'], 'browser.entry.mjs');
+      expect(browser['dart'], 'client.js');
+      expect(browser['foreign'], 'foreign/browser/bundle.mjs');
+      expect((browser['bytes'] as Map)['dart'], greaterThan(0));
+      final ssr = manifest['ssr'] as Map;
+      expect(ssr['entry'], 'ssr.entry.mjs');
+      expect(ssr['dart'], 'ssr.js');
+      expect(ssr['runtime'], 'ssr_runtime.mjs');
+      expect(ssr['foreign'], 'foreign/ssr/bundle.mjs');
+    },
+  );
 }

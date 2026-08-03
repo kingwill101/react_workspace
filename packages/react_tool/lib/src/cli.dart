@@ -467,7 +467,7 @@ final class ServeCommand extends Command<void> {
     Process? worker;
     try {
       final workerFile = config.file(
-        '${config.outputDirectory}/ssr_worker.mjs',
+        '${config.outputDirectory}/ssr.entry.mjs',
       );
       if (!noSsr && workerFile.existsSync()) {
         worker = await Process.start(
