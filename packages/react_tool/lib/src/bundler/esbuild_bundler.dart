@@ -82,6 +82,10 @@ final class EsbuildBundler implements JavaScriptBundler {
         for (final input in response['inputs'] as List<dynamic>? ?? const [])
           input as String,
       ],
+      outputs: [
+        for (final output in response['outputs'] as List<dynamic>? ?? const [])
+          output as String,
+      ],
       warnings: [
         for (final warning
             in response['warnings'] as List<dynamic>? ?? const [])

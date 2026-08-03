@@ -35,9 +35,9 @@ for pkg in esbuild react react-dom; do
 JSON
 done
 cat > "$rootdir/node_modules/esbuild/lib/main.js" <<'JS'
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 export const build = async (options) => {
-  writeFileSync(options.outfile, 'export default {};\n');
+  writeFileSync(options.outfile, readFileSync(options.entryPoints[0], 'utf8'));
   return { metafile: { inputs: {}, outputs: {} }, warnings: [] };
 };
 JS
@@ -525,6 +525,24 @@ globalThis.ReactDOM = ReactDOM;
       expect(parsed.browserEntry, 'browser.entry.mjs');
       expect(parsed.ssrEntry, 'ssr.entry.mjs');
       expect(parsed.ssr?.runtime, 'ssr_runtime.mjs');
+
+      final report = jsonDecode(
+            await File('${root.path}/build/react/bundle_report.json')
+                .readAsString(),
+          )
+          as Map;
+      expect(report['schema'], 1);
+      expect(report['mode'], 'development');
+      for (final target in ['browser', 'ssr']) {
+        final targetReport = report[target] as Map;
+        expect(targetReport['artifacts'], 1);
+        expect((targetReport['uncompressedBytes'] as int), greaterThan(0));
+        expect((targetReport['gzipBytes'] as int), greaterThan(0));
+        expect(targetReport['externals'], contains('react'));
+        expect(targetReport['externals'], contains('react-dom'));
+        expect(targetReport['retainedExports'], contains('Card'));
+        expect(targetReport['retainedHookNamespaces'], isEmpty);
+      }
     },
   );
 }

@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:sass/sass.dart' as sass;
 import 'package:yaml/yaml.dart';
 
+import 'bundler/bundle_report.dart';
 import 'bundler/bundle_request.dart';
 import 'bundler/bundle_result.dart';
 import 'bundler/bundler.dart';
@@ -25,6 +26,9 @@ final class ReactBuilder {
   final String npmCommand;
 
   JavaScriptBundler? _bundler;
+
+  /// Per-target [BundleResult] from the latest build, keyed by `browser`/`ssr`.
+  final Map<String, BundleResult> _bundleResults = {};
 
   ReactBuilder({
     required this.config,
@@ -98,6 +102,7 @@ final class ReactBuilder {
       p.join(output.path, 'manifest.json'),
     ).writeAsString('${config.toJsonString()}\n');
     await _writeBundleManifest(hasClient: hasClient, hasSsr: hasSsr);
+    await _writeBundleReport(hasClient: hasClient, hasSsr: hasSsr);
   }
 
   /// Copies build_runner outputs (`.react.dart`, `.action.g.dart`, …) from
@@ -370,7 +375,7 @@ final class ReactBuilder {
 
       final entryFile = File(p.join(entryDir.path, 'entry.mjs'));
       await entryFile.writeAsString(buffer.toString());
-      await _bundleTarget(
+      _bundleResults[target] = await _bundleTarget(
         environment: environment,
         target: target,
         entry: entryFile.path,
@@ -839,6 +844,107 @@ final class ReactBuilder {
       '${const JsonEncoder.withIndent('  ').convert(manifest)}\n',
     );
     log('Generated ${p.join(config.outputDirectory, 'bundle_manifest.json')}');
+  }
+
+  /// Emits `bundle_report.json`: size and retained-surface metrics per target,
+  /// so bundle regressions and wrapper-export retention are measurable across
+  /// builds.
+  Future<void> _writeBundleReport({
+    required bool hasClient,
+    required bool hasSsr,
+  }) async {
+    final output = config.directory(config.outputDirectory);
+    final report = <String, Object?>{
+      'schema': 1,
+      'mode': release ? 'release' : 'development',
+    };
+    if (hasClient) {
+      report['browser'] = await _reportTarget(
+        output,
+        'browser',
+      ).then((r) => r.toJson());
+    }
+    if (hasSsr) {
+      report['ssr'] = await _reportTarget(
+        output,
+        'ssr',
+      ).then((r) => r.toJson());
+    }
+
+    await File(
+      p.join(output.path, 'bundle_report.json'),
+    ).writeAsString('${const JsonEncoder.withIndent('  ').convert(report)}\n');
+
+    final summary = <String>[];
+    for (final target in const ['browser', 'ssr']) {
+      final json = report[target] as Map<String, Object?>?;
+      if (json == null) continue;
+      final gzip = _formatBytes((json['gzipBytes'] as num).toInt());
+      summary.add(
+        '$target: ${json['retainedExports'].toString()}'
+        ' (${_formatBytes((json['uncompressedBytes'] as num).toInt())}, '
+        '$gzip gzip)',
+      );
+    }
+    log(
+      'Bundled sizes: ${summary.join('; ')} '
+      '→ ${p.join(config.outputDirectory, 'bundle_report.json')}',
+    );
+  }
+
+  Future<BundleReportTarget> _reportTarget(
+    Directory output,
+    String target,
+  ) async {
+    final bundleFile = File(
+      p.join(output.path, 'foreign', target, 'bundle.mjs'),
+    );
+    final mapFile = File('${bundleFile.path}.map');
+    final text = await bundleFile.readAsString();
+    final result = _bundleResults[target];
+    final outputs = result?.outputs ?? const <String>[];
+    return BundleReportTarget(
+      artifacts: outputs.isEmpty ? 1 : outputs.length,
+      uncompressedBytes: await bundleFile.length(),
+      gzipBytes: gzip.encode(await bundleFile.readAsBytes()).length,
+      sourceMapBytes: mapFile.existsSync() ? await mapFile.length() : null,
+      externals: await _mergedExternals(),
+      retainedExports: _retainedWrapperExports(text),
+      retainedHookNamespaces: _retainedHookNamespaces(text),
+    );
+  }
+
+  /// Component registration keys retained in a final bundle: names passed
+  /// directly to `__reactDartRegisterComponent(...)` (foreign components) plus
+  /// namespaced object keys from generated wrapper shims, e.g.
+  /// `'reactRouter.Route': …`. String-literal keys survive minification.
+  List<String> _retainedWrapperExports(String bundleText) {
+    final names = <String>{};
+    for (final match in RegExp(
+      r'''__reactDartRegisterComponent\s*\(\s*['"]([^'"]+)['"]''',
+    ).allMatches(bundleText)) {
+      names.add(match.group(1)!);
+    }
+    for (final match in RegExp(
+      r'''['"]([A-Za-z_$][\w$]*\.[A-Za-z_$][\w$]*)['"]\s*:''',
+    ).allMatches(bundleText)) {
+      names.add(match.group(1)!);
+    }
+    return names.toList()..sort();
+  }
+
+  /// Hook bridge namespaces retained in a final bundle.
+  List<String> _retainedHookNamespaces(String bundleText) {
+    final names = <String>{};
+    for (final match in RegExp(
+      r'__reactDartBindings\.([A-Za-z_$][\w$]*)\s*=',
+    ).allMatches(bundleText)) {
+      names.add(match.group(1)!);
+    }
+    if (RegExp(r'__reactDartHooks\s*=').hasMatch(bundleText)) {
+      names.add('__reactDartHooks');
+    }
+    return names.toList()..sort();
   }
 }
 

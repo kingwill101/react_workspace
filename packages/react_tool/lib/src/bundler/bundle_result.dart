@@ -10,6 +10,10 @@ final class BundleResult {
   /// Input files recorded in the bundler metafile.
   final List<String> inputs;
 
+  /// Output files recorded in the bundler metafile (bundle plus any source
+  /// map or chunk artifacts).
+  final List<String> outputs;
+
   /// Non-fatal diagnostics surfaced by the bundler.
   final List<String> warnings;
 
@@ -18,6 +22,7 @@ final class BundleResult {
     required this.outputBytes,
     required this.duration,
     required this.inputs,
+    required this.outputs,
     required this.warnings,
   });
 }
