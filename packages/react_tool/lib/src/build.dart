@@ -628,12 +628,27 @@ final class ReactBuilder {
     return builder.ensure(wrappers, required: needsEnvironment);
   }
 
-  /// Descriptors of every wrapper package in the dependency graph.
+  /// Descriptors of every wrapper package in the dependency graph — plus the
+  /// project's own descriptor when it declares one, so `react ts bind` run
+  /// from inside a wrapper package provisions the JS environment its bind
+  /// groups need.
   Future<List<JsWrapperDescriptor>> _discoverWrappers() async {
     final wrappers = <JsWrapperDescriptor>[];
+
+    final ownPubspec = config.file('pubspec.yaml');
+    if (ownPubspec.existsSync()) {
+      final yaml = loadYaml(ownPubspec.readAsStringSync());
+      final own = JsWrapperDescriptor.parse(
+        config.packageName,
+        yaml is Map ? yaml.cast<String, dynamic>() : {},
+      );
+      if (own != null) wrappers.add(own);
+    }
+
     for (final (name, rootPath) in await _dependencyPackages()) {
       final pubspecFile = File(p.join(rootPath, 'pubspec.yaml'));
       if (!pubspecFile.existsSync()) continue;
+      if (p.normalize(rootPath) == p.normalize(config.root.path)) continue;
       final yaml = loadYaml(pubspecFile.readAsStringSync());
       final descriptor = JsWrapperDescriptor.parse(
         name,

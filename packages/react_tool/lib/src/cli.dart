@@ -247,17 +247,11 @@ final class _TsBindCommand extends Command<void> {
   }
 
   @override
-  String get invocation => 'react ts bind <specifier> <name...>';
+  String get invocation => 'react ts bind [<specifier> [<name...>]]';
 
   @override
   Future<void> run() async {
     final rest = argResults!.rest;
-    if (rest.length < 2) {
-      usageException('Expected: react ts bind <specifier> <name...>');
-    }
-    final specifier = rest.first;
-    final names = rest.skip(1).toList();
-
     final config = ReactProjectConfig.load();
     final builder = ReactBuilder(config: config, release: false, log: line);
 
@@ -270,6 +264,67 @@ final class _TsBindCommand extends Command<void> {
         'No JS environment at $npmRoot. Run `react js install` first.',
       );
     }
+
+    if (rest.isEmpty) {
+      // Declarative mode: regenerate every `js.bind` group from react.yaml.
+      if (config.jsBindGroups.isEmpty) {
+        usageException(
+          'Expected: react ts bind <specifier> <name...>, or declare '
+          '`react.js.bind` groups in react.yaml and run `react ts bind` '
+          'with no arguments.',
+        );
+      }
+      for (final group in config.jsBindGroups) {
+        await _runBindGroup(
+          config: config,
+          npmRoot: npmRoot,
+          specifier: group.specifier,
+          names: group.names,
+          outputPath: group.output,
+          shimPath: group.shim,
+          hooksPath: group.hooks,
+          namespace: group.namespace,
+          prefix: group.prefix,
+          typePrefix: group.typePrefix,
+          exclude: group.exclude,
+        );
+      }
+      return;
+    }
+
+    // Explicit mode: `react ts bind <specifier> [<name...>]`. No names
+    // means "discover the exported components and hooks".
+    final specifier = rest.first;
+    final names = rest.skip(1).toList();
+    await _runBindGroup(
+      config: config,
+      npmRoot: npmRoot,
+      specifier: specifier,
+      names: names,
+      outputPath: option('output') as String?,
+      shimPath: option('shim') as String?,
+      hooksPath: option('hooks') as String?,
+      namespace: option('namespace') as String?,
+      prefix: option('prefix') as String?,
+      typePrefix: option('type-prefix') as String?,
+      exclude: const [],
+    );
+  }
+
+  /// Runs a single extraction + generation. [names] empty means discovery.
+  Future<void> _runBindGroup({
+    required ReactProjectConfig config,
+    required String npmRoot,
+    required String specifier,
+    required List<String> names,
+    required String? outputPath,
+    required String? shimPath,
+    required String? hooksPath,
+    required String? namespace,
+    required String? prefix,
+    required String? typePrefix,
+    required List<String> exclude,
+  }) async {
     // Subpath specifiers (e.g. `react-router-dom/server`) live under the
     // top-level package directory; check that package only.
     final packagePart = specifier.split('/').first;
@@ -282,37 +337,53 @@ final class _TsBindCommand extends Command<void> {
       );
     }
 
-    info('Extracting $names from $specifier…');
+    final discover = names.isEmpty;
+    if (discover) {
+      info('Discovering exported components and hooks from $specifier…');
+    } else {
+      info('Extracting $names from $specifier…');
+    }
     final extractor = TsBindingExtractor(npmRoot);
     final result = await extractor.extract(
       specifier: specifier,
       names: names,
+      all: discover,
     );
 
-    final prefix = option('prefix') as String? ?? lowerCamel(specifier);
+    if (exclude.isNotEmpty) {
+      result.declarations.removeWhere((d) => exclude.contains(d.name));
+    }
+    if (discover && result.skipped.isNotEmpty) {
+      warn(
+        'Filtered out non-component exports from $specifier: '
+        '${result.skipped.join(', ')}',
+      );
+    }
+
+    final nameTail = names.join(' ');
+    final effectivePrefix = prefix ?? lowerCamel(specifier);
     final code = generateBindings(
       specifier: specifier,
       declarations: result.declarations,
-      commandLine: 'react ts bind $specifier ${names.join(' ')}',
-      prefix: prefix,
+      commandLine: 'react ts bind $specifier $nameTail'.trimRight(),
+      prefix: effectivePrefix,
       entryComment: result.entry,
-      typePrefix: option('type-prefix') as String? ?? '',
+      typePrefix: typePrefix ?? '',
     );
 
-    final output = option('output') as String? ??
+    final output = outputPath ??
         p.join('lib', '${lowerCamel(specifier)}_bindings.g.dart');
     final outputFile = config.file(output);
     outputFile.parent.createSync(recursive: true);
     outputFile.writeAsStringSync(code);
 
-    final shimPath = option('shim') as String?;
     if (shimPath != null) {
       final shim = generateShim(
         specifier: specifier,
-        prefix: prefix,
+        prefix: effectivePrefix,
         declarations: result.declarations,
-        commandLine: 'react ts bind $specifier ${names.join(' ')} --shim',
-        namespace: option('namespace') as String? ?? '',
+        commandLine: 'react ts bind $specifier $nameTail --shim'.trimRight(),
+        namespace: namespace ?? '',
       );
       final shimFile = config.file(shimPath);
       shimFile.parent.createSync(recursive: true);
@@ -320,12 +391,11 @@ final class _TsBindCommand extends Command<void> {
       info('Wrote shim to ${shimFile.path}');
     }
 
-    final hooksPath = option('hooks') as String?;
     if (hooksPath != null) {
       final hooksFile = config.file(hooksPath);
       String? bindingsImport;
       Set<String>? reuseTypeNames;
-      final bindingsPath = option('output') as String?;
+      final bindingsPath = outputPath;
       if (bindingsPath != null) {
         final bindingsFile = config.file(bindingsPath);
         if (bindingsFile.existsSync()) {
@@ -336,23 +406,28 @@ final class _TsBindCommand extends Command<void> {
               : p.relative(bindingsFile.path, from: hooksFile.parent.path);
           if (relative.endsWith('.dart')) {
             bindingsImport = relative;
-            reuseTypeNames = _generatedTopLevelNames(bindingsFile.readAsStringSync());
+            reuseTypeNames = _generatedTopLevelNames(
+              bindingsFile.readAsStringSync(),
+            );
           }
         }
       }
       final hooks = generateHooks(
         specifier: specifier,
         declarations: result.declarations,
-        commandLine: 'react ts bind $specifier ${names.join(' ')} --hooks',
+        commandLine: 'react ts bind $specifier $nameTail --hooks'.trimRight(),
         entryComment: result.entry,
         typePrefix: option('type-prefix') as String? ?? '',
         bindingsImport: bindingsImport,
         reuseTypeNames: reuseTypeNames,
-        namespace: option('namespace') as String? ?? '',
+        namespace: namespace ?? '',
       );
       hooksFile.parent.createSync(recursive: true);
       hooksFile.writeAsStringSync(hooks);
-      info('Wrote ${result.declarations.where((d) => d.kind == 'hook').length} hook(s) to ${hooksFile.path}');
+      info(
+        'Wrote ${result.declarations.where((d) => d.kind == 'hook').length} '
+        'hook(s) to ${hooksFile.path}',
+      );
     }
 
     info(

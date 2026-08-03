@@ -43,14 +43,15 @@ pub extern "C" fn tsb_extract(request_json: *const c_char, npm_root: *const c_ch
             .iter()
             .filter_map(|v| v.as_str().map(String::from))
             .collect();
-        if names.is_empty() {
+        let all = req.get("all").and_then(|v| v.as_bool()).unwrap_or(false);
+        if names.is_empty() && !all {
             return Err("empty names".into());
         }
         let entry = req
             .get("entry")
             .and_then(|v| v.as_str())
             .map(PathBuf::from);
-        let ir = extract(&specifier, &names, Path::new(npm_root), entry)?;
+        let ir = extract(&specifier, &names, Path::new(npm_root), entry, all)?;
         Ok(serde_json::json!({ "ok": ir }))
     })();
 
@@ -179,7 +180,10 @@ enum TyExpr {
 enum TsDecl {
     Interface { props: Vec<TsProp>, extends: Vec<Heritage> },
     Alias { ty: TyExpr },
-    Component { props: Option<TyExpr> },
+    /// A renderable component. `returns` carries the declared return type
+    /// (when available) so discovery can tell components from plain
+    /// functions by their return type.
+    Component { props: Option<TyExpr>, returns: Option<TyExpr> },
     /// A `use*` function: formal params + return type.
     Hook { params: Vec<TsProp>, returns: TyExpr },
 }
@@ -208,6 +212,22 @@ struct Follow {
     source: String,
     /// None = export * (follow everything); Some(names) = only these names.
     names: Option<Vec<String>>,
+    /// How this edge is reached: import edges contribute declarations to the
+    /// store but nothing to the public API; export edges do.
+    kind: FollowKind,
+    /// Public names carried by an `export { X as Y } from "..."` edge
+    /// (the *exported* names — aliases resolve to their target's names).
+    exported: Vec<String>,
+}
+
+#[derive(Clone, Copy, PartialEq)]
+enum FollowKind {
+    /// `import { A } from "..."` — resolution only.
+    Import,
+    /// `export * from "..."` — the whole target surface becomes public.
+    ExportAll,
+    /// `export { A, B } from "..."` — only the listed names become public.
+    ExportNamed,
 }
 
 struct ParsedFile {
@@ -215,6 +235,9 @@ struct ParsedFile {
     follows: Vec<Follow>,
     /// Import aliases discovered in this file (local name → exported name).
     aliases: Vec<(String, String)>,
+    /// Names this file re-exports locally (`export declare function X`,
+    /// `export { A as B }` without a source).
+    exported: Vec<String>,
 }
 
 // ---------------------------------------------------------------------------
@@ -235,6 +258,7 @@ fn parse_dts<'a>(allocator: &'a Allocator, source: &'a str) -> Option<ParsedFile
         decls: Vec::new(),
         follows: Vec::new(),
         aliases: Vec::new(),
+        exported: Vec::new(),
     };
     for stmt in &ret.program.body {
         collect_stmt(stmt, &mut out);
@@ -247,37 +271,61 @@ fn collect_stmt(stmt: &Statement, out: &mut ParsedFile) {
         Statement::ExportNamedDeclaration(e) => {
             if let Some(decl) = &e.declaration {
                 extract_decl(decl, true, out);
+                if let Some(name) = decl_name(decl) {
+                    out.exported.push(name);
+                }
             }
             if let Some(source) = &e.source {
                 let mut names = Vec::new();
+                let mut exported = Vec::new();
                 for spec in &e.specifiers {
                     if let ModuleExportName::IdentifierName(id) = &spec.local {
                         names.push(id.name.as_str().to_string());
+                    }
+                    if let ModuleExportName::IdentifierName(id) = &spec.exported {
+                        exported.push(id.name.as_str().to_string());
                     }
                 }
                 out.follows.push(Follow {
                     source: source.value.as_str().to_string(),
                     names: Some(names),
+                    kind: FollowKind::ExportNamed,
+                    exported,
                 });
+            } else {
+                // Local re-export `export { A as B }`: B becomes public.
+                for spec in &e.specifiers {
+                    if let ModuleExportName::IdentifierName(id) = &spec.exported {
+                        out.exported.push(id.name.as_str().to_string());
+                    }
+                }
             }
         }
         Statement::ExportAllDeclaration(e) => {
             out.follows.push(Follow {
                 source: e.source.value.as_str().to_string(),
                 names: None,
+                kind: FollowKind::ExportAll,
+                exported: Vec::new(),
             });
         }
         Statement::TSEnumDeclaration(e) => {
             extract_enum(e, out);
+            out.exported.push(e.id.name.as_str().to_string());
         }
         Statement::TSInterfaceDeclaration(d) => {
             extract_interface(d, out);
+            out.exported.push(d.id.name.as_str().to_string());
         }
         Statement::TSTypeAliasDeclaration(d) => {
             extract_type_alias(d, out);
+            out.exported.push(d.id.name.as_str().to_string());
         }
         Statement::FunctionDeclaration(f) => {
             extract_function(f, false, out);
+            if let Some(id) = &f.id {
+                out.exported.push(id.name.as_str().to_string());
+            }
         }
         Statement::VariableDeclaration(v) => {
             extract_variable(v, false, out);
@@ -323,12 +371,13 @@ fn collect_stmt(stmt: &Statement, out: &mut ParsedFile) {
             out.follows.push(Follow {
                 source: i.source.value.as_str().to_string(),
                 names: Some(names),
+                kind: FollowKind::Import,
+                exported: Vec::new(),
             });
         }
         _ => {}
     }
 }
-
 fn extract_decl(decl: &Declaration, exported: bool, out: &mut ParsedFile) {
     match decl {
         Declaration::TSInterfaceDeclaration(d) => extract_interface(d, out),
@@ -337,6 +386,21 @@ fn extract_decl(decl: &Declaration, exported: bool, out: &mut ParsedFile) {
         Declaration::FunctionDeclaration(f) => extract_function(f, exported, out),
         Declaration::VariableDeclaration(v) => extract_variable(v, exported, out),
         _ => {}
+    }
+}
+
+/// The name exported by an `export declare <decl>` statement, if any.
+fn decl_name(decl: &Declaration) -> Option<String> {
+    match decl {
+        Declaration::TSInterfaceDeclaration(d) => Some(d.id.name.as_str().to_string()),
+        Declaration::TSTypeAliasDeclaration(d) => Some(d.id.name.as_str().to_string()),
+        Declaration::TSEnumDeclaration(e) => Some(e.id.name.as_str().to_string()),
+        Declaration::FunctionDeclaration(f) => f.id.as_ref().map(|id| id.name.as_str().to_string()),
+        Declaration::VariableDeclaration(v) => v
+            .declarations
+            .first()
+            .and_then(|d| binding_name(&d.id)),
+        _ => None,
     }
 }
 
@@ -475,9 +539,13 @@ fn extract_function(f: &Function, exported: bool, out: &mut ParsedFile) {
                         .as_ref()
                         .map(|ta| ty_to_expr(&ta.type_annotation))
                 });
+                let returns = f
+                    .return_type
+                    .as_ref()
+                    .map(|ta| ty_to_expr(&ta.type_annotation));
                 out.decls.push((
                     name.to_string(),
-                    TsDecl::Component { props },
+                    TsDecl::Component { props, returns },
                 ));
             }
         }
@@ -489,10 +557,31 @@ fn extract_variable(v: &VariableDeclaration, exported: bool, out: &mut ParsedFil
         for d in v.declarations.iter() {
             if let Some(ta) = &d.type_annotation {
                 if let Some(name) = binding_name(&d.id) {
-                    if let Some(props) = component_props_from_annotation(&ta.type_annotation) {
+                    let ty = &ta.type_annotation;
+                    // `const X: React.FC<Props>` style.
+                    if let Some(props) = component_props_from_annotation(ty) {
                         out.decls.push((
                             name,
-                            TsDecl::Component { props: Some(props) },
+                            TsDecl::Component { props: Some(props), returns: None },
+                        ));
+                        continue;
+                    }
+                    // `const X: (props: Props) => ReactNode` style.
+                    let mut inner = ty;
+                    while let TSType::TSParenthesizedType(p) = inner {
+                        inner = &p.type_annotation;
+                    }
+                    if let TSType::TSFunctionType(f) = inner {
+                        let props = f.params.items.first().and_then(|p| {
+                            p.type_annotation
+                                .as_ref()
+                                .map(|ta| ty_to_expr(&ta.type_annotation))
+                        });
+                        let returns =
+                            Some(ty_to_expr(&f.return_type.type_annotation));
+                        out.decls.push((
+                            name,
+                            TsDecl::Component { props, returns },
                         ));
                     }
                 }
@@ -906,6 +995,53 @@ fn type_ref_to_expr(r: &TSTypeReference) -> TyExpr {
     TyExpr::Named(base)
 }
 
+/// Whether a function's return type is (or unions/contains) a React node
+/// type — the marker that separates renderable components from plain
+/// utility functions (`BrowserRouter(): React.JSX.Element` is a component,
+/// `createBrowserRouter(): RemixRouter` is not). Named types are chased
+/// through the declaration store until a base case is hit; cycles and
+/// unclassifiable types resolve conservatively to `false`.
+fn is_node_return(
+    ty: &TyExpr,
+    store: &DeclStore,
+    seen: &mut HashSet<String>,
+    depth: usize,
+) -> bool {
+    if depth > 8 {
+        return false;
+    }
+    match ty {
+        TyExpr::ReactNode => true,
+        // `null` (components that render nothing) and `any` (the extractor
+        // lowers `React.JSX.Element`/`React.Element` to `any`).
+        TyExpr::Prim("null") | TyExpr::Prim("any") => true,
+        TyExpr::Prim(_) | TyExpr::Literal(_) => false,
+        TyExpr::Named(name) => {
+            if matches!(
+                name.as_str(),
+                "ReactNode" | "ReactElement" | "ReactPortal" | "Element" | "JSX"
+            ) {
+                return true;
+            }
+            if seen.insert(name.clone()) {
+                let resolved = store.resolve_alias(name);
+                let is_node =
+                    matches!(store.decls.get(resolved), Some(TsDecl::Alias { ty })
+                        if is_node_return(ty, store, seen, depth + 1));
+                seen.remove(name);
+                is_node
+            } else {
+                false
+            }
+        }
+        TyExpr::Union(members) => members
+            .iter()
+            .any(|m| is_node_return(m, store, seen, depth + 1)),
+        TyExpr::Array(element) => is_node_return(element, store, seen, depth + 1),
+        _ => false,
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Graph loading
 // ---------------------------------------------------------------------------
@@ -1002,6 +1138,7 @@ fn extract(
     names: &[String],
     npm_root: &Path,
     entry_override: Option<PathBuf>,
+    all: bool,
 ) -> Result<serde_json::Value, String> {
     let entry = if let Some(e) = entry_override {
         e
@@ -1034,7 +1171,12 @@ fn extract(
     let mut queue: VecDeque<PathBuf> = VecDeque::new();
     queue.push_back(entry.clone());
     let mut visited: HashSet<PathBuf> = HashSet::new();
+    // Files parsed on this run, retained for the public-surface pass.
+    let mut parsed_files: HashMap<PathBuf, ParsedFile> = HashMap::new();
     let mut total_files = 0usize;
+    // Discovery candidates in deterministic (first-seen) order.
+    let mut candidates: Vec<String> = Vec::new();
+    let mut candidate_seen: HashSet<String> = HashSet::new();
     let allocator = Allocator::default();
 
     while let Some(file) = queue.pop_front() {
@@ -1051,15 +1193,21 @@ fn extract(
         let Some(parsed) = parse_dts(&allocator, &source) else {
             continue;
         };
-        for (name, decl) in parsed.decls {
-            store.insert(&name, decl);
+        for (name, decl) in &parsed.decls {
+            store.insert(name, decl.clone());
+            if all
+                && matches!(decl, TsDecl::Component { .. } | TsDecl::Hook { .. })
+                && candidate_seen.insert(name.clone())
+            {
+                candidates.push(name.clone());
+            }
         }
-        for (local, imported) in parsed.aliases {
-            store.aliases.entry(local).or_insert(imported);
+        for (local, imported) in &parsed.aliases {
+            store.aliases.entry(local.clone()).or_insert(imported.clone());
         }
-        for follow in parsed.follows {
+        for follow in &parsed.follows {
             if let Some(path) = resolve_import(&resolver, &file, &follow.source) {
-                if let Some(wanted) = follow.names {
+                if let Some(wanted) = &follow.names {
                     if wanted.iter().all(|n| store.decls.contains_key(n)) {
                         continue;
                     }
@@ -1067,26 +1215,101 @@ fn extract(
                 queue.push_back(path);
             }
         }
+        if all {
+            parsed_files.insert(file.clone(), parsed);
+        }
     }
 
     // Serialize requested declarations.
     let mut declarations = Vec::new();
-    let mut missing = Vec::new();
-    for name in names {
-        match store.decls.get(name) {
-            Some(decl) => {
-                let mut visiting = HashSet::new();
-                let ir = serialize_decl(name, decl, &store, &mut visiting, 0);
-                declarations.push(ir);
+    if !all {
+        let mut missing = Vec::new();
+        for name in names {
+            match store.decls.get(name) {
+                Some(decl) => {
+                    let mut visiting = HashSet::new();
+                    let ir = serialize_decl(name, decl, &store, &mut visiting, 0);
+                    declarations.push(ir);
+                }
+                None => missing.push(name.clone()),
             }
-            None => missing.push(name.clone()),
         }
-    }
-    if !missing.is_empty() {
-        return Err(format!(
-            "declaration(s) not found: {} (files visited: {total_files})",
-            missing.join(", ")
-        ));
+        if !missing.is_empty() {
+            return Err(format!(
+                "declaration(s) not found: {} (files visited: {total_files})",
+                missing.join(", ")
+            ));
+        }
+    } else {
+        // Discovery mode: every component/hook exported from the entry —
+        // chased through export edges only (imports feed the store but do
+        // not widen the public surface). Skipped rather than failed when a
+        // component cannot be classified: conservative by design.
+        let mut public: HashSet<String> = HashSet::new();
+        let mut reached: HashMap<PathBuf, bool> = HashMap::new();
+        let mut stack: Vec<(PathBuf, bool)> = vec![(entry.clone(), true)];
+        while let Some((file, whole_surface)) = stack.pop() {
+            match reached.get(&file) {
+                Some(true) => continue,
+                Some(false) if !whole_surface => continue,
+                _ => {}
+            }
+            reached.insert(file.clone(), whole_surface);
+            let Some(parsed) = parsed_files.get(&file) else {
+                continue;
+            };
+            if whole_surface {
+                for name in &parsed.exported {
+                    public.insert(name.clone());
+                }
+            }
+            for follow in &parsed.follows {
+                match follow.kind {
+                    FollowKind::Import => {}
+                    FollowKind::ExportAll => {
+                        if let Some(path) = resolve_import(&resolver, &file, &follow.source) {
+                            stack.push((path, true));
+                        }
+                    }
+                    FollowKind::ExportNamed => {
+                        for name in &follow.exported {
+                            public.insert(name.clone());
+                        }
+                        if let Some(path) = resolve_import(&resolver, &file, &follow.source) {
+                            stack.push((path, false));
+                        }
+                    }
+                }
+            }
+        }
+
+        let mut skipped = Vec::new();
+        for name in &candidates {
+            if !public.contains(name) {
+                continue;
+            }
+            let Some(decl) = store.decls.get(name) else {
+                continue;
+            };
+            // Functions that don't return a React node are not components
+            // (e.g. `createBrowserRouter(): RemixRouter`).
+            if let TsDecl::Component { returns: Some(ty), .. } = decl {
+                if !is_node_return(ty, &store, &mut HashSet::new(), 0) {
+                    skipped.push(name.clone());
+                    continue;
+                }
+            }
+            let mut visiting = HashSet::new();
+            let ir = serialize_decl(name, decl, &store, &mut visiting, 0);
+            declarations.push(ir);
+        }
+
+        return Ok(serde_json::json!({
+            "entry": entry.to_string_lossy(),
+            "files": total_files,
+            "declarations": declarations,
+            "skipped": skipped,
+        }));
     }
 
     Ok(serde_json::json!({
@@ -1133,7 +1356,7 @@ fn serialize_decl(
                 returns: None,
             }
         }
-        TsDecl::Component { props } => {
+        TsDecl::Component { props, .. } => {
             let props = match props {
                 Some(ty) => props_for_expr(ty, store, visiting),
                 None => Vec::new(),
@@ -1198,7 +1421,7 @@ fn props_for_expr(
                     out
                 }
                 Some(TsDecl::Alias { ty }) => props_for_expr(ty, store, visiting),
-                Some(TsDecl::Component { props }) => props
+                Some(TsDecl::Component { props, .. }) => props
                     .as_ref()
                     .map(|p| props_for_expr(p, store, visiting))
                     .unwrap_or_default(),
@@ -1629,7 +1852,7 @@ fn serialize_ty(
                     }
                     out
                 }
-                Some(TsDecl::Component { props }) => {
+                Some(TsDecl::Component { props, .. }) => {
                     let ps = match props {
                         Some(TyExpr::Object(ps)) => ps.clone(),
                         _ => Vec::new(),
@@ -1684,7 +1907,7 @@ fn props_of(ty: &TyExpr, store: &DeclStore, visiting: &mut HashSet<String>) -> V
                     visiting.remove(resolved);
                     out
                 }
-                Some(TsDecl::Component { props }) => props
+                Some(TsDecl::Component { props, .. }) => props
                     .as_ref()
                     .map(|p| props_of(p, store, visiting))
                     .unwrap_or_default(),
@@ -1766,7 +1989,7 @@ mod tests {
             return;
         }
         let names = vec!["MemoryRouter".to_string(), "Route".to_string()];
-        let out = extract("react-router-dom", &names, &root, None).expect("extract");
+        let out = extract("react-router-dom", &names, &root, None, false).expect("extract");
         let decls = out["declarations"].as_array().unwrap();
         assert_eq!(decls.len(), 2);
         let memory = &decls[0];
@@ -1816,7 +2039,7 @@ mod tests {
             return;
         }
         let names = vec!["MemoryRouterProps".to_string()];
-        let out = extract("react-router-dom", &names, &root, None).expect("extract");
+        let out = extract("react-router-dom", &names, &root, None, false).expect("extract");
         let d = &out["declarations"][0];
         assert_eq!(d["kind"], "interface");
     }
@@ -1829,7 +2052,7 @@ mod tests {
         }
         // Link is `export declare const Link: React.ForwardRefExoticComponent<...>`
         // — requires the rightmost-segment base-name resolution.
-        let out = extract("react-router-dom", &["Link".to_string()], &root, None)
+        let out = extract("react-router-dom", &["Link".to_string()], &root, None, false)
             .expect("extract");
         let d = &out["declarations"][0];
         assert_eq!(d["name"], "Link");
@@ -1857,6 +2080,7 @@ mod tests {
             &["StaticRouter".to_string()],
             &root,
             None,
+            false,
         )
         .expect("extract subpath");
         let d = &out["declarations"][0];
@@ -1874,8 +2098,51 @@ mod tests {
             return;
         }
         let names = vec!["DoesNotExist".to_string()];
-        let err = extract("react-router-dom", &names, &root, None).unwrap_err();
+        let err = extract("react-router-dom", &names, &root, None, false).unwrap_err();
         assert!(err.contains("DoesNotExist"), "{err}");
+    }
+
+    #[test]
+    fn discovers_components_and_hooks_without_a_name_list() {
+        let root = npm_root();
+        if !root.join("node_modules/react-router-dom/package.json").is_file() {
+            return;
+        }
+        let out = extract("react-router-dom", &[], &root, None, true).expect("discover");
+        let decls = out["declarations"].as_array().unwrap();
+        let skipped = out["skipped"].as_array().unwrap();
+        let names: Vec<&str> = decls
+            .iter()
+            .map(|d| d["name"].as_str().unwrap())
+            .collect();
+
+        // Renderable components discovered through the public surface.
+        for want in ["BrowserRouter", "MemoryRouter", "Routes", "Route", "Link", "NavLink"] {
+            assert!(names.contains(&want), "missing {want} in {names:?}");
+        }
+        // Hooks discovered alongside components.
+        assert!(names.contains(&"useSearchParams"), "names: {names:?}");
+        // Functions that don't return a React node are filtered out, not
+        // emitted as components.
+        let skipped_names: Vec<&str> = skipped
+            .iter()
+            .filter_map(|s| s.as_str())
+            .collect();
+        assert!(
+            skipped_names.contains(&"createBrowserRouter"),
+            "expected createBrowserRouter skipped, got {skipped_names:?}"
+        );
+        assert!(!names.contains(&"createBrowserRouter"), "names: {names:?}");
+
+        // Deterministic ordering: first-seen BFS order, stable across runs.
+        let out2 = extract("react-router-dom", &[], &root, None, true).expect("discover 2");
+        let names2: Vec<&str> = out2["declarations"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|d| d["name"].as_str().unwrap())
+            .collect();
+        assert_eq!(names, names2, "discovery should be stable across runs");
     }
 }
 
@@ -1904,14 +2171,14 @@ mod hook_tests {
             eprintln!("skipping: react-router-dom not installed at {}", root.display());
             return;
         }
-        let out = extract("react-router-dom", &["useParams".to_string()], &root, None).expect("extract");
+        let out = extract("react-router-dom", &["useParams".to_string()], &root, None, false).expect("extract");
         let decls = out["declarations"].as_array().unwrap();
         assert_eq!(decls.len(), 1);
         let decl = &decls[0];
         assert_eq!(decl["kind"], "hook");
         let returns = &decl["returns"];
         eprintln!("useParams returns: {returns}");
-        let nav = extract("react-router-dom", &["useNavigation".to_string()], &root, None).expect("nav");
+        let nav = extract("react-router-dom", &["useNavigation".to_string()], &root, None, false).expect("nav");
         eprintln!("useNavigation: {}", nav["declarations"][0]["returns"]);
     }
 
@@ -1927,6 +2194,7 @@ mod hook_tests {
             &["useLocation".to_string(), "useNavigate".to_string(), "useSearchParams".to_string()],
             &root,
             None,
+            false,
         ).expect("extract");
         let decls = out["declarations"].as_array().unwrap();
         for d in decls {

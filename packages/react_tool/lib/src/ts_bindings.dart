@@ -128,10 +128,15 @@ final class TsBindingsResult {
   final int files;
   final List<TsIrDeclaration> declarations;
 
+  /// In discovery mode: public exports that were filtered out because they
+  /// are not components (e.g. `createBrowserRouter` returns `RemixRouter`).
+  final List<String> skipped;
+
   const TsBindingsResult({
     required this.entry,
     required this.files,
     required this.declarations,
+    this.skipped = const [],
   });
 
   factory TsBindingsResult.fromJson(Map<String, dynamic> json) =>
@@ -141,6 +146,10 @@ final class TsBindingsResult {
         declarations: (json['declarations'] as List<dynamic>)
             .map((d) => TsIrDeclaration.fromJson(d as Map<String, dynamic>))
             .toList(),
+        skipped: (json['skipped'] as List<dynamic>?)
+                ?.map((s) => s as String)
+                .toList() ??
+            const [],
       );
 }
 
@@ -151,11 +160,20 @@ final class TsBindingExtractor {
   const TsBindingExtractor(this.npmRoot);
 
   /// Extracts [names] exported by [specifier] and returns the parsed IR.
+  ///
+  /// When [all] is true, [names] is ignored and the extractor discovers the
+  /// package's exported components and hooks itself, filtering out exports
+  /// whose return type is not a React node.
   Future<TsBindingsResult> extract({
     required String specifier,
     required List<String> names,
+    bool all = false,
   }) async {
-    final request = jsonEncode({'specifier': specifier, 'names': names});
+    final request = jsonEncode({
+      'specifier': specifier,
+      'names': names,
+      'all': all,
+    });
     final requestC = request.toNativeUtf8();
     final rootC = npmRoot.toNativeUtf8();
     try {
@@ -1616,6 +1634,10 @@ String _emitHook(
     buffer.writeln('  final options = ${_optionsMapLiteral(members)};');
   }
   final callArgs = <String>[
+    // Optional positional inputs cross the bridge as Dart `null` (dart:js
+    // interop has no `undefined` literal); the generated shim drops
+    // trailing nulls so JS defaults (`function f(x = ...)`) fire — some
+    // libraries (`Object.keys(init)`) throw on explicit `null`.
     for (final p in positional) '${_safeParamName(p.name)}.jsify()',
     if (hasOptions) 'options.jsify()',
   ];
@@ -1952,8 +1974,17 @@ String _shimLocalName(String exportName) =>
 
 /// The JS body for one hook bridge member.
 String _jsHookBody(TsIrDeclaration hook, Map<String, String> localFor) {
-  final args = [for (var i = 0; i < hook.params.length; i++) 'a$i'].join(', ');
-  final call = '${localFor[hook.name]}($args)';
+  final args = [for (var i = 0; i < hook.params.length; i++) 'a$i'];
+  // Dart `null` means "absent" for optional positionals (dart:js interop
+  // cannot express `undefined`), but JS default parameters only fire for
+  // a real `undefined` — some libraries even throw on explicit `null`
+  // (`Object.keys(init)`). Drop trailing nulls so the call matches the
+  // TypeScript signature.
+  final callExpr = hook.params.any((p) => !p.required)
+      ? '(() => { const as = [${args.join(', ')}]; '
+          'while (as.length && as[as.length - 1] == null) as.pop(); '
+          'return ${localFor[hook.name]}(...as); })()'
+      : '${localFor[hook.name]}(${args.join(', ')})';
   final returns = hook.returns;
   const simple = {
     'string',
@@ -1969,10 +2000,10 @@ String _jsHookBody(TsIrDeclaration hook, Map<String, String> localFor) {
     'function',
   };
   if (returns == null || simple.contains(returns.kind)) {
-    return '($args) => $call';
+    return '(${args.join(', ')}) => $callExpr';
   }
   final decode = _jsDecodeExpr(returns, 'v');
-  return '($args) => { const v = $call; return $decode; }';
+  return '(${args.join(', ')}) => { const v = $callExpr; return $decode; }';
 }
 
 /// JS decode expression for a shim bridge return value.
