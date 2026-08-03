@@ -56,6 +56,32 @@ main,
   padding: 28px 0;
 }
 
+.site-nav {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.nav-link {
+  padding: 9px 15px;
+  border-radius: 999px;
+  color: $muted;
+  text-decoration: none;
+  font-weight: 650;
+  font-size: .92rem;
+  transition: color .15s, background .15s;
+}
+
+.nav-link:hover {
+  color: $violet;
+  background: rgba(114, 87, 255, .07);
+}
+
+.nav-link[aria-current='page'] {
+  color: $violet;
+  background: rgba(114, 87, 255, .08);
+}
+
 .brand-lockup {
   display: flex;
   align-items: center;
@@ -309,4 +335,108 @@ h1 {
   color: $violet;
   text-decoration: none;
   font-weight: 600;
+}
+
+// ── Multi-page layout ──────────────────────────────────────────
+.site-main {
+  flex: 1;
+  padding-bottom: 20px;
+}
+
+.page,
+.section-page {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 18px;
+}
+
+.section-head h2 {
+  font-size: clamp(26px, 4vw, 38px);
+  letter-spacing: -.04em;
+}
+
+.sub-nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.section-outlet {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.explore-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.explore-card h2 {
+  font-size: 22px;
+  letter-spacing: -.03em;
+}
+
+.explore-card p {
+  color: $muted;
+  line-height: 1.6;
+  font-size: 15px;
+  flex: 1;
+}
+
+.card-link {
+  margin-top: 4px;
+  color: $violet;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.card-link:hover {
+  text-decoration: underline;
+}
+
+.home-counter {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hooks-surface,
+.demo-surface,
+.todos-surface {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mini-links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.mini-links a {
+  color: $violet;
+  text-decoration: none;
+  font-weight: 650;
+}
+
+.mini-links a:hover {
+  text-decoration: underline;
 }

@@ -35,9 +35,22 @@ Future<void> main() async {
     ssr: ssr,
     rootComponent:
         Platform.environment['REACT_ROOT_COMPONENT'] ?? _defaultRootComponent,
-    pageProps: (request) => {'title': 'hi', 'path': request.url.path},
+    pageProps: (request) => {
+      'title': 'hi',
+      'path': _documentPath(request.url),
+    },
   );
 
   final server = await io.serve(app.handler, InternetAddress.anyIPv4, port);
   print('Server running on http://localhost:${server.port}');
+}
+
+/// The router location for an SSR request: path plus query string, with a
+/// leading slash (shelf's in-memory request URLs omit it).
+String _documentPath(Uri url) {
+  var path = url.path;
+  if (path.isEmpty) path = '/';
+  if (!path.startsWith('/')) path = '/$path';
+  if (url.query.isNotEmpty) path = '$path?${url.query}';
+  return path;
 }

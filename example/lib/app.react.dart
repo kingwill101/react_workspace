@@ -3,7 +3,7 @@ import 'package:react/react.dart';
 const idApp = ComponentId('package:example/lib/app.dart#App');
 
 ReactNode App({
-  required String path,
+  String? path,
   required String title,
   String? key,
   List<ReactNode> children = const []

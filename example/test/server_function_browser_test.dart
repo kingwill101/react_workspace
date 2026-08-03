@@ -46,10 +46,11 @@ Future<void> main() async {
     'SSR hydrates and invokes a generated server function',
     (browser) async {
       final page = await _get('$baseUrl/');
-      expect(page, contains('location: /'));
-      expect(page, contains('Home route — pick a destination above.'));
+      expect(page, contains('Build interfaces with'));
+      expect(page, contains('Explore routing →'));
 
-      await browser.visit('/');
+      // Navigate to the server-actions page.
+      await browser.visit('/state/todos');
       await browser.waitForText('4 open');
       await browser.waitForText('Build server functions');
 

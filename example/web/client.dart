@@ -17,17 +17,19 @@ void main() {
       final root = getRoot('app');
       final props = getInitialProps();
       if (props.isNotEmpty) {
-        // SSR content present — hydrate instead of mounting fresh.
+        // SSR content present — hydrate instead of mounting fresh. The path
+        // prop is server-only: the client renders through BrowserRouter so
+        // navigation follows the real URL.
         hydrate(
           root,
           App(
             title: props['title'] as String? ?? 'Hello from React',
-            path: props['path'] as String? ?? '/',
+            path: null,
           ),
         );
       } else {
         // No SSR — mount fresh.
-        mount(root, App(title: 'Hello from React', path: '/'));
+        mount(root, App(title: 'Hello from React', path: null));
       }
     },
   );

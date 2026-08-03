@@ -104,10 +104,7 @@ final class ReactServerApp {
       }
 
       final isDocument =
-          request.method == 'GET' &&
-          (request.url.path.isEmpty ||
-              request.url.path == '/' ||
-              request.url.path == 'index.html');
+          request.method == 'GET' && _looksLikeDocument(request.url.path);
       if (!isDocument || ssr == null || rootComponent == null) {
         return staticHandler(request);
       }
@@ -136,3 +133,19 @@ final class ReactServerApp {
 
 FutureOr<Map<String, dynamic>> _emptyPageProps(Request request) => {};
 Object? _anonymous(Request request) => null;
+
+/// Whether a GET request is a document (HTML navigation) that should go
+/// through SSR rather than the static handler.
+///
+/// Documents are the root path, `index.html`, and any path whose last segment
+/// carries no file extension (e.g. `/todos`, `/router/items/42`). Everything
+/// with an extension (`client.js`, `foreign/ssr/bundle.mjs`, `styles.css`,
+/// …) is an asset and stays on the static handler. This makes deep links to
+/// client-side routes render through SSR (SPA + SSR) instead of 404ing.
+bool _looksLikeDocument(String path) {
+  if (path.isEmpty || path == '/') return true;
+  if (path == 'index.html') return true;
+  final segments = path.split('/').where((s) => s.isNotEmpty);
+  if (segments.isEmpty) return true;
+  return !segments.last.contains('.');
+}
