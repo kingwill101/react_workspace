@@ -275,6 +275,8 @@ However, direct imports alone are insufficient if every registration is still em
 
 Then the aggregate entry only imports those exports.
 
+**Status:** the builder now emits this data. Each target in `bundle_report.json` carries `usedComponents` (component keys whose quoted literal survives in the compiled `client.js`/`ssr.js` Dart output) and `usedHooks` (`<namespace>.<hook>` paths the compiled output actually calls). `dart compile js` keeps these string-literal component keys and JS-interop hook paths intact while tree-shaking unused helpers, so the scan reports what the application truly renders per target — without importing the whole namespace.
+
 The usage manifest is **per target**. The `ssr` target is a superset of the browser target (e.g. it additionally needs `reactRouter.StaticRouter` from `react-router-dom/server`), so the manifest is keyed by target and the packaging layer consumes whichever the current build is producing:
 
 ```json
@@ -331,9 +333,9 @@ Do that in stages:
 }
 ```
 
-6. Replace wildcard imports in generated shims with named imports.
+6. Replace wildcard imports in generated shims with named imports. ✅ `generateShim()` now emits named imports.
 
-7. Add target-specific foreign usage data.
+7. Add target-specific foreign usage data. ✅ `bundle_report.json` per-target `usedComponents`/`usedHooks` from a scan of the compiled Dart output.
 
 8. Only after measuring, decide whether physically inlining `client.js` and `ssr.js` into final bundles is worthwhile.
 

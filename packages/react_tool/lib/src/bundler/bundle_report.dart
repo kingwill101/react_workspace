@@ -24,6 +24,14 @@ final class BundleReportTarget {
   /// `__reactDartHooks`, …).
   final List<String> retainedHookNamespaces;
 
+  /// Component keys from [retainedExports] that the compiled Dart output
+  /// actually references on this target — the components the app renders.
+  final List<String> usedComponents;
+
+  /// `<namespace>.<hook>` keys the compiled Dart output actually calls on this
+  /// target.
+  final List<String> usedHooks;
+
   const BundleReportTarget({
     required this.artifacts,
     required this.uncompressedBytes,
@@ -32,6 +40,8 @@ final class BundleReportTarget {
     required this.externals,
     required this.retainedExports,
     required this.retainedHookNamespaces,
+    required this.usedComponents,
+    required this.usedHooks,
   });
 
   Map<String, Object?> toJson() => {
@@ -42,6 +52,8 @@ final class BundleReportTarget {
     'externals': externals,
     'retainedExports': retainedExports,
     'retainedHookNamespaces': retainedHookNamespaces,
+    'usedComponents': usedComponents,
+    'usedHooks': usedHooks,
   };
 }
 
@@ -76,6 +88,12 @@ final class BundleReport {
         ),
         retainedHookNamespaces: List<String>.from(
           map['retainedHookNamespaces'] as List? ?? const [],
+        ),
+        usedComponents: List<String>.from(
+          map['usedComponents'] as List? ?? const [],
+        ),
+        usedHooks: List<String>.from(
+          map['usedHooks'] as List? ?? const [],
         ),
       );
     }

@@ -568,6 +568,10 @@ globalThis.ReactDOM = ReactDOM;
         expect(targetReport['externals'], contains('react-dom'));
         expect(targetReport['retainedExports'], contains('Card'));
         expect(targetReport['retainedHookNamespaces'], isEmpty);
+        // The stub app is `void main() {}`, so nothing is used on either
+        // target.
+        expect(targetReport['usedComponents'], isEmpty);
+        expect(targetReport['usedHooks'], isEmpty);
       }
     },
   );

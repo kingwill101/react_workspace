@@ -12,6 +12,7 @@ import 'bundler/bundle_result.dart';
 import 'bundler/bundler.dart';
 import 'bundler/esbuild_bundler.dart';
 import 'bundler/rolldown_bundler.dart';
+import 'bundler/usage_scan.dart';
 import 'js_environment.dart';
 import 'project_config.dart';
 import 'styles.dart';
@@ -909,15 +910,30 @@ final class ReactBuilder {
     final text = await bundleFile.readAsString();
     final result = _bundleResults[target];
     final outputs = result?.outputs ?? const <String>[];
+    final retainedExports = _retainedWrapperExports(text);
+    final retainedHookNamespaces = _retainedHookNamespaces(text);
+    final dartJs = _compiledDartFor(output, target);
     return BundleReportTarget(
       artifacts: outputs.isEmpty ? 1 : outputs.length,
       uncompressedBytes: await bundleFile.length(),
       gzipBytes: gzip.encode(await bundleFile.readAsBytes()).length,
       sourceMapBytes: mapFile.existsSync() ? await mapFile.length() : null,
       externals: await _mergedExternals(),
-      retainedExports: _retainedWrapperExports(text),
-      retainedHookNamespaces: _retainedHookNamespaces(text),
+      retainedExports: retainedExports,
+      retainedHookNamespaces: retainedHookNamespaces,
+      usedComponents: usedComponentsIn(dartJs ?? '', retainedExports),
+      usedHooks: usedHooksIn(dartJs ?? '', retainedHookNamespaces),
     );
+  }
+
+  /// The compiled Dart JS output for a target (`client.js` for browser,
+  /// `ssr.js` for SSR), or null when the target was not built.
+  String? _compiledDartFor(Directory output, String target) {
+    final file = File(
+      p.join(output.path, target == 'browser' ? 'client.js' : 'ssr.js'),
+    );
+    if (!file.existsSync()) return null;
+    return file.readAsStringSync();
   }
 
   /// Component registration keys retained in a final bundle: names passed

@@ -713,6 +713,7 @@ build/react/
 │       └── bundle.mjs
 ├── foreign_components.g.dart      # typed Dart bindings for foreign components
 ├── bundle_manifest.json           # deterministic artifact manifest (entries, bytes, bundler, mode)
+├── bundle_report.json             # size + retained-surface metrics, with per-target usedComponents/usedHooks
 ├── index.html                     # import map + single <script src="browser.entry.mjs">
 └── manifest.json
 ```
@@ -789,6 +790,18 @@ Status (implemented):
     **Dart helpers carry the bare component name** (`outlet()`, `navigate()`, `memoryRouter(children:, initialEntries:)`, `route(path:, element:)`, `link(to:, children:)`, …) — the `--prefix` value is used *only* for the JS registration keys (`reactRouter.*`) the shim registers and the Dart `foreignComponent('reactRouter.Name', …)` lookups reference; it never leaks into Dart function names, so generated APIs read like handwritten ones. (A `hide link` is still needed where `react_web`'s `<link>` element helper is imported alongside the router's `Link`.)
 
 12. ✅ Bundler abstraction + target-aware packaging layer — `JavaScriptBundler` interface with the existing esbuild path contained behind it (`EsbuildBundler`, `packages/react_tool/lib/src/bundler/`), explicit per-target bootstrap entries (`browser.entry.mjs`, `ssr.entry.mjs` + `ssr_runtime.mjs` split), a deterministic `bundle_manifest.json` (schema 1, bundler, mode, per-target entry/dart/runtime/foreign + byte sizes), and a `BundleManifest` model consumed by `react serve` and the `react_testing` harness (falling back to legacy names). esbuild metafiles enabled with output size + duration logging. Foreign bundles verified byte-for-byte identical to the pre-refactor output (browser `1e4b38e3…`, ssr `c8a81a5e…`); browser E2E (hydration + server function) green. Design record: `docs/bundler_recommendation.md`.
+
+Post-12 roadmap (bundler recommendations, in order):
+
+13. ✅ Bundle reporting — `bundle_report.json` (schema 1) next to `bundle_manifest.json`: per-target artifacts, uncompressed/gzip bytes, optional source-map size, externals, `retainedExports` (component keys surviving the final bundle, e.g. `reactRouter.Route`), and `retainedHookNamespaces`. Retained keys come from string literals (`__reactDartRegisterComponent('…')`, `'ns.Name': …` shim object keys) which survive minification.
+
+14. ✅ Rolldown backend — `react.yaml bundling.backend: rolldown` selects `RolldownBundler` (esbuild stays the default); the managed environment pins `rolldown` as a devDependency and a tool-owned `rolldown_driver.mjs` drives it with the same request/response contract as the esbuild driver (JSON argv options, structured inputs/outputs summary). Browser keeps externals bare for the import map; the node target rewrites them to absolute paths through the environment's npm root. `backend: webpack` and friends are rejected at config load.
+
+15. ✅ Named shim imports — `generateShim()` imports only the referenced declarations as individual named imports aliased `__reactDart<Name>` (tree-shakeable) instead of `import * as …`; hook bridge bodies call the aliased imports. The `react_router` browser/server shims were regenerated through the CLI.
+
+16. ✅ Per-target usage data — each `bundle_report.json` target now carries `usedComponents` (retained keys whose quoted literal appears in the compiled `client.js`/`ssr.js` Dart output) and `usedHooks` (`<namespace>.<hook>` paths from the `__reactDartBindings` JS-interop bridge). `dart compile js` preserves these string literals while tree-shaking unused helpers, so the scan reports what the app actually renders per target (verified on the example: browser uses `MemoryRouter/Routes/Route/Link/NavLink`, SSR additionally calls `useLocation`/`useParams`).
+
+17. ⏳ Application-level DCE — prune the aggregate entry to only the used components/hooks from item 16.
 
 The existing mechanism demonstrates that wrappers can self-register and be discovered through Dart package metadata. That part is valuable. The permanent design should make the **module specifier** the contract, make esbuild the resolver, separate browser and Node outputs, and keep all automatically managed npm state out of the consumer’s source-controlled manifest.
 
