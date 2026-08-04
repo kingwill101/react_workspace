@@ -72,6 +72,16 @@ tasks:
     cmds:
       - dart analyze
 
+  verify:
+    desc: Verify full Web IDL completeness (dropped = 0, no duplicate names)
+    cmds:
+      - dart run tool/web_idl/verify.dart
+
+  verify-strict:
+    desc: Verify completeness + package:web mapping coverage (requires pinned package:web)
+    cmds:
+      - dart run tool/web_idl/verify.dart --strict
+
   clean:
     desc: Remove compiled and generated files
     cmds:

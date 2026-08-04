@@ -34,6 +34,14 @@ Future<void> main() async {
   SsrSurfaceEmitter(completeModel).emitTo(neutralWebSurfaceDir);
   print('Generated SSR throwing surface → $neutralWebSurfaceDir/ssr.dart');
 
+  // Focused per-spec libraries, e.g. `import 'package:react_web/storage.dart'`.
+  const apisDir = 'packages/react_web/lib/apis';
+  NeutralSurfaceEmitter(completeModel).emitFocusedLibraries(
+    apisDir,
+    completeModel.specOf.values.toSet().toList(),
+  );
+  print('Generated focused libraries → $apisDir/');
+
   final modelBuilder = ModelBuilder(webIdlPath: webApisJson);
   final model = modelBuilder.build();
 

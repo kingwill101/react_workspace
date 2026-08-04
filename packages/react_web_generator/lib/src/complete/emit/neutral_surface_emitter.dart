@@ -57,7 +57,8 @@ final class NeutralSurfaceEmitter {
     _emitGlobals(dir);
   }
 
-  String _fileName(String spec) {
+  /// Deterministic, sanitized module file name for a spec group.
+  static String specFileName(String spec) {
     final sb = StringBuffer();
     for (final c in spec.toLowerCase().split('')) {
       if ((c.codeUnitAt(0) >= 97 && c.codeUnitAt(0) <= 122) ||
@@ -74,6 +75,23 @@ final class NeutralSurfaceEmitter {
     name = name.replaceAll(RegExp(r'^_+|_+$'), '');
     return name.isEmpty ? 'misc' : name;
   }
+
+  /// Emits a focused `package:react_web/<spec>.dart` library per module so
+  /// users can `import 'package:react_web/storage.dart';` etc.
+  void emitFocusedLibraries(String apisDir, List<String> specs) {
+    final dir = Directory(apisDir);
+    dir.createSync(recursive: true);
+    final files = specs.map(specFileName).toSet()..remove('web');
+    for (final f in files) {
+      File('${dir.path}/$f.dart').writeAsStringSync(
+        '// GENERATED CODE — DO NOT EDIT\n'
+        '// Focused library for a specification module.\n'
+        "export 'package:react_web/src/generated/web/$f.dart';\n",
+      );
+    }
+  }
+
+  String _fileName(String spec) => specFileName(spec);
 
   void _emitSpec(Directory dir, String spec, List<WebIdlDefinition> defs, List<String> allSpecs) {
     final buf = StringBuffer();
