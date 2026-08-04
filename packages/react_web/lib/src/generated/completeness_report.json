@@ -1,0 +1,50 @@
+{
+  "sourceRevision": null,
+  "definitions": {
+    "source": 2626,
+    "emitted": 2626,
+    "opaque": 0,
+    "dropped": 0
+  },
+  "members": {
+    "source": 11299,
+    "emitted": 11299,
+    "opaque": 0,
+    "dropped": 0
+  },
+  "kinds": {
+    "interface": {
+      "source": 1106,
+      "emitted": 1106
+    },
+    "mixin": {
+      "source": 91,
+      "emitted": 91
+    },
+    "dictionary": {
+      "source": 851,
+      "emitted": 851
+    },
+    "namespace": {
+      "source": 9,
+      "emitted": 9
+    },
+    "enum": {
+      "source": 358,
+      "emitted": 358
+    },
+    "typedef": {
+      "source": 137,
+      "emitted": 137
+    },
+    "callback": {
+      "source": 71,
+      "emitted": 71
+    },
+    "callbackInterface": {
+      "source": 3,
+      "emitted": 3
+    }
+  },
+  "opaqueLowerings": []
+}

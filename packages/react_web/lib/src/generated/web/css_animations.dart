@@ -1,0 +1,286 @@
+// GENERATED CODE — DO NOT EDIT
+// Neutral Web surface for spec: css-animations
+// ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
+
+import 'dom.dart';
+import 'cssom.dart';
+import 'html.dart';
+
+abstract interface class AnimationEvent {
+  Object get animationName;
+  double get elapsedTime;
+  Object get pseudoElement;
+}
+
+abstract interface class AnimationEventInit {
+  Object get animationName;
+  set animationName(Object value);
+  double get elapsedTime;
+  set elapsedTime(double value);
+  Object get pseudoElement;
+  set pseudoElement(Object value);
+}
+
+abstract interface class CSSKeyframeRule {
+  Object get keyText;
+   set keyText(Object value);
+  CSSStyleProperties get style;
+}
+
+abstract interface class CSSKeyframesRule {
+  Object get name;
+   set name(Object value);
+  CSSRuleList get cssRules;
+  int get length;
+  void appendRule(Object rule);
+  void deleteRule(Object select);
+  CSSKeyframeRule? findRule(Object select);
+}
+
+abstract interface class CSSRule {
+   static const int KEYFRAMES_RULE =
+      7;
+   static const int KEYFRAME_RULE =
+      8;
+   static const int SUPPORTS_RULE =
+      12;
+   static const int COUNTER_STYLE_RULE =
+      11;
+   static const int FONT_FEATURE_VALUES_RULE =
+      14;
+  Object get cssText;
+   set cssText(Object value);
+  CSSRule? get parentRule;
+  CSSStyleSheet? get parentStyleSheet;
+  int get type;
+   static const int STYLE_RULE =
+      1;
+   static const int CHARSET_RULE =
+      2;
+   static const int IMPORT_RULE =
+      3;
+   static const int MEDIA_RULE =
+      4;
+   static const int FONT_FACE_RULE =
+      5;
+   static const int PAGE_RULE =
+      6;
+   static const int MARGIN_RULE =
+      9;
+   static const int NAMESPACE_RULE =
+      10;
+}
+
+abstract interface class GlobalEventHandlers {
+  EventHandler get onanimationstart;
+   set onanimationstart(EventHandler value);
+  EventHandler get onanimationiteration;
+   set onanimationiteration(EventHandler value);
+  EventHandler get onanimationend;
+   set onanimationend(EventHandler value);
+  EventHandler get onanimationcancel;
+   set onanimationcancel(EventHandler value);
+  EventHandler get onsnapchanged;
+   set onsnapchanged(EventHandler value);
+  EventHandler get onsnapchanging;
+   set onsnapchanging(EventHandler value);
+  EventHandler get ontransitionrun;
+   set ontransitionrun(EventHandler value);
+  EventHandler get ontransitionstart;
+   set ontransitionstart(EventHandler value);
+  EventHandler get ontransitionend;
+   set ontransitionend(EventHandler value);
+  EventHandler get ontransitioncancel;
+   set ontransitioncancel(EventHandler value);
+  EventHandler get onfencedtreeclick;
+   set onfencedtreeclick(EventHandler value);
+  EventHandler get onabort;
+   set onabort(EventHandler value);
+  EventHandler get onauxclick;
+   set onauxclick(EventHandler value);
+  EventHandler get onbeforeinput;
+   set onbeforeinput(EventHandler value);
+  EventHandler get onbeforematch;
+   set onbeforematch(EventHandler value);
+  EventHandler get onbeforetoggle;
+   set onbeforetoggle(EventHandler value);
+  EventHandler get onblur;
+   set onblur(EventHandler value);
+  EventHandler get oncancel;
+   set oncancel(EventHandler value);
+  EventHandler get oncanplay;
+   set oncanplay(EventHandler value);
+  EventHandler get oncanplaythrough;
+   set oncanplaythrough(EventHandler value);
+  EventHandler get onchange;
+   set onchange(EventHandler value);
+  EventHandler get onclick;
+   set onclick(EventHandler value);
+  EventHandler get onclose;
+   set onclose(EventHandler value);
+  EventHandler get oncommand;
+   set oncommand(EventHandler value);
+  EventHandler get oncontextlost;
+   set oncontextlost(EventHandler value);
+  EventHandler get oncontextmenu;
+   set oncontextmenu(EventHandler value);
+  EventHandler get oncontextrestored;
+   set oncontextrestored(EventHandler value);
+  EventHandler get oncopy;
+   set oncopy(EventHandler value);
+  EventHandler get oncuechange;
+   set oncuechange(EventHandler value);
+  EventHandler get oncut;
+   set oncut(EventHandler value);
+  EventHandler get ondblclick;
+   set ondblclick(EventHandler value);
+  EventHandler get ondrag;
+   set ondrag(EventHandler value);
+  EventHandler get ondragend;
+   set ondragend(EventHandler value);
+  EventHandler get ondragenter;
+   set ondragenter(EventHandler value);
+  EventHandler get ondragleave;
+   set ondragleave(EventHandler value);
+  EventHandler get ondragover;
+   set ondragover(EventHandler value);
+  EventHandler get ondragstart;
+   set ondragstart(EventHandler value);
+  EventHandler get ondrop;
+   set ondrop(EventHandler value);
+  EventHandler get ondurationchange;
+   set ondurationchange(EventHandler value);
+  EventHandler get onemptied;
+   set onemptied(EventHandler value);
+  EventHandler get onended;
+   set onended(EventHandler value);
+  OnErrorEventHandler get onerror;
+   set onerror(OnErrorEventHandler value);
+  EventHandler get onfocus;
+   set onfocus(EventHandler value);
+  EventHandler get onformdata;
+   set onformdata(EventHandler value);
+  EventHandler get oninput;
+   set oninput(EventHandler value);
+  EventHandler get oninvalid;
+   set oninvalid(EventHandler value);
+  EventHandler get onkeydown;
+   set onkeydown(EventHandler value);
+  EventHandler get onkeypress;
+   set onkeypress(EventHandler value);
+  EventHandler get onkeyup;
+   set onkeyup(EventHandler value);
+  EventHandler get onload;
+   set onload(EventHandler value);
+  EventHandler get onloadeddata;
+   set onloadeddata(EventHandler value);
+  EventHandler get onloadedmetadata;
+   set onloadedmetadata(EventHandler value);
+  EventHandler get onloadstart;
+   set onloadstart(EventHandler value);
+  EventHandler get onmousedown;
+   set onmousedown(EventHandler value);
+  EventHandler get onmouseenter;
+   set onmouseenter(EventHandler value);
+  EventHandler get onmouseleave;
+   set onmouseleave(EventHandler value);
+  EventHandler get onmousemove;
+   set onmousemove(EventHandler value);
+  EventHandler get onmouseout;
+   set onmouseout(EventHandler value);
+  EventHandler get onmouseover;
+   set onmouseover(EventHandler value);
+  EventHandler get onmouseup;
+   set onmouseup(EventHandler value);
+  EventHandler get onpaste;
+   set onpaste(EventHandler value);
+  EventHandler get onpause;
+   set onpause(EventHandler value);
+  EventHandler get onplay;
+   set onplay(EventHandler value);
+  EventHandler get onplaying;
+   set onplaying(EventHandler value);
+  EventHandler get onprogress;
+   set onprogress(EventHandler value);
+  EventHandler get onratechange;
+   set onratechange(EventHandler value);
+  EventHandler get onreset;
+   set onreset(EventHandler value);
+  EventHandler get onresize;
+   set onresize(EventHandler value);
+  EventHandler get onscroll;
+   set onscroll(EventHandler value);
+  EventHandler get onscrollend;
+   set onscrollend(EventHandler value);
+  EventHandler get onsecuritypolicyviolation;
+   set onsecuritypolicyviolation(EventHandler value);
+  EventHandler get onseeked;
+   set onseeked(EventHandler value);
+  EventHandler get onseeking;
+   set onseeking(EventHandler value);
+  EventHandler get onselect;
+   set onselect(EventHandler value);
+  EventHandler get onslotchange;
+   set onslotchange(EventHandler value);
+  EventHandler get onstalled;
+   set onstalled(EventHandler value);
+  EventHandler get onsubmit;
+   set onsubmit(EventHandler value);
+  EventHandler get onsuspend;
+   set onsuspend(EventHandler value);
+  EventHandler get ontimeupdate;
+   set ontimeupdate(EventHandler value);
+  EventHandler get ontoggle;
+   set ontoggle(EventHandler value);
+  EventHandler get onvolumechange;
+   set onvolumechange(EventHandler value);
+  EventHandler get onwaiting;
+   set onwaiting(EventHandler value);
+  EventHandler get onwebkitanimationend;
+   set onwebkitanimationend(EventHandler value);
+  EventHandler get onwebkitanimationiteration;
+   set onwebkitanimationiteration(EventHandler value);
+  EventHandler get onwebkitanimationstart;
+   set onwebkitanimationstart(EventHandler value);
+  EventHandler get onwebkittransitionend;
+   set onwebkittransitionend(EventHandler value);
+  EventHandler get onwheel;
+   set onwheel(EventHandler value);
+  EventHandler get onpointerover;
+   set onpointerover(EventHandler value);
+  EventHandler get onpointerenter;
+   set onpointerenter(EventHandler value);
+  EventHandler get onpointerdown;
+   set onpointerdown(EventHandler value);
+  EventHandler get onpointermove;
+   set onpointermove(EventHandler value);
+  EventHandler get onpointerrawupdate;
+   set onpointerrawupdate(EventHandler value);
+  EventHandler get onpointerup;
+   set onpointerup(EventHandler value);
+  EventHandler get onpointercancel;
+   set onpointercancel(EventHandler value);
+  EventHandler get onpointerout;
+   set onpointerout(EventHandler value);
+  EventHandler get onpointerleave;
+   set onpointerleave(EventHandler value);
+  EventHandler get ongotpointercapture;
+   set ongotpointercapture(EventHandler value);
+  EventHandler get onlostpointercapture;
+   set onlostpointercapture(EventHandler value);
+  EventHandler get onselectstart;
+   set onselectstart(EventHandler value);
+  EventHandler get onselectionchange;
+   set onselectionchange(EventHandler value);
+  EventHandler get ontouchstart;
+   set ontouchstart(EventHandler value);
+  EventHandler get ontouchend;
+   set ontouchend(EventHandler value);
+  EventHandler get ontouchmove;
+   set ontouchmove(EventHandler value);
+  EventHandler get ontouchcancel;
+   set ontouchcancel(EventHandler value);
+  EventHandler get onbeforexrselect;
+   set onbeforexrselect(EventHandler value);
+}
+

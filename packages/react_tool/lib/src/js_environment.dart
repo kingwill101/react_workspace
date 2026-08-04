@@ -402,7 +402,7 @@ class JsEnvironmentBuilder {
       log('Installing JS environment into ${p.relative(root.path)}');
       final result = await Process.run(
         npmCommand,
-        ['install', '--no-audit', '--no-fund'],
+        ['install', '--no-audit', '--no-fund', '--legacy-peer-deps'],
         workingDirectory: root.path,
       );
       if (result.exitCode != 0) {

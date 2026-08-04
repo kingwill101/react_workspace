@@ -1,0 +1,52 @@
+// GENERATED CODE — DO NOT EDIT
+// Neutral Web surface for spec: clipboard-apis
+// ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
+
+import 'html.dart';
+import 'dom.dart';
+import 'fileapi.dart';
+import 'permissions.dart';
+
+abstract interface class Clipboard {
+  Future<ClipboardItems> read([ClipboardUnsanitizedFormats? formats]);
+  Future<String> readText();
+  Future<void> write(ClipboardItems data);
+  Future<void> writeText(String data);
+}
+
+abstract interface class ClipboardEvent {
+  DataTransfer? get clipboardData;
+}
+
+abstract interface class ClipboardEventInit {
+  DataTransfer? get clipboardData;
+  set clipboardData(DataTransfer? value);
+}
+
+abstract interface class ClipboardItem {
+  PresentationStyle get presentationStyle;
+  List<String> get types;
+  Future<Blob> getType(String type);
+}
+
+typedef ClipboardItemData = Future<Object>;
+
+abstract interface class ClipboardItemOptions {
+  PresentationStyle get presentationStyle;
+  set presentationStyle(PresentationStyle value);
+}
+
+typedef ClipboardItems = List<ClipboardItem>;
+
+abstract interface class ClipboardPermissionDescriptor {
+  bool get allowWithoutGesture;
+  set allowWithoutGesture(bool value);
+}
+
+abstract interface class ClipboardUnsanitizedFormats {
+  List<String> get unsanitized;
+  set unsanitized(List<String> value);
+}
+
+typedef PresentationStyle = String;
+

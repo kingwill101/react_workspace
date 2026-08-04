@@ -13,6 +13,27 @@ const neutralWebModelJson =
 const generatedDir = 'packages/react_web/lib/src/generated';
 
 Future<void> main() async {
+  // === Complete Web IDL surface (replaces the old reachability pipeline) ===
+  final raw = CompleteWebModelBuilder(webIdlPath: webApisJson).loadRaw();
+  final completeModel = mergeRawModel(raw);
+
+  const neutralWebSurfaceDir = 'packages/react_web/lib/src/generated/web';
+  NeutralSurfaceEmitter(completeModel).emitTo(neutralWebSurfaceDir);
+  print('Generated complete neutral Web surface → $neutralWebSurfaceDir/');
+  print('  Definitions: ${completeModel.definitionCount} across ${completeModel.specOf.values.toSet().length} specs');
+
+  final verifier = CompletenessVerifier(model: completeModel, emittedModel: completeModel);
+  final report = verifier.verify();
+  File(neutralWebSurfaceDir + '/../completeness_report.json')
+      .writeAsStringSync(verifier.toJsonNice(report));
+  print('Completeness report → $neutralWebSurfaceDir/../completeness_report.json');
+  print('  definitions.dropped=${(report['definitions'] as Map)['dropped']} '
+      'members.dropped=${(report['members'] as Map)['dropped']}');
+
+  // Generated SSR throwing surface (same declarations as browser; throws at runtime).
+  SsrSurfaceEmitter(completeModel).emitTo(neutralWebSurfaceDir);
+  print('Generated SSR throwing surface → $neutralWebSurfaceDir/ssr.dart');
+
   final modelBuilder = ModelBuilder(webIdlPath: webApisJson);
   final model = modelBuilder.build();
 

@@ -1,0 +1,19 @@
+// GENERATED CODE — DO NOT EDIT
+// Neutral Web surface for spec: screen-orientation
+// ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
+
+import 'html.dart';
+
+typedef OrientationLockType = String;
+
+typedef OrientationType = String;
+
+abstract interface class ScreenOrientation {
+  Future<void> lock(OrientationLockType orientation);
+  void unlock();
+  OrientationType get type;
+  int get angle;
+  EventHandler get onchange;
+   set onchange(EventHandler value);
+}
+

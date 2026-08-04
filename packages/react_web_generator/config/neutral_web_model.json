@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sources": {
-    "webIdlSnapshot": "/run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/tool/web_idl/snapshots/web_apis.json",
-    "rootsConfig": "/run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/packages/react_web_generator/config/roots.json"
+    "webIdlSnapshot": "tool/web_idl/snapshots/web_apis.json",
+    "rootsConfig": "packages/react_web_generator/config/roots.json"
   },
   "types": {
     "react.ReactCompositionEvent": {

@@ -1,0 +1,40 @@
+// GENERATED CODE — DO NOT EDIT
+// Neutral Web surface for spec: reporting
+// ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
+
+
+abstract interface class GenerateTestReportParameters {
+  String get message;
+  set message(String value);
+  String get group;
+  set group(String value);
+}
+
+abstract interface class Report {
+  Object toJSON();
+  String get type;
+  String get url;
+  ReportBody? get body;
+}
+
+abstract interface class ReportBody {
+  Object toJSON();
+}
+
+typedef ReportList = List<Report>;
+
+abstract interface class ReportingObserver {
+  void observe();
+  void disconnect();
+  ReportList takeRecords();
+}
+
+typedef ReportingObserverCallback = void Function(List<Report> reports, ReportingObserver observer,);
+
+abstract interface class ReportingObserverOptions {
+  List<String> get types;
+  set types(List<String> value);
+  bool get buffered;
+  set buffered(bool value);
+}
+
