@@ -14,4 +14,5 @@ library;
 
 export 'src/generated/web/web.dart';
 export 'src/generated/web/globals.dart';
+export 'src/generated/web/ssr.dart' show SsrWebRuntime, installSsrWebRuntime;
 export 'src/web_runtime.dart';

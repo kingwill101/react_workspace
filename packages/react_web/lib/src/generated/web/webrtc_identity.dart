@@ -9,6 +9,7 @@ import 'webrtc_encoded_transform.dart';
 import 'capture_handle_identity.dart';
 import 'mediacapture_streams.dart';
 import 'webrtc_priority.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 typedef GenerateAssertionCallback = Future<RTCIdentityAssertionResult> Function(String contents, String origin, RTCIdentityProviderOptions options,);
 
@@ -30,6 +31,11 @@ abstract interface class RTCConfiguration {
 }
 
 abstract interface class RTCError {
+  factory RTCError(RTCErrorInit init, [String? message]) =>
+      WebRuntime.current.createWebObject<RTCError>(
+        'RTCError',
+        [init, message],
+      );
   int? get httpRequestStatusCode;
   RTCErrorDetailType get errorDetail;
   int? get sdpLineNumber;
@@ -55,13 +61,6 @@ abstract interface class RTCErrorInit {
   set sentAlert(int value);
 }
 
-abstract interface class RTCIdentityAssertion {
-  String get idp;
-   set idp(String value);
-  String get name;
-   set name(String value);
-}
-
 abstract interface class RTCIdentityAssertionResult {
   RTCIdentityProviderDetails get idp;
   set idp(RTCIdentityProviderDetails value);
@@ -83,10 +82,6 @@ abstract interface class RTCIdentityProviderDetails {
   set protocol(String value);
 }
 
-abstract interface class RTCIdentityProviderGlobalScope {
-  RTCIdentityProviderRegistrar get rtcIdentityProvider;
-}
-
 abstract interface class RTCIdentityProviderOptions {
   String get protocol;
   set protocol(String value);
@@ -94,10 +89,6 @@ abstract interface class RTCIdentityProviderOptions {
   set usernameHint(String value);
   String get peerIdentity;
   set peerIdentity(String value);
-}
-
-abstract interface class RTCIdentityProviderRegistrar {
-  void register(RTCIdentityProvider idp);
 }
 
 abstract interface class RTCIdentityValidationResult {
@@ -108,11 +99,15 @@ abstract interface class RTCIdentityValidationResult {
 }
 
 abstract interface class RTCPeerConnection {
+  factory RTCPeerConnection([RTCConfiguration? configuration]) =>
+      WebRuntime.current.createWebObject<RTCPeerConnection>(
+        'RTCPeerConnection',
+        [configuration],
+      );
   void setIdentityProvider(String provider, [RTCIdentityProviderOptions? options]);
   Future<String> getIdentityAssertion();
-  Future<RTCIdentityAssertion> get peerIdentity;
+  Future<Object> get peerIdentity;
   String? get idpLoginUrl;
-  String? get idpErrorInfo;
   Future<void> createOffer(RTCSessionDescriptionCallback successCallback, RTCPeerConnectionErrorCallback failureCallback, [RTCOfferOptions? options]);
   Future<void> createAnswer(RTCSessionDescriptionCallback successCallback, RTCPeerConnectionErrorCallback failureCallback);
   Future<void> setLocalDescription(RTCLocalSessionDescriptionInit description, VoidFunction successCallback, RTCPeerConnectionErrorCallback failureCallback);

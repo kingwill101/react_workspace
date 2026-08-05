@@ -18,20 +18,9 @@ abstract interface class AllowedBluetoothDevice {
   set allowedManufacturerData(List<int> value);
 }
 
-abstract interface class BluetoothAdvertisingEvent {
-  BluetoothDevice get device;
-  List<UUID> get uuids;
-  String? get name;
-  int? get appearance;
-  int? get txPower;
-  int? get rssi;
-  BluetoothManufacturerDataMap get manufacturerData;
-  BluetoothServiceDataMap get serviceData;
-}
-
 abstract interface class BluetoothAdvertisingEventInit {
-  BluetoothDevice get device;
-  set device(BluetoothDevice value);
+  Object get device;
+  set device(Object value);
   List<Object> get uuids;
   set uuids(List<Object> value);
   String get name;
@@ -42,22 +31,10 @@ abstract interface class BluetoothAdvertisingEventInit {
   set txPower(int value);
   int get rssi;
   set rssi(int value);
-  BluetoothManufacturerDataMap get manufacturerData;
-  set manufacturerData(BluetoothManufacturerDataMap value);
-  BluetoothServiceDataMap get serviceData;
-  set serviceData(BluetoothServiceDataMap value);
-}
-
-abstract interface class BluetoothCharacteristicProperties {
-  bool get broadcast;
-  bool get read;
-  bool get writeWithoutResponse;
-  bool get write;
-  bool get notify;
-  bool get indicate;
-  bool get authenticatedSignedWrites;
-  bool get reliableWrite;
-  bool get writableAuxiliaries;
+  Object get manufacturerData;
+  set manufacturerData(Object value);
+  Object get serviceData;
+  set serviceData(Object value);
 }
 
 typedef BluetoothCharacteristicUUID = Object;
@@ -70,27 +47,6 @@ abstract interface class BluetoothDataFilterInit {
 }
 
 typedef BluetoothDescriptorUUID = Object;
-
-abstract interface class BluetoothDevice {
-  EventHandler get onadvertisementreceived;
-   set onadvertisementreceived(EventHandler value);
-  EventHandler get ongattserverdisconnected;
-   set ongattserverdisconnected(EventHandler value);
-  EventHandler get oncharacteristicvaluechanged;
-   set oncharacteristicvaluechanged(EventHandler value);
-  EventHandler get onserviceadded;
-   set onserviceadded(EventHandler value);
-  EventHandler get onservicechanged;
-   set onservicechanged(EventHandler value);
-  EventHandler get onserviceremoved;
-   set onserviceremoved(EventHandler value);
-  String get id;
-  String? get name;
-  BluetoothRemoteGATTServer? get gatt;
-  Future<void> forget();
-  Future<void> watchAdvertisements([WatchAdvertisementsOptions? options]);
-  bool get watchingAdvertisements;
-}
 
 abstract interface class BluetoothDeviceEventHandlers {
   EventHandler get onadvertisementreceived;
@@ -117,14 +73,6 @@ abstract interface class BluetoothManufacturerDataFilterInit {
   set companyIdentifier(int value);
 }
 
-abstract interface class BluetoothManufacturerDataMap {
-   Iterable<int> get keys;
-   Iterable<Object> get values;
-   Iterable<MapEntry<int, Object>> get entries;
-   Object? operator [](Object key);
-   bool has(Object key);
-}
-
 abstract interface class BluetoothPermissionDescriptor {
   String get deviceId;
   set deviceId(String value);
@@ -138,79 +86,14 @@ abstract interface class BluetoothPermissionDescriptor {
   set acceptAllDevices(bool value);
 }
 
-abstract interface class BluetoothPermissionResult {
-  List<BluetoothDevice> get devices;
-   set devices(List<BluetoothDevice> value);
-}
-
 abstract interface class BluetoothPermissionStorage {
   List<AllowedBluetoothDevice> get allowedDevices;
   set allowedDevices(List<AllowedBluetoothDevice> value);
 }
 
-abstract interface class BluetoothRemoteGATTCharacteristic {
-  EventHandler get oncharacteristicvaluechanged;
-   set oncharacteristicvaluechanged(EventHandler value);
-  BluetoothRemoteGATTService get service;
-  UUID get uuid;
-  BluetoothCharacteristicProperties get properties;
-  Object get value;
-  Future<BluetoothRemoteGATTDescriptor> getDescriptor(BluetoothDescriptorUUID descriptor);
-  Future<List<BluetoothRemoteGATTDescriptor>> getDescriptors([BluetoothDescriptorUUID? descriptor]);
-  Future<Object> readValue();
-  Future<void> writeValue(BufferSource value);
-  Future<void> writeValueWithResponse(BufferSource value);
-  Future<void> writeValueWithoutResponse(BufferSource value);
-  Future<BluetoothRemoteGATTCharacteristic> startNotifications();
-  Future<BluetoothRemoteGATTCharacteristic> stopNotifications();
-}
-
-abstract interface class BluetoothRemoteGATTDescriptor {
-  BluetoothRemoteGATTCharacteristic get characteristic;
-  UUID get uuid;
-  Object get value;
-  Future<Object> readValue();
-  Future<void> writeValue(BufferSource value);
-}
-
-abstract interface class BluetoothRemoteGATTServer {
-  BluetoothDevice get device;
-  bool get connected;
-  Future<BluetoothRemoteGATTServer> connect();
-  void disconnect();
-  Future<BluetoothRemoteGATTService> getPrimaryService(BluetoothServiceUUID service);
-  Future<List<BluetoothRemoteGATTService>> getPrimaryServices([BluetoothServiceUUID? service]);
-}
-
-abstract interface class BluetoothRemoteGATTService {
-  EventHandler get oncharacteristicvaluechanged;
-   set oncharacteristicvaluechanged(EventHandler value);
-  EventHandler get onserviceadded;
-   set onserviceadded(EventHandler value);
-  EventHandler get onservicechanged;
-   set onservicechanged(EventHandler value);
-  EventHandler get onserviceremoved;
-   set onserviceremoved(EventHandler value);
-  BluetoothDevice get device;
-  UUID get uuid;
-  bool get isPrimary;
-  Future<BluetoothRemoteGATTCharacteristic> getCharacteristic(BluetoothCharacteristicUUID characteristic);
-  Future<List<BluetoothRemoteGATTCharacteristic>> getCharacteristics([BluetoothCharacteristicUUID? characteristic]);
-  Future<BluetoothRemoteGATTService> getIncludedService(BluetoothServiceUUID service);
-  Future<List<BluetoothRemoteGATTService>> getIncludedServices([BluetoothServiceUUID? service]);
-}
-
 abstract interface class BluetoothServiceDataFilterInit {
   BluetoothServiceUUID get service;
   set service(BluetoothServiceUUID value);
-}
-
-abstract interface class BluetoothServiceDataMap {
-   Iterable<UUID> get keys;
-   Iterable<Object> get values;
-   Iterable<MapEntry<UUID, Object>> get entries;
-   Object? operator [](Object key);
-   bool has(Object key);
 }
 
 typedef BluetoothServiceUUID = Object;
@@ -246,10 +129,6 @@ abstract interface class ServiceEventHandlers {
 }
 
 typedef UUID = String;
-
-abstract interface class ValueEvent {
-  Object get value;
-}
 
 abstract interface class ValueEventInit {
   Object get value;

@@ -2,13 +2,6 @@
 // Neutral Web surface for spec: device-posture
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-import 'html.dart';
-
-abstract interface class DevicePosture {
-  DevicePostureType get type;
-  EventHandler get onchange;
-   set onchange(EventHandler value);
-}
 
 typedef DevicePostureType = String;
 

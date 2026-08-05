@@ -4,6 +4,7 @@
 
 import 'webrtc.dart';
 import 'html.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class RTCIceGatherOptions {
   RTCIceTransportPolicy get gatherPolicy;
@@ -22,21 +23,17 @@ abstract interface class RTCIceParameters {
 }
 
 abstract interface class RTCIceTransport {
-  void gather([RTCIceGatherOptions? options]);
-  void start([RTCIceParameters? remoteParameters, RTCIceRole? role]);
-  void stop();
-  void addRemoteCandidate([RTCIceCandidateInit? remoteCandidate]);
-  EventHandler get onerror;
-   set onerror(EventHandler value);
-  EventHandler get onicecandidate;
-   set onicecandidate(EventHandler value);
+  factory RTCIceTransport() =>
+      WebRuntime.current.createWebObject<RTCIceTransport>(
+        'RTCIceTransport',
+        [],
+      );
   RTCIceRole get role;
-  RTCIceComponent get component;
   RTCIceTransportState get state;
   RTCIceGathererState get gatheringState;
   List<RTCIceCandidate> getLocalCandidates();
   List<RTCIceCandidate> getRemoteCandidates();
-  RTCIceCandidatePair? getSelectedCandidatePair();
+  Object getSelectedCandidatePair();
   RTCIceParameters? getLocalParameters();
   RTCIceParameters? getRemoteParameters();
   EventHandler get onstatechange;

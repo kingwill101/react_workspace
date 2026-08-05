@@ -5,8 +5,14 @@
 import 'dom.dart';
 import 'html.dart';
 import 'webidl.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class MediaEncryptedEvent {
+  factory MediaEncryptedEvent(String type, [MediaEncryptedEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<MediaEncryptedEvent>(
+        'MediaEncryptedEvent',
+        [type, eventInitDict],
+      );
   String get initDataType;
   Object get initData;
 }
@@ -19,6 +25,11 @@ abstract interface class MediaEncryptedEventInit {
 }
 
 abstract interface class MediaKeyMessageEvent {
+  factory MediaKeyMessageEvent(String type, MediaKeyMessageEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<MediaKeyMessageEvent>(
+        'MediaKeyMessageEvent',
+        [type, eventInitDict],
+      );
   MediaKeyMessageType get messageType;
   Object get message;
 }
@@ -55,9 +66,6 @@ typedef MediaKeySessionType = String;
 typedef MediaKeyStatus = String;
 
 abstract interface class MediaKeyStatusMap {
-   Iterable<(BufferSource, MediaKeyStatus)> get entries;
-   Iterable<BufferSource> get keys;
-   Iterable<MediaKeyStatus> get values;
   int get size;
   bool has(BufferSource keyId);
   MediaKeyStatus get_(BufferSource keyId);

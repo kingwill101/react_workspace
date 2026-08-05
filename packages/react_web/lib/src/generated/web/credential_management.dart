@@ -4,9 +4,7 @@
 
 import 'dom.dart';
 import 'webauthn.dart';
-import 'digital_credentials.dart';
 import 'fedcm.dart';
-import 'web_otp.dart';
 import 'html.dart';
 
 abstract interface class Credential {
@@ -34,25 +32,6 @@ abstract interface class CredentialData {
 
 typedef CredentialMediationRequirement = String;
 
-abstract interface class CredentialRequestOptions {
-  CredentialMediationRequirement get mediation;
-  set mediation(CredentialMediationRequirement value);
-  AbortSignal get signal;
-  set signal(AbortSignal value);
-  bool get password;
-  set password(bool value);
-  FederatedCredentialRequestOptions get federated;
-  set federated(FederatedCredentialRequestOptions value);
-  DigitalCredentialRequestOptions get digital;
-  set digital(DigitalCredentialRequestOptions value);
-  IdentityCredentialRequestOptions get identity;
-  set identity(IdentityCredentialRequestOptions value);
-  OTPCredentialRequestOptions get otp;
-  set otp(OTPCredentialRequestOptions value);
-  PublicKeyCredentialRequestOptions get publicKey;
-  set publicKey(PublicKeyCredentialRequestOptions value);
-}
-
 abstract interface class CredentialUserData {
   String get name;
   String get iconURL;
@@ -63,13 +42,6 @@ abstract interface class CredentialsContainer {
   Future<void> store(Credential credential);
   Future<Credential?> create([CredentialCreationOptions? options]);
   Future<void> preventSilentAccess();
-}
-
-abstract interface class FederatedCredential {
-  String get name;
-  String get iconURL;
-  String get provider;
-  String? get protocol;
 }
 
 abstract interface class FederatedCredentialInit {
@@ -90,12 +62,6 @@ abstract interface class FederatedCredentialRequestOptions {
   set providers(List<String> value);
   List<String> get protocols;
   set protocols(List<String> value);
-}
-
-abstract interface class PasswordCredential {
-  String get name;
-  String get iconURL;
-  String get password;
 }
 
 abstract interface class PasswordCredentialData {

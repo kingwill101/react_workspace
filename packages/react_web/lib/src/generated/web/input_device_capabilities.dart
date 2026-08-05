@@ -4,11 +4,7 @@
 
 import 'anonymous_iframe.dart';
 import 'dom.dart';
-
-abstract interface class InputDeviceCapabilities {
-  bool get firesTouchEvents;
-  bool get pointerMovementScrolls;
-}
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class InputDeviceCapabilitiesInit {
   bool get firesTouchEvents;
@@ -18,7 +14,11 @@ abstract interface class InputDeviceCapabilitiesInit {
 }
 
 abstract interface class UIEvent {
-  InputDeviceCapabilities? get sourceCapabilities;
+  factory UIEvent(String type, [UIEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<UIEvent>(
+        'UIEvent',
+        [type, eventInitDict],
+      );
   Window? get view;
   int get detail;
   void initUIEvent(String typeArg, [bool? bubblesArg, bool? cancelableArg, Window? viewArg, int? detailArg]);
@@ -26,8 +26,8 @@ abstract interface class UIEvent {
 }
 
 abstract interface class UIEventInit {
-  InputDeviceCapabilities? get sourceCapabilities;
-  set sourceCapabilities(InputDeviceCapabilities? value);
+  Object get sourceCapabilities;
+  set sourceCapabilities(Object value);
   Window? get view;
   set view(Window? value);
   int get detail;

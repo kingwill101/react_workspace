@@ -5,31 +5,27 @@
 import 'streams.dart';
 import 'hr_time.dart';
 import 'webidl.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class WebTransport {
-  Future<WebTransportConnectionStats> getStats();
+  factory WebTransport(String url, [WebTransportOptions? options]) =>
+      WebRuntime.current.createWebObject<WebTransport>(
+        'WebTransport',
+        [url, options],
+      );
   Future<void> get ready;
-  WebTransportReliabilityMode get reliability;
-  WebTransportCongestionControl get congestionControl;
-  int? get anticipatedConcurrentIncomingUnidirectionalStreams;
-   set anticipatedConcurrentIncomingUnidirectionalStreams(int? value);
-  int? get anticipatedConcurrentIncomingBidirectionalStreams;
-   set anticipatedConcurrentIncomingBidirectionalStreams(int? value);
-  String get protocol;
   Future<WebTransportCloseInfo> get closed;
-  Future<void> get draining;
   void close([WebTransportCloseInfo? closeInfo]);
   WebTransportDatagramDuplexStream get datagrams;
   Future<WebTransportBidirectionalStream> createBidirectionalStream([WebTransportSendStreamOptions? options]);
   ReadableStream get incomingBidirectionalStreams;
-  Future<WebTransportSendStream> createUnidirectionalStream([WebTransportSendStreamOptions? options]);
+  Future<Object> createUnidirectionalStream([WebTransportSendStreamOptions? options]);
   ReadableStream get incomingUnidirectionalStreams;
-  WebTransportSendGroup createSendGroup();
 }
 
 abstract interface class WebTransportBidirectionalStream {
-  WebTransportReceiveStream get readable;
-  WebTransportSendStream get writable;
+  Object get readable;
+  Object get writable;
 }
 
 abstract interface class WebTransportCloseInfo {
@@ -64,8 +60,6 @@ abstract interface class WebTransportConnectionStats {
   set datagrams(WebTransportDatagramStats value);
   int? get estimatedSendRate;
   set estimatedSendRate(int? value);
-  bool get atSendCapacity;
-  set atSendCapacity(bool value);
 }
 
 abstract interface class WebTransportDatagramDuplexStream {
@@ -94,6 +88,11 @@ abstract interface class WebTransportDatagramStats {
 }
 
 abstract interface class WebTransportError {
+  factory WebTransportError([String? message, WebTransportErrorOptions? options]) =>
+      WebRuntime.current.createWebObject<WebTransportError>(
+        'WebTransportError',
+        [message, options],
+      );
   WebTransportErrorSource get source;
   int? get streamErrorCode;
 }
@@ -127,12 +126,6 @@ abstract interface class WebTransportOptions {
   set anticipatedConcurrentIncomingUnidirectionalStreams(int? value);
   int? get anticipatedConcurrentIncomingBidirectionalStreams;
   set anticipatedConcurrentIncomingBidirectionalStreams(int? value);
-  List<String> get protocols;
-  set protocols(List<String> value);
-}
-
-abstract interface class WebTransportReceiveStream {
-  Future<WebTransportReceiveStreamStats> getStats();
 }
 
 abstract interface class WebTransportReceiveStreamStats {
@@ -144,22 +137,9 @@ abstract interface class WebTransportReceiveStreamStats {
 
 typedef WebTransportReliabilityMode = String;
 
-abstract interface class WebTransportSendGroup {
-  Future<WebTransportSendStreamStats> getStats();
-}
-
-abstract interface class WebTransportSendStream {
-  WebTransportSendGroup? get sendGroup;
-   set sendGroup(WebTransportSendGroup? value);
-  int get sendOrder;
-   set sendOrder(int value);
-  Future<WebTransportSendStreamStats> getStats();
-  WebTransportWriter getWriter();
-}
-
 abstract interface class WebTransportSendStreamOptions {
-  WebTransportSendGroup? get sendGroup;
-  set sendGroup(WebTransportSendGroup? value);
+  Object get sendGroup;
+  set sendGroup(Object value);
   int get sendOrder;
   set sendOrder(int value);
   bool get waitUntilAvailable;
@@ -173,9 +153,5 @@ abstract interface class WebTransportSendStreamStats {
   set bytesSent(int value);
   int get bytesAcknowledged;
   set bytesAcknowledged(int value);
-}
-
-abstract interface class WebTransportWriter {
-  Future<void> atomicWrite([Object? chunk]);
 }
 

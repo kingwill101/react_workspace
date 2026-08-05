@@ -6,7 +6,6 @@ import 'encrypted_media.dart';
 import 'html.dart';
 import 'mediacapture_streams.dart';
 import 'remote_playback.dart';
-import 'capture_handle_identity.dart';
 import 'image_capture.dart';
 import 'screen_capture.dart';
 
@@ -32,30 +31,12 @@ abstract interface class HTMLMediaElement {
   String get currentSrc;
   String? get crossOrigin;
    set crossOrigin(String? value);
-   static const int NETWORK_EMPTY =
-      0;
-   static const int NETWORK_IDLE =
-      1;
-   static const int NETWORK_LOADING =
-      2;
-   static const int NETWORK_NO_SOURCE =
-      3;
   int get networkState;
   String get preload;
    set preload(String value);
   TimeRanges get buffered;
   void load();
   CanPlayTypeResult canPlayType(String type);
-   static const int HAVE_NOTHING =
-      0;
-   static const int HAVE_METADATA =
-      1;
-   static const int HAVE_CURRENT_DATA =
-      2;
-   static const int HAVE_FUTURE_DATA =
-      3;
-   static const int HAVE_ENOUGH_DATA =
-      4;
   int get readyState;
   bool get seeking;
   double get currentTime;
@@ -98,17 +79,11 @@ abstract interface class HTMLMediaElement {
 }
 
 abstract interface class MediaDevices {
-  Future<MediaDeviceInfo> selectAudioOutput([AudioOutputOptions? options]);
-  void setCaptureHandleConfig([CaptureHandleConfig? config]);
-  void setSupportedCaptureActions(List<String> actions);
-  EventHandler get oncaptureaction;
-   set oncaptureaction(EventHandler value);
   EventHandler get ondevicechange;
    set ondevicechange(EventHandler value);
   Future<List<MediaDeviceInfo>> enumerateDevices();
   MediaTrackSupportedConstraints getSupportedConstraints();
   Future<MediaStream> getUserMedia([MediaStreamConstraints? constraints]);
-  Future<MediaStream> getViewportMedia([DisplayMediaStreamOptions? options]);
   Future<MediaStream> getDisplayMedia([DisplayMediaStreamOptions? options]);
 }
 

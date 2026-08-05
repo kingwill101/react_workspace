@@ -4,13 +4,24 @@
 
 import 'webidl.dart';
 import 'dom.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class ByteLengthQueuingStrategy {
+  factory ByteLengthQueuingStrategy(QueuingStrategyInit init) =>
+      WebRuntime.current.createWebObject<ByteLengthQueuingStrategy>(
+        'ByteLengthQueuingStrategy',
+        [init],
+      );
   double get highWaterMark;
   Function get size;
 }
 
 abstract interface class CountQueuingStrategy {
+  factory CountQueuingStrategy(QueuingStrategyInit init) =>
+      WebRuntime.current.createWebObject<CountQueuingStrategy>(
+        'CountQueuingStrategy',
+        [init],
+      );
   double get highWaterMark;
   Function get size;
 }
@@ -43,16 +54,25 @@ abstract interface class ReadableByteStreamController {
 }
 
 abstract interface class ReadableStream {
+  factory ReadableStream([Object? underlyingSource, QueuingStrategy? strategy]) =>
+      WebRuntime.current.createWebObject<ReadableStream>(
+        'ReadableStream',
+        [underlyingSource, strategy],
+      );
   bool get locked;
   Future<void> cancel([Object? reason]);
   ReadableStreamReader getReader([ReadableStreamGetReaderOptions? options]);
   ReadableStream pipeThrough(ReadableWritablePair transform, [StreamPipeOptions? options]);
   Future<void> pipeTo(WritableStream destination, [StreamPipeOptions? options]);
   List<ReadableStream> tee();
-   Iterable<Object> get values;
 }
 
 abstract interface class ReadableStreamBYOBReader {
+  factory ReadableStreamBYOBReader(ReadableStream stream) =>
+      WebRuntime.current.createWebObject<ReadableStreamBYOBReader>(
+        'ReadableStreamBYOBReader',
+        [stream],
+      );
   Future<void> get closed;
   Future<void> cancel([Object? reason]);
   Future<ReadableStreamReadResult> read(ArrayBufferView view, [ReadableStreamBYOBReaderReadOptions? options]);
@@ -80,6 +100,11 @@ abstract interface class ReadableStreamDefaultController {
 }
 
 abstract interface class ReadableStreamDefaultReader {
+  factory ReadableStreamDefaultReader(ReadableStream stream) =>
+      WebRuntime.current.createWebObject<ReadableStreamDefaultReader>(
+        'ReadableStreamDefaultReader',
+        [stream],
+      );
   Future<void> get closed;
   Future<void> cancel([Object? reason]);
   Future<ReadableStreamReadResult> read();
@@ -133,6 +158,11 @@ abstract interface class StreamPipeOptions {
 }
 
 abstract interface class TransformStream {
+  factory TransformStream([Object? transformer, QueuingStrategy? writableStrategy, QueuingStrategy? readableStrategy]) =>
+      WebRuntime.current.createWebObject<TransformStream>(
+        'TransformStream',
+        [transformer, writableStrategy, readableStrategy],
+      );
   ReadableStream get readable;
   WritableStream get writable;
 }
@@ -208,6 +238,11 @@ typedef UnderlyingSourcePullCallback = Future<void> Function(ReadableStreamContr
 typedef UnderlyingSourceStartCallback = Object Function(ReadableStreamController controller,);
 
 abstract interface class WritableStream {
+  factory WritableStream([Object? underlyingSink, QueuingStrategy? strategy]) =>
+      WebRuntime.current.createWebObject<WritableStream>(
+        'WritableStream',
+        [underlyingSink, strategy],
+      );
   bool get locked;
   Future<void> abort([Object? reason]);
   Future<void> close();
@@ -220,6 +255,11 @@ abstract interface class WritableStreamDefaultController {
 }
 
 abstract interface class WritableStreamDefaultWriter {
+  factory WritableStreamDefaultWriter(WritableStream stream) =>
+      WebRuntime.current.createWebObject<WritableStreamDefaultWriter>(
+        'WritableStreamDefaultWriter',
+        [stream],
+      );
   Future<void> get closed;
   double? get desiredSize;
   Future<void> get ready;

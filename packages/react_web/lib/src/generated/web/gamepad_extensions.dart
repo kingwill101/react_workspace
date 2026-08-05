@@ -6,9 +6,6 @@ import 'hr_time.dart';
 import 'gamepad.dart';
 
 abstract interface class Gamepad {
-  GamepadHand get hand;
-  List<GamepadHapticActuator> get hapticActuators;
-  GamepadPose? get pose;
   String get id;
   int get index;
   bool get connected;
@@ -16,27 +13,13 @@ abstract interface class Gamepad {
   GamepadMappingType get mapping;
   List<double> get axes;
   List<GamepadButton> get buttons;
-  List<GamepadTouch> get touches;
-  GamepadHapticActuator get vibrationActuator;
 }
 
 typedef GamepadHand = String;
 
 abstract interface class GamepadHapticActuator {
   Future<bool> pulse(double value, double duration);
-  List<GamepadHapticEffectType> get effects;
   Future<GamepadHapticsResult> playEffect(GamepadHapticEffectType type, [GamepadEffectParameters? params]);
   Future<GamepadHapticsResult> reset();
-}
-
-abstract interface class GamepadPose {
-  bool get hasOrientation;
-  bool get hasPosition;
-  Object get position;
-  Object get linearVelocity;
-  Object get linearAcceleration;
-  Object get orientation;
-  Object get angularVelocity;
-  Object get angularAcceleration;
 }
 

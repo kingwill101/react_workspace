@@ -4,8 +4,8 @@
 
 import 'gamepad_extensions.dart';
 import 'dom.dart';
-import 'geometry.dart';
 import 'html.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class GamepadButton {
   bool get pressed;
@@ -29,6 +29,11 @@ abstract interface class GamepadEffectParameters {
 }
 
 abstract interface class GamepadEvent {
+  factory GamepadEvent(String type, GamepadEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<GamepadEvent>(
+        'GamepadEvent',
+        [type, eventInitDict],
+      );
   Gamepad get gamepad;
 }
 
@@ -42,17 +47,6 @@ typedef GamepadHapticEffectType = String;
 typedef GamepadHapticsResult = String;
 
 typedef GamepadMappingType = String;
-
-abstract interface class GamepadTouch {
-  int get touchId;
-  set touchId(int value);
-  Object get surfaceId;
-  set surfaceId(Object value);
-  DOMPointReadOnly get position;
-  set position(DOMPointReadOnly value);
-  DOMRectReadOnly? get surfaceDimensions;
-  set surfaceDimensions(DOMRectReadOnly? value);
-}
 
 abstract interface class WindowEventHandlers {
   EventHandler get ongamepadconnected;

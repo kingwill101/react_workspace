@@ -9,6 +9,7 @@ import 'html.dart';
 import 'urlpattern.dart';
 import 'background_fetch.dart';
 import 'trusted_types.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Cache {
   Future<Response> match(RequestInfo request, [CacheQueryOptions? options]);
@@ -54,6 +55,11 @@ abstract interface class Clients {
 }
 
 abstract interface class ExtendableEvent {
+  factory ExtendableEvent(String type, [ExtendableEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<ExtendableEvent>(
+        'ExtendableEvent',
+        [type, eventInitDict],
+      );
   void waitUntil(Future<Object> f);
 }
 
@@ -61,6 +67,11 @@ abstract interface class ExtendableEventInit {
 }
 
 abstract interface class ExtendableMessageEvent {
+  factory ExtendableMessageEvent(String type, [ExtendableMessageEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<ExtendableMessageEvent>(
+        'ExtendableMessageEvent',
+        [type, eventInitDict],
+      );
   Object get data;
   String get origin;
   String get lastEventId;
@@ -82,6 +93,11 @@ abstract interface class ExtendableMessageEventInit {
 }
 
 abstract interface class FetchEvent {
+  factory FetchEvent(String type, FetchEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<FetchEvent>(
+        'FetchEvent',
+        [type, eventInitDict],
+      );
   Request get request;
   Future<Object> get preloadResponse;
   String get clientId;
@@ -109,7 +125,6 @@ abstract interface class FetchEventInit {
 typedef FrameType = String;
 
 abstract interface class InstallEvent {
-  Future<void> addRoutes(Object rules);
 }
 
 abstract interface class MultiCacheQueryOptions {
@@ -207,7 +222,6 @@ typedef ServiceWorkerUpdateViaCache = String;
 abstract interface class WindowClient {
   DocumentVisibilityState get visibilityState;
   bool get focused;
-  List<String> get ancestorOrigins;
   Future<WindowClient> focus();
   Future<WindowClient?> navigate(String url);
 }

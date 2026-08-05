@@ -2,13 +2,8 @@
 // Neutral Web surface for spec: shape-detection-api
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-import 'html.dart';
 import 'geometry.dart';
 import 'image_capture.dart';
-
-abstract interface class BarcodeDetector {
-  Future<List<DetectedBarcode>> detect(ImageBitmapSource image);
-}
 
 abstract interface class BarcodeDetectorOptions {
   List<BarcodeFormat> get formats;
@@ -33,10 +28,6 @@ abstract interface class DetectedFace {
   set boundingBox(DOMRectReadOnly value);
   List<Landmark>? get landmarks;
   set landmarks(List<Landmark>? value);
-}
-
-abstract interface class FaceDetector {
-  Future<List<DetectedFace>> detect(ImageBitmapSource image);
 }
 
 abstract interface class FaceDetectorOptions {

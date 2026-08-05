@@ -4,6 +4,7 @@
 
 import 'web_animations_2.dart';
 import 'hr_time.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Animatable {
   Animation animate(Object? keyframes, [Object? options]);
@@ -48,6 +49,11 @@ typedef CompositeOperation = String;
 typedef CompositeOperationOrAuto = String;
 
 abstract interface class DocumentTimeline {
+  factory DocumentTimeline([DocumentTimelineOptions? options]) =>
+      WebRuntime.current.createWebObject<DocumentTimeline>(
+        'DocumentTimeline',
+        [options],
+      );
 }
 
 abstract interface class DocumentTimelineOptions {
@@ -60,8 +66,6 @@ typedef FillMode = String;
 abstract interface class GetAnimationsOptions {
   bool get subtree;
   set subtree(bool value);
-  Object get pseudoElement;
-  set pseudoElement(Object value);
 }
 
 typedef PlaybackDirection = String;

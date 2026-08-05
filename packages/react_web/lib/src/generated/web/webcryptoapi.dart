@@ -239,11 +239,11 @@ abstract interface class SubtleCrypto {
   Future<Object> encrypt(AlgorithmIdentifier algorithm, CryptoKey key, BufferSource data);
   Future<Object> decrypt(AlgorithmIdentifier algorithm, CryptoKey key, BufferSource data);
   Future<Object> sign(AlgorithmIdentifier algorithm, CryptoKey key, BufferSource data);
-  Future<bool> verify(AlgorithmIdentifier algorithm, CryptoKey key, BufferSource signature, BufferSource data);
+  Future<Object> verify(AlgorithmIdentifier algorithm, CryptoKey key, BufferSource signature, BufferSource data);
   Future<Object> digest(AlgorithmIdentifier algorithm, BufferSource data);
   Future<Object> generateKey(AlgorithmIdentifier algorithm, bool extractable, List<KeyUsage> keyUsages);
-  Future<CryptoKey> deriveKey(AlgorithmIdentifier algorithm, CryptoKey baseKey, AlgorithmIdentifier derivedKeyType, bool extractable, List<KeyUsage> keyUsages);
-  Future<Object> deriveBits(AlgorithmIdentifier algorithm, CryptoKey baseKey, [int? length]);
+  Future<Object> deriveKey(AlgorithmIdentifier algorithm, CryptoKey baseKey, AlgorithmIdentifier derivedKeyType, bool extractable, List<KeyUsage> keyUsages);
+  Future<Object> deriveBits(AlgorithmIdentifier algorithm, CryptoKey baseKey, int length);
   Future<CryptoKey> importKey(KeyFormat format, Object keyData, AlgorithmIdentifier algorithm, bool extractable, List<KeyUsage> keyUsages);
   Future<Object> exportKey(KeyFormat format, CryptoKey key);
   Future<Object> wrapKey(KeyFormat format, CryptoKey key, CryptoKey wrappingKey, AlgorithmIdentifier wrapAlgorithm);

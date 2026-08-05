@@ -3,7 +3,6 @@
 library;
 
 import 'definition.dart';
-import 'member.dart';
 
 final class RawWebModel {
   final Map<String, List<IdlInterface>> interfaces;

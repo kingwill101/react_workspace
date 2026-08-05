@@ -3,12 +3,7 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'generic_sensor.dart';
-
-abstract interface class Accelerometer {
-  double? get x;
-  double? get y;
-  double? get z;
-}
+import 'package:react_web/src/web_runtime.dart';
 
 typedef AccelerometerLocalCoordinateSystem = String;
 
@@ -18,8 +13,18 @@ abstract interface class AccelerometerSensorOptions {
 }
 
 abstract interface class GravitySensor {
+  factory GravitySensor([AccelerometerSensorOptions? options]) =>
+      WebRuntime.current.createWebObject<GravitySensor>(
+        'GravitySensor',
+        [options],
+      );
 }
 
 abstract interface class LinearAccelerationSensor {
+  factory LinearAccelerationSensor([AccelerometerSensorOptions? options]) =>
+      WebRuntime.current.createWebObject<LinearAccelerationSensor>(
+        'LinearAccelerationSensor',
+        [options],
+      );
 }
 

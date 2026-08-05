@@ -2,15 +2,21 @@
 // Neutral Web surface for spec: webaudio
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-import 'html.dart';
 import 'audio_output.dart';
 import 'mediacapture_streams.dart';
 import 'capture_handle_identity.dart';
 import 'dom.dart';
+import 'html.dart';
 import 'hr_time.dart';
 import 'webidl.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AnalyserNode {
+  factory AnalyserNode(BaseAudioContext context, [AnalyserOptions? options]) =>
+      WebRuntime.current.createWebObject<AnalyserNode>(
+        'AnalyserNode',
+        [context, options],
+      );
   void getFloatFrequencyData(Object array);
   void getByteFrequencyData(Object array);
   void getFloatTimeDomainData(Object array);
@@ -38,6 +44,11 @@ abstract interface class AnalyserOptions {
 }
 
 abstract interface class AudioBuffer {
+  factory AudioBuffer(AudioBufferOptions options) =>
+      WebRuntime.current.createWebObject<AudioBuffer>(
+        'AudioBuffer',
+        [options],
+      );
   double get sampleRate;
   int get length;
   double get duration;
@@ -57,6 +68,11 @@ abstract interface class AudioBufferOptions {
 }
 
 abstract interface class AudioBufferSourceNode {
+  factory AudioBufferSourceNode(BaseAudioContext context, [AudioBufferSourceOptions? options]) =>
+      WebRuntime.current.createWebObject<AudioBufferSourceNode>(
+        'AudioBufferSourceNode',
+        [context, options],
+      );
   AudioBuffer? get buffer;
    set buffer(AudioBuffer? value);
   AudioParam get playbackRate;
@@ -86,19 +102,17 @@ abstract interface class AudioBufferSourceOptions {
 }
 
 abstract interface class AudioContext {
+  factory AudioContext([AudioContextOptions? contextOptions]) =>
+      WebRuntime.current.createWebObject<AudioContext>(
+        'AudioContext',
+        [contextOptions],
+      );
   double get baseLatency;
   double get outputLatency;
-  Object get sinkId;
-  AudioRenderCapacity get renderCapacity;
-  EventHandler get onsinkchange;
-   set onsinkchange(EventHandler value);
-  EventHandler get onerror;
-   set onerror(EventHandler value);
   AudioTimestamp getOutputTimestamp();
   Future<void> resume();
   Future<void> suspend();
   Future<void> close();
-  Future<void> setSinkId(Object sinkId);
   MediaElementAudioSourceNode createMediaElementSource(HTMLMediaElement mediaElement);
   MediaStreamAudioSourceNode createMediaStreamSource(MediaStream mediaStream);
   MediaStreamTrackAudioSourceNode createMediaStreamTrackSource(MediaStreamTrack mediaStreamTrack);
@@ -194,14 +208,14 @@ abstract interface class AudioParamDescriptor {
 }
 
 abstract interface class AudioParamMap {
-   Iterable<String> get keys;
-   Iterable<AudioParam> get values;
-   Iterable<MapEntry<String, AudioParam>> get entries;
-   AudioParam? operator [](Object key);
-   bool has(Object key);
 }
 
 abstract interface class AudioProcessingEvent {
+  factory AudioProcessingEvent(String type, AudioProcessingEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<AudioProcessingEvent>(
+        'AudioProcessingEvent',
+        [type, eventInitDict],
+      );
   double get playbackTime;
   AudioBuffer get inputBuffer;
   AudioBuffer get outputBuffer;
@@ -214,20 +228,6 @@ abstract interface class AudioProcessingEventInit {
   set inputBuffer(AudioBuffer value);
   AudioBuffer get outputBuffer;
   set outputBuffer(AudioBuffer value);
-}
-
-abstract interface class AudioRenderCapacity {
-  void start([AudioRenderCapacityOptions? options]);
-  void stop();
-  EventHandler get onupdate;
-   set onupdate(EventHandler value);
-}
-
-abstract interface class AudioRenderCapacityEvent {
-  double get timestamp;
-  double get averageLoad;
-  double get peakLoad;
-  double get underrunRatio;
 }
 
 abstract interface class AudioRenderCapacityEventInit {
@@ -253,10 +253,6 @@ abstract interface class AudioScheduledSourceNode {
   void stop([double? when_]);
 }
 
-abstract interface class AudioSinkInfo {
-  AudioSinkType get type;
-}
-
 abstract interface class AudioSinkOptions {
   AudioSinkType get type;
   set type(AudioSinkType value);
@@ -272,7 +268,6 @@ abstract interface class AudioTimestamp {
 }
 
 abstract interface class AudioWorklet {
-  MessagePort get port;
 }
 
 abstract interface class AudioWorkletGlobalScope {
@@ -280,11 +275,14 @@ abstract interface class AudioWorkletGlobalScope {
   int get currentFrame;
   double get currentTime;
   double get sampleRate;
-  int get renderQuantumSize;
-  MessagePort get port;
 }
 
 abstract interface class AudioWorkletNode {
+  factory AudioWorkletNode(BaseAudioContext context, String name, [AudioWorkletNodeOptions? options]) =>
+      WebRuntime.current.createWebObject<AudioWorkletNode>(
+        'AudioWorkletNode',
+        [context, name, options],
+      );
   AudioParamMap get parameters;
   MessagePort get port;
   EventHandler get onprocessorerror;
@@ -307,6 +305,11 @@ abstract interface class AudioWorkletNodeOptions {
 typedef AudioWorkletProcessCallback = bool Function(List<List<Object>> inputs, List<List<Object>> outputs, Object parameters,);
 
 abstract interface class AudioWorkletProcessor {
+  factory AudioWorkletProcessor() =>
+      WebRuntime.current.createWebObject<AudioWorkletProcessor>(
+        'AudioWorkletProcessor',
+        [],
+      );
   MessagePort get port;
 }
 
@@ -320,7 +323,6 @@ abstract interface class BaseAudioContext {
   double get currentTime;
   AudioListener get listener;
   AudioContextState get state;
-  int get renderQuantumSize;
   AudioWorklet get audioWorklet;
   EventHandler get onstatechange;
    set onstatechange(EventHandler value);
@@ -346,6 +348,11 @@ abstract interface class BaseAudioContext {
 }
 
 abstract interface class BiquadFilterNode {
+  factory BiquadFilterNode(BaseAudioContext context, [BiquadFilterOptions? options]) =>
+      WebRuntime.current.createWebObject<BiquadFilterNode>(
+        'BiquadFilterNode',
+        [context, options],
+      );
   BiquadFilterType get type;
    set type(BiquadFilterType value);
   AudioParam get frequency;
@@ -375,6 +382,11 @@ typedef ChannelCountMode = String;
 typedef ChannelInterpretation = String;
 
 abstract interface class ChannelMergerNode {
+  factory ChannelMergerNode(BaseAudioContext context, [ChannelMergerOptions? options]) =>
+      WebRuntime.current.createWebObject<ChannelMergerNode>(
+        'ChannelMergerNode',
+        [context, options],
+      );
 }
 
 abstract interface class ChannelMergerOptions {
@@ -383,6 +395,11 @@ abstract interface class ChannelMergerOptions {
 }
 
 abstract interface class ChannelSplitterNode {
+  factory ChannelSplitterNode(BaseAudioContext context, [ChannelSplitterOptions? options]) =>
+      WebRuntime.current.createWebObject<ChannelSplitterNode>(
+        'ChannelSplitterNode',
+        [context, options],
+      );
 }
 
 abstract interface class ChannelSplitterOptions {
@@ -391,6 +408,11 @@ abstract interface class ChannelSplitterOptions {
 }
 
 abstract interface class ConstantSourceNode {
+  factory ConstantSourceNode(BaseAudioContext context, [ConstantSourceOptions? options]) =>
+      WebRuntime.current.createWebObject<ConstantSourceNode>(
+        'ConstantSourceNode',
+        [context, options],
+      );
   AudioParam get offset;
 }
 
@@ -400,6 +422,11 @@ abstract interface class ConstantSourceOptions {
 }
 
 abstract interface class ConvolverNode {
+  factory ConvolverNode(BaseAudioContext context, [ConvolverOptions? options]) =>
+      WebRuntime.current.createWebObject<ConvolverNode>(
+        'ConvolverNode',
+        [context, options],
+      );
   AudioBuffer? get buffer;
    set buffer(AudioBuffer? value);
   bool get normalize;
@@ -418,6 +445,11 @@ typedef DecodeErrorCallback = void Function(DOMException error,);
 typedef DecodeSuccessCallback = void Function(AudioBuffer decodedData,);
 
 abstract interface class DelayNode {
+  factory DelayNode(BaseAudioContext context, [DelayOptions? options]) =>
+      WebRuntime.current.createWebObject<DelayNode>(
+        'DelayNode',
+        [context, options],
+      );
   AudioParam get delayTime;
 }
 
@@ -431,6 +463,11 @@ abstract interface class DelayOptions {
 typedef DistanceModelType = String;
 
 abstract interface class DynamicsCompressorNode {
+  factory DynamicsCompressorNode(BaseAudioContext context, [DynamicsCompressorOptions? options]) =>
+      WebRuntime.current.createWebObject<DynamicsCompressorNode>(
+        'DynamicsCompressorNode',
+        [context, options],
+      );
   AudioParam get threshold;
   AudioParam get knee;
   AudioParam get ratio;
@@ -453,6 +490,11 @@ abstract interface class DynamicsCompressorOptions {
 }
 
 abstract interface class GainNode {
+  factory GainNode(BaseAudioContext context, [GainOptions? options]) =>
+      WebRuntime.current.createWebObject<GainNode>(
+        'GainNode',
+        [context, options],
+      );
   AudioParam get gain;
 }
 
@@ -462,6 +504,11 @@ abstract interface class GainOptions {
 }
 
 abstract interface class IIRFilterNode {
+  factory IIRFilterNode(BaseAudioContext context, IIRFilterOptions options) =>
+      WebRuntime.current.createWebObject<IIRFilterNode>(
+        'IIRFilterNode',
+        [context, options],
+      );
   void getFrequencyResponse(Object frequencyHz, Object magResponse, Object phaseResponse);
 }
 
@@ -473,6 +520,11 @@ abstract interface class IIRFilterOptions {
 }
 
 abstract interface class MediaElementAudioSourceNode {
+  factory MediaElementAudioSourceNode(AudioContext context, MediaElementAudioSourceOptions options) =>
+      WebRuntime.current.createWebObject<MediaElementAudioSourceNode>(
+        'MediaElementAudioSourceNode',
+        [context, options],
+      );
   HTMLMediaElement get mediaElement;
 }
 
@@ -482,10 +534,20 @@ abstract interface class MediaElementAudioSourceOptions {
 }
 
 abstract interface class MediaStreamAudioDestinationNode {
+  factory MediaStreamAudioDestinationNode(AudioContext context, [AudioNodeOptions? options]) =>
+      WebRuntime.current.createWebObject<MediaStreamAudioDestinationNode>(
+        'MediaStreamAudioDestinationNode',
+        [context, options],
+      );
   MediaStream get stream;
 }
 
 abstract interface class MediaStreamAudioSourceNode {
+  factory MediaStreamAudioSourceNode(AudioContext context, MediaStreamAudioSourceOptions options) =>
+      WebRuntime.current.createWebObject<MediaStreamAudioSourceNode>(
+        'MediaStreamAudioSourceNode',
+        [context, options],
+      );
   MediaStream get mediaStream;
 }
 
@@ -495,6 +557,11 @@ abstract interface class MediaStreamAudioSourceOptions {
 }
 
 abstract interface class MediaStreamTrackAudioSourceNode {
+  factory MediaStreamTrackAudioSourceNode(AudioContext context, MediaStreamTrackAudioSourceOptions options) =>
+      WebRuntime.current.createWebObject<MediaStreamTrackAudioSourceNode>(
+        'MediaStreamTrackAudioSourceNode',
+        [context, options],
+      );
 }
 
 abstract interface class MediaStreamTrackAudioSourceOptions {
@@ -503,6 +570,11 @@ abstract interface class MediaStreamTrackAudioSourceOptions {
 }
 
 abstract interface class OfflineAudioCompletionEvent {
+  factory OfflineAudioCompletionEvent(String type, OfflineAudioCompletionEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<OfflineAudioCompletionEvent>(
+        'OfflineAudioCompletionEvent',
+        [type, eventInitDict],
+      );
   AudioBuffer get renderedBuffer;
 }
 
@@ -512,6 +584,16 @@ abstract interface class OfflineAudioCompletionEventInit {
 }
 
 abstract interface class OfflineAudioContext {
+  factory OfflineAudioContext(OfflineAudioContextOptions contextOptions) =>
+      WebRuntime.current.createWebObject<OfflineAudioContext>(
+        'OfflineAudioContext',
+        [contextOptions],
+      );
+  factory OfflineAudioContext.named1(int numberOfChannels, int length, double sampleRate) =>
+      WebRuntime.current.createWebObject<OfflineAudioContext>(
+        'OfflineAudioContext',
+        [numberOfChannels, length, sampleRate],
+      );
   Future<AudioBuffer> startRendering();
   Future<void> resume();
   Future<void> suspend(double suspendTime);
@@ -532,6 +614,11 @@ abstract interface class OfflineAudioContextOptions {
 }
 
 abstract interface class OscillatorNode {
+  factory OscillatorNode(BaseAudioContext context, [OscillatorOptions? options]) =>
+      WebRuntime.current.createWebObject<OscillatorNode>(
+        'OscillatorNode',
+        [context, options],
+      );
   OscillatorType get type;
    set type(OscillatorType value);
   AudioParam get frequency;
@@ -555,6 +642,11 @@ typedef OscillatorType = String;
 typedef OverSampleType = String;
 
 abstract interface class PannerNode {
+  factory PannerNode(BaseAudioContext context, [PannerOptions? options]) =>
+      WebRuntime.current.createWebObject<PannerNode>(
+        'PannerNode',
+        [context, options],
+      );
   PanningModelType get panningModel;
    set panningModel(PanningModelType value);
   AudioParam get positionX;
@@ -615,6 +707,11 @@ abstract interface class PannerOptions {
 typedef PanningModelType = String;
 
 abstract interface class PeriodicWave {
+  factory PeriodicWave(BaseAudioContext context, [PeriodicWaveOptions? options]) =>
+      WebRuntime.current.createWebObject<PeriodicWave>(
+        'PeriodicWave',
+        [context, options],
+      );
 }
 
 abstract interface class PeriodicWaveConstraints {
@@ -636,6 +733,11 @@ abstract interface class ScriptProcessorNode {
 }
 
 abstract interface class StereoPannerNode {
+  factory StereoPannerNode(BaseAudioContext context, [StereoPannerOptions? options]) =>
+      WebRuntime.current.createWebObject<StereoPannerNode>(
+        'StereoPannerNode',
+        [context, options],
+      );
   AudioParam get pan;
 }
 
@@ -645,6 +747,11 @@ abstract interface class StereoPannerOptions {
 }
 
 abstract interface class WaveShaperNode {
+  factory WaveShaperNode(BaseAudioContext context, [WaveShaperOptions? options]) =>
+      WebRuntime.current.createWebObject<WaveShaperNode>(
+        'WaveShaperNode',
+        [context, options],
+      );
   Object get curve;
    set curve(Object value);
   OverSampleType get oversample;

@@ -5,7 +5,6 @@
 import 'permissions.dart';
 
 abstract interface class Permissions {
-  Future<PermissionStatus> request(Object permissionDesc);
   Future<PermissionStatus> revoke(Object permissionDesc);
   Future<PermissionStatus> query(Object permissionDesc);
 }

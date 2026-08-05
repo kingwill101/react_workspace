@@ -7,7 +7,6 @@ import 'server_timing.dart';
 
 abstract interface class PerformanceResourceTiming {
   String get initiatorType;
-  String get deliveryType;
   String get nextHopProtocol;
   DOMHighResTimeStamp get workerStart;
   DOMHighResTimeStamp get redirectStart;
@@ -19,16 +18,12 @@ abstract interface class PerformanceResourceTiming {
   DOMHighResTimeStamp get connectEnd;
   DOMHighResTimeStamp get secureConnectionStart;
   DOMHighResTimeStamp get requestStart;
-  DOMHighResTimeStamp get finalResponseHeadersStart;
-  DOMHighResTimeStamp get firstInterimResponseStart;
   DOMHighResTimeStamp get responseStart;
   DOMHighResTimeStamp get responseEnd;
   int get transferSize;
   int get encodedBodySize;
   int get decodedBodySize;
-  int get responseStatus;
   RenderBlockingStatusType get renderBlockingStatus;
-  String get contentType;
   List<PerformanceServerTiming> get serverTiming;
 }
 

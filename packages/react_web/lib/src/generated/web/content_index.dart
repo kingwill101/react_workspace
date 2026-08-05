@@ -22,16 +22,6 @@ abstract interface class ContentDescription {
   set url(String value);
 }
 
-abstract interface class ContentIndex {
-  Future<void> add(ContentDescription description);
-  Future<void> delete(String id);
-  Future<List<ContentDescription>> getAll();
-}
-
-abstract interface class ContentIndexEvent {
-  String get id;
-}
-
 abstract interface class ContentIndexEventInit {
   String get id;
   set id(String value);

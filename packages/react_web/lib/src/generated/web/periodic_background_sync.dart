@@ -9,18 +9,8 @@ abstract interface class BackgroundSyncOptions {
   set minInterval(int value);
 }
 
-abstract interface class PeriodicSyncEvent {
-  String get tag;
-}
-
 abstract interface class PeriodicSyncEventInit {
   String get tag;
   set tag(String value);
-}
-
-abstract interface class PeriodicSyncManager {
-  Future<void> register(String tag, [BackgroundSyncOptions? options]);
-  Future<List<String>> getTags();
-  Future<void> unregister(String tag);
 }
 

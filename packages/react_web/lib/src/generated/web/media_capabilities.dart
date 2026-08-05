@@ -34,8 +34,8 @@ abstract interface class MediaCapabilities {
 }
 
 abstract interface class MediaCapabilitiesDecodingInfo {
-  MediaKeySystemAccess? get keySystemAccess;
-  set keySystemAccess(MediaKeySystemAccess? value);
+  MediaKeySystemAccess get keySystemAccess;
+  set keySystemAccess(MediaKeySystemAccess value);
   MediaDecodingConfiguration get configuration;
   set configuration(MediaDecodingConfiguration value);
 }

@@ -3,10 +3,14 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'dom.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Highlight {
-   Iterable<AbstractRange> get values;
-   bool has(Object value);
+  factory Highlight([List<AbstractRange>? initialRanges]) =>
+      WebRuntime.current.createWebObject<Highlight>(
+        'Highlight',
+        [initialRanges],
+      );
   int get priority;
    set priority(int value);
   HighlightType get type;
@@ -14,18 +18,7 @@ abstract interface class Highlight {
 }
 
 abstract interface class HighlightRegistry {
-   Iterable<String> get keys;
-   Iterable<Highlight> get values;
-   Iterable<MapEntry<String, Highlight>> get entries;
-   Highlight? operator [](Object key);
-   bool has(Object key);
-  List<Highlight> highlightsFromPoint(double x, double y, [HighlightsFromPointOptions? options]);
 }
 
 typedef HighlightType = String;
-
-abstract interface class HighlightsFromPointOptions {
-  List<ShadowRoot> get shadowRoots;
-  set shadowRoots(List<ShadowRoot> value);
-}
 

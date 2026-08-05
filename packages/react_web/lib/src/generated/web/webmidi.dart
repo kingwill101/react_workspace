@@ -6,6 +6,7 @@ import 'html.dart';
 import 'dom.dart';
 import 'hr_time.dart';
 import 'permissions.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class MIDIAccess {
   MIDIInputMap get inputs;
@@ -16,6 +17,11 @@ abstract interface class MIDIAccess {
 }
 
 abstract interface class MIDIConnectionEvent {
+  factory MIDIConnectionEvent(String type, [MIDIConnectionEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<MIDIConnectionEvent>(
+        'MIDIConnectionEvent',
+        [type, eventInitDict],
+      );
   MIDIPort? get port;
 }
 
@@ -30,14 +36,14 @@ abstract interface class MIDIInput {
 }
 
 abstract interface class MIDIInputMap {
-   Iterable<String> get keys;
-   Iterable<MIDIInput> get values;
-   Iterable<MapEntry<String, MIDIInput>> get entries;
-   MIDIInput? operator [](Object key);
-   bool has(Object key);
 }
 
 abstract interface class MIDIMessageEvent {
+  factory MIDIMessageEvent(String type, [MIDIMessageEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<MIDIMessageEvent>(
+        'MIDIMessageEvent',
+        [type, eventInitDict],
+      );
   Object get data;
 }
 
@@ -59,11 +65,6 @@ abstract interface class MIDIOutput {
 }
 
 abstract interface class MIDIOutputMap {
-   Iterable<String> get keys;
-   Iterable<MIDIOutput> get values;
-   Iterable<MapEntry<String, MIDIOutput>> get entries;
-   MIDIOutput? operator [](Object key);
-   bool has(Object key);
 }
 
 abstract interface class MIDIPort {

@@ -6,15 +6,20 @@ import 'streams.dart';
 import 'webidl.dart';
 import 'html.dart';
 import 'url.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Blob {
+  factory Blob([List<BlobPart>? blobParts, BlobPropertyBag? options]) =>
+      WebRuntime.current.createWebObject<Blob>(
+        'Blob',
+        [blobParts, options],
+      );
   int get size;
   String get type;
   Blob slice([int? start, int? end, String? contentType]);
   ReadableStream stream();
   Future<String> text();
   Future<Object> arrayBuffer();
-  Future<Object> bytes();
 }
 
 typedef BlobPart = Object;
@@ -29,6 +34,11 @@ abstract interface class BlobPropertyBag {
 typedef EndingType = String;
 
 abstract interface class File {
+  factory File(List<BlobPart> fileBits, String fileName, [FilePropertyBag? options]) =>
+      WebRuntime.current.createWebObject<File>(
+        'File',
+        [fileBits, fileName, options],
+      );
   String get name;
   int get lastModified;
   String get webkitRelativePath;
@@ -45,17 +55,16 @@ abstract interface class FilePropertyBag {
 }
 
 abstract interface class FileReader {
+  factory FileReader() =>
+      WebRuntime.current.createWebObject<FileReader>(
+        'FileReader',
+        [],
+      );
   void readAsArrayBuffer(Blob blob);
   void readAsBinaryString(Blob blob);
   void readAsText(Blob blob, [String? encoding]);
   void readAsDataURL(Blob blob);
   void abort();
-   static const int EMPTY =
-      0;
-   static const int LOADING =
-      1;
-   static const int DONE =
-      2;
   int get readyState;
   Object get result;
   DOMException? get error;
@@ -74,6 +83,11 @@ abstract interface class FileReader {
 }
 
 abstract interface class FileReaderSync {
+  factory FileReaderSync() =>
+      WebRuntime.current.createWebObject<FileReaderSync>(
+        'FileReaderSync',
+        [],
+      );
   Object readAsArrayBuffer(Blob blob);
   String readAsBinaryString(Blob blob);
   String readAsText(Blob blob, [String? encoding]);
@@ -81,6 +95,11 @@ abstract interface class FileReaderSync {
 }
 
 abstract interface class URL {
+  factory URL(String url, [String? base]) =>
+      WebRuntime.current.createWebObject<URL>(
+        'URL',
+        [url, base],
+      );
   String get href;
    set href(String value);
   String get origin;

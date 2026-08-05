@@ -4,12 +4,6 @@
 
 import 'hr_time.dart';
 
-abstract interface class Profiler {
-  DOMHighResTimeStamp get sampleInterval;
-  bool get stopped;
-  Future<ProfilerTrace> stop();
-}
-
 abstract interface class ProfilerFrame {
   String get name;
   set name(String value);

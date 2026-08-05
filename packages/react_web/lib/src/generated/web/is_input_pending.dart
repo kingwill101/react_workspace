@@ -8,7 +8,3 @@ abstract interface class IsInputPendingOptions {
   set includeContinuous(bool value);
 }
 
-abstract interface class Scheduling {
-  bool isInputPending([IsInputPendingOptions? isInputPendingOptions]);
-}
-

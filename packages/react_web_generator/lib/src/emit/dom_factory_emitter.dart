@@ -14,10 +14,10 @@ final class DomFactoryEmitter {
     buf.writeln();
     buf.writeln("import 'package:react/react.dart';");
     buf.writeln(
-      "import 'package:react_web/src/generated/event_interfaces.dart';",
+      "import 'package:react_web/src/generated/react_events.dart';",
     );
     buf.writeln(
-      "import 'package:react_web/src/generated/html_interfaces.dart';",
+      "import 'package:react_web/src/generated/web/web.dart';",
     );
     buf.writeln();
 

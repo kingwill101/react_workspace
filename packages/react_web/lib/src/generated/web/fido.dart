@@ -32,6 +32,10 @@ abstract interface class AuthenticationExtensionsClientInputs {
   set prf(AuthenticationExtensionsPRFInputs value);
   AuthenticationExtensionsLargeBlobInputs get largeBlob;
   set largeBlob(AuthenticationExtensionsLargeBlobInputs value);
+  bool get uvm;
+  set uvm(bool value);
+  AuthenticationExtensionsSupplementalPubKeysInputs get supplementalPubKeys;
+  set supplementalPubKeys(AuthenticationExtensionsSupplementalPubKeysInputs value);
 }
 
 abstract interface class AuthenticationExtensionsClientOutputs {
@@ -49,6 +53,10 @@ abstract interface class AuthenticationExtensionsClientOutputs {
   set prf(AuthenticationExtensionsPRFOutputs value);
   AuthenticationExtensionsLargeBlobOutputs get largeBlob;
   set largeBlob(AuthenticationExtensionsLargeBlobOutputs value);
+  UvmEntries get uvm;
+  set uvm(UvmEntries value);
+  AuthenticationExtensionsSupplementalPubKeysOutputs get supplementalPubKeys;
+  set supplementalPubKeys(AuthenticationExtensionsSupplementalPubKeysOutputs value);
 }
 
 abstract interface class HMACGetSecretInput {

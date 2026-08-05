@@ -9,7 +9,6 @@ import 'fileapi.dart';
 import 'webidl.dart';
 
 abstract interface class RTCDataChannel {
-  RTCPriorityType get priority;
   String get label;
   bool get ordered;
   int? get maxPacketLifeTime;
@@ -67,8 +66,6 @@ abstract interface class RTCRtpEncodingParameters {
   set scalabilityMode(String value);
   bool get active;
   set active(bool value);
-  RTCRtpCodec get codec;
-  set codec(RTCRtpCodec value);
   int get maxBitrate;
   set maxBitrate(int value);
   double get maxFramerate;

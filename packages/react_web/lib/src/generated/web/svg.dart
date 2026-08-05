@@ -9,20 +9,21 @@ import 'css_nav.dart';
 import 'cssom.dart';
 import 'web_animations_2.dart';
 import 'dom.dart';
+import 'trusted_types.dart';
 import 'html.dart';
-import 'css_regions.dart';
 import 'css_view_transitions_2.dart';
 import 'css_view_transitions.dart';
-import 'font_metrics_api.dart';
-import 'css_typed_om.dart';
-import 'trusted_types.dart';
-import 'permissions_policy.dart';
-import 'scroll_to_text_fragment.dart';
 import 'selection_api.dart';
 import 'web_animations.dart';
-import 'css_pseudo.dart';
+import 'css_typed_om.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Document {
+  factory Document() =>
+      WebRuntime.current.createWebObject<Document>(
+        'Document',
+        [],
+      );
   FontFaceSet get fonts;
   List<DOMQuad> getBoxQuads([BoxQuadOptions? options]);
   DOMQuad convertQuadFromNode(DOMQuadInit quad, GeometryNode from, [ConvertCoordinateOptions? options]);
@@ -69,8 +70,6 @@ abstract interface class Document {
    set ontransitionend(EventHandler value);
   EventHandler get ontransitioncancel;
    set ontransitioncancel(EventHandler value);
-  EventHandler get onfencedtreeclick;
-   set onfencedtreeclick(EventHandler value);
   EventHandler get onabort;
    set onabort(EventHandler value);
   EventHandler get onauxclick;
@@ -95,8 +94,6 @@ abstract interface class Document {
    set onclick(EventHandler value);
   EventHandler get onclose;
    set onclose(EventHandler value);
-  EventHandler get oncommand;
-   set oncommand(EventHandler value);
   EventHandler get oncontextlost;
    set oncontextlost(EventHandler value);
   EventHandler get oncontextmenu;
@@ -260,19 +257,16 @@ abstract interface class Document {
   EventHandler get onbeforexrselect;
    set onbeforexrselect(EventHandler value);
   SVGSVGElement? get rootElement;
-  NamedFlowMap get namedFlows;
   ViewTransition startViewTransition([Object? callbackOptions]);
   Element? elementFromPoint(double x, double y);
   List<Element> elementsFromPoint(double x, double y);
-  CaretPosition? caretPositionFromPoint(double x, double y, [CaretPositionFromPointOptions? options]);
+  Object caretPositionFromPoint(double x, double y, [CaretPositionFromPointOptions? options]);
   Element? get scrollingElement;
   DOMImplementation get implementation;
   String get URL;
   String get documentURI;
   String get compatMode;
   String get characterSet;
-  String get charset;
-  String get inputEncoding;
   String get contentType;
   DocumentType? get doctype;
   Element? get documentElement;
@@ -286,7 +280,7 @@ abstract interface class Document {
   CDATASection createCDATASection(String data);
   Comment createComment(String data);
   ProcessingInstruction createProcessingInstruction(String target, String data);
-  Node importNode(Node node, [bool? subtree]);
+  Node importNode(Node node, [bool? deep]);
   Node adoptNode(Node node);
   Attr createAttribute(String localName);
   Attr createAttributeNS(String? namespace, String qualifiedName);
@@ -294,8 +288,6 @@ abstract interface class Document {
   Range createRange();
   NodeIterator createNodeIterator(Node root, [int? whatToShow, NodeFilter? filter]);
   TreeWalker createTreeWalker(Node root, [int? whatToShow, NodeFilter? filter]);
-  FontMetrics measureElement(Element element);
-  FontMetrics measureText(String text, StylePropertyMapReadOnly styleMap);
   bool get fullscreenEnabled;
   bool get fullscreen;
   Future<void> exitFullscreen();
@@ -335,10 +327,7 @@ abstract interface class Document {
   String get designMode;
    set designMode(String value);
   bool execCommand(String commandId, [bool? showUI, String? value]);
-  bool queryCommandEnabled(String commandId);
   bool queryCommandIndeterm(String commandId);
-  bool queryCommandState(String commandId);
-  bool queryCommandSupported(String commandId);
   String queryCommandValue(String commandId);
   bool get hidden;
   DocumentVisibilityState get visibilityState;
@@ -362,12 +351,6 @@ abstract interface class Document {
   void captureEvents();
   void releaseEvents();
   HTMLAllCollection get all;
-  EventHandler get onfreeze;
-   set onfreeze(EventHandler value);
-  EventHandler get onresume;
-   set onresume(EventHandler value);
-  bool get wasDiscarded;
-  PermissionsPolicy get permissionsPolicy;
   bool get pictureInPictureEnabled;
   Future<void> exitPictureInPicture();
   EventHandler get onpointerlockchange;
@@ -375,17 +358,10 @@ abstract interface class Document {
   EventHandler get onpointerlockerror;
    set onpointerlockerror(EventHandler value);
   void exitPointerLock();
-  bool get prerendering;
-  EventHandler get onprerenderingchange;
-   set onprerenderingchange(EventHandler value);
-  Future<void> requestStorageAccessFor(String requestedOrigin);
   Future<bool> hasUnpartitionedCookieAccess();
-  FragmentDirective get fragmentDirective;
   Selection? getSelection();
   Future<bool> hasStorageAccess();
   Future<void> requestStorageAccess();
-  Future<bool> hasPrivateToken(String issuer);
-  Future<bool> hasRedemptionRecord(String issuer);
   DocumentTimeline get timeline;
 }
 
@@ -411,38 +387,9 @@ abstract interface class SVGAElement {
    set text(String value);
   String get referrerPolicy;
    set referrerPolicy(String value);
-  String get origin;
-  String get protocol;
-   set protocol(String value);
-  String get username;
-   set username(String value);
-  String get password;
-   set password(String value);
-  String get host;
-   set host(String value);
-  String get hostname;
-   set hostname(String value);
-  String get port;
-   set port(String value);
-  String get pathname;
-   set pathname(String value);
-  String get search;
-   set search(String value);
-  String get hash;
-   set hash(String value);
 }
 
 abstract interface class SVGAngle {
-   static const int SVG_ANGLETYPE_UNKNOWN =
-      0;
-   static const int SVG_ANGLETYPE_UNSPECIFIED =
-      1;
-   static const int SVG_ANGLETYPE_DEG =
-      2;
-   static const int SVG_ANGLETYPE_RAD =
-      3;
-   static const int SVG_ANGLETYPE_GRAD =
-      4;
   int get unitType;
   double get value;
    set value(double value);
@@ -568,8 +515,6 @@ abstract interface class SVGElement {
    set ontransitionend(EventHandler value);
   EventHandler get ontransitioncancel;
    set ontransitioncancel(EventHandler value);
-  EventHandler get onfencedtreeclick;
-   set onfencedtreeclick(EventHandler value);
   EventHandler get onabort;
    set onabort(EventHandler value);
   EventHandler get onauxclick;
@@ -594,8 +539,6 @@ abstract interface class SVGElement {
    set onclick(EventHandler value);
   EventHandler get onclose;
    set onclose(EventHandler value);
-  EventHandler get oncommand;
-   set oncommand(EventHandler value);
   EventHandler get oncontextlost;
    set oncontextlost(EventHandler value);
   EventHandler get oncontextmenu;
@@ -813,14 +756,6 @@ abstract interface class SVGGeometryElement {
 
 abstract interface class SVGGradientElement {
   SVGAnimatedString get href;
-   static const int SVG_SPREADMETHOD_UNKNOWN =
-      0;
-   static const int SVG_SPREADMETHOD_PAD =
-      1;
-   static const int SVG_SPREADMETHOD_REFLECT =
-      2;
-   static const int SVG_SPREADMETHOD_REPEAT =
-      3;
   SVGAnimatedEnumeration get gradientUnits;
   SVGAnimatedTransformList get gradientTransform;
   SVGAnimatedEnumeration get spreadMethod;
@@ -847,28 +782,6 @@ abstract interface class SVGImageElement {
 }
 
 abstract interface class SVGLength {
-   static const int SVG_LENGTHTYPE_UNKNOWN =
-      0;
-   static const int SVG_LENGTHTYPE_NUMBER =
-      1;
-   static const int SVG_LENGTHTYPE_PERCENTAGE =
-      2;
-   static const int SVG_LENGTHTYPE_EMS =
-      3;
-   static const int SVG_LENGTHTYPE_EXS =
-      4;
-   static const int SVG_LENGTHTYPE_PX =
-      5;
-   static const int SVG_LENGTHTYPE_CM =
-      6;
-   static const int SVG_LENGTHTYPE_MM =
-      7;
-   static const int SVG_LENGTHTYPE_IN =
-      8;
-   static const int SVG_LENGTHTYPE_PT =
-      9;
-   static const int SVG_LENGTHTYPE_PC =
-      10;
   int get unitType;
   double get value;
    set value(double value);
@@ -909,18 +822,6 @@ abstract interface class SVGLinearGradientElement {
 abstract interface class SVGMarkerElement {
   SVGAnimatedRect get viewBox;
   SVGAnimatedPreserveAspectRatio get preserveAspectRatio;
-   static const int SVG_MARKERUNITS_UNKNOWN =
-      0;
-   static const int SVG_MARKERUNITS_USERSPACEONUSE =
-      1;
-   static const int SVG_MARKERUNITS_STROKEWIDTH =
-      2;
-   static const int SVG_MARKER_ORIENT_UNKNOWN =
-      0;
-   static const int SVG_MARKER_ORIENT_AUTO =
-      1;
-   static const int SVG_MARKER_ORIENT_ANGLE =
-      2;
   SVGAnimatedLength get refX;
   SVGAnimatedLength get refY;
   SVGAnimatedEnumeration get markerUnits;
@@ -993,34 +894,6 @@ abstract interface class SVGPolylineElement {
 }
 
 abstract interface class SVGPreserveAspectRatio {
-   static const int SVG_PRESERVEASPECTRATIO_UNKNOWN =
-      0;
-   static const int SVG_PRESERVEASPECTRATIO_NONE =
-      1;
-   static const int SVG_PRESERVEASPECTRATIO_XMINYMIN =
-      2;
-   static const int SVG_PRESERVEASPECTRATIO_XMIDYMIN =
-      3;
-   static const int SVG_PRESERVEASPECTRATIO_XMAXYMIN =
-      4;
-   static const int SVG_PRESERVEASPECTRATIO_XMINYMID =
-      5;
-   static const int SVG_PRESERVEASPECTRATIO_XMIDYMID =
-      6;
-   static const int SVG_PRESERVEASPECTRATIO_XMAXYMID =
-      7;
-   static const int SVG_PRESERVEASPECTRATIO_XMINYMAX =
-      8;
-   static const int SVG_PRESERVEASPECTRATIO_XMIDYMAX =
-      9;
-   static const int SVG_PRESERVEASPECTRATIO_XMAXYMAX =
-      10;
-   static const int SVG_MEETORSLICE_UNKNOWN =
-      0;
-   static const int SVG_MEETORSLICE_MEET =
-      1;
-   static const int SVG_MEETORSLICE_SLICE =
-      2;
   int get align;
    set align(int value);
   int get meetOrSlice;
@@ -1135,7 +1008,6 @@ abstract interface class SVGStopElement {
 }
 
 abstract interface class SVGStringList {
-  int get length;
   int get numberOfItems;
   void clear();
   String initialize(String newItem);
@@ -1173,12 +1045,6 @@ abstract interface class SVGTests {
 }
 
 abstract interface class SVGTextContentElement {
-   static const int LENGTHADJUST_UNKNOWN =
-      0;
-   static const int LENGTHADJUST_SPACING =
-      1;
-   static const int LENGTHADJUST_SPACINGANDGLYPHS =
-      2;
   SVGAnimatedLength get textLength;
   SVGAnimatedEnumeration get lengthAdjust;
   int getNumberOfChars();
@@ -1197,18 +1063,6 @@ abstract interface class SVGTextElement {
 
 abstract interface class SVGTextPathElement {
   SVGAnimatedString get href;
-   static const int TEXTPATH_METHODTYPE_UNKNOWN =
-      0;
-   static const int TEXTPATH_METHODTYPE_ALIGN =
-      1;
-   static const int TEXTPATH_METHODTYPE_STRETCH =
-      2;
-   static const int TEXTPATH_SPACINGTYPE_UNKNOWN =
-      0;
-   static const int TEXTPATH_SPACINGTYPE_AUTO =
-      1;
-   static const int TEXTPATH_SPACINGTYPE_EXACT =
-      2;
   SVGAnimatedLength get startOffset;
   SVGAnimatedEnumeration get method;
   SVGAnimatedEnumeration get spacing;
@@ -1226,20 +1080,6 @@ abstract interface class SVGTitleElement {
 }
 
 abstract interface class SVGTransform {
-   static const int SVG_TRANSFORM_UNKNOWN =
-      0;
-   static const int SVG_TRANSFORM_MATRIX =
-      1;
-   static const int SVG_TRANSFORM_TRANSLATE =
-      2;
-   static const int SVG_TRANSFORM_SCALE =
-      3;
-   static const int SVG_TRANSFORM_ROTATE =
-      4;
-   static const int SVG_TRANSFORM_SKEWX =
-      5;
-   static const int SVG_TRANSFORM_SKEWY =
-      6;
   int get type;
   DOMMatrix get matrix;
   double get angle;
@@ -1252,7 +1092,6 @@ abstract interface class SVGTransform {
 }
 
 abstract interface class SVGTransformList {
-  int get length;
   int get numberOfItems;
   void clear();
   SVGTransform initialize(SVGTransform newItem);
@@ -1270,12 +1109,6 @@ abstract interface class SVGURIReference {
 }
 
 abstract interface class SVGUnitTypes {
-   static const int SVG_UNIT_TYPE_UNKNOWN =
-      0;
-   static const int SVG_UNIT_TYPE_USERSPACEONUSE =
-      1;
-   static const int SVG_UNIT_TYPE_OBJECTBOUNDINGBOX =
-      2;
 }
 
 abstract interface class SVGUseElement {
@@ -1284,19 +1117,10 @@ abstract interface class SVGUseElement {
   SVGAnimatedLength get y;
   SVGAnimatedLength get width;
   SVGAnimatedLength get height;
-  SVGElement? get instanceRoot;
-  SVGElement? get animatedInstanceRoot;
-}
-
-abstract interface class SVGUseElementShadowRoot {
 }
 
 abstract interface class SVGViewElement {
   SVGAnimatedRect get viewBox;
   SVGAnimatedPreserveAspectRatio get preserveAspectRatio;
-}
-
-abstract interface class ShadowAnimation {
-  Animation get sourceAnimation;
 }
 

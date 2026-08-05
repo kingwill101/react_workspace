@@ -3,7 +3,6 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'mediacapture_streams.dart';
-import 'captured_mouse_events.dart';
 
 typedef CaptureStartFocusBehavior = String;
 
@@ -16,8 +15,8 @@ abstract interface class DisplayMediaStreamOptions {
   set video(Object value);
   Object get audio;
   set audio(Object value);
-  CaptureController get controller;
-  set controller(CaptureController value);
+  Object get controller;
+  set controller(Object value);
   SelfCapturePreferenceEnum get selfBrowserSurface;
   set selfBrowserSurface(SelfCapturePreferenceEnum value);
   SystemAudioPreferenceEnum get systemAudio;

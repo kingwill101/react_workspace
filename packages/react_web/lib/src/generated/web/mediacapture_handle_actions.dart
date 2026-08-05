@@ -6,10 +6,6 @@ import 'dom.dart';
 
 typedef CaptureAction = String;
 
-abstract interface class CaptureActionEvent {
-  CaptureAction get action;
-}
-
 abstract interface class CaptureActionEventInit {
   String get action;
   set action(String value);

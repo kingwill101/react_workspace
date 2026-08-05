@@ -3,19 +3,10 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'hr_time.dart';
-import 'html.dart';
 
 typedef NavigationTimingType = String;
 
 abstract interface class PerformanceNavigation {
-   static const int TYPE_NAVIGATE =
-      0;
-   static const int TYPE_RELOAD =
-      1;
-   static const int TYPE_BACK_FORWARD =
-      2;
-   static const int TYPE_RESERVED =
-      255;
   int get type;
   int get redirectCount;
   Object toJSON();
@@ -32,9 +23,6 @@ abstract interface class PerformanceNavigationTiming {
   DOMHighResTimeStamp get loadEventEnd;
   NavigationTimingType get type;
   int get redirectCount;
-  DOMHighResTimeStamp get criticalCHRestart;
-  NotRestoredReasons? get notRestoredReasons;
-  DOMHighResTimeStamp get activationStart;
 }
 
 abstract interface class PerformanceTiming {

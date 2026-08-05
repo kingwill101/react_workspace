@@ -4,7 +4,6 @@
 
 import 'geometry.dart';
 import 'html.dart';
-import 'webidl.dart';
 
 abstract interface class PaintRenderingContext2D {
   void save();
@@ -84,10 +83,5 @@ abstract interface class PaintRenderingContext2DSettings {
 abstract interface class PaintSize {
   double get width;
   double get height;
-}
-
-abstract interface class PaintWorkletGlobalScope {
-  void registerPaint(String name, VoidFunction paintCtor);
-  double get devicePixelRatio;
 }
 

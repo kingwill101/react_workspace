@@ -3,8 +3,14 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'dom.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class DeviceMotionEvent {
+  factory DeviceMotionEvent(String type, [DeviceMotionEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<DeviceMotionEvent>(
+        'DeviceMotionEvent',
+        [type, eventInitDict],
+      );
   DeviceMotionEventAcceleration? get acceleration;
   DeviceMotionEventAcceleration? get accelerationIncludingGravity;
   DeviceMotionEventRotationRate? get rotationRate;
@@ -53,6 +59,11 @@ abstract interface class DeviceMotionEventRotationRateInit {
 }
 
 abstract interface class DeviceOrientationEvent {
+  factory DeviceOrientationEvent(String type, [DeviceOrientationEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<DeviceOrientationEvent>(
+        'DeviceOrientationEvent',
+        [type, eventInitDict],
+      );
   double? get alpha;
   double? get beta;
   double? get gamma;

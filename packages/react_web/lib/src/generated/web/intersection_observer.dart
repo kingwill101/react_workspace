@@ -6,14 +6,17 @@ import 'css_nav.dart';
 import 'svg.dart';
 import 'hr_time.dart';
 import 'geometry.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class IntersectionObserver {
+  factory IntersectionObserver(IntersectionObserverCallback callback, [IntersectionObserverInit? options]) =>
+      WebRuntime.current.createWebObject<IntersectionObserver>(
+        'IntersectionObserver',
+        [callback, options],
+      );
   Object get root;
   String get rootMargin;
-  String get scrollMargin;
   List<double> get thresholds;
-  int get delay;
-  bool get trackVisibility;
   void observe(Element target);
   void unobserve(Element target);
   void disconnect();
@@ -23,12 +26,16 @@ abstract interface class IntersectionObserver {
 typedef IntersectionObserverCallback = void Function(List<IntersectionObserverEntry> entries, IntersectionObserver observer,);
 
 abstract interface class IntersectionObserverEntry {
+  factory IntersectionObserverEntry(IntersectionObserverEntryInit intersectionObserverEntryInit) =>
+      WebRuntime.current.createWebObject<IntersectionObserverEntry>(
+        'IntersectionObserverEntry',
+        [intersectionObserverEntryInit],
+      );
   DOMHighResTimeStamp get time;
   DOMRectReadOnly? get rootBounds;
   DOMRectReadOnly get boundingClientRect;
   DOMRectReadOnly get intersectionRect;
   bool get isIntersecting;
-  bool get isVisible;
   double get intersectionRatio;
   Element get target;
 }
@@ -44,8 +51,6 @@ abstract interface class IntersectionObserverEntryInit {
   set intersectionRect(DOMRectInit value);
   bool get isIntersecting;
   set isIntersecting(bool value);
-  bool get isVisible;
-  set isVisible(bool value);
   double get intersectionRatio;
   set intersectionRatio(double value);
   Element get target;
@@ -61,9 +66,5 @@ abstract interface class IntersectionObserverInit {
   set scrollMargin(String value);
   Object get threshold;
   set threshold(Object value);
-  int get delay;
-  set delay(int value);
-  bool get trackVisibility;
-  set trackVisibility(bool value);
 }
 

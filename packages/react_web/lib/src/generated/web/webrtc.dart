@@ -13,6 +13,7 @@ import 'webrtc_encoded_transform.dart';
 import 'mediacapture_streams.dart';
 import 'webrtc_stats.dart';
 import 'capture_handle_identity.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class RTCAnswerOptions {
 }
@@ -38,6 +39,11 @@ abstract interface class RTCDTMFSender {
 }
 
 abstract interface class RTCDTMFToneChangeEvent {
+  factory RTCDTMFToneChangeEvent(String type, [RTCDTMFToneChangeEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<RTCDTMFToneChangeEvent>(
+        'RTCDTMFToneChangeEvent',
+        [type, eventInitDict],
+      );
   String get tone;
 }
 
@@ -47,6 +53,11 @@ abstract interface class RTCDTMFToneChangeEventInit {
 }
 
 abstract interface class RTCDataChannelEvent {
+  factory RTCDataChannelEvent(String type, RTCDataChannelEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<RTCDataChannelEvent>(
+        'RTCDataChannelEvent',
+        [type, eventInitDict],
+      );
   RTCDataChannel get channel;
 }
 
@@ -79,6 +90,11 @@ typedef RTCDtlsTransportState = String;
 typedef RTCErrorDetailType = String;
 
 abstract interface class RTCErrorEvent {
+  factory RTCErrorEvent(String type, RTCErrorEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<RTCErrorEvent>(
+        'RTCErrorEvent',
+        [type, eventInitDict],
+      );
   RTCError get error;
 }
 
@@ -88,6 +104,11 @@ abstract interface class RTCErrorEventInit {
 }
 
 abstract interface class RTCIceCandidate {
+  factory RTCIceCandidate([RTCIceCandidateInit? candidateInitDict]) =>
+      WebRuntime.current.createWebObject<RTCIceCandidate>(
+        'RTCIceCandidate',
+        [candidateInitDict],
+      );
   String get candidate;
   String? get sdpMid;
   int? get sdpMLineIndex;
@@ -102,8 +123,6 @@ abstract interface class RTCIceCandidate {
   String? get relatedAddress;
   int? get relatedPort;
   String? get usernameFragment;
-  RTCIceServerTransportProtocol? get relayProtocol;
-  String? get url;
   RTCIceCandidateInit toJSON();
 }
 
@@ -116,11 +135,6 @@ abstract interface class RTCIceCandidateInit {
   set sdpMLineIndex(int? value);
   String? get usernameFragment;
   set usernameFragment(String? value);
-}
-
-abstract interface class RTCIceCandidatePair {
-  RTCIceCandidate get local;
-  RTCIceCandidate get remote;
 }
 
 typedef RTCIceCandidateType = String;
@@ -176,6 +190,11 @@ abstract interface class RTCOfferOptions {
 typedef RTCPeerConnectionErrorCallback = void Function(DOMException error,);
 
 abstract interface class RTCPeerConnectionIceErrorEvent {
+  factory RTCPeerConnectionIceErrorEvent(String type, RTCPeerConnectionIceErrorEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<RTCPeerConnectionIceErrorEvent>(
+        'RTCPeerConnectionIceErrorEvent',
+        [type, eventInitDict],
+      );
   String? get address;
   int? get port;
   String get url;
@@ -197,6 +216,11 @@ abstract interface class RTCPeerConnectionIceErrorEventInit {
 }
 
 abstract interface class RTCPeerConnectionIceEvent {
+  factory RTCPeerConnectionIceEvent(String type, [RTCPeerConnectionIceEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<RTCPeerConnectionIceEvent>(
+        'RTCPeerConnectionIceEvent',
+        [type, eventInitDict],
+      );
   RTCIceCandidate? get candidate;
   String? get url;
 }
@@ -323,6 +347,11 @@ typedef RTCSctpTransportState = String;
 typedef RTCSdpType = String;
 
 abstract interface class RTCSessionDescription {
+  factory RTCSessionDescription(RTCSessionDescriptionInit descriptionInitDict) =>
+      WebRuntime.current.createWebObject<RTCSessionDescription>(
+        'RTCSessionDescription',
+        [descriptionInitDict],
+      );
   RTCSdpType get type;
   String get sdp;
   RTCSessionDescriptionInit toJSON();
@@ -352,14 +381,14 @@ abstract interface class RTCStats {
 }
 
 abstract interface class RTCStatsReport {
-   Iterable<String> get keys;
-   Iterable<Object> get values;
-   Iterable<MapEntry<String, Object>> get entries;
-   Object? operator [](Object key);
-   bool has(Object key);
 }
 
 abstract interface class RTCTrackEvent {
+  factory RTCTrackEvent(String type, RTCTrackEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<RTCTrackEvent>(
+        'RTCTrackEvent',
+        [type, eventInitDict],
+      );
   RTCRtpReceiver get receiver;
   MediaStreamTrack get track;
   List<MediaStream> get streams;

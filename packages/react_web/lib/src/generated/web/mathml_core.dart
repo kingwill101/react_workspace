@@ -29,8 +29,6 @@ abstract interface class MathMLElement {
    set ontransitionend(EventHandler value);
   EventHandler get ontransitioncancel;
    set ontransitioncancel(EventHandler value);
-  EventHandler get onfencedtreeclick;
-   set onfencedtreeclick(EventHandler value);
   EventHandler get onabort;
    set onabort(EventHandler value);
   EventHandler get onauxclick;
@@ -55,8 +53,6 @@ abstract interface class MathMLElement {
    set onclick(EventHandler value);
   EventHandler get onclose;
    set onclose(EventHandler value);
-  EventHandler get oncommand;
-   set oncommand(EventHandler value);
   EventHandler get oncontextlost;
    set oncontextlost(EventHandler value);
   EventHandler get oncontextmenu;

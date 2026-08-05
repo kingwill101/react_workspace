@@ -5,6 +5,29 @@
 import 'payment_request.dart';
 import 'service_workers.dart';
 
+abstract interface class AddressErrors {
+  String get addressLine;
+  set addressLine(String value);
+  String get city;
+  set city(String value);
+  String get country;
+  set country(String value);
+  String get dependentLocality;
+  set dependentLocality(String value);
+  String get organization;
+  set organization(String value);
+  String get phone;
+  set phone(String value);
+  String get postalCode;
+  set postalCode(String value);
+  String get recipient;
+  set recipient(String value);
+  String get region;
+  set region(String value);
+  String get sortingCode;
+  set sortingCode(String value);
+}
+
 abstract interface class AddressInit {
   String get country;
   set country(String value);
@@ -28,10 +51,6 @@ abstract interface class AddressInit {
   set phone(String value);
 }
 
-abstract interface class CanMakePaymentEvent {
-  void respondWith(Future<bool> canMakePaymentResponse);
-}
-
 typedef PaymentDelegation = String;
 
 abstract interface class PaymentHandlerResponse {
@@ -51,10 +70,19 @@ abstract interface class PaymentHandlerResponse {
   set shippingOption(String? value);
 }
 
-abstract interface class PaymentManager {
-  String get userHint;
-   set userHint(String value);
-  Future<void> enableDelegations(List<PaymentDelegation> delegations);
+abstract interface class PaymentOptions {
+  bool get requestPayerName;
+  set requestPayerName(bool value);
+  bool get requestBillingAddress;
+  set requestBillingAddress(bool value);
+  bool get requestPayerEmail;
+  set requestPayerEmail(bool value);
+  bool get requestPayerPhone;
+  set requestPayerPhone(bool value);
+  bool get requestShipping;
+  set requestShipping(bool value);
+  PaymentShippingType get shippingType;
+  set shippingType(PaymentShippingType value);
 }
 
 abstract interface class PaymentRequestDetailsUpdate {
@@ -70,22 +98,6 @@ abstract interface class PaymentRequestDetailsUpdate {
   set paymentMethodErrors(Object value);
   AddressErrors get shippingAddressErrors;
   set shippingAddressErrors(AddressErrors value);
-}
-
-abstract interface class PaymentRequestEvent {
-  String get topOrigin;
-  String get paymentRequestOrigin;
-  String get paymentRequestId;
-  List<PaymentMethodData> get methodData;
-  Object get total;
-  List<PaymentDetailsModifier> get modifiers;
-  Object? get paymentOptions;
-  List<PaymentShippingOption>? get shippingOptions;
-  Future<WindowClient?> openWindow(String url);
-  Future<PaymentRequestDetailsUpdate?> changePaymentMethod(String methodName, [Object? methodDetails]);
-  Future<PaymentRequestDetailsUpdate?> changeShippingAddress([AddressInit? shippingAddress]);
-  Future<PaymentRequestDetailsUpdate?> changeShippingOption(String shippingOption);
-  void respondWith(Future<PaymentHandlerResponse> handlerResponsePromise);
 }
 
 abstract interface class PaymentRequestEventInit {
@@ -106,4 +118,17 @@ abstract interface class PaymentRequestEventInit {
   List<PaymentShippingOption> get shippingOptions;
   set shippingOptions(List<PaymentShippingOption> value);
 }
+
+abstract interface class PaymentShippingOption {
+  String get id;
+  set id(String value);
+  String get label;
+  set label(String value);
+  PaymentCurrencyAmount get amount;
+  set amount(PaymentCurrencyAmount value);
+  bool get selected;
+  set selected(bool value);
+}
+
+typedef PaymentShippingType = String;
 

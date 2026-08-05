@@ -13,9 +13,6 @@ abstract interface class FileSystemCreateWritableOptions {
 }
 
 abstract interface class FileSystemDirectoryHandle {
-   Iterable<(String, FileSystemHandle)> get entries;
-   Iterable<String> get keys;
-   Iterable<FileSystemHandle> get values;
   Future<FileSystemFileHandle> getFileHandle(String name, [FileSystemGetFileOptions? options]);
   Future<FileSystemDirectoryHandle> getDirectoryHandle(String name, [FileSystemGetDirectoryOptions? options]);
   Future<void> removeEntry(String name, [FileSystemRemoveOptions? options]);

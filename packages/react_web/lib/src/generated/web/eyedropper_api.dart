@@ -14,7 +14,3 @@ abstract interface class ColorSelectionResult {
   set sRGBHex(String value);
 }
 
-abstract interface class EyeDropper {
-  Future<ColorSelectionResult> open([ColorSelectionOptions? options]);
-}
-

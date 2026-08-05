@@ -3,26 +3,15 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'webidl.dart';
-import 'html.dart';
 import 'webcodecs_aac_codec_registration.dart';
+import 'streams.dart';
+import 'html.dart';
 import 'webcodecs_avc_codec_registration.dart';
 import 'webcodecs_av1_codec_registration.dart';
 import 'geometry.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 typedef AlphaOption = String;
-
-abstract interface class AudioData {
-  AudioSampleFormat? get format;
-  double get sampleRate;
-  int get numberOfFrames;
-  int get numberOfChannels;
-  int get duration;
-  int get timestamp;
-  int allocationSize(AudioDataCopyToOptions options);
-  void copyTo(AllowSharedBufferSource destination, AudioDataCopyToOptions options);
-  AudioData clone();
-  void close();
-}
 
 abstract interface class AudioDataCopyToOptions {
   int get planeIndex;
@@ -52,19 +41,7 @@ abstract interface class AudioDataInit {
   set transfer(List<Object> value);
 }
 
-typedef AudioDataOutputCallback = void Function(AudioData output,);
-
-abstract interface class AudioDecoder {
-  CodecState get state;
-  int get decodeQueueSize;
-  EventHandler get ondequeue;
-   set ondequeue(EventHandler value);
-  void configure(AudioDecoderConfig config);
-  void decode(EncodedAudioChunk chunk);
-  Future<void> flush();
-  void reset();
-  void close();
-}
+typedef AudioDataOutputCallback = void Function(Object output,);
 
 abstract interface class AudioDecoderConfig {
   String get codec;
@@ -91,18 +68,6 @@ abstract interface class AudioDecoderSupport {
   set config(AudioDecoderConfig value);
 }
 
-abstract interface class AudioEncoder {
-  CodecState get state;
-  int get encodeQueueSize;
-  EventHandler get ondequeue;
-   set ondequeue(EventHandler value);
-  void configure(AudioEncoderConfig config);
-  void encode(AudioData data);
-  Future<void> flush();
-  void reset();
-  void close();
-}
-
 abstract interface class AudioEncoderInit {
   EncodedAudioChunkOutputCallback get output;
   set output(EncodedAudioChunkOutputCallback value);
@@ -120,14 +85,6 @@ abstract interface class AudioEncoderSupport {
 typedef AudioSampleFormat = String;
 
 typedef CodecState = String;
-
-abstract interface class EncodedAudioChunk {
-  EncodedAudioChunkType get type;
-  int get timestamp;
-  int? get duration;
-  int get byteLength;
-  void copyTo(AllowSharedBufferSource destination);
-}
 
 abstract interface class EncodedAudioChunkInit {
   EncodedAudioChunkType get type;
@@ -147,11 +104,16 @@ abstract interface class EncodedAudioChunkMetadata {
   set decoderConfig(AudioDecoderConfig value);
 }
 
-typedef EncodedAudioChunkOutputCallback = void Function(EncodedAudioChunk output, EncodedAudioChunkMetadata metadata,);
+typedef EncodedAudioChunkOutputCallback = void Function(Object output, EncodedAudioChunkMetadata metadata,);
 
 typedef EncodedAudioChunkType = String;
 
 abstract interface class EncodedVideoChunk {
+  factory EncodedVideoChunk(EncodedVideoChunkInit init) =>
+      WebRuntime.current.createWebObject<EncodedVideoChunk>(
+        'EncodedVideoChunk',
+        [init],
+      );
   EncodedVideoChunkType get type;
   int get timestamp;
   int? get duration;
@@ -203,16 +165,6 @@ abstract interface class ImageDecodeResult {
   set complete(bool value);
 }
 
-abstract interface class ImageDecoder {
-  String get type;
-  bool get complete;
-  Future<void> get completed;
-  ImageTrackList get tracks;
-  Future<ImageDecodeResult> decode([ImageDecodeOptions? options]);
-  void reset();
-  void close();
-}
-
 abstract interface class ImageDecoderInit {
   String get type;
   set type(String value);
@@ -228,21 +180,6 @@ abstract interface class ImageDecoderInit {
   set preferAnimation(bool value);
   List<Object> get transfer;
   set transfer(List<Object> value);
-}
-
-abstract interface class ImageTrack {
-  bool get animated;
-  int get frameCount;
-  double get repetitionCount;
-  bool get selected;
-   set selected(bool value);
-}
-
-abstract interface class ImageTrackList {
-  Future<void> get ready;
-  int get length;
-  int get selectedIndex;
-  ImageTrack? get selectedTrack;
 }
 
 typedef LatencyMode = String;
@@ -262,6 +199,11 @@ abstract interface class SvcOutputMetadata {
 typedef VideoColorPrimaries = String;
 
 abstract interface class VideoColorSpace {
+  factory VideoColorSpace([VideoColorSpaceInit? init]) =>
+      WebRuntime.current.createWebObject<VideoColorSpace>(
+        'VideoColorSpace',
+        [init],
+      );
   VideoColorPrimaries? get primaries;
   VideoTransferCharacteristics? get transfer;
   VideoMatrixCoefficients? get matrix;
@@ -281,6 +223,11 @@ abstract interface class VideoColorSpaceInit {
 }
 
 abstract interface class VideoDecoder {
+  factory VideoDecoder(VideoDecoderInit init) =>
+      WebRuntime.current.createWebObject<VideoDecoder>(
+        'VideoDecoder',
+        [init],
+      );
   CodecState get state;
   int get decodeQueueSize;
   EventHandler get ondequeue;
@@ -311,10 +258,6 @@ abstract interface class VideoDecoderConfig {
   set hardwareAcceleration(HardwareAcceleration value);
   bool get optimizeForLatency;
   set optimizeForLatency(bool value);
-  double get rotation;
-  set rotation(double value);
-  bool get flip;
-  set flip(bool value);
 }
 
 abstract interface class VideoDecoderInit {
@@ -332,6 +275,11 @@ abstract interface class VideoDecoderSupport {
 }
 
 abstract interface class VideoEncoder {
+  factory VideoEncoder(VideoEncoderInit init) =>
+      WebRuntime.current.createWebObject<VideoEncoder>(
+        'VideoEncoder',
+        [init],
+      );
   CodecState get state;
   int get encodeQueueSize;
   EventHandler get ondequeue;
@@ -360,19 +308,26 @@ abstract interface class VideoEncoderSupport {
 }
 
 abstract interface class VideoFrame {
+  factory VideoFrame(CanvasImageSource image, [VideoFrameInit? init]) =>
+      WebRuntime.current.createWebObject<VideoFrame>(
+        'VideoFrame',
+        [image, init],
+      );
+  factory VideoFrame.named1(AllowSharedBufferSource data, VideoFrameBufferInit init) =>
+      WebRuntime.current.createWebObject<VideoFrame>(
+        'VideoFrame',
+        [data, init],
+      );
   VideoPixelFormat? get format;
   int get codedWidth;
   int get codedHeight;
   DOMRectReadOnly? get codedRect;
   DOMRectReadOnly? get visibleRect;
-  double get rotation;
-  bool get flip;
   int get displayWidth;
   int get displayHeight;
   int? get duration;
   int get timestamp;
   VideoColorSpace get colorSpace;
-  VideoFrameMetadata metadata();
   int allocationSize([VideoFrameCopyToOptions? options]);
   Future<List<PlaneLayout>> copyTo(AllowSharedBufferSource destination, [VideoFrameCopyToOptions? options]);
   VideoFrame clone();
@@ -394,10 +349,6 @@ abstract interface class VideoFrameBufferInit {
   set layout(List<PlaneLayout> value);
   DOMRectInit get visibleRect;
   set visibleRect(DOMRectInit value);
-  double get rotation;
-  set rotation(double value);
-  bool get flip;
-  set flip(bool value);
   int get displayWidth;
   set displayWidth(int value);
   int get displayHeight;
@@ -430,10 +381,6 @@ abstract interface class VideoFrameInit {
   set alpha(AlphaOption value);
   DOMRectInit get visibleRect;
   set visibleRect(DOMRectInit value);
-  double get rotation;
-  set rotation(double value);
-  bool get flip;
-  set flip(bool value);
   int get displayWidth;
   set displayWidth(int value);
   int get displayHeight;

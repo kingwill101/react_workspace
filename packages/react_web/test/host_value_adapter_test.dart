@@ -5,7 +5,7 @@ import 'dart:js_interop';
 
 import 'package:react_js/react_js.dart';
 import 'package:react_web/src/generated/browser_adapter.dart';
-import 'package:react_web/src/generated/html_interfaces.dart';
+import 'package:react_web/src/generated/web/web.dart';
 import 'package:test/test.dart';
 import 'package:web/web.dart' as web;
 

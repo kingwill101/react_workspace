@@ -6,6 +6,7 @@ import 'html.dart';
 import 'dom.dart';
 import 'fileapi.dart';
 import 'permissions.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Clipboard {
   Future<ClipboardItems> read([ClipboardUnsanitizedFormats? formats]);
@@ -15,6 +16,11 @@ abstract interface class Clipboard {
 }
 
 abstract interface class ClipboardEvent {
+  factory ClipboardEvent(String type, [ClipboardEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<ClipboardEvent>(
+        'ClipboardEvent',
+        [type, eventInitDict],
+      );
   DataTransfer? get clipboardData;
 }
 
@@ -24,6 +30,11 @@ abstract interface class ClipboardEventInit {
 }
 
 abstract interface class ClipboardItem {
+  factory ClipboardItem(Map<String, ClipboardItemData> items, [ClipboardItemOptions? options]) =>
+      WebRuntime.current.createWebObject<ClipboardItem>(
+        'ClipboardItem',
+        [items, options],
+      );
   PresentationStyle get presentationStyle;
   List<String> get types;
   Future<Blob> getType(String type);

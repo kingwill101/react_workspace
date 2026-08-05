@@ -4,8 +4,14 @@
 
 import 'dom.dart';
 import 'uievents.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Touch {
+  factory Touch(TouchInit touchInitDict) =>
+      WebRuntime.current.createWebObject<Touch>(
+        'Touch',
+        [touchInitDict],
+      );
   int get identifier;
   EventTarget get target;
   double get screenX;
@@ -24,6 +30,11 @@ abstract interface class Touch {
 }
 
 abstract interface class TouchEvent {
+  factory TouchEvent(String type, [TouchEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<TouchEvent>(
+        'TouchEvent',
+        [type, eventInitDict],
+      );
   TouchList get touches;
   TouchList get targetTouches;
   TouchList get changedTouches;
@@ -31,7 +42,6 @@ abstract interface class TouchEvent {
   bool get metaKey;
   bool get ctrlKey;
   bool get shiftKey;
-  bool getModifierState(String keyArg);
 }
 
 abstract interface class TouchEventInit {

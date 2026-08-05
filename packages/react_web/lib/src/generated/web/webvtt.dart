@@ -3,6 +3,7 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'dom.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 typedef AlignSetting = String;
 
@@ -19,6 +20,11 @@ typedef PositionAlignSetting = String;
 typedef ScrollSetting = String;
 
 abstract interface class VTTCue {
+  factory VTTCue(double startTime, double endTime, String text) =>
+      WebRuntime.current.createWebObject<VTTCue>(
+        'VTTCue',
+        [startTime, endTime, text],
+      );
   VTTRegion? get region;
    set region(VTTRegion? value);
   DirectionSetting get vertical;
@@ -43,6 +49,11 @@ abstract interface class VTTCue {
 }
 
 abstract interface class VTTRegion {
+  factory VTTRegion() =>
+      WebRuntime.current.createWebObject<VTTRegion>(
+        'VTTRegion',
+        [],
+      );
   String get id;
    set id(String value);
   double get width;

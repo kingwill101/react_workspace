@@ -4,8 +4,14 @@
 
 import 'css_nav.dart';
 import 'geometry.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class ResizeObserver {
+  factory ResizeObserver(ResizeObserverCallback callback) =>
+      WebRuntime.current.createWebObject<ResizeObserver>(
+        'ResizeObserver',
+        [callback],
+      );
   void observe(Element target, [ResizeObserverOptions? options]);
   void unobserve(Element target);
   void disconnect();

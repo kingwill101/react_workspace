@@ -3,7 +3,7 @@ library;
 
 export 'package:react/react.dart';
 
-export 'src/generated/event_interfaces.dart';
+export 'src/generated/react_events.dart';
 export 'src/generated/elements.dart'
     hide
         div,
@@ -18,9 +18,10 @@ export 'src/generated/elements.dart'
         a,
         img;
 export 'src/generated/dom.dart';
-export 'src/generated/html_interfaces.dart'
+export 'src/generated/web/web.dart'
     hide
         Text,
+        EffectCallback,
         HTMLDivElement,
         HTMLSpanElement,
         HTMLButtonElement,
@@ -32,5 +33,7 @@ export 'src/generated/html_interfaces.dart'
         HTMLOptionElement,
         HTMLAnchorElement,
         HTMLImageElement;
+export 'src/generated/browser_adapter.dart'
+    show registerBrowserAdapters, installBrowserWebRuntime;
 export 'src/http_server_function_client.dart';
 export 'src/ssr_metadata.dart';

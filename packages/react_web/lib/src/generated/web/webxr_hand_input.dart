@@ -4,11 +4,6 @@
 
 
 abstract interface class XRHand {
-   Iterable<(XRHandJoint, XRJointSpace)> get entries;
-   Iterable<XRHandJoint> get keys;
-   Iterable<XRJointSpace> get values;
-  int get size;
-  XRJointSpace get_(XRHandJoint key);
 }
 
 typedef XRHandJoint = String;

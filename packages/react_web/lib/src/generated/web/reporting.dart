@@ -2,6 +2,7 @@
 // Neutral Web surface for spec: reporting
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class GenerateTestReportParameters {
   String get message;
@@ -24,6 +25,11 @@ abstract interface class ReportBody {
 typedef ReportList = List<Report>;
 
 abstract interface class ReportingObserver {
+  factory ReportingObserver(ReportingObserverCallback callback, [ReportingObserverOptions? options]) =>
+      WebRuntime.current.createWebObject<ReportingObserver>(
+        'ReportingObserver',
+        [callback, options],
+      );
   void observe();
   void disconnect();
   ReportList takeRecords();

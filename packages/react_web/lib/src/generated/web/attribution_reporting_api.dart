@@ -10,6 +10,7 @@ import 'trust_token_api.dart';
 import 'html.dart';
 import 'xhr.dart';
 import 'svg.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AttributionReportingRequestOptions {
   bool get eventSourceEligible;
@@ -67,20 +68,13 @@ abstract interface class RequestInit {
 }
 
 abstract interface class XMLHttpRequest {
-  void setAttributionReporting(AttributionReportingRequestOptions options);
-  void setPrivateToken(PrivateToken privateToken);
+  factory XMLHttpRequest() =>
+      WebRuntime.current.createWebObject<XMLHttpRequest>(
+        'XMLHttpRequest',
+        [],
+      );
   EventHandler get onreadystatechange;
    set onreadystatechange(EventHandler value);
-   static const int UNSENT =
-      0;
-   static const int OPENED =
-      1;
-   static const int HEADERS_RECEIVED =
-      2;
-   static const int LOADING =
-      3;
-   static const int DONE =
-      4;
   int get readyState;
   void open(String method, String url, bool async_, [String? username, String? password]);
   void setRequestHeader(String name, String value);

@@ -4,6 +4,7 @@
 
 import 'media_source.dart';
 import 'fileapi.dart';
+import 'webcodecs.dart';
 import 'geometry.dart';
 import 'css_nav.dart';
 import 'dom.dart';
@@ -19,28 +20,24 @@ import 'cssom.dart';
 import 'media_playback_quality.dart';
 import 'picture_in_picture.dart';
 import 'video_rvfc.dart';
+import 'service_workers.dart';
+import 'webgl1.dart';
+import 'webgl2.dart';
 import 'css_view_transitions_2.dart';
+import 'webidl.dart';
 import 'css_font_loading.dart';
 import 'indexeddb.dart';
 import 'webcryptoapi.dart';
 import 'fetch.dart';
 import 'attribution_reporting_api.dart';
 import 'event_timing.dart';
-import 'webidl.dart';
 import 'scheduling_apis.dart';
-import 'service_workers.dart';
 import 'netinfo.dart';
-import 'storage_buckets.dart';
 import 'fs.dart';
-import 'ua_client_hints.dart';
 import 'web_locks.dart';
-import 'webgpu.dart';
-import 'webnn.dart';
 import 'media_capabilities.dart';
 import 'permissions_request.dart';
-import 'serial.dart';
-import 'webhid.dart';
-import 'webusb.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AbstractWorker {
   EventHandler get onerror;
@@ -90,6 +87,11 @@ abstract interface class BeforeUnloadEvent {
 typedef BlobCallback = void Function(Blob? blob,);
 
 abstract interface class BroadcastChannel {
+  factory BroadcastChannel(String name) =>
+      WebRuntime.current.createWebObject<BroadcastChannel>(
+        'BroadcastChannel',
+        [name],
+      );
   String get name;
   void postMessage(Object message);
   void close();
@@ -100,8 +102,6 @@ abstract interface class BroadcastChannel {
 }
 
 typedef CanPlayTypeResult = String;
-
-typedef CanvasColorType = String;
 
 abstract interface class CanvasCompositing {
   double get globalAlpha;
@@ -156,7 +156,7 @@ abstract interface class CanvasGradient {
 abstract interface class CanvasImageData {
   ImageData createImageData(int sw, int sh, [ImageDataSettings? settings]);
   ImageData getImageData(int sx, int sy, int sw, int sh, [ImageDataSettings? settings]);
-  void putImageData(ImageData imageData, int dx, int dy, int dirtyX, int dirtyY, int dirtyWidth, int dirtyHeight);
+  void putImageData(ImageData imagedata, int dx, int dy, int dirtyX, int dirtyY, int dirtyWidth, int dirtyHeight);
 }
 
 abstract interface class CanvasImageSmoothing {
@@ -211,7 +211,6 @@ abstract interface class CanvasRect {
 }
 
 abstract interface class CanvasRenderingContext2D {
-  CanvasRenderingContext2DSettings getContextAttributes();
   void save();
   void restore();
   void reset();
@@ -259,13 +258,14 @@ abstract interface class CanvasRenderingContext2D {
   bool isPointInPath(Path2D path, double x, double y, [CanvasFillRule? fillRule]);
   bool isPointInStroke(Path2D path, double x, double y);
   void drawFocusIfNeeded(Path2D path, Element element);
+  void scrollPathIntoView(Path2D path);
   void fillText(String text, double x, double y, [double? maxWidth]);
   void strokeText(String text, double x, double y, [double? maxWidth]);
   TextMetrics measureText(String text);
   void drawImage(CanvasImageSource image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
   ImageData createImageData(int sw, int sh, [ImageDataSettings? settings]);
   ImageData getImageData(int sx, int sy, int sw, int sh, [ImageDataSettings? settings]);
-  void putImageData(ImageData imageData, int dx, int dy, int dirtyX, int dirtyY, int dirtyWidth, int dirtyHeight);
+  void putImageData(ImageData imagedata, int dx, int dy, int dirtyX, int dirtyY, int dirtyWidth, int dirtyHeight);
   double get lineWidth;
    set lineWidth(double value);
   CanvasLineCap get lineCap;
@@ -309,6 +309,7 @@ abstract interface class CanvasRenderingContext2D {
   void arc(double x, double y, double radius, double startAngle, double endAngle, [bool? counterclockwise]);
   void ellipse(double x, double y, double radiusX, double radiusY, double rotation, double startAngle, double endAngle, [bool? counterclockwise]);
   HTMLCanvasElement get canvas;
+  CanvasRenderingContext2DSettings getContextAttributes();
 }
 
 abstract interface class CanvasRenderingContext2DSettings {
@@ -318,14 +319,8 @@ abstract interface class CanvasRenderingContext2DSettings {
   set desynchronized(bool value);
   PredefinedColorSpace get colorSpace;
   set colorSpace(PredefinedColorSpace value);
-  CanvasColorType get colorType;
-  set colorType(CanvasColorType value);
   bool get willReadFrequently;
   set willReadFrequently(bool value);
-}
-
-abstract interface class CanvasSettings {
-  CanvasRenderingContext2DSettings getContextAttributes();
 }
 
 abstract interface class CanvasShadowStyles {
@@ -393,16 +388,7 @@ abstract interface class CanvasTransform {
 
 abstract interface class CanvasUserInterface {
   void drawFocusIfNeeded(Path2D path, Element element);
-}
-
-abstract interface class CloseWatcher {
-  void requestClose();
-  void close();
-  void destroy();
-  EventHandler get oncancel;
-   set oncancel(EventHandler value);
-  EventHandler get onclose;
-   set onclose(EventHandler value);
+  void scrollPathIntoView(Path2D path);
 }
 
 abstract interface class CloseWatcherOptions {
@@ -411,18 +397,6 @@ abstract interface class CloseWatcherOptions {
 }
 
 typedef ColorSpaceConversion = String;
-
-abstract interface class CommandEvent {
-  Element? get source;
-  String get command;
-}
-
-abstract interface class CommandEventInit {
-  Element? get source;
-  set source(Element? value);
-  String get command;
-  set command(String value);
-}
 
 typedef CustomElementConstructor = HTMLElement Function();
 
@@ -435,11 +409,14 @@ abstract interface class CustomElementRegistry {
 }
 
 abstract interface class CustomStateSet {
-   Iterable<String> get values;
-   bool has(Object value);
 }
 
 abstract interface class DOMParser {
+  factory DOMParser() =>
+      WebRuntime.current.createWebObject<DOMParser>(
+        'DOMParser',
+        [],
+      );
   Document parseFromString(Object string, DOMParserSupportedType type);
 }
 
@@ -455,6 +432,11 @@ abstract interface class DOMStringMap {
 }
 
 abstract interface class DataTransfer {
+  factory DataTransfer() =>
+      WebRuntime.current.createWebObject<DataTransfer>(
+        'DataTransfer',
+        [],
+      );
   String get dropEffect;
    set dropEffect(String value);
   String get effectAllowed;
@@ -478,13 +460,13 @@ abstract interface class DataTransferItemList {
 abstract interface class DedicatedWorkerGlobalScope {
   int requestAnimationFrame(FrameRequestCallback callback);
   void cancelAnimationFrame(int handle);
+  String get name;
+  void postMessage(Object message, List<Object> transfer);
+  void close();
   EventHandler get onmessage;
    set onmessage(EventHandler value);
   EventHandler get onmessageerror;
    set onmessageerror(EventHandler value);
-  String get name;
-  void postMessage(Object message, List<Object> transfer);
-  void close();
   EventHandler get onrtctransform;
    set onrtctransform(EventHandler value);
 }
@@ -494,6 +476,11 @@ typedef DocumentReadyState = String;
 typedef DocumentVisibilityState = String;
 
 abstract interface class DragEvent {
+  factory DragEvent(String type, [DragEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<DragEvent>(
+        'DragEvent',
+        [type, eventInitDict],
+      );
   DataTransfer? get dataTransfer;
 }
 
@@ -596,8 +583,6 @@ abstract interface class ElementInternals {
    set ariaPressed(String? value);
   String? get ariaReadOnly;
    set ariaReadOnly(String? value);
-  String? get ariaRelevant;
-   set ariaRelevant(String? value);
   String? get ariaRequired;
    set ariaRequired(String? value);
   String? get ariaRoleDescription;
@@ -638,6 +623,11 @@ abstract interface class ElementInternals {
 }
 
 abstract interface class ErrorEvent {
+  factory ErrorEvent(String type, [ErrorEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<ErrorEvent>(
+        'ErrorEvent',
+        [type, eventInitDict],
+      );
   String get message;
   String get filename;
   int get lineno;
@@ -663,14 +653,13 @@ typedef EventHandler = EventHandlerNonNull?;
 typedef EventHandlerNonNull = Object Function(Event event,);
 
 abstract interface class EventSource {
+  factory EventSource(String url, [EventSourceInit? eventSourceInitDict]) =>
+      WebRuntime.current.createWebObject<EventSource>(
+        'EventSource',
+        [url, eventSourceInitDict],
+      );
   String get url;
   bool get withCredentials;
-   static const int CONNECTING =
-      0;
-   static const int OPEN =
-      1;
-   static const int CLOSED =
-      2;
   int get readyState;
   EventHandler get onopen;
    set onopen(EventHandler value);
@@ -699,6 +688,11 @@ abstract interface class FocusOptions {
 }
 
 abstract interface class FormDataEvent {
+  factory FormDataEvent(String type, FormDataEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<FormDataEvent>(
+        'FormDataEvent',
+        [type, eventInitDict],
+      );
   FormData get formData;
 }
 
@@ -725,6 +719,11 @@ abstract interface class HTMLAllCollection {
 }
 
 abstract interface class HTMLAnchorElement {
+  factory HTMLAnchorElement() =>
+      WebRuntime.current.createWebObject<HTMLAnchorElement>(
+        'HTMLAnchorElement',
+        [],
+      );
   String get attributionSrc;
    set attributionSrc(String value);
   String get href;
@@ -775,13 +774,14 @@ abstract interface class HTMLAnchorElement {
    set rev(String value);
   String get shape;
    set shape(String value);
-  int get attributionSourceId;
-   set attributionSourceId(int value);
 }
 
 abstract interface class HTMLAreaElement {
-  String get attributionSrc;
-   set attributionSrc(String value);
+  factory HTMLAreaElement() =>
+      WebRuntime.current.createWebObject<HTMLAreaElement>(
+        'HTMLAreaElement',
+        [],
+      );
   String get href;
    set href(String value);
   String get origin;
@@ -825,14 +825,29 @@ abstract interface class HTMLAreaElement {
 }
 
 abstract interface class HTMLAudioElement {
+  factory HTMLAudioElement() =>
+      WebRuntime.current.createWebObject<HTMLAudioElement>(
+        'HTMLAudioElement',
+        [],
+      );
 }
 
 abstract interface class HTMLBRElement {
+  factory HTMLBRElement() =>
+      WebRuntime.current.createWebObject<HTMLBRElement>(
+        'HTMLBRElement',
+        [],
+      );
   String get clear;
    set clear(String value);
 }
 
 abstract interface class HTMLBaseElement {
+  factory HTMLBaseElement() =>
+      WebRuntime.current.createWebObject<HTMLBaseElement>(
+        'HTMLBaseElement',
+        [],
+      );
   String get href;
    set href(String value);
   String get target;
@@ -840,14 +855,15 @@ abstract interface class HTMLBaseElement {
 }
 
 abstract interface class HTMLButtonElement {
+  factory HTMLButtonElement() =>
+      WebRuntime.current.createWebObject<HTMLButtonElement>(
+        'HTMLButtonElement',
+        [],
+      );
   Element? get popoverTargetElement;
    set popoverTargetElement(Element? value);
   String get popoverTargetAction;
    set popoverTargetAction(String value);
-  String get command;
-   set command(String value);
-  Element? get commandForElement;
-   set commandForElement(Element? value);
   bool get disabled;
    set disabled(bool value);
   HTMLFormElement? get form;
@@ -877,6 +893,11 @@ abstract interface class HTMLButtonElement {
 }
 
 abstract interface class HTMLCanvasElement {
+  factory HTMLCanvasElement() =>
+      WebRuntime.current.createWebObject<HTMLCanvasElement>(
+        'HTMLCanvasElement',
+        [],
+      );
   int get width;
    set width(int value);
   int get height;
@@ -889,20 +910,40 @@ abstract interface class HTMLCanvasElement {
 }
 
 abstract interface class HTMLDListElement {
+  factory HTMLDListElement() =>
+      WebRuntime.current.createWebObject<HTMLDListElement>(
+        'HTMLDListElement',
+        [],
+      );
   bool get compact;
    set compact(bool value);
 }
 
 abstract interface class HTMLDataElement {
+  factory HTMLDataElement() =>
+      WebRuntime.current.createWebObject<HTMLDataElement>(
+        'HTMLDataElement',
+        [],
+      );
   String get value;
    set value(String value);
 }
 
 abstract interface class HTMLDataListElement {
+  factory HTMLDataListElement() =>
+      WebRuntime.current.createWebObject<HTMLDataListElement>(
+        'HTMLDataListElement',
+        [],
+      );
   HTMLCollection get options;
 }
 
 abstract interface class HTMLDetailsElement {
+  factory HTMLDetailsElement() =>
+      WebRuntime.current.createWebObject<HTMLDetailsElement>(
+        'HTMLDetailsElement',
+        [],
+      );
   String get name;
    set name(String value);
   bool get open;
@@ -910,29 +951,46 @@ abstract interface class HTMLDetailsElement {
 }
 
 abstract interface class HTMLDialogElement {
+  factory HTMLDialogElement() =>
+      WebRuntime.current.createWebObject<HTMLDialogElement>(
+        'HTMLDialogElement',
+        [],
+      );
   bool get open;
    set open(bool value);
   String get returnValue;
    set returnValue(String value);
-  String get closedBy;
-   set closedBy(String value);
   void show_();
   void showModal();
   void close([String? returnValue]);
-  void requestClose([String? returnValue]);
 }
 
 abstract interface class HTMLDirectoryElement {
+  factory HTMLDirectoryElement() =>
+      WebRuntime.current.createWebObject<HTMLDirectoryElement>(
+        'HTMLDirectoryElement',
+        [],
+      );
   bool get compact;
    set compact(bool value);
 }
 
 abstract interface class HTMLDivElement {
+  factory HTMLDivElement() =>
+      WebRuntime.current.createWebObject<HTMLDivElement>(
+        'HTMLDivElement',
+        [],
+      );
   String get align;
    set align(String value);
 }
 
 abstract interface class HTMLEmbedElement {
+  factory HTMLEmbedElement() =>
+      WebRuntime.current.createWebObject<HTMLEmbedElement>(
+        'HTMLEmbedElement',
+        [],
+      );
   String get src;
    set src(String value);
   String get type;
@@ -949,6 +1007,11 @@ abstract interface class HTMLEmbedElement {
 }
 
 abstract interface class HTMLFieldSetElement {
+  factory HTMLFieldSetElement() =>
+      WebRuntime.current.createWebObject<HTMLFieldSetElement>(
+        'HTMLFieldSetElement',
+        [],
+      );
   bool get disabled;
    set disabled(bool value);
   HTMLFormElement? get form;
@@ -965,6 +1028,11 @@ abstract interface class HTMLFieldSetElement {
 }
 
 abstract interface class HTMLFontElement {
+  factory HTMLFontElement() =>
+      WebRuntime.current.createWebObject<HTMLFontElement>(
+        'HTMLFontElement',
+        [],
+      );
   String get color;
    set color(String value);
   String get face;
@@ -978,6 +1046,11 @@ abstract interface class HTMLFormControlsCollection {
 }
 
 abstract interface class HTMLFormElement {
+  factory HTMLFormElement() =>
+      WebRuntime.current.createWebObject<HTMLFormElement>(
+        'HTMLFormElement',
+        [],
+      );
   String get acceptCharset;
    set acceptCharset(String value);
   String get action;
@@ -1009,6 +1082,11 @@ abstract interface class HTMLFormElement {
 }
 
 abstract interface class HTMLFrameElement {
+  factory HTMLFrameElement() =>
+      WebRuntime.current.createWebObject<HTMLFrameElement>(
+        'HTMLFrameElement',
+        [],
+      );
   String get name;
    set name(String value);
   String get scrolling;
@@ -1030,6 +1108,11 @@ abstract interface class HTMLFrameElement {
 }
 
 abstract interface class HTMLFrameSetElement {
+  factory HTMLFrameSetElement() =>
+      WebRuntime.current.createWebObject<HTMLFrameSetElement>(
+        'HTMLFrameSetElement',
+        [],
+      );
   EventHandler get ongamepadconnected;
    set ongamepadconnected(EventHandler value);
   EventHandler get ongamepaddisconnected;
@@ -1079,6 +1162,11 @@ abstract interface class HTMLFrameSetElement {
 }
 
 abstract interface class HTMLHRElement {
+  factory HTMLHRElement() =>
+      WebRuntime.current.createWebObject<HTMLHRElement>(
+        'HTMLHRElement',
+        [],
+      );
   String get align;
    set align(String value);
   String get color;
@@ -1092,14 +1180,29 @@ abstract interface class HTMLHRElement {
 }
 
 abstract interface class HTMLHeadElement {
+  factory HTMLHeadElement() =>
+      WebRuntime.current.createWebObject<HTMLHeadElement>(
+        'HTMLHeadElement',
+        [],
+      );
 }
 
 abstract interface class HTMLHeadingElement {
+  factory HTMLHeadingElement() =>
+      WebRuntime.current.createWebObject<HTMLHeadingElement>(
+        'HTMLHeadingElement',
+        [],
+      );
   String get align;
    set align(String value);
 }
 
 abstract interface class HTMLHtmlElement {
+  factory HTMLHtmlElement() =>
+      WebRuntime.current.createWebObject<HTMLHtmlElement>(
+        'HTMLHtmlElement',
+        [],
+      );
   String get version;
    set version(String value);
 }
@@ -1129,6 +1232,11 @@ abstract interface class HTMLHyperlinkElementUtils {
 }
 
 abstract interface class HTMLLIElement {
+  factory HTMLLIElement() =>
+      WebRuntime.current.createWebObject<HTMLLIElement>(
+        'HTMLLIElement',
+        [],
+      );
   int get value;
    set value(int value);
   String get type;
@@ -1136,6 +1244,11 @@ abstract interface class HTMLLIElement {
 }
 
 abstract interface class HTMLLabelElement {
+  factory HTMLLabelElement() =>
+      WebRuntime.current.createWebObject<HTMLLabelElement>(
+        'HTMLLabelElement',
+        [],
+      );
   HTMLFormElement? get form;
   String get htmlFor;
    set htmlFor(String value);
@@ -1143,12 +1256,22 @@ abstract interface class HTMLLabelElement {
 }
 
 abstract interface class HTMLLegendElement {
+  factory HTMLLegendElement() =>
+      WebRuntime.current.createWebObject<HTMLLegendElement>(
+        'HTMLLegendElement',
+        [],
+      );
   HTMLFormElement? get form;
   String get align;
    set align(String value);
 }
 
 abstract interface class HTMLLinkElement {
+  factory HTMLLinkElement() =>
+      WebRuntime.current.createWebObject<HTMLLinkElement>(
+        'HTMLLinkElement',
+        [],
+      );
   CSSStyleSheet? get sheet;
   String get href;
    set href(String value);
@@ -1174,7 +1297,6 @@ abstract interface class HTMLLinkElement {
    set imageSizes(String value);
   String get referrerPolicy;
    set referrerPolicy(String value);
-  DOMTokenList get blocking;
   bool get disabled;
    set disabled(bool value);
   String get fetchPriority;
@@ -1188,12 +1310,22 @@ abstract interface class HTMLLinkElement {
 }
 
 abstract interface class HTMLMapElement {
+  factory HTMLMapElement() =>
+      WebRuntime.current.createWebObject<HTMLMapElement>(
+        'HTMLMapElement',
+        [],
+      );
   String get name;
    set name(String value);
   HTMLCollection get areas;
 }
 
 abstract interface class HTMLMarqueeElement {
+  factory HTMLMarqueeElement() =>
+      WebRuntime.current.createWebObject<HTMLMarqueeElement>(
+        'HTMLMarqueeElement',
+        [],
+      );
   String get behavior;
    set behavior(String value);
   String get bgColor;
@@ -1221,11 +1353,21 @@ abstract interface class HTMLMarqueeElement {
 }
 
 abstract interface class HTMLMenuElement {
+  factory HTMLMenuElement() =>
+      WebRuntime.current.createWebObject<HTMLMenuElement>(
+        'HTMLMenuElement',
+        [],
+      );
   bool get compact;
    set compact(bool value);
 }
 
 abstract interface class HTMLMetaElement {
+  factory HTMLMetaElement() =>
+      WebRuntime.current.createWebObject<HTMLMetaElement>(
+        'HTMLMetaElement',
+        [],
+      );
   String get name;
    set name(String value);
   String get httpEquiv;
@@ -1239,6 +1381,11 @@ abstract interface class HTMLMetaElement {
 }
 
 abstract interface class HTMLMeterElement {
+  factory HTMLMeterElement() =>
+      WebRuntime.current.createWebObject<HTMLMeterElement>(
+        'HTMLMeterElement',
+        [],
+      );
   double get value;
    set value(double value);
   double get min;
@@ -1255,6 +1402,11 @@ abstract interface class HTMLMeterElement {
 }
 
 abstract interface class HTMLModElement {
+  factory HTMLModElement() =>
+      WebRuntime.current.createWebObject<HTMLModElement>(
+        'HTMLModElement',
+        [],
+      );
   String get cite;
    set cite(String value);
   String get dateTime;
@@ -1262,6 +1414,11 @@ abstract interface class HTMLModElement {
 }
 
 abstract interface class HTMLOListElement {
+  factory HTMLOListElement() =>
+      WebRuntime.current.createWebObject<HTMLOListElement>(
+        'HTMLOListElement',
+        [],
+      );
   bool get reversed;
    set reversed(bool value);
   int get start;
@@ -1273,6 +1430,11 @@ abstract interface class HTMLOListElement {
 }
 
 abstract interface class HTMLObjectElement {
+  factory HTMLObjectElement() =>
+      WebRuntime.current.createWebObject<HTMLObjectElement>(
+        'HTMLObjectElement',
+        [],
+      );
   String get data;
    set data(String value);
   String get type;
@@ -1318,6 +1480,11 @@ abstract interface class HTMLObjectElement {
 }
 
 abstract interface class HTMLOptGroupElement {
+  factory HTMLOptGroupElement() =>
+      WebRuntime.current.createWebObject<HTMLOptGroupElement>(
+        'HTMLOptGroupElement',
+        [],
+      );
   bool get disabled;
    set disabled(bool value);
   String get label;
@@ -1325,6 +1492,11 @@ abstract interface class HTMLOptGroupElement {
 }
 
 abstract interface class HTMLOptionElement {
+  factory HTMLOptionElement() =>
+      WebRuntime.current.createWebObject<HTMLOptionElement>(
+        'HTMLOptionElement',
+        [],
+      );
   bool get disabled;
    set disabled(bool value);
   HTMLFormElement? get form;
@@ -1367,6 +1539,11 @@ typedef HTMLOrSVGImageElement = Object;
 typedef HTMLOrSVGScriptElement = Object;
 
 abstract interface class HTMLOutputElement {
+  factory HTMLOutputElement() =>
+      WebRuntime.current.createWebObject<HTMLOutputElement>(
+        'HTMLOutputElement',
+        [],
+      );
   DOMTokenList get htmlFor;
   HTMLFormElement? get form;
   String get name;
@@ -1386,11 +1563,21 @@ abstract interface class HTMLOutputElement {
 }
 
 abstract interface class HTMLParagraphElement {
+  factory HTMLParagraphElement() =>
+      WebRuntime.current.createWebObject<HTMLParagraphElement>(
+        'HTMLParagraphElement',
+        [],
+      );
   String get align;
    set align(String value);
 }
 
 abstract interface class HTMLParamElement {
+  factory HTMLParamElement() =>
+      WebRuntime.current.createWebObject<HTMLParamElement>(
+        'HTMLParamElement',
+        [],
+      );
   String get name;
    set name(String value);
   String get value;
@@ -1402,14 +1589,29 @@ abstract interface class HTMLParamElement {
 }
 
 abstract interface class HTMLPictureElement {
+  factory HTMLPictureElement() =>
+      WebRuntime.current.createWebObject<HTMLPictureElement>(
+        'HTMLPictureElement',
+        [],
+      );
 }
 
 abstract interface class HTMLPreElement {
+  factory HTMLPreElement() =>
+      WebRuntime.current.createWebObject<HTMLPreElement>(
+        'HTMLPreElement',
+        [],
+      );
   int get width;
    set width(int value);
 }
 
 abstract interface class HTMLProgressElement {
+  factory HTMLProgressElement() =>
+      WebRuntime.current.createWebObject<HTMLProgressElement>(
+        'HTMLProgressElement',
+        [],
+      );
   double get value;
    set value(double value);
   double get max;
@@ -1419,11 +1621,21 @@ abstract interface class HTMLProgressElement {
 }
 
 abstract interface class HTMLQuoteElement {
+  factory HTMLQuoteElement() =>
+      WebRuntime.current.createWebObject<HTMLQuoteElement>(
+        'HTMLQuoteElement',
+        [],
+      );
   String get cite;
    set cite(String value);
 }
 
 abstract interface class HTMLScriptElement {
+  factory HTMLScriptElement() =>
+      WebRuntime.current.createWebObject<HTMLScriptElement>(
+        'HTMLScriptElement',
+        [],
+      );
   String get attributionSrc;
    set attributionSrc(String value);
   String get src;
@@ -1444,7 +1656,6 @@ abstract interface class HTMLScriptElement {
    set integrity(String value);
   String get referrerPolicy;
    set referrerPolicy(String value);
-  DOMTokenList get blocking;
   String get fetchPriority;
    set fetchPriority(String value);
   String get charset;
@@ -1456,6 +1667,11 @@ abstract interface class HTMLScriptElement {
 }
 
 abstract interface class HTMLSelectElement {
+  factory HTMLSelectElement() =>
+      WebRuntime.current.createWebObject<HTMLSelectElement>(
+        'HTMLSelectElement',
+        [],
+      );
   String get autocomplete;
    set autocomplete(String value);
   bool get disabled;
@@ -1493,6 +1709,11 @@ abstract interface class HTMLSelectElement {
 }
 
 abstract interface class HTMLSlotElement {
+  factory HTMLSlotElement() =>
+      WebRuntime.current.createWebObject<HTMLSlotElement>(
+        'HTMLSlotElement',
+        [],
+      );
   String get name;
    set name(String value);
   List<Node> assignedNodes([AssignedNodesOptions? options]);
@@ -1501,6 +1722,11 @@ abstract interface class HTMLSlotElement {
 }
 
 abstract interface class HTMLSourceElement {
+  factory HTMLSourceElement() =>
+      WebRuntime.current.createWebObject<HTMLSourceElement>(
+        'HTMLSourceElement',
+        [],
+      );
   String get src;
    set src(String value);
   String get type;
@@ -1518,25 +1744,44 @@ abstract interface class HTMLSourceElement {
 }
 
 abstract interface class HTMLSpanElement {
+  factory HTMLSpanElement() =>
+      WebRuntime.current.createWebObject<HTMLSpanElement>(
+        'HTMLSpanElement',
+        [],
+      );
 }
 
 abstract interface class HTMLStyleElement {
+  factory HTMLStyleElement() =>
+      WebRuntime.current.createWebObject<HTMLStyleElement>(
+        'HTMLStyleElement',
+        [],
+      );
   CSSStyleSheet? get sheet;
   bool get disabled;
    set disabled(bool value);
   String get media;
    set media(String value);
-  DOMTokenList get blocking;
   String get type;
    set type(String value);
 }
 
 abstract interface class HTMLTableCaptionElement {
+  factory HTMLTableCaptionElement() =>
+      WebRuntime.current.createWebObject<HTMLTableCaptionElement>(
+        'HTMLTableCaptionElement',
+        [],
+      );
   String get align;
    set align(String value);
 }
 
 abstract interface class HTMLTableCellElement {
+  factory HTMLTableCellElement() =>
+      WebRuntime.current.createWebObject<HTMLTableCellElement>(
+        'HTMLTableCellElement',
+        [],
+      );
   int get colSpan;
    set colSpan(int value);
   int get rowSpan;
@@ -1569,6 +1814,11 @@ abstract interface class HTMLTableCellElement {
 }
 
 abstract interface class HTMLTableColElement {
+  factory HTMLTableColElement() =>
+      WebRuntime.current.createWebObject<HTMLTableColElement>(
+        'HTMLTableColElement',
+        [],
+      );
   int get span;
    set span(int value);
   String get align;
@@ -1584,6 +1834,11 @@ abstract interface class HTMLTableColElement {
 }
 
 abstract interface class HTMLTableElement {
+  factory HTMLTableElement() =>
+      WebRuntime.current.createWebObject<HTMLTableElement>(
+        'HTMLTableElement',
+        [],
+      );
   HTMLTableCaptionElement? get caption;
    set caption(HTMLTableCaptionElement? value);
   HTMLTableCaptionElement createCaption();
@@ -1622,6 +1877,11 @@ abstract interface class HTMLTableElement {
 }
 
 abstract interface class HTMLTableRowElement {
+  factory HTMLTableRowElement() =>
+      WebRuntime.current.createWebObject<HTMLTableRowElement>(
+        'HTMLTableRowElement',
+        [],
+      );
   int get rowIndex;
   int get sectionRowIndex;
   HTMLCollection get cells;
@@ -1640,6 +1900,11 @@ abstract interface class HTMLTableRowElement {
 }
 
 abstract interface class HTMLTableSectionElement {
+  factory HTMLTableSectionElement() =>
+      WebRuntime.current.createWebObject<HTMLTableSectionElement>(
+        'HTMLTableSectionElement',
+        [],
+      );
   HTMLCollection get rows;
   HTMLTableRowElement insertRow([int? index]);
   void deleteRow(int index);
@@ -1654,6 +1919,11 @@ abstract interface class HTMLTableSectionElement {
 }
 
 abstract interface class HTMLTemplateElement {
+  factory HTMLTemplateElement() =>
+      WebRuntime.current.createWebObject<HTMLTemplateElement>(
+        'HTMLTemplateElement',
+        [],
+      );
   DocumentFragment get content;
   String get shadowRootMode;
    set shadowRootMode(String value);
@@ -1666,6 +1936,11 @@ abstract interface class HTMLTemplateElement {
 }
 
 abstract interface class HTMLTextAreaElement {
+  factory HTMLTextAreaElement() =>
+      WebRuntime.current.createWebObject<HTMLTextAreaElement>(
+        'HTMLTextAreaElement',
+        [],
+      );
   String get autocomplete;
    set autocomplete(String value);
   int get cols;
@@ -1716,16 +1991,31 @@ abstract interface class HTMLTextAreaElement {
 }
 
 abstract interface class HTMLTimeElement {
+  factory HTMLTimeElement() =>
+      WebRuntime.current.createWebObject<HTMLTimeElement>(
+        'HTMLTimeElement',
+        [],
+      );
   String get dateTime;
    set dateTime(String value);
 }
 
 abstract interface class HTMLTitleElement {
+  factory HTMLTitleElement() =>
+      WebRuntime.current.createWebObject<HTMLTitleElement>(
+        'HTMLTitleElement',
+        [],
+      );
   String get text;
    set text(String value);
 }
 
 abstract interface class HTMLTrackElement {
+  factory HTMLTrackElement() =>
+      WebRuntime.current.createWebObject<HTMLTrackElement>(
+        'HTMLTrackElement',
+        [],
+      );
   String get kind;
    set kind(String value);
   String get src;
@@ -1736,19 +2026,16 @@ abstract interface class HTMLTrackElement {
    set label(String value);
   bool get default_;
    set default_(bool value);
-   static const int NONE =
-      0;
-   static const int LOADING =
-      1;
-   static const int LOADED =
-      2;
-   static const int ERROR =
-      3;
   int get readyState;
   TextTrack get track;
 }
 
 abstract interface class HTMLUListElement {
+  factory HTMLUListElement() =>
+      WebRuntime.current.createWebObject<HTMLUListElement>(
+        'HTMLUListElement',
+        [],
+      );
   bool get compact;
    set compact(bool value);
   String get type;
@@ -1759,6 +2046,11 @@ abstract interface class HTMLUnknownElement {
 }
 
 abstract interface class HTMLVideoElement {
+  factory HTMLVideoElement() =>
+      WebRuntime.current.createWebObject<HTMLVideoElement>(
+        'HTMLVideoElement',
+        [],
+      );
   int get width;
    set width(int value);
   int get height;
@@ -1782,6 +2074,11 @@ abstract interface class HTMLVideoElement {
 }
 
 abstract interface class HashChangeEvent {
+  factory HashChangeEvent(String type, [HashChangeEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<HashChangeEvent>(
+        'HashChangeEvent',
+        [type, eventInitDict],
+      );
   String get oldURL;
   String get newURL;
 }
@@ -1839,6 +2136,16 @@ abstract interface class ImageBitmapRenderingContextSettings {
 typedef ImageBitmapSource = Object;
 
 abstract interface class ImageData {
+  factory ImageData(int sw, int sh, [ImageDataSettings? settings]) =>
+      WebRuntime.current.createWebObject<ImageData>(
+        'ImageData',
+        [sw, sh, settings],
+      );
+  factory ImageData.named1(Object data, int sw, [int? sh, ImageDataSettings? settings]) =>
+      WebRuntime.current.createWebObject<ImageData>(
+        'ImageData',
+        [data, sw, sh, settings],
+      );
   int get width;
   int get height;
   Object get data;
@@ -1886,14 +2193,6 @@ abstract interface class Location {
 }
 
 abstract interface class MediaError {
-   static const int MEDIA_ERR_ABORTED =
-      1;
-   static const int MEDIA_ERR_NETWORK =
-      2;
-   static const int MEDIA_ERR_DECODE =
-      3;
-   static const int MEDIA_ERR_SRC_NOT_SUPPORTED =
-      4;
   int get code;
   String get message;
 }
@@ -1901,11 +2200,21 @@ abstract interface class MediaError {
 typedef MediaProvider = Object;
 
 abstract interface class MessageChannel {
+  factory MessageChannel() =>
+      WebRuntime.current.createWebObject<MessageChannel>(
+        'MessageChannel',
+        [],
+      );
   MessagePort get port1;
   MessagePort get port2;
 }
 
 abstract interface class MessageEvent {
+  factory MessageEvent(String type, [MessageEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<MessageEvent>(
+        'MessageEvent',
+        [type, eventInitDict],
+      );
   Object get data;
   String get origin;
   String get lastEventId;
@@ -1929,23 +2238,14 @@ abstract interface class MessageEventInit {
 
 typedef MessageEventSource = Object;
 
-abstract interface class MessageEventTarget {
-  EventHandler get onmessage;
-   set onmessage(EventHandler value);
-  EventHandler get onmessageerror;
-   set onmessageerror(EventHandler value);
-}
-
 abstract interface class MessagePort {
-  EventHandler get onmessage;
-   set onmessage(EventHandler value);
-  EventHandler get onmessageerror;
-   set onmessageerror(EventHandler value);
   void postMessage(Object message, List<Object> transfer);
   void start();
   void close();
-  EventHandler get onclose;
-   set onclose(EventHandler value);
+  EventHandler get onmessage;
+   set onmessage(EventHandler value);
+  EventHandler get onmessageerror;
+   set onmessageerror(EventHandler value);
 }
 
 abstract interface class MimeType {
@@ -1961,27 +2261,11 @@ abstract interface class MimeTypeArray {
   MimeType? namedItem(String name);
 }
 
-abstract interface class NavigateEvent {
-  NavigationType get navigationType;
-  NavigationDestination get destination;
-  bool get canIntercept;
-  bool get userInitiated;
-  bool get hashChange;
-  AbortSignal get signal;
-  FormData? get formData;
-  String? get downloadRequest;
-  Object get info;
-  bool get hasUAVisualTransition;
-  Element? get sourceElement;
-  void intercept([NavigationInterceptOptions? options]);
-  void scroll();
-}
-
 abstract interface class NavigateEventInit {
   NavigationType get navigationType;
   set navigationType(NavigationType value);
-  NavigationDestination get destination;
-  set destination(NavigationDestination value);
+  Object get destination;
+  set destination(Object value);
   bool get canIntercept;
   set canIntercept(bool value);
   bool get userInitiated;
@@ -1998,74 +2282,18 @@ abstract interface class NavigateEventInit {
   set info(Object value);
   bool get hasUAVisualTransition;
   set hasUAVisualTransition(bool value);
-  Element? get sourceElement;
-  set sourceElement(Element? value);
-}
-
-abstract interface class Navigation {
-  List<NavigationHistoryEntry> entries();
-  NavigationHistoryEntry? get currentEntry;
-  void updateCurrentEntry(NavigationUpdateCurrentEntryOptions options);
-  NavigationTransition? get transition;
-  NavigationActivation? get activation;
-  bool get canGoBack;
-  bool get canGoForward;
-  NavigationResult navigate(String url, [NavigationNavigateOptions? options]);
-  NavigationResult reload([NavigationReloadOptions? options]);
-  NavigationResult traverseTo(String key, [NavigationOptions? options]);
-  NavigationResult back([NavigationOptions? options]);
-  NavigationResult forward([NavigationOptions? options]);
-  EventHandler get onnavigate;
-   set onnavigate(EventHandler value);
-  EventHandler get onnavigatesuccess;
-   set onnavigatesuccess(EventHandler value);
-  EventHandler get onnavigateerror;
-   set onnavigateerror(EventHandler value);
-  EventHandler get oncurrententrychange;
-   set oncurrententrychange(EventHandler value);
-}
-
-abstract interface class NavigationActivation {
-  NavigationHistoryEntry? get from;
-  NavigationHistoryEntry get entry;
-  NavigationType get navigationType;
-}
-
-abstract interface class NavigationCurrentEntryChangeEvent {
-  NavigationType? get navigationType;
-  NavigationHistoryEntry get from;
 }
 
 abstract interface class NavigationCurrentEntryChangeEventInit {
   NavigationType? get navigationType;
   set navigationType(NavigationType? value);
-  NavigationHistoryEntry get from;
-  set from(NavigationHistoryEntry value);
-}
-
-abstract interface class NavigationDestination {
-  String get url;
-  String get key;
-  String get id;
-  int get index;
-  bool get sameDocument;
-  Object getState();
+  Object get from;
+  set from(Object value);
 }
 
 typedef NavigationFocusReset = String;
 
 typedef NavigationHistoryBehavior = String;
-
-abstract interface class NavigationHistoryEntry {
-  String? get url;
-  String get key;
-  String get id;
-  int get index;
-  bool get sameDocument;
-  Object getState();
-  EventHandler get ondispose;
-   set ondispose(EventHandler value);
-}
 
 typedef NavigationInterceptHandler = Future<void> Function();
 
@@ -2096,19 +2324,13 @@ abstract interface class NavigationReloadOptions {
 }
 
 abstract interface class NavigationResult {
-  Future<NavigationHistoryEntry> get committed;
-  set committed(Future<NavigationHistoryEntry> value);
-  Future<NavigationHistoryEntry> get finished;
-  set finished(Future<NavigationHistoryEntry> value);
+  Future<Object> get committed;
+  set committed(Future<Object> value);
+  Future<Object> get finished;
+  set finished(Future<Object> value);
 }
 
 typedef NavigationScrollBehavior = String;
-
-abstract interface class NavigationTransition {
-  NavigationType get navigationType;
-  NavigationHistoryEntry get from;
-  Future<void> get finished;
-}
 
 typedef NavigationType = String;
 
@@ -2160,22 +2382,12 @@ abstract interface class NavigatorPlugins {
   bool get pdfViewerEnabled;
 }
 
-abstract interface class NotRestoredReasonDetails {
-  String get reason;
-  Object toJSON();
-}
-
-abstract interface class NotRestoredReasons {
-  String? get src;
-  String? get id;
-  String? get name;
-  String? get url;
-  List<NotRestoredReasonDetails>? get reasons;
-  List<NotRestoredReasons>? get children;
-  Object toJSON();
-}
-
 abstract interface class OffscreenCanvas {
+  factory OffscreenCanvas(int width, int height) =>
+      WebRuntime.current.createWebObject<OffscreenCanvas>(
+        'OffscreenCanvas',
+        [width, height],
+      );
   int get width;
    set width(int value);
   int get height;
@@ -2190,7 +2402,6 @@ abstract interface class OffscreenCanvas {
 }
 
 abstract interface class OffscreenCanvasRenderingContext2D {
-  CanvasRenderingContext2DSettings getContextAttributes();
   void save();
   void restore();
   void reset();
@@ -2243,7 +2454,7 @@ abstract interface class OffscreenCanvasRenderingContext2D {
   void drawImage(CanvasImageSource image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
   ImageData createImageData(int sw, int sh, [ImageDataSettings? settings]);
   ImageData getImageData(int sx, int sy, int sw, int sh, [ImageDataSettings? settings]);
-  void putImageData(ImageData imageData, int dx, int dy, int dirtyX, int dirtyY, int dirtyWidth, int dirtyHeight);
+  void putImageData(ImageData imagedata, int dx, int dy, int dirtyX, int dirtyY, int dirtyWidth, int dirtyHeight);
   double get lineWidth;
    set lineWidth(double value);
   CanvasLineCap get lineCap;
@@ -2301,28 +2512,24 @@ typedef OnErrorEventHandler = OnErrorEventHandlerNonNull?;
 
 typedef OnErrorEventHandlerNonNull = Object Function(Object event, String source, int lineno, int colno, Object error,);
 
-abstract interface class PageRevealEvent {
-  ViewTransition? get viewTransition;
-}
-
 abstract interface class PageRevealEventInit {
   ViewTransition? get viewTransition;
   set viewTransition(ViewTransition? value);
 }
 
-abstract interface class PageSwapEvent {
-  NavigationActivation? get activation;
-  ViewTransition? get viewTransition;
-}
-
 abstract interface class PageSwapEventInit {
-  NavigationActivation? get activation;
-  set activation(NavigationActivation? value);
+  Object get activation;
+  set activation(Object value);
   ViewTransition? get viewTransition;
   set viewTransition(ViewTransition? value);
 }
 
 abstract interface class PageTransitionEvent {
+  factory PageTransitionEvent(String type, [PageTransitionEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<PageTransitionEvent>(
+        'PageTransitionEvent',
+        [type, eventInitDict],
+      );
   bool get persisted;
 }
 
@@ -2332,6 +2539,11 @@ abstract interface class PageTransitionEventInit {
 }
 
 abstract interface class Path2D {
+  factory Path2D([Object? path]) =>
+      WebRuntime.current.createWebObject<Path2D>(
+        'Path2D',
+        [path],
+      );
   void closePath();
   void moveTo(double x, double y);
   void lineTo(double x, double y);
@@ -2362,6 +2574,11 @@ abstract interface class PluginArray {
 }
 
 abstract interface class PopStateEvent {
+  factory PopStateEvent(String type, [PopStateEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<PopStateEvent>(
+        'PopStateEvent',
+        [type, eventInitDict],
+      );
   Object get state;
   bool get hasUAVisualTransition;
 }
@@ -2385,6 +2602,11 @@ typedef PredefinedColorSpace = String;
 typedef PremultiplyAlpha = String;
 
 abstract interface class PromiseRejectionEvent {
+  factory PromiseRejectionEvent(String type, PromiseRejectionEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<PromiseRejectionEvent>(
+        'PromiseRejectionEvent',
+        [type, eventInitDict],
+      );
   Object get promise;
   Object get reason;
 }
@@ -2410,6 +2632,11 @@ typedef ScrollRestoration = String;
 typedef SelectionMode = String;
 
 abstract interface class SharedWorker {
+  factory SharedWorker(Object scriptURL, [Object? options]) =>
+      WebRuntime.current.createWebObject<SharedWorker>(
+        'SharedWorker',
+        [scriptURL, options],
+      );
   EventHandler get onerror;
    set onerror(EventHandler value);
   MessagePort get port;
@@ -2422,11 +2649,6 @@ abstract interface class SharedWorkerGlobalScope {
    set onconnect(EventHandler value);
 }
 
-abstract interface class ShowPopoverOptions {
-  HTMLElement get source;
-  set source(HTMLElement value);
-}
-
 abstract interface class Storage {
   int get length;
   String? key(int index);
@@ -2437,6 +2659,11 @@ abstract interface class Storage {
 }
 
 abstract interface class StorageEvent {
+  factory StorageEvent(String type, [StorageEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<StorageEvent>(
+        'StorageEvent',
+        [type, eventInitDict],
+      );
   String? get key;
   String? get oldValue;
   String? get newValue;
@@ -2464,6 +2691,11 @@ abstract interface class StructuredSerializeOptions {
 }
 
 abstract interface class SubmitEvent {
+  factory SubmitEvent(String type, [SubmitEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<SubmitEvent>(
+        'SubmitEvent',
+        [type, eventInitDict],
+      );
   HTMLElement? get submitter;
 }
 
@@ -2549,6 +2781,11 @@ abstract interface class TimeRanges {
 typedef TimerHandler = Object;
 
 abstract interface class ToggleEvent {
+  factory ToggleEvent(String type, [ToggleEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<ToggleEvent>(
+        'ToggleEvent',
+        [type, eventInitDict],
+      );
   String get oldState;
   String get newState;
 }
@@ -2560,12 +2797,12 @@ abstract interface class ToggleEventInit {
   set newState(String value);
 }
 
-abstract interface class TogglePopoverOptions {
-  bool get force;
-  set force(bool value);
-}
-
 abstract interface class TrackEvent {
+  factory TrackEvent(String type, [TrackEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<TrackEvent>(
+        'TrackEvent',
+        [type, eventInitDict],
+      );
   Object get track;
 }
 
@@ -2638,10 +2875,6 @@ abstract interface class VideoTrackList {
    set onremovetrack(EventHandler value);
 }
 
-abstract interface class VisibilityStateEntry {
-  int get duration;
-}
-
 abstract interface class WindowLocalStorage {
   Storage get localStorage;
 }
@@ -2656,14 +2889,19 @@ abstract interface class WindowSessionStorage {
 }
 
 abstract interface class Worker {
+  factory Worker(Object scriptURL, [WorkerOptions? options]) =>
+      WebRuntime.current.createWebObject<Worker>(
+        'Worker',
+        [scriptURL, options],
+      );
   EventHandler get onerror;
    set onerror(EventHandler value);
+  void terminate();
+  void postMessage(Object message, List<Object> transfer);
   EventHandler get onmessage;
    set onmessage(EventHandler value);
   EventHandler get onmessageerror;
    set onmessageerror(EventHandler value);
-  void terminate();
-  void postMessage(Object message, List<Object> transfer);
 }
 
 abstract interface class WorkerGlobalScope {
@@ -2722,7 +2960,6 @@ abstract interface class WorkerNavigator {
   Future<void> setAppBadge([int? contents]);
   Future<void> clearAppBadge();
   double get deviceMemory;
-  bool get globalPrivacyControl;
   String get appCodeName;
   String get appName;
   String get appVersion;
@@ -2739,18 +2976,16 @@ abstract interface class WorkerNavigator {
   bool get onLine;
   int get hardwareConcurrency;
   NetworkInformation get connection;
-  StorageBucketManager get storageBuckets;
+  Object get storageBuckets;
   StorageManager get storage;
-  NavigatorUAData get userAgentData;
+  Object get userAgentData;
   LockManager get locks;
-  GPU get gpu;
-  ML get ml;
+  Object get gpu;
+  Object get ml;
   MediaCapabilities get mediaCapabilities;
   Permissions get permissions;
-  Serial get serial;
   ServiceWorkerContainer get serviceWorker;
-  HID get hid;
-  USB get usb;
+  Object get usb;
 }
 
 abstract interface class WorkerOptions {

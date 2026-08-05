@@ -566,30 +566,35 @@ reactOnlyProps:
   - dangerouslySetInnerHTML
 ```
 
-## D. Curated milestone allowlist
+## D. Element factory roots
 
 Create:
 
 ```text
-packages/react_web_generator/config/milestone_w1_elements.yaml
+packages/react_web_generator/config/roots.json
 ```
 
-```yaml
-html:
-  - div
-  - span
-  - button
-  - input
-  - form
-  - label
-  - textarea
-  - select
-  - option
-  - a
-  - img
+```json
+{
+  "voidElements": ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"],
+  "elements": [
+    {"tag": "div", "voidElement": false},
+    {"tag": "span", "voidElement": false},
+    {"tag": "button", "voidElement": false},
+    {"tag": "input", "voidElement": true},
+    {"tag": "form", "voidElement": false},
+    {"tag": "label", "voidElement": false},
+    {"tag": "textarea", "voidElement": false},
+    {"tag": "select", "voidElement": false},
+    {"tag": "option", "voidElement": true},
+    {"tag": "a", "voidElement": false},
+    {"tag": "img", "voidElement": true}
+  ]
+}
 ```
 
-Do not generate every platform interface during the first implementation.
+The roots config controls which tags get typed factory functions; the complete neutral
+type surface itself is generated for every spec in the snapshot.
 
 ---
 

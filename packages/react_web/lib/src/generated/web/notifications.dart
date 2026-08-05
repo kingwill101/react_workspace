@@ -3,9 +3,10 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'html.dart';
-import 'hr_time.dart';
 import 'service_workers.dart';
 import 'vibration.dart';
+import 'hr_time.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class GetNotificationOptions {
   String get tag;
@@ -13,6 +14,11 @@ abstract interface class GetNotificationOptions {
 }
 
 abstract interface class Notification {
+  factory Notification(String title, [NotificationOptions? options]) =>
+      WebRuntime.current.createWebObject<Notification>(
+        'Notification',
+        [title, options],
+      );
   EventHandler get onclick;
    set onclick(EventHandler value);
   EventHandler get onshow;
@@ -26,16 +32,11 @@ abstract interface class Notification {
   String get lang;
   String get body;
   String get tag;
-  String get image;
   String get icon;
   String get badge;
-  List<int> get vibrate;
-  EpochTimeStamp get timestamp;
-  bool get renotify;
   bool? get silent;
   bool get requireInteraction;
   Object get data;
-  List<NotificationAction> get actions;
   void close();
 }
 
@@ -51,6 +52,11 @@ abstract interface class NotificationAction {
 typedef NotificationDirection = String;
 
 abstract interface class NotificationEvent {
+  factory NotificationEvent(String type, NotificationEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<NotificationEvent>(
+        'NotificationEvent',
+        [type, eventInitDict],
+      );
   Notification get notification;
   String get action;
 }

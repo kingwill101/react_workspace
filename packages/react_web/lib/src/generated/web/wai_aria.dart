@@ -81,8 +81,6 @@ abstract interface class ARIAMixin {
    set ariaPressed(String? value);
   String? get ariaReadOnly;
    set ariaReadOnly(String? value);
-  String? get ariaRelevant;
-   set ariaRelevant(String? value);
   String? get ariaRequired;
    set ariaRequired(String? value);
   String? get ariaRoleDescription;

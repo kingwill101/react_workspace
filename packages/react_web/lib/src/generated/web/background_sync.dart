@@ -3,8 +3,14 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'service_workers.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class SyncEvent {
+  factory SyncEvent(String type, SyncEventInit init) =>
+      WebRuntime.current.createWebObject<SyncEvent>(
+        'SyncEvent',
+        [type, init],
+      );
   String get tag;
   bool get lastChance;
 }

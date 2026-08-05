@@ -88,7 +88,7 @@ TypeRef parseIdlType(Object? raw) {
     case 'record':
       // idlType is a two-element list: [keyType, valueType].
       final list = rawInner as List;
-      final key = parseIdlType(list.length > 0 ? list[0] : _firstInner(rawInner));
+      final key = parseIdlType(list.isNotEmpty ? list[0] : _firstInner(rawInner));
       final value = parseIdlType(list.length > 1 ? list[1] : _firstInner(rawInner));
       return NamedTypeRef(
         typeId: 'core.Map',
@@ -100,13 +100,11 @@ TypeRef parseIdlType(Object? raw) {
   // Simple (possibly list-wrapped single) type.
   final inner = rawInner is String ? rawInner : _firstInnerDirect(rawInner);
   if (inner != null) {
-    if (inner is String) {
-      final core = idlPrimitiveToCore(inner);
-      if (core != null) {
-        return NamedTypeRef(typeId: core, nullable: nullable);
-      }
-      return NamedTypeRef(typeId: 'web.$inner', nullable: nullable);
+    final core = idlPrimitiveToCore(inner);
+    if (core != null) {
+      return NamedTypeRef(typeId: core, nullable: nullable);
     }
+    return NamedTypeRef(typeId: 'web.$inner', nullable: nullable);
     if (inner is Map) {
       // Handle a nested idlType descriptor that is itself a list heading
       // (common for generic-in-generic). Re-parse.

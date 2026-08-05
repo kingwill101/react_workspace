@@ -3,8 +3,15 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'generic_sensor.dart';
+import 'geometry.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AbsoluteOrientationSensor {
+  factory AbsoluteOrientationSensor([OrientationSensorOptions? sensorOptions]) =>
+      WebRuntime.current.createWebObject<AbsoluteOrientationSensor>(
+        'AbsoluteOrientationSensor',
+        [sensorOptions],
+      );
 }
 
 abstract interface class OrientationSensor {
@@ -20,6 +27,11 @@ abstract interface class OrientationSensorOptions {
 }
 
 abstract interface class RelativeOrientationSensor {
+  factory RelativeOrientationSensor([OrientationSensorOptions? sensorOptions]) =>
+      WebRuntime.current.createWebObject<RelativeOrientationSensor>(
+        'RelativeOrientationSensor',
+        [sensorOptions],
+      );
 }
 
 typedef RotationMatrixType = Object;

@@ -78,11 +78,25 @@ final class NeutralSurfaceEmitter {
 
   /// Emits a focused `package:react_web/<spec>.dart` library per module so
   /// users can `import 'package:react_web/storage.dart';` etc.
-  void emitFocusedLibraries(String apisDir, List<String> specs) {
+  ///
+  /// Stale files are removed first (everything in [apisDir] is generated) and
+  /// a focused library is only emitted when its corresponding surface file
+  /// exists under [surfaceDir].
+  void emitFocusedLibraries(
+    String apisDir,
+    List<String> specs, {
+    String surfaceDir = 'packages/react_web/lib/src/generated/web',
+  }) {
     final dir = Directory(apisDir);
     dir.createSync(recursive: true);
+    for (final stale in dir.listSync()) {
+      if (stale is File && stale.path.endsWith('.dart')) {
+        stale.deleteSync();
+      }
+    }
     final files = specs.map(specFileName).toSet()..remove('web');
     for (final f in files) {
+      if (!File('$surfaceDir/$f.dart').existsSync()) continue;
       File('${dir.path}/$f.dart').writeAsStringSync(
         '// GENERATED CODE — DO NOT EDIT\n'
         '// Focused library for a specification module.\n'
@@ -103,6 +117,9 @@ final class NeutralSurfaceEmitter {
     final importSpecs = _requiredSpecs(defs, allSpecs)..remove(spec);
     for (final s in importSpecs) {
       buf.writeln("import '${_fileName(s)}.dart';");
+    }
+    if (defs.any(_hasConstructor)) {
+      buf.writeln("import 'package:react_web/src/web_runtime.dart';");
     }
     buf.writeln();
 
@@ -155,13 +172,13 @@ final class NeutralSurfaceEmitter {
       IdlCallbackInterface() => d.members,
       IdlDictionary() => d.fields,
       IdlCallback() => d.parameters,
-      IdlEnum() || IdlIncludes() => const <Object>[],
-      IdlTypedef() => <Object>[d.type],
+      IdlEnum() || IdlIncludes() || IdlTypedef() => const <Object>[],
     } as List;
     for (final m in members) {
       _refMember(m, ref);
     }
     if (d is IdlDictionary && d.inheritance != null) names.add(d.inheritance!);
+    if (d is IdlTypedef) ref(d.type);
   }
 
   void _refMember(Object m, void Function(TypeRef) ref) {
@@ -206,9 +223,35 @@ final class NeutralSurfaceEmitter {
 
   void _emitInterface(StringBuffer buf, IdlInterface d) {
     buf.writeln('abstract interface class ${d.name} {');
+    _emitConstructors(buf, d);
     _emitMembers(buf, flattenMembers(model, d), indent: '  ');
     buf.writeln('}');
   }
+
+  /// Emits runtime-dispatched factory constructors for constructible
+  /// interfaces. The factory hands the IDL constructor arguments to the
+  /// installed [WebRuntime], which returns the backend implementation (a
+  /// `Browser*` proxy on the browser, a throwing `Ssr*` stub during SSR).
+  void _emitConstructors(StringBuffer buf, IdlInterface d) {
+    final ctors = d.members.whereType<IdlConstructor>().toList();
+    for (var i = 0; i < ctors.length; i++) {
+      final c = ctors[i];
+      final ctorName = i == 0 ? d.name : '${d.name}.named$i';
+      buf.writeln('  factory $ctorName(${_paramStrings(c.parameters)}) =>');
+      buf.writeln('      WebRuntime.current.createWebObject<${d.name}>(');
+      buf.writeln("        '${d.name}',");
+      buf.writeln('        [${_ctorArgNames(c.parameters)}],');
+      buf.writeln('      );');
+    }
+  }
+
+  String _ctorArgNames(List<IdlParameter> params) => [
+    for (var i = 0; i < params.length; i++)
+      escapeIdentifier(params[i].name.isEmpty ? 'arg$i' : params[i].name),
+  ].join(', ');
+
+  bool _hasConstructor(WebIdlDefinition d) =>
+      d is IdlInterface && d.members.any((m) => m is IdlConstructor);
 
   void _emitMixin(StringBuffer buf, IdlMixin d) {
     buf.writeln('abstract interface class ${d.name} {');

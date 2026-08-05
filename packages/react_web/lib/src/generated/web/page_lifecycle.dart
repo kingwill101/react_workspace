@@ -6,7 +6,6 @@ import 'service_workers.dart';
 import 'html.dart';
 
 abstract interface class Client {
-  ClientLifecycleState get lifecycleState;
   String get url;
   FrameType get frameType;
   String get id;

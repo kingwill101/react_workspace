@@ -2,9 +2,6 @@
 // Neutral Web surface for spec: image-capture
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-import 'capture_handle_identity.dart';
-import 'fileapi.dart';
-import 'html.dart';
 import 'mediacapture_streams.dart';
 
 typedef ConstrainPoint2D = Object;
@@ -17,14 +14,6 @@ abstract interface class ConstrainPoint2DParameters {
 }
 
 typedef FillLightMode = String;
-
-abstract interface class ImageCapture {
-  Future<Blob> takePhoto([PhotoSettings? photoSettings]);
-  Future<PhotoCapabilities> getPhotoCapabilities();
-  Future<PhotoSettings> getPhotoSettings();
-  Future<ImageBitmap> grabFrame();
-  MediaStreamTrack get track;
-}
 
 abstract interface class MediaSettingsRange {
   double get max;
@@ -98,8 +87,6 @@ abstract interface class MediaTrackCapabilities {
   set deviceId(String value);
   String get groupId;
   set groupId(String value);
-  List<bool> get backgroundBlur;
-  set backgroundBlur(List<bool> value);
   String get displaySurface;
   set displaySurface(String value);
   bool get logicalSurface;
@@ -173,8 +160,6 @@ abstract interface class MediaTrackConstraintSet {
   set deviceId(ConstrainDOMString value);
   ConstrainDOMString get groupId;
   set groupId(ConstrainDOMString value);
-  ConstrainBoolean get backgroundBlur;
-  set backgroundBlur(ConstrainBoolean value);
   ConstrainDOMString get displaySurface;
   set displaySurface(ConstrainDOMString value);
   ConstrainBoolean get logicalSurface;
@@ -252,8 +237,6 @@ abstract interface class MediaTrackSettings {
   set deviceId(String value);
   String get groupId;
   set groupId(String value);
-  bool get backgroundBlur;
-  set backgroundBlur(bool value);
   String get displaySurface;
   set displaySurface(String value);
   bool get logicalSurface;
@@ -331,8 +314,6 @@ abstract interface class MediaTrackSupportedConstraints {
   set deviceId(bool value);
   bool get groupId;
   set groupId(bool value);
-  bool get backgroundBlur;
-  set backgroundBlur(bool value);
   bool get displaySurface;
   set displaySurface(bool value);
   bool get logicalSurface;

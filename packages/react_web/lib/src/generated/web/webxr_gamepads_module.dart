@@ -14,6 +14,5 @@ abstract interface class XRInputSource {
   XRSpace get targetRaySpace;
   XRSpace? get gripSpace;
   List<String> get profiles;
-  bool get skipRendering;
 }
 

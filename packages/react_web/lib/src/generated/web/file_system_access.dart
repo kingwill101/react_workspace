@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: file-system-access
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-import 'permissions.dart';
 import 'fs.dart';
+import 'permissions.dart';
 
 abstract interface class DirectoryPickerOptions {
   String get id;
@@ -33,8 +33,6 @@ abstract interface class FilePickerOptions {
 }
 
 abstract interface class FileSystemHandle {
-  Future<PermissionState> queryPermission([FileSystemHandlePermissionDescriptor? descriptor]);
-  Future<PermissionState> requestPermission([FileSystemHandlePermissionDescriptor? descriptor]);
   FileSystemHandleKind get kind;
   String get name;
   Future<bool> isSameEntry(FileSystemHandle other);

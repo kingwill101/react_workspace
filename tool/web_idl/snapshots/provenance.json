@@ -1,5 +1,11 @@
 {
-  "dartWebRevision": "12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431",
-  "source": "dart-lang/web web_generator",
+  "dartWebRevision": "web-v1.1.1",
+  "dartWebCommit": "222164b5010cb0324d4132666f1d43750ffc6448",
+  "webref": {
+    "@webref/idl": "3.49.0",
+    "@webref/css": "6.12.15",
+    "@webref/elements": "2.3.0"
+  },
+  "source": "dart-lang/web web_generator (git submodule third_party/web @ web-v1.1.1)",
   "generateAll": false
 }

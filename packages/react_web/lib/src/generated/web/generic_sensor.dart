@@ -6,6 +6,7 @@ import 'hr_time.dart';
 import 'html.dart';
 import 'webidl.dart';
 import 'dom.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Sensor {
   bool get activated;
@@ -22,6 +23,11 @@ abstract interface class Sensor {
 }
 
 abstract interface class SensorErrorEvent {
+  factory SensorErrorEvent(String type, SensorErrorEventInit errorEventInitDict) =>
+      WebRuntime.current.createWebObject<SensorErrorEvent>(
+        'SensorErrorEvent',
+        [type, errorEventInitDict],
+      );
   DOMException get error;
 }
 

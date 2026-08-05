@@ -4,29 +4,21 @@
 
 import 'hr_time.dart';
 import 'navigation_timing.dart';
-import 'performance_measure_memory.dart';
 import 'performance_timeline.dart';
 import 'html.dart';
 import 'user_timing.dart';
 import 'dom.dart';
 
 abstract interface class EventCounts {
-   Iterable<String> get keys;
-   Iterable<int> get values;
-   Iterable<MapEntry<String, int>> get entries;
-   int? operator [](Object key);
-   bool has(Object key);
 }
 
 abstract interface class Performance {
   EventCounts get eventCounts;
-  int get interactionCount;
   DOMHighResTimeStamp now();
   DOMHighResTimeStamp get timeOrigin;
   Object toJSON();
   PerformanceTiming get timing;
   PerformanceNavigation get navigation;
-  Future<MemoryMeasurement> measureUserAgentSpecificMemory();
   PerformanceEntryList getEntries();
   PerformanceEntryList getEntriesByType(String type);
   PerformanceEntryList getEntriesByName(String name, [String? type]);
@@ -45,7 +37,6 @@ abstract interface class PerformanceEventTiming {
   DOMHighResTimeStamp get processingEnd;
   bool get cancelable;
   Node? get target;
-  int get interactionId;
 }
 
 abstract interface class PerformanceObserverInit {

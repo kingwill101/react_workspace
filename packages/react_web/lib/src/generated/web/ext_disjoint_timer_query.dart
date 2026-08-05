@@ -5,21 +5,7 @@
 import 'webgl1.dart';
 
 abstract interface class EXT_disjoint_timer_query {
-   static const GLenum QUERY_COUNTER_BITS_EXT =
-      0x8864;
-   static const GLenum CURRENT_QUERY_EXT =
-      0x8865;
-   static const GLenum QUERY_RESULT_EXT =
-      0x8866;
-   static const GLenum QUERY_RESULT_AVAILABLE_EXT =
-      0x8867;
-   static const GLenum TIME_ELAPSED_EXT =
-      0x88BF;
-   static const GLenum TIMESTAMP_EXT =
-      0x8E28;
-   static const GLenum GPU_DISJOINT_EXT =
-      0x8FBB;
-  WebGLTimerQueryEXT createQueryEXT();
+  WebGLTimerQueryEXT? createQueryEXT();
   void deleteQueryEXT(WebGLTimerQueryEXT? query);
   bool isQueryEXT(WebGLTimerQueryEXT? query);
   void beginQueryEXT(GLenum target, WebGLTimerQueryEXT query);

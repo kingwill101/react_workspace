@@ -5,10 +5,6 @@
 
 typedef AppBannerPromptOutcome = String;
 
-abstract interface class BeforeInstallPromptEvent {
-  Future<PromptResponseObject> prompt();
-}
-
 abstract interface class PromptResponseObject {
   AppBannerPromptOutcome get userChoice;
   set userChoice(AppBannerPromptOutcome value);

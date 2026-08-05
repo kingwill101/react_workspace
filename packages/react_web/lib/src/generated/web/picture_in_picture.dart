@@ -4,8 +4,14 @@
 
 import 'dom.dart';
 import 'html.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class PictureInPictureEvent {
+  factory PictureInPictureEvent(String type, PictureInPictureEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<PictureInPictureEvent>(
+        'PictureInPictureEvent',
+        [type, eventInitDict],
+      );
   PictureInPictureWindow get pictureInPictureWindow;
 }
 

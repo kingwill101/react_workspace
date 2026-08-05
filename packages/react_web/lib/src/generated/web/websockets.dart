@@ -6,10 +6,16 @@ import 'dom.dart';
 import 'html.dart';
 import 'webidl.dart';
 import 'fileapi.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 typedef BinaryType = String;
 
 abstract interface class CloseEvent {
+  factory CloseEvent(String type, [CloseEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<CloseEvent>(
+        'CloseEvent',
+        [type, eventInitDict],
+      );
   bool get wasClean;
   int get code;
   String get reason;
@@ -25,15 +31,12 @@ abstract interface class CloseEventInit {
 }
 
 abstract interface class WebSocket {
+  factory WebSocket(String url, [Object? protocols]) =>
+      WebRuntime.current.createWebObject<WebSocket>(
+        'WebSocket',
+        [url, protocols],
+      );
   String get url;
-   static const int CONNECTING =
-      0;
-   static const int OPEN =
-      1;
-   static const int CLOSING =
-      2;
-   static const int CLOSED =
-      3;
   int get readyState;
   int get bufferedAmount;
   EventHandler get onopen;

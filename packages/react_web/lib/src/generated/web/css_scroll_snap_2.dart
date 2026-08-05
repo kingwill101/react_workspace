@@ -4,11 +4,6 @@
 
 import 'dom.dart';
 
-abstract interface class SnapEvent {
-  Node? get snapTargetBlock;
-  Node? get snapTargetInline;
-}
-
 abstract interface class SnapEventInit {
   Node? get snapTargetBlock;
   set snapTargetBlock(Node? value);

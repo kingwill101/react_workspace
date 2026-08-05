@@ -1,45 +1,45 @@
 {
   "sourceRevision": null,
   "definitions": {
-    "source": 2626,
-    "emitted": 2626,
+    "source": 2167,
+    "emitted": 2167,
     "opaque": 0,
     "dropped": 0
   },
   "members": {
-    "source": 11299,
-    "emitted": 11299,
+    "source": 8868,
+    "emitted": 8868,
     "opaque": 0,
     "dropped": 0
   },
   "kinds": {
     "interface": {
-      "source": 1106,
-      "emitted": 1106
+      "source": 735,
+      "emitted": 735
     },
     "mixin": {
-      "source": 91,
-      "emitted": 91
+      "source": 87,
+      "emitted": 87
     },
     "dictionary": {
-      "source": 851,
-      "emitted": 851
+      "source": 790,
+      "emitted": 790
     },
     "namespace": {
-      "source": 9,
-      "emitted": 9
+      "source": 2,
+      "emitted": 2
     },
     "enum": {
-      "source": 358,
-      "emitted": 358
+      "source": 350,
+      "emitted": 350
     },
     "typedef": {
       "source": 137,
       "emitted": 137
     },
     "callback": {
-      "source": 71,
-      "emitted": 71
+      "source": 63,
+      "emitted": 63
     },
     "callbackInterface": {
       "source": 3,

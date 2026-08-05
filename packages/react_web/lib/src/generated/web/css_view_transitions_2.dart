@@ -4,29 +4,19 @@
 
 import 'css_view_transitions.dart';
 
-abstract interface class CSSViewTransitionRule {
-  Object get navigation;
-  List<Object> get types;
-}
-
 abstract interface class StartViewTransitionOptions {
-  ViewTransitionUpdateCallback? get update;
-  set update(ViewTransitionUpdateCallback? value);
+  UpdateCallback? get update;
+  set update(UpdateCallback? value);
   List<String>? get types;
   set types(List<String>? value);
 }
 
 abstract interface class ViewTransition {
-  ViewTransitionTypeSet get types;
-   set types(ViewTransitionTypeSet value);
   Future<void> get updateCallbackDone;
   Future<void> get ready;
   Future<void> get finished;
   void skipTransition();
 }
 
-abstract interface class ViewTransitionTypeSet {
-   Iterable<String> get values;
-   bool has(Object value);
-}
+typedef ViewTransitionNavigation = String;
 

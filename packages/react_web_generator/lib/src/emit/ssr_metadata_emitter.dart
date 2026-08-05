@@ -1,11 +1,13 @@
 import 'dart:io';
 
-import '../model/model.dart';
+import '../web_host_ir.dart';
 
+/// Emits SSR behavior metadata (`generated/ssr_metadata.dart`) from the host
+/// IR, so the server renderer knows how to lower each element/prop.
 final class SsrMetadataEmitter {
-  final NeutralWebModel model;
+  final List<WebHostElementIR> elements;
 
-  SsrMetadataEmitter(this.model);
+  const SsrMetadataEmitter(this.elements);
 
   void emitToDirectory(String outputDir) {
     final buf = StringBuffer();
@@ -14,16 +16,16 @@ final class SsrMetadataEmitter {
     buf.writeln("import 'package:react_web/src/ssr_metadata.dart';");
     buf.writeln();
 
-    for (final entry in model.elements.entries) {
-      _emitElementSsrDefinition(buf, entry.value);
+    for (final el in elements) {
+      _emitElementSsrDefinition(buf, el);
     }
 
     buf.writeln(
       'const Map<String, WebElementSsrDefinition> ssrDefinitions = {',
     );
-    for (final entry in model.elements.entries) {
+    for (final el in elements) {
       buf.writeln(
-        "  '${entry.key}': ${_camelToPascal(entry.key)}SsrDefinition,",
+        "  '${el.tagName}': ${_camelToPascal(el.tagName)}SsrDefinition,",
       );
     }
     buf.writeln('};');
@@ -34,23 +36,24 @@ final class SsrMetadataEmitter {
     file.writeAsStringSync(buf.toString());
   }
 
-  void _emitElementSsrDefinition(StringBuffer buf, ElementDecl decl) {
-    final tagName = decl.tagName;
-    final voidElement = decl.voidElement;
-
+  void _emitElementSsrDefinition(StringBuffer buf, WebHostElementIR el) {
     buf.writeln(
-      'const ${_camelToPascal(tagName)}SsrDefinition = WebElementSsrDefinition(',
+      'const ${_camelToPascal(el.tagName)}SsrDefinition = WebElementSsrDefinition(',
     );
-    buf.writeln("  tagName: '$tagName',");
-    buf.writeln('  voidElement: $voidElement,');
+    buf.writeln("  tagName: '${el.tagName}',");
+    buf.writeln('  voidElement: ${el.voidElement},');
     buf.writeln('  props: {');
 
-    for (final prop in decl.props) {
-      final ssrBehavior = _propSsrBehavior(prop);
-      buf.writeln("    '${prop.name}': $ssrBehavior,");
+    for (final prop in el.props) {
+      buf.writeln(
+        "    '${prop.reactName}': WebSsrBehavior.${prop.ssrBehavior.name},",
+      );
+    }
+    for (final event in el.events) {
+      buf.writeln("    '${event.reactName}': WebSsrBehavior.eventOmitted,");
+      buf.writeln("    '${event.captureName}': WebSsrBehavior.eventOmitted,");
     }
 
-    // React-specific props common to all elements
     buf.writeln("    'key': WebSsrBehavior.unsupported,");
     buf.writeln("    'ref': WebSsrBehavior.refOmitted,");
     buf.writeln("    'children': WebSsrBehavior.textContent,");
@@ -59,21 +62,6 @@ final class SsrMetadataEmitter {
     buf.writeln('  },');
     buf.writeln(');');
     buf.writeln();
-  }
-
-  String _propSsrBehavior(PropDecl prop) {
-    if (prop.name.startsWith('on')) return 'WebSsrBehavior.eventOmitted';
-    if (prop.name == 'ref') return 'WebSsrBehavior.refOmitted';
-    if (prop.name == 'dangerouslySetInnerHTML') return 'WebSsrBehavior.special';
-    if (prop.name == 'children') return 'WebSsrBehavior.textContent';
-    if (_isBooleanAttribute(prop)) return 'WebSsrBehavior.booleanAttribute';
-    return 'WebSsrBehavior.attribute';
-  }
-
-  bool _isBooleanAttribute(PropDecl prop) {
-    final type = prop.type;
-    if (type is NamedTypeRef && type.typeId == 'core.bool') return true;
-    return false;
   }
 
   String _camelToPascal(String s) {

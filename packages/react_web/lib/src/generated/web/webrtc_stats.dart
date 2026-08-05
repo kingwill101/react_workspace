@@ -263,12 +263,6 @@ abstract interface class RTCInboundRtpStreamStats {
   set rtxSsrc(int value);
   int get fecSsrc;
   set fecSsrc(int value);
-  double get totalCorruptionProbability;
-  set totalCorruptionProbability(double value);
-  double get totalSquaredCorruptionProbability;
-  set totalSquaredCorruptionProbability(double value);
-  int get corruptionMeasurements;
-  set corruptionMeasurements(int value);
 }
 
 abstract interface class RTCMediaSourceStats {

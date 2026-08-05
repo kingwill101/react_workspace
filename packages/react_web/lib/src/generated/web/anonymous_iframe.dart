@@ -5,7 +5,6 @@
 import 'trusted_types.dart';
 import 'dom.dart';
 import 'svg.dart';
-import 'permissions_policy.dart';
 import 'html.dart';
 import 'indexeddb.dart';
 import 'webcryptoapi.dart';
@@ -15,33 +14,23 @@ import 'event_timing.dart';
 import 'webidl.dart';
 import 'scheduling_apis.dart';
 import 'service_workers.dart';
-import 'cookie_store.dart';
-import 'css_nav.dart';
-import 'css_viewport.dart';
 import 'cssom_view.dart';
 import 'cssom.dart';
-import 'digital_goods.dart';
-import 'document_picture_in_picture.dart';
-import 'fenced_frame.dart';
-import 'fs.dart';
-import 'file_system_access.dart';
-import 'audio_session.dart';
-import 'local_font_access.dart';
-import 'portals.dart';
+import 'css_nav.dart';
+import 'fedcm.dart';
 import 'requestidlecallback.dart';
 import 'selection_api.dart';
-import 'shared_storage.dart';
 import 'speech_api.dart';
-import 'web_app_launch.dart';
-import 'window_management.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class HTMLIFrameElement {
+  factory HTMLIFrameElement() =>
+      WebRuntime.current.createWebObject<HTMLIFrameElement>(
+        'HTMLIFrameElement',
+        [],
+      );
   bool get sharedStorageWritable;
    set sharedStorageWritable(bool value);
-  bool get credentialless;
-   set credentialless(bool value);
-  String get csp;
-   set csp(String value);
   String get src;
    set src(String value);
   Object get srcdoc;
@@ -76,11 +65,6 @@ abstract interface class HTMLIFrameElement {
    set marginHeight(String value);
   String get marginWidth;
    set marginWidth(String value);
-  PermissionsPolicy get permissionsPolicy;
-  String get privateToken;
-   set privateToken(String value);
-  bool get adAuctionHeaders;
-   set adAuctionHeaders(bool value);
 }
 
 abstract interface class Window {
@@ -104,8 +88,6 @@ abstract interface class Window {
    set ontransitionend(EventHandler value);
   EventHandler get ontransitioncancel;
    set ontransitioncancel(EventHandler value);
-  EventHandler get onfencedtreeclick;
-   set onfencedtreeclick(EventHandler value);
   EventHandler get onabort;
    set onabort(EventHandler value);
   EventHandler get onauxclick;
@@ -130,8 +112,6 @@ abstract interface class Window {
    set onclick(EventHandler value);
   EventHandler get onclose;
    set onclose(EventHandler value);
-  EventHandler get oncommand;
-   set oncommand(EventHandler value);
   EventHandler get oncontextlost;
    set oncontextlost(EventHandler value);
   EventHandler get oncontextmenu;
@@ -360,13 +340,9 @@ abstract interface class Window {
   void cancelAnimationFrame(int handle);
   Storage get sessionStorage;
   Storage get localStorage;
-  bool get credentialless;
   int get orientation;
   EventHandler get onorientationchange;
    set onorientationchange(EventHandler value);
-  CookieStore get cookieStore;
-  void navigate(SpatialNavigationDirection dir);
-  Viewport get viewport;
   MediaQueryList matchMedia(Object query);
   Screen get screen;
   VisualViewport? get visualViewport;
@@ -377,9 +353,7 @@ abstract interface class Window {
   int get innerWidth;
   int get innerHeight;
   double get scrollX;
-  double get pageXOffset;
   double get scrollY;
-  double get pageYOffset;
   void scroll(double x, double y);
   void scrollTo(double x, double y);
   void scrollBy(double x, double y);
@@ -391,13 +365,7 @@ abstract interface class Window {
   int get outerHeight;
   double get devicePixelRatio;
   CSSStyleDeclaration getComputedStyle(Element elt, [Object? pseudoElt]);
-  Future<DigitalGoodsService> getDigitalGoodsService(String serviceProvider);
-  DocumentPictureInPicture get documentPictureInPicture;
   Event get event;
-  Fence? get fence;
-  Future<List<FileSystemFileHandle>> showOpenFilePicker([OpenFilePickerOptions? options]);
-  Future<FileSystemFileHandle> showSaveFilePicker([SaveFilePickerOptions? options]);
-  Future<FileSystemDirectoryHandle> showDirectoryPicker([DirectoryPickerOptions? options]);
   Object get window;
   Object get self;
   Document get document;
@@ -405,7 +373,6 @@ abstract interface class Window {
    set name(String value);
   Location get location;
   History get history;
-  Navigation get navigation;
   CustomElementRegistry get customElements;
   BarProp get locationbar;
   BarProp get menubar;
@@ -429,8 +396,6 @@ abstract interface class Window {
   Element? get frameElement;
   Object open([String? url, String? target, String? features]);
   Navigator get navigator;
-  Navigator get clientInformation;
-  bool get originAgentCluster;
   void alert(String message);
   bool confirm([String? message]);
   String? prompt([String? message, String? default_]);
@@ -439,7 +404,6 @@ abstract interface class Window {
   void captureEvents();
   void releaseEvents();
   External get external_;
-  Future<List<FontData>> queryLocalFonts([QueryOptions? options]);
   EventHandler get onappinstalled;
    set onappinstalled(EventHandler value);
   EventHandler get onbeforeinstallprompt;
@@ -450,13 +414,9 @@ abstract interface class Window {
    set ondeviceorientationabsolute(EventHandler value);
   EventHandler get ondevicemotion;
    set ondevicemotion(EventHandler value);
-  PortalHost? get portalHost;
   int requestIdleCallback(IdleRequestCallback callback, [IdleRequestOptions? options]);
   void cancelIdleCallback(int handle);
   Selection? getSelection();
-  SharedStorage? get sharedStorage;
   SpeechSynthesis get speechSynthesis;
-  LaunchQueue get launchQueue;
-  Future<ScreenDetails> getScreenDetails();
 }
 

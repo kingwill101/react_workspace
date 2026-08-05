@@ -8,7 +8,9 @@ import 'xhr.dart';
 import 'attribution_reporting_api.dart';
 import 'referrer_policy.dart';
 import 'dom.dart';
-import 'private_network_access.dart';
+import 'webidl.dart';
+import 'url.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Body {
   ReadableStream? get body;
@@ -24,20 +26,27 @@ abstract interface class Body {
 typedef BodyInit = Object;
 
 abstract interface class Headers {
+  factory Headers([HeadersInit? init]) =>
+      WebRuntime.current.createWebObject<Headers>(
+        'Headers',
+        [init],
+      );
   void append(String name, String value);
   void delete(String name);
   String? get_(String name);
   List<String> getSetCookie();
   bool has(String name);
   void set_(String name, String value);
-   Iterable<(String, String)> get entries;
-   Iterable<String> get keys;
-   Iterable<String> get values;
 }
 
 typedef HeadersInit = Object;
 
 abstract interface class Request {
+  factory Request(RequestInfo input, [RequestInit? init]) =>
+      WebRuntime.current.createWebObject<Request>(
+        'Request',
+        [input, init],
+      );
   ReadableStream? get body;
   bool get bodyUsed;
   Future<Object> arrayBuffer();
@@ -58,12 +67,9 @@ abstract interface class Request {
   RequestRedirect get redirect;
   String get integrity;
   bool get keepalive;
-  bool get isReloadNavigation;
   bool get isHistoryNavigation;
   AbortSignal get signal;
-  RequestDuplex get duplex;
   Request clone();
-  IPAddressSpace get targetAddressSpace;
 }
 
 typedef RequestCache = String;
@@ -83,6 +89,11 @@ typedef RequestPriority = String;
 typedef RequestRedirect = String;
 
 abstract interface class Response {
+  factory Response([BodyInit? body, ResponseInit? init]) =>
+      WebRuntime.current.createWebObject<Response>(
+        'Response',
+        [body, init],
+      );
   ReadableStream? get body;
   bool get bodyUsed;
   Future<Object> arrayBuffer();

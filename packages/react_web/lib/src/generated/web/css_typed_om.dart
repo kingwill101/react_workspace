@@ -4,15 +4,7 @@
 
 import 'geometry.dart';
 import 'cssom.dart';
-
-abstract interface class CSSColor {
-  CSSKeywordish get colorSpace;
-   set colorSpace(CSSKeywordish value);
-  List<CSSColorPercent> get channels;
-   set channels(List<CSSColorPercent> value);
-  CSSNumberish get alpha;
-   set alpha(CSSNumberish value);
-}
+import 'package:react_web/src/web_runtime.dart';
 
 typedef CSSColorAngle = Object;
 
@@ -22,92 +14,85 @@ typedef CSSColorPercent = Object;
 
 typedef CSSColorRGBComp = Object;
 
-abstract interface class CSSColorValue {
-}
-
-abstract interface class CSSHSL {
-  CSSColorAngle get h;
-   set h(CSSColorAngle value);
-  CSSColorPercent get s;
-   set s(CSSColorPercent value);
-  CSSColorPercent get l;
-   set l(CSSColorPercent value);
-  CSSColorPercent get alpha;
-   set alpha(CSSColorPercent value);
-}
-
-abstract interface class CSSHWB {
-  CSSNumericValue get h;
-   set h(CSSNumericValue value);
-  CSSNumberish get w;
-   set w(CSSNumberish value);
-  CSSNumberish get b;
-   set b(CSSNumberish value);
-  CSSNumberish get alpha;
-   set alpha(CSSNumberish value);
-}
-
 abstract interface class CSSImageValue {
 }
 
 abstract interface class CSSKeywordValue {
+  factory CSSKeywordValue(String value) =>
+      WebRuntime.current.createWebObject<CSSKeywordValue>(
+        'CSSKeywordValue',
+        [value],
+      );
   String get value;
    set value(String value);
 }
 
 typedef CSSKeywordish = Object;
 
-abstract interface class CSSLCH {
-  CSSColorPercent get l;
-   set l(CSSColorPercent value);
-  CSSColorPercent get c;
-   set c(CSSColorPercent value);
-  CSSColorAngle get h;
-   set h(CSSColorAngle value);
-  CSSColorPercent get alpha;
-   set alpha(CSSColorPercent value);
-}
-
-abstract interface class CSSLab {
-  CSSColorPercent get l;
-   set l(CSSColorPercent value);
-  CSSColorNumber get a;
-   set a(CSSColorNumber value);
-  CSSColorNumber get b;
-   set b(CSSColorNumber value);
-  CSSColorPercent get alpha;
-   set alpha(CSSColorPercent value);
-}
-
 abstract interface class CSSMathClamp {
+  factory CSSMathClamp(CSSNumberish lower, CSSNumberish value, CSSNumberish upper) =>
+      WebRuntime.current.createWebObject<CSSMathClamp>(
+        'CSSMathClamp',
+        [lower, value, upper],
+      );
   CSSNumericValue get lower;
   CSSNumericValue get value;
   CSSNumericValue get upper;
 }
 
 abstract interface class CSSMathInvert {
+  factory CSSMathInvert(CSSNumberish arg) =>
+      WebRuntime.current.createWebObject<CSSMathInvert>(
+        'CSSMathInvert',
+        [arg],
+      );
   CSSNumericValue get value;
 }
 
 abstract interface class CSSMathMax {
+  factory CSSMathMax([List<CSSNumberish>? args]) =>
+      WebRuntime.current.createWebObject<CSSMathMax>(
+        'CSSMathMax',
+        [args],
+      );
   CSSNumericArray get values;
 }
 
 abstract interface class CSSMathMin {
+  factory CSSMathMin([List<CSSNumberish>? args]) =>
+      WebRuntime.current.createWebObject<CSSMathMin>(
+        'CSSMathMin',
+        [args],
+      );
   CSSNumericArray get values;
 }
 
 abstract interface class CSSMathNegate {
+  factory CSSMathNegate(CSSNumberish arg) =>
+      WebRuntime.current.createWebObject<CSSMathNegate>(
+        'CSSMathNegate',
+        [arg],
+      );
   CSSNumericValue get value;
 }
 
 typedef CSSMathOperator = String;
 
 abstract interface class CSSMathProduct {
+  factory CSSMathProduct([List<CSSNumberish>? args]) =>
+      WebRuntime.current.createWebObject<CSSMathProduct>(
+        'CSSMathProduct',
+        [args],
+      );
   CSSNumericArray get values;
 }
 
 abstract interface class CSSMathSum {
+  factory CSSMathSum([List<CSSNumberish>? args]) =>
+      WebRuntime.current.createWebObject<CSSMathSum>(
+        'CSSMathSum',
+        [args],
+      );
   CSSNumericArray get values;
 }
 
@@ -116,6 +101,11 @@ abstract interface class CSSMathValue {
 }
 
 abstract interface class CSSMatrixComponent {
+  factory CSSMatrixComponent(DOMMatrixReadOnly matrix, [CSSMatrixComponentOptions? options]) =>
+      WebRuntime.current.createWebObject<CSSMatrixComponent>(
+        'CSSMatrixComponent',
+        [matrix, options],
+      );
   DOMMatrix get matrix;
    set matrix(DOMMatrix value);
 }
@@ -128,7 +118,6 @@ abstract interface class CSSMatrixComponentOptions {
 typedef CSSNumberish = Object;
 
 abstract interface class CSSNumericArray {
-   Iterable<CSSNumericValue> get values;
   int get length;
 }
 
@@ -166,47 +155,29 @@ abstract interface class CSSNumericValue {
   CSSNumericType type();
 }
 
-abstract interface class CSSOKLCH {
-  CSSColorPercent get l;
-   set l(CSSColorPercent value);
-  CSSColorPercent get c;
-   set c(CSSColorPercent value);
-  CSSColorAngle get h;
-   set h(CSSColorAngle value);
-  CSSColorPercent get alpha;
-   set alpha(CSSColorPercent value);
-}
-
-abstract interface class CSSOKLab {
-  CSSColorPercent get l;
-   set l(CSSColorPercent value);
-  CSSColorNumber get a;
-   set a(CSSColorNumber value);
-  CSSColorNumber get b;
-   set b(CSSColorNumber value);
-  CSSColorPercent get alpha;
-   set alpha(CSSColorPercent value);
-}
-
 abstract interface class CSSPerspective {
+  factory CSSPerspective(CSSPerspectiveValue length) =>
+      WebRuntime.current.createWebObject<CSSPerspective>(
+        'CSSPerspective',
+        [length],
+      );
   CSSPerspectiveValue get length;
    set length(CSSPerspectiveValue value);
 }
 
 typedef CSSPerspectiveValue = Object;
 
-abstract interface class CSSRGB {
-  CSSColorRGBComp get r;
-   set r(CSSColorRGBComp value);
-  CSSColorRGBComp get g;
-   set g(CSSColorRGBComp value);
-  CSSColorRGBComp get b;
-   set b(CSSColorRGBComp value);
-  CSSColorPercent get alpha;
-   set alpha(CSSColorPercent value);
-}
-
 abstract interface class CSSRotate {
+  factory CSSRotate(CSSNumericValue angle) =>
+      WebRuntime.current.createWebObject<CSSRotate>(
+        'CSSRotate',
+        [angle],
+      );
+  factory CSSRotate.named1(CSSNumberish x, CSSNumberish y, CSSNumberish z, CSSNumericValue angle) =>
+      WebRuntime.current.createWebObject<CSSRotate>(
+        'CSSRotate',
+        [x, y, z, angle],
+      );
   CSSNumberish get x;
    set x(CSSNumberish value);
   CSSNumberish get y;
@@ -218,6 +189,11 @@ abstract interface class CSSRotate {
 }
 
 abstract interface class CSSScale {
+  factory CSSScale(CSSNumberish x, CSSNumberish y, [CSSNumberish? z]) =>
+      WebRuntime.current.createWebObject<CSSScale>(
+        'CSSScale',
+        [x, y, z],
+      );
   CSSNumberish get x;
    set x(CSSNumberish value);
   CSSNumberish get y;
@@ -227,6 +203,11 @@ abstract interface class CSSScale {
 }
 
 abstract interface class CSSSkew {
+  factory CSSSkew(CSSNumericValue ax, CSSNumericValue ay) =>
+      WebRuntime.current.createWebObject<CSSSkew>(
+        'CSSSkew',
+        [ax, ay],
+      );
   CSSNumericValue get ax;
    set ax(CSSNumericValue value);
   CSSNumericValue get ay;
@@ -234,11 +215,21 @@ abstract interface class CSSSkew {
 }
 
 abstract interface class CSSSkewX {
+  factory CSSSkewX(CSSNumericValue ax) =>
+      WebRuntime.current.createWebObject<CSSSkewX>(
+        'CSSSkewX',
+        [ax],
+      );
   CSSNumericValue get ax;
    set ax(CSSNumericValue value);
 }
 
 abstract interface class CSSSkewY {
+  factory CSSSkewY(CSSNumericValue ay) =>
+      WebRuntime.current.createWebObject<CSSSkewY>(
+        'CSSSkewY',
+        [ay],
+      );
   CSSNumericValue get ay;
    set ay(CSSNumericValue value);
 }
@@ -247,7 +238,7 @@ abstract interface class CSSStyleRule {
   StylePropertyMap get styleMap;
   Object get selectorText;
    set selectorText(Object value);
-  CSSStyleProperties get style;
+  Object get style;
 }
 
 abstract interface class CSSStyleValue {
@@ -260,13 +251,22 @@ abstract interface class CSSTransformComponent {
 }
 
 abstract interface class CSSTransformValue {
-   Iterable<CSSTransformComponent> get values;
+  factory CSSTransformValue(List<CSSTransformComponent> transforms) =>
+      WebRuntime.current.createWebObject<CSSTransformValue>(
+        'CSSTransformValue',
+        [transforms],
+      );
   int get length;
   bool get is2D;
   DOMMatrix toMatrix();
 }
 
 abstract interface class CSSTranslate {
+  factory CSSTranslate(CSSNumericValue x, CSSNumericValue y, [CSSNumericValue? z]) =>
+      WebRuntime.current.createWebObject<CSSTranslate>(
+        'CSSTranslate',
+        [x, y, z],
+      );
   CSSNumericValue get x;
    set x(CSSNumericValue value);
   CSSNumericValue get y;
@@ -276,6 +276,11 @@ abstract interface class CSSTranslate {
 }
 
 abstract interface class CSSUnitValue {
+  factory CSSUnitValue(double value, String unit) =>
+      WebRuntime.current.createWebObject<CSSUnitValue>(
+        'CSSUnitValue',
+        [value, unit],
+      );
   double get value;
    set value(double value);
   String get unit;
@@ -284,11 +289,20 @@ abstract interface class CSSUnitValue {
 typedef CSSUnparsedSegment = Object;
 
 abstract interface class CSSUnparsedValue {
-   Iterable<CSSUnparsedSegment> get values;
+  factory CSSUnparsedValue(List<CSSUnparsedSegment> members) =>
+      WebRuntime.current.createWebObject<CSSUnparsedValue>(
+        'CSSUnparsedValue',
+        [members],
+      );
   int get length;
 }
 
 abstract interface class CSSVariableReferenceValue {
+  factory CSSVariableReferenceValue(String variable, [CSSUnparsedValue? fallback]) =>
+      WebRuntime.current.createWebObject<CSSVariableReferenceValue>(
+        'CSSVariableReferenceValue',
+        [variable, fallback],
+      );
   String get variable;
    set variable(String value);
   CSSUnparsedValue? get fallback;
@@ -307,9 +321,6 @@ abstract interface class StylePropertyMap {
 }
 
 abstract interface class StylePropertyMapReadOnly {
-   Iterable<(String, List<CSSStyleValue>)> get entries;
-   Iterable<String> get keys;
-   Iterable<List<CSSStyleValue>> get values;
   CSSStyleValue get_(String property);
   List<CSSStyleValue> getAll(String property);
   bool has(String property);

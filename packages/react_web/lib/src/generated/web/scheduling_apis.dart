@@ -4,10 +4,12 @@
 
 import 'dom.dart';
 import 'html.dart';
+import 'package:react_web/src/web_runtime.dart';
+
+typedef ContinuationPriority = String;
 
 abstract interface class Scheduler {
   Future<Object> postTask(SchedulerPostTaskCallback callback, [SchedulerPostTaskOptions? options]);
-  Future<void> yield_();
 }
 
 typedef SchedulerPostTaskCallback = Object Function();
@@ -21,7 +23,21 @@ abstract interface class SchedulerPostTaskOptions {
   set delay(int value);
 }
 
+typedef SchedulerSignalInherit = String;
+
+abstract interface class SchedulerYieldOptions {
+  Object get signal;
+  set signal(Object value);
+  ContinuationPriority get priority;
+  set priority(ContinuationPriority value);
+}
+
 abstract interface class TaskController {
+  factory TaskController([TaskControllerInit? init]) =>
+      WebRuntime.current.createWebObject<TaskController>(
+        'TaskController',
+        [init],
+      );
   void setPriority(TaskPriority priority);
 }
 
@@ -33,6 +49,11 @@ abstract interface class TaskControllerInit {
 typedef TaskPriority = String;
 
 abstract interface class TaskPriorityChangeEvent {
+  factory TaskPriorityChangeEvent(String type, TaskPriorityChangeEventInit priorityChangeEventInitDict) =>
+      WebRuntime.current.createWebObject<TaskPriorityChangeEvent>(
+        'TaskPriorityChangeEvent',
+        [type, priorityChangeEventInitDict],
+      );
   TaskPriority get previousPriority;
 }
 

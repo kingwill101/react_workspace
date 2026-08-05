@@ -4,8 +4,14 @@
 
 import 'streams.dart';
 import 'capture_handle_identity.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class MediaStreamTrackProcessor {
+  factory MediaStreamTrackProcessor(MediaStreamTrackProcessorInit init) =>
+      WebRuntime.current.createWebObject<MediaStreamTrackProcessor>(
+        'MediaStreamTrackProcessor',
+        [init],
+      );
   ReadableStream get readable;
 }
 
@@ -14,12 +20,5 @@ abstract interface class MediaStreamTrackProcessorInit {
   set track(MediaStreamTrack value);
   int get maxBufferSize;
   set maxBufferSize(int value);
-}
-
-abstract interface class VideoTrackGenerator {
-  WritableStream get writable;
-  bool get muted;
-   set muted(bool value);
-  MediaStreamTrack get track;
 }
 

@@ -2,18 +2,7 @@
 // Neutral Web surface for spec: webhid
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-import 'html.dart';
 import 'dom.dart';
-import 'webidl.dart';
-
-abstract interface class HID {
-  EventHandler get onconnect;
-   set onconnect(EventHandler value);
-  EventHandler get ondisconnect;
-   set ondisconnect(EventHandler value);
-  Future<List<HIDDevice>> getDevices();
-  Future<List<HIDDevice>> requestDevice(HIDDeviceRequestOptions options);
-}
 
 abstract interface class HIDCollectionInfo {
   int get usagePage;
@@ -32,29 +21,9 @@ abstract interface class HIDCollectionInfo {
   set featureReports(List<HIDReportInfo> value);
 }
 
-abstract interface class HIDConnectionEvent {
-  HIDDevice get device;
-}
-
 abstract interface class HIDConnectionEventInit {
-  HIDDevice get device;
-  set device(HIDDevice value);
-}
-
-abstract interface class HIDDevice {
-  EventHandler get oninputreport;
-   set oninputreport(EventHandler value);
-  bool get opened;
-  int get vendorId;
-  int get productId;
-  String get productName;
-  List<HIDCollectionInfo> get collections;
-  Future<void> open();
-  Future<void> close();
-  Future<void> forget();
-  Future<void> sendReport(Object reportId, BufferSource data);
-  Future<void> sendFeatureReport(Object reportId, BufferSource data);
-  Future<Object> receiveFeatureReport(Object reportId);
+  Object get device;
+  set device(Object value);
 }
 
 abstract interface class HIDDeviceFilter {
@@ -75,15 +44,9 @@ abstract interface class HIDDeviceRequestOptions {
   set exclusionFilters(List<HIDDeviceFilter> value);
 }
 
-abstract interface class HIDInputReportEvent {
-  HIDDevice get device;
-  Object get reportId;
-  Object get data;
-}
-
 abstract interface class HIDInputReportEventInit {
-  HIDDevice get device;
-  set device(HIDDevice value);
+  Object get device;
+  set device(Object value);
   Object get reportId;
   set reportId(Object value);
   Object get data;

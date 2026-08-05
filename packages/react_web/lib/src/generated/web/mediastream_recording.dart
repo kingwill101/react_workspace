@@ -6,10 +6,16 @@ import 'fileapi.dart';
 import 'hr_time.dart';
 import 'mediacapture_streams.dart';
 import 'html.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 typedef BitrateMode = String;
 
 abstract interface class BlobEvent {
+  factory BlobEvent(String type, BlobEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<BlobEvent>(
+        'BlobEvent',
+        [type, eventInitDict],
+      );
   Blob get data;
   DOMHighResTimeStamp get timecode;
 }
@@ -22,6 +28,11 @@ abstract interface class BlobEventInit {
 }
 
 abstract interface class MediaRecorder {
+  factory MediaRecorder(MediaStream stream, [MediaRecorderOptions? options]) =>
+      WebRuntime.current.createWebObject<MediaRecorder>(
+        'MediaRecorder',
+        [stream, options],
+      );
   MediaStream get stream;
   String get mimeType;
   RecordingState get state;
@@ -39,7 +50,6 @@ abstract interface class MediaRecorder {
    set onerror(EventHandler value);
   int get videoBitsPerSecond;
   int get audioBitsPerSecond;
-  BitrateMode get audioBitrateMode;
   void start([int? timeslice]);
   void stop();
   void pause();

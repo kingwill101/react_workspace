@@ -4,7 +4,7 @@
 
 
 abstract interface class NavigatorUA {
-  NavigatorUAData get userAgentData;
+  Object get userAgentData;
 }
 
 abstract interface class NavigatorUABrandVersion {
@@ -12,14 +12,6 @@ abstract interface class NavigatorUABrandVersion {
   set brand(String value);
   String get version;
   set version(String value);
-}
-
-abstract interface class NavigatorUAData {
-  List<NavigatorUABrandVersion> get brands;
-  bool get mobile;
-  String get platform;
-  Future<UADataValues> getHighEntropyValues(List<String> hints);
-  UALowEntropyJSON toJSON();
 }
 
 abstract interface class UADataValues {

@@ -241,6 +241,12 @@ final class SsrSurfaceEmitter {
     buf.writeln("  Document get document => throw UnsupportedWebApiError('Document', exposed: 'Window');");
     buf.writeln('  @override');
     buf.writeln("  Navigator get navigator => throw UnsupportedWebApiError('Navigator', exposed: 'Window');");
+    buf.writeln('  @override');
+    buf.writeln('  T createWebObject<T extends Object>(String name, List<Object?> arguments) =>');
+    buf.writeln("      throw UnsupportedWebApiError('\$name constructor');");
     buf.writeln('}');
+    buf.writeln();
+    buf.writeln('/// Installs the SSR [WebRuntime]. Safe to call repeatedly.');
+    buf.writeln('void installSsrWebRuntime() => WebRuntime.install(const SsrWebRuntime());');
   }
 }

@@ -77,7 +77,7 @@ ShelfRequestHandler _handler({Object? Function(Request)? authenticate}) {
     authenticate: authenticate ?? (_) => 'Ada',
   );
   return ShelfRequestHandler(
-    Pipeline().addHandler((request) {
+    const Pipeline().addHandler((request) {
       if (request.url.path == '__react/actions') {
         return actionHandler(request);
       }

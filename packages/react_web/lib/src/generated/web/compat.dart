@@ -3,8 +3,14 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'html.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class HTMLBodyElement {
+  factory HTMLBodyElement() =>
+      WebRuntime.current.createWebObject<HTMLBodyElement>(
+        'HTMLBodyElement',
+        [],
+      );
   EventHandler get ongamepadconnected;
    set ongamepadconnected(EventHandler value);
   EventHandler get ongamepaddisconnected;
@@ -47,8 +53,6 @@ abstract interface class HTMLBodyElement {
    set onunload(EventHandler value);
   EventHandler get onportalactivate;
    set onportalactivate(EventHandler value);
-  EventHandler get onorientationchange;
-   set onorientationchange(EventHandler value);
   String get text;
    set text(String value);
   String get link;

@@ -5,13 +5,12 @@
 import 'cssom_view.dart';
 import 'geometry.dart';
 import 'dom.dart';
+import 'trusted_types.dart';
 import 'html.dart';
 import 'web_animations_2.dart';
 import 'web_animations.dart';
-import 'css_pseudo.dart';
 import 'css_typed_om.dart';
 import 'fullscreen.dart';
-import 'trusted_types.dart';
 import 'pointerlock.dart';
 import 'input_device_capabilities.dart';
 
@@ -114,8 +113,6 @@ abstract interface class Element {
    set ariaPressed(String? value);
   String? get ariaReadOnly;
    set ariaReadOnly(String? value);
-  String? get ariaRelevant;
-   set ariaRelevant(String? value);
   String? get ariaRequired;
    set ariaRequired(String? value);
   String? get ariaRoleDescription;
@@ -144,10 +141,6 @@ abstract interface class Element {
    set ariaValueText(String? value);
   Animation animate(Object? keyframes, [Object? options]);
   List<Animation> getAnimations([GetAnimationsOptions? options]);
-  Node getSpatialNavigationContainer();
-  List<Node> focusableAreas([FocusableAreasOption? option]);
-  Node? spatialNavigationSearch(SpatialNavigationDirection dir, [SpatialNavigationSearchOptions? options]);
-  CSSPseudoElement? pseudo(Object type);
   DOMTokenList get part_;
   StylePropertyMapReadOnly computedStyleMap();
   DOMRectList getClientRects();
@@ -167,7 +160,6 @@ abstract interface class Element {
   int get clientLeft;
   int get clientWidth;
   int get clientHeight;
-  double get currentCSSZoom;
   String? get namespaceURI;
   String? get prefix;
   String get localName;
@@ -200,14 +192,11 @@ abstract interface class Element {
   ShadowRoot? get shadowRoot;
   Element? closest(String selectors);
   bool matches(String selectors);
-  bool webkitMatchesSelector(String selectors);
   HTMLCollection getElementsByTagName(String qualifiedName);
   HTMLCollection getElementsByTagNameNS(String? namespace, String localName);
   HTMLCollection getElementsByClassName(String classNames);
   Element? insertAdjacentElement(String where, Element element);
   void insertAdjacentText(String where, String data);
-  String get elementTiming;
-   set elementTiming(String value);
   Future<void> requestFullscreen([FullscreenOptions? options]);
   EventHandler get onfullscreenchange;
    set onfullscreenchange(EventHandler value);
@@ -231,11 +220,6 @@ typedef FocusableAreaSearchMode = String;
 abstract interface class FocusableAreasOption {
   FocusableAreaSearchMode get mode;
   set mode(FocusableAreaSearchMode value);
-}
-
-abstract interface class NavigationEvent {
-  SpatialNavigationDirection get dir;
-  EventTarget? get relatedTarget;
 }
 
 abstract interface class NavigationEventInit {

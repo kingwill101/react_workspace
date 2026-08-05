@@ -9,16 +9,17 @@ import 'html.dart';
 import 'streams.dart';
 import 'mst_content_hint.dart';
 import 'mediacapture_streams.dart';
-import 'webcryptoapi.dart';
 import 'dom.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 typedef CryptoKeyID = Object;
 
-abstract interface class KeyFrameRequestEvent {
-  String? get rid;
-}
-
 abstract interface class RTCEncodedAudioFrame {
+  factory RTCEncodedAudioFrame(RTCEncodedAudioFrame originalFrame, [RTCEncodedAudioFrameOptions? options]) =>
+      WebRuntime.current.createWebObject<RTCEncodedAudioFrame>(
+        'RTCEncodedAudioFrame',
+        [originalFrame, options],
+      );
   Object get data;
    set data(Object value);
   RTCEncodedAudioFrameMetadata getMetadata();
@@ -45,6 +46,11 @@ abstract interface class RTCEncodedAudioFrameOptions {
 }
 
 abstract interface class RTCEncodedVideoFrame {
+  factory RTCEncodedVideoFrame(RTCEncodedVideoFrame originalFrame, [RTCEncodedVideoFrameOptions? options]) =>
+      WebRuntime.current.createWebObject<RTCEncodedVideoFrame>(
+        'RTCEncodedVideoFrame',
+        [originalFrame, options],
+      );
   RTCEncodedVideoFrameType get type;
   Object get data;
    set data(Object value);
@@ -99,6 +105,11 @@ abstract interface class RTCRtpReceiver {
 }
 
 abstract interface class RTCRtpScriptTransform {
+  factory RTCRtpScriptTransform(Worker worker, [Object? options, List<Object>? transfer]) =>
+      WebRuntime.current.createWebObject<RTCRtpScriptTransform>(
+        'RTCRtpScriptTransform',
+        [worker, options, transfer],
+      );
 }
 
 abstract interface class RTCRtpScriptTransformer {
@@ -106,15 +117,12 @@ abstract interface class RTCRtpScriptTransformer {
   Future<int> generateKeyFrame([String? rid]);
   Future<void> sendKeyFrameRequest();
   WritableStream get writable;
-  EventHandler get onkeyframerequest;
-   set onkeyframerequest(EventHandler value);
   Object get options;
 }
 
 abstract interface class RTCRtpSender {
   RTCRtpTransform? get transform;
    set transform(RTCRtpTransform? value);
-  Future<void> generateKeyFrame([List<String>? rids]);
   MediaStreamTrack? get track;
   RTCDtlsTransport? get transport;
   Future<void> setParameters(RTCRtpSendParameters parameters, [RTCSetParameterOptions? setParameterOptions]);
@@ -129,20 +137,6 @@ typedef RTCRtpTransform = Object;
 
 abstract interface class RTCTransformEvent {
   RTCRtpScriptTransformer get transformer;
-}
-
-abstract interface class SFrameTransform {
-  ReadableStream get readable;
-  WritableStream get writable;
-  Future<void> setEncryptionKey(CryptoKey key, [CryptoKeyID? keyID]);
-  EventHandler get onerror;
-   set onerror(EventHandler value);
-}
-
-abstract interface class SFrameTransformErrorEvent {
-  SFrameTransformErrorEventType get errorType;
-  CryptoKeyID? get keyID;
-  Object get frame;
 }
 
 abstract interface class SFrameTransformErrorEventInit {

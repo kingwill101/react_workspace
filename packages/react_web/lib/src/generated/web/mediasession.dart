@@ -2,12 +2,7 @@
 // Neutral Web surface for spec: mediasession
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-
-abstract interface class ChapterInformation {
-  String get title;
-  double get startTime;
-  List<MediaImage> get artwork;
-}
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class ChapterInformationInit {
   String get title;
@@ -28,15 +23,19 @@ abstract interface class MediaImage {
 }
 
 abstract interface class MediaMetadata {
+  factory MediaMetadata([MediaMetadataInit? init]) =>
+      WebRuntime.current.createWebObject<MediaMetadata>(
+        'MediaMetadata',
+        [init],
+      );
   String get title;
    set title(String value);
   String get artist;
    set artist(String value);
   String get album;
    set album(String value);
-  List<Object> get artwork;
-   set artwork(List<Object> value);
-  List<ChapterInformation> get chapterInfo;
+  List<MediaImage> get artwork;
+   set artwork(List<MediaImage> value);
 }
 
 abstract interface class MediaMetadataInit {
@@ -68,9 +67,6 @@ abstract interface class MediaSession {
    set playbackState(MediaSessionPlaybackState value);
   void setActionHandler(MediaSessionAction action, MediaSessionActionHandler? handler);
   void setPositionState([MediaPositionState? state]);
-  Future<void> setMicrophoneActive(bool active);
-  Future<void> setCameraActive(bool active);
-  Future<void> setScreenshareActive(bool active);
 }
 
 typedef MediaSessionAction = String;
@@ -78,17 +74,26 @@ typedef MediaSessionAction = String;
 abstract interface class MediaSessionActionDetails {
   MediaSessionAction get action;
   set action(MediaSessionAction value);
-  double get seekOffset;
-  set seekOffset(double value);
-  double get seekTime;
-  set seekTime(double value);
-  bool get fastSeek;
-  set fastSeek(bool value);
-  bool get isActivating;
-  set isActivating(bool value);
 }
 
 typedef MediaSessionActionHandler = void Function(MediaSessionActionDetails details,);
 
+abstract interface class MediaSessionCaptureActionDetails {
+  bool get isActivating;
+  set isActivating(bool value);
+}
+
 typedef MediaSessionPlaybackState = String;
+
+abstract interface class MediaSessionSeekActionDetails {
+  double get seekOffset;
+  set seekOffset(double value);
+}
+
+abstract interface class MediaSessionSeekToActionDetails {
+  double get seekTime;
+  set seekTime(double value);
+  bool get fastSeek;
+  set fastSeek(bool value);
+}
 

@@ -4,20 +4,24 @@
 
 import 'hr_time.dart';
 import 'event_timing.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class PerformanceEntry {
-  int get id;
   String get name;
   String get entryType;
   DOMHighResTimeStamp get startTime;
   DOMHighResTimeStamp get duration;
-  int get navigationId;
   Object toJSON();
 }
 
 typedef PerformanceEntryList = List<PerformanceEntry>;
 
 abstract interface class PerformanceObserver {
+  factory PerformanceObserver(PerformanceObserverCallback callback) =>
+      WebRuntime.current.createWebObject<PerformanceObserver>(
+        'PerformanceObserver',
+        [callback],
+      );
   void observe([PerformanceObserverInit? options]);
   void disconnect();
   PerformanceEntryList takeRecords();

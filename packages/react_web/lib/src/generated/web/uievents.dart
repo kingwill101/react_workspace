@@ -6,8 +6,14 @@ import 'input_device_capabilities.dart';
 import 'dom.dart';
 import 'anonymous_iframe.dart';
 import 'pointerlock.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CompositionEvent {
+  factory CompositionEvent(String type, [CompositionEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<CompositionEvent>(
+        'CompositionEvent',
+        [type, eventInitDict],
+      );
   String get data;
   void initCompositionEvent(String typeArg, [bool? bubblesArg, bool? cancelableArg, Object? viewArg, String? dataArg]);
 }
@@ -49,6 +55,11 @@ abstract interface class EventModifierInit {
 }
 
 abstract interface class FocusEvent {
+  factory FocusEvent(String type, [FocusEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<FocusEvent>(
+        'FocusEvent',
+        [type, eventInitDict],
+      );
   EventTarget? get relatedTarget;
 }
 
@@ -58,14 +69,11 @@ abstract interface class FocusEventInit {
 }
 
 abstract interface class KeyboardEvent {
-   static const int DOM_KEY_LOCATION_STANDARD =
-      0x00;
-   static const int DOM_KEY_LOCATION_LEFT =
-      0x01;
-   static const int DOM_KEY_LOCATION_RIGHT =
-      0x02;
-   static const int DOM_KEY_LOCATION_NUMPAD =
-      0x03;
+  factory KeyboardEvent(String type, [KeyboardEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<KeyboardEvent>(
+        'KeyboardEvent',
+        [type, eventInitDict],
+      );
   String get key;
   String get code;
   int get location;
@@ -98,18 +106,26 @@ abstract interface class KeyboardEventInit {
   set keyCode(int value);
 }
 
+abstract interface class MutationEvent {
+  Node? get relatedNode;
+  String get prevValue;
+  String get newValue;
+  String get attrName;
+  int get attrChange;
+  void initMutationEvent(String typeArg, [bool? bubblesArg, bool? cancelableArg, Node? relatedNodeArg, String? prevValueArg, String? newValueArg, String? attrNameArg, int? attrChangeArg]);
+}
+
 abstract interface class TextEvent {
   String get data;
   void initTextEvent(String type, [bool? bubbles, bool? cancelable, Window? view, String? data]);
 }
 
 abstract interface class WheelEvent {
-   static const int DOM_DELTA_PIXEL =
-      0x00;
-   static const int DOM_DELTA_LINE =
-      0x01;
-   static const int DOM_DELTA_PAGE =
-      0x02;
+  factory WheelEvent(String type, [WheelEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<WheelEvent>(
+        'WheelEvent',
+        [type, eventInitDict],
+      );
   double get deltaX;
   double get deltaY;
   double get deltaZ;

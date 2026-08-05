@@ -3,30 +3,17 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'webxr.dart';
-import 'geometry.dart';
-import 'webxr_gamepads_module.dart';
-import 'anchors.dart';
 
 abstract interface class XRHitTestOptionsInit {
   XRSpace get space;
   set space(XRSpace value);
   List<XRHitTestTrackableType> get entityTypes;
   set entityTypes(List<XRHitTestTrackableType> value);
-  XRRay get offsetRay;
-  set offsetRay(XRRay value);
-}
-
-abstract interface class XRHitTestSource {
-  void cancel();
+  Object get offsetRay;
+  set offsetRay(Object value);
 }
 
 typedef XRHitTestTrackableType = String;
-
-abstract interface class XRRay {
-  DOMPointReadOnly get origin;
-  DOMPointReadOnly get direction;
-  Object get matrix;
-}
 
 abstract interface class XRRayDirectionInit {
   double get x;
@@ -44,16 +31,7 @@ abstract interface class XRTransientInputHitTestOptionsInit {
   set profile(String value);
   List<XRHitTestTrackableType> get entityTypes;
   set entityTypes(List<XRHitTestTrackableType> value);
-  XRRay get offsetRay;
-  set offsetRay(XRRay value);
-}
-
-abstract interface class XRTransientInputHitTestResult {
-  XRInputSource get inputSource;
-  List<XRHitTestResult> get results;
-}
-
-abstract interface class XRTransientInputHitTestSource {
-  void cancel();
+  Object get offsetRay;
+  set offsetRay(Object value);
 }
 

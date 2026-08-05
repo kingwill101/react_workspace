@@ -5,18 +5,6 @@
 import 'svg.dart';
 
 abstract interface class SVGComponentTransferFunctionElement {
-   static const int SVG_FECOMPONENTTRANSFER_TYPE_UNKNOWN =
-      0;
-   static const int SVG_FECOMPONENTTRANSFER_TYPE_IDENTITY =
-      1;
-   static const int SVG_FECOMPONENTTRANSFER_TYPE_TABLE =
-      2;
-   static const int SVG_FECOMPONENTTRANSFER_TYPE_DISCRETE =
-      3;
-   static const int SVG_FECOMPONENTTRANSFER_TYPE_LINEAR =
-      4;
-   static const int SVG_FECOMPONENTTRANSFER_TYPE_GAMMA =
-      5;
   SVGAnimatedEnumeration get type;
   SVGAnimatedNumberList get tableValues;
   SVGAnimatedNumber get slope;
@@ -32,40 +20,6 @@ abstract interface class SVGFEBlendElement {
   SVGAnimatedLength get width;
   SVGAnimatedLength get height;
   SVGAnimatedString get result;
-   static const int SVG_FEBLEND_MODE_UNKNOWN =
-      0;
-   static const int SVG_FEBLEND_MODE_NORMAL =
-      1;
-   static const int SVG_FEBLEND_MODE_MULTIPLY =
-      2;
-   static const int SVG_FEBLEND_MODE_SCREEN =
-      3;
-   static const int SVG_FEBLEND_MODE_DARKEN =
-      4;
-   static const int SVG_FEBLEND_MODE_LIGHTEN =
-      5;
-   static const int SVG_FEBLEND_MODE_OVERLAY =
-      6;
-   static const int SVG_FEBLEND_MODE_COLOR_DODGE =
-      7;
-   static const int SVG_FEBLEND_MODE_COLOR_BURN =
-      8;
-   static const int SVG_FEBLEND_MODE_HARD_LIGHT =
-      9;
-   static const int SVG_FEBLEND_MODE_SOFT_LIGHT =
-      10;
-   static const int SVG_FEBLEND_MODE_DIFFERENCE =
-      11;
-   static const int SVG_FEBLEND_MODE_EXCLUSION =
-      12;
-   static const int SVG_FEBLEND_MODE_HUE =
-      13;
-   static const int SVG_FEBLEND_MODE_SATURATION =
-      14;
-   static const int SVG_FEBLEND_MODE_COLOR =
-      15;
-   static const int SVG_FEBLEND_MODE_LUMINOSITY =
-      16;
   SVGAnimatedString get in1;
   SVGAnimatedString get in2;
   SVGAnimatedEnumeration get mode;
@@ -77,16 +31,6 @@ abstract interface class SVGFEColorMatrixElement {
   SVGAnimatedLength get width;
   SVGAnimatedLength get height;
   SVGAnimatedString get result;
-   static const int SVG_FECOLORMATRIX_TYPE_UNKNOWN =
-      0;
-   static const int SVG_FECOLORMATRIX_TYPE_MATRIX =
-      1;
-   static const int SVG_FECOLORMATRIX_TYPE_SATURATE =
-      2;
-   static const int SVG_FECOLORMATRIX_TYPE_HUEROTATE =
-      3;
-   static const int SVG_FECOLORMATRIX_TYPE_LUMINANCETOALPHA =
-      4;
   SVGAnimatedString get in1;
   SVGAnimatedEnumeration get type;
   SVGAnimatedNumberList get values;
@@ -107,20 +51,6 @@ abstract interface class SVGFECompositeElement {
   SVGAnimatedLength get width;
   SVGAnimatedLength get height;
   SVGAnimatedString get result;
-   static const int SVG_FECOMPOSITE_OPERATOR_UNKNOWN =
-      0;
-   static const int SVG_FECOMPOSITE_OPERATOR_OVER =
-      1;
-   static const int SVG_FECOMPOSITE_OPERATOR_IN =
-      2;
-   static const int SVG_FECOMPOSITE_OPERATOR_OUT =
-      3;
-   static const int SVG_FECOMPOSITE_OPERATOR_ATOP =
-      4;
-   static const int SVG_FECOMPOSITE_OPERATOR_XOR =
-      5;
-   static const int SVG_FECOMPOSITE_OPERATOR_ARITHMETIC =
-      6;
   SVGAnimatedString get in1;
   SVGAnimatedString get in2;
   SVGAnimatedEnumeration get operator_;
@@ -136,14 +66,6 @@ abstract interface class SVGFEConvolveMatrixElement {
   SVGAnimatedLength get width;
   SVGAnimatedLength get height;
   SVGAnimatedString get result;
-   static const int SVG_EDGEMODE_UNKNOWN =
-      0;
-   static const int SVG_EDGEMODE_DUPLICATE =
-      1;
-   static const int SVG_EDGEMODE_WRAP =
-      2;
-   static const int SVG_EDGEMODE_NONE =
-      3;
   SVGAnimatedString get in1;
   SVGAnimatedInteger get orderX;
   SVGAnimatedInteger get orderY;
@@ -177,16 +99,6 @@ abstract interface class SVGFEDisplacementMapElement {
   SVGAnimatedLength get width;
   SVGAnimatedLength get height;
   SVGAnimatedString get result;
-   static const int SVG_CHANNEL_UNKNOWN =
-      0;
-   static const int SVG_CHANNEL_R =
-      1;
-   static const int SVG_CHANNEL_G =
-      2;
-   static const int SVG_CHANNEL_B =
-      3;
-   static const int SVG_CHANNEL_A =
-      4;
   SVGAnimatedString get in1;
   SVGAnimatedString get in2;
   SVGAnimatedNumber get scale;
@@ -239,14 +151,6 @@ abstract interface class SVGFEGaussianBlurElement {
   SVGAnimatedLength get width;
   SVGAnimatedLength get height;
   SVGAnimatedString get result;
-   static const int SVG_EDGEMODE_UNKNOWN =
-      0;
-   static const int SVG_EDGEMODE_DUPLICATE =
-      1;
-   static const int SVG_EDGEMODE_WRAP =
-      2;
-   static const int SVG_EDGEMODE_NONE =
-      3;
   SVGAnimatedString get in1;
   SVGAnimatedNumber get stdDeviationX;
   SVGAnimatedNumber get stdDeviationY;
@@ -283,12 +187,6 @@ abstract interface class SVGFEMorphologyElement {
   SVGAnimatedLength get width;
   SVGAnimatedLength get height;
   SVGAnimatedString get result;
-   static const int SVG_MORPHOLOGY_OPERATOR_UNKNOWN =
-      0;
-   static const int SVG_MORPHOLOGY_OPERATOR_ERODE =
-      1;
-   static const int SVG_MORPHOLOGY_OPERATOR_DILATE =
-      2;
   SVGAnimatedString get in1;
   SVGAnimatedEnumeration get operator_;
   SVGAnimatedNumber get radiusX;
@@ -352,18 +250,6 @@ abstract interface class SVGFETurbulenceElement {
   SVGAnimatedLength get width;
   SVGAnimatedLength get height;
   SVGAnimatedString get result;
-   static const int SVG_TURBULENCE_TYPE_UNKNOWN =
-      0;
-   static const int SVG_TURBULENCE_TYPE_FRACTALNOISE =
-      1;
-   static const int SVG_TURBULENCE_TYPE_TURBULENCE =
-      2;
-   static const int SVG_STITCHTYPE_UNKNOWN =
-      0;
-   static const int SVG_STITCHTYPE_STITCH =
-      1;
-   static const int SVG_STITCHTYPE_NOSTITCH =
-      2;
   SVGAnimatedNumber get baseFrequencyX;
   SVGAnimatedNumber get baseFrequencyY;
   SVGAnimatedInteger get numOctaves;

@@ -2,22 +2,11 @@
 // Neutral Web surface for spec: serial
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-import 'html.dart';
-import 'streams.dart';
 import 'web_bluetooth.dart';
 
 typedef FlowControlType = String;
 
 typedef ParityType = String;
-
-abstract interface class Serial {
-  EventHandler get onconnect;
-   set onconnect(EventHandler value);
-  EventHandler get ondisconnect;
-   set ondisconnect(EventHandler value);
-  Future<List<SerialPort>> getPorts();
-  Future<SerialPort> requestPort([SerialPortRequestOptions? options]);
-}
 
 abstract interface class SerialInputSignals {
   bool get dataCarrierDetect;
@@ -52,22 +41,6 @@ abstract interface class SerialOutputSignals {
   set requestToSend(bool value);
   bool get break_;
   set break_(bool value);
-}
-
-abstract interface class SerialPort {
-  EventHandler get onconnect;
-   set onconnect(EventHandler value);
-  EventHandler get ondisconnect;
-   set ondisconnect(EventHandler value);
-  bool get connected;
-  ReadableStream get readable;
-  WritableStream get writable;
-  SerialPortInfo getInfo();
-  Future<void> open(SerialOptions options);
-  Future<void> setSignals([SerialOutputSignals? signals]);
-  Future<SerialInputSignals> getSignals();
-  Future<void> close();
-  Future<void> forget();
 }
 
 abstract interface class SerialPortFilter {

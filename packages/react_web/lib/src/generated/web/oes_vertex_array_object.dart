@@ -5,9 +5,7 @@
 import 'webgl1.dart';
 
 abstract interface class OES_vertex_array_object {
-   static const GLenum VERTEX_ARRAY_BINDING_OES =
-      0x85B5;
-  WebGLVertexArrayObjectOES createVertexArrayOES();
+  WebGLVertexArrayObjectOES? createVertexArrayOES();
   void deleteVertexArrayOES(WebGLVertexArrayObjectOES? arrayObject);
   GLboolean isVertexArrayOES(WebGLVertexArrayObjectOES? arrayObject);
   void bindVertexArrayOES(WebGLVertexArrayObjectOES? arrayObject);

@@ -2,8 +2,14 @@
 // Neutral Web surface for spec: geometry
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class DOMMatrix {
+  factory DOMMatrix([Object? init]) =>
+      WebRuntime.current.createWebObject<DOMMatrix>(
+        'DOMMatrix',
+        [init],
+      );
   double get a;
    set a(double value);
   double get b;
@@ -115,6 +121,11 @@ abstract interface class DOMMatrixInit {
 }
 
 abstract interface class DOMMatrixReadOnly {
+  factory DOMMatrixReadOnly([Object? init]) =>
+      WebRuntime.current.createWebObject<DOMMatrixReadOnly>(
+        'DOMMatrixReadOnly',
+        [init],
+      );
   double get a;
   double get b;
   double get c;
@@ -159,6 +170,11 @@ abstract interface class DOMMatrixReadOnly {
 }
 
 abstract interface class DOMPoint {
+  factory DOMPoint([double? x, double? y, double? z, double? w]) =>
+      WebRuntime.current.createWebObject<DOMPoint>(
+        'DOMPoint',
+        [x, y, z, w],
+      );
   double get x;
    set x(double value);
   double get y;
@@ -181,6 +197,11 @@ abstract interface class DOMPointInit {
 }
 
 abstract interface class DOMPointReadOnly {
+  factory DOMPointReadOnly([double? x, double? y, double? z, double? w]) =>
+      WebRuntime.current.createWebObject<DOMPointReadOnly>(
+        'DOMPointReadOnly',
+        [x, y, z, w],
+      );
   double get x;
   double get y;
   double get z;
@@ -190,6 +211,11 @@ abstract interface class DOMPointReadOnly {
 }
 
 abstract interface class DOMQuad {
+  factory DOMQuad([DOMPointInit? p1, DOMPointInit? p2, DOMPointInit? p3, DOMPointInit? p4]) =>
+      WebRuntime.current.createWebObject<DOMQuad>(
+        'DOMQuad',
+        [p1, p2, p3, p4],
+      );
   DOMPoint get p1;
   DOMPoint get p2;
   DOMPoint get p3;
@@ -210,6 +236,11 @@ abstract interface class DOMQuadInit {
 }
 
 abstract interface class DOMRect {
+  factory DOMRect([double? x, double? y, double? width, double? height]) =>
+      WebRuntime.current.createWebObject<DOMRect>(
+        'DOMRect',
+        [x, y, width, height],
+      );
   double get x;
    set x(double value);
   double get y;
@@ -237,6 +268,11 @@ abstract interface class DOMRectList {
 }
 
 abstract interface class DOMRectReadOnly {
+  factory DOMRectReadOnly([double? x, double? y, double? width, double? height]) =>
+      WebRuntime.current.createWebObject<DOMRectReadOnly>(
+        'DOMRectReadOnly',
+        [x, y, width, height],
+      );
   double get x;
   double get y;
   double get width;

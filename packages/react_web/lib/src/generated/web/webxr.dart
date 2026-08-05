@@ -2,60 +2,57 @@
 // Neutral Web surface for spec: webxr
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-import 'geometry.dart';
 import 'hr_time.dart';
-import 'anchors.dart';
 import 'webxr_gamepads_module.dart';
 import 'dom.dart';
 import 'permissions.dart';
+import 'geometry.dart';
 import 'html.dart';
-import 'webxr_depth_sensing.dart';
-import 'raw_camera_access.dart';
 import 'webgl1.dart';
-
-abstract interface class XRBoundedReferenceSpace {
-  List<DOMPointReadOnly> get boundsGeometry;
-}
+import 'webgl2.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 typedef XREye = String;
 
-typedef XRFrameRequestCallback = void Function(DOMHighResTimeStamp time, XRFrame frame,);
+typedef XRFrameRequestCallback = void Function(DOMHighResTimeStamp time, Object frame,);
 
 typedef XRHandedness = String;
 
-abstract interface class XRInputSourceArray {
-   Iterable<XRInputSource> get values;
-  int get length;
-}
-
 abstract interface class XRInputSourceEvent {
-  XRFrame get frame;
+  factory XRInputSourceEvent(String type, XRInputSourceEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<XRInputSourceEvent>(
+        'XRInputSourceEvent',
+        [type, eventInitDict],
+      );
+  Object get frame;
   XRInputSource get inputSource;
 }
 
 abstract interface class XRInputSourceEventInit {
-  XRFrame get frame;
-  set frame(XRFrame value);
+  Object get frame;
+  set frame(Object value);
   XRInputSource get inputSource;
   set inputSource(XRInputSource value);
 }
 
 abstract interface class XRInputSourcesChangeEvent {
-  XRSession get session;
+  factory XRInputSourcesChangeEvent(String type, XRInputSourcesChangeEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<XRInputSourcesChangeEvent>(
+        'XRInputSourcesChangeEvent',
+        [type, eventInitDict],
+      );
+  Object get session;
   List<XRInputSource> get added;
   List<XRInputSource> get removed;
 }
 
 abstract interface class XRInputSourcesChangeEventInit {
-  XRSession get session;
-  set session(XRSession value);
+  Object get session;
+  set session(Object value);
   List<XRInputSource> get added;
   set added(List<XRInputSource> value);
   List<XRInputSource> get removed;
   set removed(List<XRInputSource> value);
-}
-
-abstract interface class XRLayer {
 }
 
 abstract interface class XRPermissionDescriptor {
@@ -65,11 +62,6 @@ abstract interface class XRPermissionDescriptor {
   set requiredFeatures(List<String> value);
   List<String> get optionalFeatures;
   set optionalFeatures(List<String> value);
-}
-
-abstract interface class XRPermissionStatus {
-  List<String> get granted;
-   set granted(List<String> value);
 }
 
 abstract interface class XRPose {
@@ -86,6 +78,11 @@ abstract interface class XRReferenceSpace {
 }
 
 abstract interface class XRReferenceSpaceEvent {
+  factory XRReferenceSpaceEvent(String type, XRReferenceSpaceEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<XRReferenceSpaceEvent>(
+        'XRReferenceSpaceEvent',
+        [type, eventInitDict],
+      );
   XRReferenceSpace get referenceSpace;
   XRRigidTransform? get transform;
 }
@@ -99,14 +96,6 @@ abstract interface class XRReferenceSpaceEventInit {
 
 typedef XRReferenceSpaceType = String;
 
-abstract interface class XRRenderState {
-  double get depthNear;
-  double get depthFar;
-  double? get inlineVerticalFieldOfView;
-  XRWebGLLayer? get baseLayer;
-  List<XRLayer> get layers;
-}
-
 abstract interface class XRRenderStateInit {
   double get depthNear;
   set depthNear(double value);
@@ -114,13 +103,18 @@ abstract interface class XRRenderStateInit {
   set depthFar(double value);
   double get inlineVerticalFieldOfView;
   set inlineVerticalFieldOfView(double value);
-  XRWebGLLayer? get baseLayer;
-  set baseLayer(XRWebGLLayer? value);
-  List<XRLayer>? get layers;
-  set layers(List<XRLayer>? value);
+  Object get baseLayer;
+  set baseLayer(Object value);
+  List<Object> get layers;
+  set layers(List<Object> value);
 }
 
 abstract interface class XRRigidTransform {
+  factory XRRigidTransform([DOMPointInit? position, DOMPointInit? orientation]) =>
+      WebRuntime.current.createWebObject<XRRigidTransform>(
+        'XRRigidTransform',
+        [position, orientation],
+      );
   DOMPointReadOnly get position;
   DOMPointReadOnly get orientation;
   Object get matrix;
@@ -128,12 +122,17 @@ abstract interface class XRRigidTransform {
 }
 
 abstract interface class XRSessionEvent {
-  XRSession get session;
+  factory XRSessionEvent(String type, XRSessionEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<XRSessionEvent>(
+        'XRSessionEvent',
+        [type, eventInitDict],
+      );
+  Object get session;
 }
 
 abstract interface class XRSessionEventInit {
-  XRSession get session;
-  set session(XRSession value);
+  Object get session;
+  set session(Object value);
 }
 
 typedef XRSessionMode = String;
@@ -146,17 +145,10 @@ abstract interface class XRSessionSupportedPermissionDescriptor {
 abstract interface class XRSpace {
 }
 
-abstract interface class XRSystem {
-  Future<bool> isSessionSupported(XRSessionMode mode);
-  Future<XRSession> requestSession(XRSessionMode mode, [XRSessionInit? options]);
-  EventHandler get ondevicechange;
-   set ondevicechange(EventHandler value);
-}
-
 typedef XRTargetRayMode = String;
 
 abstract interface class XRViewerPose {
-  List<XRView> get views;
+  List<Object> get views;
 }
 
 abstract interface class XRViewport {
@@ -167,17 +159,6 @@ abstract interface class XRViewport {
 }
 
 typedef XRVisibilityState = String;
-
-abstract interface class XRWebGLLayer {
-  bool get antialias;
-  bool get ignoreDepthValues;
-  double? get fixedFoveation;
-   set fixedFoveation(double? value);
-  WebGLFramebuffer? get framebuffer;
-  int get framebufferWidth;
-  int get framebufferHeight;
-  XRViewport? getViewport(XRView view);
-}
 
 abstract interface class XRWebGLLayerInit {
   bool get antialias;

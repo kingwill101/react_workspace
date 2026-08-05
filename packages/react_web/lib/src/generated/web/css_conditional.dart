@@ -10,10 +10,8 @@ abstract interface class CSSConditionRule {
 
 abstract interface class CSSMediaRule {
   MediaList get media;
-  bool get matches;
 }
 
 abstract interface class CSSSupportsRule {
-  bool get matches;
 }
 

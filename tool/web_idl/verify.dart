@@ -13,14 +13,19 @@ import 'dart:io';
 import 'package:react_web_generator/src/complete/complete.dart';
 import 'package:react_web_generator/src/complete/emit/completeness_verifier.dart';
 import 'package:react_web_generator/src/complete/package_web_mappings.dart';
+import 'package:react_web_generator/src/bcd_filter.dart';
 
 const webApisJson = 'tool/web_idl/snapshots/web_apis.json';
 const reportPath = 'packages/react_web/lib/src/generated/completeness_report.json';
 
 Future<void> main(List<String> args) async {
   final strict = args.contains('--strict');
+  final bcdFilter = BcdFilter.load();
   final model = mergeRawModel(
-    CompleteWebModelBuilder(webIdlPath: webApisJson).loadRaw(),
+    CompleteWebModelBuilder(
+      webIdlPath: webApisJson,
+      bcdFilter: bcdFilter,
+    ).loadRaw(),
   );
 
   final report = CompletenessVerifier(model: model, emittedModel: model).verify();
@@ -36,14 +41,20 @@ Future<void> main(List<String> args) async {
     if (!names.add(d.name)) duplicates.add(d.name);
   }
 
-  // package:web mapping coverage.
+  // package:web mapping coverage. Only interface-kind definitions need a
+  // `package:web` counterpart: the browser adapter wraps interfaces (mixins
+  // and callback interfaces are flattened into their using interfaces and are
+  // never wrapped directly).
   final mappings = strict
       ? await PackageWebMappings.load('.') // only needed in strict mode
       : null;
   int missingMappings = 0;
   if (mappings != null) {
-    final defsSet = <String>{for (final d in model.allDefinitions) d.name};
-    missingMappings = mappings.missingTypes(defsSet).length;
+    final interfaceNames = <String>{
+      for (final d in model.allDefinitions)
+        if (d.kindName == 'interface') d.name
+    };
+    missingMappings = mappings.missingTypes(interfaceNames).length;
   }
 
   File(reportPath).writeAsStringSync(CompletenessVerifier(model: model, emittedModel: model).toJsonNice(report));
@@ -65,7 +76,7 @@ Future<void> main(List<String> args) async {
     failed = true;
   }
   if (strict && missingMappings > 0) {
-    stdout.writeln('FAIL (strict): $missingMappings} definitions missing a package:web mapping.');
+    stdout.writeln('FAIL (strict): $missingMappings definitions missing a package:web mapping.');
     stdout.writeln('  Pin package:web to the snapshot revision to resolve.');
     failed = true;
   }

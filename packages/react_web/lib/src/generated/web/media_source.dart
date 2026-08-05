@@ -5,13 +5,9 @@
 import 'html.dart';
 import 'dom.dart';
 import 'webidl.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 typedef AppendMode = String;
-
-abstract interface class BufferedChangeEvent {
-  TimeRanges get addedRanges;
-  TimeRanges get removedRanges;
-}
 
 abstract interface class BufferedChangeEventInit {
   TimeRanges get addedRanges;
@@ -22,20 +18,12 @@ abstract interface class BufferedChangeEventInit {
 
 typedef EndOfStreamError = String;
 
-abstract interface class ManagedMediaSource {
-  bool get streaming;
-  EventHandler get onstartstreaming;
-   set onstartstreaming(EventHandler value);
-  EventHandler get onendstreaming;
-   set onendstreaming(EventHandler value);
-}
-
-abstract interface class ManagedSourceBuffer {
-  EventHandler get onbufferedchange;
-   set onbufferedchange(EventHandler value);
-}
-
 abstract interface class MediaSource {
+  factory MediaSource() =>
+      WebRuntime.current.createWebObject<MediaSource>(
+        'MediaSource',
+        [],
+      );
   MediaSourceHandle get handle;
   SourceBufferList get sourceBuffers;
   SourceBufferList get activeSourceBuffers;
@@ -69,7 +57,6 @@ abstract interface class SourceBuffer {
    set timestampOffset(double value);
   AudioTrackList get audioTracks;
   VideoTrackList get videoTracks;
-  TextTrackList get textTracks;
   double get appendWindowStart;
    set appendWindowStart(double value);
   double get appendWindowEnd;

@@ -3,16 +3,17 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'dom.dart';
+import 'css_nav.dart';
+import 'svg.dart';
 import 'geometry.dart';
 import 'css_typed_om.dart';
 import 'cssom.dart';
 import 'html.dart';
-import 'css_nav.dart';
-import 'edit_context.dart';
 import 'pointerlock.dart';
 import 'anonymous_iframe.dart';
 import 'trusted_types.dart';
 import 'screen_orientation.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class BoxQuadOptions {
   CSSBoxType get box;
@@ -22,12 +23,6 @@ abstract interface class BoxQuadOptions {
 }
 
 typedef CSSBoxType = String;
-
-abstract interface class CaretPosition {
-  Node get offsetNode;
-  int get offset;
-  DOMRect? getClientRect();
-}
 
 abstract interface class CaretPositionFromPointOptions {
   List<ShadowRoot> get shadowRoots;
@@ -64,6 +59,11 @@ abstract interface class GeometryUtils {
 }
 
 abstract interface class HTMLElement {
+  factory HTMLElement() =>
+      WebRuntime.current.createWebObject<HTMLElement>(
+        'HTMLElement',
+        [],
+      );
   StylePropertyMap get attributeStyleMap;
   CSSStyleDeclaration get style;
   EventHandler get onanimationstart;
@@ -86,8 +86,6 @@ abstract interface class HTMLElement {
    set ontransitionend(EventHandler value);
   EventHandler get ontransitioncancel;
    set ontransitioncancel(EventHandler value);
-  EventHandler get onfencedtreeclick;
-   set onfencedtreeclick(EventHandler value);
   EventHandler get onabort;
    set onabort(EventHandler value);
   EventHandler get onauxclick;
@@ -112,8 +110,6 @@ abstract interface class HTMLElement {
    set onclick(EventHandler value);
   EventHandler get onclose;
    set onclose(EventHandler value);
-  EventHandler get oncommand;
-   set oncommand(EventHandler value);
   EventHandler get oncontextlost;
    set oncontextlost(EventHandler value);
   EventHandler get oncontextmenu;
@@ -299,8 +295,6 @@ abstract interface class HTMLElement {
   int get offsetLeft;
   int get offsetWidth;
   int get offsetHeight;
-  EditContext? get editContext;
-   set editContext(EditContext? value);
   String get title;
    set title(String value);
   String get lang;
@@ -321,25 +315,26 @@ abstract interface class HTMLElement {
    set draggable(bool value);
   bool get spellcheck;
    set spellcheck(bool value);
-  String get writingSuggestions;
-   set writingSuggestions(String value);
   String get autocapitalize;
    set autocapitalize(String value);
-  bool get autocorrect;
-   set autocorrect(bool value);
   String get innerText;
    set innerText(String value);
   String get outerText;
    set outerText(String value);
   ElementInternals attachInternals();
-  void showPopover([ShowPopoverOptions? options]);
+  void showPopover();
   void hidePopover();
-  bool togglePopover([Object? options]);
+  bool togglePopover([bool? force]);
   String? get popover;
    set popover(String? value);
 }
 
 abstract interface class HTMLImageElement {
+  factory HTMLImageElement() =>
+      WebRuntime.current.createWebObject<HTMLImageElement>(
+        'HTMLImageElement',
+        [],
+      );
   String get attributionSrc;
    set attributionSrc(String value);
   bool get sharedStorageWritable;
@@ -403,6 +398,11 @@ abstract interface class MediaQueryList {
 }
 
 abstract interface class MediaQueryListEvent {
+  factory MediaQueryListEvent(Object type, [MediaQueryListEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<MediaQueryListEvent>(
+        'MediaQueryListEvent',
+        [type, eventInitDict],
+      );
   Object get media;
   bool get matches;
 }
@@ -415,6 +415,11 @@ abstract interface class MediaQueryListEventInit {
 }
 
 abstract interface class MouseEvent {
+  factory MouseEvent(String type, [MouseEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<MouseEvent>(
+        'MouseEvent',
+        [type, eventInitDict],
+      );
   double get pageX;
   double get pageY;
   double get x;
@@ -427,8 +432,6 @@ abstract interface class MouseEvent {
   int get screenY;
   int get clientX;
   int get clientY;
-  int get layerX;
-  int get layerY;
   bool get ctrlKey;
   bool get shiftKey;
   bool get altKey;
@@ -441,6 +444,11 @@ abstract interface class MouseEvent {
 }
 
 abstract interface class Range {
+  factory Range() =>
+      WebRuntime.current.createWebObject<Range>(
+        'Range',
+        [],
+      );
   DOMRectList getClientRects();
   DOMRect getBoundingClientRect();
   Node get commonAncestorContainer;
@@ -453,14 +461,6 @@ abstract interface class Range {
   void collapse([bool? toStart]);
   void selectNode(Node node);
   void selectNodeContents(Node node);
-   static const int START_TO_START =
-      0;
-   static const int START_TO_END =
-      1;
-   static const int END_TO_END =
-      2;
-   static const int END_TO_START =
-      3;
   int compareBoundaryPoints(int how, Range sourceRange);
   void deleteContents();
   DocumentFragment extractContents();
@@ -483,22 +483,15 @@ abstract interface class Screen {
   int get colorDepth;
   int get pixelDepth;
   ScreenOrientation get orientation;
-  bool get isExtended;
-  EventHandler get onchange;
-   set onchange(EventHandler value);
 }
 
 typedef ScrollBehavior = String;
-
-typedef ScrollIntoViewContainer = String;
 
 abstract interface class ScrollIntoViewOptions {
   ScrollLogicalPosition get block;
   set block(ScrollLogicalPosition value);
   ScrollLogicalPosition get inline;
   set inline(ScrollLogicalPosition value);
-  ScrollIntoViewContainer get container;
-  set container(ScrollIntoViewContainer value);
 }
 
 typedef ScrollLogicalPosition = String;

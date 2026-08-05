@@ -2,11 +2,18 @@
 // Neutral Web surface for spec: speech-api
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-import 'capture_handle_identity.dart';
 import 'html.dart';
 import 'dom.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class SpeechRecognition {
+  factory SpeechRecognition() =>
+      WebRuntime.current.createWebObject<SpeechRecognition>(
+        'SpeechRecognition',
+        [],
+      );
+  Object get grammars;
+   set grammars(Object value);
   String get lang;
    set lang(String value);
   bool get continuous;
@@ -15,9 +22,7 @@ abstract interface class SpeechRecognition {
    set interimResults(bool value);
   int get maxAlternatives;
    set maxAlternatives(int value);
-  SpeechRecognitionMode get mode;
-   set mode(SpeechRecognitionMode value);
-  void start(MediaStreamTrack audioTrack);
+  void start();
   void stop();
   void abort();
   EventHandler get onaudiostart;
@@ -52,6 +57,11 @@ abstract interface class SpeechRecognitionAlternative {
 typedef SpeechRecognitionErrorCode = String;
 
 abstract interface class SpeechRecognitionErrorEvent {
+  factory SpeechRecognitionErrorEvent(String type, SpeechRecognitionErrorEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<SpeechRecognitionErrorEvent>(
+        'SpeechRecognitionErrorEvent',
+        [type, eventInitDict],
+      );
   SpeechRecognitionErrorCode get error;
   String get message;
 }
@@ -64,6 +74,11 @@ abstract interface class SpeechRecognitionErrorEventInit {
 }
 
 abstract interface class SpeechRecognitionEvent {
+  factory SpeechRecognitionEvent(String type, SpeechRecognitionEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<SpeechRecognitionEvent>(
+        'SpeechRecognitionEvent',
+        [type, eventInitDict],
+      );
   int get resultIndex;
   SpeechRecognitionResultList get results;
 }
@@ -74,8 +89,6 @@ abstract interface class SpeechRecognitionEventInit {
   SpeechRecognitionResultList get results;
   set results(SpeechRecognitionResultList value);
 }
-
-typedef SpeechRecognitionMode = String;
 
 abstract interface class SpeechRecognitionResult {
   int get length;
@@ -104,6 +117,11 @@ abstract interface class SpeechSynthesis {
 typedef SpeechSynthesisErrorCode = String;
 
 abstract interface class SpeechSynthesisErrorEvent {
+  factory SpeechSynthesisErrorEvent(String type, SpeechSynthesisErrorEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<SpeechSynthesisErrorEvent>(
+        'SpeechSynthesisErrorEvent',
+        [type, eventInitDict],
+      );
   SpeechSynthesisErrorCode get error;
 }
 
@@ -113,6 +131,11 @@ abstract interface class SpeechSynthesisErrorEventInit {
 }
 
 abstract interface class SpeechSynthesisEvent {
+  factory SpeechSynthesisEvent(String type, SpeechSynthesisEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<SpeechSynthesisEvent>(
+        'SpeechSynthesisEvent',
+        [type, eventInitDict],
+      );
   SpeechSynthesisUtterance get utterance;
   int get charIndex;
   int get charLength;
@@ -134,6 +157,11 @@ abstract interface class SpeechSynthesisEventInit {
 }
 
 abstract interface class SpeechSynthesisUtterance {
+  factory SpeechSynthesisUtterance([String? text]) =>
+      WebRuntime.current.createWebObject<SpeechSynthesisUtterance>(
+        'SpeechSynthesisUtterance',
+        [text],
+      );
   String get text;
    set text(String value);
   String get lang;

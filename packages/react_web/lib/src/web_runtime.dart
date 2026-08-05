@@ -37,6 +37,15 @@ abstract interface class WebRuntime {
   Document get document;
   Navigator get navigator;
 
+  /// Constructs a backend instance of a neutral constructible Web API
+  /// (e.g. [BroadcastChannel]) from its IDL constructor arguments.
+  ///
+  /// The browser backend constructs the underlying JS object and wraps it in
+  /// the matching neutral `Browser*` proxy; the SSR backend throws
+  /// [UnsupportedWebApiError] since no constructible Web API exists on the
+  /// server.
+  T createWebObject<T extends Object>(String name, List<Object?> arguments);
+
   static WebRuntime get current =>
       _current ?? (throw StateError('WebRuntime has not been installed.'));
 

@@ -1,20 +1,23 @@
 import 'dart:io';
 
 import 'package:react_web_generator/react_web_generator.dart';
-import 'package:react_web_generator/src/normalize/model_builder.dart';
-import 'package:react_web_generator/src/emit/model_json_emitter.dart';
-import 'package:react_web_generator/src/emit/neutral_interface_emitter.dart';
+import 'package:react_web_generator/src/bcd_filter.dart';
+import 'package:react_web_generator/src/complete/package_web_mappings.dart';
+import 'package:react_web_generator/src/emit/dom_factory_emitter.dart';
 
 const webApisJson = 'tool/web_idl/snapshots/web_apis.json';
 const overlayJson =
     'packages/react_web_generator/config/react_dom_overlay.json';
-const neutralWebModelJson =
-    'packages/react_web_generator/config/neutral_web_model.json';
 const generatedDir = 'packages/react_web/lib/src/generated';
 
 Future<void> main() async {
-  // === Complete Web IDL surface (replaces the old reachability pipeline) ===
-  final raw = CompleteWebModelBuilder(webIdlPath: webApisJson).loadRaw();
+  final bcdFilter = BcdFilter.load();
+
+  // === Complete Web IDL surface (single source of truth) ===
+  final raw = CompleteWebModelBuilder(
+    webIdlPath: webApisJson,
+    bcdFilter: bcdFilter,
+  ).loadRaw();
   final completeModel = mergeRawModel(raw);
 
   const neutralWebSurfaceDir = 'packages/react_web/lib/src/generated/web';
@@ -24,7 +27,7 @@ Future<void> main() async {
 
   final verifier = CompletenessVerifier(model: completeModel, emittedModel: completeModel);
   final report = verifier.verify();
-  File(neutralWebSurfaceDir + '/../completeness_report.json')
+  File('$neutralWebSurfaceDir/../completeness_report.json')
       .writeAsStringSync(verifier.toJsonNice(report));
   print('Completeness report → $neutralWebSurfaceDir/../completeness_report.json');
   print('  definitions.dropped=${(report['definitions'] as Map)['dropped']} '
@@ -42,20 +45,11 @@ Future<void> main() async {
   );
   print('Generated focused libraries → $apisDir/');
 
-  final modelBuilder = ModelBuilder(webIdlPath: webApisJson);
-  final model = modelBuilder.build();
+  // React synthetic event interfaces (authored; typed against the neutral surface).
+  const ReactEventEmitter().emitToDirectory(generatedDir);
+  print('Generated React event interfaces → $generatedDir/react_events.dart');
 
-  ModelJsonEmitter(model).writeTo(neutralWebModelJson);
-  print('Generated neutral web model → $neutralWebModelJson');
-  print('  Types: ${model.types.length}');
-  print('  Elements: ${model.elements.length}');
-
-  final interfaceEmitter = NeutralInterfaceEmitter(model);
-  interfaceEmitter.emitToDirectory(generatedDir);
-  print('Generated interface files → $generatedDir/');
-  print('  - types/html_interfaces.dart');
-  print('  - event_interfaces.dart');
-
+  // Host element factories (IR over the IDL snapshot + overlay).
   final builder = await WebHostIrBuilder.create(
     packageRoot: Directory.current.path,
     webApisJsonPath: webApisJson,
@@ -63,6 +57,7 @@ Future<void> main() async {
     rootsPath: 'packages/react_web_generator/config/roots.json',
   );
   final elements = builder.build();
+  final allElements = builder.buildAll();
 
   final factoryEmitter = FactoryEmitter(elements);
   final factoryCode = factoryEmitter.emit();
@@ -71,15 +66,21 @@ Future<void> main() async {
   await outDir.create(recursive: true);
   await File('${outDir.path}/elements.dart').writeAsString(factoryCode);
 
-  final browserAdapterEmitter = BrowserAdapterEmitter(model);
+  final packageWebMappings = await PackageWebMappings.load(Directory.current.path);
+  final browserAdapterEmitter = BrowserAdapterEmitter(
+    completeModel,
+    packageWebNames: packageWebMappings.typeToLibrary.keys.toSet(),
+  );
   browserAdapterEmitter.emitToDirectory(outDir.path);
 
-  final ssrEmitter = SsrMetadataEmitter(model);
-  ssrEmitter.emitToDirectory(outDir.path);
+  DomFactoryEmitter(allElements).emitToDirectory(outDir.path);
+
+  SsrMetadataEmitter(allElements).emitToDirectory(outDir.path);
 
   print(
     'Generated ${elements.length} element factories → ${outDir.path}/elements.dart',
   );
   print('Generated browser adapter → ${outDir.path}/browser_adapter.dart');
+  print('Generated DOM factories → ${outDir.path}/dom.dart');
   print('Generated SSR metadata → ${outDir.path}/ssr_metadata.dart');
 }

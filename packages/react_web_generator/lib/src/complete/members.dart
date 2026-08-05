@@ -80,8 +80,8 @@ String escapeIdentifier(String name) {
       .replaceAll('.', '_')
       .replaceAll('#', '_');
   if (s.isEmpty) s = '_';
-  if (RegExp(r'^[0-9]').hasMatch(s)) s = '_' + s;
-  if (_keywords.contains(s)) return s + '_';
+  if (RegExp(r'^[0-9]').hasMatch(s)) s = '_$s';
+  if (_keywords.contains(s)) return '${s}_';
   return s;
 }
 

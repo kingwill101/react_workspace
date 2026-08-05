@@ -2,9 +2,12 @@
 // Neutral Web surface for spec: webgl1
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-import 'dom.dart';
 import 'html.dart';
+import 'cssom_view.dart';
+import 'webcodecs.dart';
+import 'dom.dart';
 import 'webidl.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 typedef Float32List = Object;
 
@@ -73,6 +76,11 @@ abstract interface class WebGLContextAttributes {
 }
 
 abstract interface class WebGLContextEvent {
+  factory WebGLContextEvent(String type, [WebGLContextEventInit? eventInit]) =>
+      WebRuntime.current.createWebObject<WebGLContextEvent>(
+        'WebGLContextEvent',
+        [type, eventInit],
+      );
   String get statusMessage;
 }
 
@@ -82,11 +90,6 @@ abstract interface class WebGLContextEventInit {
 }
 
 abstract interface class WebGLFramebuffer {
-}
-
-abstract interface class WebGLObject {
-  String get label;
-   set label(String value);
 }
 
 typedef WebGLPowerPreference = String;
@@ -726,12 +729,12 @@ abstract interface class WebGLRenderingContext {
   void compileShader(WebGLShader shader);
   void copyTexImage2D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border);
   void copyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height);
-  WebGLBuffer createBuffer();
-  WebGLFramebuffer createFramebuffer();
-  WebGLProgram createProgram();
-  WebGLRenderbuffer createRenderbuffer();
+  WebGLBuffer? createBuffer();
+  WebGLFramebuffer? createFramebuffer();
+  WebGLProgram? createProgram();
+  WebGLRenderbuffer? createRenderbuffer();
   WebGLShader? createShader(GLenum type);
-  WebGLTexture createTexture();
+  WebGLTexture? createTexture();
   void cullFace(GLenum mode);
   void deleteBuffer(WebGLBuffer? buffer);
   void deleteFramebuffer(WebGLFramebuffer? framebuffer);
@@ -1469,12 +1472,12 @@ abstract interface class WebGLRenderingContextBase {
   void compileShader(WebGLShader shader);
   void copyTexImage2D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border);
   void copyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height);
-  WebGLBuffer createBuffer();
-  WebGLFramebuffer createFramebuffer();
-  WebGLProgram createProgram();
-  WebGLRenderbuffer createRenderbuffer();
+  WebGLBuffer? createBuffer();
+  WebGLFramebuffer? createFramebuffer();
+  WebGLProgram? createProgram();
+  WebGLRenderbuffer? createRenderbuffer();
   WebGLShader? createShader(GLenum type);
-  WebGLTexture createTexture();
+  WebGLTexture? createTexture();
   void cullFace(GLenum mode);
   void deleteBuffer(WebGLBuffer? buffer);
   void deleteFramebuffer(WebGLFramebuffer? framebuffer);

@@ -7,6 +7,7 @@ import 'dom.dart';
 import 'image_capture.dart';
 import 'capture_handle_identity.dart';
 import 'html.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CameraDevicePermissionDescriptor {
   bool get panTiltZoom;
@@ -49,11 +50,6 @@ abstract interface class ConstrainULongRange {
   set ideal(int value);
 }
 
-abstract interface class DeviceChangeEvent {
-  List<MediaDeviceInfo> get devices;
-  List<MediaDeviceInfo> get userInsertedDevices;
-}
-
 abstract interface class DeviceChangeEventInit {
   List<MediaDeviceInfo> get devices;
   set devices(List<MediaDeviceInfo> value);
@@ -81,6 +77,21 @@ abstract interface class MediaDeviceInfo {
 typedef MediaDeviceKind = String;
 
 abstract interface class MediaStream {
+  factory MediaStream() =>
+      WebRuntime.current.createWebObject<MediaStream>(
+        'MediaStream',
+        [],
+      );
+  factory MediaStream.named1(MediaStream stream) =>
+      WebRuntime.current.createWebObject<MediaStream>(
+        'MediaStream',
+        [stream],
+      );
+  factory MediaStream.named2(List<MediaStreamTrack> tracks) =>
+      WebRuntime.current.createWebObject<MediaStream>(
+        'MediaStream',
+        [tracks],
+      );
   String get id;
   List<MediaStreamTrack> getAudioTracks();
   List<MediaStreamTrack> getVideoTracks();
@@ -108,6 +119,11 @@ abstract interface class MediaStreamConstraints {
 }
 
 abstract interface class MediaStreamTrackEvent {
+  factory MediaStreamTrackEvent(String type, MediaStreamTrackEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<MediaStreamTrackEvent>(
+        'MediaStreamTrackEvent',
+        [type, eventInitDict],
+      );
   MediaStreamTrack get track;
 }
 
@@ -124,6 +140,11 @@ abstract interface class MediaTrackConstraints {
 }
 
 abstract interface class OverconstrainedError {
+  factory OverconstrainedError(String constraint, [String? message]) =>
+      WebRuntime.current.createWebObject<OverconstrainedError>(
+        'OverconstrainedError',
+        [constraint, message],
+      );
   String get constraint;
 }
 

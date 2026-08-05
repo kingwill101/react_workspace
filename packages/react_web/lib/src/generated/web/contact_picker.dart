@@ -4,23 +4,9 @@
 
 import 'fileapi.dart';
 
-abstract interface class ContactAddress {
-  Object toJSON();
-  String get city;
-  String get country;
-  String get dependentLocality;
-  String get organization;
-  String get phone;
-  String get postalCode;
-  String get recipient;
-  String get region;
-  String get sortingCode;
-  List<String> get addressLine;
-}
-
 abstract interface class ContactInfo {
-  List<ContactAddress> get address;
-  set address(List<ContactAddress> value);
+  List<Object> get address;
+  set address(List<Object> value);
   List<String> get email;
   set email(List<String> value);
   List<Blob> get icon;
@@ -32,11 +18,6 @@ abstract interface class ContactInfo {
 }
 
 typedef ContactProperty = String;
-
-abstract interface class ContactsManager {
-  Future<List<ContactProperty>> getProperties();
-  Future<List<ContactInfo>> select(List<ContactProperty> properties, [ContactsSelectOptions? options]);
-}
 
 abstract interface class ContactsSelectOptions {
   bool get multiple;

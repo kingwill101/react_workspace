@@ -6,6 +6,7 @@ import 'css_animations.dart';
 import 'css_nav.dart';
 import 'web_animations_2.dart';
 import 'dom.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CSSGroupingRule {
   CSSRuleList get cssRules;
@@ -21,51 +22,15 @@ abstract interface class CSSImportRule {
   Object get supportsText;
 }
 
-abstract interface class CSSMarginRule {
-  Object get name;
-  CSSStyleDeclaration get style;
-}
-
 abstract interface class CSSNamespaceRule {
   Object get namespaceURI;
   Object get prefix;
 }
 
-abstract interface class CSSPageDescriptors {
-  Object get margin;
-   set margin(Object value);
-  Object get marginTop;
-   set marginTop(Object value);
-  Object get marginRight;
-   set marginRight(Object value);
-  Object get marginBottom;
-   set marginBottom(Object value);
-  Object get marginLeft;
-   set marginLeft(Object value);
-  Object get margin_top;
-   set margin_top(Object value);
-  Object get margin_right;
-   set margin_right(Object value);
-  Object get margin_bottom;
-   set margin_bottom(Object value);
-  Object get margin_left;
-   set margin_left(Object value);
-  Object get size;
-   set size(Object value);
-  Object get pageOrientation;
-   set pageOrientation(Object value);
-  Object get page_orientation;
-   set page_orientation(Object value);
-  Object get marks;
-   set marks(Object value);
-  Object get bleed;
-   set bleed(Object value);
-}
-
 abstract interface class CSSPageRule {
   Object get selectorText;
    set selectorText(Object value);
-  CSSPageDescriptors get style;
+  Object get style;
 }
 
 abstract interface class CSSRuleList {
@@ -85,12 +50,12 @@ abstract interface class CSSStyleDeclaration {
   CSSRule? get parentRule;
 }
 
-abstract interface class CSSStyleProperties {
-  Object get cssFloat;
-   set cssFloat(Object value);
-}
-
 abstract interface class CSSStyleSheet {
+  factory CSSStyleSheet([CSSStyleSheetInit? options]) =>
+      WebRuntime.current.createWebObject<CSSStyleSheet>(
+        'CSSStyleSheet',
+        [options],
+      );
   CSSRule? get ownerRule;
   CSSRuleList get cssRules;
   int insertRule(Object rule, [int? index]);

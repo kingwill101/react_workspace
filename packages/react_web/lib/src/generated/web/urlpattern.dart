@@ -3,20 +3,6 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 
-abstract interface class URLPattern {
-  bool test([URLPatternInput? input, String? baseURL]);
-  URLPatternResult? exec([URLPatternInput? input, String? baseURL]);
-  String get protocol;
-  String get username;
-  String get password;
-  String get hostname;
-  String get port;
-  String get pathname;
-  String get search;
-  String get hash;
-  bool get hasRegExpGroups;
-}
-
 typedef URLPatternCompatible = Object;
 
 abstract interface class URLPatternComponentResult {

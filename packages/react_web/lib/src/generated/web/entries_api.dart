@@ -2,16 +2,15 @@
 // Neutral Web surface for spec: entries-api
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
-import 'file_system_access.dart';
 import 'html.dart';
 import 'fileapi.dart';
 import 'webidl.dart';
 import 'css_nav.dart';
 import 'dom.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class DataTransferItem {
   FileSystemEntry? webkitGetAsEntry();
-  Future<FileSystemHandle?> getAsFileSystemHandle();
   String get kind;
   String get type;
   void getAsString(FunctionStringCallback? callback);
@@ -62,6 +61,11 @@ abstract interface class FileSystemFlags {
 }
 
 abstract interface class HTMLInputElement {
+  factory HTMLInputElement() =>
+      WebRuntime.current.createWebObject<HTMLInputElement>(
+        'HTMLInputElement',
+        [],
+      );
   Element? get popoverTargetElement;
    set popoverTargetElement(Element? value);
   String get popoverTargetAction;
@@ -73,8 +77,6 @@ abstract interface class HTMLInputElement {
    set capture(String value);
   String get accept;
    set accept(String value);
-  bool get alpha;
-   set alpha(bool value);
   String get alt;
    set alt(String value);
   String get autocomplete;
@@ -83,8 +85,6 @@ abstract interface class HTMLInputElement {
    set defaultChecked(bool value);
   bool get checked;
    set checked(bool value);
-  String get colorSpace;
-   set colorSpace(String value);
   String get dirName;
    set dirName(String value);
   bool get disabled;

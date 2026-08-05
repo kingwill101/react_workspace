@@ -28,12 +28,6 @@ abstract interface class GeolocationPosition {
 }
 
 abstract interface class GeolocationPositionError {
-   static const int PERMISSION_DENIED =
-      1;
-   static const int POSITION_UNAVAILABLE =
-      2;
-   static const int TIMEOUT =
-      3;
   int get code;
   String get message;
 }

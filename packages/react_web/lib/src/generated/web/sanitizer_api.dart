@@ -2,17 +2,14 @@
 // Neutral Web surface for spec: sanitizer-api
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Sanitizer {
-  SanitizerConfig get_();
-  void allowElement(SanitizerElementWithAttributes element);
-  void removeElement(SanitizerElement element);
-  void replaceElementWithChildren(SanitizerElement element);
-  void allowAttribute(SanitizerAttribute attribute);
-  void removeAttribute(SanitizerAttribute attribute);
-  void setComments(bool allow);
-  void setDataAttributes(bool allow);
-  void removeUnsafe();
+  factory Sanitizer([SanitizerConfig? config]) =>
+      WebRuntime.current.createWebObject<Sanitizer>(
+        'Sanitizer',
+        [config],
+      );
 }
 
 typedef SanitizerAttribute = Object;
@@ -59,14 +56,7 @@ abstract interface class SanitizerElementNamespaceWithAttributes {
 
 typedef SanitizerElementWithAttributes = Object;
 
-typedef SanitizerPresets = String;
-
 abstract interface class SetHTMLOptions {
-  Object get sanitizer;
-  set sanitizer(Object value);
-}
-
-abstract interface class SetHTMLUnsafeOptions {
   Object get sanitizer;
   set sanitizer(Object value);
 }

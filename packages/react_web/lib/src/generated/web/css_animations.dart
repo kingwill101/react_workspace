@@ -5,8 +5,14 @@
 import 'dom.dart';
 import 'cssom.dart';
 import 'html.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AnimationEvent {
+  factory AnimationEvent(Object type, [AnimationEventInit? animationEventInitDict]) =>
+      WebRuntime.current.createWebObject<AnimationEvent>(
+        'AnimationEvent',
+        [type, animationEventInitDict],
+      );
   Object get animationName;
   double get elapsedTime;
   Object get pseudoElement;
@@ -24,7 +30,7 @@ abstract interface class AnimationEventInit {
 abstract interface class CSSKeyframeRule {
   Object get keyText;
    set keyText(Object value);
-  CSSStyleProperties get style;
+  Object get style;
 }
 
 abstract interface class CSSKeyframesRule {
@@ -38,37 +44,11 @@ abstract interface class CSSKeyframesRule {
 }
 
 abstract interface class CSSRule {
-   static const int KEYFRAMES_RULE =
-      7;
-   static const int KEYFRAME_RULE =
-      8;
-   static const int SUPPORTS_RULE =
-      12;
-   static const int COUNTER_STYLE_RULE =
-      11;
-   static const int FONT_FEATURE_VALUES_RULE =
-      14;
   Object get cssText;
    set cssText(Object value);
   CSSRule? get parentRule;
   CSSStyleSheet? get parentStyleSheet;
   int get type;
-   static const int STYLE_RULE =
-      1;
-   static const int CHARSET_RULE =
-      2;
-   static const int IMPORT_RULE =
-      3;
-   static const int MEDIA_RULE =
-      4;
-   static const int FONT_FACE_RULE =
-      5;
-   static const int PAGE_RULE =
-      6;
-   static const int MARGIN_RULE =
-      9;
-   static const int NAMESPACE_RULE =
-      10;
 }
 
 abstract interface class GlobalEventHandlers {
@@ -92,8 +72,6 @@ abstract interface class GlobalEventHandlers {
    set ontransitionend(EventHandler value);
   EventHandler get ontransitioncancel;
    set ontransitioncancel(EventHandler value);
-  EventHandler get onfencedtreeclick;
-   set onfencedtreeclick(EventHandler value);
   EventHandler get onabort;
    set onabort(EventHandler value);
   EventHandler get onauxclick;
@@ -118,8 +96,6 @@ abstract interface class GlobalEventHandlers {
    set onclick(EventHandler value);
   EventHandler get onclose;
    set onclose(EventHandler value);
-  EventHandler get oncommand;
-   set oncommand(EventHandler value);
   EventHandler get oncontextlost;
    set oncontextlost(EventHandler value);
   EventHandler get oncontextmenu;

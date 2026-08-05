@@ -5,11 +5,6 @@
 import 'dom.dart';
 import 'cssom_view.dart';
 
-abstract interface class GetComposedRangesOptions {
-  List<ShadowRoot> get shadowRoots;
-  set shadowRoots(List<ShadowRoot> value);
-}
-
 abstract interface class Selection {
   Node? get anchorNode;
   int get anchorOffset;
@@ -24,7 +19,6 @@ abstract interface class Selection {
   void removeRange(Range range);
   void removeAllRanges();
   void empty();
-  List<StaticRange> getComposedRanges([GetComposedRangesOptions? options]);
   void collapse(Node? node, [int? offset]);
   void setPosition(Node? node, [int? offset]);
   void collapseToStart();

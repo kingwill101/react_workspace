@@ -4,6 +4,7 @@
 
 import 'webidl.dart';
 import 'streams.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class TextDecodeOptions {
   bool get stream;
@@ -11,6 +12,11 @@ abstract interface class TextDecodeOptions {
 }
 
 abstract interface class TextDecoder {
+  factory TextDecoder([String? label, TextDecoderOptions? options]) =>
+      WebRuntime.current.createWebObject<TextDecoder>(
+        'TextDecoder',
+        [label, options],
+      );
   String get encoding;
   bool get fatal;
   bool get ignoreBOM;
@@ -31,6 +37,11 @@ abstract interface class TextDecoderOptions {
 }
 
 abstract interface class TextDecoderStream {
+  factory TextDecoderStream([String? label, TextDecoderOptions? options]) =>
+      WebRuntime.current.createWebObject<TextDecoderStream>(
+        'TextDecoderStream',
+        [label, options],
+      );
   String get encoding;
   bool get fatal;
   bool get ignoreBOM;
@@ -39,6 +50,11 @@ abstract interface class TextDecoderStream {
 }
 
 abstract interface class TextEncoder {
+  factory TextEncoder() =>
+      WebRuntime.current.createWebObject<TextEncoder>(
+        'TextEncoder',
+        [],
+      );
   String get encoding;
   Object encode([String? input]);
   TextEncoderEncodeIntoResult encodeInto(String source, Object destination);
@@ -56,6 +72,11 @@ abstract interface class TextEncoderEncodeIntoResult {
 }
 
 abstract interface class TextEncoderStream {
+  factory TextEncoderStream() =>
+      WebRuntime.current.createWebObject<TextEncoderStream>(
+        'TextEncoderStream',
+        [],
+      );
   String get encoding;
   ReadableStream get readable;
   WritableStream get writable;

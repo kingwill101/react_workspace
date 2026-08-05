@@ -210,7 +210,7 @@ void main() {
         namespace: WebNamespace.html,
         elementType: WebDartType(
           symbol: 'HTMLImageElement',
-          import: pkg('package:react_web/src/generated/html_interfaces.dart'),
+          import: pkg('package:react_web/src/generated/web/web.dart'),
           nullable: false,
         ),
         voidElement: true,

@@ -3,8 +3,14 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'pointerlock.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class PointerEvent {
+  factory PointerEvent(String type, [PointerEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<PointerEvent>(
+        'PointerEvent',
+        [type, eventInitDict],
+      );
   int get pointerId;
   double get width;
   double get height;
@@ -13,11 +19,8 @@ abstract interface class PointerEvent {
   int get tiltX;
   int get tiltY;
   int get twist;
-  double get altitudeAngle;
-  double get azimuthAngle;
   String get pointerType;
   bool get isPrimary;
-  int get persistentDeviceId;
   List<PointerEvent> getCoalescedEvents();
   List<PointerEvent> getPredictedEvents();
 }
@@ -47,8 +50,6 @@ abstract interface class PointerEventInit {
   set pointerType(String value);
   bool get isPrimary;
   set isPrimary(bool value);
-  int get persistentDeviceId;
-  set persistentDeviceId(int value);
   List<PointerEvent> get coalescedEvents;
   set coalescedEvents(List<PointerEvent> value);
   List<PointerEvent> get predictedEvents;

@@ -110,8 +110,8 @@ List<IdlMember> parseMembers(Object? rawMembers) {
         final at = _iterableTypes(m['idlType']);
         out.add(
           IdlMaplike(
-            keyType: at.isNotEmpty ? at[0] : NamedTypeRef(typeId: 'core.dynamic'),
-            valueType: at.length > 1 ? at[1] : NamedTypeRef(typeId: 'core.dynamic'),
+            keyType: at.isNotEmpty ? at[0] : const NamedTypeRef(typeId: 'core.dynamic'),
+            valueType: at.length > 1 ? at[1] : const NamedTypeRef(typeId: 'core.dynamic'),
             readonly: m['readonly'] as bool? ?? false,
           ),
         );
@@ -119,7 +119,7 @@ List<IdlMember> parseMembers(Object? rawMembers) {
         final at = _iterableTypes(m['idlType']);
         out.add(
           IdlSetlike(
-            valueType: at.isNotEmpty ? at[0] : NamedTypeRef(typeId: 'core.dynamic'),
+            valueType: at.isNotEmpty ? at[0] : const NamedTypeRef(typeId: 'core.dynamic'),
             readonly: m['readonly'] as bool? ?? false,
           ),
         );

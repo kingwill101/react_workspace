@@ -18,9 +18,7 @@ abstract interface class NavigatorNetworkInformation {
 
 abstract interface class NetworkInformation {
   bool get saveData;
-  ConnectionType get type;
   EffectiveConnectionType get effectiveType;
-  Megabit get downlinkMax;
   Megabit get downlink;
   Millisecond get rtt;
   EventHandler get onchange;

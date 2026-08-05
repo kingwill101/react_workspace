@@ -4,44 +4,16 @@
 
 import 'html.dart';
 import 'webcodecs.dart';
-import 'webidl.dart';
+import 'cssom_view.dart';
 import 'dom.dart';
-
-abstract interface class GPU {
-  Future<GPUAdapter?> requestAdapter([GPURequestAdapterOptions? options]);
-  GPUTextureFormat getPreferredCanvasFormat();
-  WGSLLanguageFeatures get wgslLanguageFeatures;
-}
-
-abstract interface class GPUAdapter {
-  GPUSupportedFeatures get features;
-  GPUSupportedLimits get limits;
-  GPUAdapterInfo get info;
-  bool get isFallbackAdapter;
-  Future<GPUDevice> requestDevice([GPUDeviceDescriptor? descriptor]);
-}
-
-abstract interface class GPUAdapterInfo {
-  String get vendor;
-  String get architecture;
-  String get device;
-  String get description;
-  int get subgroupMinSize;
-  int get subgroupMaxSize;
-}
 
 typedef GPUAddressMode = String;
 
 typedef GPUAutoLayoutMode = String;
 
-abstract interface class GPUBindGroup {
-  String get label;
-   set label(String value);
-}
-
 abstract interface class GPUBindGroupDescriptor {
-  GPUBindGroupLayout get layout;
-  set layout(GPUBindGroupLayout value);
+  Object get layout;
+  set layout(Object value);
   List<GPUBindGroupEntry> get entries;
   set entries(List<GPUBindGroupEntry> value);
 }
@@ -51,11 +23,6 @@ abstract interface class GPUBindGroupEntry {
   set binding(GPUIndex32 value);
   GPUBindingResource get resource;
   set resource(GPUBindingResource value);
-}
-
-abstract interface class GPUBindGroupLayout {
-  String get label;
-   set label(String value);
 }
 
 abstract interface class GPUBindGroupLayoutDescriptor {
@@ -81,7 +48,7 @@ abstract interface class GPUBindGroupLayoutEntry {
 }
 
 abstract interface class GPUBindingCommandsMixin {
-  void setBindGroup(GPUIndex32 index, GPUBindGroup? bindGroup, Object dynamicOffsetsData, GPUSize64 dynamicOffsetsDataStart, GPUSize32 dynamicOffsetsDataLength);
+  void setBindGroup(GPUIndex32 index, Object bindGroup, Object dynamicOffsetsData, GPUSize64 dynamicOffsetsDataStart, GPUSize32 dynamicOffsetsDataLength);
 }
 
 typedef GPUBindingResource = Object;
@@ -106,21 +73,9 @@ abstract interface class GPUBlendState {
   set alpha(GPUBlendComponent value);
 }
 
-abstract interface class GPUBuffer {
-  String get label;
-   set label(String value);
-  GPUSize64Out get size;
-  GPUFlagsConstant get usage;
-  GPUBufferMapState get mapState;
-  Future<void> mapAsync(GPUMapModeFlags mode, [GPUSize64? offset, GPUSize64? size]);
-  Object getMappedRange([GPUSize64? offset, GPUSize64? size]);
-  void unmap();
-  void destroy();
-}
-
 abstract interface class GPUBufferBinding {
-  GPUBuffer get buffer;
-  set buffer(GPUBuffer value);
+  Object get buffer;
+  set buffer(Object value);
   GPUSize64 get offset;
   set offset(GPUSize64 value);
   GPUSize64 get size;
@@ -151,37 +106,13 @@ typedef GPUBufferDynamicOffset = int;
 
 typedef GPUBufferMapState = String;
 
-abstract final class GPUBufferUsage {
-  GPUBufferUsage._();
-  static const GPUFlagsConstant MAP_READ =
-      0x0001;
-  static const GPUFlagsConstant MAP_WRITE =
-      0x0002;
-  static const GPUFlagsConstant COPY_SRC =
-      0x0004;
-  static const GPUFlagsConstant COPY_DST =
-      0x0008;
-  static const GPUFlagsConstant INDEX =
-      0x0010;
-  static const GPUFlagsConstant VERTEX =
-      0x0020;
-  static const GPUFlagsConstant UNIFORM =
-      0x0040;
-  static const GPUFlagsConstant STORAGE =
-      0x0080;
-  static const GPUFlagsConstant INDIRECT =
-      0x0100;
-  static const GPUFlagsConstant QUERY_RESOLVE =
-      0x0200;
-}
-
 typedef GPUBufferUsageFlags = int;
 
 typedef GPUCanvasAlphaMode = String;
 
 abstract interface class GPUCanvasConfiguration {
-  GPUDevice get device;
-  set device(GPUDevice value);
+  Object get device;
+  set device(Object value);
   GPUTextureFormat get format;
   set format(GPUTextureFormat value);
   GPUTextureUsageFlags get usage;
@@ -190,26 +121,9 @@ abstract interface class GPUCanvasConfiguration {
   set viewFormats(List<GPUTextureFormat> value);
   PredefinedColorSpace get colorSpace;
   set colorSpace(PredefinedColorSpace value);
-  GPUCanvasToneMapping get toneMapping;
-  set toneMapping(GPUCanvasToneMapping value);
   GPUCanvasAlphaMode get alphaMode;
   set alphaMode(GPUCanvasAlphaMode value);
 }
-
-abstract interface class GPUCanvasContext {
-  Object get canvas;
-  void configure(GPUCanvasConfiguration configuration);
-  void unconfigure();
-  GPUCanvasConfiguration? getConfiguration();
-  GPUTexture getCurrentTexture();
-}
-
-abstract interface class GPUCanvasToneMapping {
-  GPUCanvasToneMappingMode get mode;
-  set mode(GPUCanvasToneMappingMode value);
-}
-
-typedef GPUCanvasToneMappingMode = String;
 
 typedef GPUColor = Object;
 
@@ -233,45 +147,9 @@ abstract interface class GPUColorTargetState {
   set writeMask(GPUColorWriteFlags value);
 }
 
-abstract final class GPUColorWrite {
-  GPUColorWrite._();
-  static const GPUFlagsConstant RED =
-      0x1;
-  static const GPUFlagsConstant GREEN =
-      0x2;
-  static const GPUFlagsConstant BLUE =
-      0x4;
-  static const GPUFlagsConstant ALPHA =
-      0x8;
-  static const GPUFlagsConstant ALL =
-      0xF;
-}
-
 typedef GPUColorWriteFlags = int;
 
-abstract interface class GPUCommandBuffer {
-  String get label;
-   set label(String value);
-}
-
 abstract interface class GPUCommandBufferDescriptor {
-}
-
-abstract interface class GPUCommandEncoder {
-  String get label;
-   set label(String value);
-  void pushDebugGroup(String groupLabel);
-  void popDebugGroup();
-  void insertDebugMarker(String markerLabel);
-  GPURenderPassEncoder beginRenderPass(GPURenderPassDescriptor descriptor);
-  GPUComputePassEncoder beginComputePass([GPUComputePassDescriptor? descriptor]);
-  void copyBufferToBuffer(GPUBuffer source, GPUSize64 sourceOffset, GPUBuffer destination, GPUSize64 destinationOffset, GPUSize64 size);
-  void copyBufferToTexture(GPUTexelCopyBufferInfo source, GPUTexelCopyTextureInfo destination, GPUExtent3D copySize);
-  void copyTextureToBuffer(GPUTexelCopyTextureInfo source, GPUTexelCopyBufferInfo destination, GPUExtent3D copySize);
-  void copyTextureToTexture(GPUTexelCopyTextureInfo source, GPUTexelCopyTextureInfo destination, GPUExtent3D copySize);
-  void clearBuffer(GPUBuffer buffer, [GPUSize64? offset, GPUSize64? size]);
-  void resolveQuerySet(GPUQuerySet querySet, GPUSize32 firstQuery, GPUSize32 queryCount, GPUBuffer destination, GPUSize64 destinationOffset);
-  GPUCommandBuffer finish([GPUCommandBufferDescriptor? descriptor]);
 }
 
 abstract interface class GPUCommandEncoderDescriptor {
@@ -282,19 +160,6 @@ abstract interface class GPUCommandsMixin {
 
 typedef GPUCompareFunction = String;
 
-abstract interface class GPUCompilationInfo {
-  List<GPUCompilationMessage> get messages;
-}
-
-abstract interface class GPUCompilationMessage {
-  String get message;
-  GPUCompilationMessageType get type;
-  int get lineNum;
-  int get linePos;
-  int get offset;
-  int get length;
-}
-
 typedef GPUCompilationMessageType = String;
 
 abstract interface class GPUComputePassDescriptor {
@@ -302,55 +167,18 @@ abstract interface class GPUComputePassDescriptor {
   set timestampWrites(GPUComputePassTimestampWrites value);
 }
 
-abstract interface class GPUComputePassEncoder {
-  String get label;
-   set label(String value);
-  void pushDebugGroup(String groupLabel);
-  void popDebugGroup();
-  void insertDebugMarker(String markerLabel);
-  void setBindGroup(GPUIndex32 index, GPUBindGroup? bindGroup, Object dynamicOffsetsData, GPUSize64 dynamicOffsetsDataStart, GPUSize32 dynamicOffsetsDataLength);
-  void setPipeline(GPUComputePipeline pipeline);
-  void dispatchWorkgroups(GPUSize32 workgroupCountX, [GPUSize32? workgroupCountY, GPUSize32? workgroupCountZ]);
-  void dispatchWorkgroupsIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
-  void end();
-}
-
 abstract interface class GPUComputePassTimestampWrites {
-  GPUQuerySet get querySet;
-  set querySet(GPUQuerySet value);
+  Object get querySet;
+  set querySet(Object value);
   GPUSize32 get beginningOfPassWriteIndex;
   set beginningOfPassWriteIndex(GPUSize32 value);
   GPUSize32 get endOfPassWriteIndex;
   set endOfPassWriteIndex(GPUSize32 value);
 }
 
-abstract interface class GPUComputePipeline {
-  String get label;
-   set label(String value);
-  GPUBindGroupLayout getBindGroupLayout(int index);
-}
-
 abstract interface class GPUComputePipelineDescriptor {
   GPUProgrammableStage get compute;
   set compute(GPUProgrammableStage value);
-}
-
-abstract interface class GPUCopyExternalImageDestInfo {
-  PredefinedColorSpace get colorSpace;
-  set colorSpace(PredefinedColorSpace value);
-  bool get premultipliedAlpha;
-  set premultipliedAlpha(bool value);
-}
-
-typedef GPUCopyExternalImageSource = Object;
-
-abstract interface class GPUCopyExternalImageSourceInfo {
-  GPUCopyExternalImageSource get source;
-  set source(GPUCopyExternalImageSource value);
-  GPUOrigin2D get origin;
-  set origin(GPUOrigin2D value);
-  bool get flipY;
-  set flipY(bool value);
 }
 
 typedef GPUCullMode = String;
@@ -386,36 +214,6 @@ abstract interface class GPUDepthStencilState {
   set depthBiasClamp(double value);
 }
 
-abstract interface class GPUDevice {
-  String get label;
-   set label(String value);
-  GPUSupportedFeatures get features;
-  GPUSupportedLimits get limits;
-  GPUAdapterInfo get adapterInfo;
-  GPUQueue get queue;
-  void destroy();
-  GPUBuffer createBuffer(GPUBufferDescriptor descriptor);
-  GPUTexture createTexture(GPUTextureDescriptor descriptor);
-  GPUSampler createSampler([GPUSamplerDescriptor? descriptor]);
-  GPUExternalTexture importExternalTexture(GPUExternalTextureDescriptor descriptor);
-  GPUBindGroupLayout createBindGroupLayout(GPUBindGroupLayoutDescriptor descriptor);
-  GPUPipelineLayout createPipelineLayout(GPUPipelineLayoutDescriptor descriptor);
-  GPUBindGroup createBindGroup(GPUBindGroupDescriptor descriptor);
-  GPUShaderModule createShaderModule(GPUShaderModuleDescriptor descriptor);
-  GPUComputePipeline createComputePipeline(GPUComputePipelineDescriptor descriptor);
-  GPURenderPipeline createRenderPipeline(GPURenderPipelineDescriptor descriptor);
-  Future<GPUComputePipeline> createComputePipelineAsync(GPUComputePipelineDescriptor descriptor);
-  Future<GPURenderPipeline> createRenderPipelineAsync(GPURenderPipelineDescriptor descriptor);
-  GPUCommandEncoder createCommandEncoder([GPUCommandEncoderDescriptor? descriptor]);
-  GPURenderBundleEncoder createRenderBundleEncoder(GPURenderBundleEncoderDescriptor descriptor);
-  GPUQuerySet createQuerySet(GPUQuerySetDescriptor descriptor);
-  Future<GPUDeviceLostInfo> get lost;
-  void pushErrorScope(GPUErrorFilter filter);
-  Future<GPUError?> popErrorScope();
-  EventHandler get onuncapturederror;
-   set onuncapturederror(EventHandler value);
-}
-
 abstract interface class GPUDeviceDescriptor {
   List<GPUFeatureName> get requiredFeatures;
   set requiredFeatures(List<GPUFeatureName> value);
@@ -425,16 +223,7 @@ abstract interface class GPUDeviceDescriptor {
   set defaultQueue(GPUQueueDescriptor value);
 }
 
-abstract interface class GPUDeviceLostInfo {
-  GPUDeviceLostReason get reason;
-  String get message;
-}
-
 typedef GPUDeviceLostReason = String;
-
-abstract interface class GPUError {
-  String get message;
-}
 
 typedef GPUErrorFilter = String;
 
@@ -447,11 +236,6 @@ abstract interface class GPUExtent3DDict {
   set height(GPUIntegerCoordinate value);
   GPUIntegerCoordinate get depthOrArrayLayers;
   set depthOrArrayLayers(GPUIntegerCoordinate value);
-}
-
-abstract interface class GPUExternalTexture {
-  String get label;
-   set label(String value);
 }
 
 abstract interface class GPUExternalTextureBindingLayout {
@@ -477,6 +261,49 @@ abstract interface class GPUFragmentState {
 
 typedef GPUFrontFace = String;
 
+abstract interface class GPUImageCopyBuffer {
+  Object get buffer;
+  set buffer(Object value);
+}
+
+abstract interface class GPUImageCopyExternalImage {
+  GPUImageCopyExternalImageSource get source;
+  set source(GPUImageCopyExternalImageSource value);
+  GPUOrigin2D get origin;
+  set origin(GPUOrigin2D value);
+  bool get flipY;
+  set flipY(bool value);
+}
+
+typedef GPUImageCopyExternalImageSource = Object;
+
+abstract interface class GPUImageCopyTexture {
+  Object get texture;
+  set texture(Object value);
+  GPUIntegerCoordinate get mipLevel;
+  set mipLevel(GPUIntegerCoordinate value);
+  GPUOrigin3D get origin;
+  set origin(GPUOrigin3D value);
+  GPUTextureAspect get aspect;
+  set aspect(GPUTextureAspect value);
+}
+
+abstract interface class GPUImageCopyTextureTagged {
+  PredefinedColorSpace get colorSpace;
+  set colorSpace(PredefinedColorSpace value);
+  bool get premultipliedAlpha;
+  set premultipliedAlpha(bool value);
+}
+
+abstract interface class GPUImageDataLayout {
+  GPUSize64 get offset;
+  set offset(GPUSize64 value);
+  GPUSize32 get bytesPerRow;
+  set bytesPerRow(GPUSize32 value);
+  GPUSize32 get rowsPerImage;
+  set rowsPerImage(GPUSize32 value);
+}
+
 typedef GPUIndex32 = int;
 
 typedef GPUIndexFormat = String;
@@ -485,18 +312,7 @@ typedef GPUIntegerCoordinate = int;
 
 typedef GPUIntegerCoordinateOut = int;
 
-abstract interface class GPUInternalError {
-}
-
 typedef GPULoadOp = String;
-
-abstract final class GPUMapMode {
-  GPUMapMode._();
-  static const GPUFlagsConstant READ =
-      0x0001;
-  static const GPUFlagsConstant WRITE =
-      0x0002;
-}
 
 typedef GPUMapModeFlags = int;
 
@@ -541,11 +357,8 @@ abstract interface class GPUOrigin3DDict {
   set z(GPUIntegerCoordinate value);
 }
 
-abstract interface class GPUOutOfMemoryError {
-}
-
 abstract interface class GPUPipelineBase {
-  GPUBindGroupLayout getBindGroupLayout(int index);
+  Object getBindGroupLayout(int index);
 }
 
 typedef GPUPipelineConstantValue = double;
@@ -555,10 +368,6 @@ abstract interface class GPUPipelineDescriptorBase {
   set layout(Object value);
 }
 
-abstract interface class GPUPipelineError {
-  GPUPipelineErrorReason get reason;
-}
-
 abstract interface class GPUPipelineErrorInit {
   GPUPipelineErrorReason get reason;
   set reason(GPUPipelineErrorReason value);
@@ -566,14 +375,9 @@ abstract interface class GPUPipelineErrorInit {
 
 typedef GPUPipelineErrorReason = String;
 
-abstract interface class GPUPipelineLayout {
-  String get label;
-   set label(String value);
-}
-
 abstract interface class GPUPipelineLayoutDescriptor {
-  List<GPUBindGroupLayout?> get bindGroupLayouts;
-  set bindGroupLayouts(List<GPUBindGroupLayout?> value);
+  List<Object> get bindGroupLayouts;
+  set bindGroupLayouts(List<Object> value);
 }
 
 typedef GPUPowerPreference = String;
@@ -594,20 +398,12 @@ abstract interface class GPUPrimitiveState {
 typedef GPUPrimitiveTopology = String;
 
 abstract interface class GPUProgrammableStage {
-  GPUShaderModule get module;
-  set module(GPUShaderModule value);
+  Object get module;
+  set module(Object value);
   String get entryPoint;
   set entryPoint(String value);
   Map<String, GPUPipelineConstantValue> get constants;
   set constants(Map<String, GPUPipelineConstantValue> value);
-}
-
-abstract interface class GPUQuerySet {
-  String get label;
-   set label(String value);
-  void destroy();
-  GPUQueryType get type;
-  GPUSize32Out get count;
 }
 
 abstract interface class GPUQuerySetDescriptor {
@@ -619,42 +415,10 @@ abstract interface class GPUQuerySetDescriptor {
 
 typedef GPUQueryType = String;
 
-abstract interface class GPUQueue {
-  String get label;
-   set label(String value);
-  void submit(List<GPUCommandBuffer> commandBuffers);
-  Future<void> onSubmittedWorkDone();
-  void writeBuffer(GPUBuffer buffer, GPUSize64 bufferOffset, AllowSharedBufferSource data, [GPUSize64? dataOffset, GPUSize64? size]);
-  void writeTexture(GPUTexelCopyTextureInfo destination, AllowSharedBufferSource data, GPUTexelCopyBufferLayout dataLayout, GPUExtent3D size);
-  void copyExternalImageToTexture(GPUCopyExternalImageSourceInfo source, GPUCopyExternalImageDestInfo destination, GPUExtent3D copySize);
-}
-
 abstract interface class GPUQueueDescriptor {
 }
 
-abstract interface class GPURenderBundle {
-  String get label;
-   set label(String value);
-}
-
 abstract interface class GPURenderBundleDescriptor {
-}
-
-abstract interface class GPURenderBundleEncoder {
-  String get label;
-   set label(String value);
-  void pushDebugGroup(String groupLabel);
-  void popDebugGroup();
-  void insertDebugMarker(String markerLabel);
-  void setBindGroup(GPUIndex32 index, GPUBindGroup? bindGroup, Object dynamicOffsetsData, GPUSize64 dynamicOffsetsDataStart, GPUSize32 dynamicOffsetsDataLength);
-  void setPipeline(GPURenderPipeline pipeline);
-  void setIndexBuffer(GPUBuffer buffer, GPUIndexFormat indexFormat, [GPUSize64? offset, GPUSize64? size]);
-  void setVertexBuffer(GPUIndex32 slot, GPUBuffer? buffer, [GPUSize64? offset, GPUSize64? size]);
-  void draw(GPUSize32 vertexCount, [GPUSize32? instanceCount, GPUSize32? firstVertex, GPUSize32? firstInstance]);
-  void drawIndexed(GPUSize32 indexCount, [GPUSize32? instanceCount, GPUSize32? firstIndex, GPUSignedOffset32? baseVertex, GPUSize32? firstInstance]);
-  void drawIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
-  void drawIndexedIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
-  GPURenderBundle finish([GPURenderBundleDescriptor? descriptor]);
 }
 
 abstract interface class GPURenderBundleEncoderDescriptor {
@@ -665,22 +429,22 @@ abstract interface class GPURenderBundleEncoderDescriptor {
 }
 
 abstract interface class GPURenderCommandsMixin {
-  void setPipeline(GPURenderPipeline pipeline);
-  void setIndexBuffer(GPUBuffer buffer, GPUIndexFormat indexFormat, [GPUSize64? offset, GPUSize64? size]);
-  void setVertexBuffer(GPUIndex32 slot, GPUBuffer? buffer, [GPUSize64? offset, GPUSize64? size]);
+  void setPipeline(Object pipeline);
+  void setIndexBuffer(Object buffer, GPUIndexFormat indexFormat, [GPUSize64? offset, GPUSize64? size]);
+  void setVertexBuffer(GPUIndex32 slot, Object buffer, [GPUSize64? offset, GPUSize64? size]);
   void draw(GPUSize32 vertexCount, [GPUSize32? instanceCount, GPUSize32? firstVertex, GPUSize32? firstInstance]);
   void drawIndexed(GPUSize32 indexCount, [GPUSize32? instanceCount, GPUSize32? firstIndex, GPUSignedOffset32? baseVertex, GPUSize32? firstInstance]);
-  void drawIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
-  void drawIndexedIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
+  void drawIndirect(Object indirectBuffer, GPUSize64 indirectOffset);
+  void drawIndexedIndirect(Object indirectBuffer, GPUSize64 indirectOffset);
 }
 
 abstract interface class GPURenderPassColorAttachment {
-  GPUTextureView get view;
-  set view(GPUTextureView value);
+  Object get view;
+  set view(Object value);
   GPUIntegerCoordinate get depthSlice;
   set depthSlice(GPUIntegerCoordinate value);
-  GPUTextureView get resolveTarget;
-  set resolveTarget(GPUTextureView value);
+  Object get resolveTarget;
+  set resolveTarget(Object value);
   GPUColor get clearValue;
   set clearValue(GPUColor value);
   GPULoadOp get loadOp;
@@ -690,8 +454,8 @@ abstract interface class GPURenderPassColorAttachment {
 }
 
 abstract interface class GPURenderPassDepthStencilAttachment {
-  GPUTextureView get view;
-  set view(GPUTextureView value);
+  Object get view;
+  set view(Object value);
   double get depthClearValue;
   set depthClearValue(double value);
   GPULoadOp get depthLoadOp;
@@ -715,36 +479,12 @@ abstract interface class GPURenderPassDescriptor {
   set colorAttachments(List<GPURenderPassColorAttachment?> value);
   GPURenderPassDepthStencilAttachment get depthStencilAttachment;
   set depthStencilAttachment(GPURenderPassDepthStencilAttachment value);
-  GPUQuerySet get occlusionQuerySet;
-  set occlusionQuerySet(GPUQuerySet value);
+  Object get occlusionQuerySet;
+  set occlusionQuerySet(Object value);
   GPURenderPassTimestampWrites get timestampWrites;
   set timestampWrites(GPURenderPassTimestampWrites value);
   GPUSize64 get maxDrawCount;
   set maxDrawCount(GPUSize64 value);
-}
-
-abstract interface class GPURenderPassEncoder {
-  String get label;
-   set label(String value);
-  void pushDebugGroup(String groupLabel);
-  void popDebugGroup();
-  void insertDebugMarker(String markerLabel);
-  void setBindGroup(GPUIndex32 index, GPUBindGroup? bindGroup, Object dynamicOffsetsData, GPUSize64 dynamicOffsetsDataStart, GPUSize32 dynamicOffsetsDataLength);
-  void setPipeline(GPURenderPipeline pipeline);
-  void setIndexBuffer(GPUBuffer buffer, GPUIndexFormat indexFormat, [GPUSize64? offset, GPUSize64? size]);
-  void setVertexBuffer(GPUIndex32 slot, GPUBuffer? buffer, [GPUSize64? offset, GPUSize64? size]);
-  void draw(GPUSize32 vertexCount, [GPUSize32? instanceCount, GPUSize32? firstVertex, GPUSize32? firstInstance]);
-  void drawIndexed(GPUSize32 indexCount, [GPUSize32? instanceCount, GPUSize32? firstIndex, GPUSignedOffset32? baseVertex, GPUSize32? firstInstance]);
-  void drawIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
-  void drawIndexedIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
-  void setViewport(double x, double y, double width, double height, double minDepth, double maxDepth);
-  void setScissorRect(GPUIntegerCoordinate x, GPUIntegerCoordinate y, GPUIntegerCoordinate width, GPUIntegerCoordinate height);
-  void setBlendConstant(GPUColor color);
-  void setStencilReference(GPUStencilValue reference);
-  void beginOcclusionQuery(GPUSize32 queryIndex);
-  void endOcclusionQuery();
-  void executeBundles(List<GPURenderBundle> bundles);
-  void end();
 }
 
 abstract interface class GPURenderPassLayout {
@@ -757,18 +497,12 @@ abstract interface class GPURenderPassLayout {
 }
 
 abstract interface class GPURenderPassTimestampWrites {
-  GPUQuerySet get querySet;
-  set querySet(GPUQuerySet value);
+  Object get querySet;
+  set querySet(Object value);
   GPUSize32 get beginningOfPassWriteIndex;
   set beginningOfPassWriteIndex(GPUSize32 value);
   GPUSize32 get endOfPassWriteIndex;
   set endOfPassWriteIndex(GPUSize32 value);
-}
-
-abstract interface class GPURenderPipeline {
-  String get label;
-   set label(String value);
-  GPUBindGroupLayout getBindGroupLayout(int index);
 }
 
 abstract interface class GPURenderPipelineDescriptor {
@@ -785,22 +519,13 @@ abstract interface class GPURenderPipelineDescriptor {
 }
 
 abstract interface class GPURequestAdapterOptions {
-  String get featureLevel;
-  set featureLevel(String value);
   GPUPowerPreference get powerPreference;
   set powerPreference(GPUPowerPreference value);
   bool get forceFallbackAdapter;
   set forceFallbackAdapter(bool value);
-  bool get xrCompatible;
-  set xrCompatible(bool value);
 }
 
 typedef GPUSampleMask = int;
-
-abstract interface class GPUSampler {
-  String get label;
-   set label(String value);
-}
 
 abstract interface class GPUSamplerBindingLayout {
   GPUSamplerBindingType get type;
@@ -832,12 +557,6 @@ abstract interface class GPUSamplerDescriptor {
   set maxAnisotropy(int value);
 }
 
-abstract interface class GPUShaderModule {
-  String get label;
-   set label(String value);
-  Future<GPUCompilationInfo> getCompilationInfo();
-}
-
 abstract interface class GPUShaderModuleCompilationHint {
   String get entryPoint;
   set entryPoint(String value);
@@ -848,18 +567,10 @@ abstract interface class GPUShaderModuleCompilationHint {
 abstract interface class GPUShaderModuleDescriptor {
   String get code;
   set code(String value);
+  Object get sourceMap;
+  set sourceMap(Object value);
   List<GPUShaderModuleCompilationHint> get compilationHints;
   set compilationHints(List<GPUShaderModuleCompilationHint> value);
-}
-
-abstract final class GPUShaderStage {
-  GPUShaderStage._();
-  static const GPUFlagsConstant VERTEX =
-      0x1;
-  static const GPUFlagsConstant FRAGMENT =
-      0x2;
-  static const GPUFlagsConstant COMPUTE =
-      0x4;
 }
 
 typedef GPUShaderStageFlags = int;
@@ -902,85 +613,6 @@ abstract interface class GPUStorageTextureBindingLayout {
 
 typedef GPUStoreOp = String;
 
-abstract interface class GPUSupportedFeatures {
-   Iterable<String> get values;
-   bool has(Object value);
-}
-
-abstract interface class GPUSupportedLimits {
-  int get maxTextureDimension1D;
-  int get maxTextureDimension2D;
-  int get maxTextureDimension3D;
-  int get maxTextureArrayLayers;
-  int get maxBindGroups;
-  int get maxBindGroupsPlusVertexBuffers;
-  int get maxBindingsPerBindGroup;
-  int get maxDynamicUniformBuffersPerPipelineLayout;
-  int get maxDynamicStorageBuffersPerPipelineLayout;
-  int get maxSampledTexturesPerShaderStage;
-  int get maxSamplersPerShaderStage;
-  int get maxStorageBuffersPerShaderStage;
-  int get maxStorageTexturesPerShaderStage;
-  int get maxUniformBuffersPerShaderStage;
-  int get maxUniformBufferBindingSize;
-  int get maxStorageBufferBindingSize;
-  int get minUniformBufferOffsetAlignment;
-  int get minStorageBufferOffsetAlignment;
-  int get maxVertexBuffers;
-  int get maxBufferSize;
-  int get maxVertexAttributes;
-  int get maxVertexBufferArrayStride;
-  int get maxInterStageShaderVariables;
-  int get maxColorAttachments;
-  int get maxColorAttachmentBytesPerSample;
-  int get maxComputeWorkgroupStorageSize;
-  int get maxComputeInvocationsPerWorkgroup;
-  int get maxComputeWorkgroupSizeX;
-  int get maxComputeWorkgroupSizeY;
-  int get maxComputeWorkgroupSizeZ;
-  int get maxComputeWorkgroupsPerDimension;
-}
-
-abstract interface class GPUTexelCopyBufferInfo {
-  GPUBuffer get buffer;
-  set buffer(GPUBuffer value);
-}
-
-abstract interface class GPUTexelCopyBufferLayout {
-  GPUSize64 get offset;
-  set offset(GPUSize64 value);
-  GPUSize32 get bytesPerRow;
-  set bytesPerRow(GPUSize32 value);
-  GPUSize32 get rowsPerImage;
-  set rowsPerImage(GPUSize32 value);
-}
-
-abstract interface class GPUTexelCopyTextureInfo {
-  GPUTexture get texture;
-  set texture(GPUTexture value);
-  GPUIntegerCoordinate get mipLevel;
-  set mipLevel(GPUIntegerCoordinate value);
-  GPUOrigin3D get origin;
-  set origin(GPUOrigin3D value);
-  GPUTextureAspect get aspect;
-  set aspect(GPUTextureAspect value);
-}
-
-abstract interface class GPUTexture {
-  String get label;
-   set label(String value);
-  GPUTextureView createView([GPUTextureViewDescriptor? descriptor]);
-  void destroy();
-  GPUIntegerCoordinateOut get width;
-  GPUIntegerCoordinateOut get height;
-  GPUIntegerCoordinateOut get depthOrArrayLayers;
-  GPUIntegerCoordinateOut get mipLevelCount;
-  GPUSize32Out get sampleCount;
-  GPUTextureDimension get dimension;
-  GPUTextureFormat get format;
-  GPUFlagsConstant get usage;
-}
-
 typedef GPUTextureAspect = String;
 
 abstract interface class GPUTextureBindingLayout {
@@ -1015,34 +647,13 @@ typedef GPUTextureFormat = String;
 
 typedef GPUTextureSampleType = String;
 
-abstract final class GPUTextureUsage {
-  GPUTextureUsage._();
-  static const GPUFlagsConstant COPY_SRC =
-      0x01;
-  static const GPUFlagsConstant COPY_DST =
-      0x02;
-  static const GPUFlagsConstant TEXTURE_BINDING =
-      0x04;
-  static const GPUFlagsConstant STORAGE_BINDING =
-      0x08;
-  static const GPUFlagsConstant RENDER_ATTACHMENT =
-      0x10;
-}
-
 typedef GPUTextureUsageFlags = int;
-
-abstract interface class GPUTextureView {
-  String get label;
-   set label(String value);
-}
 
 abstract interface class GPUTextureViewDescriptor {
   GPUTextureFormat get format;
   set format(GPUTextureFormat value);
   GPUTextureViewDimension get dimension;
   set dimension(GPUTextureViewDimension value);
-  GPUTextureUsageFlags get usage;
-  set usage(GPUTextureUsageFlags value);
   GPUTextureAspect get aspect;
   set aspect(GPUTextureAspect value);
   GPUIntegerCoordinate get baseMipLevel;
@@ -1057,16 +668,9 @@ abstract interface class GPUTextureViewDescriptor {
 
 typedef GPUTextureViewDimension = String;
 
-abstract interface class GPUUncapturedErrorEvent {
-  GPUError get error;
-}
-
 abstract interface class GPUUncapturedErrorEventInit {
-  GPUError get error;
-  set error(GPUError value);
-}
-
-abstract interface class GPUValidationError {
+  Object get error;
+  set error(Object value);
 }
 
 abstract interface class GPUVertexAttribute {
@@ -1097,11 +701,6 @@ abstract interface class GPUVertexState {
 typedef GPUVertexStepMode = String;
 
 abstract interface class NavigatorGPU {
-  GPU get gpu;
-}
-
-abstract interface class WGSLLanguageFeatures {
-   Iterable<String> get values;
-   bool has(Object value);
+  Object get gpu;
 }
 

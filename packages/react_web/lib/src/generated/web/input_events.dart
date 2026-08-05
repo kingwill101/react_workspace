@@ -5,8 +5,14 @@
 import 'html.dart';
 import 'dom.dart';
 import 'input_device_capabilities.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class InputEvent {
+  factory InputEvent(String type, [InputEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<InputEvent>(
+        'InputEvent',
+        [type, eventInitDict],
+      );
   DataTransfer? get dataTransfer;
   List<StaticRange> getTargetRanges();
   String? get data;

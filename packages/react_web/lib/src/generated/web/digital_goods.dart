@@ -4,13 +4,6 @@
 
 import 'payment_request.dart';
 
-abstract interface class DigitalGoodsService {
-  Future<List<ItemDetails>> getDetails(List<String> itemIds);
-  Future<List<PurchaseDetails>> listPurchases();
-  Future<List<PurchaseDetails>> listPurchaseHistory();
-  Future<void> consume(String purchaseToken);
-}
-
 abstract interface class ItemDetails {
   String get itemId;
   set itemId(String value);

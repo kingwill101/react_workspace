@@ -5,12 +5,18 @@
 import 'service_workers.dart';
 import 'permissions.dart';
 import 'fileapi.dart';
-import 'hr_time.dart';
 import 'webidl.dart';
+import 'hr_time.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 typedef PushEncryptionKeyName = String;
 
 abstract interface class PushEvent {
+  factory PushEvent(String type, [PushEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<PushEvent>(
+        'PushEvent',
+        [type, eventInitDict],
+      );
   PushMessageData? get data;
 }
 
@@ -28,7 +34,6 @@ abstract interface class PushManager {
 abstract interface class PushMessageData {
   Object arrayBuffer();
   Blob blob();
-  Object bytes();
   Object json();
   String text();
 }
@@ -50,6 +55,11 @@ abstract interface class PushSubscription {
 }
 
 abstract interface class PushSubscriptionChangeEvent {
+  factory PushSubscriptionChangeEvent(String type, [PushSubscriptionChangeEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<PushSubscriptionChangeEvent>(
+        'PushSubscriptionChangeEvent',
+        [type, eventInitDict],
+      );
   PushSubscription? get newSubscription;
   PushSubscription? get oldSubscription;
 }

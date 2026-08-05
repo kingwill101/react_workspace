@@ -12,6 +12,7 @@ import 'event_timing.dart';
 import 'scheduling_apis.dart';
 import 'service_workers.dart';
 import 'trusted_types.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class IDBCursor {
   Object get source;
@@ -40,12 +41,8 @@ abstract interface class IDBDatabase {
   void close();
   IDBObjectStore createObjectStore(String name, [IDBObjectStoreParameters? options]);
   void deleteObjectStore(String name);
-  EventHandler get onabort;
-   set onabort(EventHandler value);
   EventHandler get onclose;
    set onclose(EventHandler value);
-  EventHandler get onerror;
-   set onerror(EventHandler value);
   EventHandler get onversionchange;
    set onversionchange(EventHandler value);
 }
@@ -173,6 +170,11 @@ abstract interface class IDBTransactionOptions {
 }
 
 abstract interface class IDBVersionChangeEvent {
+  factory IDBVersionChangeEvent(String type, [IDBVersionChangeEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<IDBVersionChangeEvent>(
+        'IDBVersionChangeEvent',
+        [type, eventInitDict],
+      );
   int get oldVersion;
   int? get newVersion;
 }

@@ -5,8 +5,16 @@
 import 'webidl.dart';
 import 'html.dart';
 import 'dom.dart';
+import 'package:react_web/src/web_runtime.dart';
+
+typedef BinaryData = Object;
 
 abstract interface class FontFace {
+  factory FontFace(Object family, Object source, [FontFaceDescriptors? descriptors]) =>
+      WebRuntime.current.createWebObject<FontFace>(
+        'FontFace',
+        [family, source, descriptors],
+      );
   Object get family;
    set family(Object value);
   Object get style;
@@ -19,8 +27,6 @@ abstract interface class FontFace {
    set unicodeRange(Object value);
   Object get featureSettings;
    set featureSettings(Object value);
-  Object get variationSettings;
-   set variationSettings(Object value);
   Object get display;
    set display(Object value);
   Object get ascentOverride;
@@ -32,9 +38,6 @@ abstract interface class FontFace {
   FontFaceLoadStatus get status;
   Future<FontFace> load();
   Future<FontFace> get loaded;
-  FontFaceFeatures get features;
-  FontFaceVariations get variations;
-  FontFacePalettes get palettes;
 }
 
 abstract interface class FontFaceDescriptors {
@@ -60,26 +63,14 @@ abstract interface class FontFaceDescriptors {
   set lineGapOverride(Object value);
 }
 
-abstract interface class FontFaceFeatures {
-}
-
 typedef FontFaceLoadStatus = String;
 
-abstract interface class FontFacePalette {
-   Iterable<String> get values;
-  int get length;
-  bool get usableWithLightBackground;
-  bool get usableWithDarkBackground;
-}
-
-abstract interface class FontFacePalettes {
-   Iterable<FontFacePalette> get values;
-  int get length;
-}
-
 abstract interface class FontFaceSet {
-   Iterable<FontFace> get values;
-   bool has(Object value);
+  factory FontFaceSet(List<FontFace> initialFaces) =>
+      WebRuntime.current.createWebObject<FontFaceSet>(
+        'FontFaceSet',
+        [initialFaces],
+      );
   FontFaceSet add(FontFace font);
   bool delete(FontFace font);
   void clear();
@@ -96,6 +87,11 @@ abstract interface class FontFaceSet {
 }
 
 abstract interface class FontFaceSetLoadEvent {
+  factory FontFaceSetLoadEvent(Object type, [FontFaceSetLoadEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<FontFaceSetLoadEvent>(
+        'FontFaceSetLoadEvent',
+        [type, eventInitDict],
+      );
   List<FontFace> get fontfaces;
 }
 
@@ -108,18 +104,5 @@ typedef FontFaceSetLoadStatus = String;
 
 abstract interface class FontFaceSource {
   FontFaceSet get fonts;
-}
-
-abstract interface class FontFaceVariationAxis {
-  String get name;
-  String get axisTag;
-  double get minimumValue;
-  double get maximumValue;
-  double get defaultValue;
-}
-
-abstract interface class FontFaceVariations {
-   Iterable<FontFaceVariationAxis> get values;
-   bool has(Object value);
 }
 

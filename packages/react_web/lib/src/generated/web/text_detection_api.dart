@@ -4,7 +4,6 @@
 
 import 'geometry.dart';
 import 'image_capture.dart';
-import 'html.dart';
 
 abstract interface class DetectedText {
   DOMRectReadOnly get boundingBox;
@@ -13,9 +12,5 @@ abstract interface class DetectedText {
   set rawValue(String value);
   List<Point2D> get cornerPoints;
   set cornerPoints(List<Point2D> value);
-}
-
-abstract interface class TextDetector {
-  Future<List<DetectedText>> detect(ImageBitmapSource image);
 }
 

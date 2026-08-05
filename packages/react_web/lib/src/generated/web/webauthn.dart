@@ -5,15 +5,6 @@
 import 'webidl.dart';
 import 'fido.dart';
 
-abstract interface class AllAcceptedCredentialsOptions {
-  String get rpId;
-  set rpId(String value);
-  Base64URLString get userId;
-  set userId(Base64URLString value);
-  List<Base64URLString> get allAcceptedCredentialIds;
-  set allAcceptedCredentialIds(List<Base64URLString> value);
-}
-
 typedef AttestationConveyancePreference = String;
 
 abstract interface class AuthenticationExtensionsClientInputsJSON {
@@ -61,9 +52,23 @@ abstract interface class AuthenticationExtensionsPRFValues {
   set second(BufferSource value);
 }
 
+abstract interface class AuthenticationExtensionsSupplementalPubKeysInputs {
+  List<String> get scopes;
+  set scopes(List<String> value);
+  String get attestation;
+  set attestation(String value);
+  List<String> get attestationFormats;
+  set attestationFormats(List<String> value);
+}
+
+abstract interface class AuthenticationExtensionsSupplementalPubKeysOutputs {
+  List<Object> get signatures;
+  set signatures(List<Object> value);
+}
+
 abstract interface class AuthenticationResponseJSON {
-  String get id;
-  set id(String value);
+  Base64URLString get id;
+  set id(Base64URLString value);
   Base64URLString get rawId;
   set rawId(Base64URLString value);
   AuthenticatorAssertionResponseJSON get response;
@@ -112,8 +117,8 @@ abstract interface class AuthenticatorAttestationResponseJSON {
   set transports(List<String> value);
   Base64URLString get publicKey;
   set publicKey(Base64URLString value);
-  COSEAlgorithmIdentifier get publicKeyAlgorithm;
-  set publicKeyAlgorithm(COSEAlgorithmIdentifier value);
+  int get publicKeyAlgorithm;
+  set publicKeyAlgorithm(int value);
   Base64URLString get attestationObject;
   set attestationObject(Base64URLString value);
 }
@@ -148,26 +153,17 @@ abstract interface class CollectedClientData {
   set challenge(String value);
   String get origin;
   set origin(String value);
-  bool get crossOrigin;
-  set crossOrigin(bool value);
   String get topOrigin;
   set topOrigin(String value);
+  bool get crossOrigin;
+  set crossOrigin(bool value);
 }
 
 abstract interface class CredentialPropertiesOutput {
   bool get rk;
   set rk(bool value);
-}
-
-abstract interface class CurrentUserDetailsOptions {
-  String get rpId;
-  set rpId(String value);
-  Base64URLString get userId;
-  set userId(Base64URLString value);
-  String get name;
-  set name(String value);
-  String get displayName;
-  set displayName(String value);
+  String get authenticatorDisplayName;
+  set authenticatorDisplayName(String value);
 }
 
 typedef LargeBlobSupport = String;
@@ -177,7 +173,6 @@ abstract interface class PublicKeyCredential {
   AuthenticatorResponse get response;
   String? get authenticatorAttachment;
   AuthenticationExtensionsClientOutputs getClientExtensionResults();
-  PublicKeyCredentialJSON toJSON();
 }
 
 typedef PublicKeyCredentialClientCapabilities = Map<String, bool>;
@@ -242,10 +237,10 @@ abstract interface class PublicKeyCredentialDescriptor {
 }
 
 abstract interface class PublicKeyCredentialDescriptorJSON {
-  String get type;
-  set type(String value);
   Base64URLString get id;
   set id(Base64URLString value);
+  String get type;
+  set type(String value);
   List<String> get transports;
   set transports(List<String> value);
 }
@@ -255,7 +250,7 @@ abstract interface class PublicKeyCredentialEntity {
   set name(String value);
 }
 
-typedef PublicKeyCredentialHint = String;
+typedef PublicKeyCredentialHints = String;
 
 typedef PublicKeyCredentialJSON = Object;
 
@@ -324,8 +319,8 @@ abstract interface class PublicKeyCredentialUserEntityJSON {
 }
 
 abstract interface class RegistrationResponseJSON {
-  String get id;
-  set id(String value);
+  Base64URLString get id;
+  set id(Base64URLString value);
   Base64URLString get rawId;
   set rawId(Base64URLString value);
   AuthenticatorAttestationResponseJSON get response;
@@ -349,12 +344,9 @@ abstract interface class TokenBinding {
 
 typedef TokenBindingStatus = String;
 
-abstract interface class UnknownCredentialOptions {
-  String get rpId;
-  set rpId(String value);
-  Base64URLString get credentialId;
-  set credentialId(Base64URLString value);
-}
-
 typedef UserVerificationRequirement = String;
+
+typedef UvmEntries = List<UvmEntry>;
+
+typedef UvmEntry = List<int>;
 

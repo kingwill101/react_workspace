@@ -4,16 +4,21 @@
 
 import 'html.dart';
 import 'css_nav.dart';
+import 'trusted_types.dart';
 import 'svg.dart';
 import 'hr_time.dart';
-import 'observable.dart';
 import 'cssom.dart';
 import 'web_animations_2.dart';
-import 'trusted_types.dart';
 import 'geometry.dart';
 import 'cssom_view.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AbortController {
+  factory AbortController() =>
+      WebRuntime.current.createWebObject<AbortController>(
+        'AbortController',
+        [],
+      );
   AbortSignal get signal;
   void abort([Object? reason]);
 }
@@ -82,9 +87,19 @@ abstract interface class ChildNode {
 }
 
 abstract interface class Comment {
+  factory Comment([String? data]) =>
+      WebRuntime.current.createWebObject<Comment>(
+        'Comment',
+        [data],
+      );
 }
 
 abstract interface class CustomEvent {
+  factory CustomEvent(String type, [CustomEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<CustomEvent>(
+        'CustomEvent',
+        [type, eventInitDict],
+      );
   Object get detail;
   void initCustomEvent(String type, [bool? bubbles, bool? cancelable, Object? detail]);
 }
@@ -112,10 +127,14 @@ abstract interface class DOMTokenList {
   bool supports(String token);
   String get value;
    set value(String value);
-   Iterable<String> get values;
 }
 
 abstract interface class DocumentFragment {
+  factory DocumentFragment() =>
+      WebRuntime.current.createWebObject<DocumentFragment>(
+        'DocumentFragment',
+        [],
+      );
   Element? getElementById(String elementId);
   HTMLCollection get children;
   Element? get firstElementChild;
@@ -144,19 +163,16 @@ abstract interface class ElementCreationOptions {
 }
 
 abstract interface class Event {
+  factory Event(String type, [EventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<Event>(
+        'Event',
+        [type, eventInitDict],
+      );
   String get type;
   EventTarget? get target;
   EventTarget? get srcElement;
   EventTarget? get currentTarget;
   List<EventTarget> composedPath();
-   static const int NONE =
-      0;
-   static const int CAPTURING_PHASE =
-      1;
-   static const int AT_TARGET =
-      2;
-   static const int BUBBLING_PHASE =
-      3;
   int get eventPhase;
   void stopPropagation();
   bool get cancelBubble;
@@ -193,10 +209,14 @@ abstract interface class EventListenerOptions {
 }
 
 abstract interface class EventTarget {
+  factory EventTarget() =>
+      WebRuntime.current.createWebObject<EventTarget>(
+        'EventTarget',
+        [],
+      );
   void addEventListener(String type, EventListener? callback, [Object? options]);
   void removeEventListener(String type, EventListener? callback, [Object? options]);
   bool dispatchEvent(Event event);
-  Observable when_(String type, [ObservableEventListenerOptions? options]);
 }
 
 abstract interface class GetRootNodeOptions {
@@ -213,6 +233,11 @@ abstract interface class HTMLCollection {
 typedef MutationCallback = void Function(List<MutationRecord> mutations, MutationObserver observer,);
 
 abstract interface class MutationObserver {
+  factory MutationObserver(MutationCallback callback) =>
+      WebRuntime.current.createWebObject<MutationObserver>(
+        'MutationObserver',
+        [callback],
+      );
   void observe(Node target, [MutationObserverInit? options]);
   void disconnect();
   List<MutationRecord> takeRecords();
@@ -259,30 +284,6 @@ abstract interface class NamedNodeMap {
 }
 
 abstract interface class Node {
-   static const int ELEMENT_NODE =
-      1;
-   static const int ATTRIBUTE_NODE =
-      2;
-   static const int TEXT_NODE =
-      3;
-   static const int CDATA_SECTION_NODE =
-      4;
-   static const int ENTITY_REFERENCE_NODE =
-      5;
-   static const int ENTITY_NODE =
-      6;
-   static const int PROCESSING_INSTRUCTION_NODE =
-      7;
-   static const int COMMENT_NODE =
-      8;
-   static const int DOCUMENT_NODE =
-      9;
-   static const int DOCUMENT_TYPE_NODE =
-      10;
-   static const int DOCUMENT_FRAGMENT_NODE =
-      11;
-   static const int NOTATION_NODE =
-      12;
   int get nodeType;
   String get nodeName;
   String get baseURI;
@@ -302,21 +303,9 @@ abstract interface class Node {
   String? get textContent;
    set textContent(String? value);
   void normalize();
-  Node cloneNode([bool? subtree]);
+  Node cloneNode([bool? deep]);
   bool isEqualNode(Node? otherNode);
   bool isSameNode(Node? otherNode);
-   static const int DOCUMENT_POSITION_DISCONNECTED =
-      0x01;
-   static const int DOCUMENT_POSITION_PRECEDING =
-      0x02;
-   static const int DOCUMENT_POSITION_FOLLOWING =
-      0x04;
-   static const int DOCUMENT_POSITION_CONTAINS =
-      0x08;
-   static const int DOCUMENT_POSITION_CONTAINED_BY =
-      0x10;
-   static const int DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC =
-      0x20;
   int compareDocumentPosition(Node other);
   bool contains(Node? other);
   String? lookupPrefix(String? namespace);
@@ -378,7 +367,6 @@ abstract interface class NodeIterator {
 abstract interface class NodeList {
   Node? item(int index);
   int get length;
-   Iterable<Node> get values;
 }
 
 abstract interface class NonDocumentTypeChildNode {
@@ -422,8 +410,6 @@ abstract interface class ShadowRoot {
   bool get clonable;
   bool get serializable;
   Element get host;
-  EventHandler get onslotchange;
-   set onslotchange(EventHandler value);
   void setHTMLUnsafe(Object html);
   String getHTML([GetHTMLOptions? options]);
   Object get innerHTML;
@@ -452,6 +438,11 @@ abstract interface class Slottable {
 }
 
 abstract interface class StaticRange {
+  factory StaticRange(StaticRangeInit init) =>
+      WebRuntime.current.createWebObject<StaticRange>(
+        'StaticRange',
+        [init],
+      );
 }
 
 abstract interface class StaticRangeInit {
@@ -466,6 +457,11 @@ abstract interface class StaticRangeInit {
 }
 
 abstract interface class Text {
+  factory Text([String? data]) =>
+      WebRuntime.current.createWebObject<Text>(
+        'Text',
+        [data],
+      );
   List<DOMQuad> getBoxQuads([BoxQuadOptions? options]);
   DOMQuad convertQuadFromNode(DOMQuadInit quad, GeometryNode from, [ConvertCoordinateOptions? options]);
   DOMQuad convertRectFromNode(DOMRectReadOnly rect, GeometryNode from, [ConvertCoordinateOptions? options]);
@@ -494,6 +490,11 @@ abstract interface class XMLDocument {
 }
 
 abstract interface class XPathEvaluator {
+  factory XPathEvaluator() =>
+      WebRuntime.current.createWebObject<XPathEvaluator>(
+        'XPathEvaluator',
+        [],
+      );
   XPathExpression createExpression(String expression, [XPathNSResolver? resolver]);
   Node createNSResolver(Node nodeResolver);
   XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type, XPathResult? result]);
@@ -514,26 +515,6 @@ abstract interface class XPathNSResolver {
 }
 
 abstract interface class XPathResult {
-   static const int ANY_TYPE =
-      0;
-   static const int NUMBER_TYPE =
-      1;
-   static const int STRING_TYPE =
-      2;
-   static const int BOOLEAN_TYPE =
-      3;
-   static const int UNORDERED_NODE_ITERATOR_TYPE =
-      4;
-   static const int ORDERED_NODE_ITERATOR_TYPE =
-      5;
-   static const int UNORDERED_NODE_SNAPSHOT_TYPE =
-      6;
-   static const int ORDERED_NODE_SNAPSHOT_TYPE =
-      7;
-   static const int ANY_UNORDERED_NODE_TYPE =
-      8;
-   static const int FIRST_ORDERED_NODE_TYPE =
-      9;
   int get resultType;
   double get numberValue;
   String get stringValue;
@@ -546,6 +527,11 @@ abstract interface class XPathResult {
 }
 
 abstract interface class XSLTProcessor {
+  factory XSLTProcessor() =>
+      WebRuntime.current.createWebObject<XSLTProcessor>(
+        'XSLTProcessor',
+        [],
+      );
   void importStylesheet(Node style);
   DocumentFragment transformToFragment(Node source, Document output);
   Document transformToDocument(Node source);

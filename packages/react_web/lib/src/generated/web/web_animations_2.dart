@@ -7,16 +7,18 @@ import 'web_animations.dart';
 import 'html.dart';
 import 'dom.dart';
 import 'css_nav.dart';
-import 'css_pseudo.dart';
+import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Animation {
+  factory Animation([AnimationEffect? effect, AnimationTimeline? timeline]) =>
+      WebRuntime.current.createWebObject<Animation>(
+        'Animation',
+        [effect, timeline],
+      );
   CSSNumberish? get startTime;
    set startTime(CSSNumberish? value);
   CSSNumberish? get currentTime;
    set currentTime(CSSNumberish? value);
-  AnimationTrigger? get trigger;
-   set trigger(AnimationTrigger? value);
-  double? get overallProgress;
   String get id;
    set id(String value);
   AnimationEffect? get effect;
@@ -47,24 +49,17 @@ abstract interface class Animation {
 }
 
 abstract interface class AnimationEffect {
-  GroupEffect? get parent;
-  AnimationEffect? get previousSibling;
-  AnimationEffect? get nextSibling;
-  void before([List<AnimationEffect>? effects]);
-  void after([List<AnimationEffect>? effects]);
-  void replace([List<AnimationEffect>? effects]);
-  void remove();
   EffectTiming getTiming();
   ComputedEffectTiming getComputedTiming();
   void updateTiming([OptionalEffectTiming? timing]);
 }
 
-abstract interface class AnimationNodeList {
-  int get length;
-  AnimationEffect? item(int index);
-}
-
 abstract interface class AnimationPlaybackEvent {
+  factory AnimationPlaybackEvent(String type, [AnimationPlaybackEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<AnimationPlaybackEvent>(
+        'AnimationPlaybackEvent',
+        [type, eventInitDict],
+      );
   CSSNumberish? get currentTime;
   CSSNumberish? get timelineTime;
 }
@@ -78,41 +73,7 @@ abstract interface class AnimationPlaybackEventInit {
 
 abstract interface class AnimationTimeline {
   CSSNumberish? get currentTime;
-  CSSNumberish? get duration;
-  Animation play([AnimationEffect? effect]);
 }
-
-abstract interface class AnimationTrigger {
-  AnimationTimeline get timeline;
-   set timeline(AnimationTimeline value);
-  AnimationTriggerType get type;
-   set type(AnimationTriggerType value);
-  Object get rangeStart;
-   set rangeStart(Object value);
-  Object get rangeEnd;
-   set rangeEnd(Object value);
-  Object get exitRangeStart;
-   set exitRangeStart(Object value);
-  Object get exitRangeEnd;
-   set exitRangeEnd(Object value);
-}
-
-abstract interface class AnimationTriggerOptions {
-  AnimationTimeline? get timeline;
-  set timeline(AnimationTimeline? value);
-  AnimationTriggerType? get type;
-  set type(AnimationTriggerType? value);
-  Object get rangeStart;
-  set rangeStart(Object value);
-  Object get rangeEnd;
-  set rangeEnd(Object value);
-  Object get exitRangeStart;
-  set exitRangeStart(Object value);
-  Object get exitRangeEnd;
-  set exitRangeEnd(Object value);
-}
-
-typedef AnimationTriggerType = String;
 
 abstract interface class ComputedEffectTiming {
   CSSNumberish get startTime;
@@ -152,15 +113,6 @@ abstract interface class EffectTiming {
   set easing(String value);
 }
 
-abstract interface class GroupEffect {
-  AnimationNodeList get children;
-  AnimationEffect? get firstChild;
-  AnimationEffect? get lastChild;
-  GroupEffect clone();
-  void prepend([List<AnimationEffect>? effects]);
-  void append([List<AnimationEffect>? effects]);
-}
-
 typedef IterationCompositeOperation = String;
 
 abstract interface class KeyframeAnimationOptions {
@@ -168,8 +120,6 @@ abstract interface class KeyframeAnimationOptions {
   set rangeStart(Object value);
   Object get rangeEnd;
   set rangeEnd(Object value);
-  AnimationTrigger? get trigger;
-  set trigger(AnimationTrigger? value);
   String get id;
   set id(String value);
   AnimationTimeline? get timeline;
@@ -177,6 +127,16 @@ abstract interface class KeyframeAnimationOptions {
 }
 
 abstract interface class KeyframeEffect {
+  factory KeyframeEffect(Element? target, Object? keyframes, [Object? options]) =>
+      WebRuntime.current.createWebObject<KeyframeEffect>(
+        'KeyframeEffect',
+        [target, keyframes, options],
+      );
+  factory KeyframeEffect.named1(KeyframeEffect source) =>
+      WebRuntime.current.createWebObject<KeyframeEffect>(
+        'KeyframeEffect',
+        [source],
+      );
   IterationCompositeOperation get iterationComposite;
    set iterationComposite(IterationCompositeOperation value);
   Element? get target;
@@ -217,10 +177,6 @@ abstract interface class OptionalEffectTiming {
   set direction(PlaybackDirection value);
   String get easing;
   set easing(String value);
-}
-
-abstract interface class SequenceEffect {
-  SequenceEffect clone();
 }
 
 abstract interface class TimelineRangeOffset {

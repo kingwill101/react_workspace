@@ -6,16 +6,6 @@ import 'generic_sensor.dart';
 import 'hr_time.dart';
 import 'dom.dart';
 
-abstract interface class GeolocationSensor {
-  double? get latitude;
-  double? get longitude;
-  double? get altitude;
-  double? get accuracy;
-  double? get altitudeAccuracy;
-  double? get heading;
-  double? get speed;
-}
-
 abstract interface class GeolocationSensorOptions {
 }
 

@@ -3,15 +3,11 @@
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
 import 'dom.dart';
-import 'html.dart';
+import 'webidl.dart';
 
 abstract interface class NDEFMakeReadOnlyOptions {
   AbortSignal? get signal;
   set signal(AbortSignal? value);
-}
-
-abstract interface class NDEFMessage {
-  List<NDEFRecord> get records;
 }
 
 abstract interface class NDEFMessageInit {
@@ -21,36 +17,11 @@ abstract interface class NDEFMessageInit {
 
 typedef NDEFMessageSource = Object;
 
-abstract interface class NDEFReader {
-  EventHandler get onreading;
-   set onreading(EventHandler value);
-  EventHandler get onreadingerror;
-   set onreadingerror(EventHandler value);
-  Future<void> scan([NDEFScanOptions? options]);
-  Future<void> write(NDEFMessageSource message, [NDEFWriteOptions? options]);
-  Future<void> makeReadOnly([NDEFMakeReadOnlyOptions? options]);
-}
-
-abstract interface class NDEFReadingEvent {
-  String get serialNumber;
-  NDEFMessage get message;
-}
-
 abstract interface class NDEFReadingEventInit {
   String? get serialNumber;
   set serialNumber(String? value);
   NDEFMessageInit get message;
   set message(NDEFMessageInit value);
-}
-
-abstract interface class NDEFRecord {
-  String get recordType;
-  String? get mediaType;
-  String? get id;
-  Object get data;
-  String? get encoding;
-  String? get lang;
-  List<NDEFRecord>? toRecords();
 }
 
 abstract interface class NDEFRecordInit {

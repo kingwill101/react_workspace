@@ -1,12 +1,13 @@
 # react_web_generator
 
-Generates the **web host layer** for `react_web`: typed Dart element factories, neutral
-Web IDL interfaces, and browser adapters that bridge React synthetic events and DOM
-elements to `package:web` at runtime.
+Generates the **web host layer** for `react_web`: typed Dart element factories, the
+complete neutral Web IDL type surface, a browser adapter that bridges React synthetic
+events and DOM elements to `package:web` at runtime, and SSR metadata for server-side
+rendering.
 
 This package is **not** meant to be imported by application code. Run its generator
 (`tool/web_idl/generate_factories.dart`) during development; it rewrites generated files
-inside `packages/react_web/lib/src/generated/` and `packages/react_web/lib/src/`.
+inside `packages/react_web/lib/src/generated/`.
 
 ---
 
@@ -14,38 +15,56 @@ inside `packages/react_web/lib/src/generated/` and `packages/react_web/lib/src/`
 
 | Output | Location | Description |
 |--------|----------|-------------|
+| Neutral type surface | `packages/react_web/lib/src/generated/web/` | The complete Web IDL surface as `abstract interface class` declarations: `web.dart` barrel plus one focused library per spec (`dom.dart`, `html.dart`, `svg.dart`, `webaudio.dart`, …). 2167 definitions across 262 specs. |
+| React event types | `packages/react_web/lib/src/generated/react_events.dart` | Authored React synthetic event interfaces (`ReactMouseEvent<T>`, `ReactKeyboardEvent<T>`, …). |
 | Element factories | `packages/react_web/lib/src/generated/elements.dart` | Pure Dart factory functions (`div(...)`, `button(...)`, …) returning `ReactNode` with typed props, events, and refs. |
-| Browser adapter | `packages/react_web/lib/src/generated/browser_adapter.dart` | Concrete wrappers around `package:web` types: `GeneratedElement`, `GeneratedReactSyntheticEvent<T>`, etc. Includes a host-value codec registration function. |
-| Neutral HTML interfaces | `packages/react_web/lib/src/types/html_interfaces.dart` | Generated `abstract interface class` declarations for Web IDL element types (e.g., `HTMLDivElement`, `EventTarget`). Used for static typing in factories and adapters. |
-| Neutral event interfaces | `packages/react_web/lib/src/event_interfaces.dart` | Generated `abstract interface class` declarations for React synthetic event types (e.g., `ReactMouseEvent<T>`, `ReactKeyboardEvent<T>`). |
+| DOM factories | `packages/react_web/lib/src/generated/dom.dart` | Non-element DOM factories (`document`, `window`, …). |
+| Browser adapter | `packages/react_web/lib/src/generated/browser_adapter.dart` | Concrete wrappers that delegate every member to `package:web` via JS interop, plus `BrowserWebRuntime`, `registerBrowserAdapters()`, and `installBrowserWebRuntime()`. |
+| SSR surface | `packages/react_web/lib/src/generated/web/ssr.dart` | The same 2167 interfaces as throwing implementations (`UnsupportedWebApiError`), `SsrWebRuntime`, and `installSsrWebRuntime()`. |
+| SSR metadata | `packages/react_web/lib/src/generated/ssr_metadata.dart` | Per-element prop/event lowering metadata (`WebElementSsrDefinition`), driven by `ssr_metadata.dart` consumers. |
 
-All four files are **generated artifacts**. Do not hand-edit them; edits will be
+All generated files are **generated artifacts**. Do not hand-edit them; edits will be
 overwritten on the next generation run.
 
 ---
 
-## 2. How it works — the 3-layer architecture
+## 2. How it works — the layered architecture
 
-### 2.1 Neutral interfaces (pure Dart)
+### 2.1 Complete neutral surface (single source of truth)
 
-The generator produces abstract interface classes that model Web IDL and React
-synthetic event types **without any browser dependency**. These live under
-`packages/react_web/lib/src/` and form the **type contract** that the rest of the
-workspace uses:
+The generator loads the pinned Web IDL snapshot (`tool/web_idl/snapshots/web_apis.json`),
+filters specs against browser compatibility data (`BcdFilter`), and merges them into a
+`CompleteWebModel` covering **every** interface, mixin, callback interface, enum,
+typedef, and namespace — no reachability cut-down, no hand-maintained auxiliary types.
 
-- `types/html_interfaces.dart` — element and DOM types (`HTMLElement`, `EventTarget`,
-  `HTMLDivElement`, etc.).
-- `event_interfaces.dart` — React event types parameterized by `T extends EventTarget`.
+Each definition becomes an `abstract interface class` in the neutral surface. Mixins are
+flattened into the interfaces that use them (`implements` lists), so the surface is
+usable purely as static types without any `dart:js_interop` dependency.
 
-These interfaces are **stable hand-authored sources of truth** for the type shapes,
-but the concrete declarations are *generated* from the Web IDL snapshot and React
-declarations.
+### 2.2 Verifier gate
 
-### 2.2 Web Host IR (intermediate representation)
+`tool/web_idl/verify.dart` is the integrity gate between the snapshot and the generated
+surface:
 
-Before emitting Dart code, the generator builds a `List<WebHostElementIR>` — a
-lightweight, offline-friendly IR that describes exactly what each element factory
-should expose:
+- every definition and member in the model is emitted (dropped 0, opaque 0)
+- no duplicate interface names
+- `--strict`: every `interface`-kind definition has a `package:web` counterpart
+  (`PackageWebMappings.missingTypes`). Mixins and callback interfaces are excluded: the
+  browser adapter only wraps interfaces.
+
+### 2.3 Web Host IR (factories and SSR metadata)
+
+`WebHostIrBuilder` builds a `List<WebHostElementIR>` from the complete model plus two
+config files:
+
+1. **Web IDL snapshot** — the pinned spec data.
+2. **React DOM overlay** (`config/react_dom_overlay.json`) — React-specific mapping of
+   DOM events to React synthetic event types, property renames (`class` →
+   `className`), and global props.
+3. **Element roots** (`config/roots.json`) — which tags get factories, plus the void
+   element list.
+
+`WebHostElementIR` describes exactly what each element factory should expose:
 
 - `WebHostElementIR` — tag name, factory name, namespace, element type, void flag,
   props list, events list.
@@ -53,29 +72,25 @@ should expose:
 - `WebEventPropIR` — DOM event name, React name, capture name, React event type,
   native event type.
 
-This IR is built by **`WebHostIrBuilder`** from three config sources:
+### 2.4 Browser adapter (real delegation to package:web)
 
-1. **Web IDL snapshot** (`tool/web_idl/snapshots/web_apis.json`) — a pinned JSON dump of
-   browser IDL specs (html, dom, cssom, cssom-view).
-2. **React DOM overlay** (`config/react_dom_overlay.json`) — React-specific mapping of
-   DOM events to React synthetic event types, plus property renames (`class` →
-   `className`) and global props.
-3. **Element allowlist** (`config/milestone_w1_elements.json`) — which HTML tags to
-   generate factories for.
+The generated `browser_adapter.dart` is a full runtime backend. Every wrapper is a
+`final class BrowserX extends BrowserObjectAdapter implements X` where
+`BrowserObjectAdapter` holds a `JSObject` and dispatches getters, setters, and method
+calls through `dart:js_interop_unsafe` (`getProperty`/`setProperty`/`callMethodVarArgs`).
+Type conversion (`_toJs`/`_convert`) handles primitives, lists, JS objects, and
+`null`/`undefined`; unknown values become `_UnknownObject`.
 
-### 2.3 Browser adapter (host-value codec dispatch)
+Wrapper classes are closed over `implements` from the neutral surface; when
+`package:web` exports the same name, the wrapper also exposes a `web.X get inner`
+accessor for raw interop escapes. Event wrappers (`BrowserReactMouseEvent<T>`, …) are
+generated per React event type from the shared `reactEventDefs` and expose `inner` as a
+`JSObject`.
 
-The generated `browser_adapter.dart` provides concrete implementations that run in the
-browser (compiled with `dart compile js`). It:
-
-- Implements `EventTarget` for `GeneratedElement` (wrapping `web.HTMLElement`).
-- Generates `GeneratedReactMouseEvent<T>`, `GeneratedReactKeyboardEvent<T>`, etc.,
-  backed by `dart:js_interop`.
-- Provides `wrapJSValue()` / `_wrapOne()` helpers that distinguish elements (by
-  `tagName`) from events (by `type`) and dispatch to the correct wrapper.
-- Registers every element type and event type with `ReactCodecRegistry` via
-  `registerBrowserAdapters()`, enabling the JS bridge to serialize/deserialize host
-  values across the Dart–JS boundary.
+`BrowserWebRuntime` implements `WebRuntime` against `web.window`/`web.document`.
+`registerBrowserAdapters()` registers every element-like interface and React event type
+with `ReactCodecRegistry` so the JS bridge can serialize/deserialize host values across
+the Dart–JS boundary. `installBrowserWebRuntime()` installs the runtime singleton.
 
 ---
 
@@ -87,118 +102,58 @@ Run from the workspace root:
 dart run tool/web_idl/generate_factories.dart
 ```
 
-The script executes these steps in order:
+Steps in order:
 
-### Step 1 — Build the neutral web model
-
-```text
-ModelBuilder(webIdlPath) → NeutralWebModel
-```
-
-- Loads relevant interfaces from the Web IDL snapshot.
-- Adds React event interfaces from `source/react_declarations.dart`.
-- Computes reachable types from the configured root element names (e.g. `HTMLDivElement`),
-  walking the inheritance chain ( `HTMLDivElement → HTMLElement → Element → …` ).
-- Writes `config/neutral_web_model.json` — the **single source of truth** for all
-  reachable interface declarations.
-- Emits `lib/src/types/html_interfaces.dart` and `lib/src/event_interfaces.dart` from
-  the model.
-
-### Step 2 — Build element IR for factory/adapter generation
-
-```text
-WebHostIrBuilder.create(...) → List<WebHostElementIR>
-```
-
-- Reads the Web IDL snapshot, overlay, and element allowlist.
-- Resolves each allowlisted tag to its IDL interface name (e.g. `div` → `HTMLDivElement`).
-- Validates that `package:web` exports the required interface (via `PackageWebResolver`).
-- Collects inherited IDL attributes as `WebHostPropIR` props.
-- Builds event specs from the overlay’s `events` map.
-
-### Step 3 — Emit factories and adapter
-
-```text
-FactoryEmitter(elements) → elements.dart
-AdapterEmitter(elements, interfaceModel) → browser_adapter.dart
-```
-
-- `FactoryEmitter` writes one factory function per element, plus `ReactEventProp` /
-  `ReactRefProp` wrapper helpers and `ReactValueSpec` constants.
-- `AdapterEmitter` writes `GeneratedElement`, event mixins/classes, JS wrapping helpers,
-  and `registerBrowserAdapters()`.
+1. **Load the raw model** — parse the pinned Web IDL snapshot.
+2. **Apply the BCD filter** — drop deprecated/never-implemented specs.
+3. **Merge** into `CompleteWebModel` (flatten mixins, resolve typedefs).
+4. **Verify** — completeness and duplicate-name gate.
+5. **Emit the SSR surface** — `web/ssr.dart` (throwing implementations).
+6. **Emit focused libraries** — the neutral surface, one library per spec, into
+   `packages/react_web/lib/src/generated/web/` plus `lib/apis/` convenience barrels.
+7. **Emit React event types** — `react_events.dart` from `reactEventDefs`.
+8. **Build `WebHostElementIR`** — from the model, overlay, and roots.
+9. **Emit element factories** — `elements.dart`.
+10. **Emit the browser adapter** — `browser_adapter.dart` from the model plus
+    `PackageWebMappings` (which neutral names map to `package:web`).
+11. **Emit DOM factories** — `dom.dart`.
+12. **Emit SSR metadata** — `ssr_metadata.dart` from the IR.
 
 ---
 
 ## 4. Configuration files — what to edit and why
 
-### `config/milestone_w1_elements.json`
-
-**What it controls:** Which HTML tags get factories.
-
-```json
-{ "html": ["div", "span", "button", "input", "form", "label", "textarea", "select", "option", "a", "img"] }
-```
-
-**When to edit:** Adding support for a new HTML element (e.g. `<video>`).
-
-**Manual steps required after edit:**
-1. Add the tag to the `html` array.
-2. Ensure `package:web` exports the corresponding extension type (e.g. `HTMLVideoElement`).
-3. If the element needs custom React props not present in IDL, update
-   `react_dom_overlay.json`.
-4. Re-run the generator.
-
 ### `config/react_dom_overlay.json`
 
-**What it controls:** React-specific mappings that do not exist in raw Web IDL.
+**What it controls:** React-specific mappings that do not exist in raw Web IDL:
+property renames, global props, event → synthetic event mappings, and type policies.
+
+- **`propertyRenames`** — maps IDL attribute names to their React/Dart prop names.
+- **`globalProps`** — attributes added to every element even if IDL does not declare them.
+- **`events`** — maps DOM event names to React synthetic event wrapper types.
+- **`typePolicies`** — exposure policy overrides per type (`full`/`opaque`/`excluded`).
+
+### `config/roots.json`
+
+**What it controls:** Which HTML tags get factories, and the void-element list.
 
 ```json
 {
-  "propertyRenames": { "class": "className", "for": "htmlFor", ... },
-  "globalProps": ["id", "className", "title", "hidden", "tabIndex", "role"],
-  "events": {
-    "click": { "reactName": "onClick", "eventType": "ReactMouseEvent", "nativeType": "MouseEvent" },
-    ...
-  },
-  "reactOnlyProps": ["children", "key", "ref", "dangerouslySetInnerHTML"]
+  "voidElements": ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"],
+  "elements": [{"tag": "div", "voidElement": false}, {"tag": "button", "voidElement": false}, ...]
 }
 ```
 
-- **`propertyRenames`** — maps IDL attribute names to their React/Dart prop names.
-- **`globalProps`** — attributes that should be added to every element even if the IDL
-  interface does not explicitly declare them.
-- **`events`** — maps DOM event names (`click`, `input`, `change`, …) to their React
-  synthetic event wrapper type and the underlying native `package:web` event type.
-- **`reactOnlyProps`** — reserved names handled specially by the runtime (not emitted as
-  HTML attributes).
-
-**When to edit:**
-- Adding a new event mapping (e.g. `scroll` → `ReactUIEvent`).
-- Renaming a prop to match React conventions.
-- Adding a global attribute that should appear on every element.
-
-### `source/react_declarations.dart`
-
-**What it controls:** The shape of React synthetic event interfaces.
-
-This file defines `InterfaceDecl` objects for `ReactSyntheticEvent`, `ReactMouseEvent`,
-`ReactKeyboardEvent`, etc. It is the **hand-authored contract** for what event members
-should exist.
-
-**When to edit:** Adding a new React event type (e.g. `ReactTransitionEvent`), or
-changing the members of an existing event type (e.g. adding `nativeEvent`).
+**When to edit:** Adding support for a new HTML element (e.g. `<video>`). Add the tag
+to `elements` (with `voidElement` matching the spec), re-run the generator. The
+corresponding interface (e.g. `HTMLVideoElement`) must exist in the snapshot — the
+builder throws if it does not.
 
 ### `tool/web_idl/snapshots/web_apis.json`
 
-**What it controls:** The raw Web IDL definitions.
-
-This is a pinned JSON snapshot of browser specification data. It is **not** hand-edited
-during normal development. To refresh it, use the snapshot acquisition tool in
-`tool/web_idl/`.
-
-**When to edit:** Only when upgrading the IDL baseline. Changing this file changes the
-entire reachable type graph.
+The pinned JSON snapshot of browser specification IDL. Not hand-edited during normal
+development; refresh it with the snapshot acquisition tool in `tool/web_idl/` and pin
+`package:web` to a matching revision.
 
 ---
 
@@ -208,25 +163,28 @@ entire reachable type graph.
 
 | File | Generated by | Why |
 |------|--------------|-----|
+| `packages/react_web/lib/src/generated/web/**` | `NeutralSurfaceEmitter` (+ per-spec focused libraries) | Complete neutral surface from the model. |
+| `packages/react_web/lib/src/generated/web/ssr.dart` | `SsrSurfaceEmitter` | Throwing SSR surface + `SsrWebRuntime` + installer. |
+| `packages/react_web/lib/src/generated/react_events.dart` | `ReactEventEmitter` | React synthetic event interfaces. |
 | `packages/react_web/lib/src/generated/elements.dart` | `FactoryEmitter` | Deterministic output from `WebHostElementIR`. |
-| `packages/react_web/lib/src/generated/browser_adapter.dart` | `AdapterEmitter` | Deterministic output from `WebHostElementIR` + `neutral_web_model.json`. |
-| `packages/react_web/lib/src/types/html_interfaces.dart` | `NeutralInterfaceEmitter` | Derived from `neutral_web_model.json`. |
-| `packages/react_web/lib/src/event_interfaces.dart` | `NeutralInterfaceEmitter` | Derived from `neutral_web_model.json`. |
-| `packages/react_web_generator/config/neutral_web_model.json` | `ModelJsonEmitter` | Derived from Web IDL snapshot + React declarations. |
+| `packages/react_web/lib/src/generated/dom.dart` | `DomFactoryEmitter` | Non-element DOM factories. |
+| `packages/react_web/lib/src/generated/browser_adapter.dart` | `BrowserAdapterEmitter` | Real delegation wrappers + `BrowserWebRuntime`. |
+| `packages/react_web/lib/src/generated/ssr_metadata.dart` | `SsrMetadataEmitter` | SSR prop/event lowering metadata. |
+| `packages/react_web/lib/src/generated/completeness_report.json` | generator | Defs/members/duplicates audit. |
+| `packages/react_web/lib/apis/**` | generator | Convenience barrels for focused libraries. |
 
 ### Hand-authored (edit these)
 
 | File | Purpose |
 |------|---------|
-| `packages/react_web_generator/config/milestone_w1_elements.json` | Element allowlist. |
-| `packages/react_web_generator/config/react_dom_overlay.json` | Event/property renames/overrides. |
-| `packages/react_web_generator/lib/src/source/react_declarations.dart` | React event interface shapes. |
-| `packages/react_web_generator/lib/src/adapter_emitter.dart` | Adapter code-generation logic. |
-| `packages/react_web_generator/lib/src/factory_emitter.dart` | Factory code-generation logic. |
-| `packages/react_web_generator/lib/src/ir_builder.dart` | IR construction, IDL-to-Dart type mapping, void-element logic. |
-| `packages/react_web_generator/lib/src/resolver.dart` | `package:web` symbol indexing. |
-| `packages/react_web_generator/lib/src/normalize/model_builder.dart` | Reachability, type graph construction. |
-| `packages/react_web/lib/react_web.dart` | Barrel export; currently hides `Text` and element interface names to avoid collisions with `package:react`. |
+| `config/react_dom_overlay.json` | Event/property renames/overrides and type policies. |
+| `config/roots.json` | Element factory roots + void elements. |
+| `lib/src/emit/react_event_defs.dart` | React synthetic event shapes (single source for surface + adapter). |
+| `lib/src/emit/browser_adapter_emitter.dart` | Browser adapter generation logic. |
+| `lib/src/emit/factory_emitter.dart` | Factory generation logic. |
+| `lib/src/ir_builder.dart` | IR construction, IDL-to-Dart type mapping (incl. `WindowProxy` → `Window`), void-element logic. |
+| `lib/src/complete/**` | Model parsing/merging and neutral-surface emission. |
+| `packages/react_web/lib/react_web.dart` | Barrel export; hides `Text`, `EffectCallback`, and factory helper types to avoid collisions with `package:react` / `web_animations_2`. |
 
 ---
 
@@ -234,135 +192,108 @@ entire reachable type graph.
 
 ### 6.1 Add a new HTML element
 
-1. Add the tag name to `config/milestone_w1_elements.json` under `"html"`.
-2. Confirm `package:web` exports the corresponding extension type (e.g. `HTMLVideoElement`).
-   The generator will throw a `StateError` at build time if it does not.
+1. Add the tag to `config/roots.json` under `elements` (with the correct
+   `voidElement` flag).
+2. Confirm the interface exists in `tool/web_idl/snapshots/web_apis.json` (the builder
+   throws `StateError` if not).
 3. Run `dart run tool/web_idl/generate_factories.dart`.
-4. The new factory function (e.g. `video(...)`) and `GeneratedElement` adapter entries
-   are produced automatically.
+4. The new factory function and `Browser*` adapter wrapper are produced automatically.
 
 ### 6.2 Add a new event type
 
-1. Add the DOM event entry to `config/react_dom_overlay.json` under `"events"`, e.g.:
-
-   ```json
-   "scroll": { "reactName": "onScroll", "eventType": "ReactUIEvent", "nativeType": "UIEvent" }
-   ```
-
-2. If `ReactUIEvent` does not yet exist in the neutral model, add an `InterfaceDecl`
-   for it in `lib/src/source/react_declarations.dart` with the desired members.
-3. Run the generator.
-4. The factory will now emit `onScroll` and `onScrollCapture` callbacks typed as
-   `void Function(ReactUIEvent)?`. The browser adapter will emit
-   `GeneratedReactUIEvent<T>` with the correct JS interop reads.
+1. Add the DOM event entry to `config/react_dom_overlay.json` under `"events"`.
+2. Add the `ReactEventDef` to `lib/src/emit/react_event_defs.dart`.
+3. Run the generator. The factory emits `onScroll`/`onScrollCapture` callbacks, the
+   surface emits the `ReactScrollEvent<T>` interface, and the adapter emits
+   `BrowserReactScrollEvent<T>`.
 
 ### 6.3 Add a new global property
 
-Add the attribute name to `"globalProps"` in `config/react_dom_overlay.json`. It will
-be appended to every element factory with type `String?`.
+Add the attribute name to `"globalProps"` in `config/react_dom_overlay.json`. It is
+appended to every element factory.
 
 ### 6.4 Rename an IDL property to a React prop
 
-Add a mapping to `"propertyRenames"` in `config/react_dom_overlay.json`. The current
-mapping is:
+Add a mapping to `"propertyRenames"` in `config/react_dom_overlay.json` (e.g.
+`"class": "className"`).
 
-```json
-{ "class": "className", "for": "htmlFor", "tabindex": "tabIndex", ... }
-```
+### 6.5 Change adapter emission logic
 
-### 6.5 Add a new event interface member
+Edit `lib/src/emit/browser_adapter_emitter.dart`. Common changes:
 
-Edit the relevant `InterfaceDecl` in `lib/src/source/react_declarations.dart` and add
-an `AttributeDecl` or `OperationDecl`. The generator will include it in both the
-neutral interface file and the browser adapter mixin.
+- Add a `_kinds` entry for a new primitive kind.
+- Change how unknown JS values are wrapped (`_UnknownObject`).
+- Extend `registerBrowserAdapters()` dispatch.
 
-### 6.6 Change adapter emission logic
+### 6.6 Change factory emission logic
 
-Edit `lib/src/adapter_emitter.dart`. Common changes:
-- Add a new `_jsReadExpr` case for a new primitive type.
-- Change how `GeneratedElement` implements element types (currently only `EventTarget`).
-- Modify `_wrapEventByType` dispatch logic.
-
-### 6.7 Change factory emission logic
-
-Edit `lib/src/factory_emitter.dart`.
+Edit `lib/src/emit/factory_emitter.dart`.
 
 ---
 
 ## 7. Key concepts and types
 
-### NeutralWebModel
+### CompleteWebModel
 
-The central data structure produced by `ModelBuilder`. Contains:
+The central data structure produced by the snapshot load/merge steps. Contains every
+definition (`interface`, `mixin`, `callbackInterface`, `enum`, `typedef`, `namespace`)
+with parsed members. Mixins are flattened into using interfaces; typedefs are resolved.
 
-- `types: Map<String, InterfaceDecl>` — all reachable Web IDL and React event
-  interfaces keyed by typeId (`web.HTMLDivElement`, `react.ReactMouseEvent`, etc.).
-- `elements: Map<String, ElementDecl>` — element declarations keyed by tag name
-  (`div`, `button`, …).
-- `sources` — provenance metadata (e.g. path to the Web IDL snapshot).
+### PackageWebMappings
 
-### InterfaceDecl
-
-Represents a Web IDL or React interface:
-
-- `typeId` — fully qualified ID (`web.HTMLDivElement`).
-- `name` — short Dart name (`HTMLDivElement`).
-- `typeParameters` — generic parameters (used by event interfaces, e.g. `<T extends EventTarget>`).
-- `extends_` — inheritance chain (`HTMLElement`, `Element`).
-- `members` — `AttributeDecl` and `OperationDecl`.
-- `browserBinding` — mapping to `package:web` (`library: 'package:web/web.dart'`, `symbol: 'HTMLDivElement'`).
+Maps neutral interface names to the `package:web` revision pinned in the workspace.
+Used by the strict verify gate and by `BrowserAdapterEmitter` to decide which wrappers
+also expose a `web.X get inner` accessor.
 
 ### WebHostElementIR
 
-The offline-friendly IR consumed by emitters:
+The offline-friendly IR consumed by the factory/SSR emitters:
 
 - `tagName` — `"div"`.
-- `factoryName` — `"div"` (camel-cased tag).
-- `elementType` — `WebDartType(symbol: 'HTMLDivElement', import: 'package:web/web.dart')`.
-- `voidElement` — `true` for `img`, `input`.
+- `factoryName` — `"div"`.
+- `elementType` — `WebDartType(symbol: 'HTMLDivElement', import: 'package:react_web/src/generated/web/web.dart')`.
+- `voidElement` — `true` for `img`, `input`, …
 - `props` — list of `WebHostPropIR`.
 - `events` — list of `WebEventPropIR`.
-
-### WebDartType
-
-A resolved Dart type reference used in generated code:
-
-- `symbol` — e.g. `'HTMLDivElement?'`, `'ReactMouseEvent<T>'`.
-- `import` — the Dart library URI where the symbol is declared.
-- `nullable` / `typeArguments` — generic information.
 
 ### ReactCodecRegistry
 
 The runtime registry (in `react_js`) that maps `(namespace, typeId)` pairs to
-encoder/decoder functions. The generated `registerBrowserAdapters()` function calls
-`ReactCodecRegistry.registerHostValue(...)` for every element type and event type so
-that the JS renderer can serialize/deserialize DOM nodes and events across the
-Dart–JS interop boundary.
+encoder/decoder functions. The generated `registerBrowserAdapters()` registers every
+element-like interface and React event type so the JS renderer can serialize/deserialize
+DOM nodes and events across the Dart–JS interop boundary.
+
+### WebRuntime
+
+The runtime seam between renderer-independent code and the host environment. The browser
+path installs `BrowserWebRuntime` (via `initReact()` in `react_dom`); server entry points
+install `SsrWebRuntime` via `installSsrWebRuntime()` (exported from
+`package:react_web/web.dart`).
 
 ---
 
 ## 8. Generated interface files — usage and caveats
 
-### `html_interfaces.dart`
+### Neutral surface (`generated/web/`)
 
-Contains abstract interfaces for every reachable Web IDL type. These are used as:
+Used as:
 
-- **Factory return types** — not directly; factories return `ReactNode`.
 - **Ref callback types** — e.g. `void Function(HTMLDivElement?)? ref`.
 - **Event `currentTarget` types** — e.g. `ReactSyntheticEvent<T extends EventTarget>`.
-- **Adapter implementation targets** — `GeneratedElement` currently implements only
-  `EventTarget` (not the full `HTMLDivElement` interface) to avoid inheriting 300+
-  abstract methods from `package:web`.
+- **Adapter implementation targets** — `BrowserX` wrappers `implements` the neutral
+  interface and satisfy every member via `BrowserObjectAdapter.noSuchMethod`.
+- **Application typing** — components can type props/state with DOM types without a
+  browser dependency.
 
-**Important:** The barrel export in `packages/react_web/lib/react_web.dart` currently
-hides `Text` and all element interface names (`HTMLDivElement`, `HTMLSpanElement`, etc.)
-from `html_interfaces.dart` because `package:react` already exports a `Text` widget.
-If you add new element interface classes, verify they do not collide with `package:react`
-exports.
+**Barrel hiding:** `packages/react_web/lib/react_web.dart` hides `Text` (collides with
+`package:react`'s `Text` node class), `EffectCallback` (collides with
+`web_animations_2`), and the generated element factory helper types (`div`, `span`, …)
+so the factories remain available through `elements.dart`'s own import. If the surface
+gains new top-level names that collide, extend the `hide` lists.
 
-### `event_interfaces.dart`
+### React event types (`react_events.dart`)
 
-Contains parameterized event interfaces:
+Parameterized interfaces authored in `react_event_defs.dart`:
 
 ```dart
 abstract interface class ReactSyntheticEvent<T extends EventTarget> {
@@ -370,15 +301,10 @@ abstract interface class ReactSyntheticEvent<T extends EventTarget> {
   EventTarget get target;
   ...
 }
-
-abstract interface class ReactMouseEvent<T extends EventTarget>
-    implements ReactSyntheticEvent<T> { ... }
 ```
 
-These are referenced by:
-- `elements.dart` factory signatures.
-- `browser_adapter.dart` adapter classes.
-- Application code that types event handlers.
+Referenced by `elements.dart` factory signatures, `browser_adapter.dart` wrappers, and
+application event handlers.
 
 ---
 
@@ -390,30 +316,28 @@ cd /run/media/kingwill101/disk2/code/code/dart_packages/react_workspace
 dart run tool/web_idl/generate_factories.dart
 ```
 
-Expected output:
+Expected output ends with:
 
 ```text
-Generated neutral web model → packages/react_web_generator/config/neutral_web_model.json
-  Types: 60
-  Elements: 11
-Generated interface files → packages/react_web/src/
-  - types/html_interfaces.dart
-  - event_interfaces.dart
 Generated 11 element factories → packages/react_web/lib/src/generated/elements.dart
 Generated browser adapter → packages/react_web/lib/src/generated/browser_adapter.dart
+Generated DOM factories → packages/react_web/lib/src/generated/dom.dart
+Generated SSR metadata → packages/react_web/lib/src/generated/ssr_metadata.dart
 ```
 
-After generation, run analysis to verify:
+Gate:
 
 ```bash
-dart analyze packages/
+dart run tool/web_idl/verify.dart            # completeness + duplicates
+dart run tool/web_idl/verify.dart --strict   # + package:web mapping coverage
 ```
 
-Tests for the generator itself:
+Tests:
 
 ```bash
 cd packages/react_web_generator && dart test
-cd packages/react_web && dart test   # if any tests exist
+cd packages/react_web && dart test           # VM suites
+cd packages/react_web && dart test -p chrome test/host_value_adapter_test.dart  # browser backend
 ```
 
 ---
@@ -422,108 +346,63 @@ cd packages/react_web && dart test   # if any tests exist
 
 ### `IDL interface "XYZ" not found for element "foo"`
 
-The allowlist references a tag whose IDL interface is not present in the Web IDL
-snapshot. Either the snapshot is stale, or the interface was renamed.
+The roots config references a tag whose interface is absent from the snapshot. Refresh
+the snapshot or remove the root element.
 
-### `package:web does not export "XYZ" required by element "foo"`
+### `package:web missing mappings` in strict verify
 
-The resolver could not find the extension type in the installed `package:web`. Upgrade
-`web` in the workspace `pubspec.yaml` or remove the element from the allowlist.
+The snapshot surface is ahead of the pinned `package:web` revision. Pin `package:web`
+to the snapshot revision, or update `tool/web_idl/snapshots/provenance.json`.
 
-### `ambiguous_export: Text`
+### `ambiguous_export: Text` (or `EffectCallback`)
 
-`package:react` exports a `Text` widget, and `html_interfaces.dart` also exports a
-`Text` interface. The barrel export in `react_web.dart` hides the conflicting names.
-If you add new generated types, check for name collisions and update the `hide` list
-in the barrel export.
+`package:react` exports a `Text` widget and `web_animations_2` exports
+`EffectCallback`; the neutral surface also declares them. The barrel export in
+`react_web.dart` hides the conflicting names. If new generated types collide, update the
+`hide` lists.
 
-### `non_abstract_class_inherits_abstract_member` in `GeneratedElement`
+### SSR throwing `UnsupportedWebApiError`
 
-This happens when `GeneratedElement` implements an interface with many abstract
-members (e.g. full `HTMLDivElement`) but the adapter emitter only implements a subset.
-The current design avoids this by having `GeneratedElement` implement only `EventTarget`.
-
-### Events not appearing in factories
-
-Check that the DOM event name is listed in `config/react_dom_overlay.json` under
-`"events"` and that the corresponding React event type is declared in
-`lib/src/source/react_declarations.dart`.
+Expected: the SSR surface deliberately throws for live Web APIs. Host elements are
+handled by the virtual host-node pipeline and SSR metadata, never by constructing DOM
+objects.
 
 ---
 
 ## 11. Design decisions
 
-### 11.1 Single source of truth: `neutral_web_model.json`
+### 11.1 Single source of truth: the Web IDL snapshot
 
-All generated outputs derive from one file: `config/neutral_web_model.json`. It is
-**never hand-edited**. It is rewritten by `ModelJsonEmitter` every time the generator
-runs. Adding an element or exposing a new IDL member may expand the type graph, but it
-must never require manually adding another Dart interface or auxiliary stub.
+All generated outputs derive from one pinned snapshot (`web_apis.json`) merged into
+`CompleteWebModel`. There is no intermediate hand-maintained model JSON: adding an
+element or exposing a member never requires editing auxiliary stubs — the full surface
+is generated.
 
-### 11.2 Structured `TypeRef` AST, not strings
+### 11.2 Full surface, not reachability
 
-Types in the model are represented as structured JSON (e.g. `{"kind":"named","typeId":"web.String","nullable":true,"arguments":[]}`)
-rather than unparsed Dart strings like `"String?"` or `"T extends EventTarget"`.
-This lets every emitter resolve types independently without fragile string parsing.
+Every definition in the snapshot is emitted (filtered only by BCD). This keeps the
+surface stable, total, and free of "unresolved type" closures: no member is dropped, and
+application code can use any browser type.
 
-### 11.3 Reachability, not manual allowlisting of auxiliary types
+### 11.3 Mixins flatten into interfaces
 
-Every type referenced by the public surface (parent interfaces, return types, parameters,
-generic bounds, union options) is discovered automatically by a reachability pass from
-the configured root element names and React event interfaces.
+Mixins are not emitted as standalone abstract mixin classes; their members are merged
+into the interfaces that `includes` them. This keeps `implements` closures closed and
+lets `BrowserObjectAdapter.noSuchMethod` cover every member uniformly.
 
-The generator fails if the closure contains an unresolved type:
+### 11.4 The browser adapter is generated, not handwritten
 
-```text
-Unresolved neutral type: HTMLInputElement.files → FileList
-Source: Web IDL HTMLInputElement.files
-Add a mapping policy or update the source snapshot.
-```
+`browser_adapter.dart` is ~6.7k lines of mechanical, deterministic delegation
+(`getProperty`/`setProperty`/`callMethodVarArgs` per member). Handwriting it would be
+unmaintainable; generation guarantees it matches the neutral surface exactly. The
+`BrowserObjectAdapter.noSuchMethod` dispatcher means a new IDL member requires only
+regeneration, never a hand edit.
 
-It should never silently require someone to add `abstract interface class FileList {}` by hand.
-
-### 11.4 Exposure policies
-
-Not every reachable Web API needs its complete surface generated immediately. Each
-reachable declaration receives a policy:
-
-| Policy   | Behavior |
-|----------|----------|
-| `full`   | Generate all members recursively. |
-| `opaque` | Generate only a marker interface (`abstract interface class ShadowRoot {}`). The browser adapter can still hold the underlying `web.ShadowRoot`, but shared code cannot inspect unsupported members. |
-| `excluded` | Drop any member that exposes this type, with a generator diagnostic. |
-| `mapped` | Map it to a known neutral/core type (e.g. `TrustedHTML` → `TrustedHtml`). |
-
-The policy file (`react_dom_overlay.json` or a dedicated `typePolicies` map) remains
-small and intentional. It does not duplicate Web IDL inheritance and members.
-
-### 11.5 Browser adapters per interface, not one monolith
-
-`GeneratedElement` currently implements only `EventTarget` (3 methods), not the full
-`HTMLDivElement` interface with 300+ inherited abstract members. This avoids
-`non_abstract_class_inherits_abstract_member` errors and keeps the adapter minimal.
-
-Event wrappers are generated per event type (`GeneratedReactMouseEvent<T>`,
-`GeneratedReactKeyboardEvent<T>`, …). The host-value registry registers exact neutral
-type IDs (e.g. `web.HTMLDivElement`, `react.ReactMouseEvent<EventTarget>`).
-
-### 11.6 SSR generation policy
+### 11.5 SSR generation policy
 
 SSR does **not** construct concrete DOM or event objects (`HTMLDivElement`, `MouseEvent`,
-`FileList`). The shared interfaces exist so component source compiles:
-
-```dart
-div(
-  onClick: (event) {
-    event.currentTarget.focus();
-  },
-);
-```
-
-During SSR, `onClick` and `ref` are omitted. The server never invokes the callback and
-never needs an `HTMLDivElement` instance.
-
-SSR should generate **renderer metadata and prop lowering** from the same model:
+`FileList`). The shared interfaces exist so component source compiles; the SSR surface
+throws `UnsupportedWebApiError` on live access. SSR renders from the same model:
 
 - host element metadata
 - prop filtering
@@ -533,41 +412,13 @@ SSR should generate **renderer metadata and prop lowering** from the same model:
 - `dangerouslySetInnerHTML` handling
 
 If a future native renderer needs real server-side DOM handles, add another target
-emitter from the same model. Do not force that requirement into the current SSR
-architecture.
+emitter from the same model.
 
-### 11.7 React-specific data comes from React declarations
+### 11.6 React-specific data comes from React declarations
 
-Web IDL knows about browser interfaces, but it does not define:
-
-- `SyntheticEvent` / `currentTarget`
-- React event handler names (`onClickCapture`)
-- `dangerouslySetInnerHTML`
-- JSX intrinsic element mappings
-- React ref shapes
-
-That information comes from hand-authored React declarations (`source/react_declarations.dart`)
-and the overlay file (`react_dom_overlay.json`). These should be pinned just like the
-Web IDL snapshot.
-
-### 11.8 Generics are modeled explicitly
-
-Type parameters are encoded as structured declarations with bounds, not as unparsed
-strings:
-
-```json
-{
-  "typeParameters": [
-    {
-      "name": "T",
-      "bound": { "kind": "named", "typeId": "web.EventTarget", "nullable": false, "arguments": [] }
-    }
-  ]
-}
-```
-
-Type parameter references in members use `{"kind":"typeParameter","name":"T","nullable":false}`.
-Generic instantiations in `extends` use `{"kind":"named","typeId":"react.ReactSyntheticEvent","arguments":[{"kind":"typeParameter","name":"T",...}]}`.
+Web IDL knows about browser interfaces, but not `SyntheticEvent`, `onClickCapture`,
+`dangerouslySetInnerHTML`, or ref shapes. That information lives in
+`react_event_defs.dart` and `react_dom_overlay.json`, pinned alongside the snapshot.
 
 ---
 
@@ -576,39 +427,33 @@ Generic instantiations in `extends` use `{"kind":"named","typeId":"react.ReactSy
 ```
 packages/react_web_generator/
 ├── config/
-│   ├── milestone_w1_elements.json      # Element allowlist
-│   ├── react_dom_overlay.json          # Event/property renames/overrides
-│   ├── neutral_interfaces.json         # Deprecated legacy interface model
-│   └── neutral_web_model.json          # Generated single source of truth (reachable types)
+│   ├── roots.json                  # Element factory roots + void elements
+│   └── react_dom_overlay.json      # Event/property renames/overrides, type policies
 ├── lib/
-│   ├── react_web_generator.dart        # Barrel export
+│   ├── react_web_generator.dart    # Barrel export
 │   └── src/
-│       ├── adapter_emitter.dart        # Emits browser_adapter.dart
-│       ├── factory_emitter.dart        # Emits elements.dart
-│       ├── ir_builder.dart             # Builds WebHostElementIR from IDL + overlay
-│       ├── resolver.dart               # Indexes package:web extension types
-│       ├── web_dart_type.dart          # WebDartType IR node
-│       ├── web_host_ir.dart            # WebHostElementIR / WebHostPropIR / WebEventPropIR
-│       ├── emit/
-│       │   ├── model_json_emitter.dart # Writes neutral_web_model.json
-│       │   ├── neutral_interface_emitter.dart # Emits html_interfaces.dart + event_interfaces.dart
-│       │   └── type_ref_resolver.dart  # Resolves TypeRef to Dart type strings
-│       ├── model/
-│       │   ├── model.dart              # NeutralWebModel, ElementDecl
-│       │   ├── element_decl.dart       # ElementDecl, PropDecl, EventDecl
-│       │   ├── member_decl.dart        # AttributeDecl, OperationDecl, ParameterDecl
-│       │   ├── neutral_web_model.dart  # NeutralWebModel + JSON (de)serialization
-│       │   ├── type_decl.dart          # InterfaceDecl, TypeParameterDecl, BrowserBinding
-│       │   └── type_ref.dart           # NamedTypeRef, TypeParameterRef, UnionTypeRef
-│       ├── normalize/
-│       │   ├── model_builder.dart      # Builds NeutralWebModel from IDL + React declarations
-│       │   └── reachability.dart       # Graph traversal for reachable types
-│       └── source/
-│           ├── react_declarations.dart # Hand-authored React synthetic event interfaces
-│           └── web_idl_loader.dart     # Loads Web IDL snapshot into InterfaceDecl registry
+│       ├── bcd_filter.dart         # Spec filtering by browser compatibility data
+│       ├── ir_builder.dart         # Builds WebHostElementIR from model + overlay + roots
+│       ├── complete/
+│       │   ├── complete.dart       # CompleteWebModel, merge, load
+│       │   ├── package_web_mappings.dart  # package:web name mapping
+│       │   └── emit/
+│       │       ├── neutral_surface_emitter.dart  # Emits web/** + lib/apis/**
+│       │       └── ssr_surface_emitter.dart      # Emits web/ssr.dart
+│       └── emit/
+│           ├── react_event_defs.dart        # Authored React event shapes
+│           ├── react_event_emitter.dart     # Emits react_events.dart
+│           ├── factory_emitter.dart         # Emits elements.dart
+│           ├── dom_factory_emitter.dart     # Emits dom.dart
+│           ├── browser_adapter_emitter.dart # Emits browser_adapter.dart
+│           └── ssr_metadata_emitter.dart    # Emits ssr_metadata.dart
 └── test/
     └── factory_emitter_test.dart       # FactoryEmitter unit tests
 
 tool/web_idl/
-└── generate_factories.dart             # Top-level generation entry point
+├── generate_factories.dart             # Top-level generation entry point
+├── verify.dart                         # Integrity gate (--strict for package:web)
+└── snapshots/
+    ├── web_apis.json                   # Pinned Web IDL snapshot
+    └── provenance.json                 # Snapshot metadata (source, date, revision)
 ```

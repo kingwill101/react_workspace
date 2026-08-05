@@ -5,7 +5,16 @@ import 'package:react_web_generator/src/resolver.dart';
 import 'package:react_web_generator/src/source/element_snapshot.dart';
 import 'package:react_web_generator/src/web_dart_type.dart';
 import 'package:react_web_generator/src/web_host_ir.dart';
-import 'package:react_web_generator/src/normalize/model_builder.dart';
+
+/// Loads the set of void (self-closing) element tags from the roots config.
+Set<String> loadVoidElements(String rootsPath) {
+  final file = File(rootsPath);
+  final data = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+  return (data['voidElements'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toSet() ??
+      {};
+}
 
 final class WebHostIrBuilder {
   final PackageWebResolver _resolver;
@@ -281,12 +290,25 @@ final class WebHostIrBuilder {
     final primitive = _primitiveType(typeStr);
     if (primitive != null) return primitive;
 
+    final alias = _typedefAliases[typeStr];
+    if (alias != null) return alias;
+
     return WebDartType(
       symbol: typeStr,
       import: Uri.parse('dart:core'),
       nullable: nullable,
     );
   }
+
+  /// IDL typedefs that resolve to a neutral surface type under a different
+  /// name than the raw snapshot string.
+  static final _typedefAliases = <String, WebDartType>{
+    'WindowProxy': WebDartType(
+      symbol: 'Window',
+      import: Uri.parse('package:react_web/src/generated/web/web.dart'),
+      nullable: false,
+    ),
+  };
 
   WebDartType? _primitiveType(String idlType) {
     return switch (idlType) {
