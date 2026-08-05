@@ -6,3 +6,4 @@ dependencies:
   react:
   react_js:
     path: ../react_js
+  react_web: any

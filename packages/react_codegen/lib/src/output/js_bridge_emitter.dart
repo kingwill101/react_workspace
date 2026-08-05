@@ -47,6 +47,10 @@ final class JsBridgeEmitter {
         toJSBuffer.writeln(
           "  o.setProperty('${prop.name}'.toJS, ${prop.required ? 'callbackToJS($modelCode)' : 'props.${prop.name} == null ? null : callbackToJS($modelCode)'});",
         );
+      } else if (_isCollection(prop.type)) {
+        toJSBuffer.writeln(
+          "  o.setProperty('${prop.name}'.toJS, ${prop.required ? 'props.${prop.name}.jsify()' : 'props.${prop.name} == null ? null : props.${prop.name}!.jsify()'});",
+        );
       } else if (_isNullable(prop.type)) {
         toJSBuffer.writeln(
           "  if (props.${prop.name} != null) o.setProperty('${prop.name}'.toJS, props.${prop.name}!.toJS);",
@@ -131,6 +135,9 @@ final class JsBridgeEmitter {
   }
 
   bool _isCallback(ReactTypeRef type) => type is FunctionTypeRef;
+
+  bool _isCollection(ReactTypeRef type) =>
+      type is NamedTypeRef && (type.symbol == 'List' || type.symbol == 'Map');
 
   ReactCallbackModel _callbackModel(ReactTypeRef type) {
     if (type is! FunctionTypeRef) {
@@ -227,6 +234,8 @@ final class JsBridgeEmitter {
       ) => 'requiredJSDouble(js, "${prop.name}"$nullable)',
       (NamedTypeRef(symbol: 'bool'), true) =>
         'requiredJSBool(js, "${prop.name}"$nullable)',
+      (NamedTypeRef(symbol: 'List') || NamedTypeRef(symbol: 'Map'), _) =>
+        'js.getProperty("${prop.name}".toJS).dartify() as ${_typeCode(prop.type)}',
       _ => 'jsAnyOrNull(js, "${prop.name}")',
     };
   }

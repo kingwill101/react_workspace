@@ -94,7 +94,8 @@ void main() {
       );
 
       final result = callback.invoke([7]);
-      expect(result, 7);
+      expect(result, isA<Future<int>>());
+      expect(await result, 7);
     });
   });
 

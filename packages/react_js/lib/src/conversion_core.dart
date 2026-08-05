@@ -127,7 +127,7 @@ T fromJS<T>(JSAny? js) {
     for (var i = 0; i < js.length; i++) {
       result.add(fromJS<Object?>(js[i]));
     }
-    return (result as List<Object?>).cast<T>() as T;
+    return (result).cast<T>() as T;
   }
   return js as T;
 }

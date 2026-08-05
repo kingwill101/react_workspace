@@ -40,7 +40,7 @@ ShelfRequestHandler _handler() {
   final registry = ServerFunctionRegistry()
     ..register(_incrementRef, (arguments, _) => arguments.value + 1);
   final actionHandler = createServerActionHandler(registry);
-  return ShelfRequestHandler(Pipeline().addHandler(actionHandler));
+  return ShelfRequestHandler(const Pipeline().addHandler(actionHandler));
 }
 
 void main() {

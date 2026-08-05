@@ -44,6 +44,14 @@ final class ReactTypeReader {
       );
     }
 
+    if (type is InterfaceType && type.element.name == 'Map') {
+      return NamedTypeRef(
+        symbol: 'Map',
+        typeArguments: type.typeArguments.map(read).toList(),
+        nullable: nullable,
+      );
+    }
+
     if (type is FunctionType) {
       return _readFunction(type);
     }

@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react_js/react_js.dart';
-import 'package:react_web/src/generated/browser_adapter.dart';
+import 'package:react_web/react_web.dart';
 
 void initReact() {
   registerBrowserAdapters();
+  installBrowserWebRuntime();
   runWithReactRuntime(
     ReactRuntime(
       target: ReactRenderTarget.browser,

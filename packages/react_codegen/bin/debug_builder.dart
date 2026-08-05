@@ -1,6 +1,7 @@
 /// Debug script to diagnose ServerDataAnnotation resolution.
 ///
 /// Usage: dart run packages/react_codegen/bin/debug_builder.dart
+library;
 import 'dart:io';
 
 import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
@@ -29,7 +30,7 @@ Future<void> main(List<String> args) async {
   final contractResult = await session.getResolvedUnit(contractPath) as ResolvedUnitResult;
   final contractLib = contractResult.libraryElement;
 
-  final serverDataChecker = TypeChecker.fromUrl(
+  const serverDataChecker = TypeChecker.fromUrl(
     'package:react_actions/src/annotations.dart#ServerDataAnnotation',
   );
 

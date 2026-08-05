@@ -8,11 +8,14 @@ final class CallbackEmitter {
     required String debugName,
     required ReactCallbackModel callback,
   }) {
+    final positionalSpec = callback.positional
+        .map((param) => _valueSpec(param.valueSpec))
+        .join(',\n    ');
     final signature =
         '''
 const (
   positional: [
-    ${callback.positional.map((param) => _valueSpec(param.valueSpec)).join(',\n    ')},
+    ${positionalSpec.isEmpty ? '' : '$positionalSpec,'}
   ],
   result: ${_valueSpec(callback.result)},
   asynchronous: ${callback.asynchronous},

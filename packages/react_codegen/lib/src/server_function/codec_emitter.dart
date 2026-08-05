@@ -148,19 +148,19 @@ final class CodecEmitter {
       return value;
     }
     if (type is ListSerialization) {
-      return '${value}.map((__e) => ${_encodeExpr(type.element, '__e')}).toList()';
+      return '$value.map((__e) => ${_encodeExpr(type.element, '__e')}).toList()';
     }
     if (type is MapSerialization) {
-      return '${value}.map((__k, __v) => MapEntry(__k, ${_encodeExpr(type.value, '__v')}))';
+      return '$value.map((__k, __v) => MapEntry(__k, ${_encodeExpr(type.value, '__v')}))';
     }
     if (type is DateTimeSerialization) {
-      return '${value}.toIso8601String()';
+      return '$value.toIso8601String()';
     }
     if (type is UriSerialization) {
-      return '${value}.toString()';
+      return '$value.toString()';
     }
     if (type is EnumSerialization) {
-      return '${value}.name';
+      return '$value.name';
     }
     if (type is RecordSerialization) {
       final parts = type.fields.map(
@@ -188,15 +188,18 @@ final class CodecEmitter {
     if (type is PrimitiveSerialization) {
       final n = type.dartName;
       final q = type.nullable;
-      if (n == 'String')
+      if (n == 'String') {
         return q ? '$jsonVar as String?' : '$jsonVar as String';
-      if (n == 'int')
+      }
+      if (n == 'int') {
         return q ? '($jsonVar as num?)?.toInt()' : '($jsonVar as num).toInt()';
+      }
       if (n == 'num') return q ? '$jsonVar as num?' : '$jsonVar as num';
-      if (n == 'double')
+      if (n == 'double') {
         return q
             ? '($jsonVar as num?)?.toDouble()'
             : '($jsonVar as num).toDouble()';
+      }
       if (n == 'bool') return q ? '$jsonVar as bool?' : '$jsonVar as bool';
       return q ? '$jsonVar as $n?' : '$jsonVar as $n';
     }

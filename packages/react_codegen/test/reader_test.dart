@@ -9,7 +9,7 @@ import 'package:source_gen/source_gen.dart';
 
 void main() {
   test('@serverFunction annotation resolves correctly', () async {
-    final checker = TypeChecker.fromUrl(
+    const checker = TypeChecker.fromUrl(
       'package:react_actions/src/annotations.dart#ServerFunctionAnnotation',
     );
     expect(checker, isNotNull, reason: 'TypeChecker should be constructable');

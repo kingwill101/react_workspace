@@ -609,7 +609,7 @@ import "dart:io";
 
 void main() async {
   final port = int.tryParse(Platform.environment["PORT"] ?? "") ?? 8080;
-  final root = Directory("build/react");
+  var root = Directory("build/react");
   if (!root.existsSync()) {
     final web = Directory("web");
     if (web.existsSync()) {
@@ -645,20 +645,20 @@ ContentType _contentType(String ext) {
     case "html":
       return ContentType.html;
     case "js":
-      return ContentType.js;
+      return ContentType("application", "javascript");
     case "mjs":
       return ContentType("application", "javascript");
     case "css":
-      return ContentType.css;
+      return ContentType("text", "css");
     case "json":
       return ContentType.json;
     case "png":
-      return ContentType.imagePng;
+      return ContentType("image", "png");
     case "jpg":
     case "jpeg":
-      return ContentType.imageJpeg;
+      return ContentType("image", "jpeg");
     case "gif":
-      return ContentType.imageGif;
+      return ContentType("image", "gif");
     case "svg":
       return ContentType("image", "svg+xml");
     case "wasm":
