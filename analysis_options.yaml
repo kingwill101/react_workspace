@@ -2,6 +2,7 @@ include: package:lints/recommended.yaml
 analyzer:
   exclude:
     - tool/vendor/**
+    - third_party/**
 linter:
   rules:
     - prefer_const_constructors
