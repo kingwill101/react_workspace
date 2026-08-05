@@ -1,11 +1,13 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react_js/react_js.dart';
+import 'package:react_js/src/codec_registry.dart' show ReactCodecRegistry;
 import 'dashboard.dart' as impl;
 import 'dashboard.react.dart' show idDashboardPage;
 
-JSObject _DashboardPage_toJS(({List<Map<String, dynamic>> lessons, dynamic Function(String) onNavigate, dynamic Function(String) onToast, List<Map<String, dynamic>> templates, List<Map<String, dynamic>> units, Map<String, dynamic>? user}) props) {
+JSObject _DashboardPage_toJS(({List<Map<String, dynamic>> classes, List<Map<String, dynamic>> lessons, dynamic Function(String) onNavigate, dynamic Function(String) onToast, List<Map<String, dynamic>> syllabuses, List<Map<String, dynamic>> templates, List<Map<String, dynamic>> units, Map<String, dynamic>? user}) props) {
   final o = JSObject();
+  o.setProperty('classes'.toJS, props.classes.jsify());
   o.setProperty('lessons'.toJS, props.lessons.jsify());
   o.setProperty('onNavigate'.toJS, callbackToJS(ReactCallback(
   debugName: 'DashboardPage.onNavigate',
@@ -45,13 +47,15 @@ JSObject _DashboardPage_toJS(({List<Map<String, dynamic>> lessons, dynamic Funct
     return props.onToast(arguments[0] as String);
   },
 )));
+  o.setProperty('syllabuses'.toJS, props.syllabuses.jsify());
   o.setProperty('templates'.toJS, props.templates.jsify());
   o.setProperty('units'.toJS, props.units.jsify());
   o.setProperty('user'.toJS, props.user == null ? null : props.user!.jsify());
   return o;
 }
 
-({List<Map<String, dynamic>> lessons, dynamic Function(String) onNavigate, dynamic Function(String) onToast, List<Map<String, dynamic>> templates, List<Map<String, dynamic>> units, Map<String, dynamic>? user}) _DashboardPage_fromJS(JSObject js) {
+({List<Map<String, dynamic>> classes, List<Map<String, dynamic>> lessons, dynamic Function(String) onNavigate, dynamic Function(String) onToast, List<Map<String, dynamic>> syllabuses, List<Map<String, dynamic>> templates, List<Map<String, dynamic>> units, Map<String, dynamic>? user}) _DashboardPage_fromJS(JSObject js) {
+final classes = js.getProperty("classes".toJS).dartify() as List<Map<String, dynamic>>;
 final lessons = js.getProperty("lessons".toJS).dartify() as List<Map<String, dynamic>>;
 final dynamic Function(String) onNavigate =
     (String param0) {
@@ -97,10 +101,11 @@ return decodeReactValue(
   rawResult,
 ) as dynamic;
     };
+final syllabuses = js.getProperty("syllabuses".toJS).dartify() as List<Map<String, dynamic>>;
 final templates = js.getProperty("templates".toJS).dartify() as List<Map<String, dynamic>>;
 final units = js.getProperty("units".toJS).dartify() as List<Map<String, dynamic>>;
 final user = js.getProperty("user".toJS).dartify() as Map<String, dynamic>?;
-  return (lessons: lessons, onNavigate: onNavigate, onToast: onToast, templates: templates, units: units, user: user);
+  return (classes: classes, lessons: lessons, onNavigate: onNavigate, onToast: onToast, syllabuses: syllabuses, templates: templates, units: units, user: user);
 }
 
 final JSFunction $DashboardPage = (() {
@@ -112,7 +117,7 @@ final JSFunction $DashboardPage = (() {
 })() as JSFunction;
 void registerDashboardPage(){
   ReactRegistry.register(idDashboardPage.value, $DashboardPage,
-      toJS: (p) => _DashboardPage_toJS(p as ({List<Map<String, dynamic>> lessons, dynamic Function(String) onNavigate, dynamic Function(String) onToast, List<Map<String, dynamic>> templates, List<Map<String, dynamic>> units, Map<String, dynamic>? user})),
+      toJS: (p) => _DashboardPage_toJS(p as ({List<Map<String, dynamic>> classes, List<Map<String, dynamic>> lessons, dynamic Function(String) onNavigate, dynamic Function(String) onToast, List<Map<String, dynamic>> syllabuses, List<Map<String, dynamic>> templates, List<Map<String, dynamic>> units, Map<String, dynamic>? user})),
       fromJS: (js) => _DashboardPage_fromJS(js));
 }
 

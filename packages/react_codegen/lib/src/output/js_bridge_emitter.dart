@@ -1,6 +1,10 @@
 import '../model/model.dart';
 import 'callback_emitter.dart';
 
+// ReactCodecRegistry is referenced by name in generated code strings;
+// we import it here only to verify it is available to generated files.
+// ignore: unused_import
+
 final class JsBridgeEmitter {
   final CallbackEmitter callbackEmitter;
 
@@ -11,6 +15,7 @@ final class JsBridgeEmitter {
       ..writeln("import 'dart:js_interop';")
       ..writeln("import 'dart:js_interop_unsafe';")
       ..writeln("import 'package:react_js/react_js.dart';")
+      ..writeln("import 'package:react_js/src/codec_registry.dart' show ReactCodecRegistry;")
       ..writeln("import '${model.inputFile}' as impl;");
     for (final component in model.components) {
       buffer.writeln("import '${model.reactFile}' show id${component.name};");
@@ -47,6 +52,19 @@ final class JsBridgeEmitter {
         toJSBuffer.writeln(
           "  o.setProperty('${prop.name}'.toJS, ${prop.required ? 'callbackToJS($modelCode)' : 'props.${prop.name} == null ? null : callbackToJS($modelCode)'});",
         );
+      } else if (_isHostType(prop.type)) {
+        // Host-platform value (DOM element / synthetic event) — encode via
+        // ReactCodecRegistry so the renderer adapter handles the JS wrapping.
+        final t = prop.type as HostTypeRef;
+        if (t.nullable) {
+          toJSBuffer.writeln(
+            "  if (props.${prop.name} != null) o.setProperty('${prop.name}'.toJS, ReactCodecRegistry.encodeHostValue('${t.hostNamespace}', '${t.typeId}', props.${prop.name}) ?? JSObject());",
+          );
+        } else {
+          toJSBuffer.writeln(
+            "  o.setProperty('${prop.name}'.toJS, ReactCodecRegistry.encodeHostValue('${t.hostNamespace}', '${t.typeId}', props.${prop.name}) ?? JSObject());",
+          );
+        }
       } else if (_isCollection(prop.type)) {
         toJSBuffer.writeln(
           "  o.setProperty('${prop.name}'.toJS, ${prop.required ? 'props.${prop.name}.jsify()' : 'props.${prop.name} == null ? null : props.${prop.name}!.jsify()'});",
@@ -119,6 +137,10 @@ final class JsBridgeEmitter {
   }
 
   bool _isNullable(ReactTypeRef type) {
+    if (type is HostTypeRef) {
+      return type.nullable;
+    }
+
     if (type is NamedTypeRef) {
       return type.nullable;
     }
@@ -135,6 +157,8 @@ final class JsBridgeEmitter {
   }
 
   bool _isCallback(ReactTypeRef type) => type is FunctionTypeRef;
+
+  bool _isHostType(ReactTypeRef type) => type is HostTypeRef;
 
   bool _isCollection(ReactTypeRef type) =>
       type is NamedTypeRef && (type.symbol == 'List' || type.symbol == 'Map');
@@ -162,6 +186,16 @@ final class JsBridgeEmitter {
   }
 
   ReactValueSpecModel _toValueSpec(ReactTypeRef type) {
+    // Host types (react_web DOM elements, synthetic events) → hostValue codec.
+    if (type is HostTypeRef) {
+      return ReactValueSpecModel(
+        kind: ReactValueKind.hostValue,
+        nullable: type.nullable,
+        hostNamespace: type.hostNamespace,
+        typeId: type.typeId,
+      );
+    }
+
     if (type is NamedTypeRef) {
       final kind = switch (type.symbol) {
         'void' => ReactValueKind.void_,
@@ -197,6 +231,11 @@ final class JsBridgeEmitter {
   }
 
   String _typeCode(ReactTypeRef type) {
+    if (type is HostTypeRef) {
+      final suffix = type.nullable ? '?' : '';
+      return '${type.typeId}$suffix';
+    }
+
     if (type is NamedTypeRef) {
       final args = type.typeArguments.map(_typeCode).join(', ');
       final suffix = args.isEmpty ? '' : '<$args>';
@@ -217,6 +256,13 @@ final class JsBridgeEmitter {
   }
 
   String _accessor(ReactPropModel prop, String componentName) {
+    // Host-platform prop — decode via ReactCodecRegistry.
+    if (prop.type is HostTypeRef) {
+      final t = prop.type as HostTypeRef;
+      final raw = "ReactCodecRegistry.decodeHostValue('${t.hostNamespace}', '${t.typeId}', js.getProperty('${prop.name}'.toJS)) as ${_typeCode(t)}";
+      return raw;
+    }
+
     final nullable = _isNullable(prop.type)
         ? ''
         : ', component: "$componentName"';

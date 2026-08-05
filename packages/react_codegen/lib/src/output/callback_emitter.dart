@@ -201,6 +201,11 @@ final ${_callbackType(callback)} $fieldName =
   }
 
   String _typeCode(ReactTypeRef type) {
+    if (type is HostTypeRef) {
+      final suffix = type.nullable ? '?' : '';
+      return '${type.typeId}$suffix';
+    }
+
     if (type is NamedTypeRef) {
       final args = type.typeArguments.map(_typeCode).join(', ');
       final suffix = args.isEmpty ? '' : '<$args>';

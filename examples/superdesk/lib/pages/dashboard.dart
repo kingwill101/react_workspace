@@ -6,6 +6,8 @@ ReactNode DashboardPage(({
   List<Map<String, dynamic>> templates,
   List<Map<String, dynamic>> lessons,
   List<Map<String, dynamic>> units,
+  List<Map<String, dynamic>> syllabuses,
+  List<Map<String, dynamic>> classes,
   Function(String) onNavigate,
   Function(String) onToast,
 }) props) {
@@ -178,6 +180,24 @@ ReactNode DashboardPage(({
                     ),
                   ],
                 ),
+            ],
+          ),
+        ],
+      ),
+      div(
+        className: 'bg-white border-3 border-dark rounded-[24px] shadow-chunky p-4 flex gap-3',
+        children: [
+          div(
+            className: 'w-[44px] h-[44px] rounded-[12px] bg-cream border-2 border-dark grid place-items-center text-[18px]',
+            children: [Text('💡')],
+          ),
+          div(
+            children: [
+              div(className: 'font-black text-[13px]', children: [Text('Promethean tip')]),
+              p(
+                className: 'text-[12px] font-bold text-gray-500 leading-snug mt-1',
+                children: [Text('Tap any widget in Live Board to enlarge menus — everything is tap-friendly for boards!')],
+              ),
             ],
           ),
         ],

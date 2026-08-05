@@ -1,11 +1,13 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react_js/react_js.dart';
+import 'package:react_js/src/codec_registry.dart' show ReactCodecRegistry;
 import 'syllabus.dart' as impl;
 import 'syllabus.react.dart' show idSyllabusPage;
 
-JSObject _SyllabusPage_toJS(({List<String> expandedUnits, dynamic Function(String) onSelect, dynamic Function(String) onToast, dynamic Function(String) onToggle, String selectedSyllabus}) props) {
+JSObject _SyllabusPage_toJS(({List<Map<String, dynamic>> classes, List<String> expandedUnits, dynamic Function(String) onSelect, dynamic Function(String) onToast, dynamic Function(String) onToggle, String selectedSyllabus, List<Map<String, dynamic>> syllabuses, List<Map<String, dynamic>> units}) props) {
   final o = JSObject();
+  o.setProperty('classes'.toJS, props.classes.jsify());
   o.setProperty('expandedUnits'.toJS, props.expandedUnits.jsify());
   o.setProperty('onSelect'.toJS, callbackToJS(ReactCallback(
   debugName: 'SyllabusPage.onSelect',
@@ -65,10 +67,13 @@ JSObject _SyllabusPage_toJS(({List<String> expandedUnits, dynamic Function(Strin
   },
 )));
   o.setProperty('selectedSyllabus'.toJS, props.selectedSyllabus.toJS);
+  o.setProperty('syllabuses'.toJS, props.syllabuses.jsify());
+  o.setProperty('units'.toJS, props.units.jsify());
   return o;
 }
 
-({List<String> expandedUnits, dynamic Function(String) onSelect, dynamic Function(String) onToast, dynamic Function(String) onToggle, String selectedSyllabus}) _SyllabusPage_fromJS(JSObject js) {
+({List<Map<String, dynamic>> classes, List<String> expandedUnits, dynamic Function(String) onSelect, dynamic Function(String) onToast, dynamic Function(String) onToggle, String selectedSyllabus, List<Map<String, dynamic>> syllabuses, List<Map<String, dynamic>> units}) _SyllabusPage_fromJS(JSObject js) {
+final classes = js.getProperty("classes".toJS).dartify() as List<Map<String, dynamic>>;
 final expandedUnits = js.getProperty("expandedUnits".toJS).dartify() as List<String>;
 final dynamic Function(String) onSelect =
     (String param0) {
@@ -137,7 +142,9 @@ return decodeReactValue(
 ) as dynamic;
     };
 final selectedSyllabus = requiredJSString(js, "selectedSyllabus", component: "SyllabusPage");
-  return (expandedUnits: expandedUnits, onSelect: onSelect, onToast: onToast, onToggle: onToggle, selectedSyllabus: selectedSyllabus);
+final syllabuses = js.getProperty("syllabuses".toJS).dartify() as List<Map<String, dynamic>>;
+final units = js.getProperty("units".toJS).dartify() as List<Map<String, dynamic>>;
+  return (classes: classes, expandedUnits: expandedUnits, onSelect: onSelect, onToast: onToast, onToggle: onToggle, selectedSyllabus: selectedSyllabus, syllabuses: syllabuses, units: units);
 }
 
 final JSFunction $SyllabusPage = (() {
@@ -149,7 +156,7 @@ final JSFunction $SyllabusPage = (() {
 })() as JSFunction;
 void registerSyllabusPage(){
   ReactRegistry.register(idSyllabusPage.value, $SyllabusPage,
-      toJS: (p) => _SyllabusPage_toJS(p as ({List<String> expandedUnits, dynamic Function(String) onSelect, dynamic Function(String) onToast, dynamic Function(String) onToggle, String selectedSyllabus})),
+      toJS: (p) => _SyllabusPage_toJS(p as ({List<Map<String, dynamic>> classes, List<String> expandedUnits, dynamic Function(String) onSelect, dynamic Function(String) onToast, dynamic Function(String) onToggle, String selectedSyllabus, List<Map<String, dynamic>> syllabuses, List<Map<String, dynamic>> units})),
       fromJS: (js) => _SyllabusPage_fromJS(js));
 }
 

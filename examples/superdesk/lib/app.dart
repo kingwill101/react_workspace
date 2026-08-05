@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import 'package:react/react.dart';
 import 'package:react_web/react_web.dart';
-import 'package:react_web/web.dart' show HTMLInputElement;
+import 'package:react_web/web.dart' show HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement, MessageEvent;
 
 import 'pages/dashboard.dart';
 import 'pages/resources.dart';
@@ -17,6 +16,16 @@ import 'pages/settings.dart';
 
 final _appId = 'superdesk';
 
+void _downloadJson(String filename, String content) {
+  try {
+    window.localStorage.setItem('superdesk_backup_export', content);
+    final a = document.createElement('a');
+    a.setAttribute('href', 'data:application/json;charset=utf-8,${Uri.encodeComponent(content)}');
+    a.setAttribute('download', filename);
+    (a as dynamic).click();
+  } catch (_) {}
+}
+
 @reactComponent
 ReactNode App(({String title}) props) {
   final (page, setPage) = useState<String>('Dashboard');
@@ -28,9 +37,14 @@ ReactNode App(({String title}) props) {
   final (search, setSearch) = useState<String>('');
   final (filter, setFilter) = useState<String>('all');
   final (showNewRes, setShowNewRes) = useState<bool>(false);
+  final (newResName, setNewResName) = useState<String>('');
+  final (newResType, setNewResType) = useState<String>('vocab');
   final (editingRes, setEditingRes) = useState<Map<String, dynamic>?>(null);
   final (expandedUnits, setExpandedUnits) = useState<List<String>>([]);
   final (selectedSyllabus, setSelectedSyllabus) = useState<String>('s1');
+  final (units, setUnits) = useState<List<Map<String, dynamic>>>([]);
+  final (syllabuses, setSyllabuses) = useState<List<Map<String, dynamic>>>([]);
+  final (classes, setClasses) = useState<List<Map<String, dynamic>>>([]);
   final (arcadeGame, setArcadeGame) = useState<String>('wordpop');
   final (wordPopActive, setWordPopActive) = useState<bool>(false);
   final (score, setScore) = useState<int>(0);
@@ -56,6 +70,24 @@ ReactNode App(({String title}) props) {
         (jsonDecode(savedPhases) as List).map((e) => Map<String, dynamic>.from(e as Map)),
       ));
     }
+    final savedUnits = window.localStorage.getItem('superdesk_units');
+    if (savedUnits != null) {
+      setUnits(List<Map<String, dynamic>>.from(
+        (jsonDecode(savedUnits) as List).map((e) => Map<String, dynamic>.from(e as Map)),
+      ));
+    }
+    final savedSyllabuses = window.localStorage.getItem('superdesk_syllabuses');
+    if (savedSyllabuses != null) {
+      setSyllabuses(List<Map<String, dynamic>>.from(
+        (jsonDecode(savedSyllabuses) as List).map((e) => Map<String, dynamic>.from(e as Map)),
+      ));
+    }
+    final savedClasses = window.localStorage.getItem('superdesk_classes');
+    if (savedClasses != null) {
+      setClasses(List<Map<String, dynamic>>.from(
+        (jsonDecode(savedClasses) as List).map((e) => Map<String, dynamic>.from(e as Map)),
+      ));
+    }
   }, []);
 
   useEffect(() {
@@ -72,6 +104,18 @@ ReactNode App(({String title}) props) {
     window.localStorage.setItem('superdesk_phases', jsonEncode(phases));
   }, [phases]);
 
+  useEffect(() {
+    window.localStorage.setItem('superdesk_units', jsonEncode(units));
+  }, [units]);
+
+  useEffect(() {
+    window.localStorage.setItem('superdesk_syllabuses', jsonEncode(syllabuses));
+  }, [syllabuses]);
+
+  useEffect(() {
+    window.localStorage.setItem('superdesk_classes', jsonEncode(classes));
+  }, [classes]);
+
   final liveJoinedRef = useRef<int>(0);
   useEffect(() {
     liveJoinedRef.current = liveJoined;
@@ -81,7 +125,7 @@ ReactNode App(({String title}) props) {
   useEffect(() {
     final channel = BroadcastChannel('superdesk-live');
     channel.onmessage = (Event event) {
-      final data = (event as dynamic).data;
+      final data = (event as MessageEvent).data.toString();
       if (data == '{"type":"join"}') {
         setLiveJoined((liveJoinedRef.current ?? 0) + 1);
       }
@@ -283,7 +327,9 @@ ReactNode App(({String title}) props) {
                       user: user,
                       templates: _templates,
                       lessons: _lessons,
-                      units: _units,
+                      units: units,
+                      syllabuses: syllabuses,
+                      classes: classes,
                       onNavigate: setPage.call,
                       onToast: setToast.call,
                     )),
@@ -305,9 +351,12 @@ ReactNode App(({String title}) props) {
                       onSelect: setSelectedSyllabus.call,
                       expandedUnits: expandedUnits,
                       onToggle: (id) => setExpandedUnits(expandedUnits.contains(id) ? expandedUnits.where((x) => x != id).toList() : [...expandedUnits, id]),
+                      units: units,
+                      syllabuses: syllabuses,
+                      classes: classes,
                       onToast: setToast.call,
                     )),
-                    if (page == 'Classes') ClassesPage((onToast: setToast.call)),
+                    if (page == 'Classes') ClassesPage((classes: classes, onToast: setToast.call)),
                     if (page == 'Builder') BuilderPage((
                       lessonName: lessonName,
                       onLessonName: setLessonName.call,
@@ -347,10 +396,165 @@ ReactNode App(({String title}) props) {
                         window.localStorage.clear();
                         window.location.reload();
                       },
+                      onExport: () {
+                        final data = jsonEncode({
+                          'user': user,
+                          'resources': resources,
+                          'units': units,
+                          'syllabuses': syllabuses,
+                          'classes': classes,
+                          'phases': phases,
+                        });
+                        _downloadJson('superdesk_backup.json', data);
+                        setToast('Settings exported ✨');
+                      },
+                      onImport: (jsonStr) {
+                        try {
+                          final data = jsonDecode(jsonStr) as Map<String, dynamic>;
+                          if (data['user'] != null) setUser(data['user'] as Map<String, dynamic>);
+                          if (data['resources'] != null) setResources(List<Map<String, dynamic>>.from((data['resources'] as List).map((e) => Map<String, dynamic>.from(e as Map))));
+                          if (data['units'] != null) setUnits(List<Map<String, dynamic>>.from((data['units'] as List).map((e) => Map<String, dynamic>.from(e as Map))));
+                          if (data['syllabuses'] != null) setSyllabuses(List<Map<String, dynamic>>.from((data['syllabuses'] as List).map((e) => Map<String, dynamic>.from(e as Map))));
+                          if (data['classes'] != null) setClasses(List<Map<String, dynamic>>.from((data['classes'] as List).map((e) => Map<String, dynamic>.from(e as Map))));
+                          if (data['phases'] != null) setPhases(List<Map<String, dynamic>>.from((data['phases'] as List).map((e) => Map<String, dynamic>.from(e as Map))));
+                          setToast('Settings imported ✨');
+                        } catch (e) {
+                          setToast('Import failed ❌');
+                        }
+                      },
+                      onToast: setToast.call,
                     )),
                   ],
                 ),
-                if (toast != null)
+                if (showNewRes)
+                  div(
+                    className: 'fixed inset-0 bg-black/40 backdrop-blur-sm grid place-items-center z-50 p-4',
+                    children: [
+                      div(
+                        className: 'w-full max-w-[440px] bg-cream border-3 border-dark rounded-[28px] shadow-chunky-lg p-6',
+                        children: [
+                          div(
+                            className: 'flex items-center justify-between mb-4',
+                            children: [
+                              h3(
+                                className: 'font-black text-[18px]',
+                                style: {'fontFamily': 'Fredoka'},
+                                children: [Text('New Resource')],
+                              ),
+                              button(
+                                onClick: (_) => setShowNewRes(false),
+                                className: 'w-[32px] h-[32px] bg-white border-2 border-dark rounded-full grid place-items-center font-black',
+                                children: [Text('✕')],
+                              ),
+                            ],
+                          ),
+                          div(
+                            className: 'space-y-3',
+                            children: [
+                              input(
+                                value: newResName,
+                                onChange: (e) => setNewResName((e.target as HTMLInputElement).value),
+                                placeholder: 'Resource name',
+                                className: 'w-full h-[48px] bg-white border-2 border-dark rounded-[16px] px-4 font-bold outline-none',
+                              ),
+                              select(
+                                value: newResType,
+                                onChange: (e) => setNewResType((e.target as HTMLSelectElement).value),
+                                className: 'w-full h-[48px] bg-white border-2 border-dark rounded-[16px] px-4 font-black',
+                                children: [
+                                  option(value: 'vocab', children: [Text('Vocab Pack')]),
+                                  option(value: 'video', children: [Text('Video')]),
+                                  option(value: 'slides', children: [Text('Slides')]),
+                                  option(value: 'game', children: [Text('Game')]),
+                                  option(value: 'quiz', children: [Text('Quiz Bank')]),
+                                  option(value: 'image', children: [Text('Image Pack')]),
+                                ],
+                              ),
+                              button(
+                                onClick: (_) {
+                                  if (newResName.trim().isEmpty) {
+                                    setToast('Name required');
+                                    return;
+                                  }
+                                  final newRes = {
+                                    'id': 'r${DateTime.now().millisecondsSinceEpoch}',
+                                    'name': newResName,
+                                    'type': newResType,
+                                    'desc': 'New resource draft',
+                                    'duration': '10 min',
+                                    'badge': 'New',
+                                    'color': '#FFF4E0',
+                                  };
+                                  setResources([newRes, ...resources]);
+                                  setShowNewRes(false);
+                                  setNewResName('');
+                                  setToast('Resource created ✨');
+                                },
+                                className: 'w-full h-[48px] bg-dark text-white rounded-full font-black border-3 border-dark shadow-chunky',
+                                children: [Text('Create Resource')],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                if (editingRes != null)
+                  div(
+                    className: 'fixed inset-0 bg-black/40 backdrop-blur-sm grid place-items-center z-50 p-4',
+                    children: [
+                      div(
+                        className: 'w-full max-w-[480px] bg-white border-3 border-dark rounded-[28px] shadow-chunky-lg p-6',
+                        children: [
+                          div(
+                            className: 'flex items-center justify-between mb-3',
+                            children: [
+                              h3(
+                                className: 'font-black text-[18px]',
+                                style: {'fontFamily': 'Fredoka'},
+                                children: [Text('Edit ${editingRes!['name']}')],
+                              ),
+                              button(
+                                onClick: (_) => setEditingRes(null),
+                                className: 'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full grid place-items-center font-black',
+                                children: [Text('✕')],
+                              ),
+                            ],
+                          ),
+                          input(
+                            value: editingRes!['name'] as String? ?? '',
+                            onChange: (e) => setEditingRes({...editingRes!, 'name': (e.target as HTMLInputElement).value}),
+                            className: 'w-full h-[44px] bg-cream border-2 border-dark rounded-[16px] px-3 font-black outline-none',
+                          ),
+                          textarea(
+                            value: editingRes!['desc'] as String? ?? '',
+                            onChange: (e) => setEditingRes({...editingRes!, 'desc': (e.target as HTMLTextAreaElement).value}),
+                            className: 'w-full mt-3 h-[80px] bg-cream border-2 border-dark rounded-[16px] p-3 font-bold text-[13px] outline-none',
+                          ),
+                          div(
+                            className: 'flex gap-2 mt-4',
+                            children: [
+                              button(
+                                onClick: (_) {
+                                  setResources(resources.map((r) => r['id'] == editingRes!['id'] ? editingRes! : r).toList());
+                                  setEditingRes(null);
+                                  setToast('Saved ✨');
+                                },
+                                className: 'flex-1 h-[44px] bg-dark text-white rounded-full font-black',
+                                children: [Text('Save')],
+                              ),
+                              button(
+                                onClick: (_) => setEditingRes(null),
+                                className: 'h-[44px] px-5 bg-white border-2 border-dark rounded-full font-black',
+                                children: [Text('Cancel')],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                if (toast != null && toast!.isNotEmpty)
                   div(
                     className: 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-dark text-white px-5 py-3 rounded-full font-black text-[13px] shadow-[4px_4px_0px_#FFC9CE] z-50 border-2 border-white',
                     children: [Text(toast)],
@@ -377,24 +581,3 @@ final _lessons = [
   {'id': 'l3', 'title': 'Family Members', 'date': 'Mon', 'students': 25},
 ];
 
-final _units = [
-  {'id': 'u1', 'name': 'Unit 1: Greetings', 'emoji': '👋', 'resources': 8, 'color': '#FFE8A3', 'syllabusId': 's1', 'parentId': null},
-  {'id': 'u2', 'name': 'Unit 2: Colors', 'emoji': '🎨', 'resources': 12, 'color': '#C8F5D4', 'syllabusId': 's1', 'parentId': null},
-  {'id': 'u3', 'name': 'Unit 3: Animals', 'emoji': '🐾', 'resources': 10, 'color': '#FFC9CE', 'syllabusId': 's1', 'parentId': null},
-  {'id': 'u4', 'name': 'Sub: Pets', 'emoji': '🐱', 'resources': 4, 'color': '#FFF4E0', 'syllabusId': 's1', 'parentId': 'u2'},
-  {'id': 'u5', 'name': 'Sub: Farm Animals', 'emoji': '🐄', 'resources': 3, 'color': '#FFF4E0', 'syllabusId': 's1', 'parentId': 'u2'},
-];
-
-final _syllabuses = [
-  {'id': 's1', 'name': 'Fall Semester', 'color': '#FFE8A3'},
-  {'id': 's2', 'name': 'Spring Semester', 'color': '#C8F5D4'},
-];
-
-final _classes = [
-  {'id': 'c1', 'name': 'Grade 1A', 'color': '#FFE8A3', 'students': [
-    {'id': 's1', 'name': 'Alice'}, {'id': 's2', 'name': 'Bob'}, {'id': 's3', 'name': 'Carlos'},
-  ]},
-  {'id': 'c2', 'name': 'Grade 1B', 'color': '#C8F5D4', 'students': [
-    {'id': 's4', 'name': 'Diana'}, {'id': 's5', 'name': 'Ethan'},
-  ]},
-];

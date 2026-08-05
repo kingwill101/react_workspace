@@ -4,6 +4,23 @@ sealed class ReactTypeRef {
   const ReactTypeRef();
 }
 
+/// A host-platform type owned by a renderer adapter (e.g. `react_web`).
+///
+/// [hostNamespace] identifies the adapter (e.g. `'web'`).
+/// [typeId] is the canonical name registered in [ReactCodecRegistry] (e.g.
+/// `'ReactChangeEvent'`, `'HTMLInputElement'`).
+final class HostTypeRef extends ReactTypeRef {
+  final String hostNamespace;
+  final String typeId;
+  final bool nullable;
+
+  const HostTypeRef({
+    required this.hostNamespace,
+    required this.typeId,
+    this.nullable = false,
+  });
+}
+
 final class NamedTypeRef extends ReactTypeRef {
   final String symbol;
   final Uri? import;
@@ -75,4 +92,43 @@ abstract final class ReactTypes {
   static const reactNode = NamedTypeRef(symbol: 'ReactNode');
   static const voidType = NamedTypeRef(symbol: 'void');
   static const dynamicType = NamedTypeRef(symbol: 'dynamic');
+
+  /// Known `react_web` host types: element name → (hostNamespace, typeId).
+  ///
+  /// The type-reader uses this table to recognise `react_web` types declared
+  /// in user props and emit [HostTypeRef] so the codegen generates correct
+  /// `hostValue` codec calls instead of falling back to raw `.toJS`.
+  static const Map<String, (String, String)> webHostTypes = {
+    // Synthetic React event wrappers
+    'ReactSyntheticEvent': ('web', 'ReactSyntheticEvent'),
+    'ReactChangeEvent':    ('web', 'ReactChangeEvent'),
+    'ReactInputEvent':     ('web', 'ReactInputEvent'),
+    'ReactMouseEvent':     ('web', 'ReactMouseEvent'),
+    'ReactKeyboardEvent':  ('web', 'ReactKeyboardEvent'),
+    'ReactFocusEvent':     ('web', 'ReactFocusEvent'),
+    'ReactFormEvent':      ('web', 'ReactFormEvent'),
+    'ReactDragEvent':      ('web', 'ReactDragEvent'),
+    'ReactWheelEvent':     ('web', 'ReactWheelEvent'),
+    'ReactPointerEvent':   ('web', 'ReactPointerEvent'),
+    'ReactTouchEvent':     ('web', 'ReactTouchEvent'),
+    'ReactCompositionEvent': ('web', 'ReactCompositionEvent'),
+    // HTML element types
+    'HTMLElement':          ('web', 'HTMLElement'),
+    'HTMLInputElement':     ('web', 'HTMLInputElement'),
+    'HTMLSelectElement':    ('web', 'HTMLSelectElement'),
+    'HTMLTextAreaElement':  ('web', 'HTMLTextAreaElement'),
+    'HTMLButtonElement':    ('web', 'HTMLButtonElement'),
+    'HTMLAnchorElement':    ('web', 'HTMLAnchorElement'),
+    'HTMLFormElement':      ('web', 'HTMLFormElement'),
+    'HTMLImageElement':     ('web', 'HTMLImageElement'),
+    'HTMLVideoElement':     ('web', 'HTMLVideoElement'),
+    'HTMLCanvasElement':    ('web', 'HTMLCanvasElement'),
+    'HTMLDivElement':       ('web', 'HTMLDivElement'),
+    'HTMLSpanElement':      ('web', 'HTMLSpanElement'),
+    // General DOM / event
+    'EventTarget':          ('web', 'EventTarget'),
+    'Element':              ('web', 'Element'),
+    'Event':                ('web', 'Event'),
+    'Node':                 ('web', 'Node'),
+  };
 }

@@ -52,6 +52,27 @@ final class ReactTypeReader {
       );
     }
 
+    // ── react_web host types ───────────────────────────────────────────────
+    // Recognise any interface whose *base* name (ignoring type-args and the
+    // nullability suffix) is listed in the host-type table.  We strip generic
+    // arguments so that both `ReactChangeEvent` and
+    // `ReactChangeEvent<HTMLInputElement>` match.
+    if (type is InterfaceType) {
+      final rawName = type.element.name;
+      // Also try the base name without type arguments from the display string
+      // so e.g. `ReactChangeEvent<HTMLInputElement>` → `ReactChangeEvent`.
+      final hostEntry = ReactTypes.webHostTypes[rawName];
+      if (hostEntry != null) {
+        final (hostNamespace, typeId) = hostEntry;
+        return HostTypeRef(
+          hostNamespace: hostNamespace,
+          typeId: typeId,
+          nullable: nullable,
+        );
+      }
+    }
+    // ── end react_web host types ───────────────────────────────────────────
+
     if (type is FunctionType) {
       return _readFunction(type);
     }

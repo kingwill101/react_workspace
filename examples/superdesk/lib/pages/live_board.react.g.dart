@@ -1,6 +1,7 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react_js/react_js.dart';
+import 'package:react_js/src/codec_registry.dart' show ReactCodecRegistry;
 import 'live_board.dart' as impl;
 import 'live_board.react.dart' show idLiveBoardPage;
 

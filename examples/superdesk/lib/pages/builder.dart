@@ -67,6 +67,11 @@ ReactNode BuilderPage(({
                 ),
             ],
           ),
+          button(
+            onClick: (_) => props.onToast('AI phases added ✨'),
+            className: 'w-full h-[40px] px-4 bg-cream border-2 border-dark rounded-full font-black text-[12px] flex items-center justify-center gap-2',
+            children: [Text('✨ AI Suggest Phases')],
+          ),
           if (props.phases.isNotEmpty) ...[
             h5(
               className: 'font-black mt-6 mb-3',

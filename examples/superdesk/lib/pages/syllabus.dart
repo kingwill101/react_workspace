@@ -1,6 +1,5 @@
 import 'package:react_web/react_web.dart';
 
-
 @reactComponent
 ReactNode SyllabusPage(
   ({
@@ -8,70 +7,19 @@ ReactNode SyllabusPage(
     Function(String) onSelect,
     List<String> expandedUnits,
     Function(String) onToggle,
+    List<Map<String, dynamic>> units,
+    List<Map<String, dynamic>> syllabuses,
+    List<Map<String, dynamic>> classes,
     Function(String) onToast,
-  })
-  props,
+  }) props,
 ) {
-  final syllabuses = [
-    {'id': 's1', 'name': 'Fall Semester', 'color': '#FFE8A3'},
-    {'id': 's2', 'name': 'Spring Semester', 'color': '#C8F5D4'},
-  ];
-
-  final units = [
-    {
-      'id': 'u1',
-      'name': 'Unit 1: Greetings',
-      'emoji': '👋',
-      'resources': 8,
-      'color': '#FFE8A3',
-      'syllabusId': 's1',
-      'parentId': null,
-    },
-    {
-      'id': 'u2',
-      'name': 'Unit 2: Colors',
-      'emoji': '🎨',
-      'resources': 12,
-      'color': '#C8F5D4',
-      'syllabusId': 's1',
-      'parentId': null,
-    },
-    {
-      'id': 'u3',
-      'name': 'Unit 3: Animals',
-      'emoji': '🐾',
-      'resources': 10,
-      'color': '#FFC9CE',
-      'syllabusId': 's1',
-      'parentId': null,
-    },
-    {
-      'id': 'u4',
-      'name': 'Sub: Pets',
-      'emoji': '🐱',
-      'resources': 4,
-      'color': '#FFF4E0',
-      'syllabusId': 's1',
-      'parentId': 'u2',
-    },
-    {
-      'id': 'u5',
-      'name': 'Sub: Farm Animals',
-      'emoji': '🐄',
-      'resources': 3,
-      'color': '#FFF4E0',
-      'syllabusId': 's1',
-      'parentId': 'u2',
-    },
-  ];
-
   return div(
     className: 'space-y-5',
     children: [
       div(
         className: 'flex gap-2 mb-2',
         children: [
-          for (final s in syllabuses)
+          for (final s in props.syllabuses)
             button(
               key: s['id'] as String,
               onClick: (_) => props.onSelect(s['id'] as String),
@@ -79,12 +27,17 @@ ReactNode SyllabusPage(
                   'h-[40px] px-4 rounded-full border-3 border-dark font-black text-[13px] ${props.selectedSyllabus == s['id'] ? "bg-dark text-white" : "bg-white"}',
               children: [Text(s['name'] as String)],
             ),
+          button(
+            onClick: (_) => props.onToast('New syllabus ✨'),
+            className: 'h-[40px] px-4 bg-cream border-3 border-dashed border-dark rounded-full font-black text-[13px]',
+            children: [Text('+ New')],
+          ),
         ],
       ),
       div(
         className: 'space-y-3',
         children: [
-          for (final unit in units.where(
+          for (final unit in props.units.where(
             (u) => u['syllabusId'] == props.selectedSyllabus,
           ))
             div(
@@ -129,7 +82,7 @@ ReactNode SyllabusPage(
                   div(
                     className: 'ml-6 mt-2 space-y-2',
                     children: [
-                      for (final sub in units.where(
+                      for (final sub in props.units.where(
                         (u) => u['parentId'] == unit['id'],
                       ))
                         div(
@@ -151,6 +104,45 @@ ReactNode SyllabusPage(
                   ),
               ],
             ),
+        ],
+      ),
+      div(
+        className: 'mt-4 bg-cream border-2 border-dark rounded-[16px] p-4',
+        children: [
+          div(
+            className: 'flex gap-2 mb-3',
+            children: [
+              button(
+                onClick: (_) {
+                  final name = window.prompt('New unit name');
+                  if (name != null && name.isNotEmpty) {
+                    props.onToast('Unit added ✨');
+                  }
+                },
+                className: 'h-[36px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
+                children: [Text('+ Add Unit')],
+              ),
+            ],
+          ),
+          textarea(
+            className: 'w-full h-[80px] bg-white border-2 border-dark rounded-[12px] p-2 font-bold text-[12px] outline-none',
+            placeholder: 'Learning objectives...',
+          ),
+          div(
+            className: 'flex gap-2 mt-3',
+            children: [
+              button(
+                onClick: (_) => props.onToast('Linked ✨'),
+                className: 'h-[36px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
+                children: [Text('Link Existing')],
+              ),
+              button(
+                onClick: (_) => props.onToast('Created ✨'),
+                className: 'h-[36px] px-4 bg-white border-2 border-dark rounded-full font-black text-[12px]',
+                children: [Text('Create New')],
+              ),
+            ],
+          ),
         ],
       ),
     ],

@@ -1,17 +1,7 @@
 import 'package:react_web/react_web.dart';
 
-
 @reactComponent
-ReactNode ClassesPage(({Function(String) onToast}) props) {
-  final classes = [
-    {'id': 'c1', 'name': 'Grade 1A', 'color': '#FFE8A3', 'students': [
-      {'id': 's1', 'name': 'Alice'}, {'id': 's2', 'name': 'Bob'}, {'id': 's3', 'name': 'Carlos'},
-    ]},
-    {'id': 'c2', 'name': 'Grade 1B', 'color': '#C8F5D4', 'students': [
-      {'id': 's4', 'name': 'Diana'}, {'id': 's5', 'name': 'Ethan'},
-    ]},
-  ];
-
+ReactNode ClassesPage(({List<Map<String, dynamic>> classes, Function(String) onToast}) props) {
   return div(
     className: 'space-y-5',
     children: [
@@ -26,7 +16,7 @@ ReactNode ClassesPage(({Function(String) onToast}) props) {
           div(
             className: 'grid md:grid-cols-2 gap-4',
             children: [
-              for (final cls in classes)
+              for (final cls in props.classes)
                 div(
                   key: cls['id'] as String,
                   className: 'border-3 border-dark rounded-[20px] shadow-chunky p-4',
@@ -57,6 +47,28 @@ ReactNode ClassesPage(({Function(String) onToast}) props) {
                     ),
                   ],
                 ),
+            ],
+          ),
+          div(
+            className: 'mt-4 bg-cream border-2 border-dark rounded-[16px] p-4',
+            children: [
+              h4(
+                className: 'font-black mb-2',
+                style: {'fontFamily': 'Fredoka'},
+                children: [Text('Group Maker')],
+              ),
+              div(
+                className: 'flex items-center gap-3',
+                children: [
+                  span(className: 'font-black text-[12px]', children: [Text('Groups:')]),
+                  input(type: 'range', min: '2', max: '6', defaultValue: '3', className: 'flex-1 accent-dark'),
+                  button(
+                    onClick: (_) => props.onToast('Shuffled ✨'),
+                    className: 'h-[36px] px-4 bg-cream border-2 border-dark rounded-full font-black text-[12px]',
+                    children: [Text('Shuffle ✨')],
+                  ),
+                ],
+              ),
             ],
           ),
         ],

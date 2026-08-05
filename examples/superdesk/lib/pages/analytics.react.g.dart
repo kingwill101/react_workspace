@@ -1,6 +1,7 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:react_js/react_js.dart';
+import 'package:react_js/src/codec_registry.dart' show ReactCodecRegistry;
 import 'analytics.dart' as impl;
 import 'analytics.react.dart' show idAnalyticsPage;
 
