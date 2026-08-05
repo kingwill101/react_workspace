@@ -1,0 +1,31 @@
+import 'package:react_actions/react_actions.dart';
+import 'package:react_dom/react_dom.dart';
+import 'package:react_web/react_web.dart'
+    show HttpServerFunctionClient, installBrowserWebRuntime, registerBrowserAdapters;
+import 'package:superdesk/app.react.dart';
+import 'package:superdesk/react_components.g.dart';
+
+void main() {
+  initReact();
+  registerReactComponents();
+  installBrowserWebRuntime();
+  registerBrowserAdapters();
+
+  // Server-function calls run through this client.
+  runWithServerFunctionClient(
+    HttpServerFunctionClient(
+      endpoint: Uri.parse('/__react/actions'),
+    ),
+    () {
+      final root = getRoot('app');
+      final props = getInitialProps();
+      final app = App(title: props['title'] as String? ?? 'Hello from React');
+      if (props.isNotEmpty) {
+        // The server rendered the same props — hydrate the existing markup.
+        hydrate(root, app);
+      } else {
+        mount(root, app);
+      }
+    },
+  );
+}
