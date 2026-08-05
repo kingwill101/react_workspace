@@ -1,60 +1,58 @@
 ---
-sidebar_position: 3
+sidebar_position: 1
 ---
 
 # API Reference
 
-## `@serverFunction`
+This document provides a high-level overview of the core APIs exposed by the React Dart workspace packages.
 
-Annotate a Dart function to make it callable from the browser:
+## `package:react`
 
-```dart
-@serverFunction
-Future<String> greet(
-  ServerFunctionContext context, {
-  required String name,
-}) async {
-  return 'Hello, $name!';
-}
-```
+The core package defines the component tree and essential hooks. It is platform-agnostic and contains no browser dependencies.
 
-The code generator creates:
-- A typed client binding in `greeting.client.g.dart`
-- A server action registration in `server_actions.g.dart`
+### Core Types
 
-## `ServerFunctionContext`
+- `abstract class ReactNode`: The base class for all elements in the React tree.
+- `class Component<P>`: Represents a Dart component instance with `props`, `key`, and `children`.
+- `class HostNode<P>`: Represents a native host element (like an HTML `div` or `span`).
+- `class Text`: A text node.
+- `class Fragment`: Groups children without adding an extra DOM node.
 
-Provides request context to server functions:
+### Hooks
 
-- `request` — The incoming HTTP request
-- `cookies` — Request cookies
-- `headers` — Request headers
+- `(T, StateSetter<T>) useState<T>(T initial)`: Returns a stateful value and a function to update it.
+- `void useEffect(EffectCallback effect, [List<Object?>? deps])`: Accepts a function that contains imperative, possibly effectful code. Skips execution during SSR.
+- `void useLayoutEffect(EffectCallback effect, [List<Object?>? deps])`: Similar to `useEffect`, but fires synchronously after all DOM mutations.
 
-## `ReactTestHarness`
+## `package:react_actions`
 
-From `package:react_testing/react_testing.dart`. Boots a full test app for integration testing:
+Handles server-client RPC communication.
 
-```dart
-final harness = await ReactTestHarness.start(
-  projectRoot: Directory('examples/ssr'),
-  rootComponent: 'package:my_app/lib/app.dart#App',
-  registerActions: (registry) => registerServerActions(registry: registry),
-  pageProps: (request) => {'title': 'Test'},
-);
-```
+### Annotations
 
-### Methods
+- `@serverFunction`: Marks a top-level function as an RPC endpoint. The function must take `ServerFunctionContext` as its first argument and return a `Future`.
+- `@serverData`: Marks a `final class` as a serializable data transfer object (DTO). The class must have exactly one public generative constructor with named parameters matching its final fields.
 
-- `harness.createClient()` — Returns a `TestClient` for making HTTP requests
-- `harness.createHandler()` — Returns a `RequestHandler` for `server_testing`
-- `harness.close()` — Shuts down the test server and SSR worker
+## `package:react_server`
 
-## `ReactProjectConfig`
+Server-side execution utilities for SSR and Server Functions.
 
-From `package:react_tool/react_tool.dart`. Loads project configuration from `react.yaml` or `pubspec.yaml` defaults:
+- `class ServerFunctionContext`: Passed to `@serverFunction`s. Provides access to DI via `get<T>()` and request metadata.
+- `class SsrRenderer`: Manages a pool of JS workers for rendering React components to HTML strings. Use `SsrRenderer.start(manifestPath: ...)` to initialize.
+- `class SsrResponse`: The returned data from an SSR render, containing `html` and `head` strings.
 
-- `clientEntrypoint` — Path to the client bootstrap
-- `ssrEntrypoint` — Path to the SSR entrypoint (null if not configured)
-- `serverEntrypoint` — Path to the server entrypoint (null if not configured)
-- `styleEntrypoints` — List of style entrypoints
-- `root` — The project root directory
+## `package:react_dom`
+
+Browser-specific rendering and hydration.
+
+- `void hydrateRoot(Element container, ReactNode initialChildren)`: Hydrates a server-rendered HTML document, making it interactive.
+- `Root createRoot(Element container)`: Creates a React root for client-only rendering, bypassing SSR hydration.
+
+## `package:react_testing`
+
+Testing utilities.
+
+- `class ReactTestHarness`: Orchestrates the testing build server.
+  - `start(...)`: Initializes the harness.
+  - `renderClient()`: Renders the component in a headless browser and returns a page controller.
+  - `renderSsr()`: Returns the raw HTML string as rendered by the SSR worker.

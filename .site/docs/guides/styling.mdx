@@ -1,0 +1,121 @@
+---
+sidebar_position: 6
+---
+
+# Styling
+
+React Dart offers multiple approaches to styling your applications, ranging from simple inline styles to robust, scoped CSS Modules. The build system leverages the Dart `sass` package natively, so no Node.js dependency is required to process stylesheets.
+
+## CSS Modules (Recommended)
+
+CSS Modules are the idiomatic way to style React Dart components. They provide scoped, collision-free class names.
+
+Any file ending in `.module.css`, `.module.scss`, or `.module.sass` is automatically treated as a CSS Module.
+
+### How it works
+
+1. You create a stylesheet, e.g., `card.module.scss`.
+2. The `react_tool` build system detects it and generates a Dart file next to it, e.g., `card.module.dart`.
+3. You import the generated Dart file and use the strongly-typed class names.
+
+**`card.module.scss`:**
+```scss
+.card {
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+```
+
+**`card.dart`:**
+```dart
+import 'package:react/react.dart';
+import 'card.react.dart';
+// Import the generated styles
+import 'card.module.dart';
+
+@React()
+ReactNode Card({required String title, required ReactNode children}) {
+  return div(
+    // Access the generated, scoped class name
+    className: CardModuleStyles.card,
+    children: [
+      h2(className: CardModuleStyles.title, children: [Text(title)]),
+      children,
+    ],
+  );
+}
+```
+
+During compilation, `.card` becomes something like `card_a73b2`, ensuring it never conflicts with a `.card` class in another component. **Do not edit the generated `*.module.dart` file.**
+
+## Global Styles
+
+For CSS resets, typography baselines, or global utility classes, you can define global entrypoints in your `react.yaml`.
+
+```yaml
+# react.yaml
+styles:
+  entrypoints:
+    - web/global.scss
+    - web/typography.css
+  output: styles.css
+```
+
+The CLI compiles these files and emits a single `styles.css` into `build/react/`. Ensure your `web/index.html` includes a link to this file:
+
+```html
+<link rel="stylesheet" href="/styles.css">
+```
+
+## Inline Styles
+
+For highly dynamic styles that change based on state (like progress bars or drag coordinates), you can use the `style` prop. The `style` prop accepts a `Map<String, Object>`.
+
+React Dart maps CSS properties dynamically. Use camelCase for standard properties and standard syntax for CSS custom properties (variables).
+
+```dart
+@React()
+ReactNode ProgressBar({required double percentage}) {
+  return div(
+    style: {
+      'width': '100%',
+      'backgroundColor': '#eee',
+    },
+    children: [
+      div(
+        style: {
+          // Dynamic value using inline styles
+          'width': '${percentage * 100}%',
+          'height': '20px',
+          'backgroundColor': 'blue',
+          'transition': 'width 0.3s ease',
+        },
+      ),
+    ],
+  );
+}
+```
+
+## CSS Custom Properties (Variables)
+
+You can pass CSS variables down to your stylesheets via the `style` prop. This is a powerful way to bridge Dart state and CSS without writing extensive inline styles.
+
+```dart
+@React()
+ReactNode ThemedBox({required String themeColor}) {
+  return div(
+    className: BoxModuleStyles.container,
+    style: {
+      '--box-theme-color': themeColor,
+    },
+    children: [Text('Hello World')],
+  );
+}
+```

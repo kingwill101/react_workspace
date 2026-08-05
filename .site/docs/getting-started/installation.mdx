@@ -1,0 +1,78 @@
+---
+sidebar_position: 0
+---
+
+# Installation
+
+Before you can start building applications with React Dart, you need to set up your environment and install the necessary tools. This guide will walk you through the prerequisites and the installation of the React Dart CLI.
+
+## Prerequisites
+
+React Dart leverages the latest features of the Dart language and requires a modern SDK environment.
+
+1. **Dart SDK**: You must have Dart version `>=3.12.0 <4.0.0` installed.
+   - [Install Dart](https://dart.dev/get-dart)
+2. **Node.js**: (Optional but recommended) While React Dart uses Dart's `sass` package natively and manages isolated npm environments internally, having Node.js installed is beneficial if you plan on using custom JS/TS components or external bundlers like Rolldown.
+
+## Installing the React Dart CLI
+
+The core orchestration tool for React Dart is the `react_tool` package, which provides the `react` executable. It handles everything from scaffolding projects to compiling Dart to JS, bundling foreign assets, and starting development servers.
+
+Activate the CLI globally using Dart pub:
+
+```bash
+dart pub global activate react_tool
+```
+
+Ensure that your global pub cache bin directory is in your system's `PATH`.
+- **Linux/macOS**: `~/.pub-cache/bin`
+- **Windows**: `%LOCALAPPDATA%\Pub\Cache\bin`
+
+Once activated, you can verify the installation by running:
+
+```bash
+react doctor
+```
+
+*(Note: Depending on your shell setup, you might also invoke it via `dart run react_tool:react doctor` from within a project directory.)*
+
+## Setting up your IDE
+
+Because React Dart relies heavily on code generation (via `build_runner`), you will want your IDE to play nicely with generated files.
+
+### VS Code
+
+If you use Visual Studio Code, ensure you have the official **Dart** and **Flutter** extensions installed.
+We also recommend hiding `.react.dart` and `.react.g.dart` files from your explorer to reduce clutter, since you should never edit these manually:
+
+```json
+// .vscode/settings.json
+{
+  "files.exclude": {
+    "**/*.react.dart": true,
+    "**/*.react.g.dart": true,
+    "**/*.module.dart": true
+  }
+}
+```
+
+### IntelliJ / Android Studio
+
+The Dart plugin provides excellent support. Generated files will be automatically marked as derived.
+
+## Validating the Installation
+
+To ensure everything is working, create a temporary directory and run the doctor command:
+
+```bash
+mkdir test_react_dart
+cd test_react_dart
+dart pub init
+dart run react_tool:react doctor
+```
+
+The doctor command will analyze the directory and report that it is missing a `react.yaml` file, which confirms the CLI is successfully evaluating the workspace.
+
+## Next Steps
+
+Now that you have the tools installed, head over to the [Quick Start](./quick-start.mdx) guide to scaffold and run your first React Dart application!

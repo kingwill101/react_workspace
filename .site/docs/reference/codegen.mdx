@@ -1,0 +1,74 @@
+---
+sidebar_position: 4
+---
+
+# Code Generation (`react_codegen`)
+
+React Dart relies heavily on Dart's `build_runner` ecosystem to bridge the gap between idiomatic Dart and the underlying React JS runtime. The `react_codegen` package is responsible for this magic.
+
+## What Gets Generated?
+
+For every Dart file containing a component annotated with `@React()` (e.g., `button.dart`), the generator produces two files:
+
+1. **`button.react.dart`**: The pure Dart component factory.
+2. **`button.react.g.dart`**: The JavaScript interop wrappers.
+
+### 1. The Pure Dart Factory (`.react.dart`)
+
+This file contains the function you actually import and call in your Dart code. It returns a pure `Component` node that lives in the portable `ReactNode` tree.
+
+**Source (`button.dart`):**
+```dart
+@React()
+ReactNode Button({required String label, required Function onClick}) { ... }
+```
+
+**Generated (`button.react.dart`):**
+```dart
+// Auto-generated. Do not edit.
+Component Button({required String label, required Function onClick, String? key, List<ReactNode> children = const []}) {
+  return Component(
+    _idButton, 
+    (label: label, onClick: onClick), 
+    key: key, 
+    children: children,
+  );
+}
+```
+
+Notice how it automatically injects `key` and `children` arguments, grouping the custom props into a record. This keeps the Dart tree pure and platform-agnostic.
+
+### 2. The JS Wrapper (`.react.g.dart`)
+
+This file contains the code that the `react_js` renderer uses to actually mount the component in the browser. It uses Dart 3 Extension Types (`@JS` interop) to define the exact shape of the JavaScript `props` object.
+
+```dart
+// Auto-generated JS interop. Do not edit.
+@JS()
+extension type PropsJS._(JSObject _) implements JSObject {
+  external String get label;
+  external JSFunction get onClick;
+}
+
+// Registration function called internally by the React Dart runtime
+void registerButton() {
+  // Binds the Dart implementation to a JS proxy that React can call
+}
+```
+
+## Server Function Generation
+
+When using `@serverFunction` from `package:react_actions`, the generator produces:
+- A client-side proxy that performs the HTTP `fetch`.
+- Cryptographic hashes of the function signature to ensure contract validity between client and server.
+- Serialization and deserialization codecs (using `dart:convert`) for the arguments and return types.
+
+## Running the Generator
+
+You rarely need to run `build_runner` directly. The `react_tool` commands (`react build` and `react serve`) automatically invoke the generator. 
+
+However, if you ever need to run it manually (e.g., to debug a generation issue), you can use standard Dart tooling:
+
+```bash
+dart run build_runner build -d
+```

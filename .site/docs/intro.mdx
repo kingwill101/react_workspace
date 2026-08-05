@@ -2,51 +2,60 @@
 sidebar_position: 1
 ---
 
-# React Dart
+# Introduction to React Dart
 
-Build React interfaces with Dart — full SSR, typed server functions, and contract-based client/server communication.
+Welcome to **React Dart**, a framework for building robust, scalable React applications entirely in Dart. By combining the power of the Dart language with the React ecosystem, React Dart offers a unique, type-safe development experience that bridges the gap between client and server.
 
 ## What is React Dart?
 
-React Dart is a framework for building React applications in Dart. It provides:
+React Dart is a framework designed to build React interfaces using Dart, bringing full Server-Side Rendering (SSR), typed server functions, and a contract-based client/server communication model. It allows you to write components in Dart, which are then compiled and executed in the browser or rendered on the server.
 
-- **Server-side rendering** — render React components on the server and hydrate them on the client
-- **Typed server functions** — call Dart functions from the browser with full type safety and contract validation
-- **Code generation** — automatic generation of client bindings, SSR registries, and action codecs
-- **Testing infrastructure** — `server_testing` and `react_testing` packages for reliable integration and E2E tests
+### Core Philosophy
 
-## Quick Start
+1. **Type Safety End-to-End**: Leverage Dart's strong type system across both the UI layer and the backend server logic.
+2. **Seamless Server Integration**: With `@serverFunction`, call backend logic directly from your UI components without manually writing API endpoints or serialization logic.
+3. **Interop without Tears**: Import and use any JavaScript/TypeScript React component effortlessly. React Dart handles the bundling and bridge generation.
+4. **Zero-Configuration Build**: The `react_tool` CLI orchestrates Dart compilation, JS bundling (via esbuild or rolldown), and CSS/Sass compilation.
 
-```bash
-# Scaffold a new project
-dart run react_tool:react init my_app
+## Key Features
 
-# Build and serve
-cd my_app
-dart pub get
-dart run react_tool:react build
-dart run react_tool:react serve
+### 1. Server-Side Rendering (SSR)
+React Dart supports out-of-the-box SSR. Your application renders to HTML on the server, sending a fully formed document to the client, which is then hydrated. This results in incredibly fast initial page loads and excellent SEO.
+
+### 2. Typed Server Functions
+Gone are the days of manual REST APIs for every small interaction. By simply annotating a Dart function with `@serverFunction`, React Dart automatically generates the necessary client proxies, cryptographic contract hashes, and secure serialization codecs.
+
+```dart
+@serverFunction
+Future<bool> validateUser(ServerFunctionContext context, {required String username}) async {
+  return await db.users.exists(username);
+}
 ```
 
-## Project Structure
+### 3. Automated Code Generation
+React Dart embraces Dart's macro and builder ecosystem. The `react_codegen` package generates:
+- Pure sealed Dart components (e.g., `Component` with keys and children).
+- JavaScript wrapper extensions for seamless prop passing.
+- Action codecs for server functions.
 
-A React Dart project contains:
+### 4. Foreign Component Support
+Want to use `react-router-dom` or a complex date picker from npm? React Dart's `foreign:` configuration lets you register JavaScript/TypeScript components. The CLI bundles them, and you can generate typed Dart bindings to interact with them as if they were native Dart components.
 
-- `lib/` — Dart source code (components, server functions, SSR entrypoint)
-- `web/` — Client-side assets (HTML, styles, client bootstrap)
-- `react.yaml` — Project configuration (entrypoints, styles)
-- `pubspec.yaml` — Dart package configuration
+### 5. First-class CSS and Sass
+Support for CSS and Sass is built directly into the CLI. Simply define your styles in `react.yaml`. It also supports CSS Modules natively for any file ending in `.module.scss`, `.module.sass`, or `.module.css`.
 
-## Key Concepts
+## Ecosystem Packages
 
-### SSR (Server-Side Rendering)
+The React Dart workspace is composed of several specialized packages:
 
-React Dart renders components on the server using `renderToString`, sends the HTML to the browser, and hydrates the client bundle. This gives you fast initial loads and SEO-friendly pages.
+- **`react`**: The core package containing the portable `ReactNode` tree, `Component` definitions, and core hooks (`useState`, `useEffect`).
+- **`react_dom`**: Handles DOM mounting, hydration, and browser-specific implementations.
+- **`react_js`**: Provides the JavaScript bindings and exhaustive renderer switches.
+- **`react_actions`**: Contains the `@serverFunction` and `@serverData` annotations for client-server RPC.
+- **`react_codegen`**: The build_runner backend that generates `.react.dart` component files and `.react.g.dart` JS wrappers.
+- **`react_tool`**: The CLI that orchestrates the entire build pipeline (`react build`, `react serve`).
+- **`react_testing`**: Tools for executing headless browser testing and SSR validation.
 
-### Server Functions
+## Next Steps
 
-Annotate Dart functions with `@serverFunction` to make them callable from the browser. React Dart generates typed client bindings with contract hashes and codecs, so calls are type-safe and validated.
-
-### Client-Only Mode
-
-Skip SSR entirely and serve a static client bundle. Use `react init --template client` to scaffold a client-only project.
+Ready to dive in? Proceed to the [Installation](./getting-started/installation.mdx) guide to set up your environment, or jump straight into the [Quick Start](./getting-started/quick-start.mdx) to build your first app.

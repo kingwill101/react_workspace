@@ -1,46 +1,135 @@
 ---
-sidebar_position: 3
+sidebar_position: 2
 ---
 
 # Server Functions
 
-Call Dart functions from the browser with full type safety.
+Server Functions are one of the most powerful features of React Dart. They allow you to write backend logic directly alongside your frontend code, calling Dart functions from the browser as seamlessly as if they were local.
 
-## Defining a server function
+React Dart handles the heavy lifting: generating HTTP endpoints, creating secure contract hashes, wiring up serializers, and providing typed proxies for the client.
 
-Annotate a Dart function with `@serverFunction`:
+## Defining a Server Function
+
+To create a server function, write a standard Dart function and annotate it with `@serverFunction` (from `package:react_actions`).
+
+### Requirements
+
+1. **Context Parameter**: The first parameter must be `ServerFunctionContext`. This provides request details, headers, and access to the dependency injection container.
+2. **Named Parameters**: All subsequent parameters must be required and named. Positional arguments are not supported.
+3. **Asynchronous**: The function must return a `Future<T>`.
+4. **Serializable Types**: Parameters and return types must be serializable (primitives, lists, maps, or classes annotated with `@serverData`).
 
 ```dart
 import 'package:react_actions/react_actions.dart';
 import 'package:react_server/react_server.dart';
 
 @serverFunction
-Future<String> greet(
+Future<bool> checkUsername(
   ServerFunctionContext context, {
-  required String name,
+  required String username,
 }) async {
-  return 'Hello, $name!';
+  // This code runs strictly on the server
+  final db = context.get<Database>();
+  return await db.users.exists(username);
 }
 ```
 
-## Calling from the browser
+## Using Custom Data Types
 
-The code generator creates a typed client binding in `greeting.client.g.dart`:
+Often you need to pass complex objects between the client and server. Use the `@serverData` annotation to define data transfer objects (DTOs) that React Dart can serialize.
 
 ```dart
-import 'package:my_app/greeting.client.g.dart' show greetAction;
+@serverData
+final class UserProfile {
+  final String id;
+  final String email;
+  final int age;
 
-// Inside a component or event handler:
-final result = await greetAction(name: 'World');
+  const UserProfile({
+    required this.id,
+    required this.email,
+    required this.age,
+  });
+}
+
+@serverFunction
+Future<UserProfile> getUserProfile(
+  ServerFunctionContext context, {
+  required String userId,
+}) async {
+  // Fetch and return the data
+  return UserProfile(id: userId, email: 'user@example.com', age: 30);
+}
 ```
 
-## How it works
+**Constraints on `@serverData` classes:**
+- Must be a `final class`.
+- No type parameters or generics.
+- No inheritance (other than `Object`) or mixins.
+- All fields must be `final` and public.
+- Exactly one public generative constructor matching the fields.
 
-1. The server function is registered in `ServerFunctionRegistry`.
-2. The client sends a POST request to `/__react/actions` with the action ID, contract hash, and encoded arguments.
-3. The server validates the contract hash, decodes the arguments, and executes the function.
-4. The result is encoded and returned to the client.
+## Calling a Server Function from the Client
 
-## Contract validation
+When the `react_codegen` builder runs, it generates client proxies for your server functions. You can call them directly from your React components. Behind the scenes, React Dart performs a fetch request to the server, passing the serialized arguments.
 
-Each action has a contract hash that is verified on the server. If the client sends a request with an invalid hash, the server rejects it. This ensures that stale clients cannot call functions that have changed.
+```dart
+import 'package:react/react.dart';
+import 'actions.dart'; // Import the file containing the @serverFunction
+
+@React()
+ReactNode ProfileView() {
+  final (profile, setProfile) = useState<UserProfile?>(null);
+  final (loading, setLoading) = useState(false);
+
+  Future<void> loadProfile() async {
+    setLoading(true);
+    try {
+      // Direct, type-safe call. The builder handles the RPC bridge.
+      final result = await getUserProfile(userId: '123');
+      setProfile(result);
+    } catch (e) {
+      print('Error loading profile: $e');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return div(
+    children: [
+      button(onClick: (e) => loadProfile(), children: [Text('Load Profile')]),
+      if (loading) p(children: [Text('Loading...')]),
+      if (profile != null) p(children: [Text('Email: ${profile.email}')]),
+    ],
+  );
+}
+```
+
+Notice that on the client side, you *do not pass* the `ServerFunctionContext`. The generated proxy automatically handles omitting it and the backend injects it when the RPC call is received.
+
+## Registering Server Functions
+
+For the backend to know how to route incoming RPC calls, you must register your server functions. The builder generates a convenient `registerAll()` method.
+
+In your `bin/server.dart` (and `lib/ssr.dart`):
+
+```dart
+import 'package:my_app/server/actions.dart' as actions;
+
+void main() {
+  // Register the codecs and routing metadata
+  actions.registerAll();
+  
+  // ... start your server ...
+}
+```
+
+## Security and Cryptographic Hashes
+
+Security is a primary concern. Every `@serverFunction` generates a cryptographic hash based on its signature and types. When the client invokes the function, it sends this hash. The server validates the hash before execution.
+
+If an attacker tries to call an endpoint with modified payloads, or if the client is running a stale version that doesn't match the server's expected signature, the contract validation fails and the request is rejected with a `400 Bad Request` or `409 Conflict`.
+
+## Error Handling
+
+If a server function throws an exception, it is caught by the React Dart RPC handler. The client proxy will then throw a `ServerFunctionException` containing the message. Always use try-catch blocks in your client components when calling server functions.

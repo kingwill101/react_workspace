@@ -1,39 +1,84 @@
 ---
-sidebar_position: 1
+sidebar_position: 3
 ---
 
-# react.yaml Reference
+# `react.yaml` Configuration
 
-The `react.yaml` file configures how React Dart builds and serves your project.
+The `react.yaml` file is the central configuration for your React Dart project. It dictates where entrypoints are located, how styles are compiled, and how foreign JavaScript components are integrated.
 
-## Schema
+If `react.yaml` is absent, the CLI will look for a `react:` key in your `pubspec.yaml`.
+
+## Top-Level Keys
 
 ```yaml
-client:
-  entrypoint: web/client.dart
-ssr:
-  entrypoint: lib/ssr.dart
-server:
-  entrypoint: bin/server.dart
+# Example react.yaml
+client: web/client.dart
+ssr: lib/ssr.dart
+server: bin/server.dart
+static: web
+output: build/react
+```
+
+- **`client`**: Path to the Dart script that hydrates the browser (default: `web/client.dart`).
+- **`ssr`**: Path to the Dart script that exports the SSR rendering function (default: `lib/ssr.dart`).
+- **`server`**: Path to the backend Dart executable (default: `bin/server.dart`).
+- **`static`**: Directory containing static assets to copy to the output (default: `web`).
+- **`output`**: Directory where the build artifacts are placed (default: `build/react`).
+
+## Styles Configuration
+
+Controls how global CSS and Sass are handled. (CSS Modules are automatically detected and do not need to be listed here).
+
+```yaml
 styles:
   entrypoints:
     - web/styles.scss
+    - web/admin.scss
+  output: styles.css
 ```
 
-## Fields
+- **`entrypoints`**: A list of paths to `.css`, `.scss`, or `.sass` files.
+- **`output`**: The output filename in the build directory.
 
-### `client.entrypoint`
+## Foreign Components
 
-**Required.** The path to the client bootstrap file, relative to the project root. This file calls `initReact()` and `registerReactComponents()`, then mounts or hydrates the root component.
+Configures integration with JavaScript and TypeScript modules.
 
-### `ssr.entrypoint`
+```yaml
+foreign:
+  modules:
+    - web/components/setup.js
+  components:
+    - name: DatePicker
+      module: web/components/date_picker.js
+      export: default
+      props:
+        value: String
+        disabled: bool?
+```
 
-**Optional.** The path to the SSR entrypoint. If omitted or the file doesn't exist, SSR is disabled. The entrypoint registers components with `SsrComponentRegistry` and sets up a global renderer.
+- **`modules`**: A list of JS/TS modules that are imported for side-effects or global setup into the foreign bundle.
+- **`components`**: Definitions for specific foreign components.
+  - `name`: The Dart identifier for the component.
+  - `module`: The file path or npm specifier.
+  - `export`: The JS export name (defaults to `default`).
+  - `props`: A map of property names to Dart type strings. Generates a typed wrapper in Dart if provided.
+- **`host`**: (boolean) If true, validates an existing JS host project instead of managing isolated NPM dependencies.
+- **`backend`**: Specifies the bundler backend: `esbuild` (default) or `rolldown`.
 
-### `server.entrypoint`
+## TypeScript Bindings (`js.bind`)
 
-**Optional.** The path to the server entrypoint. If omitted or the file doesn't exist, no server binary is built and `react serve` falls back to a static file server.
+Declarative instructions for `react ts bind`.
 
-### `styles.entrypoints`
+```yaml
+js:
+  bind:
+    - specifier: react-router-dom
+      names: [MemoryRouter, BrowserRouter]
+      hooks: lib/router_hooks.dart
+```
 
-**Optional.** A list of Sass/SCSS files to compile into CSS. The compiled CSS is included in the client bundle.
+- **`specifier`**: The npm package to bind.
+- **`names`**: Explicit list of exports to bind.
+- **`hooks`**: Output path for hook generation.
+- **`exclude`**: Names to exclude from automatic discovery.

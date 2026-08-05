@@ -1,0 +1,80 @@
+---
+sidebar_position: 5
+---
+
+# Type System
+
+React Dart is strongly typed. Because Dart and TypeScript/JavaScript handle types differently, React Dart provides specific primitives to construct the UI tree safely.
+
+## The `ReactNode` Tree
+
+The core of the UI is the `ReactNode` class. Every component you write must return a `ReactNode`.
+
+- **`Component<P>`**: A custom Dart component.
+- **`HostNode<P>`**: A native DOM element (e.g., `div`, `span`).
+- **`Text`**: A primitive string node. Note that unlike standard React where you can just write `<div>Hello</div>`, in Dart you must explicitly wrap strings: `div(children: [Text('Hello')])`.
+- **`Fragment`**: Used to return multiple children without a wrapping DOM node.
+
+## Props and Records
+
+When the code generator creates a component factory, it aggregates your custom named parameters into a Dart Record.
+
+For example, if you write:
+```dart
+@React()
+ReactNode Avatar({required String src, int size = 48}) { ... }
+```
+
+The internal `Component<P>` type parameter `P` becomes a Record: `({String src, int size})`. The generator handles the mapping between this record and the JavaScript `props` object.
+
+## HTML Elements
+
+React Dart provides typed builders for standard HTML elements. Instead of writing `<div className="foo">`, you write `div(className: 'foo')`.
+
+These builders accept strongly typed arguments for standard DOM attributes:
+- `String? className`
+- `Map<String, Object>? style`
+- `String? id`
+- `bool? disabled`
+
+### Callbacks and Events
+
+Event handlers are strongly typed.
+
+```dart
+button(
+  onClick: (event) {
+    // event is a typed synthetic event, not a raw dynamic JS object
+    print('Clicked!');
+  }
+)
+```
+
+## `ForeignComponent`
+
+When integrating with JS/TS modules via `foreignComponent`, the props are passed as a `Map<String, Object?>`.
+
+```dart
+foreignComponent(
+  'MyGraph',
+  props: {
+    'data': [1, 2, 3],
+    'animate': true,
+  }
+)
+```
+
+Because this map is passed to JavaScript, the values must be safe for JS interop. Primitives, Lists, and Maps are automatically converted. If you need to pass a Dart function to a foreign component, you must wrap it in `allowInterop` from `dart:js_util` to ensure JavaScript can invoke the Dart closure.
+
+```dart
+import 'dart:js_util';
+
+foreignComponent(
+  'DatePicker',
+  props: {
+    'onChange': allowInterop((date) => print(date)),
+  }
+)
+```
+
+*(Note: If you use the generated wrappers defined by the `props` map in `react.yaml`, `allowInterop` is often handled for you, or the types strictly require it).*

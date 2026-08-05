@@ -4,47 +4,120 @@ sidebar_position: 5
 
 # Deployment
 
-## Docker
+Deploying a full-stack React Dart application requires orchestrating both the Dart backend and the static web assets. This guide covers the process of building your app for production and deploying it to various environments, particularly via Docker.
 
-The scaffold generates a multi-stage `Dockerfile`:
+## Building for Production
+
+Before deploying, you must compile your application in release mode. The `--release` flag instructs the Dart compiler to use advanced minification (`dart2js` with `-O4`) and instructs esbuild to minify the JavaScript bundles.
+
+```bash
+dart run react_tool:react build --release
+```
+
+This command populates the `build/react/` directory with everything needed for runtime:
+
+1. **Static Assets**: Your compiled CSS, `index.html`, and raw files from your `static` directory.
+2. **Client Bundles**: `client.js` and `foreign/browser/bundle.mjs`.
+3. **SSR Runtime**: `ssr_runtime.mjs` and `foreign/ssr/bundle.mjs`.
+4. **Manifest**: `bundle_manifest.json`, which the server uses to map endpoints.
+
+## Containerizing with Docker
+
+The most reliable way to deploy a full-stack Dart server is using Docker. You will use a multi-stage Dockerfile: one stage to build the app, and a smaller runtime stage to serve it.
+
+Here is an optimized Dockerfile for a React Dart application:
 
 ```dockerfile
-# Stage 1: build
+# Stage 1: Build Environment
 FROM dart:stable AS build
-COPY . /workspace
-WORKDIR /workspace/my_app
+
+WORKDIR /app
+
+# Copy pubspec and get dependencies (layer caching)
+COPY pubspec.* ./
 RUN dart pub get
-RUN dart run react_tool:react build --server
 
-# Stage 2: runtime
-FROM node:20-bookworm-slim AS runtime
-COPY --from=build /workspace/my_app/build/ ./build/
+# Copy the rest of the application
+COPY . .
+
+# Run the React Dart build
+RUN dart run react_tool:react build --release
+
+# Compile the Dart server ahead-of-time for maximum performance
+RUN dart compile exe bin/server.dart -o build/server
+
+# Stage 2: Minimal Runtime Environment
+FROM debian:bookworm-slim
+
+# The Dart runtime requires some basic libraries
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy the compiled server binary
+COPY --from=build /app/build/server /app/server
+
+# Copy the React build artifacts (static files, JS bundles, SSR worker)
+COPY --from=build /app/build/react /app/build/react
+
+# Ensure the server binds to 0.0.0.0 in Docker
+ENV HOST=0.0.0.0
+ENV PORT=8080
+
 EXPOSE 8080
-CMD ["sh", "-c", "node build/react/ssr.entry.mjs & exec ./build/react/server"]
+
+# Start the server
+CMD ["/app/server"]
 ```
 
-Build and run:
+## Running the Container
+
+Build the Docker image:
 
 ```bash
-docker build -f my_app/Dockerfile .
-docker run -p 8080:8080 my_app
+docker build -t my-react-dart-app .
 ```
 
-## Static hosting (client-only)
-
-For client-only projects, build the client bundle and serve `build/react/` with any static file server:
+Run the container, mapping port 8080 to your host machine:
 
 ```bash
-dart run react_tool:react build
-# Serve build/react/ with nginx, Netlify, Vercel, etc.
+docker run -p 8080:8080 my-react-dart-app
 ```
 
-## `react serve`
+## Server Configuration
 
-For development and simple deployments, use the built-in serve command:
+In production, your Dart server (e.g., `bin/server.dart`) must serve the static files from `build/react/` and route dynamic requests to the SSR worker. Ensure your server code handles `PORT` and `HOST` environment variables appropriately.
+
+```dart
+// bin/server.dart
+import 'dart:io';
+import 'package:shelf/shelf.dart';
+import 'package:shelf/shelf_io.dart' as io;
+
+void main() async {
+  final port = int.parse(Platform.environment['PORT'] ?? '8080');
+  final host = Platform.environment['HOST'] ?? 'localhost';
+  
+  // Initialize SSR, set up routes, etc.
+  
+  final server = await io.serve(handler, host, port);
+  print('Server listening on port \${server.port}');
+}
+```
+
+## Platform-Specific Deployments
+
+### Google Cloud Run
+
+Google Cloud Run is an excellent fit for Dockerized React Dart apps because it scales HTTP containers to zero and handles SSL termination automatically.
 
 ```bash
-dart run react_tool:react serve
+gcloud run deploy my-react-app \
+  --source . \
+  --allow-unauthenticated \
+  --region us-central1
 ```
 
-This starts the SSR worker (if configured) and the Dart server on port 8080.
+### AWS Fargate / ECS
+
+You can push your Docker image to ECR and deploy it via ECS Fargate. Set up an Application Load Balancer to route traffic to your containers.

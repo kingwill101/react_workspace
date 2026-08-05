@@ -2,74 +2,53 @@
 sidebar_position: 2
 ---
 
-# CLI Reference
+# CLI Reference (`react_tool`)
 
-## `react init`
+The `react_tool` package exposes the `react` executable, which orchestrates the entire build and development lifecycle of a React Dart application.
 
-Scaffold a new React Dart project.
-
-```bash
-react init <project-name> [options]
-```
-
-### Options
-
-| Option | Default | Description |
-|---|---|---|
-| `--packages <path>` | `../packages` | Path to react_* package directories |
-| `--template <variant>` | `ssr` | Scaffold variant: `ssr` or `client` |
-| `--force` | `false` | Overwrite an existing directory |
-
-### Examples
+## Global Activation
 
 ```bash
-# Scaffold an SSR project (default)
-react init my_app
-
-# Scaffold a client-only project
-react init my_app --template client
-
-# Scaffold with custom packages path
-react init my_app --packages ../../packages
+dart pub global activate react_tool
 ```
 
-## `react build`
+You can then run `react <command>` or `dart run react_tool:react <command>`.
 
-Build the project — compiles client JS, SSR JS (if configured), and server binary (if configured).
+## Commands
 
-```bash
-react build [--server] [--release]
-```
+### `react doctor`
+Inspects the current project and verifies that the `react.yaml` configuration is valid, dependencies are installed, and the environment is ready for development.
 
-### Options
+### `react init <directory> [--template <name>]`
+Scaffolds a new React Dart project.
+- `--template ssr` (default): Creates a full-stack SSR project with a backend server.
+- `--template client`: Creates a client-only static site project.
 
-| Option | Default | Description |
-|---|---|---|
-| `--server` | `false` | Build the server binary |
-| `--release` | `false` | Use release optimization |
+### `react build`
+Compiles the application for production.
+- **Flags**:
+  - `--release`: Minifies Dart and JS outputs, and compresses CSS.
+  - `--watch`: Watches the file system and incrementally rebuilds on changes.
+- **Outputs**: Generates files into the configured output directory (usually `build/react/`). This includes the manifest, JS bundles, and compiled stylesheets.
 
-## `react serve`
+### `react serve`
+Starts the development server.
+- **Flags**:
+  - `--watch`: Rebuilds and restarts the server on code changes.
+  - `--release`: Runs the server using release-mode artifacts.
+  - `--no-ssr`: Disables the SSR worker for debugging client-side rendering.
+- **Behavior**: Runs the Dart executable specified in `serverEntrypoint` (e.g., `bin/server.dart`). In client-only mode, it spins up a simple static file server instead.
 
-Build and serve the project.
+### `react js install`
+Provisions an isolated NPM environment in `.dart_tool/react/js`. This is used internally during `build`, but can be run manually to force an npm dependency resolution based on your wrapper definitions.
 
-```bash
-react serve [options]
-```
+### `react js sync`
+Validates that a host JS project satisfies all wrapper requirements. Useful when `foreign.host: true` is set in `react.yaml`.
 
-### Options
-
-| Option | Default | Description |
-|---|---|---|
-| `--port <port>` | `8080` | Port for the Dart server |
-| `--ssr-port <port>` | `3001` | Port for the SSR worker |
-| `--release` | `false` | Use release optimization |
-| `--no-ssr` | `false` | Skip the SSR worker |
-| `--watch` | `false` | Rebuild and restart on file changes |
-
-## `react clean`
-
-Remove build artifacts.
-
-## `react doctor`
-
-Inspect the current project configuration.
+### `react ts bind <specifier> [names...]`
+Extracts TypeScript declarations from an NPM package and generates Dart bindings.
+- **Arguments**:
+  - `<specifier>`: The npm package name (e.g., `react-router-dom`).
+  - `[names...]`: Specific exports to bind. If omitted, discovers all React components and hooks.
+- **Flags**:
+  - `--hooks <file>`: Specify an output file for generated hook bindings.

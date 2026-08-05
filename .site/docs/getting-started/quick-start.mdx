@@ -4,53 +4,92 @@ sidebar_position: 1
 
 # Quick Start
 
-Get a React Dart project running in under two minutes.
+Get up and running with React Dart in minutes. This guide will show you how to scaffold a new project, understand the generated code, and start the development server.
 
-## 1. Scaffold a project
+## 1. Scaffold a New Project
+
+Use the `react` CLI to initialize a new React Dart project. This command creates a new directory with a pre-configured workspace, including the necessary `pubspec.yaml`, `react.yaml`, and sample source files.
 
 ```bash
-dart run react_tool:react init my_app
+dart run react_tool:react init my_react_app
+cd my_react_app
 ```
 
-This creates a new directory `my_app/` with:
+*Note: If you have `react_tool` activated globally, you can simply run `react init my_react_app`.*
 
-- `pubspec.yaml` — Dart dependencies
-- `react.yaml` — Project configuration
-- `lib/app.dart` — Root component
-- `lib/ssr.dart` — SSR entrypoint
-- `bin/server.dart` — Server entrypoint
-- `web/client.dart` — Client bootstrap
-- `web/index.html` — HTML template
+## 2. Fetch Dependencies
 
-## 2. Install dependencies
+Before building or running the application, fetch the Dart dependencies using pub:
 
 ```bash
-cd my_app
 dart pub get
 ```
 
-## 3. Build
+This will download the `react`, `react_dom`, `react_tool`, and `react_codegen` packages required by your new project.
+
+## 3. Start the Development Server
+
+React Dart comes with a powerful development server that automatically handles building, serving, and watching your files for changes.
 
 ```bash
-dart run react_tool:react build
+dart run react_tool:react serve --watch
 ```
 
-This compiles the client JS bundle, the SSR bundle (if configured), and the server binary (if configured).
+What happens when you run this command?
+1. **Code Generation**: `react_codegen` processes your `.dart` files, generating `.react.dart` (component factories) and `.react.g.dart` (JS wrappers).
+2. **Compilation**: The Dart compiler compiles your client code (`web/client.dart`) and your SSR worker (`lib/ssr.dart`) to JavaScript.
+3. **Bundling**: Foreign JavaScript dependencies (like React itself) are bundled via esbuild.
+4. **Serving**: A local Dart HTTP server starts up, handling requests, performing Server-Side Rendering (SSR), and serving static assets.
 
-## 4. Serve
+Open your browser to `http://localhost:8080` to see your running application!
+
+## 4. Make a Change
+
+Open `lib/app.dart` in your IDE. You'll see a basic functional component. Let's modify it to add some state using the `useState` hook.
+
+```dart
+import 'package:react/react.dart';
+import 'app.react.dart'; // The generated factory
+
+@React()
+ReactNode App() {
+  final (count, setCount) = useState(0);
+
+  return div(
+    children: [
+      h1(children: [Text('Hello React Dart!')]),
+      p(children: [Text('You clicked $count times.')]),
+      button(
+        onClick: (e) => setCount(count + 1),
+        children: [Text('Click me')],
+      ),
+    ],
+  );
+}
+```
+
+Because you ran `react serve --watch`, the CLI automatically detects the change, reruns code generation, recompiles the JavaScript bundles, and restarts the server. Refresh your browser to see the interactive counter!
+
+## 5. Build for Production
+
+When you are ready to deploy your application, use the `build` command with the `--release` flag. This minifies the output and applies production optimizations.
 
 ```bash
-dart run react_tool:react serve
+dart run react_tool:react build --release
 ```
 
-The app is available at `http://localhost:8080`.
+All built artifacts will be placed in the `build/react/` directory, including:
+- Minified JavaScript bundles (`client.js`, `ssr.js`)
+- Compiled CSS from Sass
+- The `bundle_manifest.json`
+- Optimized foreign bundles
 
-## Client-only variant
-
-Skip SSR and server functions entirely:
+You can then run the compiled server directly:
 
 ```bash
-dart run react_tool:react init my_app --template client
+dart bin/server.dart
 ```
 
-This generates a project with only the client bundle and a static file server — no SSR worker, no server binary, no Dockerfile.
+## Next Steps
+
+Congratulations on running your first React Dart app! Next, explore the [Project Structure](./project-structure.mdx) to understand how the files in your project are organized, or dive into [Server Functions](../guides/server-functions.mdx) to learn how to communicate with your backend.
