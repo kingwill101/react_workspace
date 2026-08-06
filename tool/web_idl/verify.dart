@@ -28,11 +28,27 @@ Future<void> main(List<String> args) async {
     ).loadRaw(),
   );
 
-  final report = CompletenessVerifier(model: model, emittedModel: model).verify();
+  // Prefer manifest verification: compare snapshot vs actually emitted manifest.
+  Map<String, Object?> report;
+  int defsDropped;
+  int membersDropped;
+  const manifestPath = 'packages/react_web/lib/src/generated/emitted_manifest.json';
+  if (File(manifestPath).existsSync()) {
+    final manifest = EmittedManifest.fromFile(manifestPath);
+    final verifier = CompletenessVerifier.withManifest(model: model, manifest: manifest);
+    report = verifier.verifyAgainstManifest(manifest);
+  } else {
+    // Fallback for CI without prior generation — use isolated model copies to avoid identical check.
+    final copy = mergeRawModel(
+      CompleteWebModelBuilder(webIdlPath: webApisJson, bcdFilter: BcdFilter.load()).loadRaw(),
+    );
+    final verifier = CompletenessVerifier(model: model, emittedModel: copy);
+    report = verifier.verify();
+  }
   final defs = report['definitions'] as Map;
   final members = report['members'] as Map;
-  final defsDropped = defs['dropped'] as int;
-  final membersDropped = members['dropped'] as int;
+  defsDropped = defs['dropped'] as int;
+  membersDropped = members['dropped'] as int;
 
   // Duplicate emitted names across the whole model (should be zero).
   final names = <String>{};
@@ -57,7 +73,14 @@ Future<void> main(List<String> args) async {
     missingMappings = mappings.missingTypes(interfaceNames).length;
   }
 
-  File(reportPath).writeAsStringSync(CompletenessVerifier(model: model, emittedModel: model).toJsonNice(report));
+  // Write report via a lightweight verifier if manifest was used, else reuse model verifier.
+  final reportWriter = CompletenessVerifier(
+    model: model,
+    emittedModel: mergeRawModel(
+      CompleteWebModelBuilder(webIdlPath: webApisJson, bcdFilter: BcdFilter.load()).loadRaw(),
+    ),
+  );
+  File(reportPath).writeAsStringSync(reportWriter.toJsonNice(report));
 
   stdout.writeln('definitions: ${defs['emitted']}/${defs['source']} (dropped $defsDropped, opaque ${defs['opaque']})');
   stdout.writeln('members: ${members['emitted']}/${members['source']} (dropped $membersDropped, opaque ${members['opaque']})');

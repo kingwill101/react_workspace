@@ -244,6 +244,15 @@ final class SsrSurfaceEmitter {
     buf.writeln('  @override');
     buf.writeln('  T createWebObject<T extends Object>(String name, List<Object?> arguments) =>');
     buf.writeln("      throw UnsupportedWebApiError('\$name constructor');");
+    buf.writeln('  @override');
+    buf.writeln('  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments) =>');
+    buf.writeln("      throw UnsupportedWebApiError('\$namespace.\$member');");
+    buf.writeln('  @override');
+    buf.writeln('  dynamic getNamespaceProperty(String namespace, String property) =>');
+    buf.writeln("      throw UnsupportedWebApiError('\$namespace.\$property');");
+    buf.writeln('  @override');
+    buf.writeln('  void setNamespaceProperty(String namespace, String property, Object? value) =>');
+    buf.writeln("      throw UnsupportedWebApiError('\$namespace.\$property');");
     buf.writeln('}');
     buf.writeln();
     buf.writeln('/// Installs the SSR [WebRuntime]. Safe to call repeatedly.');

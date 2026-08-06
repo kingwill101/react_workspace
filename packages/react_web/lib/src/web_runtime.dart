@@ -46,6 +46,15 @@ abstract interface class WebRuntime {
   /// server.
   T createWebObject<T extends Object>(String name, List<Object?> arguments);
 
+  /// Invokes a namespace operation (e.g. `CSS.supports()`).
+  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments);
+
+  /// Reads a namespace attribute.
+  dynamic getNamespaceProperty(String namespace, String property);
+
+  /// Writes a namespace attribute.
+  void setNamespaceProperty(String namespace, String property, Object? value);
+
   static WebRuntime get current =>
       _current ?? (throw StateError('WebRuntime has not been installed.'));
 

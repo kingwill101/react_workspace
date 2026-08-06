@@ -21,17 +21,39 @@ Future<void> main() async {
   final completeModel = mergeRawModel(raw);
 
   const neutralWebSurfaceDir = 'packages/react_web/lib/src/generated/web';
-  NeutralSurfaceEmitter(completeModel).emitTo(neutralWebSurfaceDir);
+  final neutralEmitter = NeutralSurfaceEmitter(completeModel);
+  neutralEmitter.emitTo(neutralWebSurfaceDir);
   print('Generated complete neutral Web surface → $neutralWebSurfaceDir/');
   print('  Definitions: ${completeModel.definitionCount} across ${completeModel.specOf.values.toSet().length} specs');
 
-  final verifier = CompletenessVerifier(model: completeModel, emittedModel: completeModel);
-  final report = verifier.verify();
+  // Verify against the emitted manifest written by NeutralSurfaceEmitter.
+  const manifestPath = 'packages/react_web/lib/src/generated/emitted_manifest.json';
+  final manifest = EmittedManifest.fromFile(manifestPath);
+  final verifier = CompletenessVerifier.withManifest(model: completeModel, manifest: manifest);
+  final report = verifier.verifyAgainstManifest(manifest);
   File('$neutralWebSurfaceDir/../completeness_report.json')
       .writeAsStringSync(verifier.toJsonNice(report));
   print('Completeness report → $neutralWebSurfaceDir/../completeness_report.json');
+  print('  emitted_manifest → $manifestPath');
   print('  definitions.dropped=${(report['definitions'] as Map)['dropped']} '
       'members.dropped=${(report['members'] as Map)['dropped']}');
+
+  // Generate host-type registry for react_codegen from the complete model.
+  const hostTypesPath = 'packages/react_codegen/lib/src/generated/web_host_types.g.dart';
+  final hostBuf = StringBuffer();
+  hostBuf.writeln('// GENERATED CODE — DO NOT EDIT');
+  hostBuf.writeln('// Full host-type table derived from the complete Web model.');
+  hostBuf.writeln('const generatedWebHostTypes = <String, (String, String)>{');
+  for (final name in completeModel.interfaces.keys.toList()..sort()) {
+    hostBuf.writeln("  '$name': ('web', '$name'),");
+  }
+  // Also include mixins that can appear as host values via implements.
+  for (final name in completeModel.mixins.keys.toList()..sort()) {
+    hostBuf.writeln("  '$name': ('web', '$name'),");
+  }
+  hostBuf.writeln('};');
+  File(hostTypesPath).writeAsStringSync(hostBuf.toString());
+  print('Generated host-type registry → $hostTypesPath (${completeModel.interfaces.length} interfaces)');
 
   // Generated SSR throwing surface (same declarations as browser; throws at runtime).
   SsrSurfaceEmitter(completeModel).emitTo(neutralWebSurfaceDir);

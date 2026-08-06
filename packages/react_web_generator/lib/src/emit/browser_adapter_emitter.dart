@@ -202,6 +202,11 @@ final class BrowserAdapterEmitter {
         final id = ref.typeId;
         final name = id.contains('.') ? id.substring(id.indexOf('.') + 1) : id;
         if (_callbackNames.contains(name)) return 'jsfunction';
+        // Broader IDL shape coverage.
+        if (name == 'Promise') return 'promise';
+        if (name == 'sequence' || name == 'FrozenArray' || name == 'ObservableArray') return 'list';
+        if (name == 'record') return 'map';
+        if (name.endsWith('Array') && (name.startsWith('Int') || name.startsWith('Uint') || name.startsWith('Float') || name == 'ArrayBuffer' || name == 'SharedArrayBuffer')) return 'typedArray';
         return switch (name) {
           'bool' => 'bool',
           'int' => 'int',
@@ -399,6 +404,16 @@ final class BrowserAdapterEmitter {
     buf.writeln();
     buf.writeln('dynamic _convert(JSAny? value, String kind) {');
     buf.writeln('  if (value == null || value.isNull || value.isUndefined) return null;');
+    buf.writeln('  if (kind == "promise" && value is JSPromise) {');
+    buf.writeln('    return (value as JSPromise<JSAny?>).toDart;');
+    buf.writeln('  }');
+    buf.writeln('  if (kind == "list" && value is JSArray) {');
+    buf.writeln('    return (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, "wrap")).toList();');
+    buf.writeln('  }');
+    buf.writeln('  if (kind == "map" && value is JSObject) {');
+    buf.writeln('    // record<K,V> → JS object with string keys; best-effort map view.');
+    buf.writeln('    return _wrapObject(value as JSObject);');
+    buf.writeln('  }');
     buf.writeln('  return switch (kind) {');
     buf.writeln("    'bool' => (value as JSBoolean).toDart,");
     buf.writeln("    'int' => (value as JSNumber).toDartInt,");
@@ -406,6 +421,9 @@ final class BrowserAdapterEmitter {
     buf.writeln("    'string' => (value as JSString).toDart,");
     buf.writeln("    'void' => null,");
     buf.writeln("    'jsfunction' => value,");
+    buf.writeln("    'promise' => (value is JSPromise ? (value as JSPromise<JSAny?>).toDart : _wrapObject(value as JSObject)),");
+    buf.writeln("    'list' => (value is JSArray ? (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, 'wrap')).toList() : _wrapObject(value as JSObject)),");
+    buf.writeln("    'typedArray' => value,");
     buf.writeln('    _ => value is JSString');
     buf.writeln('        ? (value as JSString).toDart');
     buf.writeln('        : value is JSBoolean');
@@ -622,6 +640,27 @@ final class BrowserAdapterEmitter {
     buf.writeln("      throw UnsupportedWebApiError('\$name constructor');");
     buf.writeln('    }');
     buf.writeln('    return ctor(arguments) as T;');
+    buf.writeln('  }');
+    buf.writeln('  @override');
+    buf.writeln('  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments) {');
+    buf.writeln('    final ns = globalContext.getProperty(namespace.toJS);');
+    buf.writeln('    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("\$namespace.\$member");');
+    buf.writeln('    final jsArgs = [for (final a in arguments) _toJs(a)];');
+    buf.writeln('    final result = (ns as JSObject).callMethodVarArgs(member.toJS, jsArgs);');
+    buf.writeln('    return _convert(result, "wrap");');
+    buf.writeln('  }');
+    buf.writeln('  @override');
+    buf.writeln('  dynamic getNamespaceProperty(String namespace, String property) {');
+    buf.writeln('    final ns = globalContext.getProperty(namespace.toJS);');
+    buf.writeln('    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("\$namespace.\$property");');
+    buf.writeln('    final value = (ns as JSObject).getProperty(property.toJS);');
+    buf.writeln('    return _convert(value, "wrap");');
+    buf.writeln('  }');
+    buf.writeln('  @override');
+    buf.writeln('  void setNamespaceProperty(String namespace, String property, Object? value) {');
+    buf.writeln('    final ns = globalContext.getProperty(namespace.toJS);');
+    buf.writeln('    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("\$namespace.\$property");');
+    buf.writeln('    (ns as JSObject).setProperty(property.toJS, _toJs(value));');
     buf.writeln('  }');
     buf.writeln('}');
     buf.writeln();

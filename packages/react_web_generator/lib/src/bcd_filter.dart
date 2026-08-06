@@ -104,10 +104,12 @@ class BcdFilter {
     // Event handler fallback: if the member is an `onX` handler and
     // the underlying event (`X_event`) is supported on any generated
     // interface, assume it can bubble up.
+    // BCD stores `click_event` but _cacheMembers normalizes to `onclick`,
+    // so we check both forms.
     if (memberName.startsWith('on') && memberName.length > 2) {
       final eventName = '${memberName.substring(2)}_event';
       for (final entry in _includedMembers.entries) {
-        if (entry.value.contains(eventName)) return true;
+        if (entry.value.contains(memberName) || entry.value.contains(eventName)) return true;
       }
     }
     return false;

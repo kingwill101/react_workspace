@@ -53,22 +53,28 @@ final class ReactTypeReader {
     }
 
     // ── react_web host types ───────────────────────────────────────────────
-    // Recognise any interface whose *base* name (ignoring type-args and the
-    // nullability suffix) is listed in the host-type table.  We strip generic
-    // arguments so that both `ReactChangeEvent` and
-    // `ReactChangeEvent<HTMLInputElement>` match.
+    // Recognise any interface whose *base* name is listed in the host-type
+    // table, but only when the type originates from `package:react_web`.
+    // This prevents an application-defined `Event`/`Node`/`Element` from
+    // being misclassified.
     if (type is InterfaceType) {
       final rawName = type.element.name;
-      // Also try the base name without type arguments from the display string
-      // so e.g. `ReactChangeEvent<HTMLInputElement>` → `ReactChangeEvent`.
+      final libUri = type.element.library.uri.toString();
+      final isReactWeb = libUri.contains('react_web') || libUri.contains('package:web');
       final hostEntry = ReactTypes.webHostTypes[rawName];
-      if (hostEntry != null) {
+      if (hostEntry != null && isReactWeb) {
         final (hostNamespace, typeId) = hostEntry;
         return HostTypeRef(
           hostNamespace: hostNamespace,
           typeId: typeId,
           nullable: nullable,
         );
+      }
+      // Fallback: if name is a known host type but library is not
+      // react_web, still check for exact react_web uri to avoid false
+      // positives from user-defined types with same short name.
+      if (hostEntry != null && !isReactWeb) {
+        // Do not emit HostTypeRef for non-react_web libraries.
       }
     }
     // ── end react_web host types ───────────────────────────────────────────

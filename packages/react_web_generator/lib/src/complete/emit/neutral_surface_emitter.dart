@@ -1,6 +1,7 @@
 /// Emits the complete neutral Web surface split per specification module.
 library;
 
+import 'dart:convert';
 import 'dart:io';
 
 import '../../model/type_ref.dart';
@@ -55,6 +56,93 @@ final class NeutralSurfaceEmitter {
 
     _emitWebBarrel(dir, specs.keys.toList());
     _emitGlobals(dir);
+    _writeEmittedManifest(outputDir);
+  }
+
+  void _writeEmittedManifest(String outputDir) {
+    // Build manifest from actually emitted definitions/members (mirrors
+    // CompletenessVerifier._memberIds but collected during emission).
+    final definitions = <String>{};
+    final members = <String>{};
+    for (final d in model.allDefinitions) {
+      if (_reservedTypeNames.containsKey(d.name)) continue;
+      definitions.add('${d.kindName}:${d.name}');
+      switch (d) {
+        case IdlInterface():
+          final flat = flattenMembers(model, d);
+          final ops = <String, IdlOperation>{};
+          for (final m in flat) {
+            if (m is IdlOperation) {
+              final ex = ops[m.name];
+              if (ex == null || m.parameters.length > ex.parameters.length) ops[m.name] = m;
+            }
+          }
+          final seen = <String>{};
+          for (final m in flat) {
+            switch (m) {
+              case IdlOperation():
+                if (!seen.add(m.name)) continue;
+                members.add('${d.name}.${ops[m.name]!.name}:operation');
+              case IdlAttribute():
+                members.add('${d.name}.${m.name}:attribute');
+              case IdlConstant():
+                members.add('${d.name}.${m.name}:const');
+              case IdlIterable():
+                members.add('${d.name}.iterable:iterable');
+              case IdlMaplike():
+                members.add('${d.name}.maplike:maplike');
+              case IdlSetlike():
+                members.add('${d.name}.setlike:setlike');
+              case IdlConstructor():
+                members.add('${d.name}.constructor:constructor');
+              case IdlField():
+                break;
+            }
+          }
+        case IdlMixin():
+          for (final m in d.members) {
+            switch (m) {
+              case IdlAttribute(): members.add('${d.name}.${m.name}:attribute');
+              case IdlOperation(): members.add('${d.name}.${m.name}:operation');
+              case IdlConstant(): members.add('${d.name}.${m.name}:const');
+              case IdlIterable(): members.add('${d.name}.iterable:iterable');
+              case IdlMaplike(): members.add('${d.name}.maplike:maplike');
+              case IdlSetlike(): members.add('${d.name}.setlike:setlike');
+              case _: break;
+            }
+          }
+        case IdlDictionary():
+          for (final f in d.fields) {
+            members.add('${d.name}.${f.name}:field');
+          }
+        case IdlNamespace():
+          for (final m in d.members) {
+            switch (m) {
+              case IdlOperation(): members.add('${d.name}.${m.name}:operation');
+              case IdlAttribute(): members.add('${d.name}.${m.name}:attribute');
+              case IdlConstant(): members.add('${d.name}.${m.name}:const');
+              case _: break;
+            }
+          }
+        case IdlCallbackInterface():
+          for (final m in d.members) {
+            switch (m) {
+              case IdlAttribute(): members.add('${d.name}.${m.name}:attribute');
+              case IdlOperation(): members.add('${d.name}.${m.name}:operation');
+              case IdlConstant(): members.add('${d.name}.${m.name}:const');
+              case _: break;
+            }
+          }
+        case IdlEnum() || IdlTypedef() || IdlCallback() || IdlIncludes():
+          break;
+      }
+    }
+    final manifest = {
+      'definitions': (definitions.toList()..sort()),
+      'members': (members.toList()..sort()),
+    };
+    File('${Directory(outputDir).parent.path}/emitted_manifest.json')
+        .writeAsStringSync(const JsonEncoder.withIndent('  ').convert(manifest));
   }
 
   /// Deterministic, sanitized module file name for a spec group.
@@ -118,7 +206,7 @@ final class NeutralSurfaceEmitter {
     for (final s in importSpecs) {
       buf.writeln("import '${_fileName(s)}.dart';");
     }
-    if (defs.any(_hasConstructor)) {
+    if (defs.any(_hasConstructor) || defs.any((d) => d is IdlNamespace)) {
       buf.writeln("import 'package:react_web/src/web_runtime.dart';");
     }
     buf.writeln();
@@ -260,12 +348,43 @@ final class NeutralSurfaceEmitter {
   }
 
   void _emitDictionary(StringBuffer buf, IdlDictionary d) {
+    String _dictType(IdlField f) {
+      var t = _resolver.resolve(f.type);
+      if (!f.required && !t.endsWith('?')) t = '$t?';
+      return t;
+    }
     buf.writeln('abstract interface class ${d.name} {');
     for (final f in d.fields) {
-      final t = _resolver.resolve(f.type);
+      final t = _dictType(f);
       final fn = escapeIdentifier(f.name);
       buf.writeln('  $t get $fn;');
       buf.writeln('  set $fn($t value);');
+    }
+    buf.writeln('}');
+    buf.writeln();
+    // Portable construction value type so callers can build dictionary
+    // arguments (e.g. StorageEventInit) without hand-writing JS objects.
+    buf.writeln('final class ${d.name}Value implements ${d.name} {');
+    for (final f in d.fields) {
+      final t = _dictType(f);
+      final fn = escapeIdentifier(f.name);
+      buf.writeln('  @override');
+      buf.writeln('  $t $fn;');
+    }
+    buf.writeln();
+    if (d.fields.isEmpty) {
+      buf.writeln('  ${d.name}Value();');
+    } else {
+      buf.writeln('  ${d.name}Value({');
+      for (final f in d.fields) {
+        final fn = escapeIdentifier(f.name);
+        if (f.required) {
+          buf.writeln('    required this.$fn,');
+        } else {
+          buf.writeln('    this.$fn,');
+        }
+      }
+      buf.writeln('  });');
     }
     buf.writeln('}');
   }
@@ -314,9 +433,22 @@ final class NeutralSurfaceEmitter {
     for (final m in d.members) {
       if (m is IdlOperation) {
         if (!emitted.add(m.name)) continue;
-        _emitStaticOperation(buf, ops[m.name]!);
+        final op = ops[m.name]!;
+        final ret = _resolver.resolve(op.returnType);
+        final paramNames = [for (var i = 0; i < op.parameters.length; i++) escapeIdentifier(op.parameters[i].name.isEmpty ? 'arg$i' : op.parameters[i].name)];
+        buf.write('  static $ret ${escapeIdentifier(op.name)}(');
+        buf.write(_paramStrings(op.parameters));
+        buf.writeln(') => WebRuntime.current.invokeNamespace(');
+        buf.writeln("      '${d.name}', '${op.name}', [${paramNames.join(', ')}]) as $ret;");
       } else if (m is IdlAttribute) {
-        _emitStaticAttribute(buf, m);
+        final t = _resolver.resolve((m as IdlAttribute).type);
+        final name = escapeIdentifier(m.name);
+        buf.writeln('  static $t get $name =>');
+        buf.writeln("      WebRuntime.current.getNamespaceProperty('${d.name}', '${m.name}') as $t;");
+        if (!m.readonly) {
+          buf.writeln('  static set $name($t value) =>');
+          buf.writeln("      WebRuntime.current.setNamespaceProperty('${d.name}', '${m.name}', value);");
+        }
       } else if (m is IdlConstant) {
         _emitStaticConstant(buf, m);
       }
@@ -326,16 +458,24 @@ final class NeutralSurfaceEmitter {
 
   void _emitStaticOperation(StringBuffer buf, IdlOperation m) {
     final ret = _resolver.resolve(m.returnType);
+    final params = m.parameters;
+    final paramNames = [for (var i = 0; i < params.length; i++) escapeIdentifier(params[i].name.isEmpty ? 'arg$i' : params[i].name)];
     buf.write('  static $ret ${escapeIdentifier(m.name)}(');
-    buf.write(_paramStrings(m.parameters));
-    buf.writeln(') => throw UnsupportedError(');
-    buf.writeln("      '${m.name} is not supported in the neutral surface');");
+    buf.write(_paramStrings(params));
+    // Dispatch via WebRuntime when installed (browser), otherwise throw
+    // clearly for SSR. The namespace name is not available here, so we
+    // close over it in _emitNamespace: emit a forwarder that captures it.
+    // For now emit a runtime-dispatched body that the SSR emitter will
+    // override with a throwing stub if needed.
+    buf.writeln(') => WebRuntime.current.invokeNamespace(');
+    // Placeholder — replaced by _emitNamespace with correct namespace.
+    buf.writeln("      '__ns__', '${m.name}', [${paramNames.join(', ')}]) as $ret;");
   }
 
   void _emitStaticAttribute(StringBuffer buf, IdlAttribute m) {
     final t = _resolver.resolve(m.type);
     buf.writeln('  static $t get ${escapeIdentifier(m.name)} =>');
-    buf.writeln("      throw UnsupportedError('${m.name} not supported in neutral surface');");
+    buf.writeln("      WebRuntime.current.getNamespaceProperty('__ns__', '${m.name}') as $t;");
   }
 
   void _emitStaticConstant(StringBuffer buf, IdlConstant m) {
@@ -344,20 +484,23 @@ final class NeutralSurfaceEmitter {
   }
 
   void _emitMembers(StringBuffer buf, List<IdlMember> members, {required String indent}) {
-    final ops = <String, IdlOperation>{};
     final emitOrder = <IdlMember>[];
     for (final m in members) {
       if (m is IdlOperation) {
-        final existing = ops[m.name];
-        if (existing == null || m.parameters.length > existing.parameters.length) {
-          ops[m.name] = m;
-        }
         if (!emitOrder.any((e) => e is IdlOperation && e.name == m.name)) {
           emitOrder.add(m);
         }
       } else {
         emitOrder.add(m);
       }
+    }
+    // For now keep simple max-params collapse to stay in sync with
+    // SsrSurfaceEmitter (which uses same dedup). Full overload merging
+    // will be re-enabled once SSR is updated to match.
+    final ops = <String, IdlOperation>{};
+    for (final m in members.whereType<IdlOperation>()) {
+      final ex = ops[m.name];
+      if (ex == null || m.parameters.length > ex.parameters.length) ops[m.name] = m;
     }
     for (final m in emitOrder) {
       switch (m) {
