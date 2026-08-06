@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 // Neutral Web surface for spec: dom
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
@@ -411,37 +412,37 @@ abstract interface class Node {
 }
 
 abstract interface class NodeFilter {
-   static const int FILTER_ACCEPT =
+   static const int filterAccept =
       1;
-   static const int FILTER_REJECT =
+   static const int filterReject =
       2;
-   static const int FILTER_SKIP =
+   static const int filterSkip =
       3;
-   static const int SHOW_ALL =
+   static const int showAll =
       0xFFFFFFFF;
-   static const int SHOW_ELEMENT =
+   static const int showElement =
       0x1;
-   static const int SHOW_ATTRIBUTE =
+   static const int showAttribute =
       0x2;
-   static const int SHOW_TEXT =
+   static const int showText =
       0x4;
-   static const int SHOW_CDATA_SECTION =
+   static const int showCdataSection =
       0x8;
-   static const int SHOW_ENTITY_REFERENCE =
+   static const int showEntityReference =
       0x10;
-   static const int SHOW_ENTITY =
+   static const int showEntity =
       0x20;
-   static const int SHOW_PROCESSING_INSTRUCTION =
+   static const int showProcessingInstruction =
       0x40;
-   static const int SHOW_COMMENT =
+   static const int showComment =
       0x80;
-   static const int SHOW_DOCUMENT =
+   static const int showDocument =
       0x100;
-   static const int SHOW_DOCUMENT_TYPE =
+   static const int showDocumentType =
       0x200;
-   static const int SHOW_DOCUMENT_FRAGMENT =
+   static const int showDocumentFragment =
       0x400;
-   static const int SHOW_NOTATION =
+   static const int showNotation =
       0x800;
   int acceptNode(Node node);
 }

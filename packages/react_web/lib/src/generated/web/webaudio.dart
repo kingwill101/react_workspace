@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 // Neutral Web surface for spec: webaudio
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
@@ -552,7 +553,7 @@ abstract interface class BiquadFilterNode {
    set type(BiquadFilterType value);
   AudioParam get frequency;
   AudioParam get detune;
-  AudioParam get Q;
+  AudioParam get q;
   AudioParam get gain;
   void getFrequencyResponse(Object frequencyHz, Object magResponse, Object phaseResponse);
 }
@@ -560,8 +561,8 @@ abstract interface class BiquadFilterNode {
 abstract interface class BiquadFilterOptions {
   BiquadFilterType? get type;
   set type(BiquadFilterType? value);
-  double? get Q;
-  set Q(double? value);
+  double? get q;
+  set q(double? value);
   double? get detune;
   set detune(double? value);
   double? get frequency;
@@ -574,7 +575,7 @@ final class BiquadFilterOptionsValue implements BiquadFilterOptions {
   @override
   BiquadFilterType? type;
   @override
-  double? Q;
+  double? q;
   @override
   double? detune;
   @override
@@ -584,7 +585,7 @@ final class BiquadFilterOptionsValue implements BiquadFilterOptions {
 
   BiquadFilterOptionsValue({
     this.type,
-    this.Q,
+    this.q,
     this.detune,
     this.frequency,
     this.gain,

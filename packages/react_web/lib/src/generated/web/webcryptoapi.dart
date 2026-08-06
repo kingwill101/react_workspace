@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 // Neutral Web surface for spec: WebCryptoAPI
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
@@ -311,8 +312,8 @@ abstract interface class JsonWebKey {
   set kty(String? value);
   String? get use;
   set use(String? value);
-  List<String>? get key_ops;
-  set key_ops(List<String>? value);
+  List<String>? get keyOps;
+  set keyOps(List<String>? value);
   String? get alg;
   set alg(String? value);
   bool? get ext;
@@ -351,7 +352,7 @@ final class JsonWebKeyValue implements JsonWebKey {
   @override
   String? use;
   @override
-  List<String>? key_ops;
+  List<String>? keyOps;
   @override
   String? alg;
   @override
@@ -386,7 +387,7 @@ final class JsonWebKeyValue implements JsonWebKey {
   JsonWebKeyValue({
     this.kty,
     this.use,
-    this.key_ops,
+    this.keyOps,
     this.alg,
     this.ext,
     this.crv,

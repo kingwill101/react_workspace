@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 // Neutral Web surface for spec: html
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
@@ -760,8 +761,8 @@ final class EventSourceInitValue implements EventSourceInit {
 }
 
 abstract interface class External {
-  void AddSearchProvider();
-  void IsSearchProviderInstalled();
+  void addSearchProvider();
+  void isSearchProviderInstalled();
 }
 
 abstract interface class FocusOptions {

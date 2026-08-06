@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 // Exports the complete neutral Web surface.
 
 export 'angle_instanced_arrays.dart';

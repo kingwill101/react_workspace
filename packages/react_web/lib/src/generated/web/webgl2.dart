@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 // Neutral Web surface for spec: webgl2
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
@@ -13,599 +14,599 @@ typedef GLuint64 = int;
 typedef Uint32List = Object;
 
 abstract interface class WebGL2RenderingContext {
-   static const GLenum DEPTH_BUFFER_BIT =
+   static const GLenum depthBufferBit =
       0x00000100;
-   static const GLenum STENCIL_BUFFER_BIT =
+   static const GLenum stencilBufferBit =
       0x00000400;
-   static const GLenum COLOR_BUFFER_BIT =
+   static const GLenum colorBufferBit =
       0x00004000;
-   static const GLenum POINTS =
+   static const GLenum points =
       0x0000;
-   static const GLenum LINES =
+   static const GLenum lines =
       0x0001;
-   static const GLenum LINE_LOOP =
+   static const GLenum lineLoop =
       0x0002;
-   static const GLenum LINE_STRIP =
+   static const GLenum lineStrip =
       0x0003;
-   static const GLenum TRIANGLES =
+   static const GLenum triangles =
       0x0004;
-   static const GLenum TRIANGLE_STRIP =
+   static const GLenum triangleStrip =
       0x0005;
-   static const GLenum TRIANGLE_FAN =
+   static const GLenum triangleFan =
       0x0006;
-   static const GLenum ZERO =
+   static const GLenum zero =
       0;
-   static const GLenum ONE =
+   static const GLenum one =
       1;
-   static const GLenum SRC_COLOR =
+   static const GLenum srcColor =
       0x0300;
-   static const GLenum ONE_MINUS_SRC_COLOR =
+   static const GLenum oneMinusSrcColor =
       0x0301;
-   static const GLenum SRC_ALPHA =
+   static const GLenum srcAlpha =
       0x0302;
-   static const GLenum ONE_MINUS_SRC_ALPHA =
+   static const GLenum oneMinusSrcAlpha =
       0x0303;
-   static const GLenum DST_ALPHA =
+   static const GLenum dstAlpha =
       0x0304;
-   static const GLenum ONE_MINUS_DST_ALPHA =
+   static const GLenum oneMinusDstAlpha =
       0x0305;
-   static const GLenum DST_COLOR =
+   static const GLenum dstColor =
       0x0306;
-   static const GLenum ONE_MINUS_DST_COLOR =
+   static const GLenum oneMinusDstColor =
       0x0307;
-   static const GLenum SRC_ALPHA_SATURATE =
+   static const GLenum srcAlphaSaturate =
       0x0308;
-   static const GLenum FUNC_ADD =
+   static const GLenum funcAdd =
       0x8006;
-   static const GLenum BLEND_EQUATION =
+   static const GLenum blendEquation =
       0x8009;
-   static const GLenum BLEND_EQUATION_RGB =
+   static const GLenum blendEquationRgb =
       0x8009;
-   static const GLenum BLEND_EQUATION_ALPHA =
+   static const GLenum blendEquationAlpha =
       0x883D;
-   static const GLenum FUNC_SUBTRACT =
+   static const GLenum funcSubtract =
       0x800A;
-   static const GLenum FUNC_REVERSE_SUBTRACT =
+   static const GLenum funcReverseSubtract =
       0x800B;
-   static const GLenum BLEND_DST_RGB =
+   static const GLenum blendDstRgb =
       0x80C8;
-   static const GLenum BLEND_SRC_RGB =
+   static const GLenum blendSrcRgb =
       0x80C9;
-   static const GLenum BLEND_DST_ALPHA =
+   static const GLenum blendDstAlpha =
       0x80CA;
-   static const GLenum BLEND_SRC_ALPHA =
+   static const GLenum blendSrcAlpha =
       0x80CB;
-   static const GLenum CONSTANT_COLOR =
+   static const GLenum constantColor =
       0x8001;
-   static const GLenum ONE_MINUS_CONSTANT_COLOR =
+   static const GLenum oneMinusConstantColor =
       0x8002;
-   static const GLenum CONSTANT_ALPHA =
+   static const GLenum constantAlpha =
       0x8003;
-   static const GLenum ONE_MINUS_CONSTANT_ALPHA =
+   static const GLenum oneMinusConstantAlpha =
       0x8004;
-   static const GLenum BLEND_COLOR =
+   static const GLenum blendColor =
       0x8005;
-   static const GLenum ARRAY_BUFFER =
+   static const GLenum arrayBuffer =
       0x8892;
-   static const GLenum ELEMENT_ARRAY_BUFFER =
+   static const GLenum elementArrayBuffer =
       0x8893;
-   static const GLenum ARRAY_BUFFER_BINDING =
+   static const GLenum arrayBufferBinding =
       0x8894;
-   static const GLenum ELEMENT_ARRAY_BUFFER_BINDING =
+   static const GLenum elementArrayBufferBinding =
       0x8895;
-   static const GLenum STREAM_DRAW =
+   static const GLenum streamDraw =
       0x88E0;
-   static const GLenum STATIC_DRAW =
+   static const GLenum staticDraw =
       0x88E4;
-   static const GLenum DYNAMIC_DRAW =
+   static const GLenum dynamicDraw =
       0x88E8;
-   static const GLenum BUFFER_SIZE =
+   static const GLenum bufferSize =
       0x8764;
-   static const GLenum BUFFER_USAGE =
+   static const GLenum bufferUsage =
       0x8765;
-   static const GLenum CURRENT_VERTEX_ATTRIB =
+   static const GLenum currentVertexAttrib =
       0x8626;
-   static const GLenum FRONT =
+   static const GLenum front =
       0x0404;
-   static const GLenum BACK =
+   static const GLenum back =
       0x0405;
-   static const GLenum FRONT_AND_BACK =
+   static const GLenum frontAndBack =
       0x0408;
-   static const GLenum CULL_FACE =
+   static const GLenum cullFace =
       0x0B44;
-   static const GLenum BLEND =
+   static const GLenum blend =
       0x0BE2;
-   static const GLenum DITHER =
+   static const GLenum dither =
       0x0BD0;
-   static const GLenum STENCIL_TEST =
+   static const GLenum stencilTest =
       0x0B90;
-   static const GLenum DEPTH_TEST =
+   static const GLenum depthTest =
       0x0B71;
-   static const GLenum SCISSOR_TEST =
+   static const GLenum scissorTest =
       0x0C11;
-   static const GLenum POLYGON_OFFSET_FILL =
+   static const GLenum polygonOffsetFill =
       0x8037;
-   static const GLenum SAMPLE_ALPHA_TO_COVERAGE =
+   static const GLenum sampleAlphaToCoverage =
       0x809E;
-   static const GLenum SAMPLE_COVERAGE =
+   static const GLenum sampleCoverage =
       0x80A0;
-   static const GLenum NO_ERROR =
+   static const GLenum noError =
       0;
-   static const GLenum INVALID_ENUM =
+   static const GLenum invalidEnum =
       0x0500;
-   static const GLenum INVALID_VALUE =
+   static const GLenum invalidValue =
       0x0501;
-   static const GLenum INVALID_OPERATION =
+   static const GLenum invalidOperation =
       0x0502;
-   static const GLenum OUT_OF_MEMORY =
+   static const GLenum outOfMemory =
       0x0505;
-   static const GLenum CW =
+   static const GLenum cw =
       0x0900;
-   static const GLenum CCW =
+   static const GLenum ccw =
       0x0901;
-   static const GLenum LINE_WIDTH =
+   static const GLenum lineWidth =
       0x0B21;
-   static const GLenum ALIASED_POINT_SIZE_RANGE =
+   static const GLenum aliasedPointSizeRange =
       0x846D;
-   static const GLenum ALIASED_LINE_WIDTH_RANGE =
+   static const GLenum aliasedLineWidthRange =
       0x846E;
-   static const GLenum CULL_FACE_MODE =
+   static const GLenum cullFaceMode =
       0x0B45;
-   static const GLenum FRONT_FACE =
+   static const GLenum frontFace =
       0x0B46;
-   static const GLenum DEPTH_RANGE =
+   static const GLenum depthRange =
       0x0B70;
-   static const GLenum DEPTH_WRITEMASK =
+   static const GLenum depthWritemask =
       0x0B72;
-   static const GLenum DEPTH_CLEAR_VALUE =
+   static const GLenum depthClearValue =
       0x0B73;
-   static const GLenum DEPTH_FUNC =
+   static const GLenum depthFunc =
       0x0B74;
-   static const GLenum STENCIL_CLEAR_VALUE =
+   static const GLenum stencilClearValue =
       0x0B91;
-   static const GLenum STENCIL_FUNC =
+   static const GLenum stencilFunc =
       0x0B92;
-   static const GLenum STENCIL_FAIL =
+   static const GLenum stencilFail =
       0x0B94;
-   static const GLenum STENCIL_PASS_DEPTH_FAIL =
+   static const GLenum stencilPassDepthFail =
       0x0B95;
-   static const GLenum STENCIL_PASS_DEPTH_PASS =
+   static const GLenum stencilPassDepthPass =
       0x0B96;
-   static const GLenum STENCIL_REF =
+   static const GLenum stencilRef =
       0x0B97;
-   static const GLenum STENCIL_VALUE_MASK =
+   static const GLenum stencilValueMask =
       0x0B93;
-   static const GLenum STENCIL_WRITEMASK =
+   static const GLenum stencilWritemask =
       0x0B98;
-   static const GLenum STENCIL_BACK_FUNC =
+   static const GLenum stencilBackFunc =
       0x8800;
-   static const GLenum STENCIL_BACK_FAIL =
+   static const GLenum stencilBackFail =
       0x8801;
-   static const GLenum STENCIL_BACK_PASS_DEPTH_FAIL =
+   static const GLenum stencilBackPassDepthFail =
       0x8802;
-   static const GLenum STENCIL_BACK_PASS_DEPTH_PASS =
+   static const GLenum stencilBackPassDepthPass =
       0x8803;
-   static const GLenum STENCIL_BACK_REF =
+   static const GLenum stencilBackRef =
       0x8CA3;
-   static const GLenum STENCIL_BACK_VALUE_MASK =
+   static const GLenum stencilBackValueMask =
       0x8CA4;
-   static const GLenum STENCIL_BACK_WRITEMASK =
+   static const GLenum stencilBackWritemask =
       0x8CA5;
-   static const GLenum VIEWPORT =
+   static const GLenum viewport =
       0x0BA2;
-   static const GLenum SCISSOR_BOX =
+   static const GLenum scissorBox =
       0x0C10;
-   static const GLenum COLOR_CLEAR_VALUE =
+   static const GLenum colorClearValue =
       0x0C22;
-   static const GLenum COLOR_WRITEMASK =
+   static const GLenum colorWritemask =
       0x0C23;
-   static const GLenum UNPACK_ALIGNMENT =
+   static const GLenum unpackAlignment =
       0x0CF5;
-   static const GLenum PACK_ALIGNMENT =
+   static const GLenum packAlignment =
       0x0D05;
-   static const GLenum MAX_TEXTURE_SIZE =
+   static const GLenum maxTextureSize =
       0x0D33;
-   static const GLenum MAX_VIEWPORT_DIMS =
+   static const GLenum maxViewportDims =
       0x0D3A;
-   static const GLenum SUBPIXEL_BITS =
+   static const GLenum subpixelBits =
       0x0D50;
-   static const GLenum RED_BITS =
+   static const GLenum redBits =
       0x0D52;
-   static const GLenum GREEN_BITS =
+   static const GLenum greenBits =
       0x0D53;
-   static const GLenum BLUE_BITS =
+   static const GLenum blueBits =
       0x0D54;
-   static const GLenum ALPHA_BITS =
+   static const GLenum alphaBits =
       0x0D55;
-   static const GLenum DEPTH_BITS =
+   static const GLenum depthBits =
       0x0D56;
-   static const GLenum STENCIL_BITS =
+   static const GLenum stencilBits =
       0x0D57;
-   static const GLenum POLYGON_OFFSET_UNITS =
+   static const GLenum polygonOffsetUnits =
       0x2A00;
-   static const GLenum POLYGON_OFFSET_FACTOR =
+   static const GLenum polygonOffsetFactor =
       0x8038;
-   static const GLenum TEXTURE_BINDING_2D =
+   static const GLenum textureBinding2d =
       0x8069;
-   static const GLenum SAMPLE_BUFFERS =
+   static const GLenum sampleBuffers =
       0x80A8;
-   static const GLenum SAMPLES =
+   static const GLenum samples =
       0x80A9;
-   static const GLenum SAMPLE_COVERAGE_VALUE =
+   static const GLenum sampleCoverageValue =
       0x80AA;
-   static const GLenum SAMPLE_COVERAGE_INVERT =
+   static const GLenum sampleCoverageInvert =
       0x80AB;
-   static const GLenum COMPRESSED_TEXTURE_FORMATS =
+   static const GLenum compressedTextureFormats =
       0x86A3;
-   static const GLenum DONT_CARE =
+   static const GLenum dontCare =
       0x1100;
-   static const GLenum FASTEST =
+   static const GLenum fastest =
       0x1101;
-   static const GLenum NICEST =
+   static const GLenum nicest =
       0x1102;
-   static const GLenum GENERATE_MIPMAP_HINT =
+   static const GLenum generateMipmapHint =
       0x8192;
-   static const GLenum BYTE =
+   static const GLenum byte =
       0x1400;
-   static const GLenum UNSIGNED_BYTE =
+   static const GLenum unsignedByte =
       0x1401;
-   static const GLenum SHORT =
+   static const GLenum short =
       0x1402;
-   static const GLenum UNSIGNED_SHORT =
+   static const GLenum unsignedShort =
       0x1403;
-   static const GLenum INT =
+   static const GLenum int =
       0x1404;
-   static const GLenum UNSIGNED_INT =
+   static const GLenum unsignedInt =
       0x1405;
-   static const GLenum FLOAT =
+   static const GLenum float =
       0x1406;
-   static const GLenum DEPTH_COMPONENT =
+   static const GLenum depthComponent =
       0x1902;
-   static const GLenum ALPHA =
+   static const GLenum alpha =
       0x1906;
-   static const GLenum RGB =
+   static const GLenum rgb =
       0x1907;
-   static const GLenum RGBA =
+   static const GLenum rgba =
       0x1908;
-   static const GLenum LUMINANCE =
+   static const GLenum luminance =
       0x1909;
-   static const GLenum LUMINANCE_ALPHA =
+   static const GLenum luminanceAlpha =
       0x190A;
-   static const GLenum UNSIGNED_SHORT_4_4_4_4 =
+   static const GLenum unsignedShort4444 =
       0x8033;
-   static const GLenum UNSIGNED_SHORT_5_5_5_1 =
+   static const GLenum unsignedShort5551 =
       0x8034;
-   static const GLenum UNSIGNED_SHORT_5_6_5 =
+   static const GLenum unsignedShort565 =
       0x8363;
-   static const GLenum FRAGMENT_SHADER =
+   static const GLenum fragmentShader =
       0x8B30;
-   static const GLenum VERTEX_SHADER =
+   static const GLenum vertexShader =
       0x8B31;
-   static const GLenum MAX_VERTEX_ATTRIBS =
+   static const GLenum maxVertexAttribs =
       0x8869;
-   static const GLenum MAX_VERTEX_UNIFORM_VECTORS =
+   static const GLenum maxVertexUniformVectors =
       0x8DFB;
-   static const GLenum MAX_VARYING_VECTORS =
+   static const GLenum maxVaryingVectors =
       0x8DFC;
-   static const GLenum MAX_COMBINED_TEXTURE_IMAGE_UNITS =
+   static const GLenum maxCombinedTextureImageUnits =
       0x8B4D;
-   static const GLenum MAX_VERTEX_TEXTURE_IMAGE_UNITS =
+   static const GLenum maxVertexTextureImageUnits =
       0x8B4C;
-   static const GLenum MAX_TEXTURE_IMAGE_UNITS =
+   static const GLenum maxTextureImageUnits =
       0x8872;
-   static const GLenum MAX_FRAGMENT_UNIFORM_VECTORS =
+   static const GLenum maxFragmentUniformVectors =
       0x8DFD;
-   static const GLenum SHADER_TYPE =
+   static const GLenum shaderType =
       0x8B4F;
-   static const GLenum DELETE_STATUS =
+   static const GLenum deleteStatus =
       0x8B80;
-   static const GLenum LINK_STATUS =
+   static const GLenum linkStatus =
       0x8B82;
-   static const GLenum VALIDATE_STATUS =
+   static const GLenum validateStatus =
       0x8B83;
-   static const GLenum ATTACHED_SHADERS =
+   static const GLenum attachedShaders =
       0x8B85;
-   static const GLenum ACTIVE_UNIFORMS =
+   static const GLenum activeUniforms =
       0x8B86;
-   static const GLenum ACTIVE_ATTRIBUTES =
+   static const GLenum activeAttributes =
       0x8B89;
-   static const GLenum SHADING_LANGUAGE_VERSION =
+   static const GLenum shadingLanguageVersion =
       0x8B8C;
-   static const GLenum CURRENT_PROGRAM =
+   static const GLenum currentProgram =
       0x8B8D;
-   static const GLenum NEVER =
+   static const GLenum never =
       0x0200;
-   static const GLenum LESS =
+   static const GLenum less =
       0x0201;
-   static const GLenum EQUAL =
+   static const GLenum equal =
       0x0202;
-   static const GLenum LEQUAL =
+   static const GLenum lequal =
       0x0203;
-   static const GLenum GREATER =
+   static const GLenum greater =
       0x0204;
-   static const GLenum NOTEQUAL =
+   static const GLenum notequal =
       0x0205;
-   static const GLenum GEQUAL =
+   static const GLenum gequal =
       0x0206;
-   static const GLenum ALWAYS =
+   static const GLenum always =
       0x0207;
-   static const GLenum KEEP =
+   static const GLenum keep =
       0x1E00;
-   static const GLenum REPLACE =
+   static const GLenum replace =
       0x1E01;
-   static const GLenum INCR =
+   static const GLenum incr =
       0x1E02;
-   static const GLenum DECR =
+   static const GLenum decr =
       0x1E03;
-   static const GLenum INVERT =
+   static const GLenum invert =
       0x150A;
-   static const GLenum INCR_WRAP =
+   static const GLenum incrWrap =
       0x8507;
-   static const GLenum DECR_WRAP =
+   static const GLenum decrWrap =
       0x8508;
-   static const GLenum VENDOR =
+   static const GLenum vendor =
       0x1F00;
-   static const GLenum RENDERER =
+   static const GLenum renderer =
       0x1F01;
-   static const GLenum VERSION =
+   static const GLenum version =
       0x1F02;
-   static const GLenum NEAREST =
+   static const GLenum nearest =
       0x2600;
-   static const GLenum LINEAR =
+   static const GLenum linear =
       0x2601;
-   static const GLenum NEAREST_MIPMAP_NEAREST =
+   static const GLenum nearestMipmapNearest =
       0x2700;
-   static const GLenum LINEAR_MIPMAP_NEAREST =
+   static const GLenum linearMipmapNearest =
       0x2701;
-   static const GLenum NEAREST_MIPMAP_LINEAR =
+   static const GLenum nearestMipmapLinear =
       0x2702;
-   static const GLenum LINEAR_MIPMAP_LINEAR =
+   static const GLenum linearMipmapLinear =
       0x2703;
-   static const GLenum TEXTURE_MAG_FILTER =
+   static const GLenum textureMagFilter =
       0x2800;
-   static const GLenum TEXTURE_MIN_FILTER =
+   static const GLenum textureMinFilter =
       0x2801;
-   static const GLenum TEXTURE_WRAP_S =
+   static const GLenum textureWrapS =
       0x2802;
-   static const GLenum TEXTURE_WRAP_T =
+   static const GLenum textureWrapT =
       0x2803;
-   static const GLenum TEXTURE_2D =
+   static const GLenum texture2d =
       0x0DE1;
-   static const GLenum TEXTURE =
+   static const GLenum texture =
       0x1702;
-   static const GLenum TEXTURE_CUBE_MAP =
+   static const GLenum textureCubeMap =
       0x8513;
-   static const GLenum TEXTURE_BINDING_CUBE_MAP =
+   static const GLenum textureBindingCubeMap =
       0x8514;
-   static const GLenum TEXTURE_CUBE_MAP_POSITIVE_X =
+   static const GLenum textureCubeMapPositiveX =
       0x8515;
-   static const GLenum TEXTURE_CUBE_MAP_NEGATIVE_X =
+   static const GLenum textureCubeMapNegativeX =
       0x8516;
-   static const GLenum TEXTURE_CUBE_MAP_POSITIVE_Y =
+   static const GLenum textureCubeMapPositiveY =
       0x8517;
-   static const GLenum TEXTURE_CUBE_MAP_NEGATIVE_Y =
+   static const GLenum textureCubeMapNegativeY =
       0x8518;
-   static const GLenum TEXTURE_CUBE_MAP_POSITIVE_Z =
+   static const GLenum textureCubeMapPositiveZ =
       0x8519;
-   static const GLenum TEXTURE_CUBE_MAP_NEGATIVE_Z =
+   static const GLenum textureCubeMapNegativeZ =
       0x851A;
-   static const GLenum MAX_CUBE_MAP_TEXTURE_SIZE =
+   static const GLenum maxCubeMapTextureSize =
       0x851C;
-   static const GLenum TEXTURE0 =
+   static const GLenum texture0 =
       0x84C0;
-   static const GLenum TEXTURE1 =
+   static const GLenum texture1 =
       0x84C1;
-   static const GLenum TEXTURE2 =
+   static const GLenum texture2 =
       0x84C2;
-   static const GLenum TEXTURE3 =
+   static const GLenum texture3 =
       0x84C3;
-   static const GLenum TEXTURE4 =
+   static const GLenum texture4 =
       0x84C4;
-   static const GLenum TEXTURE5 =
+   static const GLenum texture5 =
       0x84C5;
-   static const GLenum TEXTURE6 =
+   static const GLenum texture6 =
       0x84C6;
-   static const GLenum TEXTURE7 =
+   static const GLenum texture7 =
       0x84C7;
-   static const GLenum TEXTURE8 =
+   static const GLenum texture8 =
       0x84C8;
-   static const GLenum TEXTURE9 =
+   static const GLenum texture9 =
       0x84C9;
-   static const GLenum TEXTURE10 =
+   static const GLenum texture10 =
       0x84CA;
-   static const GLenum TEXTURE11 =
+   static const GLenum texture11 =
       0x84CB;
-   static const GLenum TEXTURE12 =
+   static const GLenum texture12 =
       0x84CC;
-   static const GLenum TEXTURE13 =
+   static const GLenum texture13 =
       0x84CD;
-   static const GLenum TEXTURE14 =
+   static const GLenum texture14 =
       0x84CE;
-   static const GLenum TEXTURE15 =
+   static const GLenum texture15 =
       0x84CF;
-   static const GLenum TEXTURE16 =
+   static const GLenum texture16 =
       0x84D0;
-   static const GLenum TEXTURE17 =
+   static const GLenum texture17 =
       0x84D1;
-   static const GLenum TEXTURE18 =
+   static const GLenum texture18 =
       0x84D2;
-   static const GLenum TEXTURE19 =
+   static const GLenum texture19 =
       0x84D3;
-   static const GLenum TEXTURE20 =
+   static const GLenum texture20 =
       0x84D4;
-   static const GLenum TEXTURE21 =
+   static const GLenum texture21 =
       0x84D5;
-   static const GLenum TEXTURE22 =
+   static const GLenum texture22 =
       0x84D6;
-   static const GLenum TEXTURE23 =
+   static const GLenum texture23 =
       0x84D7;
-   static const GLenum TEXTURE24 =
+   static const GLenum texture24 =
       0x84D8;
-   static const GLenum TEXTURE25 =
+   static const GLenum texture25 =
       0x84D9;
-   static const GLenum TEXTURE26 =
+   static const GLenum texture26 =
       0x84DA;
-   static const GLenum TEXTURE27 =
+   static const GLenum texture27 =
       0x84DB;
-   static const GLenum TEXTURE28 =
+   static const GLenum texture28 =
       0x84DC;
-   static const GLenum TEXTURE29 =
+   static const GLenum texture29 =
       0x84DD;
-   static const GLenum TEXTURE30 =
+   static const GLenum texture30 =
       0x84DE;
-   static const GLenum TEXTURE31 =
+   static const GLenum texture31 =
       0x84DF;
-   static const GLenum ACTIVE_TEXTURE =
+   static const GLenum activeTexture =
       0x84E0;
-   static const GLenum REPEAT =
+   static const GLenum repeat =
       0x2901;
-   static const GLenum CLAMP_TO_EDGE =
+   static const GLenum clampToEdge =
       0x812F;
-   static const GLenum MIRRORED_REPEAT =
+   static const GLenum mirroredRepeat =
       0x8370;
-   static const GLenum FLOAT_VEC2 =
+   static const GLenum floatVec2 =
       0x8B50;
-   static const GLenum FLOAT_VEC3 =
+   static const GLenum floatVec3 =
       0x8B51;
-   static const GLenum FLOAT_VEC4 =
+   static const GLenum floatVec4 =
       0x8B52;
-   static const GLenum INT_VEC2 =
+   static const GLenum intVec2 =
       0x8B53;
-   static const GLenum INT_VEC3 =
+   static const GLenum intVec3 =
       0x8B54;
-   static const GLenum INT_VEC4 =
+   static const GLenum intVec4 =
       0x8B55;
-   static const GLenum BOOL =
+   static const GLenum bool =
       0x8B56;
-   static const GLenum BOOL_VEC2 =
+   static const GLenum boolVec2 =
       0x8B57;
-   static const GLenum BOOL_VEC3 =
+   static const GLenum boolVec3 =
       0x8B58;
-   static const GLenum BOOL_VEC4 =
+   static const GLenum boolVec4 =
       0x8B59;
-   static const GLenum FLOAT_MAT2 =
+   static const GLenum floatMat2 =
       0x8B5A;
-   static const GLenum FLOAT_MAT3 =
+   static const GLenum floatMat3 =
       0x8B5B;
-   static const GLenum FLOAT_MAT4 =
+   static const GLenum floatMat4 =
       0x8B5C;
-   static const GLenum SAMPLER_2D =
+   static const GLenum sampler2d =
       0x8B5E;
-   static const GLenum SAMPLER_CUBE =
+   static const GLenum samplerCube =
       0x8B60;
-   static const GLenum VERTEX_ATTRIB_ARRAY_ENABLED =
+   static const GLenum vertexAttribArrayEnabled =
       0x8622;
-   static const GLenum VERTEX_ATTRIB_ARRAY_SIZE =
+   static const GLenum vertexAttribArraySize =
       0x8623;
-   static const GLenum VERTEX_ATTRIB_ARRAY_STRIDE =
+   static const GLenum vertexAttribArrayStride =
       0x8624;
-   static const GLenum VERTEX_ATTRIB_ARRAY_TYPE =
+   static const GLenum vertexAttribArrayType =
       0x8625;
-   static const GLenum VERTEX_ATTRIB_ARRAY_NORMALIZED =
+   static const GLenum vertexAttribArrayNormalized =
       0x886A;
-   static const GLenum VERTEX_ATTRIB_ARRAY_POINTER =
+   static const GLenum vertexAttribArrayPointer =
       0x8645;
-   static const GLenum VERTEX_ATTRIB_ARRAY_BUFFER_BINDING =
+   static const GLenum vertexAttribArrayBufferBinding =
       0x889F;
-   static const GLenum IMPLEMENTATION_COLOR_READ_TYPE =
+   static const GLenum implementationColorReadType =
       0x8B9A;
-   static const GLenum IMPLEMENTATION_COLOR_READ_FORMAT =
+   static const GLenum implementationColorReadFormat =
       0x8B9B;
-   static const GLenum COMPILE_STATUS =
+   static const GLenum compileStatus =
       0x8B81;
-   static const GLenum LOW_FLOAT =
+   static const GLenum lowFloat =
       0x8DF0;
-   static const GLenum MEDIUM_FLOAT =
+   static const GLenum mediumFloat =
       0x8DF1;
-   static const GLenum HIGH_FLOAT =
+   static const GLenum highFloat =
       0x8DF2;
-   static const GLenum LOW_INT =
+   static const GLenum lowInt =
       0x8DF3;
-   static const GLenum MEDIUM_INT =
+   static const GLenum mediumInt =
       0x8DF4;
-   static const GLenum HIGH_INT =
+   static const GLenum highInt =
       0x8DF5;
-   static const GLenum FRAMEBUFFER =
+   static const GLenum framebuffer =
       0x8D40;
-   static const GLenum RENDERBUFFER =
+   static const GLenum renderbuffer =
       0x8D41;
-   static const GLenum RGBA4 =
+   static const GLenum rgba4 =
       0x8056;
-   static const GLenum RGB5_A1 =
+   static const GLenum rgb5A1 =
       0x8057;
-   static const GLenum RGBA8 =
+   static const GLenum rgba8 =
       0x8058;
-   static const GLenum RGB565 =
+   static const GLenum rgb565 =
       0x8D62;
-   static const GLenum DEPTH_COMPONENT16 =
+   static const GLenum depthComponent16 =
       0x81A5;
-   static const GLenum STENCIL_INDEX8 =
+   static const GLenum stencilIndex8 =
       0x8D48;
-   static const GLenum DEPTH_STENCIL =
+   static const GLenum depthStencil =
       0x84F9;
-   static const GLenum RENDERBUFFER_WIDTH =
+   static const GLenum renderbufferWidth =
       0x8D42;
-   static const GLenum RENDERBUFFER_HEIGHT =
+   static const GLenum renderbufferHeight =
       0x8D43;
-   static const GLenum RENDERBUFFER_INTERNAL_FORMAT =
+   static const GLenum renderbufferInternalFormat =
       0x8D44;
-   static const GLenum RENDERBUFFER_RED_SIZE =
+   static const GLenum renderbufferRedSize =
       0x8D50;
-   static const GLenum RENDERBUFFER_GREEN_SIZE =
+   static const GLenum renderbufferGreenSize =
       0x8D51;
-   static const GLenum RENDERBUFFER_BLUE_SIZE =
+   static const GLenum renderbufferBlueSize =
       0x8D52;
-   static const GLenum RENDERBUFFER_ALPHA_SIZE =
+   static const GLenum renderbufferAlphaSize =
       0x8D53;
-   static const GLenum RENDERBUFFER_DEPTH_SIZE =
+   static const GLenum renderbufferDepthSize =
       0x8D54;
-   static const GLenum RENDERBUFFER_STENCIL_SIZE =
+   static const GLenum renderbufferStencilSize =
       0x8D55;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE =
+   static const GLenum framebufferAttachmentObjectType =
       0x8CD0;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_OBJECT_NAME =
+   static const GLenum framebufferAttachmentObjectName =
       0x8CD1;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL =
+   static const GLenum framebufferAttachmentTextureLevel =
       0x8CD2;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE =
+   static const GLenum framebufferAttachmentTextureCubeMapFace =
       0x8CD3;
-   static const GLenum COLOR_ATTACHMENT0 =
+   static const GLenum colorAttachment0 =
       0x8CE0;
-   static const GLenum DEPTH_ATTACHMENT =
+   static const GLenum depthAttachment =
       0x8D00;
-   static const GLenum STENCIL_ATTACHMENT =
+   static const GLenum stencilAttachment =
       0x8D20;
-   static const GLenum DEPTH_STENCIL_ATTACHMENT =
+   static const GLenum depthStencilAttachment =
       0x821A;
-   static const GLenum NONE =
+   static const GLenum none =
       0;
-   static const GLenum FRAMEBUFFER_COMPLETE =
+   static const GLenum framebufferComplete =
       0x8CD5;
-   static const GLenum FRAMEBUFFER_INCOMPLETE_ATTACHMENT =
+   static const GLenum framebufferIncompleteAttachment =
       0x8CD6;
-   static const GLenum FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT =
+   static const GLenum framebufferIncompleteMissingAttachment =
       0x8CD7;
-   static const GLenum FRAMEBUFFER_INCOMPLETE_DIMENSIONS =
+   static const GLenum framebufferIncompleteDimensions =
       0x8CD9;
-   static const GLenum FRAMEBUFFER_UNSUPPORTED =
+   static const GLenum framebufferUnsupported =
       0x8CDD;
-   static const GLenum FRAMEBUFFER_BINDING =
+   static const GLenum framebufferBinding =
       0x8CA6;
-   static const GLenum RENDERBUFFER_BINDING =
+   static const GLenum renderbufferBinding =
       0x8CA7;
-   static const GLenum MAX_RENDERBUFFER_SIZE =
+   static const GLenum maxRenderbufferSize =
       0x84E8;
-   static const GLenum INVALID_FRAMEBUFFER_OPERATION =
+   static const GLenum invalidFramebufferOperation =
       0x0506;
-   static const GLenum UNPACK_FLIP_Y_WEBGL =
+   static const GLenum unpackFlipYWebgl =
       0x9240;
-   static const GLenum UNPACK_PREMULTIPLY_ALPHA_WEBGL =
+   static const GLenum unpackPremultiplyAlphaWebgl =
       0x9241;
-   static const GLenum CONTEXT_LOST_WEBGL =
+   static const GLenum contextLostWebgl =
       0x9242;
-   static const GLenum UNPACK_COLORSPACE_CONVERSION_WEBGL =
+   static const GLenum unpackColorspaceConversionWebgl =
       0x9243;
-   static const GLenum BROWSER_DEFAULT_WEBGL =
+   static const GLenum browserDefaultWebgl =
       0x9244;
   Object get canvas;
   GLsizei get drawingBufferWidth;
@@ -735,529 +736,529 @@ abstract interface class WebGL2RenderingContext {
   void vertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLintptr offset);
   void viewport(GLint x, GLint y, GLsizei width, GLsizei height);
   Future<void> makeXRCompatible();
-   static const GLenum READ_BUFFER =
+   static const GLenum readBuffer =
       0x0C02;
-   static const GLenum UNPACK_ROW_LENGTH =
+   static const GLenum unpackRowLength =
       0x0CF2;
-   static const GLenum UNPACK_SKIP_ROWS =
+   static const GLenum unpackSkipRows =
       0x0CF3;
-   static const GLenum UNPACK_SKIP_PIXELS =
+   static const GLenum unpackSkipPixels =
       0x0CF4;
-   static const GLenum PACK_ROW_LENGTH =
+   static const GLenum packRowLength =
       0x0D02;
-   static const GLenum PACK_SKIP_ROWS =
+   static const GLenum packSkipRows =
       0x0D03;
-   static const GLenum PACK_SKIP_PIXELS =
+   static const GLenum packSkipPixels =
       0x0D04;
-   static const GLenum COLOR =
+   static const GLenum color =
       0x1800;
-   static const GLenum DEPTH =
+   static const GLenum depth =
       0x1801;
-   static const GLenum STENCIL =
+   static const GLenum stencil =
       0x1802;
-   static const GLenum RED =
+   static const GLenum red =
       0x1903;
-   static const GLenum RGB8 =
+   static const GLenum rgb8 =
       0x8051;
-   static const GLenum RGB10_A2 =
+   static const GLenum rgb10A2 =
       0x8059;
-   static const GLenum TEXTURE_BINDING_3D =
+   static const GLenum textureBinding3d =
       0x806A;
-   static const GLenum UNPACK_SKIP_IMAGES =
+   static const GLenum unpackSkipImages =
       0x806D;
-   static const GLenum UNPACK_IMAGE_HEIGHT =
+   static const GLenum unpackImageHeight =
       0x806E;
-   static const GLenum TEXTURE_3D =
+   static const GLenum texture3d =
       0x806F;
-   static const GLenum TEXTURE_WRAP_R =
+   static const GLenum textureWrapR =
       0x8072;
-   static const GLenum MAX_3D_TEXTURE_SIZE =
+   static const GLenum max3dTextureSize =
       0x8073;
-   static const GLenum UNSIGNED_INT_2_10_10_10_REV =
+   static const GLenum unsignedInt2101010Rev =
       0x8368;
-   static const GLenum MAX_ELEMENTS_VERTICES =
+   static const GLenum maxElementsVertices =
       0x80E8;
-   static const GLenum MAX_ELEMENTS_INDICES =
+   static const GLenum maxElementsIndices =
       0x80E9;
-   static const GLenum TEXTURE_MIN_LOD =
+   static const GLenum textureMinLod =
       0x813A;
-   static const GLenum TEXTURE_MAX_LOD =
+   static const GLenum textureMaxLod =
       0x813B;
-   static const GLenum TEXTURE_BASE_LEVEL =
+   static const GLenum textureBaseLevel =
       0x813C;
-   static const GLenum TEXTURE_MAX_LEVEL =
+   static const GLenum textureMaxLevel =
       0x813D;
-   static const GLenum MIN =
+   static const GLenum min =
       0x8007;
-   static const GLenum MAX =
+   static const GLenum max =
       0x8008;
-   static const GLenum DEPTH_COMPONENT24 =
+   static const GLenum depthComponent24 =
       0x81A6;
-   static const GLenum MAX_TEXTURE_LOD_BIAS =
+   static const GLenum maxTextureLodBias =
       0x84FD;
-   static const GLenum TEXTURE_COMPARE_MODE =
+   static const GLenum textureCompareMode =
       0x884C;
-   static const GLenum TEXTURE_COMPARE_FUNC =
+   static const GLenum textureCompareFunc =
       0x884D;
-   static const GLenum CURRENT_QUERY =
+   static const GLenum currentQuery =
       0x8865;
-   static const GLenum QUERY_RESULT =
+   static const GLenum queryResult =
       0x8866;
-   static const GLenum QUERY_RESULT_AVAILABLE =
+   static const GLenum queryResultAvailable =
       0x8867;
-   static const GLenum STREAM_READ =
+   static const GLenum streamRead =
       0x88E1;
-   static const GLenum STREAM_COPY =
+   static const GLenum streamCopy =
       0x88E2;
-   static const GLenum STATIC_READ =
+   static const GLenum staticRead =
       0x88E5;
-   static const GLenum STATIC_COPY =
+   static const GLenum staticCopy =
       0x88E6;
-   static const GLenum DYNAMIC_READ =
+   static const GLenum dynamicRead =
       0x88E9;
-   static const GLenum DYNAMIC_COPY =
+   static const GLenum dynamicCopy =
       0x88EA;
-   static const GLenum MAX_DRAW_BUFFERS =
+   static const GLenum maxDrawBuffers =
       0x8824;
-   static const GLenum DRAW_BUFFER0 =
+   static const GLenum drawBuffer0 =
       0x8825;
-   static const GLenum DRAW_BUFFER1 =
+   static const GLenum drawBuffer1 =
       0x8826;
-   static const GLenum DRAW_BUFFER2 =
+   static const GLenum drawBuffer2 =
       0x8827;
-   static const GLenum DRAW_BUFFER3 =
+   static const GLenum drawBuffer3 =
       0x8828;
-   static const GLenum DRAW_BUFFER4 =
+   static const GLenum drawBuffer4 =
       0x8829;
-   static const GLenum DRAW_BUFFER5 =
+   static const GLenum drawBuffer5 =
       0x882A;
-   static const GLenum DRAW_BUFFER6 =
+   static const GLenum drawBuffer6 =
       0x882B;
-   static const GLenum DRAW_BUFFER7 =
+   static const GLenum drawBuffer7 =
       0x882C;
-   static const GLenum DRAW_BUFFER8 =
+   static const GLenum drawBuffer8 =
       0x882D;
-   static const GLenum DRAW_BUFFER9 =
+   static const GLenum drawBuffer9 =
       0x882E;
-   static const GLenum DRAW_BUFFER10 =
+   static const GLenum drawBuffer10 =
       0x882F;
-   static const GLenum DRAW_BUFFER11 =
+   static const GLenum drawBuffer11 =
       0x8830;
-   static const GLenum DRAW_BUFFER12 =
+   static const GLenum drawBuffer12 =
       0x8831;
-   static const GLenum DRAW_BUFFER13 =
+   static const GLenum drawBuffer13 =
       0x8832;
-   static const GLenum DRAW_BUFFER14 =
+   static const GLenum drawBuffer14 =
       0x8833;
-   static const GLenum DRAW_BUFFER15 =
+   static const GLenum drawBuffer15 =
       0x8834;
-   static const GLenum MAX_FRAGMENT_UNIFORM_COMPONENTS =
+   static const GLenum maxFragmentUniformComponents =
       0x8B49;
-   static const GLenum MAX_VERTEX_UNIFORM_COMPONENTS =
+   static const GLenum maxVertexUniformComponents =
       0x8B4A;
-   static const GLenum SAMPLER_3D =
+   static const GLenum sampler3d =
       0x8B5F;
-   static const GLenum SAMPLER_2D_SHADOW =
+   static const GLenum sampler2dShadow =
       0x8B62;
-   static const GLenum FRAGMENT_SHADER_DERIVATIVE_HINT =
+   static const GLenum fragmentShaderDerivativeHint =
       0x8B8B;
-   static const GLenum PIXEL_PACK_BUFFER =
+   static const GLenum pixelPackBuffer =
       0x88EB;
-   static const GLenum PIXEL_UNPACK_BUFFER =
+   static const GLenum pixelUnpackBuffer =
       0x88EC;
-   static const GLenum PIXEL_PACK_BUFFER_BINDING =
+   static const GLenum pixelPackBufferBinding =
       0x88ED;
-   static const GLenum PIXEL_UNPACK_BUFFER_BINDING =
+   static const GLenum pixelUnpackBufferBinding =
       0x88EF;
-   static const GLenum FLOAT_MAT2x3 =
+   static const GLenum floatMat2x3 =
       0x8B65;
-   static const GLenum FLOAT_MAT2x4 =
+   static const GLenum floatMat2x4 =
       0x8B66;
-   static const GLenum FLOAT_MAT3x2 =
+   static const GLenum floatMat3x2 =
       0x8B67;
-   static const GLenum FLOAT_MAT3x4 =
+   static const GLenum floatMat3x4 =
       0x8B68;
-   static const GLenum FLOAT_MAT4x2 =
+   static const GLenum floatMat4x2 =
       0x8B69;
-   static const GLenum FLOAT_MAT4x3 =
+   static const GLenum floatMat4x3 =
       0x8B6A;
-   static const GLenum SRGB =
+   static const GLenum srgb =
       0x8C40;
-   static const GLenum SRGB8 =
+   static const GLenum srgb8 =
       0x8C41;
-   static const GLenum SRGB8_ALPHA8 =
+   static const GLenum srgb8Alpha8 =
       0x8C43;
-   static const GLenum COMPARE_REF_TO_TEXTURE =
+   static const GLenum compareRefToTexture =
       0x884E;
-   static const GLenum RGBA32F =
+   static const GLenum rgba32f =
       0x8814;
-   static const GLenum RGB32F =
+   static const GLenum rgb32f =
       0x8815;
-   static const GLenum RGBA16F =
+   static const GLenum rgba16f =
       0x881A;
-   static const GLenum RGB16F =
+   static const GLenum rgb16f =
       0x881B;
-   static const GLenum VERTEX_ATTRIB_ARRAY_INTEGER =
+   static const GLenum vertexAttribArrayInteger =
       0x88FD;
-   static const GLenum MAX_ARRAY_TEXTURE_LAYERS =
+   static const GLenum maxArrayTextureLayers =
       0x88FF;
-   static const GLenum MIN_PROGRAM_TEXEL_OFFSET =
+   static const GLenum minProgramTexelOffset =
       0x8904;
-   static const GLenum MAX_PROGRAM_TEXEL_OFFSET =
+   static const GLenum maxProgramTexelOffset =
       0x8905;
-   static const GLenum MAX_VARYING_COMPONENTS =
+   static const GLenum maxVaryingComponents =
       0x8B4B;
-   static const GLenum TEXTURE_2D_ARRAY =
+   static const GLenum texture2dArray =
       0x8C1A;
-   static const GLenum TEXTURE_BINDING_2D_ARRAY =
+   static const GLenum textureBinding2dArray =
       0x8C1D;
-   static const GLenum R11F_G11F_B10F =
+   static const GLenum r11fG11fB10f =
       0x8C3A;
-   static const GLenum UNSIGNED_INT_10F_11F_11F_REV =
+   static const GLenum unsignedInt10f11f11fRev =
       0x8C3B;
-   static const GLenum RGB9_E5 =
+   static const GLenum rgb9E5 =
       0x8C3D;
-   static const GLenum UNSIGNED_INT_5_9_9_9_REV =
+   static const GLenum unsignedInt5999Rev =
       0x8C3E;
-   static const GLenum TRANSFORM_FEEDBACK_BUFFER_MODE =
+   static const GLenum transformFeedbackBufferMode =
       0x8C7F;
-   static const GLenum MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS =
+   static const GLenum maxTransformFeedbackSeparateComponents =
       0x8C80;
-   static const GLenum TRANSFORM_FEEDBACK_VARYINGS =
+   static const GLenum transformFeedbackVaryings =
       0x8C83;
-   static const GLenum TRANSFORM_FEEDBACK_BUFFER_START =
+   static const GLenum transformFeedbackBufferStart =
       0x8C84;
-   static const GLenum TRANSFORM_FEEDBACK_BUFFER_SIZE =
+   static const GLenum transformFeedbackBufferSize =
       0x8C85;
-   static const GLenum TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN =
+   static const GLenum transformFeedbackPrimitivesWritten =
       0x8C88;
-   static const GLenum RASTERIZER_DISCARD =
+   static const GLenum rasterizerDiscard =
       0x8C89;
-   static const GLenum MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS =
+   static const GLenum maxTransformFeedbackInterleavedComponents =
       0x8C8A;
-   static const GLenum MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS =
+   static const GLenum maxTransformFeedbackSeparateAttribs =
       0x8C8B;
-   static const GLenum INTERLEAVED_ATTRIBS =
+   static const GLenum interleavedAttribs =
       0x8C8C;
-   static const GLenum SEPARATE_ATTRIBS =
+   static const GLenum separateAttribs =
       0x8C8D;
-   static const GLenum TRANSFORM_FEEDBACK_BUFFER =
+   static const GLenum transformFeedbackBuffer =
       0x8C8E;
-   static const GLenum TRANSFORM_FEEDBACK_BUFFER_BINDING =
+   static const GLenum transformFeedbackBufferBinding =
       0x8C8F;
-   static const GLenum RGBA32UI =
+   static const GLenum rgba32ui =
       0x8D70;
-   static const GLenum RGB32UI =
+   static const GLenum rgb32ui =
       0x8D71;
-   static const GLenum RGBA16UI =
+   static const GLenum rgba16ui =
       0x8D76;
-   static const GLenum RGB16UI =
+   static const GLenum rgb16ui =
       0x8D77;
-   static const GLenum RGBA8UI =
+   static const GLenum rgba8ui =
       0x8D7C;
-   static const GLenum RGB8UI =
+   static const GLenum rgb8ui =
       0x8D7D;
-   static const GLenum RGBA32I =
+   static const GLenum rgba32i =
       0x8D82;
-   static const GLenum RGB32I =
+   static const GLenum rgb32i =
       0x8D83;
-   static const GLenum RGBA16I =
+   static const GLenum rgba16i =
       0x8D88;
-   static const GLenum RGB16I =
+   static const GLenum rgb16i =
       0x8D89;
-   static const GLenum RGBA8I =
+   static const GLenum rgba8i =
       0x8D8E;
-   static const GLenum RGB8I =
+   static const GLenum rgb8i =
       0x8D8F;
-   static const GLenum RED_INTEGER =
+   static const GLenum redInteger =
       0x8D94;
-   static const GLenum RGB_INTEGER =
+   static const GLenum rgbInteger =
       0x8D98;
-   static const GLenum RGBA_INTEGER =
+   static const GLenum rgbaInteger =
       0x8D99;
-   static const GLenum SAMPLER_2D_ARRAY =
+   static const GLenum sampler2dArray =
       0x8DC1;
-   static const GLenum SAMPLER_2D_ARRAY_SHADOW =
+   static const GLenum sampler2dArrayShadow =
       0x8DC4;
-   static const GLenum SAMPLER_CUBE_SHADOW =
+   static const GLenum samplerCubeShadow =
       0x8DC5;
-   static const GLenum UNSIGNED_INT_VEC2 =
+   static const GLenum unsignedIntVec2 =
       0x8DC6;
-   static const GLenum UNSIGNED_INT_VEC3 =
+   static const GLenum unsignedIntVec3 =
       0x8DC7;
-   static const GLenum UNSIGNED_INT_VEC4 =
+   static const GLenum unsignedIntVec4 =
       0x8DC8;
-   static const GLenum INT_SAMPLER_2D =
+   static const GLenum intSampler2d =
       0x8DCA;
-   static const GLenum INT_SAMPLER_3D =
+   static const GLenum intSampler3d =
       0x8DCB;
-   static const GLenum INT_SAMPLER_CUBE =
+   static const GLenum intSamplerCube =
       0x8DCC;
-   static const GLenum INT_SAMPLER_2D_ARRAY =
+   static const GLenum intSampler2dArray =
       0x8DCF;
-   static const GLenum UNSIGNED_INT_SAMPLER_2D =
+   static const GLenum unsignedIntSampler2d =
       0x8DD2;
-   static const GLenum UNSIGNED_INT_SAMPLER_3D =
+   static const GLenum unsignedIntSampler3d =
       0x8DD3;
-   static const GLenum UNSIGNED_INT_SAMPLER_CUBE =
+   static const GLenum unsignedIntSamplerCube =
       0x8DD4;
-   static const GLenum UNSIGNED_INT_SAMPLER_2D_ARRAY =
+   static const GLenum unsignedIntSampler2dArray =
       0x8DD7;
-   static const GLenum DEPTH_COMPONENT32F =
+   static const GLenum depthComponent32f =
       0x8CAC;
-   static const GLenum DEPTH32F_STENCIL8 =
+   static const GLenum depth32fStencil8 =
       0x8CAD;
-   static const GLenum FLOAT_32_UNSIGNED_INT_24_8_REV =
+   static const GLenum float32UnsignedInt248Rev =
       0x8DAD;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING =
+   static const GLenum framebufferAttachmentColorEncoding =
       0x8210;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE =
+   static const GLenum framebufferAttachmentComponentType =
       0x8211;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_RED_SIZE =
+   static const GLenum framebufferAttachmentRedSize =
       0x8212;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_GREEN_SIZE =
+   static const GLenum framebufferAttachmentGreenSize =
       0x8213;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_BLUE_SIZE =
+   static const GLenum framebufferAttachmentBlueSize =
       0x8214;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE =
+   static const GLenum framebufferAttachmentAlphaSize =
       0x8215;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE =
+   static const GLenum framebufferAttachmentDepthSize =
       0x8216;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE =
+   static const GLenum framebufferAttachmentStencilSize =
       0x8217;
-   static const GLenum FRAMEBUFFER_DEFAULT =
+   static const GLenum framebufferDefault =
       0x8218;
-   static const GLenum UNSIGNED_INT_24_8 =
+   static const GLenum unsignedInt248 =
       0x84FA;
-   static const GLenum DEPTH24_STENCIL8 =
+   static const GLenum depth24Stencil8 =
       0x88F0;
-   static const GLenum UNSIGNED_NORMALIZED =
+   static const GLenum unsignedNormalized =
       0x8C17;
-   static const GLenum DRAW_FRAMEBUFFER_BINDING =
+   static const GLenum drawFramebufferBinding =
       0x8CA6;
-   static const GLenum READ_FRAMEBUFFER =
+   static const GLenum readFramebuffer =
       0x8CA8;
-   static const GLenum DRAW_FRAMEBUFFER =
+   static const GLenum drawFramebuffer =
       0x8CA9;
-   static const GLenum READ_FRAMEBUFFER_BINDING =
+   static const GLenum readFramebufferBinding =
       0x8CAA;
-   static const GLenum RENDERBUFFER_SAMPLES =
+   static const GLenum renderbufferSamples =
       0x8CAB;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER =
+   static const GLenum framebufferAttachmentTextureLayer =
       0x8CD4;
-   static const GLenum MAX_COLOR_ATTACHMENTS =
+   static const GLenum maxColorAttachments =
       0x8CDF;
-   static const GLenum COLOR_ATTACHMENT1 =
+   static const GLenum colorAttachment1 =
       0x8CE1;
-   static const GLenum COLOR_ATTACHMENT2 =
+   static const GLenum colorAttachment2 =
       0x8CE2;
-   static const GLenum COLOR_ATTACHMENT3 =
+   static const GLenum colorAttachment3 =
       0x8CE3;
-   static const GLenum COLOR_ATTACHMENT4 =
+   static const GLenum colorAttachment4 =
       0x8CE4;
-   static const GLenum COLOR_ATTACHMENT5 =
+   static const GLenum colorAttachment5 =
       0x8CE5;
-   static const GLenum COLOR_ATTACHMENT6 =
+   static const GLenum colorAttachment6 =
       0x8CE6;
-   static const GLenum COLOR_ATTACHMENT7 =
+   static const GLenum colorAttachment7 =
       0x8CE7;
-   static const GLenum COLOR_ATTACHMENT8 =
+   static const GLenum colorAttachment8 =
       0x8CE8;
-   static const GLenum COLOR_ATTACHMENT9 =
+   static const GLenum colorAttachment9 =
       0x8CE9;
-   static const GLenum COLOR_ATTACHMENT10 =
+   static const GLenum colorAttachment10 =
       0x8CEA;
-   static const GLenum COLOR_ATTACHMENT11 =
+   static const GLenum colorAttachment11 =
       0x8CEB;
-   static const GLenum COLOR_ATTACHMENT12 =
+   static const GLenum colorAttachment12 =
       0x8CEC;
-   static const GLenum COLOR_ATTACHMENT13 =
+   static const GLenum colorAttachment13 =
       0x8CED;
-   static const GLenum COLOR_ATTACHMENT14 =
+   static const GLenum colorAttachment14 =
       0x8CEE;
-   static const GLenum COLOR_ATTACHMENT15 =
+   static const GLenum colorAttachment15 =
       0x8CEF;
-   static const GLenum FRAMEBUFFER_INCOMPLETE_MULTISAMPLE =
+   static const GLenum framebufferIncompleteMultisample =
       0x8D56;
-   static const GLenum MAX_SAMPLES =
+   static const GLenum maxSamples =
       0x8D57;
-   static const GLenum HALF_FLOAT =
+   static const GLenum halfFloat =
       0x140B;
-   static const GLenum RG =
+   static const GLenum rg =
       0x8227;
-   static const GLenum RG_INTEGER =
+   static const GLenum rgInteger =
       0x8228;
-   static const GLenum R8 =
+   static const GLenum r8 =
       0x8229;
-   static const GLenum RG8 =
+   static const GLenum rg8 =
       0x822B;
-   static const GLenum R16F =
+   static const GLenum r16f =
       0x822D;
-   static const GLenum R32F =
+   static const GLenum r32f =
       0x822E;
-   static const GLenum RG16F =
+   static const GLenum rg16f =
       0x822F;
-   static const GLenum RG32F =
+   static const GLenum rg32f =
       0x8230;
-   static const GLenum R8I =
+   static const GLenum r8i =
       0x8231;
-   static const GLenum R8UI =
+   static const GLenum r8ui =
       0x8232;
-   static const GLenum R16I =
+   static const GLenum r16i =
       0x8233;
-   static const GLenum R16UI =
+   static const GLenum r16ui =
       0x8234;
-   static const GLenum R32I =
+   static const GLenum r32i =
       0x8235;
-   static const GLenum R32UI =
+   static const GLenum r32ui =
       0x8236;
-   static const GLenum RG8I =
+   static const GLenum rg8i =
       0x8237;
-   static const GLenum RG8UI =
+   static const GLenum rg8ui =
       0x8238;
-   static const GLenum RG16I =
+   static const GLenum rg16i =
       0x8239;
-   static const GLenum RG16UI =
+   static const GLenum rg16ui =
       0x823A;
-   static const GLenum RG32I =
+   static const GLenum rg32i =
       0x823B;
-   static const GLenum RG32UI =
+   static const GLenum rg32ui =
       0x823C;
-   static const GLenum VERTEX_ARRAY_BINDING =
+   static const GLenum vertexArrayBinding =
       0x85B5;
-   static const GLenum R8_SNORM =
+   static const GLenum r8Snorm =
       0x8F94;
-   static const GLenum RG8_SNORM =
+   static const GLenum rg8Snorm =
       0x8F95;
-   static const GLenum RGB8_SNORM =
+   static const GLenum rgb8Snorm =
       0x8F96;
-   static const GLenum RGBA8_SNORM =
+   static const GLenum rgba8Snorm =
       0x8F97;
-   static const GLenum SIGNED_NORMALIZED =
+   static const GLenum signedNormalized =
       0x8F9C;
-   static const GLenum COPY_READ_BUFFER =
+   static const GLenum copyReadBuffer =
       0x8F36;
-   static const GLenum COPY_WRITE_BUFFER =
+   static const GLenum copyWriteBuffer =
       0x8F37;
-   static const GLenum COPY_READ_BUFFER_BINDING =
+   static const GLenum copyReadBufferBinding =
       0x8F36;
-   static const GLenum COPY_WRITE_BUFFER_BINDING =
+   static const GLenum copyWriteBufferBinding =
       0x8F37;
-   static const GLenum UNIFORM_BUFFER =
+   static const GLenum uniformBuffer =
       0x8A11;
-   static const GLenum UNIFORM_BUFFER_BINDING =
+   static const GLenum uniformBufferBinding =
       0x8A28;
-   static const GLenum UNIFORM_BUFFER_START =
+   static const GLenum uniformBufferStart =
       0x8A29;
-   static const GLenum UNIFORM_BUFFER_SIZE =
+   static const GLenum uniformBufferSize =
       0x8A2A;
-   static const GLenum MAX_VERTEX_UNIFORM_BLOCKS =
+   static const GLenum maxVertexUniformBlocks =
       0x8A2B;
-   static const GLenum MAX_FRAGMENT_UNIFORM_BLOCKS =
+   static const GLenum maxFragmentUniformBlocks =
       0x8A2D;
-   static const GLenum MAX_COMBINED_UNIFORM_BLOCKS =
+   static const GLenum maxCombinedUniformBlocks =
       0x8A2E;
-   static const GLenum MAX_UNIFORM_BUFFER_BINDINGS =
+   static const GLenum maxUniformBufferBindings =
       0x8A2F;
-   static const GLenum MAX_UNIFORM_BLOCK_SIZE =
+   static const GLenum maxUniformBlockSize =
       0x8A30;
-   static const GLenum MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS =
+   static const GLenum maxCombinedVertexUniformComponents =
       0x8A31;
-   static const GLenum MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS =
+   static const GLenum maxCombinedFragmentUniformComponents =
       0x8A33;
-   static const GLenum UNIFORM_BUFFER_OFFSET_ALIGNMENT =
+   static const GLenum uniformBufferOffsetAlignment =
       0x8A34;
-   static const GLenum ACTIVE_UNIFORM_BLOCKS =
+   static const GLenum activeUniformBlocks =
       0x8A36;
-   static const GLenum UNIFORM_TYPE =
+   static const GLenum uniformType =
       0x8A37;
-   static const GLenum UNIFORM_SIZE =
+   static const GLenum uniformSize =
       0x8A38;
-   static const GLenum UNIFORM_BLOCK_INDEX =
+   static const GLenum uniformBlockIndex =
       0x8A3A;
-   static const GLenum UNIFORM_OFFSET =
+   static const GLenum uniformOffset =
       0x8A3B;
-   static const GLenum UNIFORM_ARRAY_STRIDE =
+   static const GLenum uniformArrayStride =
       0x8A3C;
-   static const GLenum UNIFORM_MATRIX_STRIDE =
+   static const GLenum uniformMatrixStride =
       0x8A3D;
-   static const GLenum UNIFORM_IS_ROW_MAJOR =
+   static const GLenum uniformIsRowMajor =
       0x8A3E;
-   static const GLenum UNIFORM_BLOCK_BINDING =
+   static const GLenum uniformBlockBinding =
       0x8A3F;
-   static const GLenum UNIFORM_BLOCK_DATA_SIZE =
+   static const GLenum uniformBlockDataSize =
       0x8A40;
-   static const GLenum UNIFORM_BLOCK_ACTIVE_UNIFORMS =
+   static const GLenum uniformBlockActiveUniforms =
       0x8A42;
-   static const GLenum UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES =
+   static const GLenum uniformBlockActiveUniformIndices =
       0x8A43;
-   static const GLenum UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER =
+   static const GLenum uniformBlockReferencedByVertexShader =
       0x8A44;
-   static const GLenum UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER =
+   static const GLenum uniformBlockReferencedByFragmentShader =
       0x8A46;
-   static const GLenum INVALID_INDEX =
+   static const GLenum invalidIndex =
       0xFFFFFFFF;
-   static const GLenum MAX_VERTEX_OUTPUT_COMPONENTS =
+   static const GLenum maxVertexOutputComponents =
       0x9122;
-   static const GLenum MAX_FRAGMENT_INPUT_COMPONENTS =
+   static const GLenum maxFragmentInputComponents =
       0x9125;
-   static const GLenum MAX_SERVER_WAIT_TIMEOUT =
+   static const GLenum maxServerWaitTimeout =
       0x9111;
-   static const GLenum OBJECT_TYPE =
+   static const GLenum objectType =
       0x9112;
-   static const GLenum SYNC_CONDITION =
+   static const GLenum syncCondition =
       0x9113;
-   static const GLenum SYNC_STATUS =
+   static const GLenum syncStatus =
       0x9114;
-   static const GLenum SYNC_FLAGS =
+   static const GLenum syncFlags =
       0x9115;
-   static const GLenum SYNC_FENCE =
+   static const GLenum syncFence =
       0x9116;
-   static const GLenum SYNC_GPU_COMMANDS_COMPLETE =
+   static const GLenum syncGpuCommandsComplete =
       0x9117;
-   static const GLenum UNSIGNALED =
+   static const GLenum unsignaled =
       0x9118;
-   static const GLenum SIGNALED =
+   static const GLenum signaled =
       0x9119;
-   static const GLenum ALREADY_SIGNALED =
+   static const GLenum alreadySignaled =
       0x911A;
-   static const GLenum TIMEOUT_EXPIRED =
+   static const GLenum timeoutExpired =
       0x911B;
-   static const GLenum CONDITION_SATISFIED =
+   static const GLenum conditionSatisfied =
       0x911C;
-   static const GLenum WAIT_FAILED =
+   static const GLenum waitFailed =
       0x911D;
-   static const GLenum SYNC_FLUSH_COMMANDS_BIT =
+   static const GLenum syncFlushCommandsBit =
       0x00000001;
-   static const GLenum VERTEX_ATTRIB_ARRAY_DIVISOR =
+   static const GLenum vertexAttribArrayDivisor =
       0x88FE;
-   static const GLenum ANY_SAMPLES_PASSED =
+   static const GLenum anySamplesPassed =
       0x8C2F;
-   static const GLenum ANY_SAMPLES_PASSED_CONSERVATIVE =
+   static const GLenum anySamplesPassedConservative =
       0x8D6A;
-   static const GLenum SAMPLER_BINDING =
+   static const GLenum samplerBinding =
       0x8919;
-   static const GLenum RGB10_A2UI =
+   static const GLenum rgb10A2ui =
       0x906F;
-   static const GLenum INT_2_10_10_10_REV =
+   static const GLenum int2101010Rev =
       0x8D9F;
-   static const GLenum TRANSFORM_FEEDBACK =
+   static const GLenum transformFeedback =
       0x8E22;
-   static const GLenum TRANSFORM_FEEDBACK_PAUSED =
+   static const GLenum transformFeedbackPaused =
       0x8E23;
-   static const GLenum TRANSFORM_FEEDBACK_ACTIVE =
+   static const GLenum transformFeedbackActive =
       0x8E24;
-   static const GLenum TRANSFORM_FEEDBACK_BINDING =
+   static const GLenum transformFeedbackBinding =
       0x8E25;
-   static const GLenum TEXTURE_IMMUTABLE_FORMAT =
+   static const GLenum textureImmutableFormat =
       0x912F;
-   static const GLenum MAX_ELEMENT_INDEX =
+   static const GLenum maxElementIndex =
       0x8D6B;
-   static const GLenum TEXTURE_IMMUTABLE_LEVELS =
+   static const GLenum textureImmutableLevels =
       0x82DF;
-   static const GLint64 TIMEOUT_IGNORED =
+   static const GLint64 timeoutIgnored =
       -1;
-   static const GLenum MAX_CLIENT_WAIT_TIMEOUT_WEBGL =
+   static const GLenum maxClientWaitTimeoutWebgl =
       0x9247;
   void copyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size);
   void getBufferSubData(GLenum target, GLintptr srcByteOffset, ArrayBufferView dstBuffer, [int? dstOffset, GLuint? length]);
@@ -1368,529 +1369,529 @@ abstract interface class WebGL2RenderingContext {
 }
 
 abstract interface class WebGL2RenderingContextBase {
-   static const GLenum READ_BUFFER =
+   static const GLenum readBuffer =
       0x0C02;
-   static const GLenum UNPACK_ROW_LENGTH =
+   static const GLenum unpackRowLength =
       0x0CF2;
-   static const GLenum UNPACK_SKIP_ROWS =
+   static const GLenum unpackSkipRows =
       0x0CF3;
-   static const GLenum UNPACK_SKIP_PIXELS =
+   static const GLenum unpackSkipPixels =
       0x0CF4;
-   static const GLenum PACK_ROW_LENGTH =
+   static const GLenum packRowLength =
       0x0D02;
-   static const GLenum PACK_SKIP_ROWS =
+   static const GLenum packSkipRows =
       0x0D03;
-   static const GLenum PACK_SKIP_PIXELS =
+   static const GLenum packSkipPixels =
       0x0D04;
-   static const GLenum COLOR =
+   static const GLenum color =
       0x1800;
-   static const GLenum DEPTH =
+   static const GLenum depth =
       0x1801;
-   static const GLenum STENCIL =
+   static const GLenum stencil =
       0x1802;
-   static const GLenum RED =
+   static const GLenum red =
       0x1903;
-   static const GLenum RGB8 =
+   static const GLenum rgb8 =
       0x8051;
-   static const GLenum RGB10_A2 =
+   static const GLenum rgb10A2 =
       0x8059;
-   static const GLenum TEXTURE_BINDING_3D =
+   static const GLenum textureBinding3d =
       0x806A;
-   static const GLenum UNPACK_SKIP_IMAGES =
+   static const GLenum unpackSkipImages =
       0x806D;
-   static const GLenum UNPACK_IMAGE_HEIGHT =
+   static const GLenum unpackImageHeight =
       0x806E;
-   static const GLenum TEXTURE_3D =
+   static const GLenum texture3d =
       0x806F;
-   static const GLenum TEXTURE_WRAP_R =
+   static const GLenum textureWrapR =
       0x8072;
-   static const GLenum MAX_3D_TEXTURE_SIZE =
+   static const GLenum max3dTextureSize =
       0x8073;
-   static const GLenum UNSIGNED_INT_2_10_10_10_REV =
+   static const GLenum unsignedInt2101010Rev =
       0x8368;
-   static const GLenum MAX_ELEMENTS_VERTICES =
+   static const GLenum maxElementsVertices =
       0x80E8;
-   static const GLenum MAX_ELEMENTS_INDICES =
+   static const GLenum maxElementsIndices =
       0x80E9;
-   static const GLenum TEXTURE_MIN_LOD =
+   static const GLenum textureMinLod =
       0x813A;
-   static const GLenum TEXTURE_MAX_LOD =
+   static const GLenum textureMaxLod =
       0x813B;
-   static const GLenum TEXTURE_BASE_LEVEL =
+   static const GLenum textureBaseLevel =
       0x813C;
-   static const GLenum TEXTURE_MAX_LEVEL =
+   static const GLenum textureMaxLevel =
       0x813D;
-   static const GLenum MIN =
+   static const GLenum min =
       0x8007;
-   static const GLenum MAX =
+   static const GLenum max =
       0x8008;
-   static const GLenum DEPTH_COMPONENT24 =
+   static const GLenum depthComponent24 =
       0x81A6;
-   static const GLenum MAX_TEXTURE_LOD_BIAS =
+   static const GLenum maxTextureLodBias =
       0x84FD;
-   static const GLenum TEXTURE_COMPARE_MODE =
+   static const GLenum textureCompareMode =
       0x884C;
-   static const GLenum TEXTURE_COMPARE_FUNC =
+   static const GLenum textureCompareFunc =
       0x884D;
-   static const GLenum CURRENT_QUERY =
+   static const GLenum currentQuery =
       0x8865;
-   static const GLenum QUERY_RESULT =
+   static const GLenum queryResult =
       0x8866;
-   static const GLenum QUERY_RESULT_AVAILABLE =
+   static const GLenum queryResultAvailable =
       0x8867;
-   static const GLenum STREAM_READ =
+   static const GLenum streamRead =
       0x88E1;
-   static const GLenum STREAM_COPY =
+   static const GLenum streamCopy =
       0x88E2;
-   static const GLenum STATIC_READ =
+   static const GLenum staticRead =
       0x88E5;
-   static const GLenum STATIC_COPY =
+   static const GLenum staticCopy =
       0x88E6;
-   static const GLenum DYNAMIC_READ =
+   static const GLenum dynamicRead =
       0x88E9;
-   static const GLenum DYNAMIC_COPY =
+   static const GLenum dynamicCopy =
       0x88EA;
-   static const GLenum MAX_DRAW_BUFFERS =
+   static const GLenum maxDrawBuffers =
       0x8824;
-   static const GLenum DRAW_BUFFER0 =
+   static const GLenum drawBuffer0 =
       0x8825;
-   static const GLenum DRAW_BUFFER1 =
+   static const GLenum drawBuffer1 =
       0x8826;
-   static const GLenum DRAW_BUFFER2 =
+   static const GLenum drawBuffer2 =
       0x8827;
-   static const GLenum DRAW_BUFFER3 =
+   static const GLenum drawBuffer3 =
       0x8828;
-   static const GLenum DRAW_BUFFER4 =
+   static const GLenum drawBuffer4 =
       0x8829;
-   static const GLenum DRAW_BUFFER5 =
+   static const GLenum drawBuffer5 =
       0x882A;
-   static const GLenum DRAW_BUFFER6 =
+   static const GLenum drawBuffer6 =
       0x882B;
-   static const GLenum DRAW_BUFFER7 =
+   static const GLenum drawBuffer7 =
       0x882C;
-   static const GLenum DRAW_BUFFER8 =
+   static const GLenum drawBuffer8 =
       0x882D;
-   static const GLenum DRAW_BUFFER9 =
+   static const GLenum drawBuffer9 =
       0x882E;
-   static const GLenum DRAW_BUFFER10 =
+   static const GLenum drawBuffer10 =
       0x882F;
-   static const GLenum DRAW_BUFFER11 =
+   static const GLenum drawBuffer11 =
       0x8830;
-   static const GLenum DRAW_BUFFER12 =
+   static const GLenum drawBuffer12 =
       0x8831;
-   static const GLenum DRAW_BUFFER13 =
+   static const GLenum drawBuffer13 =
       0x8832;
-   static const GLenum DRAW_BUFFER14 =
+   static const GLenum drawBuffer14 =
       0x8833;
-   static const GLenum DRAW_BUFFER15 =
+   static const GLenum drawBuffer15 =
       0x8834;
-   static const GLenum MAX_FRAGMENT_UNIFORM_COMPONENTS =
+   static const GLenum maxFragmentUniformComponents =
       0x8B49;
-   static const GLenum MAX_VERTEX_UNIFORM_COMPONENTS =
+   static const GLenum maxVertexUniformComponents =
       0x8B4A;
-   static const GLenum SAMPLER_3D =
+   static const GLenum sampler3d =
       0x8B5F;
-   static const GLenum SAMPLER_2D_SHADOW =
+   static const GLenum sampler2dShadow =
       0x8B62;
-   static const GLenum FRAGMENT_SHADER_DERIVATIVE_HINT =
+   static const GLenum fragmentShaderDerivativeHint =
       0x8B8B;
-   static const GLenum PIXEL_PACK_BUFFER =
+   static const GLenum pixelPackBuffer =
       0x88EB;
-   static const GLenum PIXEL_UNPACK_BUFFER =
+   static const GLenum pixelUnpackBuffer =
       0x88EC;
-   static const GLenum PIXEL_PACK_BUFFER_BINDING =
+   static const GLenum pixelPackBufferBinding =
       0x88ED;
-   static const GLenum PIXEL_UNPACK_BUFFER_BINDING =
+   static const GLenum pixelUnpackBufferBinding =
       0x88EF;
-   static const GLenum FLOAT_MAT2x3 =
+   static const GLenum floatMat2x3 =
       0x8B65;
-   static const GLenum FLOAT_MAT2x4 =
+   static const GLenum floatMat2x4 =
       0x8B66;
-   static const GLenum FLOAT_MAT3x2 =
+   static const GLenum floatMat3x2 =
       0x8B67;
-   static const GLenum FLOAT_MAT3x4 =
+   static const GLenum floatMat3x4 =
       0x8B68;
-   static const GLenum FLOAT_MAT4x2 =
+   static const GLenum floatMat4x2 =
       0x8B69;
-   static const GLenum FLOAT_MAT4x3 =
+   static const GLenum floatMat4x3 =
       0x8B6A;
-   static const GLenum SRGB =
+   static const GLenum srgb =
       0x8C40;
-   static const GLenum SRGB8 =
+   static const GLenum srgb8 =
       0x8C41;
-   static const GLenum SRGB8_ALPHA8 =
+   static const GLenum srgb8Alpha8 =
       0x8C43;
-   static const GLenum COMPARE_REF_TO_TEXTURE =
+   static const GLenum compareRefToTexture =
       0x884E;
-   static const GLenum RGBA32F =
+   static const GLenum rgba32f =
       0x8814;
-   static const GLenum RGB32F =
+   static const GLenum rgb32f =
       0x8815;
-   static const GLenum RGBA16F =
+   static const GLenum rgba16f =
       0x881A;
-   static const GLenum RGB16F =
+   static const GLenum rgb16f =
       0x881B;
-   static const GLenum VERTEX_ATTRIB_ARRAY_INTEGER =
+   static const GLenum vertexAttribArrayInteger =
       0x88FD;
-   static const GLenum MAX_ARRAY_TEXTURE_LAYERS =
+   static const GLenum maxArrayTextureLayers =
       0x88FF;
-   static const GLenum MIN_PROGRAM_TEXEL_OFFSET =
+   static const GLenum minProgramTexelOffset =
       0x8904;
-   static const GLenum MAX_PROGRAM_TEXEL_OFFSET =
+   static const GLenum maxProgramTexelOffset =
       0x8905;
-   static const GLenum MAX_VARYING_COMPONENTS =
+   static const GLenum maxVaryingComponents =
       0x8B4B;
-   static const GLenum TEXTURE_2D_ARRAY =
+   static const GLenum texture2dArray =
       0x8C1A;
-   static const GLenum TEXTURE_BINDING_2D_ARRAY =
+   static const GLenum textureBinding2dArray =
       0x8C1D;
-   static const GLenum R11F_G11F_B10F =
+   static const GLenum r11fG11fB10f =
       0x8C3A;
-   static const GLenum UNSIGNED_INT_10F_11F_11F_REV =
+   static const GLenum unsignedInt10f11f11fRev =
       0x8C3B;
-   static const GLenum RGB9_E5 =
+   static const GLenum rgb9E5 =
       0x8C3D;
-   static const GLenum UNSIGNED_INT_5_9_9_9_REV =
+   static const GLenum unsignedInt5999Rev =
       0x8C3E;
-   static const GLenum TRANSFORM_FEEDBACK_BUFFER_MODE =
+   static const GLenum transformFeedbackBufferMode =
       0x8C7F;
-   static const GLenum MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS =
+   static const GLenum maxTransformFeedbackSeparateComponents =
       0x8C80;
-   static const GLenum TRANSFORM_FEEDBACK_VARYINGS =
+   static const GLenum transformFeedbackVaryings =
       0x8C83;
-   static const GLenum TRANSFORM_FEEDBACK_BUFFER_START =
+   static const GLenum transformFeedbackBufferStart =
       0x8C84;
-   static const GLenum TRANSFORM_FEEDBACK_BUFFER_SIZE =
+   static const GLenum transformFeedbackBufferSize =
       0x8C85;
-   static const GLenum TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN =
+   static const GLenum transformFeedbackPrimitivesWritten =
       0x8C88;
-   static const GLenum RASTERIZER_DISCARD =
+   static const GLenum rasterizerDiscard =
       0x8C89;
-   static const GLenum MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS =
+   static const GLenum maxTransformFeedbackInterleavedComponents =
       0x8C8A;
-   static const GLenum MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS =
+   static const GLenum maxTransformFeedbackSeparateAttribs =
       0x8C8B;
-   static const GLenum INTERLEAVED_ATTRIBS =
+   static const GLenum interleavedAttribs =
       0x8C8C;
-   static const GLenum SEPARATE_ATTRIBS =
+   static const GLenum separateAttribs =
       0x8C8D;
-   static const GLenum TRANSFORM_FEEDBACK_BUFFER =
+   static const GLenum transformFeedbackBuffer =
       0x8C8E;
-   static const GLenum TRANSFORM_FEEDBACK_BUFFER_BINDING =
+   static const GLenum transformFeedbackBufferBinding =
       0x8C8F;
-   static const GLenum RGBA32UI =
+   static const GLenum rgba32ui =
       0x8D70;
-   static const GLenum RGB32UI =
+   static const GLenum rgb32ui =
       0x8D71;
-   static const GLenum RGBA16UI =
+   static const GLenum rgba16ui =
       0x8D76;
-   static const GLenum RGB16UI =
+   static const GLenum rgb16ui =
       0x8D77;
-   static const GLenum RGBA8UI =
+   static const GLenum rgba8ui =
       0x8D7C;
-   static const GLenum RGB8UI =
+   static const GLenum rgb8ui =
       0x8D7D;
-   static const GLenum RGBA32I =
+   static const GLenum rgba32i =
       0x8D82;
-   static const GLenum RGB32I =
+   static const GLenum rgb32i =
       0x8D83;
-   static const GLenum RGBA16I =
+   static const GLenum rgba16i =
       0x8D88;
-   static const GLenum RGB16I =
+   static const GLenum rgb16i =
       0x8D89;
-   static const GLenum RGBA8I =
+   static const GLenum rgba8i =
       0x8D8E;
-   static const GLenum RGB8I =
+   static const GLenum rgb8i =
       0x8D8F;
-   static const GLenum RED_INTEGER =
+   static const GLenum redInteger =
       0x8D94;
-   static const GLenum RGB_INTEGER =
+   static const GLenum rgbInteger =
       0x8D98;
-   static const GLenum RGBA_INTEGER =
+   static const GLenum rgbaInteger =
       0x8D99;
-   static const GLenum SAMPLER_2D_ARRAY =
+   static const GLenum sampler2dArray =
       0x8DC1;
-   static const GLenum SAMPLER_2D_ARRAY_SHADOW =
+   static const GLenum sampler2dArrayShadow =
       0x8DC4;
-   static const GLenum SAMPLER_CUBE_SHADOW =
+   static const GLenum samplerCubeShadow =
       0x8DC5;
-   static const GLenum UNSIGNED_INT_VEC2 =
+   static const GLenum unsignedIntVec2 =
       0x8DC6;
-   static const GLenum UNSIGNED_INT_VEC3 =
+   static const GLenum unsignedIntVec3 =
       0x8DC7;
-   static const GLenum UNSIGNED_INT_VEC4 =
+   static const GLenum unsignedIntVec4 =
       0x8DC8;
-   static const GLenum INT_SAMPLER_2D =
+   static const GLenum intSampler2d =
       0x8DCA;
-   static const GLenum INT_SAMPLER_3D =
+   static const GLenum intSampler3d =
       0x8DCB;
-   static const GLenum INT_SAMPLER_CUBE =
+   static const GLenum intSamplerCube =
       0x8DCC;
-   static const GLenum INT_SAMPLER_2D_ARRAY =
+   static const GLenum intSampler2dArray =
       0x8DCF;
-   static const GLenum UNSIGNED_INT_SAMPLER_2D =
+   static const GLenum unsignedIntSampler2d =
       0x8DD2;
-   static const GLenum UNSIGNED_INT_SAMPLER_3D =
+   static const GLenum unsignedIntSampler3d =
       0x8DD3;
-   static const GLenum UNSIGNED_INT_SAMPLER_CUBE =
+   static const GLenum unsignedIntSamplerCube =
       0x8DD4;
-   static const GLenum UNSIGNED_INT_SAMPLER_2D_ARRAY =
+   static const GLenum unsignedIntSampler2dArray =
       0x8DD7;
-   static const GLenum DEPTH_COMPONENT32F =
+   static const GLenum depthComponent32f =
       0x8CAC;
-   static const GLenum DEPTH32F_STENCIL8 =
+   static const GLenum depth32fStencil8 =
       0x8CAD;
-   static const GLenum FLOAT_32_UNSIGNED_INT_24_8_REV =
+   static const GLenum float32UnsignedInt248Rev =
       0x8DAD;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING =
+   static const GLenum framebufferAttachmentColorEncoding =
       0x8210;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE =
+   static const GLenum framebufferAttachmentComponentType =
       0x8211;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_RED_SIZE =
+   static const GLenum framebufferAttachmentRedSize =
       0x8212;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_GREEN_SIZE =
+   static const GLenum framebufferAttachmentGreenSize =
       0x8213;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_BLUE_SIZE =
+   static const GLenum framebufferAttachmentBlueSize =
       0x8214;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE =
+   static const GLenum framebufferAttachmentAlphaSize =
       0x8215;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE =
+   static const GLenum framebufferAttachmentDepthSize =
       0x8216;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE =
+   static const GLenum framebufferAttachmentStencilSize =
       0x8217;
-   static const GLenum FRAMEBUFFER_DEFAULT =
+   static const GLenum framebufferDefault =
       0x8218;
-   static const GLenum UNSIGNED_INT_24_8 =
+   static const GLenum unsignedInt248 =
       0x84FA;
-   static const GLenum DEPTH24_STENCIL8 =
+   static const GLenum depth24Stencil8 =
       0x88F0;
-   static const GLenum UNSIGNED_NORMALIZED =
+   static const GLenum unsignedNormalized =
       0x8C17;
-   static const GLenum DRAW_FRAMEBUFFER_BINDING =
+   static const GLenum drawFramebufferBinding =
       0x8CA6;
-   static const GLenum READ_FRAMEBUFFER =
+   static const GLenum readFramebuffer =
       0x8CA8;
-   static const GLenum DRAW_FRAMEBUFFER =
+   static const GLenum drawFramebuffer =
       0x8CA9;
-   static const GLenum READ_FRAMEBUFFER_BINDING =
+   static const GLenum readFramebufferBinding =
       0x8CAA;
-   static const GLenum RENDERBUFFER_SAMPLES =
+   static const GLenum renderbufferSamples =
       0x8CAB;
-   static const GLenum FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER =
+   static const GLenum framebufferAttachmentTextureLayer =
       0x8CD4;
-   static const GLenum MAX_COLOR_ATTACHMENTS =
+   static const GLenum maxColorAttachments =
       0x8CDF;
-   static const GLenum COLOR_ATTACHMENT1 =
+   static const GLenum colorAttachment1 =
       0x8CE1;
-   static const GLenum COLOR_ATTACHMENT2 =
+   static const GLenum colorAttachment2 =
       0x8CE2;
-   static const GLenum COLOR_ATTACHMENT3 =
+   static const GLenum colorAttachment3 =
       0x8CE3;
-   static const GLenum COLOR_ATTACHMENT4 =
+   static const GLenum colorAttachment4 =
       0x8CE4;
-   static const GLenum COLOR_ATTACHMENT5 =
+   static const GLenum colorAttachment5 =
       0x8CE5;
-   static const GLenum COLOR_ATTACHMENT6 =
+   static const GLenum colorAttachment6 =
       0x8CE6;
-   static const GLenum COLOR_ATTACHMENT7 =
+   static const GLenum colorAttachment7 =
       0x8CE7;
-   static const GLenum COLOR_ATTACHMENT8 =
+   static const GLenum colorAttachment8 =
       0x8CE8;
-   static const GLenum COLOR_ATTACHMENT9 =
+   static const GLenum colorAttachment9 =
       0x8CE9;
-   static const GLenum COLOR_ATTACHMENT10 =
+   static const GLenum colorAttachment10 =
       0x8CEA;
-   static const GLenum COLOR_ATTACHMENT11 =
+   static const GLenum colorAttachment11 =
       0x8CEB;
-   static const GLenum COLOR_ATTACHMENT12 =
+   static const GLenum colorAttachment12 =
       0x8CEC;
-   static const GLenum COLOR_ATTACHMENT13 =
+   static const GLenum colorAttachment13 =
       0x8CED;
-   static const GLenum COLOR_ATTACHMENT14 =
+   static const GLenum colorAttachment14 =
       0x8CEE;
-   static const GLenum COLOR_ATTACHMENT15 =
+   static const GLenum colorAttachment15 =
       0x8CEF;
-   static const GLenum FRAMEBUFFER_INCOMPLETE_MULTISAMPLE =
+   static const GLenum framebufferIncompleteMultisample =
       0x8D56;
-   static const GLenum MAX_SAMPLES =
+   static const GLenum maxSamples =
       0x8D57;
-   static const GLenum HALF_FLOAT =
+   static const GLenum halfFloat =
       0x140B;
-   static const GLenum RG =
+   static const GLenum rg =
       0x8227;
-   static const GLenum RG_INTEGER =
+   static const GLenum rgInteger =
       0x8228;
-   static const GLenum R8 =
+   static const GLenum r8 =
       0x8229;
-   static const GLenum RG8 =
+   static const GLenum rg8 =
       0x822B;
-   static const GLenum R16F =
+   static const GLenum r16f =
       0x822D;
-   static const GLenum R32F =
+   static const GLenum r32f =
       0x822E;
-   static const GLenum RG16F =
+   static const GLenum rg16f =
       0x822F;
-   static const GLenum RG32F =
+   static const GLenum rg32f =
       0x8230;
-   static const GLenum R8I =
+   static const GLenum r8i =
       0x8231;
-   static const GLenum R8UI =
+   static const GLenum r8ui =
       0x8232;
-   static const GLenum R16I =
+   static const GLenum r16i =
       0x8233;
-   static const GLenum R16UI =
+   static const GLenum r16ui =
       0x8234;
-   static const GLenum R32I =
+   static const GLenum r32i =
       0x8235;
-   static const GLenum R32UI =
+   static const GLenum r32ui =
       0x8236;
-   static const GLenum RG8I =
+   static const GLenum rg8i =
       0x8237;
-   static const GLenum RG8UI =
+   static const GLenum rg8ui =
       0x8238;
-   static const GLenum RG16I =
+   static const GLenum rg16i =
       0x8239;
-   static const GLenum RG16UI =
+   static const GLenum rg16ui =
       0x823A;
-   static const GLenum RG32I =
+   static const GLenum rg32i =
       0x823B;
-   static const GLenum RG32UI =
+   static const GLenum rg32ui =
       0x823C;
-   static const GLenum VERTEX_ARRAY_BINDING =
+   static const GLenum vertexArrayBinding =
       0x85B5;
-   static const GLenum R8_SNORM =
+   static const GLenum r8Snorm =
       0x8F94;
-   static const GLenum RG8_SNORM =
+   static const GLenum rg8Snorm =
       0x8F95;
-   static const GLenum RGB8_SNORM =
+   static const GLenum rgb8Snorm =
       0x8F96;
-   static const GLenum RGBA8_SNORM =
+   static const GLenum rgba8Snorm =
       0x8F97;
-   static const GLenum SIGNED_NORMALIZED =
+   static const GLenum signedNormalized =
       0x8F9C;
-   static const GLenum COPY_READ_BUFFER =
+   static const GLenum copyReadBuffer =
       0x8F36;
-   static const GLenum COPY_WRITE_BUFFER =
+   static const GLenum copyWriteBuffer =
       0x8F37;
-   static const GLenum COPY_READ_BUFFER_BINDING =
+   static const GLenum copyReadBufferBinding =
       0x8F36;
-   static const GLenum COPY_WRITE_BUFFER_BINDING =
+   static const GLenum copyWriteBufferBinding =
       0x8F37;
-   static const GLenum UNIFORM_BUFFER =
+   static const GLenum uniformBuffer =
       0x8A11;
-   static const GLenum UNIFORM_BUFFER_BINDING =
+   static const GLenum uniformBufferBinding =
       0x8A28;
-   static const GLenum UNIFORM_BUFFER_START =
+   static const GLenum uniformBufferStart =
       0x8A29;
-   static const GLenum UNIFORM_BUFFER_SIZE =
+   static const GLenum uniformBufferSize =
       0x8A2A;
-   static const GLenum MAX_VERTEX_UNIFORM_BLOCKS =
+   static const GLenum maxVertexUniformBlocks =
       0x8A2B;
-   static const GLenum MAX_FRAGMENT_UNIFORM_BLOCKS =
+   static const GLenum maxFragmentUniformBlocks =
       0x8A2D;
-   static const GLenum MAX_COMBINED_UNIFORM_BLOCKS =
+   static const GLenum maxCombinedUniformBlocks =
       0x8A2E;
-   static const GLenum MAX_UNIFORM_BUFFER_BINDINGS =
+   static const GLenum maxUniformBufferBindings =
       0x8A2F;
-   static const GLenum MAX_UNIFORM_BLOCK_SIZE =
+   static const GLenum maxUniformBlockSize =
       0x8A30;
-   static const GLenum MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS =
+   static const GLenum maxCombinedVertexUniformComponents =
       0x8A31;
-   static const GLenum MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS =
+   static const GLenum maxCombinedFragmentUniformComponents =
       0x8A33;
-   static const GLenum UNIFORM_BUFFER_OFFSET_ALIGNMENT =
+   static const GLenum uniformBufferOffsetAlignment =
       0x8A34;
-   static const GLenum ACTIVE_UNIFORM_BLOCKS =
+   static const GLenum activeUniformBlocks =
       0x8A36;
-   static const GLenum UNIFORM_TYPE =
+   static const GLenum uniformType =
       0x8A37;
-   static const GLenum UNIFORM_SIZE =
+   static const GLenum uniformSize =
       0x8A38;
-   static const GLenum UNIFORM_BLOCK_INDEX =
+   static const GLenum uniformBlockIndex =
       0x8A3A;
-   static const GLenum UNIFORM_OFFSET =
+   static const GLenum uniformOffset =
       0x8A3B;
-   static const GLenum UNIFORM_ARRAY_STRIDE =
+   static const GLenum uniformArrayStride =
       0x8A3C;
-   static const GLenum UNIFORM_MATRIX_STRIDE =
+   static const GLenum uniformMatrixStride =
       0x8A3D;
-   static const GLenum UNIFORM_IS_ROW_MAJOR =
+   static const GLenum uniformIsRowMajor =
       0x8A3E;
-   static const GLenum UNIFORM_BLOCK_BINDING =
+   static const GLenum uniformBlockBinding =
       0x8A3F;
-   static const GLenum UNIFORM_BLOCK_DATA_SIZE =
+   static const GLenum uniformBlockDataSize =
       0x8A40;
-   static const GLenum UNIFORM_BLOCK_ACTIVE_UNIFORMS =
+   static const GLenum uniformBlockActiveUniforms =
       0x8A42;
-   static const GLenum UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES =
+   static const GLenum uniformBlockActiveUniformIndices =
       0x8A43;
-   static const GLenum UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER =
+   static const GLenum uniformBlockReferencedByVertexShader =
       0x8A44;
-   static const GLenum UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER =
+   static const GLenum uniformBlockReferencedByFragmentShader =
       0x8A46;
-   static const GLenum INVALID_INDEX =
+   static const GLenum invalidIndex =
       0xFFFFFFFF;
-   static const GLenum MAX_VERTEX_OUTPUT_COMPONENTS =
+   static const GLenum maxVertexOutputComponents =
       0x9122;
-   static const GLenum MAX_FRAGMENT_INPUT_COMPONENTS =
+   static const GLenum maxFragmentInputComponents =
       0x9125;
-   static const GLenum MAX_SERVER_WAIT_TIMEOUT =
+   static const GLenum maxServerWaitTimeout =
       0x9111;
-   static const GLenum OBJECT_TYPE =
+   static const GLenum objectType =
       0x9112;
-   static const GLenum SYNC_CONDITION =
+   static const GLenum syncCondition =
       0x9113;
-   static const GLenum SYNC_STATUS =
+   static const GLenum syncStatus =
       0x9114;
-   static const GLenum SYNC_FLAGS =
+   static const GLenum syncFlags =
       0x9115;
-   static const GLenum SYNC_FENCE =
+   static const GLenum syncFence =
       0x9116;
-   static const GLenum SYNC_GPU_COMMANDS_COMPLETE =
+   static const GLenum syncGpuCommandsComplete =
       0x9117;
-   static const GLenum UNSIGNALED =
+   static const GLenum unsignaled =
       0x9118;
-   static const GLenum SIGNALED =
+   static const GLenum signaled =
       0x9119;
-   static const GLenum ALREADY_SIGNALED =
+   static const GLenum alreadySignaled =
       0x911A;
-   static const GLenum TIMEOUT_EXPIRED =
+   static const GLenum timeoutExpired =
       0x911B;
-   static const GLenum CONDITION_SATISFIED =
+   static const GLenum conditionSatisfied =
       0x911C;
-   static const GLenum WAIT_FAILED =
+   static const GLenum waitFailed =
       0x911D;
-   static const GLenum SYNC_FLUSH_COMMANDS_BIT =
+   static const GLenum syncFlushCommandsBit =
       0x00000001;
-   static const GLenum VERTEX_ATTRIB_ARRAY_DIVISOR =
+   static const GLenum vertexAttribArrayDivisor =
       0x88FE;
-   static const GLenum ANY_SAMPLES_PASSED =
+   static const GLenum anySamplesPassed =
       0x8C2F;
-   static const GLenum ANY_SAMPLES_PASSED_CONSERVATIVE =
+   static const GLenum anySamplesPassedConservative =
       0x8D6A;
-   static const GLenum SAMPLER_BINDING =
+   static const GLenum samplerBinding =
       0x8919;
-   static const GLenum RGB10_A2UI =
+   static const GLenum rgb10A2ui =
       0x906F;
-   static const GLenum INT_2_10_10_10_REV =
+   static const GLenum int2101010Rev =
       0x8D9F;
-   static const GLenum TRANSFORM_FEEDBACK =
+   static const GLenum transformFeedback =
       0x8E22;
-   static const GLenum TRANSFORM_FEEDBACK_PAUSED =
+   static const GLenum transformFeedbackPaused =
       0x8E23;
-   static const GLenum TRANSFORM_FEEDBACK_ACTIVE =
+   static const GLenum transformFeedbackActive =
       0x8E24;
-   static const GLenum TRANSFORM_FEEDBACK_BINDING =
+   static const GLenum transformFeedbackBinding =
       0x8E25;
-   static const GLenum TEXTURE_IMMUTABLE_FORMAT =
+   static const GLenum textureImmutableFormat =
       0x912F;
-   static const GLenum MAX_ELEMENT_INDEX =
+   static const GLenum maxElementIndex =
       0x8D6B;
-   static const GLenum TEXTURE_IMMUTABLE_LEVELS =
+   static const GLenum textureImmutableLevels =
       0x82DF;
-   static const GLint64 TIMEOUT_IGNORED =
+   static const GLint64 timeoutIgnored =
       -1;
-   static const GLenum MAX_CLIENT_WAIT_TIMEOUT_WEBGL =
+   static const GLenum maxClientWaitTimeoutWebgl =
       0x9247;
   void copyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size);
   void getBufferSubData(GLenum target, GLintptr srcByteOffset, ArrayBufferView dstBuffer, [int? dstOffset, GLuint? length]);

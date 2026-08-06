@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names, avoid_renaming_method_parameters, invalid_runtime_check_with_js_interop_types
 
 import 'dart:js_interop';
@@ -78,9 +79,8 @@ JSAny? _toJs(Object? value) {
   if (value is bool) return value.toJS;
   if (value is int) return value.toJS;
   if (value is double) return value.toJS;
-  if (value is List) {
+  if (value is List)
     return [for (final e in value) _toJs(e)].toJS;
-  }
   if (value is Function) return _handlerToJs(value);
   throw ArgumentError('Unsupported JS argument type: ${value.runtimeType}.');
 }
@@ -142,14 +142,14 @@ JSFunction? _handlerToJs(Object? value) {
 dynamic _convert(JSAny? value, String kind) {
   if (value == null || value.isNull || value.isUndefined) return null;
   if (kind == "promise" && value is JSPromise) {
-    return (value).toDart;
+    return (value as JSPromise<JSAny?>).toDart;
   }
   if (kind == "list" && value is JSArray) {
-    return (value).toDart.map((e) => _convert(e, "wrap")).toList();
+    return (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, "wrap")).toList();
   }
   if (kind == "map" && value is JSObject) {
     // record<K,V> → JS object with string keys; best-effort map view.
-    return _wrapObject(value);
+    return _wrapObject(value as JSObject);
   }
   return switch (kind) {
     'bool' => (value as JSBoolean).toDart,
@@ -158,15 +158,15 @@ dynamic _convert(JSAny? value, String kind) {
     'string' => (value as JSString).toDart,
     'void' => null,
     'jsfunction' => value,
-    'promise' => (value is JSPromise ? (value).toDart : _wrapObject(value as JSObject)),
-    'list' => (value is JSArray ? (value).toDart.map((e) => _convert(e, 'wrap')).toList() : _wrapObject(value as JSObject)),
+    'promise' => (value is JSPromise ? (value as JSPromise<JSAny?>).toDart : _wrapObject(value as JSObject)),
+    'list' => (value is JSArray ? (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, 'wrap')).toList() : _wrapObject(value as JSObject)),
     'typedArray' => value,
     _ => value is JSString
-        ? (value).toDart
+        ? (value as JSString).toDart
         : value is JSBoolean
-            ? (value).toDart
+            ? (value as JSBoolean).toDart
             : value is JSNumber
-                ? (value).toDartDouble
+                ? (value as JSNumber).toDartDouble
                 : _wrapObject(value as JSObject),
   };
 }
@@ -302,11 +302,11 @@ const Map<String, String> _kinds = {
   'BrowserAudioWorkletNode.port': 'wrap',
   'BrowserAudioWorkletProcessor.port': 'wrap',
   'BrowserBarProp.visible': 'bool',
-  'BrowserBiquadFilterNode.Q': 'wrap',
   'BrowserBiquadFilterNode.detune': 'wrap',
   'BrowserBiquadFilterNode.frequency': 'wrap',
   'BrowserBiquadFilterNode.gain': 'wrap',
   'BrowserBiquadFilterNode.getFrequencyResponse': 'void',
+  'BrowserBiquadFilterNode.q': 'wrap',
   'BrowserBiquadFilterNode.type': 'wrap',
   'BrowserBlob.arrayBuffer': 'wrap',
   'BrowserBlob.size': 'int',
@@ -605,7 +605,6 @@ const Map<String, String> _kinds = {
   'BrowserDeviceOrientationEvent.alpha': 'double',
   'BrowserDeviceOrientationEvent.beta': 'double',
   'BrowserDeviceOrientationEvent.gamma': 'double',
-  'BrowserDocument.URL': 'string',
   'BrowserDocument.activeElement': 'wrap',
   'BrowserDocument.adoptNode': 'wrap',
   'BrowserDocument.adoptedStyleSheets': 'list',
@@ -820,6 +819,7 @@ const Map<String, String> _kinds = {
   'BrowserDocument.styleSheets': 'wrap',
   'BrowserDocument.timeline': 'wrap',
   'BrowserDocument.title': 'string',
+  'BrowserDocument.url': 'string',
   'BrowserDocument.visibilityState': 'wrap',
   'BrowserDocument.vlinkColor': 'string',
   'BrowserDocument.write': 'void',
@@ -1094,8 +1094,8 @@ const Map<String, String> _kinds = {
   'BrowserExtendableMessageEvent.origin': 'string',
   'BrowserExtendableMessageEvent.ports': 'wrap',
   'BrowserExtendableMessageEvent.source': 'wrap',
-  'BrowserExternal.AddSearchProvider': 'void',
-  'BrowserExternal.IsSearchProviderInstalled': 'void',
+  'BrowserExternal.addSearchProvider': 'void',
+  'BrowserExternal.isSearchProviderInstalled': 'void',
   'BrowserFetchEvent.clientId': 'string',
   'BrowserFetchEvent.handled': 'wrap',
   'BrowserFetchEvent.preloadResponse': 'wrap',
@@ -4327,9 +4327,13 @@ const Map<String, String> _kinds = {
 /// JS property renames for IDL members whose escaped Dart name
 /// differs from the actual JS name.
 const Map<String, String> _jsNames = {
+  'BrowserBiquadFilterNode.q': 'Q',
   'BrowserCredentialsContainer.get_': 'get',
   'BrowserCustomElementRegistry.get_': 'get',
+  'BrowserDocument.url': 'URL',
   'BrowserElement.part_': 'part',
+  'BrowserExternal.addSearchProvider': 'AddSearchProvider',
+  'BrowserExternal.isSearchProviderInstalled': 'IsSearchProviderInstalled',
   'BrowserFormData.get_': 'get',
   'BrowserFormData.set_': 'set',
   'BrowserHTMLDialogElement.show_': 'show',

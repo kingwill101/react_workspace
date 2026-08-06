@@ -5,8 +5,8 @@
 import 'package:react_web/src/web_runtime.dart';
 import 'package:react_web/src/generated/web/web.dart';
 
-final class SsrANGLE_instanced_arrays implements ANGLE_instanced_arrays {
-  factory SsrANGLE_instanced_arrays() {
+final class SsrAngleInstancedArrays implements ANGLE_instanced_arrays {
+  factory SsrAngleInstancedArrays() {
     throw UnsupportedWebApiError('ANGLE_instanced_arrays constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -25,8 +25,8 @@ final class SsrANGLE_instanced_arrays implements ANGLE_instanced_arrays {
   );
 }
 
-final class SsrAbortController implements AbortController {
-  factory SsrAbortController() {
+final class SsrAbortcontroller implements AbortController {
+  factory SsrAbortcontroller() {
     throw UnsupportedWebApiError('AbortController constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -41,8 +41,8 @@ final class SsrAbortController implements AbortController {
   );
 }
 
-final class SsrAbortSignal implements AbortSignal {
-  factory SsrAbortSignal() {
+final class SsrAbortsignal implements AbortSignal {
+  factory SsrAbortsignal() {
     throw UnsupportedWebApiError('AbortSignal constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -69,16 +69,16 @@ final class SsrAbortSignal implements AbortSignal {
   );
 }
 
-final class SsrAbsoluteOrientationSensor implements AbsoluteOrientationSensor {
-  factory SsrAbsoluteOrientationSensor([OrientationSensorOptions? sensorOptions]) {
+final class SsrAbsoluteorientationsensor implements AbsoluteOrientationSensor {
+  factory SsrAbsoluteorientationsensor([OrientationSensorOptions? sensorOptions]) {
     throw UnsupportedWebApiError('AbsoluteOrientationSensor constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrAbstractRange implements AbstractRange {
-  factory SsrAbstractRange() {
+final class SsrAbstractrange implements AbstractRange {
+  factory SsrAbstractrange() {
     throw UnsupportedWebApiError('AbstractRange constructor'
       , exposed: 'Window'
     );
@@ -105,8 +105,8 @@ final class SsrAbstractRange implements AbstractRange {
   );
 }
 
-final class SsrAnalyserNode implements AnalyserNode {
-  factory SsrAnalyserNode(BaseAudioContext context, [AnalyserOptions? options]) {
+final class SsrAnalysernode implements AnalyserNode {
+  factory SsrAnalysernode(BaseAudioContext context, [AnalyserOptions? options]) {
     throw UnsupportedWebApiError('AnalyserNode constructor'
       , exposed: 'Window'
     );
@@ -297,8 +297,8 @@ final class SsrAnimation implements Animation {
   );
 }
 
-final class SsrAnimationEffect implements AnimationEffect {
-  factory SsrAnimationEffect() {
+final class SsrAnimationeffect implements AnimationEffect {
+  factory SsrAnimationeffect() {
     throw UnsupportedWebApiError('AnimationEffect constructor'
       , exposed: 'Window'
     );
@@ -317,8 +317,8 @@ final class SsrAnimationEffect implements AnimationEffect {
   );
 }
 
-final class SsrAnimationEvent implements AnimationEvent {
-  factory SsrAnimationEvent(Object type, [AnimationEventInit? animationEventInitDict]) {
+final class SsrAnimationevent implements AnimationEvent {
+  factory SsrAnimationevent(Object type, [AnimationEventInit? animationEventInitDict]) {
     throw UnsupportedWebApiError('AnimationEvent constructor'
       , exposed: 'Window'
     );
@@ -337,8 +337,8 @@ final class SsrAnimationEvent implements AnimationEvent {
   );
 }
 
-final class SsrAnimationPlaybackEvent implements AnimationPlaybackEvent {
-  factory SsrAnimationPlaybackEvent(String type, [AnimationPlaybackEventInit? eventInitDict]) {
+final class SsrAnimationplaybackevent implements AnimationPlaybackEvent {
+  factory SsrAnimationplaybackevent(String type, [AnimationPlaybackEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('AnimationPlaybackEvent constructor'
       , exposed: 'Window'
     );
@@ -353,8 +353,8 @@ final class SsrAnimationPlaybackEvent implements AnimationPlaybackEvent {
   );
 }
 
-final class SsrAnimationTimeline implements AnimationTimeline {
-  factory SsrAnimationTimeline() {
+final class SsrAnimationtimeline implements AnimationTimeline {
+  factory SsrAnimationtimeline() {
     throw UnsupportedWebApiError('AnimationTimeline constructor'
       , exposed: 'Window'
     );
@@ -405,8 +405,8 @@ final class SsrAttr implements Attr {
   );
 }
 
-final class SsrAudioBuffer implements AudioBuffer {
-  factory SsrAudioBuffer(AudioBufferOptions options) {
+final class SsrAudiobuffer implements AudioBuffer {
+  factory SsrAudiobuffer(AudioBufferOptions options) {
     throw UnsupportedWebApiError('AudioBuffer constructor'
       , exposed: 'Window'
     );
@@ -441,8 +441,8 @@ final class SsrAudioBuffer implements AudioBuffer {
   );
 }
 
-final class SsrAudioBufferSourceNode implements AudioBufferSourceNode {
-  factory SsrAudioBufferSourceNode(BaseAudioContext context, [AudioBufferSourceOptions? options]) {
+final class SsrAudiobuffersourcenode implements AudioBufferSourceNode {
+  factory SsrAudiobuffersourcenode(BaseAudioContext context, [AudioBufferSourceOptions? options]) {
     throw UnsupportedWebApiError('AudioBufferSourceNode constructor'
       , exposed: 'Window'
     );
@@ -493,8 +493,8 @@ final class SsrAudioBufferSourceNode implements AudioBufferSourceNode {
   );
 }
 
-final class SsrAudioContext implements AudioContext {
-  factory SsrAudioContext([AudioContextOptions? contextOptions]) {
+final class SsrAudiocontext implements AudioContext {
+  factory SsrAudiocontext([AudioContextOptions? contextOptions]) {
     throw UnsupportedWebApiError('AudioContext constructor'
       , exposed: 'Window'
     );
@@ -541,8 +541,8 @@ final class SsrAudioContext implements AudioContext {
   );
 }
 
-final class SsrAudioDestinationNode implements AudioDestinationNode {
-  factory SsrAudioDestinationNode() {
+final class SsrAudiodestinationnode implements AudioDestinationNode {
+  factory SsrAudiodestinationnode() {
     throw UnsupportedWebApiError('AudioDestinationNode constructor'
       , exposed: 'Window'
     );
@@ -553,8 +553,8 @@ final class SsrAudioDestinationNode implements AudioDestinationNode {
   );
 }
 
-final class SsrAudioListener implements AudioListener {
-  factory SsrAudioListener() {
+final class SsrAudiolistener implements AudioListener {
+  factory SsrAudiolistener() {
     throw UnsupportedWebApiError('AudioListener constructor'
       , exposed: 'Window'
     );
@@ -605,8 +605,8 @@ final class SsrAudioListener implements AudioListener {
   );
 }
 
-final class SsrAudioNode implements AudioNode {
-  factory SsrAudioNode() {
+final class SsrAudionode implements AudioNode {
+  factory SsrAudionode() {
     throw UnsupportedWebApiError('AudioNode constructor'
       , exposed: 'Window'
     );
@@ -657,8 +657,8 @@ final class SsrAudioNode implements AudioNode {
   );
 }
 
-final class SsrAudioParam implements AudioParam {
-  factory SsrAudioParam() {
+final class SsrAudioparam implements AudioParam {
+  factory SsrAudioparam() {
     throw UnsupportedWebApiError('AudioParam constructor'
       , exposed: 'Window'
     );
@@ -721,16 +721,16 @@ final class SsrAudioParam implements AudioParam {
   );
 }
 
-final class SsrAudioParamMap implements AudioParamMap {
-  factory SsrAudioParamMap() {
+final class SsrAudioparammap implements AudioParamMap {
+  factory SsrAudioparammap() {
     throw UnsupportedWebApiError('AudioParamMap constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrAudioProcessingEvent implements AudioProcessingEvent {
-  factory SsrAudioProcessingEvent(String type, AudioProcessingEventInit eventInitDict) {
+final class SsrAudioprocessingevent implements AudioProcessingEvent {
+  factory SsrAudioprocessingevent(String type, AudioProcessingEventInit eventInitDict) {
     throw UnsupportedWebApiError('AudioProcessingEvent constructor'
       , exposed: 'Window'
     );
@@ -749,8 +749,8 @@ final class SsrAudioProcessingEvent implements AudioProcessingEvent {
   );
 }
 
-final class SsrAudioScheduledSourceNode implements AudioScheduledSourceNode {
-  factory SsrAudioScheduledSourceNode() {
+final class SsrAudioscheduledsourcenode implements AudioScheduledSourceNode {
+  factory SsrAudioscheduledsourcenode() {
     throw UnsupportedWebApiError('AudioScheduledSourceNode constructor'
       , exposed: 'Window'
     );
@@ -773,8 +773,8 @@ final class SsrAudioScheduledSourceNode implements AudioScheduledSourceNode {
   );
 }
 
-final class SsrAudioTrack implements AudioTrack {
-  factory SsrAudioTrack() {
+final class SsrAudiotrack implements AudioTrack {
+  factory SsrAudiotrack() {
     throw UnsupportedWebApiError('AudioTrack constructor'
       , exposed: 'Window'
     );
@@ -809,8 +809,8 @@ final class SsrAudioTrack implements AudioTrack {
   );
 }
 
-final class SsrAudioTrackList implements AudioTrackList {
-  factory SsrAudioTrackList() {
+final class SsrAudiotracklist implements AudioTrackList {
+  factory SsrAudiotracklist() {
     throw UnsupportedWebApiError('AudioTrackList constructor'
       , exposed: 'Window'
     );
@@ -849,16 +849,16 @@ final class SsrAudioTrackList implements AudioTrackList {
   );
 }
 
-final class SsrAudioWorklet implements AudioWorklet {
-  factory SsrAudioWorklet() {
+final class SsrAudioworklet implements AudioWorklet {
+  factory SsrAudioworklet() {
     throw UnsupportedWebApiError('AudioWorklet constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrAudioWorkletGlobalScope implements AudioWorkletGlobalScope {
-  factory SsrAudioWorkletGlobalScope() {
+final class SsrAudioworkletglobalscope implements AudioWorkletGlobalScope {
+  factory SsrAudioworkletglobalscope() {
     throw UnsupportedWebApiError('AudioWorkletGlobalScope constructor'
       , exposed: 'AudioWorklet'
     );
@@ -881,8 +881,8 @@ final class SsrAudioWorkletGlobalScope implements AudioWorkletGlobalScope {
   );
 }
 
-final class SsrAudioWorkletNode implements AudioWorkletNode {
-  factory SsrAudioWorkletNode(BaseAudioContext context, String name, [AudioWorkletNodeOptions? options]) {
+final class SsrAudioworkletnode implements AudioWorkletNode {
+  factory SsrAudioworkletnode(BaseAudioContext context, String name, [AudioWorkletNodeOptions? options]) {
     throw UnsupportedWebApiError('AudioWorkletNode constructor'
       , exposed: 'Window'
     );
@@ -905,8 +905,8 @@ final class SsrAudioWorkletNode implements AudioWorkletNode {
   );
 }
 
-final class SsrAudioWorkletProcessor implements AudioWorkletProcessor {
-  factory SsrAudioWorkletProcessor() {
+final class SsrAudioworkletprocessor implements AudioWorkletProcessor {
+  factory SsrAudioworkletprocessor() {
     throw UnsupportedWebApiError('AudioWorkletProcessor constructor'
       , exposed: 'AudioWorklet'
     );
@@ -917,8 +917,8 @@ final class SsrAudioWorkletProcessor implements AudioWorkletProcessor {
   );
 }
 
-final class SsrAuthenticatorAssertionResponse implements AuthenticatorAssertionResponse {
-  factory SsrAuthenticatorAssertionResponse() {
+final class SsrAuthenticatorassertionresponse implements AuthenticatorAssertionResponse {
+  factory SsrAuthenticatorassertionresponse() {
     throw UnsupportedWebApiError('AuthenticatorAssertionResponse constructor'
       , exposed: 'Window'
     );
@@ -937,8 +937,8 @@ final class SsrAuthenticatorAssertionResponse implements AuthenticatorAssertionR
   );
 }
 
-final class SsrAuthenticatorAttestationResponse implements AuthenticatorAttestationResponse {
-  factory SsrAuthenticatorAttestationResponse() {
+final class SsrAuthenticatorattestationresponse implements AuthenticatorAttestationResponse {
+  factory SsrAuthenticatorattestationresponse() {
     throw UnsupportedWebApiError('AuthenticatorAttestationResponse constructor'
       , exposed: 'Window'
     );
@@ -965,8 +965,8 @@ final class SsrAuthenticatorAttestationResponse implements AuthenticatorAttestat
   );
 }
 
-final class SsrAuthenticatorResponse implements AuthenticatorResponse {
-  factory SsrAuthenticatorResponse() {
+final class SsrAuthenticatorresponse implements AuthenticatorResponse {
+  factory SsrAuthenticatorresponse() {
     throw UnsupportedWebApiError('AuthenticatorResponse constructor'
       , exposed: 'Window'
     );
@@ -977,8 +977,8 @@ final class SsrAuthenticatorResponse implements AuthenticatorResponse {
   );
 }
 
-final class SsrBarProp implements BarProp {
-  factory SsrBarProp() {
+final class SsrBarprop implements BarProp {
+  factory SsrBarprop() {
     throw UnsupportedWebApiError('BarProp constructor'
       , exposed: 'Window'
     );
@@ -989,8 +989,8 @@ final class SsrBarProp implements BarProp {
   );
 }
 
-final class SsrBaseAudioContext implements BaseAudioContext {
-  factory SsrBaseAudioContext() {
+final class SsrBaseaudiocontext implements BaseAudioContext {
+  factory SsrBaseaudiocontext() {
     throw UnsupportedWebApiError('BaseAudioContext constructor'
       , exposed: 'Window'
     );
@@ -1105,8 +1105,8 @@ final class SsrBaseAudioContext implements BaseAudioContext {
   );
 }
 
-final class SsrBatteryManager implements BatteryManager {
-  factory SsrBatteryManager() {
+final class SsrBatterymanager implements BatteryManager {
+  factory SsrBatterymanager() {
     throw UnsupportedWebApiError('BatteryManager constructor'
       , exposed: 'Window'
     );
@@ -1161,8 +1161,8 @@ final class SsrBatteryManager implements BatteryManager {
   );
 }
 
-final class SsrBeforeUnloadEvent implements BeforeUnloadEvent {
-  factory SsrBeforeUnloadEvent() {
+final class SsrBeforeunloadevent implements BeforeUnloadEvent {
+  factory SsrBeforeunloadevent() {
     throw UnsupportedWebApiError('BeforeUnloadEvent constructor'
       , exposed: 'Window'
     );
@@ -1177,8 +1177,8 @@ final class SsrBeforeUnloadEvent implements BeforeUnloadEvent {
   );
 }
 
-final class SsrBiquadFilterNode implements BiquadFilterNode {
-  factory SsrBiquadFilterNode(BaseAudioContext context, [BiquadFilterOptions? options]) {
+final class SsrBiquadfilternode implements BiquadFilterNode {
+  factory SsrBiquadfilternode(BaseAudioContext context, [BiquadFilterOptions? options]) {
     throw UnsupportedWebApiError('BiquadFilterNode constructor'
       , exposed: 'Window'
     );
@@ -1200,7 +1200,7 @@ final class SsrBiquadFilterNode implements BiquadFilterNode {
       , exposed: 'Window'
   );
   @override
-  AudioParam get Q => throw UnsupportedWebApiError('BiquadFilterNode.Q'
+  AudioParam get q => throw UnsupportedWebApiError('BiquadFilterNode.Q'
       , exposed: 'Window'
   );
   @override
@@ -1245,8 +1245,8 @@ final class SsrBlob implements Blob {
   );
 }
 
-final class SsrBlobEvent implements BlobEvent {
-  factory SsrBlobEvent(String type, BlobEventInit eventInitDict) {
+final class SsrBlobevent implements BlobEvent {
+  factory SsrBlobevent(String type, BlobEventInit eventInitDict) {
     throw UnsupportedWebApiError('BlobEvent constructor'
       , exposed: 'Window'
     );
@@ -1261,16 +1261,16 @@ final class SsrBlobEvent implements BlobEvent {
   );
 }
 
-final class SsrBluetoothUUID implements BluetoothUUID {
-  factory SsrBluetoothUUID() {
+final class SsrBluetoothuuid implements BluetoothUUID {
+  factory SsrBluetoothuuid() {
     throw UnsupportedWebApiError('BluetoothUUID constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrBroadcastChannel implements BroadcastChannel {
-  factory SsrBroadcastChannel(String name) {
+final class SsrBroadcastchannel implements BroadcastChannel {
+  factory SsrBroadcastchannel(String name) {
     throw UnsupportedWebApiError('BroadcastChannel constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -1305,8 +1305,8 @@ final class SsrBroadcastChannel implements BroadcastChannel {
   );
 }
 
-final class SsrByteLengthQueuingStrategy implements ByteLengthQueuingStrategy {
-  factory SsrByteLengthQueuingStrategy(QueuingStrategyInit init) {
+final class SsrBytelengthqueuingstrategy implements ByteLengthQueuingStrategy {
+  factory SsrBytelengthqueuingstrategy(QueuingStrategyInit init) {
     throw UnsupportedWebApiError('ByteLengthQueuingStrategy constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -1321,16 +1321,16 @@ final class SsrByteLengthQueuingStrategy implements ByteLengthQueuingStrategy {
   );
 }
 
-final class SsrCDATASection implements CDATASection {
-  factory SsrCDATASection() {
+final class SsrCdatasection implements CDATASection {
+  factory SsrCdatasection() {
     throw UnsupportedWebApiError('CDATASection constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrCSPViolationReportBody implements CSPViolationReportBody {
-  factory SsrCSPViolationReportBody() {
+final class SsrCspviolationreportbody implements CSPViolationReportBody {
+  factory SsrCspviolationreportbody() {
     throw UnsupportedWebApiError('CSPViolationReportBody constructor'
       , exposed: 'Window'
     );
@@ -1381,8 +1381,8 @@ final class SsrCSPViolationReportBody implements CSPViolationReportBody {
   );
 }
 
-final class SsrCSSAnimation implements CSSAnimation {
-  factory SsrCSSAnimation() {
+final class SsrCssanimation implements CSSAnimation {
+  factory SsrCssanimation() {
     throw UnsupportedWebApiError('CSSAnimation constructor'
       , exposed: 'Window'
     );
@@ -1393,8 +1393,8 @@ final class SsrCSSAnimation implements CSSAnimation {
   );
 }
 
-final class SsrCSSConditionRule implements CSSConditionRule {
-  factory SsrCSSConditionRule() {
+final class SsrCssconditionrule implements CSSConditionRule {
+  factory SsrCssconditionrule() {
     throw UnsupportedWebApiError('CSSConditionRule constructor'
       , exposed: 'Window'
     );
@@ -1405,8 +1405,8 @@ final class SsrCSSConditionRule implements CSSConditionRule {
   );
 }
 
-final class SsrCSSContainerRule implements CSSContainerRule {
-  factory SsrCSSContainerRule() {
+final class SsrCsscontainerrule implements CSSContainerRule {
+  factory SsrCsscontainerrule() {
     throw UnsupportedWebApiError('CSSContainerRule constructor'
       , exposed: 'Window'
     );
@@ -1421,8 +1421,8 @@ final class SsrCSSContainerRule implements CSSContainerRule {
   );
 }
 
-final class SsrCSSCounterStyleRule implements CSSCounterStyleRule {
-  factory SsrCSSCounterStyleRule() {
+final class SsrCsscounterstylerule implements CSSCounterStyleRule {
+  factory SsrCsscounterstylerule() {
     throw UnsupportedWebApiError('CSSCounterStyleRule constructor'
       , exposed: 'Window'
     );
@@ -1517,8 +1517,8 @@ final class SsrCSSCounterStyleRule implements CSSCounterStyleRule {
   );
 }
 
-final class SsrCSSFontFaceRule implements CSSFontFaceRule {
-  factory SsrCSSFontFaceRule() {
+final class SsrCssfontfacerule implements CSSFontFaceRule {
+  factory SsrCssfontfacerule() {
     throw UnsupportedWebApiError('CSSFontFaceRule constructor'
       , exposed: 'Window'
     );
@@ -1529,8 +1529,8 @@ final class SsrCSSFontFaceRule implements CSSFontFaceRule {
   );
 }
 
-final class SsrCSSFontFeatureValuesRule implements CSSFontFeatureValuesRule {
-  factory SsrCSSFontFeatureValuesRule() {
+final class SsrCssfontfeaturevaluesrule implements CSSFontFeatureValuesRule {
+  factory SsrCssfontfeaturevaluesrule() {
     throw UnsupportedWebApiError('CSSFontFeatureValuesRule constructor'
       , exposed: 'Window'
     );
@@ -1545,8 +1545,8 @@ final class SsrCSSFontFeatureValuesRule implements CSSFontFeatureValuesRule {
   );
 }
 
-final class SsrCSSFontPaletteValuesRule implements CSSFontPaletteValuesRule {
-  factory SsrCSSFontPaletteValuesRule() {
+final class SsrCssfontpalettevaluesrule implements CSSFontPaletteValuesRule {
+  factory SsrCssfontpalettevaluesrule() {
     throw UnsupportedWebApiError('CSSFontPaletteValuesRule constructor'
       , exposed: 'Window'
     );
@@ -1569,8 +1569,8 @@ final class SsrCSSFontPaletteValuesRule implements CSSFontPaletteValuesRule {
   );
 }
 
-final class SsrCSSGroupingRule implements CSSGroupingRule {
-  factory SsrCSSGroupingRule() {
+final class SsrCssgroupingrule implements CSSGroupingRule {
+  factory SsrCssgroupingrule() {
     throw UnsupportedWebApiError('CSSGroupingRule constructor'
       , exposed: 'Window'
     );
@@ -1589,16 +1589,16 @@ final class SsrCSSGroupingRule implements CSSGroupingRule {
   );
 }
 
-final class SsrCSSImageValue implements CSSImageValue {
-  factory SsrCSSImageValue() {
+final class SsrCssimagevalue implements CSSImageValue {
+  factory SsrCssimagevalue() {
     throw UnsupportedWebApiError('CSSImageValue constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
   }
 }
 
-final class SsrCSSImportRule implements CSSImportRule {
-  factory SsrCSSImportRule() {
+final class SsrCssimportrule implements CSSImportRule {
+  factory SsrCssimportrule() {
     throw UnsupportedWebApiError('CSSImportRule constructor'
       , exposed: 'Window'
     );
@@ -1625,8 +1625,8 @@ final class SsrCSSImportRule implements CSSImportRule {
   );
 }
 
-final class SsrCSSKeyframeRule implements CSSKeyframeRule {
-  factory SsrCSSKeyframeRule() {
+final class SsrCsskeyframerule implements CSSKeyframeRule {
+  factory SsrCsskeyframerule() {
     throw UnsupportedWebApiError('CSSKeyframeRule constructor'
       , exposed: 'Window'
     );
@@ -1645,8 +1645,8 @@ final class SsrCSSKeyframeRule implements CSSKeyframeRule {
   );
 }
 
-final class SsrCSSKeyframesRule implements CSSKeyframesRule {
-  factory SsrCSSKeyframesRule() {
+final class SsrCsskeyframesrule implements CSSKeyframesRule {
+  factory SsrCsskeyframesrule() {
     throw UnsupportedWebApiError('CSSKeyframesRule constructor'
       , exposed: 'Window'
     );
@@ -1681,8 +1681,8 @@ final class SsrCSSKeyframesRule implements CSSKeyframesRule {
   );
 }
 
-final class SsrCSSKeywordValue implements CSSKeywordValue {
-  factory SsrCSSKeywordValue(String value) {
+final class SsrCsskeywordvalue implements CSSKeywordValue {
+  factory SsrCsskeywordvalue(String value) {
     throw UnsupportedWebApiError('CSSKeywordValue constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1697,8 +1697,8 @@ final class SsrCSSKeywordValue implements CSSKeywordValue {
   );
 }
 
-final class SsrCSSLayerBlockRule implements CSSLayerBlockRule {
-  factory SsrCSSLayerBlockRule() {
+final class SsrCsslayerblockrule implements CSSLayerBlockRule {
+  factory SsrCsslayerblockrule() {
     throw UnsupportedWebApiError('CSSLayerBlockRule constructor'
       , exposed: 'Window'
     );
@@ -1709,8 +1709,8 @@ final class SsrCSSLayerBlockRule implements CSSLayerBlockRule {
   );
 }
 
-final class SsrCSSLayerStatementRule implements CSSLayerStatementRule {
-  factory SsrCSSLayerStatementRule() {
+final class SsrCsslayerstatementrule implements CSSLayerStatementRule {
+  factory SsrCsslayerstatementrule() {
     throw UnsupportedWebApiError('CSSLayerStatementRule constructor'
       , exposed: 'Window'
     );
@@ -1721,8 +1721,8 @@ final class SsrCSSLayerStatementRule implements CSSLayerStatementRule {
   );
 }
 
-final class SsrCSSMathClamp implements CSSMathClamp {
-  factory SsrCSSMathClamp(CSSNumberish lower, CSSNumberish value, CSSNumberish upper) {
+final class SsrCssmathclamp implements CSSMathClamp {
+  factory SsrCssmathclamp(CSSNumberish lower, CSSNumberish value, CSSNumberish upper) {
     throw UnsupportedWebApiError('CSSMathClamp constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1741,8 +1741,8 @@ final class SsrCSSMathClamp implements CSSMathClamp {
   );
 }
 
-final class SsrCSSMathInvert implements CSSMathInvert {
-  factory SsrCSSMathInvert(CSSNumberish arg) {
+final class SsrCssmathinvert implements CSSMathInvert {
+  factory SsrCssmathinvert(CSSNumberish arg) {
     throw UnsupportedWebApiError('CSSMathInvert constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1753,8 +1753,8 @@ final class SsrCSSMathInvert implements CSSMathInvert {
   );
 }
 
-final class SsrCSSMathMax implements CSSMathMax {
-  factory SsrCSSMathMax(CSSNumberish args) {
+final class SsrCssmathmax implements CSSMathMax {
+  factory SsrCssmathmax(CSSNumberish args) {
     throw UnsupportedWebApiError('CSSMathMax constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1765,8 +1765,8 @@ final class SsrCSSMathMax implements CSSMathMax {
   );
 }
 
-final class SsrCSSMathMin implements CSSMathMin {
-  factory SsrCSSMathMin(CSSNumberish args) {
+final class SsrCssmathmin implements CSSMathMin {
+  factory SsrCssmathmin(CSSNumberish args) {
     throw UnsupportedWebApiError('CSSMathMin constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1777,8 +1777,8 @@ final class SsrCSSMathMin implements CSSMathMin {
   );
 }
 
-final class SsrCSSMathNegate implements CSSMathNegate {
-  factory SsrCSSMathNegate(CSSNumberish arg) {
+final class SsrCssmathnegate implements CSSMathNegate {
+  factory SsrCssmathnegate(CSSNumberish arg) {
     throw UnsupportedWebApiError('CSSMathNegate constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1789,8 +1789,8 @@ final class SsrCSSMathNegate implements CSSMathNegate {
   );
 }
 
-final class SsrCSSMathProduct implements CSSMathProduct {
-  factory SsrCSSMathProduct(CSSNumberish args) {
+final class SsrCssmathproduct implements CSSMathProduct {
+  factory SsrCssmathproduct(CSSNumberish args) {
     throw UnsupportedWebApiError('CSSMathProduct constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1801,8 +1801,8 @@ final class SsrCSSMathProduct implements CSSMathProduct {
   );
 }
 
-final class SsrCSSMathSum implements CSSMathSum {
-  factory SsrCSSMathSum(CSSNumberish args) {
+final class SsrCssmathsum implements CSSMathSum {
+  factory SsrCssmathsum(CSSNumberish args) {
     throw UnsupportedWebApiError('CSSMathSum constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1813,8 +1813,8 @@ final class SsrCSSMathSum implements CSSMathSum {
   );
 }
 
-final class SsrCSSMathValue implements CSSMathValue {
-  factory SsrCSSMathValue() {
+final class SsrCssmathvalue implements CSSMathValue {
+  factory SsrCssmathvalue() {
     throw UnsupportedWebApiError('CSSMathValue constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1825,8 +1825,8 @@ final class SsrCSSMathValue implements CSSMathValue {
   );
 }
 
-final class SsrCSSMatrixComponent implements CSSMatrixComponent {
-  factory SsrCSSMatrixComponent(DOMMatrixReadOnly matrix, [CSSMatrixComponentOptions? options]) {
+final class SsrCssmatrixcomponent implements CSSMatrixComponent {
+  factory SsrCssmatrixcomponent(DOMMatrixReadOnly matrix, [CSSMatrixComponentOptions? options]) {
     throw UnsupportedWebApiError('CSSMatrixComponent constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1841,8 +1841,8 @@ final class SsrCSSMatrixComponent implements CSSMatrixComponent {
   );
 }
 
-final class SsrCSSMediaRule implements CSSMediaRule {
-  factory SsrCSSMediaRule() {
+final class SsrCssmediarule implements CSSMediaRule {
+  factory SsrCssmediarule() {
     throw UnsupportedWebApiError('CSSMediaRule constructor'
       , exposed: 'Window'
     );
@@ -1853,8 +1853,8 @@ final class SsrCSSMediaRule implements CSSMediaRule {
   );
 }
 
-final class SsrCSSNamespaceRule implements CSSNamespaceRule {
-  factory SsrCSSNamespaceRule() {
+final class SsrCssnamespacerule implements CSSNamespaceRule {
+  factory SsrCssnamespacerule() {
     throw UnsupportedWebApiError('CSSNamespaceRule constructor'
       , exposed: 'Window'
     );
@@ -1869,8 +1869,8 @@ final class SsrCSSNamespaceRule implements CSSNamespaceRule {
   );
 }
 
-final class SsrCSSNumericArray implements CSSNumericArray {
-  factory SsrCSSNumericArray() {
+final class SsrCssnumericarray implements CSSNumericArray {
+  factory SsrCssnumericarray() {
     throw UnsupportedWebApiError('CSSNumericArray constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1881,8 +1881,8 @@ final class SsrCSSNumericArray implements CSSNumericArray {
   );
 }
 
-final class SsrCSSNumericValue implements CSSNumericValue {
-  factory SsrCSSNumericValue() {
+final class SsrCssnumericvalue implements CSSNumericValue {
+  factory SsrCssnumericvalue() {
     throw UnsupportedWebApiError('CSSNumericValue constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1929,8 +1929,8 @@ final class SsrCSSNumericValue implements CSSNumericValue {
   );
 }
 
-final class SsrCSSPageRule implements CSSPageRule {
-  factory SsrCSSPageRule() {
+final class SsrCsspagerule implements CSSPageRule {
+  factory SsrCsspagerule() {
     throw UnsupportedWebApiError('CSSPageRule constructor'
       , exposed: 'Window'
     );
@@ -1949,8 +1949,8 @@ final class SsrCSSPageRule implements CSSPageRule {
   );
 }
 
-final class SsrCSSPerspective implements CSSPerspective {
-  factory SsrCSSPerspective(CSSPerspectiveValue length) {
+final class SsrCssperspective implements CSSPerspective {
+  factory SsrCssperspective(CSSPerspectiveValue length) {
     throw UnsupportedWebApiError('CSSPerspective constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -1965,8 +1965,8 @@ final class SsrCSSPerspective implements CSSPerspective {
   );
 }
 
-final class SsrCSSPropertyRule implements CSSPropertyRule {
-  factory SsrCSSPropertyRule() {
+final class SsrCsspropertyrule implements CSSPropertyRule {
+  factory SsrCsspropertyrule() {
     throw UnsupportedWebApiError('CSSPropertyRule constructor'
       , exposed: 'Window'
     );
@@ -1989,13 +1989,13 @@ final class SsrCSSPropertyRule implements CSSPropertyRule {
   );
 }
 
-final class SsrCSSRotate implements CSSRotate {
-  factory SsrCSSRotate(CSSNumericValue angle) {
+final class SsrCssrotate implements CSSRotate {
+  factory SsrCssrotate(CSSNumericValue angle) {
     throw UnsupportedWebApiError('CSSRotate constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
   }
-  factory SsrCSSRotate.named1(CSSNumberish x, CSSNumberish y, CSSNumberish z, CSSNumericValue angle) {
+  factory SsrCssrotate.named1(CSSNumberish x, CSSNumberish y, CSSNumberish z, CSSNumericValue angle) {
     throw UnsupportedWebApiError('CSSRotate constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -2034,8 +2034,8 @@ final class SsrCSSRotate implements CSSRotate {
   );
 }
 
-final class SsrCSSRule implements CSSRule {
-  factory SsrCSSRule() {
+final class SsrCssrule implements CSSRule {
+  factory SsrCssrule() {
     throw UnsupportedWebApiError('CSSRule constructor'
       , exposed: 'Window'
     );
@@ -2062,8 +2062,8 @@ final class SsrCSSRule implements CSSRule {
   );
 }
 
-final class SsrCSSRuleList implements CSSRuleList {
-  factory SsrCSSRuleList() {
+final class SsrCssrulelist implements CSSRuleList {
+  factory SsrCssrulelist() {
     throw UnsupportedWebApiError('CSSRuleList constructor'
       , exposed: 'Window'
     );
@@ -2078,8 +2078,8 @@ final class SsrCSSRuleList implements CSSRuleList {
   );
 }
 
-final class SsrCSSScale implements CSSScale {
-  factory SsrCSSScale(CSSNumberish x, CSSNumberish y, [CSSNumberish? z]) {
+final class SsrCssscale implements CSSScale {
+  factory SsrCssscale(CSSNumberish x, CSSNumberish y, [CSSNumberish? z]) {
     throw UnsupportedWebApiError('CSSScale constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -2110,8 +2110,8 @@ final class SsrCSSScale implements CSSScale {
   );
 }
 
-final class SsrCSSScopeRule implements CSSScopeRule {
-  factory SsrCSSScopeRule() {
+final class SsrCssscoperule implements CSSScopeRule {
+  factory SsrCssscoperule() {
     throw UnsupportedWebApiError('CSSScopeRule constructor'
       , exposed: 'Window'
     );
@@ -2126,8 +2126,8 @@ final class SsrCSSScopeRule implements CSSScopeRule {
   );
 }
 
-final class SsrCSSSkew implements CSSSkew {
-  factory SsrCSSSkew(CSSNumericValue ax, CSSNumericValue ay) {
+final class SsrCssskew implements CSSSkew {
+  factory SsrCssskew(CSSNumericValue ax, CSSNumericValue ay) {
     throw UnsupportedWebApiError('CSSSkew constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -2150,8 +2150,8 @@ final class SsrCSSSkew implements CSSSkew {
   );
 }
 
-final class SsrCSSSkewX implements CSSSkewX {
-  factory SsrCSSSkewX(CSSNumericValue ax) {
+final class SsrCssskewx implements CSSSkewX {
+  factory SsrCssskewx(CSSNumericValue ax) {
     throw UnsupportedWebApiError('CSSSkewX constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -2166,8 +2166,8 @@ final class SsrCSSSkewX implements CSSSkewX {
   );
 }
 
-final class SsrCSSSkewY implements CSSSkewY {
-  factory SsrCSSSkewY(CSSNumericValue ay) {
+final class SsrCssskewy implements CSSSkewY {
+  factory SsrCssskewy(CSSNumericValue ay) {
     throw UnsupportedWebApiError('CSSSkewY constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -2182,16 +2182,16 @@ final class SsrCSSSkewY implements CSSSkewY {
   );
 }
 
-final class SsrCSSStartingStyleRule implements CSSStartingStyleRule {
-  factory SsrCSSStartingStyleRule() {
+final class SsrCssstartingstylerule implements CSSStartingStyleRule {
+  factory SsrCssstartingstylerule() {
     throw UnsupportedWebApiError('CSSStartingStyleRule constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrCSSStyleDeclaration implements CSSStyleDeclaration {
-  factory SsrCSSStyleDeclaration() {
+final class SsrCssstyledeclaration implements CSSStyleDeclaration {
+  factory SsrCssstyledeclaration() {
     throw UnsupportedWebApiError('CSSStyleDeclaration constructor'
       , exposed: 'Window'
     );
@@ -2234,8 +2234,8 @@ final class SsrCSSStyleDeclaration implements CSSStyleDeclaration {
   );
 }
 
-final class SsrCSSStyleRule implements CSSStyleRule {
-  factory SsrCSSStyleRule() {
+final class SsrCssstylerule implements CSSStyleRule {
+  factory SsrCssstylerule() {
     throw UnsupportedWebApiError('CSSStyleRule constructor'
       , exposed: 'Window'
     );
@@ -2258,8 +2258,8 @@ final class SsrCSSStyleRule implements CSSStyleRule {
   );
 }
 
-final class SsrCSSStyleSheet implements CSSStyleSheet {
-  factory SsrCSSStyleSheet([CSSStyleSheetInit? options]) {
+final class SsrCssstylesheet implements CSSStyleSheet {
+  factory SsrCssstylesheet([CSSStyleSheetInit? options]) {
     throw UnsupportedWebApiError('CSSStyleSheet constructor'
       , exposed: 'Window'
     );
@@ -2302,24 +2302,24 @@ final class SsrCSSStyleSheet implements CSSStyleSheet {
   );
 }
 
-final class SsrCSSStyleValue implements CSSStyleValue {
-  factory SsrCSSStyleValue() {
+final class SsrCssstylevalue implements CSSStyleValue {
+  factory SsrCssstylevalue() {
     throw UnsupportedWebApiError('CSSStyleValue constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
   }
 }
 
-final class SsrCSSSupportsRule implements CSSSupportsRule {
-  factory SsrCSSSupportsRule() {
+final class SsrCsssupportsrule implements CSSSupportsRule {
+  factory SsrCsssupportsrule() {
     throw UnsupportedWebApiError('CSSSupportsRule constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrCSSTransformComponent implements CSSTransformComponent {
-  factory SsrCSSTransformComponent() {
+final class SsrCsstransformcomponent implements CSSTransformComponent {
+  factory SsrCsstransformcomponent() {
     throw UnsupportedWebApiError('CSSTransformComponent constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -2338,8 +2338,8 @@ final class SsrCSSTransformComponent implements CSSTransformComponent {
   );
 }
 
-final class SsrCSSTransformValue implements CSSTransformValue {
-  factory SsrCSSTransformValue(List<CSSTransformComponent> transforms) {
+final class SsrCsstransformvalue implements CSSTransformValue {
+  factory SsrCsstransformvalue(List<CSSTransformComponent> transforms) {
     throw UnsupportedWebApiError('CSSTransformValue constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -2358,8 +2358,8 @@ final class SsrCSSTransformValue implements CSSTransformValue {
   );
 }
 
-final class SsrCSSTransition implements CSSTransition {
-  factory SsrCSSTransition() {
+final class SsrCsstransition implements CSSTransition {
+  factory SsrCsstransition() {
     throw UnsupportedWebApiError('CSSTransition constructor'
       , exposed: 'Window'
     );
@@ -2370,8 +2370,8 @@ final class SsrCSSTransition implements CSSTransition {
   );
 }
 
-final class SsrCSSTranslate implements CSSTranslate {
-  factory SsrCSSTranslate(CSSNumericValue x, CSSNumericValue y, [CSSNumericValue? z]) {
+final class SsrCsstranslate implements CSSTranslate {
+  factory SsrCsstranslate(CSSNumericValue x, CSSNumericValue y, [CSSNumericValue? z]) {
     throw UnsupportedWebApiError('CSSTranslate constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -2402,8 +2402,8 @@ final class SsrCSSTranslate implements CSSTranslate {
   );
 }
 
-final class SsrCSSUnitValue implements CSSUnitValue {
-  factory SsrCSSUnitValue(double value, String unit) {
+final class SsrCssunitvalue implements CSSUnitValue {
+  factory SsrCssunitvalue(double value, String unit) {
     throw UnsupportedWebApiError('CSSUnitValue constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -2422,8 +2422,8 @@ final class SsrCSSUnitValue implements CSSUnitValue {
   );
 }
 
-final class SsrCSSUnparsedValue implements CSSUnparsedValue {
-  factory SsrCSSUnparsedValue(List<CSSUnparsedSegment> members) {
+final class SsrCssunparsedvalue implements CSSUnparsedValue {
+  factory SsrCssunparsedvalue(List<CSSUnparsedSegment> members) {
     throw UnsupportedWebApiError('CSSUnparsedValue constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -2434,8 +2434,8 @@ final class SsrCSSUnparsedValue implements CSSUnparsedValue {
   );
 }
 
-final class SsrCSSVariableReferenceValue implements CSSVariableReferenceValue {
-  factory SsrCSSVariableReferenceValue(String variable, [CSSUnparsedValue? fallback]) {
+final class SsrCssvariablereferencevalue implements CSSVariableReferenceValue {
+  factory SsrCssvariablereferencevalue(String variable, [CSSUnparsedValue? fallback]) {
     throw UnsupportedWebApiError('CSSVariableReferenceValue constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -2490,8 +2490,8 @@ final class SsrCache implements Cache {
   );
 }
 
-final class SsrCacheStorage implements CacheStorage {
-  factory SsrCacheStorage() {
+final class SsrCachestorage implements CacheStorage {
+  factory SsrCachestorage() {
     throw UnsupportedWebApiError('CacheStorage constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -2518,8 +2518,8 @@ final class SsrCacheStorage implements CacheStorage {
   );
 }
 
-final class SsrCanvasCaptureMediaStreamTrack implements CanvasCaptureMediaStreamTrack {
-  factory SsrCanvasCaptureMediaStreamTrack() {
+final class SsrCanvascapturemediastreamtrack implements CanvasCaptureMediaStreamTrack {
+  factory SsrCanvascapturemediastreamtrack() {
     throw UnsupportedWebApiError('CanvasCaptureMediaStreamTrack constructor'
       , exposed: 'Window'
     );
@@ -2534,8 +2534,8 @@ final class SsrCanvasCaptureMediaStreamTrack implements CanvasCaptureMediaStream
   );
 }
 
-final class SsrCanvasGradient implements CanvasGradient {
-  factory SsrCanvasGradient() {
+final class SsrCanvasgradient implements CanvasGradient {
+  factory SsrCanvasgradient() {
     throw UnsupportedWebApiError('CanvasGradient constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -2546,8 +2546,8 @@ final class SsrCanvasGradient implements CanvasGradient {
   );
 }
 
-final class SsrCanvasPattern implements CanvasPattern {
-  factory SsrCanvasPattern() {
+final class SsrCanvaspattern implements CanvasPattern {
+  factory SsrCanvaspattern() {
     throw UnsupportedWebApiError('CanvasPattern constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -2558,8 +2558,8 @@ final class SsrCanvasPattern implements CanvasPattern {
   );
 }
 
-final class SsrCanvasRenderingContext2D implements CanvasRenderingContext2D {
-  factory SsrCanvasRenderingContext2D() {
+final class SsrCanvasrenderingcontext2d implements CanvasRenderingContext2D {
+  factory SsrCanvasrenderingcontext2d() {
     throw UnsupportedWebApiError('CanvasRenderingContext2D constructor'
       , exposed: 'Window'
     );
@@ -2962,24 +2962,24 @@ final class SsrCanvasRenderingContext2D implements CanvasRenderingContext2D {
   );
 }
 
-final class SsrChannelMergerNode implements ChannelMergerNode {
-  factory SsrChannelMergerNode(BaseAudioContext context, [ChannelMergerOptions? options]) {
+final class SsrChannelmergernode implements ChannelMergerNode {
+  factory SsrChannelmergernode(BaseAudioContext context, [ChannelMergerOptions? options]) {
     throw UnsupportedWebApiError('ChannelMergerNode constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrChannelSplitterNode implements ChannelSplitterNode {
-  factory SsrChannelSplitterNode(BaseAudioContext context, [ChannelSplitterOptions? options]) {
+final class SsrChannelsplitternode implements ChannelSplitterNode {
+  factory SsrChannelsplitternode(BaseAudioContext context, [ChannelSplitterOptions? options]) {
     throw UnsupportedWebApiError('ChannelSplitterNode constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrCharacterData implements CharacterData {
-  factory SsrCharacterData() {
+final class SsrCharacterdata implements CharacterData {
+  factory SsrCharacterdata() {
     throw UnsupportedWebApiError('CharacterData constructor'
       , exposed: 'Window'
     );
@@ -3118,8 +3118,8 @@ final class SsrClipboard implements Clipboard {
   );
 }
 
-final class SsrClipboardEvent implements ClipboardEvent {
-  factory SsrClipboardEvent(String type, [ClipboardEventInit? eventInitDict]) {
+final class SsrClipboardevent implements ClipboardEvent {
+  factory SsrClipboardevent(String type, [ClipboardEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ClipboardEvent constructor'
       , exposed: 'Window'
     );
@@ -3130,8 +3130,8 @@ final class SsrClipboardEvent implements ClipboardEvent {
   );
 }
 
-final class SsrClipboardItem implements ClipboardItem {
-  factory SsrClipboardItem(Map<String, ClipboardItemData> items, [ClipboardItemOptions? options]) {
+final class SsrClipboarditem implements ClipboardItem {
+  factory SsrClipboarditem(Map<String, ClipboardItemData> items, [ClipboardItemOptions? options]) {
     throw UnsupportedWebApiError('ClipboardItem constructor'
       , exposed: 'Window'
     );
@@ -3150,8 +3150,8 @@ final class SsrClipboardItem implements ClipboardItem {
   );
 }
 
-final class SsrCloseEvent implements CloseEvent {
-  factory SsrCloseEvent(String type, [CloseEventInit? eventInitDict]) {
+final class SsrCloseevent implements CloseEvent {
+  factory SsrCloseevent(String type, [CloseEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('CloseEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -3178,8 +3178,8 @@ final class SsrComment implements Comment {
   }
 }
 
-final class SsrCompositionEvent implements CompositionEvent {
-  factory SsrCompositionEvent(String type, [CompositionEventInit? eventInitDict]) {
+final class SsrCompositionevent implements CompositionEvent {
+  factory SsrCompositionevent(String type, [CompositionEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('CompositionEvent constructor'
       , exposed: 'Window'
     );
@@ -3194,8 +3194,8 @@ final class SsrCompositionEvent implements CompositionEvent {
   );
 }
 
-final class SsrCompressionStream implements CompressionStream {
-  factory SsrCompressionStream(CompressionFormat format) {
+final class SsrCompressionstream implements CompressionStream {
+  factory SsrCompressionstream(CompressionFormat format) {
     throw UnsupportedWebApiError('CompressionStream constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -3210,8 +3210,8 @@ final class SsrCompressionStream implements CompressionStream {
   );
 }
 
-final class SsrConstantSourceNode implements ConstantSourceNode {
-  factory SsrConstantSourceNode(BaseAudioContext context, [ConstantSourceOptions? options]) {
+final class SsrConstantsourcenode implements ConstantSourceNode {
+  factory SsrConstantsourcenode(BaseAudioContext context, [ConstantSourceOptions? options]) {
     throw UnsupportedWebApiError('ConstantSourceNode constructor'
       , exposed: 'Window'
     );
@@ -3222,8 +3222,8 @@ final class SsrConstantSourceNode implements ConstantSourceNode {
   );
 }
 
-final class SsrContentVisibilityAutoStateChangeEvent implements ContentVisibilityAutoStateChangeEvent {
-  factory SsrContentVisibilityAutoStateChangeEvent(String type, [ContentVisibilityAutoStateChangeEventInit? eventInitDict]) {
+final class SsrContentvisibilityautostatechangeevent implements ContentVisibilityAutoStateChangeEvent {
+  factory SsrContentvisibilityautostatechangeevent(String type, [ContentVisibilityAutoStateChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ContentVisibilityAutoStateChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -3234,8 +3234,8 @@ final class SsrContentVisibilityAutoStateChangeEvent implements ContentVisibilit
   );
 }
 
-final class SsrConvolverNode implements ConvolverNode {
-  factory SsrConvolverNode(BaseAudioContext context, [ConvolverOptions? options]) {
+final class SsrConvolvernode implements ConvolverNode {
+  factory SsrConvolvernode(BaseAudioContext context, [ConvolverOptions? options]) {
     throw UnsupportedWebApiError('ConvolverNode constructor'
       , exposed: 'Window'
     );
@@ -3258,8 +3258,8 @@ final class SsrConvolverNode implements ConvolverNode {
   );
 }
 
-final class SsrCookieChangeEvent implements CookieChangeEvent {
-  factory SsrCookieChangeEvent(String type, [CookieChangeEventInit? eventInitDict]) {
+final class SsrCookiechangeevent implements CookieChangeEvent {
+  factory SsrCookiechangeevent(String type, [CookieChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('CookieChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -3274,8 +3274,8 @@ final class SsrCookieChangeEvent implements CookieChangeEvent {
   );
 }
 
-final class SsrCookieStore implements CookieStore {
-  factory SsrCookieStore() {
+final class SsrCookiestore implements CookieStore {
+  factory SsrCookiestore() {
     throw UnsupportedWebApiError('CookieStore constructor'
       , exposed: '[{value: ServiceWorker}, {value: Window}]'
     );
@@ -3306,8 +3306,8 @@ final class SsrCookieStore implements CookieStore {
   );
 }
 
-final class SsrCookieStoreManager implements CookieStoreManager {
-  factory SsrCookieStoreManager() {
+final class SsrCookiestoremanager implements CookieStoreManager {
+  factory SsrCookiestoremanager() {
     throw UnsupportedWebApiError('CookieStoreManager constructor'
       , exposed: '[{value: ServiceWorker}, {value: Window}]'
     );
@@ -3326,8 +3326,8 @@ final class SsrCookieStoreManager implements CookieStoreManager {
   );
 }
 
-final class SsrCountQueuingStrategy implements CountQueuingStrategy {
-  factory SsrCountQueuingStrategy(QueuingStrategyInit init) {
+final class SsrCountqueuingstrategy implements CountQueuingStrategy {
+  factory SsrCountqueuingstrategy(QueuingStrategyInit init) {
     throw UnsupportedWebApiError('CountQueuingStrategy constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -3358,8 +3358,8 @@ final class SsrCredential implements Credential {
   );
 }
 
-final class SsrCredentialsContainer implements CredentialsContainer {
-  factory SsrCredentialsContainer() {
+final class SsrCredentialscontainer implements CredentialsContainer {
+  factory SsrCredentialscontainer() {
     throw UnsupportedWebApiError('CredentialsContainer constructor'
       , exposed: 'Window'
     );
@@ -3402,8 +3402,8 @@ final class SsrCrypto implements Crypto {
   );
 }
 
-final class SsrCryptoKey implements CryptoKey {
-  factory SsrCryptoKey() {
+final class SsrCryptokey implements CryptoKey {
+  factory SsrCryptokey() {
     throw UnsupportedWebApiError('CryptoKey constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -3426,8 +3426,8 @@ final class SsrCryptoKey implements CryptoKey {
   );
 }
 
-final class SsrCustomElementRegistry implements CustomElementRegistry {
-  factory SsrCustomElementRegistry() {
+final class SsrCustomelementregistry implements CustomElementRegistry {
+  factory SsrCustomelementregistry() {
     throw UnsupportedWebApiError('CustomElementRegistry constructor'
       , exposed: 'Window'
     );
@@ -3454,8 +3454,8 @@ final class SsrCustomElementRegistry implements CustomElementRegistry {
   );
 }
 
-final class SsrCustomEvent implements CustomEvent {
-  factory SsrCustomEvent(String type, [CustomEventInit? eventInitDict]) {
+final class SsrCustomevent implements CustomEvent {
+  factory SsrCustomevent(String type, [CustomEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('CustomEvent constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -3470,16 +3470,16 @@ final class SsrCustomEvent implements CustomEvent {
   );
 }
 
-final class SsrCustomStateSet implements CustomStateSet {
-  factory SsrCustomStateSet() {
+final class SsrCustomstateset implements CustomStateSet {
+  factory SsrCustomstateset() {
     throw UnsupportedWebApiError('CustomStateSet constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrDOMException implements DOMException {
-  factory SsrDOMException([String? message, String? name]) {
+final class SsrDomexception implements DOMException {
+  factory SsrDomexception([String? message, String? name]) {
     throw UnsupportedWebApiError('DOMException constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -3498,8 +3498,8 @@ final class SsrDOMException implements DOMException {
   );
 }
 
-final class SsrDOMImplementation implements DOMImplementation {
-  factory SsrDOMImplementation() {
+final class SsrDomimplementation implements DOMImplementation {
+  factory SsrDomimplementation() {
     throw UnsupportedWebApiError('DOMImplementation constructor'
       , exposed: 'Window'
     );
@@ -3522,8 +3522,8 @@ final class SsrDOMImplementation implements DOMImplementation {
   );
 }
 
-final class SsrDOMMatrix implements DOMMatrix {
-  factory SsrDOMMatrix([Object? init]) {
+final class SsrDommatrix implements DOMMatrix {
+  factory SsrDommatrix([Object? init]) {
     throw UnsupportedWebApiError('DOMMatrix constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -3754,8 +3754,8 @@ final class SsrDOMMatrix implements DOMMatrix {
   );
 }
 
-final class SsrDOMMatrixReadOnly implements DOMMatrixReadOnly {
-  factory SsrDOMMatrixReadOnly([Object? init]) {
+final class SsrDommatrixreadonly implements DOMMatrixReadOnly {
+  factory SsrDommatrixreadonly([Object? init]) {
     throw UnsupportedWebApiError('DOMMatrixReadOnly constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -3926,8 +3926,8 @@ final class SsrDOMMatrixReadOnly implements DOMMatrixReadOnly {
   );
 }
 
-final class SsrDOMParser implements DOMParser {
-  factory SsrDOMParser() {
+final class SsrDomparser implements DOMParser {
+  factory SsrDomparser() {
     throw UnsupportedWebApiError('DOMParser constructor'
       , exposed: 'Window'
     );
@@ -3938,8 +3938,8 @@ final class SsrDOMParser implements DOMParser {
   );
 }
 
-final class SsrDOMPoint implements DOMPoint {
-  factory SsrDOMPoint([double? x, double? y, double? z, double? w]) {
+final class SsrDompoint implements DOMPoint {
+  factory SsrDompoint([double? x, double? y, double? z, double? w]) {
     throw UnsupportedWebApiError('DOMPoint constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -3978,8 +3978,8 @@ final class SsrDOMPoint implements DOMPoint {
   );
 }
 
-final class SsrDOMPointReadOnly implements DOMPointReadOnly {
-  factory SsrDOMPointReadOnly([double? x, double? y, double? z, double? w]) {
+final class SsrDompointreadonly implements DOMPointReadOnly {
+  factory SsrDompointreadonly([double? x, double? y, double? z, double? w]) {
     throw UnsupportedWebApiError('DOMPointReadOnly constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -4010,8 +4010,8 @@ final class SsrDOMPointReadOnly implements DOMPointReadOnly {
   );
 }
 
-final class SsrDOMQuad implements DOMQuad {
-  factory SsrDOMQuad([DOMPointInit? p1, DOMPointInit? p2, DOMPointInit? p3, DOMPointInit? p4]) {
+final class SsrDomquad implements DOMQuad {
+  factory SsrDomquad([DOMPointInit? p1, DOMPointInit? p2, DOMPointInit? p3, DOMPointInit? p4]) {
     throw UnsupportedWebApiError('DOMQuad constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -4042,8 +4042,8 @@ final class SsrDOMQuad implements DOMQuad {
   );
 }
 
-final class SsrDOMRect implements DOMRect {
-  factory SsrDOMRect([double? x, double? y, double? width, double? height]) {
+final class SsrDomrect implements DOMRect {
+  factory SsrDomrect([double? x, double? y, double? width, double? height]) {
     throw UnsupportedWebApiError('DOMRect constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -4082,8 +4082,8 @@ final class SsrDOMRect implements DOMRect {
   );
 }
 
-final class SsrDOMRectList implements DOMRectList {
-  factory SsrDOMRectList() {
+final class SsrDomrectlist implements DOMRectList {
+  factory SsrDomrectlist() {
     throw UnsupportedWebApiError('DOMRectList constructor'
       , exposed: 'Window'
     );
@@ -4098,8 +4098,8 @@ final class SsrDOMRectList implements DOMRectList {
   );
 }
 
-final class SsrDOMRectReadOnly implements DOMRectReadOnly {
-  factory SsrDOMRectReadOnly([double? x, double? y, double? width, double? height]) {
+final class SsrDomrectreadonly implements DOMRectReadOnly {
+  factory SsrDomrectreadonly([double? x, double? y, double? width, double? height]) {
     throw UnsupportedWebApiError('DOMRectReadOnly constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -4142,8 +4142,8 @@ final class SsrDOMRectReadOnly implements DOMRectReadOnly {
   );
 }
 
-final class SsrDOMStringList implements DOMStringList {
-  factory SsrDOMStringList() {
+final class SsrDomstringlist implements DOMStringList {
+  factory SsrDomstringlist() {
     throw UnsupportedWebApiError('DOMStringList constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -4162,16 +4162,16 @@ final class SsrDOMStringList implements DOMStringList {
   );
 }
 
-final class SsrDOMStringMap implements DOMStringMap {
-  factory SsrDOMStringMap() {
+final class SsrDomstringmap implements DOMStringMap {
+  factory SsrDomstringmap() {
     throw UnsupportedWebApiError('DOMStringMap constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrDOMTokenList implements DOMTokenList {
-  factory SsrDOMTokenList() {
+final class SsrDomtokenlist implements DOMTokenList {
+  factory SsrDomtokenlist() {
     throw UnsupportedWebApiError('DOMTokenList constructor'
       , exposed: 'Window'
     );
@@ -4218,8 +4218,8 @@ final class SsrDOMTokenList implements DOMTokenList {
   );
 }
 
-final class SsrDataTransfer implements DataTransfer {
-  factory SsrDataTransfer() {
+final class SsrDatatransfer implements DataTransfer {
+  factory SsrDatatransfer() {
     throw UnsupportedWebApiError('DataTransfer constructor'
       , exposed: 'Window'
     );
@@ -4270,8 +4270,8 @@ final class SsrDataTransfer implements DataTransfer {
   );
 }
 
-final class SsrDataTransferItem implements DataTransferItem {
-  factory SsrDataTransferItem() {
+final class SsrDatatransferitem implements DataTransferItem {
+  factory SsrDatatransferitem() {
     throw UnsupportedWebApiError('DataTransferItem constructor'
       , exposed: 'Window'
     );
@@ -4298,8 +4298,8 @@ final class SsrDataTransferItem implements DataTransferItem {
   );
 }
 
-final class SsrDataTransferItemList implements DataTransferItemList {
-  factory SsrDataTransferItemList() {
+final class SsrDatatransferitemlist implements DataTransferItemList {
+  factory SsrDatatransferitemlist() {
     throw UnsupportedWebApiError('DataTransferItemList constructor'
       , exposed: 'Window'
     );
@@ -4322,8 +4322,8 @@ final class SsrDataTransferItemList implements DataTransferItemList {
   );
 }
 
-final class SsrDecompressionStream implements DecompressionStream {
-  factory SsrDecompressionStream(CompressionFormat format) {
+final class SsrDecompressionstream implements DecompressionStream {
+  factory SsrDecompressionstream(CompressionFormat format) {
     throw UnsupportedWebApiError('DecompressionStream constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -4338,8 +4338,8 @@ final class SsrDecompressionStream implements DecompressionStream {
   );
 }
 
-final class SsrDedicatedWorkerGlobalScope implements DedicatedWorkerGlobalScope {
-  factory SsrDedicatedWorkerGlobalScope() {
+final class SsrDedicatedworkerglobalscope implements DedicatedWorkerGlobalScope {
+  factory SsrDedicatedworkerglobalscope() {
     throw UnsupportedWebApiError('DedicatedWorkerGlobalScope constructor'
       , exposed: 'DedicatedWorker'
     );
@@ -4390,8 +4390,8 @@ final class SsrDedicatedWorkerGlobalScope implements DedicatedWorkerGlobalScope 
   );
 }
 
-final class SsrDelayNode implements DelayNode {
-  factory SsrDelayNode(BaseAudioContext context, [DelayOptions? options]) {
+final class SsrDelaynode implements DelayNode {
+  factory SsrDelaynode(BaseAudioContext context, [DelayOptions? options]) {
     throw UnsupportedWebApiError('DelayNode constructor'
       , exposed: 'Window'
     );
@@ -4402,8 +4402,8 @@ final class SsrDelayNode implements DelayNode {
   );
 }
 
-final class SsrDeviceMotionEvent implements DeviceMotionEvent {
-  factory SsrDeviceMotionEvent(String type, [DeviceMotionEventInit? eventInitDict]) {
+final class SsrDevicemotionevent implements DeviceMotionEvent {
+  factory SsrDevicemotionevent(String type, [DeviceMotionEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('DeviceMotionEvent constructor'
       , exposed: 'Window'
     );
@@ -4426,8 +4426,8 @@ final class SsrDeviceMotionEvent implements DeviceMotionEvent {
   );
 }
 
-final class SsrDeviceMotionEventAcceleration implements DeviceMotionEventAcceleration {
-  factory SsrDeviceMotionEventAcceleration() {
+final class SsrDevicemotioneventacceleration implements DeviceMotionEventAcceleration {
+  factory SsrDevicemotioneventacceleration() {
     throw UnsupportedWebApiError('DeviceMotionEventAcceleration constructor'
       , exposed: 'Window'
     );
@@ -4446,8 +4446,8 @@ final class SsrDeviceMotionEventAcceleration implements DeviceMotionEventAcceler
   );
 }
 
-final class SsrDeviceMotionEventRotationRate implements DeviceMotionEventRotationRate {
-  factory SsrDeviceMotionEventRotationRate() {
+final class SsrDevicemotioneventrotationrate implements DeviceMotionEventRotationRate {
+  factory SsrDevicemotioneventrotationrate() {
     throw UnsupportedWebApiError('DeviceMotionEventRotationRate constructor'
       , exposed: 'Window'
     );
@@ -4466,8 +4466,8 @@ final class SsrDeviceMotionEventRotationRate implements DeviceMotionEventRotatio
   );
 }
 
-final class SsrDeviceOrientationEvent implements DeviceOrientationEvent {
-  factory SsrDeviceOrientationEvent(String type, [DeviceOrientationEventInit? eventInitDict]) {
+final class SsrDeviceorientationevent implements DeviceOrientationEvent {
+  factory SsrDeviceorientationevent(String type, [DeviceOrientationEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('DeviceOrientationEvent constructor'
       , exposed: 'Window'
     );
@@ -5453,7 +5453,7 @@ final class SsrDocument implements Document {
       , exposed: 'Window'
   );
   @override
-  String get URL => throw UnsupportedWebApiError('Document.URL'
+  String get url => throw UnsupportedWebApiError('Document.URL'
       , exposed: 'Window'
   );
   @override
@@ -5862,8 +5862,8 @@ final class SsrDocument implements Document {
   );
 }
 
-final class SsrDocumentFragment implements DocumentFragment {
-  factory SsrDocumentFragment() {
+final class SsrDocumentfragment implements DocumentFragment {
+  factory SsrDocumentfragment() {
     throw UnsupportedWebApiError('DocumentFragment constructor'
       , exposed: 'Window'
     );
@@ -5910,16 +5910,16 @@ final class SsrDocumentFragment implements DocumentFragment {
   );
 }
 
-final class SsrDocumentTimeline implements DocumentTimeline {
-  factory SsrDocumentTimeline([DocumentTimelineOptions? options]) {
+final class SsrDocumenttimeline implements DocumentTimeline {
+  factory SsrDocumenttimeline([DocumentTimelineOptions? options]) {
     throw UnsupportedWebApiError('DocumentTimeline constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrDocumentType implements DocumentType {
-  factory SsrDocumentType() {
+final class SsrDocumenttype implements DocumentType {
+  factory SsrDocumenttype() {
     throw UnsupportedWebApiError('DocumentType constructor'
       , exposed: 'Window'
     );
@@ -5954,8 +5954,8 @@ final class SsrDocumentType implements DocumentType {
   );
 }
 
-final class SsrDragEvent implements DragEvent {
-  factory SsrDragEvent(String type, [DragEventInit? eventInitDict]) {
+final class SsrDragevent implements DragEvent {
+  factory SsrDragevent(String type, [DragEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('DragEvent constructor'
       , exposed: 'Window'
     );
@@ -5966,8 +5966,8 @@ final class SsrDragEvent implements DragEvent {
   );
 }
 
-final class SsrDynamicsCompressorNode implements DynamicsCompressorNode {
-  factory SsrDynamicsCompressorNode(BaseAudioContext context, [DynamicsCompressorOptions? options]) {
+final class SsrDynamicscompressornode implements DynamicsCompressorNode {
+  factory SsrDynamicscompressornode(BaseAudioContext context, [DynamicsCompressorOptions? options]) {
     throw UnsupportedWebApiError('DynamicsCompressorNode constructor'
       , exposed: 'Window'
     );
@@ -5998,32 +5998,32 @@ final class SsrDynamicsCompressorNode implements DynamicsCompressorNode {
   );
 }
 
-final class SsrEXT_blend_minmax implements EXT_blend_minmax {
-  factory SsrEXT_blend_minmax() {
+final class SsrExtBlendMinmax implements EXT_blend_minmax {
+  factory SsrExtBlendMinmax() {
     throw UnsupportedWebApiError('EXT_blend_minmax constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrEXT_color_buffer_float implements EXT_color_buffer_float {
-  factory SsrEXT_color_buffer_float() {
+final class SsrExtColorBufferFloat implements EXT_color_buffer_float {
+  factory SsrExtColorBufferFloat() {
     throw UnsupportedWebApiError('EXT_color_buffer_float constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrEXT_color_buffer_half_float implements EXT_color_buffer_half_float {
-  factory SsrEXT_color_buffer_half_float() {
+final class SsrExtColorBufferHalfFloat implements EXT_color_buffer_half_float {
+  factory SsrExtColorBufferHalfFloat() {
     throw UnsupportedWebApiError('EXT_color_buffer_half_float constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrEXT_disjoint_timer_query implements EXT_disjoint_timer_query {
-  factory SsrEXT_disjoint_timer_query() {
+final class SsrExtDisjointTimerQuery implements EXT_disjoint_timer_query {
+  factory SsrExtDisjointTimerQuery() {
     throw UnsupportedWebApiError('EXT_disjoint_timer_query constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -6062,8 +6062,8 @@ final class SsrEXT_disjoint_timer_query implements EXT_disjoint_timer_query {
   );
 }
 
-final class SsrEXT_disjoint_timer_query_webgl2 implements EXT_disjoint_timer_query_webgl2 {
-  factory SsrEXT_disjoint_timer_query_webgl2() {
+final class SsrExtDisjointTimerQueryWebgl2 implements EXT_disjoint_timer_query_webgl2 {
+  factory SsrExtDisjointTimerQueryWebgl2() {
     throw UnsupportedWebApiError('EXT_disjoint_timer_query_webgl2 constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -6074,64 +6074,64 @@ final class SsrEXT_disjoint_timer_query_webgl2 implements EXT_disjoint_timer_que
   );
 }
 
-final class SsrEXT_float_blend implements EXT_float_blend {
-  factory SsrEXT_float_blend() {
+final class SsrExtFloatBlend implements EXT_float_blend {
+  factory SsrExtFloatBlend() {
     throw UnsupportedWebApiError('EXT_float_blend constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrEXT_frag_depth implements EXT_frag_depth {
-  factory SsrEXT_frag_depth() {
+final class SsrExtFragDepth implements EXT_frag_depth {
+  factory SsrExtFragDepth() {
     throw UnsupportedWebApiError('EXT_frag_depth constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrEXT_sRGB implements EXT_sRGB {
-  factory SsrEXT_sRGB() {
+final class SsrExtSrgb implements EXT_sRGB {
+  factory SsrExtSrgb() {
     throw UnsupportedWebApiError('EXT_sRGB constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrEXT_shader_texture_lod implements EXT_shader_texture_lod {
-  factory SsrEXT_shader_texture_lod() {
+final class SsrExtShaderTextureLod implements EXT_shader_texture_lod {
+  factory SsrExtShaderTextureLod() {
     throw UnsupportedWebApiError('EXT_shader_texture_lod constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrEXT_texture_compression_bptc implements EXT_texture_compression_bptc {
-  factory SsrEXT_texture_compression_bptc() {
+final class SsrExtTextureCompressionBptc implements EXT_texture_compression_bptc {
+  factory SsrExtTextureCompressionBptc() {
     throw UnsupportedWebApiError('EXT_texture_compression_bptc constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrEXT_texture_compression_rgtc implements EXT_texture_compression_rgtc {
-  factory SsrEXT_texture_compression_rgtc() {
+final class SsrExtTextureCompressionRgtc implements EXT_texture_compression_rgtc {
+  factory SsrExtTextureCompressionRgtc() {
     throw UnsupportedWebApiError('EXT_texture_compression_rgtc constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrEXT_texture_filter_anisotropic implements EXT_texture_filter_anisotropic {
-  factory SsrEXT_texture_filter_anisotropic() {
+final class SsrExtTextureFilterAnisotropic implements EXT_texture_filter_anisotropic {
+  factory SsrExtTextureFilterAnisotropic() {
     throw UnsupportedWebApiError('EXT_texture_filter_anisotropic constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrEXT_texture_norm16 implements EXT_texture_norm16 {
-  factory SsrEXT_texture_norm16() {
+final class SsrExtTextureNorm16 implements EXT_texture_norm16 {
+  factory SsrExtTextureNorm16() {
     throw UnsupportedWebApiError('EXT_texture_norm16 constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -6938,8 +6938,8 @@ final class SsrElement implements Element {
   );
 }
 
-final class SsrElementInternals implements ElementInternals {
-  factory SsrElementInternals() {
+final class SsrElementinternals implements ElementInternals {
+  factory SsrElementinternals() {
     throw UnsupportedWebApiError('ElementInternals constructor'
       , exposed: 'Window'
     );
@@ -7398,8 +7398,8 @@ final class SsrElementInternals implements ElementInternals {
   );
 }
 
-final class SsrEncodedVideoChunk implements EncodedVideoChunk {
-  factory SsrEncodedVideoChunk(EncodedVideoChunkInit init) {
+final class SsrEncodedvideochunk implements EncodedVideoChunk {
+  factory SsrEncodedvideochunk(EncodedVideoChunkInit init) {
     throw UnsupportedWebApiError('EncodedVideoChunk constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
@@ -7426,8 +7426,8 @@ final class SsrEncodedVideoChunk implements EncodedVideoChunk {
   );
 }
 
-final class SsrErrorEvent implements ErrorEvent {
-  factory SsrErrorEvent(String type, [ErrorEventInit? eventInitDict]) {
+final class SsrErrorevent implements ErrorEvent {
+  factory SsrErrorevent(String type, [ErrorEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ErrorEvent constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -7542,16 +7542,16 @@ final class SsrEvent implements Event {
   );
 }
 
-final class SsrEventCounts implements EventCounts {
-  factory SsrEventCounts() {
+final class SsrEventcounts implements EventCounts {
+  factory SsrEventcounts() {
     throw UnsupportedWebApiError('EventCounts constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrEventSource implements EventSource {
-  factory SsrEventSource(String url, [EventSourceInit? eventSourceInitDict]) {
+final class SsrEventsource implements EventSource {
+  factory SsrEventsource(String url, [EventSourceInit? eventSourceInitDict]) {
     throw UnsupportedWebApiError('EventSource constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -7598,8 +7598,8 @@ final class SsrEventSource implements EventSource {
   );
 }
 
-final class SsrEventTarget implements EventTarget {
-  factory SsrEventTarget() {
+final class SsrEventtarget implements EventTarget {
+  factory SsrEventtarget() {
     throw UnsupportedWebApiError('EventTarget constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -7618,8 +7618,8 @@ final class SsrEventTarget implements EventTarget {
   );
 }
 
-final class SsrExtendableCookieChangeEvent implements ExtendableCookieChangeEvent {
-  factory SsrExtendableCookieChangeEvent(String type, [ExtendableCookieChangeEventInit? eventInitDict]) {
+final class SsrExtendablecookiechangeevent implements ExtendableCookieChangeEvent {
+  factory SsrExtendablecookiechangeevent(String type, [ExtendableCookieChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ExtendableCookieChangeEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -7634,8 +7634,8 @@ final class SsrExtendableCookieChangeEvent implements ExtendableCookieChangeEven
   );
 }
 
-final class SsrExtendableEvent implements ExtendableEvent {
-  factory SsrExtendableEvent(String type, [ExtendableEventInit? eventInitDict]) {
+final class SsrExtendableevent implements ExtendableEvent {
+  factory SsrExtendableevent(String type, [ExtendableEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ExtendableEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -7646,8 +7646,8 @@ final class SsrExtendableEvent implements ExtendableEvent {
   );
 }
 
-final class SsrExtendableMessageEvent implements ExtendableMessageEvent {
-  factory SsrExtendableMessageEvent(String type, [ExtendableMessageEventInit? eventInitDict]) {
+final class SsrExtendablemessageevent implements ExtendableMessageEvent {
+  factory SsrExtendablemessageevent(String type, [ExtendableMessageEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ExtendableMessageEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -7681,17 +7681,17 @@ final class SsrExternal implements External {
     );
   }
   @override
-  void AddSearchProvider() => throw UnsupportedWebApiError('External.AddSearchProvider'
+  void addSearchProvider() => throw UnsupportedWebApiError('External.AddSearchProvider'
       , exposed: 'Window'
   );
   @override
-  void IsSearchProviderInstalled() => throw UnsupportedWebApiError('External.IsSearchProviderInstalled'
+  void isSearchProviderInstalled() => throw UnsupportedWebApiError('External.IsSearchProviderInstalled'
       , exposed: 'Window'
   );
 }
 
-final class SsrFetchEvent implements FetchEvent {
-  factory SsrFetchEvent(String type, FetchEventInit eventInitDict) {
+final class SsrFetchevent implements FetchEvent {
+  factory SsrFetchevent(String type, FetchEventInit eventInitDict) {
     throw UnsupportedWebApiError('FetchEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -7746,8 +7746,8 @@ final class SsrFile implements File {
   );
 }
 
-final class SsrFileList implements FileList {
-  factory SsrFileList() {
+final class SsrFilelist implements FileList {
+  factory SsrFilelist() {
     throw UnsupportedWebApiError('FileList constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -7762,8 +7762,8 @@ final class SsrFileList implements FileList {
   );
 }
 
-final class SsrFileReader implements FileReader {
-  factory SsrFileReader() {
+final class SsrFilereader implements FileReader {
+  factory SsrFilereader() {
     throw UnsupportedWebApiError('FileReader constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -7850,8 +7850,8 @@ final class SsrFileReader implements FileReader {
   );
 }
 
-final class SsrFileReaderSync implements FileReaderSync {
-  factory SsrFileReaderSync() {
+final class SsrFilereadersync implements FileReaderSync {
+  factory SsrFilereadersync() {
     throw UnsupportedWebApiError('FileReaderSync constructor'
       , exposed: '[{value: DedicatedWorker}, {value: SharedWorker}]'
     );
@@ -7874,8 +7874,8 @@ final class SsrFileReaderSync implements FileReaderSync {
   );
 }
 
-final class SsrFileSystem implements FileSystem {
-  factory SsrFileSystem() {
+final class SsrFilesystem implements FileSystem {
+  factory SsrFilesystem() {
     throw UnsupportedWebApiError('FileSystem constructor'
       , exposed: 'Window'
     );
@@ -7890,8 +7890,8 @@ final class SsrFileSystem implements FileSystem {
   );
 }
 
-final class SsrFileSystemDirectoryEntry implements FileSystemDirectoryEntry {
-  factory SsrFileSystemDirectoryEntry() {
+final class SsrFilesystemdirectoryentry implements FileSystemDirectoryEntry {
+  factory SsrFilesystemdirectoryentry() {
     throw UnsupportedWebApiError('FileSystemDirectoryEntry constructor'
       , exposed: 'Window'
     );
@@ -7910,8 +7910,8 @@ final class SsrFileSystemDirectoryEntry implements FileSystemDirectoryEntry {
   );
 }
 
-final class SsrFileSystemDirectoryHandle implements FileSystemDirectoryHandle {
-  factory SsrFileSystemDirectoryHandle() {
+final class SsrFilesystemdirectoryhandle implements FileSystemDirectoryHandle {
+  factory SsrFilesystemdirectoryhandle() {
     throw UnsupportedWebApiError('FileSystemDirectoryHandle constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -7934,8 +7934,8 @@ final class SsrFileSystemDirectoryHandle implements FileSystemDirectoryHandle {
   );
 }
 
-final class SsrFileSystemDirectoryReader implements FileSystemDirectoryReader {
-  factory SsrFileSystemDirectoryReader() {
+final class SsrFilesystemdirectoryreader implements FileSystemDirectoryReader {
+  factory SsrFilesystemdirectoryreader() {
     throw UnsupportedWebApiError('FileSystemDirectoryReader constructor'
       , exposed: 'Window'
     );
@@ -7946,8 +7946,8 @@ final class SsrFileSystemDirectoryReader implements FileSystemDirectoryReader {
   );
 }
 
-final class SsrFileSystemEntry implements FileSystemEntry {
-  factory SsrFileSystemEntry() {
+final class SsrFilesystementry implements FileSystemEntry {
+  factory SsrFilesystementry() {
     throw UnsupportedWebApiError('FileSystemEntry constructor'
       , exposed: 'Window'
     );
@@ -7978,8 +7978,8 @@ final class SsrFileSystemEntry implements FileSystemEntry {
   );
 }
 
-final class SsrFileSystemFileEntry implements FileSystemFileEntry {
-  factory SsrFileSystemFileEntry() {
+final class SsrFilesystemfileentry implements FileSystemFileEntry {
+  factory SsrFilesystemfileentry() {
     throw UnsupportedWebApiError('FileSystemFileEntry constructor'
       , exposed: 'Window'
     );
@@ -7990,8 +7990,8 @@ final class SsrFileSystemFileEntry implements FileSystemFileEntry {
   );
 }
 
-final class SsrFileSystemFileHandle implements FileSystemFileHandle {
-  factory SsrFileSystemFileHandle() {
+final class SsrFilesystemfilehandle implements FileSystemFileHandle {
+  factory SsrFilesystemfilehandle() {
     throw UnsupportedWebApiError('FileSystemFileHandle constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -8010,8 +8010,8 @@ final class SsrFileSystemFileHandle implements FileSystemFileHandle {
   );
 }
 
-final class SsrFileSystemHandle implements FileSystemHandle {
-  factory SsrFileSystemHandle() {
+final class SsrFilesystemhandle implements FileSystemHandle {
+  factory SsrFilesystemhandle() {
     throw UnsupportedWebApiError('FileSystemHandle constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -8030,8 +8030,8 @@ final class SsrFileSystemHandle implements FileSystemHandle {
   );
 }
 
-final class SsrFileSystemSyncAccessHandle implements FileSystemSyncAccessHandle {
-  factory SsrFileSystemSyncAccessHandle() {
+final class SsrFilesystemsyncaccesshandle implements FileSystemSyncAccessHandle {
+  factory SsrFilesystemsyncaccesshandle() {
     throw UnsupportedWebApiError('FileSystemSyncAccessHandle constructor'
       , exposed: 'DedicatedWorker'
     );
@@ -8062,8 +8062,8 @@ final class SsrFileSystemSyncAccessHandle implements FileSystemSyncAccessHandle 
   );
 }
 
-final class SsrFileSystemWritableFileStream implements FileSystemWritableFileStream {
-  factory SsrFileSystemWritableFileStream() {
+final class SsrFilesystemwritablefilestream implements FileSystemWritableFileStream {
+  factory SsrFilesystemwritablefilestream() {
     throw UnsupportedWebApiError('FileSystemWritableFileStream constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -8082,8 +8082,8 @@ final class SsrFileSystemWritableFileStream implements FileSystemWritableFileStr
   );
 }
 
-final class SsrFocusEvent implements FocusEvent {
-  factory SsrFocusEvent(String type, [FocusEventInit? eventInitDict]) {
+final class SsrFocusevent implements FocusEvent {
+  factory SsrFocusevent(String type, [FocusEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('FocusEvent constructor'
       , exposed: 'Window'
     );
@@ -8094,8 +8094,8 @@ final class SsrFocusEvent implements FocusEvent {
   );
 }
 
-final class SsrFontFace implements FontFace {
-  factory SsrFontFace(Object family, Object source, [FontFaceDescriptors? descriptors]) {
+final class SsrFontface implements FontFace {
+  factory SsrFontface(Object family, Object source, [FontFaceDescriptors? descriptors]) {
     throw UnsupportedWebApiError('FontFace constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -8194,8 +8194,8 @@ final class SsrFontFace implements FontFace {
   );
 }
 
-final class SsrFontFaceSet implements FontFaceSet {
-  factory SsrFontFaceSet(List<FontFace> initialFaces) {
+final class SsrFontfaceset implements FontFaceSet {
+  factory SsrFontfaceset(List<FontFace> initialFaces) {
     throw UnsupportedWebApiError('FontFaceSet constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -8254,8 +8254,8 @@ final class SsrFontFaceSet implements FontFaceSet {
   );
 }
 
-final class SsrFontFaceSetLoadEvent implements FontFaceSetLoadEvent {
-  factory SsrFontFaceSetLoadEvent(Object type, [FontFaceSetLoadEventInit? eventInitDict]) {
+final class SsrFontfacesetloadevent implements FontFaceSetLoadEvent {
+  factory SsrFontfacesetloadevent(Object type, [FontFaceSetLoadEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('FontFaceSetLoadEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -8266,8 +8266,8 @@ final class SsrFontFaceSetLoadEvent implements FontFaceSetLoadEvent {
   );
 }
 
-final class SsrFormData implements FormData {
-  factory SsrFormData([HTMLFormElement? form, HTMLElement? submitter]) {
+final class SsrFormdata implements FormData {
+  factory SsrFormdata([HTMLFormElement? form, HTMLElement? submitter]) {
     throw UnsupportedWebApiError('FormData constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -8298,8 +8298,8 @@ final class SsrFormData implements FormData {
   );
 }
 
-final class SsrFormDataEvent implements FormDataEvent {
-  factory SsrFormDataEvent(String type, FormDataEventInit eventInitDict) {
+final class SsrFormdataevent implements FormDataEvent {
+  factory SsrFormdataevent(String type, FormDataEventInit eventInitDict) {
     throw UnsupportedWebApiError('FormDataEvent constructor'
       , exposed: 'Window'
     );
@@ -8310,8 +8310,8 @@ final class SsrFormDataEvent implements FormDataEvent {
   );
 }
 
-final class SsrGainNode implements GainNode {
-  factory SsrGainNode(BaseAudioContext context, [GainOptions? options]) {
+final class SsrGainnode implements GainNode {
+  factory SsrGainnode(BaseAudioContext context, [GainOptions? options]) {
     throw UnsupportedWebApiError('GainNode constructor'
       , exposed: 'Window'
     );
@@ -8358,8 +8358,8 @@ final class SsrGamepad implements Gamepad {
   );
 }
 
-final class SsrGamepadButton implements GamepadButton {
-  factory SsrGamepadButton() {
+final class SsrGamepadbutton implements GamepadButton {
+  factory SsrGamepadbutton() {
     throw UnsupportedWebApiError('GamepadButton constructor'
       , exposed: 'Window'
     );
@@ -8378,8 +8378,8 @@ final class SsrGamepadButton implements GamepadButton {
   );
 }
 
-final class SsrGamepadEvent implements GamepadEvent {
-  factory SsrGamepadEvent(String type, GamepadEventInit eventInitDict) {
+final class SsrGamepadevent implements GamepadEvent {
+  factory SsrGamepadevent(String type, GamepadEventInit eventInitDict) {
     throw UnsupportedWebApiError('GamepadEvent constructor'
       , exposed: 'Window'
     );
@@ -8390,8 +8390,8 @@ final class SsrGamepadEvent implements GamepadEvent {
   );
 }
 
-final class SsrGamepadHapticActuator implements GamepadHapticActuator {
-  factory SsrGamepadHapticActuator() {
+final class SsrGamepadhapticactuator implements GamepadHapticActuator {
+  factory SsrGamepadhapticactuator() {
     throw UnsupportedWebApiError('GamepadHapticActuator constructor'
       , exposed: 'Window'
     );
@@ -8430,8 +8430,8 @@ final class SsrGeolocation implements Geolocation {
   );
 }
 
-final class SsrGeolocationCoordinates implements GeolocationCoordinates {
-  factory SsrGeolocationCoordinates() {
+final class SsrGeolocationcoordinates implements GeolocationCoordinates {
+  factory SsrGeolocationcoordinates() {
     throw UnsupportedWebApiError('GeolocationCoordinates constructor'
       , exposed: 'Window'
     );
@@ -8470,8 +8470,8 @@ final class SsrGeolocationCoordinates implements GeolocationCoordinates {
   );
 }
 
-final class SsrGeolocationPosition implements GeolocationPosition {
-  factory SsrGeolocationPosition() {
+final class SsrGeolocationposition implements GeolocationPosition {
+  factory SsrGeolocationposition() {
     throw UnsupportedWebApiError('GeolocationPosition constructor'
       , exposed: 'Window'
     );
@@ -8490,8 +8490,8 @@ final class SsrGeolocationPosition implements GeolocationPosition {
   );
 }
 
-final class SsrGeolocationPositionError implements GeolocationPositionError {
-  factory SsrGeolocationPositionError() {
+final class SsrGeolocationpositionerror implements GeolocationPositionError {
+  factory SsrGeolocationpositionerror() {
     throw UnsupportedWebApiError('GeolocationPositionError constructor'
       , exposed: 'Window'
     );
@@ -8506,8 +8506,8 @@ final class SsrGeolocationPositionError implements GeolocationPositionError {
   );
 }
 
-final class SsrGravitySensor implements GravitySensor {
-  factory SsrGravitySensor([AccelerometerSensorOptions? options]) {
+final class SsrGravitysensor implements GravitySensor {
+  factory SsrGravitysensor([AccelerometerSensorOptions? options]) {
     throw UnsupportedWebApiError('GravitySensor constructor'
       , exposed: 'Window'
     );
@@ -8534,8 +8534,8 @@ final class SsrGyroscope implements Gyroscope {
   );
 }
 
-final class SsrHTMLAllCollection implements HTMLAllCollection {
-  factory SsrHTMLAllCollection() {
+final class SsrHtmlallcollection implements HTMLAllCollection {
+  factory SsrHtmlallcollection() {
     throw UnsupportedWebApiError('HTMLAllCollection constructor'
       , exposed: 'Window'
     );
@@ -8554,8 +8554,8 @@ final class SsrHTMLAllCollection implements HTMLAllCollection {
   );
 }
 
-final class SsrHTMLAnchorElement implements HTMLAnchorElement {
-  factory SsrHTMLAnchorElement() {
+final class SsrHtmlanchorelement implements HTMLAnchorElement {
+  factory SsrHtmlanchorelement() {
     throw UnsupportedWebApiError('HTMLAnchorElement constructor'
       , exposed: 'Window'
     );
@@ -8762,8 +8762,8 @@ final class SsrHTMLAnchorElement implements HTMLAnchorElement {
   );
 }
 
-final class SsrHTMLAreaElement implements HTMLAreaElement {
-  factory SsrHTMLAreaElement() {
+final class SsrHtmlareaelement implements HTMLAreaElement {
+  factory SsrHtmlareaelement() {
     throw UnsupportedWebApiError('HTMLAreaElement constructor'
       , exposed: 'Window'
     );
@@ -8930,16 +8930,16 @@ final class SsrHTMLAreaElement implements HTMLAreaElement {
   );
 }
 
-final class SsrHTMLAudioElement implements HTMLAudioElement {
-  factory SsrHTMLAudioElement() {
+final class SsrHtmlaudioelement implements HTMLAudioElement {
+  factory SsrHtmlaudioelement() {
     throw UnsupportedWebApiError('HTMLAudioElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrHTMLBRElement implements HTMLBRElement {
-  factory SsrHTMLBRElement() {
+final class SsrHtmlbrelement implements HTMLBRElement {
+  factory SsrHtmlbrelement() {
     throw UnsupportedWebApiError('HTMLBRElement constructor'
       , exposed: 'Window'
     );
@@ -8954,8 +8954,8 @@ final class SsrHTMLBRElement implements HTMLBRElement {
   );
 }
 
-final class SsrHTMLBaseElement implements HTMLBaseElement {
-  factory SsrHTMLBaseElement() {
+final class SsrHtmlbaseelement implements HTMLBaseElement {
+  factory SsrHtmlbaseelement() {
     throw UnsupportedWebApiError('HTMLBaseElement constructor'
       , exposed: 'Window'
     );
@@ -8978,8 +8978,8 @@ final class SsrHTMLBaseElement implements HTMLBaseElement {
   );
 }
 
-final class SsrHTMLBodyElement implements HTMLBodyElement {
-  factory SsrHTMLBodyElement() {
+final class SsrHtmlbodyelement implements HTMLBodyElement {
+  factory SsrHtmlbodyelement() {
     throw UnsupportedWebApiError('HTMLBodyElement constructor'
       , exposed: 'Window'
     );
@@ -9210,8 +9210,8 @@ final class SsrHTMLBodyElement implements HTMLBodyElement {
   );
 }
 
-final class SsrHTMLButtonElement implements HTMLButtonElement {
-  factory SsrHTMLButtonElement() {
+final class SsrHtmlbuttonelement implements HTMLButtonElement {
+  factory SsrHtmlbuttonelement() {
     throw UnsupportedWebApiError('HTMLButtonElement constructor'
       , exposed: 'Window'
     );
@@ -9338,8 +9338,8 @@ final class SsrHTMLButtonElement implements HTMLButtonElement {
   );
 }
 
-final class SsrHTMLCanvasElement implements HTMLCanvasElement {
-  factory SsrHTMLCanvasElement() {
+final class SsrHtmlcanvaselement implements HTMLCanvasElement {
+  factory SsrHtmlcanvaselement() {
     throw UnsupportedWebApiError('HTMLCanvasElement constructor'
       , exposed: 'Window'
     );
@@ -9382,8 +9382,8 @@ final class SsrHTMLCanvasElement implements HTMLCanvasElement {
   );
 }
 
-final class SsrHTMLCollection implements HTMLCollection {
-  factory SsrHTMLCollection() {
+final class SsrHtmlcollection implements HTMLCollection {
+  factory SsrHtmlcollection() {
     throw UnsupportedWebApiError('HTMLCollection constructor'
       , exposed: 'Window'
     );
@@ -9402,8 +9402,8 @@ final class SsrHTMLCollection implements HTMLCollection {
   );
 }
 
-final class SsrHTMLDListElement implements HTMLDListElement {
-  factory SsrHTMLDListElement() {
+final class SsrHtmldlistelement implements HTMLDListElement {
+  factory SsrHtmldlistelement() {
     throw UnsupportedWebApiError('HTMLDListElement constructor'
       , exposed: 'Window'
     );
@@ -9418,8 +9418,8 @@ final class SsrHTMLDListElement implements HTMLDListElement {
   );
 }
 
-final class SsrHTMLDataElement implements HTMLDataElement {
-  factory SsrHTMLDataElement() {
+final class SsrHtmldataelement implements HTMLDataElement {
+  factory SsrHtmldataelement() {
     throw UnsupportedWebApiError('HTMLDataElement constructor'
       , exposed: 'Window'
     );
@@ -9434,8 +9434,8 @@ final class SsrHTMLDataElement implements HTMLDataElement {
   );
 }
 
-final class SsrHTMLDataListElement implements HTMLDataListElement {
-  factory SsrHTMLDataListElement() {
+final class SsrHtmldatalistelement implements HTMLDataListElement {
+  factory SsrHtmldatalistelement() {
     throw UnsupportedWebApiError('HTMLDataListElement constructor'
       , exposed: 'Window'
     );
@@ -9446,8 +9446,8 @@ final class SsrHTMLDataListElement implements HTMLDataListElement {
   );
 }
 
-final class SsrHTMLDetailsElement implements HTMLDetailsElement {
-  factory SsrHTMLDetailsElement() {
+final class SsrHtmldetailselement implements HTMLDetailsElement {
+  factory SsrHtmldetailselement() {
     throw UnsupportedWebApiError('HTMLDetailsElement constructor'
       , exposed: 'Window'
     );
@@ -9470,8 +9470,8 @@ final class SsrHTMLDetailsElement implements HTMLDetailsElement {
   );
 }
 
-final class SsrHTMLDialogElement implements HTMLDialogElement {
-  factory SsrHTMLDialogElement() {
+final class SsrHtmldialogelement implements HTMLDialogElement {
+  factory SsrHtmldialogelement() {
     throw UnsupportedWebApiError('HTMLDialogElement constructor'
       , exposed: 'Window'
     );
@@ -9506,8 +9506,8 @@ final class SsrHTMLDialogElement implements HTMLDialogElement {
   );
 }
 
-final class SsrHTMLDirectoryElement implements HTMLDirectoryElement {
-  factory SsrHTMLDirectoryElement() {
+final class SsrHtmldirectoryelement implements HTMLDirectoryElement {
+  factory SsrHtmldirectoryelement() {
     throw UnsupportedWebApiError('HTMLDirectoryElement constructor'
       , exposed: 'Window'
     );
@@ -9522,8 +9522,8 @@ final class SsrHTMLDirectoryElement implements HTMLDirectoryElement {
   );
 }
 
-final class SsrHTMLDivElement implements HTMLDivElement {
-  factory SsrHTMLDivElement() {
+final class SsrHtmldivelement implements HTMLDivElement {
+  factory SsrHtmldivelement() {
     throw UnsupportedWebApiError('HTMLDivElement constructor'
       , exposed: 'Window'
     );
@@ -9538,8 +9538,8 @@ final class SsrHTMLDivElement implements HTMLDivElement {
   );
 }
 
-final class SsrHTMLElement implements HTMLElement {
-  factory SsrHTMLElement() {
+final class SsrHtmlelement implements HTMLElement {
+  factory SsrHtmlelement() {
     throw UnsupportedWebApiError('HTMLElement constructor'
       , exposed: 'Window'
     );
@@ -10598,8 +10598,8 @@ final class SsrHTMLElement implements HTMLElement {
   );
 }
 
-final class SsrHTMLEmbedElement implements HTMLEmbedElement {
-  factory SsrHTMLEmbedElement() {
+final class SsrHtmlembedelement implements HTMLEmbedElement {
+  factory SsrHtmlembedelement() {
     throw UnsupportedWebApiError('HTMLEmbedElement constructor'
       , exposed: 'Window'
     );
@@ -10658,8 +10658,8 @@ final class SsrHTMLEmbedElement implements HTMLEmbedElement {
   );
 }
 
-final class SsrHTMLFieldSetElement implements HTMLFieldSetElement {
-  factory SsrHTMLFieldSetElement() {
+final class SsrHtmlfieldsetelement implements HTMLFieldSetElement {
+  factory SsrHtmlfieldsetelement() {
     throw UnsupportedWebApiError('HTMLFieldSetElement constructor'
       , exposed: 'Window'
     );
@@ -10718,8 +10718,8 @@ final class SsrHTMLFieldSetElement implements HTMLFieldSetElement {
   );
 }
 
-final class SsrHTMLFontElement implements HTMLFontElement {
-  factory SsrHTMLFontElement() {
+final class SsrHtmlfontelement implements HTMLFontElement {
+  factory SsrHtmlfontelement() {
     throw UnsupportedWebApiError('HTMLFontElement constructor'
       , exposed: 'Window'
     );
@@ -10750,8 +10750,8 @@ final class SsrHTMLFontElement implements HTMLFontElement {
   );
 }
 
-final class SsrHTMLFormControlsCollection implements HTMLFormControlsCollection {
-  factory SsrHTMLFormControlsCollection() {
+final class SsrHtmlformcontrolscollection implements HTMLFormControlsCollection {
+  factory SsrHtmlformcontrolscollection() {
     throw UnsupportedWebApiError('HTMLFormControlsCollection constructor'
       , exposed: 'Window'
     );
@@ -10762,8 +10762,8 @@ final class SsrHTMLFormControlsCollection implements HTMLFormControlsCollection 
   );
 }
 
-final class SsrHTMLFormElement implements HTMLFormElement {
-  factory SsrHTMLFormElement() {
+final class SsrHtmlformelement implements HTMLFormElement {
+  factory SsrHtmlformelement() {
     throw UnsupportedWebApiError('HTMLFormElement constructor'
       , exposed: 'Window'
     );
@@ -10882,8 +10882,8 @@ final class SsrHTMLFormElement implements HTMLFormElement {
   );
 }
 
-final class SsrHTMLFrameElement implements HTMLFrameElement {
-  factory SsrHTMLFrameElement() {
+final class SsrHtmlframeelement implements HTMLFrameElement {
+  factory SsrHtmlframeelement() {
     throw UnsupportedWebApiError('HTMLFrameElement constructor'
       , exposed: 'Window'
     );
@@ -10962,8 +10962,8 @@ final class SsrHTMLFrameElement implements HTMLFrameElement {
   );
 }
 
-final class SsrHTMLFrameSetElement implements HTMLFrameSetElement {
-  factory SsrHTMLFrameSetElement() {
+final class SsrHtmlframesetelement implements HTMLFrameSetElement {
+  factory SsrHtmlframesetelement() {
     throw UnsupportedWebApiError('HTMLFrameSetElement constructor'
       , exposed: 'Window'
     );
@@ -11154,8 +11154,8 @@ final class SsrHTMLFrameSetElement implements HTMLFrameSetElement {
   );
 }
 
-final class SsrHTMLHRElement implements HTMLHRElement {
-  factory SsrHTMLHRElement() {
+final class SsrHtmlhrelement implements HTMLHRElement {
+  factory SsrHtmlhrelement() {
     throw UnsupportedWebApiError('HTMLHRElement constructor'
       , exposed: 'Window'
     );
@@ -11202,16 +11202,16 @@ final class SsrHTMLHRElement implements HTMLHRElement {
   );
 }
 
-final class SsrHTMLHeadElement implements HTMLHeadElement {
-  factory SsrHTMLHeadElement() {
+final class SsrHtmlheadelement implements HTMLHeadElement {
+  factory SsrHtmlheadelement() {
     throw UnsupportedWebApiError('HTMLHeadElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrHTMLHeadingElement implements HTMLHeadingElement {
-  factory SsrHTMLHeadingElement() {
+final class SsrHtmlheadingelement implements HTMLHeadingElement {
+  factory SsrHtmlheadingelement() {
     throw UnsupportedWebApiError('HTMLHeadingElement constructor'
       , exposed: 'Window'
     );
@@ -11226,8 +11226,8 @@ final class SsrHTMLHeadingElement implements HTMLHeadingElement {
   );
 }
 
-final class SsrHTMLHtmlElement implements HTMLHtmlElement {
-  factory SsrHTMLHtmlElement() {
+final class SsrHtmlhtmlelement implements HTMLHtmlElement {
+  factory SsrHtmlhtmlelement() {
     throw UnsupportedWebApiError('HTMLHtmlElement constructor'
       , exposed: 'Window'
     );
@@ -11242,8 +11242,8 @@ final class SsrHTMLHtmlElement implements HTMLHtmlElement {
   );
 }
 
-final class SsrHTMLIFrameElement implements HTMLIFrameElement {
-  factory SsrHTMLIFrameElement() {
+final class SsrHtmliframeelement implements HTMLIFrameElement {
+  factory SsrHtmliframeelement() {
     throw UnsupportedWebApiError('HTMLIFrameElement constructor'
       , exposed: 'Window'
     );
@@ -11394,8 +11394,8 @@ final class SsrHTMLIFrameElement implements HTMLIFrameElement {
   );
 }
 
-final class SsrHTMLImageElement implements HTMLImageElement {
-  factory SsrHTMLImageElement() {
+final class SsrHtmlimageelement implements HTMLImageElement {
+  factory SsrHtmlimageelement() {
     throw UnsupportedWebApiError('HTMLImageElement constructor'
       , exposed: 'Window'
     );
@@ -11606,8 +11606,8 @@ final class SsrHTMLImageElement implements HTMLImageElement {
   );
 }
 
-final class SsrHTMLInputElement implements HTMLInputElement {
-  factory SsrHTMLInputElement() {
+final class SsrHtmlinputelement implements HTMLInputElement {
+  factory SsrHtmlinputelement() {
     throw UnsupportedWebApiError('HTMLInputElement constructor'
       , exposed: 'Window'
     );
@@ -12022,8 +12022,8 @@ final class SsrHTMLInputElement implements HTMLInputElement {
   );
 }
 
-final class SsrHTMLLIElement implements HTMLLIElement {
-  factory SsrHTMLLIElement() {
+final class SsrHtmllielement implements HTMLLIElement {
+  factory SsrHtmllielement() {
     throw UnsupportedWebApiError('HTMLLIElement constructor'
       , exposed: 'Window'
     );
@@ -12046,8 +12046,8 @@ final class SsrHTMLLIElement implements HTMLLIElement {
   );
 }
 
-final class SsrHTMLLabelElement implements HTMLLabelElement {
-  factory SsrHTMLLabelElement() {
+final class SsrHtmllabelelement implements HTMLLabelElement {
+  factory SsrHtmllabelelement() {
     throw UnsupportedWebApiError('HTMLLabelElement constructor'
       , exposed: 'Window'
     );
@@ -12070,8 +12070,8 @@ final class SsrHTMLLabelElement implements HTMLLabelElement {
   );
 }
 
-final class SsrHTMLLegendElement implements HTMLLegendElement {
-  factory SsrHTMLLegendElement() {
+final class SsrHtmllegendelement implements HTMLLegendElement {
+  factory SsrHtmllegendelement() {
     throw UnsupportedWebApiError('HTMLLegendElement constructor'
       , exposed: 'Window'
     );
@@ -12090,8 +12090,8 @@ final class SsrHTMLLegendElement implements HTMLLegendElement {
   );
 }
 
-final class SsrHTMLLinkElement implements HTMLLinkElement {
-  factory SsrHTMLLinkElement() {
+final class SsrHtmllinkelement implements HTMLLinkElement {
+  factory SsrHtmllinkelement() {
     throw UnsupportedWebApiError('HTMLLinkElement constructor'
       , exposed: 'Window'
     );
@@ -12238,8 +12238,8 @@ final class SsrHTMLLinkElement implements HTMLLinkElement {
   );
 }
 
-final class SsrHTMLMapElement implements HTMLMapElement {
-  factory SsrHTMLMapElement() {
+final class SsrHtmlmapelement implements HTMLMapElement {
+  factory SsrHtmlmapelement() {
     throw UnsupportedWebApiError('HTMLMapElement constructor'
       , exposed: 'Window'
     );
@@ -12258,8 +12258,8 @@ final class SsrHTMLMapElement implements HTMLMapElement {
   );
 }
 
-final class SsrHTMLMarqueeElement implements HTMLMarqueeElement {
-  factory SsrHTMLMarqueeElement() {
+final class SsrHtmlmarqueeelement implements HTMLMarqueeElement {
+  factory SsrHtmlmarqueeelement() {
     throw UnsupportedWebApiError('HTMLMarqueeElement constructor'
       , exposed: 'Window'
     );
@@ -12362,8 +12362,8 @@ final class SsrHTMLMarqueeElement implements HTMLMarqueeElement {
   );
 }
 
-final class SsrHTMLMediaElement implements HTMLMediaElement {
-  factory SsrHTMLMediaElement() {
+final class SsrHtmlmediaelement implements HTMLMediaElement {
+  factory SsrHtmlmediaelement() {
     throw UnsupportedWebApiError('HTMLMediaElement constructor'
       , exposed: 'Window'
     );
@@ -12614,8 +12614,8 @@ final class SsrHTMLMediaElement implements HTMLMediaElement {
   );
 }
 
-final class SsrHTMLMenuElement implements HTMLMenuElement {
-  factory SsrHTMLMenuElement() {
+final class SsrHtmlmenuelement implements HTMLMenuElement {
+  factory SsrHtmlmenuelement() {
     throw UnsupportedWebApiError('HTMLMenuElement constructor'
       , exposed: 'Window'
     );
@@ -12630,8 +12630,8 @@ final class SsrHTMLMenuElement implements HTMLMenuElement {
   );
 }
 
-final class SsrHTMLMetaElement implements HTMLMetaElement {
-  factory SsrHTMLMetaElement() {
+final class SsrHtmlmetaelement implements HTMLMetaElement {
+  factory SsrHtmlmetaelement() {
     throw UnsupportedWebApiError('HTMLMetaElement constructor'
       , exposed: 'Window'
     );
@@ -12678,8 +12678,8 @@ final class SsrHTMLMetaElement implements HTMLMetaElement {
   );
 }
 
-final class SsrHTMLMeterElement implements HTMLMeterElement {
-  factory SsrHTMLMeterElement() {
+final class SsrHtmlmeterelement implements HTMLMeterElement {
+  factory SsrHtmlmeterelement() {
     throw UnsupportedWebApiError('HTMLMeterElement constructor'
       , exposed: 'Window'
     );
@@ -12738,8 +12738,8 @@ final class SsrHTMLMeterElement implements HTMLMeterElement {
   );
 }
 
-final class SsrHTMLModElement implements HTMLModElement {
-  factory SsrHTMLModElement() {
+final class SsrHtmlmodelement implements HTMLModElement {
+  factory SsrHtmlmodelement() {
     throw UnsupportedWebApiError('HTMLModElement constructor'
       , exposed: 'Window'
     );
@@ -12762,8 +12762,8 @@ final class SsrHTMLModElement implements HTMLModElement {
   );
 }
 
-final class SsrHTMLOListElement implements HTMLOListElement {
-  factory SsrHTMLOListElement() {
+final class SsrHtmlolistelement implements HTMLOListElement {
+  factory SsrHtmlolistelement() {
     throw UnsupportedWebApiError('HTMLOListElement constructor'
       , exposed: 'Window'
     );
@@ -12802,8 +12802,8 @@ final class SsrHTMLOListElement implements HTMLOListElement {
   );
 }
 
-final class SsrHTMLObjectElement implements HTMLObjectElement {
-  factory SsrHTMLObjectElement() {
+final class SsrHtmlobjectelement implements HTMLObjectElement {
+  factory SsrHtmlobjectelement() {
     throw UnsupportedWebApiError('HTMLObjectElement constructor'
       , exposed: 'Window'
     );
@@ -12978,8 +12978,8 @@ final class SsrHTMLObjectElement implements HTMLObjectElement {
   );
 }
 
-final class SsrHTMLOptGroupElement implements HTMLOptGroupElement {
-  factory SsrHTMLOptGroupElement() {
+final class SsrHtmloptgroupelement implements HTMLOptGroupElement {
+  factory SsrHtmloptgroupelement() {
     throw UnsupportedWebApiError('HTMLOptGroupElement constructor'
       , exposed: 'Window'
     );
@@ -13002,8 +13002,8 @@ final class SsrHTMLOptGroupElement implements HTMLOptGroupElement {
   );
 }
 
-final class SsrHTMLOptionElement implements HTMLOptionElement {
-  factory SsrHTMLOptionElement() {
+final class SsrHtmloptionelement implements HTMLOptionElement {
+  factory SsrHtmloptionelement() {
     throw UnsupportedWebApiError('HTMLOptionElement constructor'
       , exposed: 'Window'
     );
@@ -13066,8 +13066,8 @@ final class SsrHTMLOptionElement implements HTMLOptionElement {
   );
 }
 
-final class SsrHTMLOptionsCollection implements HTMLOptionsCollection {
-  factory SsrHTMLOptionsCollection() {
+final class SsrHtmloptionscollection implements HTMLOptionsCollection {
+  factory SsrHtmloptionscollection() {
     throw UnsupportedWebApiError('HTMLOptionsCollection constructor'
       , exposed: 'Window'
     );
@@ -13098,8 +13098,8 @@ final class SsrHTMLOptionsCollection implements HTMLOptionsCollection {
   );
 }
 
-final class SsrHTMLOutputElement implements HTMLOutputElement {
-  factory SsrHTMLOutputElement() {
+final class SsrHtmloutputelement implements HTMLOutputElement {
+  factory SsrHtmloutputelement() {
     throw UnsupportedWebApiError('HTMLOutputElement constructor'
       , exposed: 'Window'
     );
@@ -13170,8 +13170,8 @@ final class SsrHTMLOutputElement implements HTMLOutputElement {
   );
 }
 
-final class SsrHTMLParagraphElement implements HTMLParagraphElement {
-  factory SsrHTMLParagraphElement() {
+final class SsrHtmlparagraphelement implements HTMLParagraphElement {
+  factory SsrHtmlparagraphelement() {
     throw UnsupportedWebApiError('HTMLParagraphElement constructor'
       , exposed: 'Window'
     );
@@ -13186,8 +13186,8 @@ final class SsrHTMLParagraphElement implements HTMLParagraphElement {
   );
 }
 
-final class SsrHTMLParamElement implements HTMLParamElement {
-  factory SsrHTMLParamElement() {
+final class SsrHtmlparamelement implements HTMLParamElement {
+  factory SsrHtmlparamelement() {
     throw UnsupportedWebApiError('HTMLParamElement constructor'
       , exposed: 'Window'
     );
@@ -13226,16 +13226,16 @@ final class SsrHTMLParamElement implements HTMLParamElement {
   );
 }
 
-final class SsrHTMLPictureElement implements HTMLPictureElement {
-  factory SsrHTMLPictureElement() {
+final class SsrHtmlpictureelement implements HTMLPictureElement {
+  factory SsrHtmlpictureelement() {
     throw UnsupportedWebApiError('HTMLPictureElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrHTMLPreElement implements HTMLPreElement {
-  factory SsrHTMLPreElement() {
+final class SsrHtmlpreelement implements HTMLPreElement {
+  factory SsrHtmlpreelement() {
     throw UnsupportedWebApiError('HTMLPreElement constructor'
       , exposed: 'Window'
     );
@@ -13250,8 +13250,8 @@ final class SsrHTMLPreElement implements HTMLPreElement {
   );
 }
 
-final class SsrHTMLProgressElement implements HTMLProgressElement {
-  factory SsrHTMLProgressElement() {
+final class SsrHtmlprogresselement implements HTMLProgressElement {
+  factory SsrHtmlprogresselement() {
     throw UnsupportedWebApiError('HTMLProgressElement constructor'
       , exposed: 'Window'
     );
@@ -13282,8 +13282,8 @@ final class SsrHTMLProgressElement implements HTMLProgressElement {
   );
 }
 
-final class SsrHTMLQuoteElement implements HTMLQuoteElement {
-  factory SsrHTMLQuoteElement() {
+final class SsrHtmlquoteelement implements HTMLQuoteElement {
+  factory SsrHtmlquoteelement() {
     throw UnsupportedWebApiError('HTMLQuoteElement constructor'
       , exposed: 'Window'
     );
@@ -13298,8 +13298,8 @@ final class SsrHTMLQuoteElement implements HTMLQuoteElement {
   );
 }
 
-final class SsrHTMLScriptElement implements HTMLScriptElement {
-  factory SsrHTMLScriptElement() {
+final class SsrHtmlscriptelement implements HTMLScriptElement {
+  factory SsrHtmlscriptelement() {
     throw UnsupportedWebApiError('HTMLScriptElement constructor'
       , exposed: 'Window'
     );
@@ -13418,8 +13418,8 @@ final class SsrHTMLScriptElement implements HTMLScriptElement {
   );
 }
 
-final class SsrHTMLSelectElement implements HTMLSelectElement {
-  factory SsrHTMLSelectElement() {
+final class SsrHtmlselectelement implements HTMLSelectElement {
+  factory SsrHtmlselectelement() {
     throw UnsupportedWebApiError('HTMLSelectElement constructor'
       , exposed: 'Window'
     );
@@ -13562,8 +13562,8 @@ final class SsrHTMLSelectElement implements HTMLSelectElement {
   );
 }
 
-final class SsrHTMLSlotElement implements HTMLSlotElement {
-  factory SsrHTMLSlotElement() {
+final class SsrHtmlslotelement implements HTMLSlotElement {
+  factory SsrHtmlslotelement() {
     throw UnsupportedWebApiError('HTMLSlotElement constructor'
       , exposed: 'Window'
     );
@@ -13590,8 +13590,8 @@ final class SsrHTMLSlotElement implements HTMLSlotElement {
   );
 }
 
-final class SsrHTMLSourceElement implements HTMLSourceElement {
-  factory SsrHTMLSourceElement() {
+final class SsrHtmlsourceelement implements HTMLSourceElement {
+  factory SsrHtmlsourceelement() {
     throw UnsupportedWebApiError('HTMLSourceElement constructor'
       , exposed: 'Window'
     );
@@ -13654,16 +13654,16 @@ final class SsrHTMLSourceElement implements HTMLSourceElement {
   );
 }
 
-final class SsrHTMLSpanElement implements HTMLSpanElement {
-  factory SsrHTMLSpanElement() {
+final class SsrHtmlspanelement implements HTMLSpanElement {
+  factory SsrHtmlspanelement() {
     throw UnsupportedWebApiError('HTMLSpanElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrHTMLStyleElement implements HTMLStyleElement {
-  factory SsrHTMLStyleElement() {
+final class SsrHtmlstyleelement implements HTMLStyleElement {
+  factory SsrHtmlstyleelement() {
     throw UnsupportedWebApiError('HTMLStyleElement constructor'
       , exposed: 'Window'
     );
@@ -13698,8 +13698,8 @@ final class SsrHTMLStyleElement implements HTMLStyleElement {
   );
 }
 
-final class SsrHTMLTableCaptionElement implements HTMLTableCaptionElement {
-  factory SsrHTMLTableCaptionElement() {
+final class SsrHtmltablecaptionelement implements HTMLTableCaptionElement {
+  factory SsrHtmltablecaptionelement() {
     throw UnsupportedWebApiError('HTMLTableCaptionElement constructor'
       , exposed: 'Window'
     );
@@ -13714,8 +13714,8 @@ final class SsrHTMLTableCaptionElement implements HTMLTableCaptionElement {
   );
 }
 
-final class SsrHTMLTableCellElement implements HTMLTableCellElement {
-  factory SsrHTMLTableCellElement() {
+final class SsrHtmltablecellelement implements HTMLTableCellElement {
+  factory SsrHtmltablecellelement() {
     throw UnsupportedWebApiError('HTMLTableCellElement constructor'
       , exposed: 'Window'
     );
@@ -13838,8 +13838,8 @@ final class SsrHTMLTableCellElement implements HTMLTableCellElement {
   );
 }
 
-final class SsrHTMLTableColElement implements HTMLTableColElement {
-  factory SsrHTMLTableColElement() {
+final class SsrHtmltablecolelement implements HTMLTableColElement {
+  factory SsrHtmltablecolelement() {
     throw UnsupportedWebApiError('HTMLTableColElement constructor'
       , exposed: 'Window'
     );
@@ -13894,8 +13894,8 @@ final class SsrHTMLTableColElement implements HTMLTableColElement {
   );
 }
 
-final class SsrHTMLTableElement implements HTMLTableElement {
-  factory SsrHTMLTableElement() {
+final class SsrHtmltableelement implements HTMLTableElement {
+  factory SsrHtmltableelement() {
     throw UnsupportedWebApiError('HTMLTableElement constructor'
       , exposed: 'Window'
     );
@@ -14042,8 +14042,8 @@ final class SsrHTMLTableElement implements HTMLTableElement {
   );
 }
 
-final class SsrHTMLTableRowElement implements HTMLTableRowElement {
-  factory SsrHTMLTableRowElement() {
+final class SsrHtmltablerowelement implements HTMLTableRowElement {
+  factory SsrHtmltablerowelement() {
     throw UnsupportedWebApiError('HTMLTableRowElement constructor'
       , exposed: 'Window'
     );
@@ -14110,8 +14110,8 @@ final class SsrHTMLTableRowElement implements HTMLTableRowElement {
   );
 }
 
-final class SsrHTMLTableSectionElement implements HTMLTableSectionElement {
-  factory SsrHTMLTableSectionElement() {
+final class SsrHtmltablesectionelement implements HTMLTableSectionElement {
+  factory SsrHtmltablesectionelement() {
     throw UnsupportedWebApiError('HTMLTableSectionElement constructor'
       , exposed: 'Window'
     );
@@ -14162,8 +14162,8 @@ final class SsrHTMLTableSectionElement implements HTMLTableSectionElement {
   );
 }
 
-final class SsrHTMLTemplateElement implements HTMLTemplateElement {
-  factory SsrHTMLTemplateElement() {
+final class SsrHtmltemplateelement implements HTMLTemplateElement {
+  factory SsrHtmltemplateelement() {
     throw UnsupportedWebApiError('HTMLTemplateElement constructor'
       , exposed: 'Window'
     );
@@ -14206,8 +14206,8 @@ final class SsrHTMLTemplateElement implements HTMLTemplateElement {
   );
 }
 
-final class SsrHTMLTextAreaElement implements HTMLTextAreaElement {
-  factory SsrHTMLTextAreaElement() {
+final class SsrHtmltextareaelement implements HTMLTextAreaElement {
+  factory SsrHtmltextareaelement() {
     throw UnsupportedWebApiError('HTMLTextAreaElement constructor'
       , exposed: 'Window'
     );
@@ -14402,8 +14402,8 @@ final class SsrHTMLTextAreaElement implements HTMLTextAreaElement {
   );
 }
 
-final class SsrHTMLTimeElement implements HTMLTimeElement {
-  factory SsrHTMLTimeElement() {
+final class SsrHtmltimeelement implements HTMLTimeElement {
+  factory SsrHtmltimeelement() {
     throw UnsupportedWebApiError('HTMLTimeElement constructor'
       , exposed: 'Window'
     );
@@ -14418,8 +14418,8 @@ final class SsrHTMLTimeElement implements HTMLTimeElement {
   );
 }
 
-final class SsrHTMLTitleElement implements HTMLTitleElement {
-  factory SsrHTMLTitleElement() {
+final class SsrHtmltitleelement implements HTMLTitleElement {
+  factory SsrHtmltitleelement() {
     throw UnsupportedWebApiError('HTMLTitleElement constructor'
       , exposed: 'Window'
     );
@@ -14434,8 +14434,8 @@ final class SsrHTMLTitleElement implements HTMLTitleElement {
   );
 }
 
-final class SsrHTMLTrackElement implements HTMLTrackElement {
-  factory SsrHTMLTrackElement() {
+final class SsrHtmltrackelement implements HTMLTrackElement {
+  factory SsrHtmltrackelement() {
     throw UnsupportedWebApiError('HTMLTrackElement constructor'
       , exposed: 'Window'
     );
@@ -14490,8 +14490,8 @@ final class SsrHTMLTrackElement implements HTMLTrackElement {
   );
 }
 
-final class SsrHTMLUListElement implements HTMLUListElement {
-  factory SsrHTMLUListElement() {
+final class SsrHtmlulistelement implements HTMLUListElement {
+  factory SsrHtmlulistelement() {
     throw UnsupportedWebApiError('HTMLUListElement constructor'
       , exposed: 'Window'
     );
@@ -14514,16 +14514,16 @@ final class SsrHTMLUListElement implements HTMLUListElement {
   );
 }
 
-final class SsrHTMLUnknownElement implements HTMLUnknownElement {
-  factory SsrHTMLUnknownElement() {
+final class SsrHtmlunknownelement implements HTMLUnknownElement {
+  factory SsrHtmlunknownelement() {
     throw UnsupportedWebApiError('HTMLUnknownElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrHTMLVideoElement implements HTMLVideoElement {
-  factory SsrHTMLVideoElement() {
+final class SsrHtmlvideoelement implements HTMLVideoElement {
+  factory SsrHtmlvideoelement() {
     throw UnsupportedWebApiError('HTMLVideoElement constructor'
       , exposed: 'Window'
     );
@@ -14610,8 +14610,8 @@ final class SsrHTMLVideoElement implements HTMLVideoElement {
   );
 }
 
-final class SsrHashChangeEvent implements HashChangeEvent {
-  factory SsrHashChangeEvent(String type, [HashChangeEventInit? eventInitDict]) {
+final class SsrHashchangeevent implements HashChangeEvent {
+  factory SsrHashchangeevent(String type, [HashChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('HashChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -14682,8 +14682,8 @@ final class SsrHighlight implements Highlight {
   );
 }
 
-final class SsrHighlightRegistry implements HighlightRegistry {
-  factory SsrHighlightRegistry() {
+final class SsrHighlightregistry implements HighlightRegistry {
+  factory SsrHighlightregistry() {
     throw UnsupportedWebApiError('HighlightRegistry constructor'
       , exposed: 'Window'
     );
@@ -14734,8 +14734,8 @@ final class SsrHistory implements History {
   );
 }
 
-final class SsrIDBCursor implements IDBCursor {
-  factory SsrIDBCursor() {
+final class SsrIdbcursor implements IDBCursor {
+  factory SsrIdbcursor() {
     throw UnsupportedWebApiError('IDBCursor constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -14782,8 +14782,8 @@ final class SsrIDBCursor implements IDBCursor {
   );
 }
 
-final class SsrIDBCursorWithValue implements IDBCursorWithValue {
-  factory SsrIDBCursorWithValue() {
+final class SsrIdbcursorwithvalue implements IDBCursorWithValue {
+  factory SsrIdbcursorwithvalue() {
     throw UnsupportedWebApiError('IDBCursorWithValue constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -14794,8 +14794,8 @@ final class SsrIDBCursorWithValue implements IDBCursorWithValue {
   );
 }
 
-final class SsrIDBDatabase implements IDBDatabase {
-  factory SsrIDBDatabase() {
+final class SsrIdbdatabase implements IDBDatabase {
+  factory SsrIdbdatabase() {
     throw UnsupportedWebApiError('IDBDatabase constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -14862,8 +14862,8 @@ final class SsrIDBDatabase implements IDBDatabase {
   );
 }
 
-final class SsrIDBFactory implements IDBFactory {
-  factory SsrIDBFactory() {
+final class SsrIdbfactory implements IDBFactory {
+  factory SsrIdbfactory() {
     throw UnsupportedWebApiError('IDBFactory constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -14886,8 +14886,8 @@ final class SsrIDBFactory implements IDBFactory {
   );
 }
 
-final class SsrIDBIndex implements IDBIndex {
-  factory SsrIDBIndex() {
+final class SsrIdbindex implements IDBIndex {
+  factory SsrIdbindex() {
     throw UnsupportedWebApiError('IDBIndex constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -14946,8 +14946,8 @@ final class SsrIDBIndex implements IDBIndex {
   );
 }
 
-final class SsrIDBKeyRange implements IDBKeyRange {
-  factory SsrIDBKeyRange() {
+final class SsrIdbkeyrange implements IDBKeyRange {
+  factory SsrIdbkeyrange() {
     throw UnsupportedWebApiError('IDBKeyRange constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -14974,8 +14974,8 @@ final class SsrIDBKeyRange implements IDBKeyRange {
   );
 }
 
-final class SsrIDBObjectStore implements IDBObjectStore {
-  factory SsrIDBObjectStore() {
+final class SsrIdbobjectstore implements IDBObjectStore {
+  factory SsrIdbobjectstore() {
     throw UnsupportedWebApiError('IDBObjectStore constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -15062,8 +15062,8 @@ final class SsrIDBObjectStore implements IDBObjectStore {
   );
 }
 
-final class SsrIDBOpenDBRequest implements IDBOpenDBRequest {
-  factory SsrIDBOpenDBRequest() {
+final class SsrIdbopendbrequest implements IDBOpenDBRequest {
+  factory SsrIdbopendbrequest() {
     throw UnsupportedWebApiError('IDBOpenDBRequest constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -15086,8 +15086,8 @@ final class SsrIDBOpenDBRequest implements IDBOpenDBRequest {
   );
 }
 
-final class SsrIDBRequest implements IDBRequest {
-  factory SsrIDBRequest() {
+final class SsrIdbrequest implements IDBRequest {
+  factory SsrIdbrequest() {
     throw UnsupportedWebApiError('IDBRequest constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -15130,8 +15130,8 @@ final class SsrIDBRequest implements IDBRequest {
   );
 }
 
-final class SsrIDBTransaction implements IDBTransaction {
-  factory SsrIDBTransaction() {
+final class SsrIdbtransaction implements IDBTransaction {
+  factory SsrIdbtransaction() {
     throw UnsupportedWebApiError('IDBTransaction constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -15194,8 +15194,8 @@ final class SsrIDBTransaction implements IDBTransaction {
   );
 }
 
-final class SsrIDBVersionChangeEvent implements IDBVersionChangeEvent {
-  factory SsrIDBVersionChangeEvent(String type, [IDBVersionChangeEventInit? eventInitDict]) {
+final class SsrIdbversionchangeevent implements IDBVersionChangeEvent {
+  factory SsrIdbversionchangeevent(String type, [IDBVersionChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('IDBVersionChangeEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -15210,8 +15210,8 @@ final class SsrIDBVersionChangeEvent implements IDBVersionChangeEvent {
   );
 }
 
-final class SsrIIRFilterNode implements IIRFilterNode {
-  factory SsrIIRFilterNode(BaseAudioContext context, IIRFilterOptions options) {
+final class SsrIirfilternode implements IIRFilterNode {
+  factory SsrIirfilternode(BaseAudioContext context, IIRFilterOptions options) {
     throw UnsupportedWebApiError('IIRFilterNode constructor'
       , exposed: 'Window'
     );
@@ -15222,8 +15222,8 @@ final class SsrIIRFilterNode implements IIRFilterNode {
   );
 }
 
-final class SsrIdleDeadline implements IdleDeadline {
-  factory SsrIdleDeadline() {
+final class SsrIdledeadline implements IdleDeadline {
+  factory SsrIdledeadline() {
     throw UnsupportedWebApiError('IdleDeadline constructor'
       , exposed: 'Window'
     );
@@ -15238,8 +15238,8 @@ final class SsrIdleDeadline implements IdleDeadline {
   );
 }
 
-final class SsrImageBitmap implements ImageBitmap {
-  factory SsrImageBitmap() {
+final class SsrImagebitmap implements ImageBitmap {
+  factory SsrImagebitmap() {
     throw UnsupportedWebApiError('ImageBitmap constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -15258,8 +15258,8 @@ final class SsrImageBitmap implements ImageBitmap {
   );
 }
 
-final class SsrImageBitmapRenderingContext implements ImageBitmapRenderingContext {
-  factory SsrImageBitmapRenderingContext() {
+final class SsrImagebitmaprenderingcontext implements ImageBitmapRenderingContext {
+  factory SsrImagebitmaprenderingcontext() {
     throw UnsupportedWebApiError('ImageBitmapRenderingContext constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -15274,13 +15274,13 @@ final class SsrImageBitmapRenderingContext implements ImageBitmapRenderingContex
   );
 }
 
-final class SsrImageData implements ImageData {
-  factory SsrImageData(int sw, int sh, [ImageDataSettings? settings]) {
+final class SsrImagedata implements ImageData {
+  factory SsrImagedata(int sw, int sh, [ImageDataSettings? settings]) {
     throw UnsupportedWebApiError('ImageData constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
-  factory SsrImageData.named1(Object data, int sw, [int? sh, ImageDataSettings? settings]) {
+  factory SsrImagedata.named1(Object data, int sw, [int? sh, ImageDataSettings? settings]) {
     throw UnsupportedWebApiError('ImageData constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -15303,8 +15303,8 @@ final class SsrImageData implements ImageData {
   );
 }
 
-final class SsrInputDeviceInfo implements InputDeviceInfo {
-  factory SsrInputDeviceInfo() {
+final class SsrInputdeviceinfo implements InputDeviceInfo {
+  factory SsrInputdeviceinfo() {
     throw UnsupportedWebApiError('InputDeviceInfo constructor'
       , exposed: 'Window'
     );
@@ -15315,8 +15315,8 @@ final class SsrInputDeviceInfo implements InputDeviceInfo {
   );
 }
 
-final class SsrInputEvent implements InputEvent {
-  factory SsrInputEvent(String type, [InputEventInit? eventInitDict]) {
+final class SsrInputevent implements InputEvent {
+  factory SsrInputevent(String type, [InputEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('InputEvent constructor'
       , exposed: 'Window'
     );
@@ -15343,16 +15343,16 @@ final class SsrInputEvent implements InputEvent {
   );
 }
 
-final class SsrInstallEvent implements InstallEvent {
-  factory SsrInstallEvent() {
+final class SsrInstallevent implements InstallEvent {
+  factory SsrInstallevent() {
     throw UnsupportedWebApiError('InstallEvent constructor'
       , exposed: 'ServiceWorker'
     );
   }
 }
 
-final class SsrIntersectionObserver implements IntersectionObserver {
-  factory SsrIntersectionObserver(IntersectionObserverCallback callback, [IntersectionObserverInit? options]) {
+final class SsrIntersectionobserver implements IntersectionObserver {
+  factory SsrIntersectionobserver(IntersectionObserverCallback callback, [IntersectionObserverInit? options]) {
     throw UnsupportedWebApiError('IntersectionObserver constructor'
       , exposed: 'Window'
     );
@@ -15387,8 +15387,8 @@ final class SsrIntersectionObserver implements IntersectionObserver {
   );
 }
 
-final class SsrIntersectionObserverEntry implements IntersectionObserverEntry {
-  factory SsrIntersectionObserverEntry(IntersectionObserverEntryInit intersectionObserverEntryInit) {
+final class SsrIntersectionobserverentry implements IntersectionObserverEntry {
+  factory SsrIntersectionobserverentry(IntersectionObserverEntryInit intersectionObserverEntryInit) {
     throw UnsupportedWebApiError('IntersectionObserverEntry constructor'
       , exposed: 'Window'
     );
@@ -15423,16 +15423,16 @@ final class SsrIntersectionObserverEntry implements IntersectionObserverEntry {
   );
 }
 
-final class SsrKHR_parallel_shader_compile implements KHR_parallel_shader_compile {
-  factory SsrKHR_parallel_shader_compile() {
+final class SsrKhrParallelShaderCompile implements KHR_parallel_shader_compile {
+  factory SsrKhrParallelShaderCompile() {
     throw UnsupportedWebApiError('KHR_parallel_shader_compile constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrKeyboardEvent implements KeyboardEvent {
-  factory SsrKeyboardEvent(String type, [KeyboardEventInit? eventInitDict]) {
+final class SsrKeyboardevent implements KeyboardEvent {
+  factory SsrKeyboardevent(String type, [KeyboardEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('KeyboardEvent constructor'
       , exposed: 'Window'
     );
@@ -15491,13 +15491,13 @@ final class SsrKeyboardEvent implements KeyboardEvent {
   );
 }
 
-final class SsrKeyframeEffect implements KeyframeEffect {
-  factory SsrKeyframeEffect(Element? target, Object? keyframes, [Object? options]) {
+final class SsrKeyframeeffect implements KeyframeEffect {
+  factory SsrKeyframeeffect(Element? target, Object? keyframes, [Object? options]) {
     throw UnsupportedWebApiError('KeyframeEffect constructor'
       , exposed: 'Window'
     );
   }
-  factory SsrKeyframeEffect.named1(KeyframeEffect source) {
+  factory SsrKeyframeeffect.named1(KeyframeEffect source) {
     throw UnsupportedWebApiError('KeyframeEffect constructor'
       , exposed: 'Window'
     );
@@ -15544,8 +15544,8 @@ final class SsrKeyframeEffect implements KeyframeEffect {
   );
 }
 
-final class SsrLargestContentfulPaint implements LargestContentfulPaint {
-  factory SsrLargestContentfulPaint() {
+final class SsrLargestcontentfulpaint implements LargestContentfulPaint {
+  factory SsrLargestcontentfulpaint() {
     throw UnsupportedWebApiError('LargestContentfulPaint constructor'
       , exposed: 'Window'
     );
@@ -15576,8 +15576,8 @@ final class SsrLargestContentfulPaint implements LargestContentfulPaint {
   );
 }
 
-final class SsrLinearAccelerationSensor implements LinearAccelerationSensor {
-  factory SsrLinearAccelerationSensor([AccelerometerSensorOptions? options]) {
+final class SsrLinearaccelerationsensor implements LinearAccelerationSensor {
+  factory SsrLinearaccelerationsensor([AccelerometerSensorOptions? options]) {
     throw UnsupportedWebApiError('LinearAccelerationSensor constructor'
       , exposed: 'Window'
     );
@@ -15692,8 +15692,8 @@ final class SsrLock implements Lock {
   );
 }
 
-final class SsrLockManager implements LockManager {
-  factory SsrLockManager() {
+final class SsrLockmanager implements LockManager {
+  factory SsrLockmanager() {
     throw UnsupportedWebApiError('LockManager constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -15708,8 +15708,8 @@ final class SsrLockManager implements LockManager {
   );
 }
 
-final class SsrMIDIAccess implements MIDIAccess {
-  factory SsrMIDIAccess() {
+final class SsrMidiaccess implements MIDIAccess {
+  factory SsrMidiaccess() {
     throw UnsupportedWebApiError('MIDIAccess constructor'
       , exposed: 'Window'
     );
@@ -15736,8 +15736,8 @@ final class SsrMIDIAccess implements MIDIAccess {
   );
 }
 
-final class SsrMIDIConnectionEvent implements MIDIConnectionEvent {
-  factory SsrMIDIConnectionEvent(String type, [MIDIConnectionEventInit? eventInitDict]) {
+final class SsrMidiconnectionevent implements MIDIConnectionEvent {
+  factory SsrMidiconnectionevent(String type, [MIDIConnectionEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MIDIConnectionEvent constructor'
       , exposed: 'Window'
     );
@@ -15748,8 +15748,8 @@ final class SsrMIDIConnectionEvent implements MIDIConnectionEvent {
   );
 }
 
-final class SsrMIDIInput implements MIDIInput {
-  factory SsrMIDIInput() {
+final class SsrMidiinput implements MIDIInput {
+  factory SsrMidiinput() {
     throw UnsupportedWebApiError('MIDIInput constructor'
       , exposed: 'Window'
     );
@@ -15764,16 +15764,16 @@ final class SsrMIDIInput implements MIDIInput {
   );
 }
 
-final class SsrMIDIInputMap implements MIDIInputMap {
-  factory SsrMIDIInputMap() {
+final class SsrMidiinputmap implements MIDIInputMap {
+  factory SsrMidiinputmap() {
     throw UnsupportedWebApiError('MIDIInputMap constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrMIDIMessageEvent implements MIDIMessageEvent {
-  factory SsrMIDIMessageEvent(String type, [MIDIMessageEventInit? eventInitDict]) {
+final class SsrMidimessageevent implements MIDIMessageEvent {
+  factory SsrMidimessageevent(String type, [MIDIMessageEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MIDIMessageEvent constructor'
       , exposed: 'Window'
     );
@@ -15784,8 +15784,8 @@ final class SsrMIDIMessageEvent implements MIDIMessageEvent {
   );
 }
 
-final class SsrMIDIOutput implements MIDIOutput {
-  factory SsrMIDIOutput() {
+final class SsrMidioutput implements MIDIOutput {
+  factory SsrMidioutput() {
     throw UnsupportedWebApiError('MIDIOutput constructor'
       , exposed: 'Window'
     );
@@ -15800,16 +15800,16 @@ final class SsrMIDIOutput implements MIDIOutput {
   );
 }
 
-final class SsrMIDIOutputMap implements MIDIOutputMap {
-  factory SsrMIDIOutputMap() {
+final class SsrMidioutputmap implements MIDIOutputMap {
+  factory SsrMidioutputmap() {
     throw UnsupportedWebApiError('MIDIOutputMap constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrMIDIPort implements MIDIPort {
-  factory SsrMIDIPort() {
+final class SsrMidiport implements MIDIPort {
+  factory SsrMidiport() {
     throw UnsupportedWebApiError('MIDIPort constructor'
       , exposed: 'Window'
     );
@@ -15860,8 +15860,8 @@ final class SsrMIDIPort implements MIDIPort {
   );
 }
 
-final class SsrMathMLElement implements MathMLElement {
-  factory SsrMathMLElement() {
+final class SsrMathmlelement implements MathMLElement {
+  factory SsrMathmlelement() {
     throw UnsupportedWebApiError('MathMLElement constructor'
       , exposed: 'Window'
     );
@@ -16736,8 +16736,8 @@ final class SsrMathMLElement implements MathMLElement {
   );
 }
 
-final class SsrMediaCapabilities implements MediaCapabilities {
-  factory SsrMediaCapabilities() {
+final class SsrMediacapabilities implements MediaCapabilities {
+  factory SsrMediacapabilities() {
     throw UnsupportedWebApiError('MediaCapabilities constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -16752,8 +16752,8 @@ final class SsrMediaCapabilities implements MediaCapabilities {
   );
 }
 
-final class SsrMediaDeviceInfo implements MediaDeviceInfo {
-  factory SsrMediaDeviceInfo() {
+final class SsrMediadeviceinfo implements MediaDeviceInfo {
+  factory SsrMediadeviceinfo() {
     throw UnsupportedWebApiError('MediaDeviceInfo constructor'
       , exposed: 'Window'
     );
@@ -16780,8 +16780,8 @@ final class SsrMediaDeviceInfo implements MediaDeviceInfo {
   );
 }
 
-final class SsrMediaDevices implements MediaDevices {
-  factory SsrMediaDevices() {
+final class SsrMediadevices implements MediaDevices {
+  factory SsrMediadevices() {
     throw UnsupportedWebApiError('MediaDevices constructor'
       , exposed: 'Window'
     );
@@ -16812,8 +16812,8 @@ final class SsrMediaDevices implements MediaDevices {
   );
 }
 
-final class SsrMediaElementAudioSourceNode implements MediaElementAudioSourceNode {
-  factory SsrMediaElementAudioSourceNode(AudioContext context, MediaElementAudioSourceOptions options) {
+final class SsrMediaelementaudiosourcenode implements MediaElementAudioSourceNode {
+  factory SsrMediaelementaudiosourcenode(AudioContext context, MediaElementAudioSourceOptions options) {
     throw UnsupportedWebApiError('MediaElementAudioSourceNode constructor'
       , exposed: 'Window'
     );
@@ -16824,8 +16824,8 @@ final class SsrMediaElementAudioSourceNode implements MediaElementAudioSourceNod
   );
 }
 
-final class SsrMediaEncryptedEvent implements MediaEncryptedEvent {
-  factory SsrMediaEncryptedEvent(String type, [MediaEncryptedEventInit? eventInitDict]) {
+final class SsrMediaencryptedevent implements MediaEncryptedEvent {
+  factory SsrMediaencryptedevent(String type, [MediaEncryptedEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MediaEncryptedEvent constructor'
       , exposed: 'Window'
     );
@@ -16840,8 +16840,8 @@ final class SsrMediaEncryptedEvent implements MediaEncryptedEvent {
   );
 }
 
-final class SsrMediaError implements MediaError {
-  factory SsrMediaError() {
+final class SsrMediaerror implements MediaError {
+  factory SsrMediaerror() {
     throw UnsupportedWebApiError('MediaError constructor'
       , exposed: 'Window'
     );
@@ -16856,8 +16856,8 @@ final class SsrMediaError implements MediaError {
   );
 }
 
-final class SsrMediaKeyMessageEvent implements MediaKeyMessageEvent {
-  factory SsrMediaKeyMessageEvent(String type, MediaKeyMessageEventInit eventInitDict) {
+final class SsrMediakeymessageevent implements MediaKeyMessageEvent {
+  factory SsrMediakeymessageevent(String type, MediaKeyMessageEventInit eventInitDict) {
     throw UnsupportedWebApiError('MediaKeyMessageEvent constructor'
       , exposed: 'Window'
     );
@@ -16872,8 +16872,8 @@ final class SsrMediaKeyMessageEvent implements MediaKeyMessageEvent {
   );
 }
 
-final class SsrMediaKeySession implements MediaKeySession {
-  factory SsrMediaKeySession() {
+final class SsrMediakeysession implements MediaKeySession {
+  factory SsrMediakeysession() {
     throw UnsupportedWebApiError('MediaKeySession constructor'
       , exposed: 'Window'
     );
@@ -16932,8 +16932,8 @@ final class SsrMediaKeySession implements MediaKeySession {
   );
 }
 
-final class SsrMediaKeyStatusMap implements MediaKeyStatusMap {
-  factory SsrMediaKeyStatusMap() {
+final class SsrMediakeystatusmap implements MediaKeyStatusMap {
+  factory SsrMediakeystatusmap() {
     throw UnsupportedWebApiError('MediaKeyStatusMap constructor'
       , exposed: 'Window'
     );
@@ -16952,8 +16952,8 @@ final class SsrMediaKeyStatusMap implements MediaKeyStatusMap {
   );
 }
 
-final class SsrMediaKeySystemAccess implements MediaKeySystemAccess {
-  factory SsrMediaKeySystemAccess() {
+final class SsrMediakeysystemaccess implements MediaKeySystemAccess {
+  factory SsrMediakeysystemaccess() {
     throw UnsupportedWebApiError('MediaKeySystemAccess constructor'
       , exposed: 'Window'
     );
@@ -16972,8 +16972,8 @@ final class SsrMediaKeySystemAccess implements MediaKeySystemAccess {
   );
 }
 
-final class SsrMediaKeys implements MediaKeys {
-  factory SsrMediaKeys() {
+final class SsrMediakeys implements MediaKeys {
+  factory SsrMediakeys() {
     throw UnsupportedWebApiError('MediaKeys constructor'
       , exposed: 'Window'
     );
@@ -16992,8 +16992,8 @@ final class SsrMediaKeys implements MediaKeys {
   );
 }
 
-final class SsrMediaList implements MediaList {
-  factory SsrMediaList() {
+final class SsrMedialist implements MediaList {
+  factory SsrMedialist() {
     throw UnsupportedWebApiError('MediaList constructor'
       , exposed: 'Window'
     );
@@ -17024,8 +17024,8 @@ final class SsrMediaList implements MediaList {
   );
 }
 
-final class SsrMediaMetadata implements MediaMetadata {
-  factory SsrMediaMetadata([MediaMetadataInit? init]) {
+final class SsrMediametadata implements MediaMetadata {
+  factory SsrMediametadata([MediaMetadataInit? init]) {
     throw UnsupportedWebApiError('MediaMetadata constructor'
       , exposed: 'Window'
     );
@@ -17064,8 +17064,8 @@ final class SsrMediaMetadata implements MediaMetadata {
   );
 }
 
-final class SsrMediaQueryList implements MediaQueryList {
-  factory SsrMediaQueryList() {
+final class SsrMediaquerylist implements MediaQueryList {
+  factory SsrMediaquerylist() {
     throw UnsupportedWebApiError('MediaQueryList constructor'
       , exposed: 'Window'
     );
@@ -17096,8 +17096,8 @@ final class SsrMediaQueryList implements MediaQueryList {
   );
 }
 
-final class SsrMediaQueryListEvent implements MediaQueryListEvent {
-  factory SsrMediaQueryListEvent(Object type, [MediaQueryListEventInit? eventInitDict]) {
+final class SsrMediaquerylistevent implements MediaQueryListEvent {
+  factory SsrMediaquerylistevent(Object type, [MediaQueryListEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MediaQueryListEvent constructor'
       , exposed: 'Window'
     );
@@ -17112,8 +17112,8 @@ final class SsrMediaQueryListEvent implements MediaQueryListEvent {
   );
 }
 
-final class SsrMediaRecorder implements MediaRecorder {
-  factory SsrMediaRecorder(MediaStream stream, [MediaRecorderOptions? options]) {
+final class SsrMediarecorder implements MediaRecorder {
+  factory SsrMediarecorder(MediaStream stream, [MediaRecorderOptions? options]) {
     throw UnsupportedWebApiError('MediaRecorder constructor'
       , exposed: 'Window'
     );
@@ -17208,8 +17208,8 @@ final class SsrMediaRecorder implements MediaRecorder {
   );
 }
 
-final class SsrMediaSession implements MediaSession {
-  factory SsrMediaSession() {
+final class SsrMediasession implements MediaSession {
+  factory SsrMediasession() {
     throw UnsupportedWebApiError('MediaSession constructor'
       , exposed: 'Window'
     );
@@ -17240,8 +17240,8 @@ final class SsrMediaSession implements MediaSession {
   );
 }
 
-final class SsrMediaSource implements MediaSource {
-  factory SsrMediaSource() {
+final class SsrMediasource implements MediaSource {
+  factory SsrMediasource() {
     throw UnsupportedWebApiError('MediaSource constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
@@ -17316,26 +17316,26 @@ final class SsrMediaSource implements MediaSource {
   );
 }
 
-final class SsrMediaSourceHandle implements MediaSourceHandle {
-  factory SsrMediaSourceHandle() {
+final class SsrMediasourcehandle implements MediaSourceHandle {
+  factory SsrMediasourcehandle() {
     throw UnsupportedWebApiError('MediaSourceHandle constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
   }
 }
 
-final class SsrMediaStream implements MediaStream {
-  factory SsrMediaStream() {
+final class SsrMediastream implements MediaStream {
+  factory SsrMediastream() {
     throw UnsupportedWebApiError('MediaStream constructor'
       , exposed: 'Window'
     );
   }
-  factory SsrMediaStream.named1(MediaStream stream) {
+  factory SsrMediastream.named1(MediaStream stream) {
     throw UnsupportedWebApiError('MediaStream constructor'
       , exposed: 'Window'
     );
   }
-  factory SsrMediaStream.named2(List<MediaStreamTrack> tracks) {
+  factory SsrMediastream.named2(List<MediaStreamTrack> tracks) {
     throw UnsupportedWebApiError('MediaStream constructor'
       , exposed: 'Window'
     );
@@ -17394,8 +17394,8 @@ final class SsrMediaStream implements MediaStream {
   );
 }
 
-final class SsrMediaStreamAudioDestinationNode implements MediaStreamAudioDestinationNode {
-  factory SsrMediaStreamAudioDestinationNode(AudioContext context, [AudioNodeOptions? options]) {
+final class SsrMediastreamaudiodestinationnode implements MediaStreamAudioDestinationNode {
+  factory SsrMediastreamaudiodestinationnode(AudioContext context, [AudioNodeOptions? options]) {
     throw UnsupportedWebApiError('MediaStreamAudioDestinationNode constructor'
       , exposed: 'Window'
     );
@@ -17406,8 +17406,8 @@ final class SsrMediaStreamAudioDestinationNode implements MediaStreamAudioDestin
   );
 }
 
-final class SsrMediaStreamAudioSourceNode implements MediaStreamAudioSourceNode {
-  factory SsrMediaStreamAudioSourceNode(AudioContext context, MediaStreamAudioSourceOptions options) {
+final class SsrMediastreamaudiosourcenode implements MediaStreamAudioSourceNode {
+  factory SsrMediastreamaudiosourcenode(AudioContext context, MediaStreamAudioSourceOptions options) {
     throw UnsupportedWebApiError('MediaStreamAudioSourceNode constructor'
       , exposed: 'Window'
     );
@@ -17418,8 +17418,8 @@ final class SsrMediaStreamAudioSourceNode implements MediaStreamAudioSourceNode 
   );
 }
 
-final class SsrMediaStreamTrack implements MediaStreamTrack {
-  factory SsrMediaStreamTrack() {
+final class SsrMediastreamtrack implements MediaStreamTrack {
+  factory SsrMediastreamtrack() {
     throw UnsupportedWebApiError('MediaStreamTrack constructor'
       , exposed: 'Window'
     );
@@ -17510,16 +17510,16 @@ final class SsrMediaStreamTrack implements MediaStreamTrack {
   );
 }
 
-final class SsrMediaStreamTrackAudioSourceNode implements MediaStreamTrackAudioSourceNode {
-  factory SsrMediaStreamTrackAudioSourceNode(AudioContext context, MediaStreamTrackAudioSourceOptions options) {
+final class SsrMediastreamtrackaudiosourcenode implements MediaStreamTrackAudioSourceNode {
+  factory SsrMediastreamtrackaudiosourcenode(AudioContext context, MediaStreamTrackAudioSourceOptions options) {
     throw UnsupportedWebApiError('MediaStreamTrackAudioSourceNode constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrMediaStreamTrackEvent implements MediaStreamTrackEvent {
-  factory SsrMediaStreamTrackEvent(String type, MediaStreamTrackEventInit eventInitDict) {
+final class SsrMediastreamtrackevent implements MediaStreamTrackEvent {
+  factory SsrMediastreamtrackevent(String type, MediaStreamTrackEventInit eventInitDict) {
     throw UnsupportedWebApiError('MediaStreamTrackEvent constructor'
       , exposed: 'Window'
     );
@@ -17530,8 +17530,8 @@ final class SsrMediaStreamTrackEvent implements MediaStreamTrackEvent {
   );
 }
 
-final class SsrMediaStreamTrackProcessor implements MediaStreamTrackProcessor {
-  factory SsrMediaStreamTrackProcessor(MediaStreamTrackProcessorInit init) {
+final class SsrMediastreamtrackprocessor implements MediaStreamTrackProcessor {
+  factory SsrMediastreamtrackprocessor(MediaStreamTrackProcessorInit init) {
     throw UnsupportedWebApiError('MediaStreamTrackProcessor constructor'
       , exposed: 'DedicatedWorker'
     );
@@ -17542,8 +17542,8 @@ final class SsrMediaStreamTrackProcessor implements MediaStreamTrackProcessor {
   );
 }
 
-final class SsrMessageChannel implements MessageChannel {
-  factory SsrMessageChannel() {
+final class SsrMessagechannel implements MessageChannel {
+  factory SsrMessagechannel() {
     throw UnsupportedWebApiError('MessageChannel constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -17558,8 +17558,8 @@ final class SsrMessageChannel implements MessageChannel {
   );
 }
 
-final class SsrMessageEvent implements MessageEvent {
-  factory SsrMessageEvent(String type, [MessageEventInit? eventInitDict]) {
+final class SsrMessageevent implements MessageEvent {
+  factory SsrMessageevent(String type, [MessageEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MessageEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: AudioWorklet}]'
     );
@@ -17590,8 +17590,8 @@ final class SsrMessageEvent implements MessageEvent {
   );
 }
 
-final class SsrMessagePort implements MessagePort {
-  factory SsrMessagePort() {
+final class SsrMessageport implements MessagePort {
+  factory SsrMessageport() {
     throw UnsupportedWebApiError('MessagePort constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: AudioWorklet}]'
     );
@@ -17634,8 +17634,8 @@ final class SsrMessagePort implements MessagePort {
   );
 }
 
-final class SsrMimeType implements MimeType {
-  factory SsrMimeType() {
+final class SsrMimetype implements MimeType {
+  factory SsrMimetype() {
     throw UnsupportedWebApiError('MimeType constructor'
       , exposed: 'Window'
     );
@@ -17658,8 +17658,8 @@ final class SsrMimeType implements MimeType {
   );
 }
 
-final class SsrMimeTypeArray implements MimeTypeArray {
-  factory SsrMimeTypeArray() {
+final class SsrMimetypearray implements MimeTypeArray {
+  factory SsrMimetypearray() {
     throw UnsupportedWebApiError('MimeTypeArray constructor'
       , exposed: 'Window'
     );
@@ -17678,8 +17678,8 @@ final class SsrMimeTypeArray implements MimeTypeArray {
   );
 }
 
-final class SsrMouseEvent implements MouseEvent {
-  factory SsrMouseEvent(String type, [MouseEventInit? eventInitDict]) {
+final class SsrMouseevent implements MouseEvent {
+  factory SsrMouseevent(String type, [MouseEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MouseEvent constructor'
       , exposed: 'Window'
     );
@@ -17770,8 +17770,8 @@ final class SsrMouseEvent implements MouseEvent {
   );
 }
 
-final class SsrMutationEvent implements MutationEvent {
-  factory SsrMutationEvent() {
+final class SsrMutationevent implements MutationEvent {
+  factory SsrMutationevent() {
     throw UnsupportedWebApiError('MutationEvent constructor'
       , exposed: 'Window'
     );
@@ -17802,8 +17802,8 @@ final class SsrMutationEvent implements MutationEvent {
   );
 }
 
-final class SsrMutationObserver implements MutationObserver {
-  factory SsrMutationObserver(MutationCallback callback) {
+final class SsrMutationobserver implements MutationObserver {
+  factory SsrMutationobserver(MutationCallback callback) {
     throw UnsupportedWebApiError('MutationObserver constructor'
       , exposed: 'Window'
     );
@@ -17822,8 +17822,8 @@ final class SsrMutationObserver implements MutationObserver {
   );
 }
 
-final class SsrMutationRecord implements MutationRecord {
-  factory SsrMutationRecord() {
+final class SsrMutationrecord implements MutationRecord {
+  factory SsrMutationrecord() {
     throw UnsupportedWebApiError('MutationRecord constructor'
       , exposed: 'Window'
     );
@@ -17866,8 +17866,8 @@ final class SsrMutationRecord implements MutationRecord {
   );
 }
 
-final class SsrNamedNodeMap implements NamedNodeMap {
-  factory SsrNamedNodeMap() {
+final class SsrNamednodemap implements NamedNodeMap {
+  factory SsrNamednodemap() {
     throw UnsupportedWebApiError('NamedNodeMap constructor'
       , exposed: 'Window'
     );
@@ -17906,8 +17906,8 @@ final class SsrNamedNodeMap implements NamedNodeMap {
   );
 }
 
-final class SsrNavigationPreloadManager implements NavigationPreloadManager {
-  factory SsrNavigationPreloadManager() {
+final class SsrNavigationpreloadmanager implements NavigationPreloadManager {
+  factory SsrNavigationpreloadmanager() {
     throw UnsupportedWebApiError('NavigationPreloadManager constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -18158,8 +18158,8 @@ final class SsrNavigator implements Navigator {
   );
 }
 
-final class SsrNetworkInformation implements NetworkInformation {
-  factory SsrNetworkInformation() {
+final class SsrNetworkinformation implements NetworkInformation {
+  factory SsrNetworkinformation() {
     throw UnsupportedWebApiError('NetworkInformation constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -18322,8 +18322,8 @@ final class SsrNode implements Node {
   );
 }
 
-final class SsrNodeIterator implements NodeIterator {
-  factory SsrNodeIterator() {
+final class SsrNodeiterator implements NodeIterator {
+  factory SsrNodeiterator() {
     throw UnsupportedWebApiError('NodeIterator constructor'
       , exposed: 'Window'
     );
@@ -18362,8 +18362,8 @@ final class SsrNodeIterator implements NodeIterator {
   );
 }
 
-final class SsrNodeList implements NodeList {
-  factory SsrNodeList() {
+final class SsrNodelist implements NodeList {
+  factory SsrNodelist() {
     throw UnsupportedWebApiError('NodeList constructor'
       , exposed: 'Window'
     );
@@ -18462,8 +18462,8 @@ final class SsrNotification implements Notification {
   );
 }
 
-final class SsrNotificationEvent implements NotificationEvent {
-  factory SsrNotificationEvent(String type, NotificationEventInit eventInitDict) {
+final class SsrNotificationevent implements NotificationEvent {
+  factory SsrNotificationevent(String type, NotificationEventInit eventInitDict) {
     throw UnsupportedWebApiError('NotificationEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -18478,8 +18478,8 @@ final class SsrNotificationEvent implements NotificationEvent {
   );
 }
 
-final class SsrOES_draw_buffers_indexed implements OES_draw_buffers_indexed {
-  factory SsrOES_draw_buffers_indexed() {
+final class SsrOesDrawBuffersIndexed implements OES_draw_buffers_indexed {
+  factory SsrOesDrawBuffersIndexed() {
     throw UnsupportedWebApiError('OES_draw_buffers_indexed constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -18514,64 +18514,64 @@ final class SsrOES_draw_buffers_indexed implements OES_draw_buffers_indexed {
   );
 }
 
-final class SsrOES_element_index_uint implements OES_element_index_uint {
-  factory SsrOES_element_index_uint() {
+final class SsrOesElementIndexUint implements OES_element_index_uint {
+  factory SsrOesElementIndexUint() {
     throw UnsupportedWebApiError('OES_element_index_uint constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrOES_fbo_render_mipmap implements OES_fbo_render_mipmap {
-  factory SsrOES_fbo_render_mipmap() {
+final class SsrOesFboRenderMipmap implements OES_fbo_render_mipmap {
+  factory SsrOesFboRenderMipmap() {
     throw UnsupportedWebApiError('OES_fbo_render_mipmap constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrOES_standard_derivatives implements OES_standard_derivatives {
-  factory SsrOES_standard_derivatives() {
+final class SsrOesStandardDerivatives implements OES_standard_derivatives {
+  factory SsrOesStandardDerivatives() {
     throw UnsupportedWebApiError('OES_standard_derivatives constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrOES_texture_float implements OES_texture_float {
-  factory SsrOES_texture_float() {
+final class SsrOesTextureFloat implements OES_texture_float {
+  factory SsrOesTextureFloat() {
     throw UnsupportedWebApiError('OES_texture_float constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrOES_texture_float_linear implements OES_texture_float_linear {
-  factory SsrOES_texture_float_linear() {
+final class SsrOesTextureFloatLinear implements OES_texture_float_linear {
+  factory SsrOesTextureFloatLinear() {
     throw UnsupportedWebApiError('OES_texture_float_linear constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrOES_texture_half_float implements OES_texture_half_float {
-  factory SsrOES_texture_half_float() {
+final class SsrOesTextureHalfFloat implements OES_texture_half_float {
+  factory SsrOesTextureHalfFloat() {
     throw UnsupportedWebApiError('OES_texture_half_float constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrOES_texture_half_float_linear implements OES_texture_half_float_linear {
-  factory SsrOES_texture_half_float_linear() {
+final class SsrOesTextureHalfFloatLinear implements OES_texture_half_float_linear {
+  factory SsrOesTextureHalfFloatLinear() {
     throw UnsupportedWebApiError('OES_texture_half_float_linear constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrOES_vertex_array_object implements OES_vertex_array_object {
-  factory SsrOES_vertex_array_object() {
+final class SsrOesVertexArrayObject implements OES_vertex_array_object {
+  factory SsrOesVertexArrayObject() {
     throw UnsupportedWebApiError('OES_vertex_array_object constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -18594,8 +18594,8 @@ final class SsrOES_vertex_array_object implements OES_vertex_array_object {
   );
 }
 
-final class SsrOVR_multiview2 implements OVR_multiview2 {
-  factory SsrOVR_multiview2() {
+final class SsrOvrMultiview2 implements OVR_multiview2 {
+  factory SsrOvrMultiview2() {
     throw UnsupportedWebApiError('OVR_multiview2 constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -18606,8 +18606,8 @@ final class SsrOVR_multiview2 implements OVR_multiview2 {
   );
 }
 
-final class SsrOfflineAudioCompletionEvent implements OfflineAudioCompletionEvent {
-  factory SsrOfflineAudioCompletionEvent(String type, OfflineAudioCompletionEventInit eventInitDict) {
+final class SsrOfflineaudiocompletionevent implements OfflineAudioCompletionEvent {
+  factory SsrOfflineaudiocompletionevent(String type, OfflineAudioCompletionEventInit eventInitDict) {
     throw UnsupportedWebApiError('OfflineAudioCompletionEvent constructor'
       , exposed: 'Window'
     );
@@ -18618,13 +18618,13 @@ final class SsrOfflineAudioCompletionEvent implements OfflineAudioCompletionEven
   );
 }
 
-final class SsrOfflineAudioContext implements OfflineAudioContext {
-  factory SsrOfflineAudioContext(OfflineAudioContextOptions contextOptions) {
+final class SsrOfflineaudiocontext implements OfflineAudioContext {
+  factory SsrOfflineaudiocontext(OfflineAudioContextOptions contextOptions) {
     throw UnsupportedWebApiError('OfflineAudioContext constructor'
       , exposed: 'Window'
     );
   }
-  factory SsrOfflineAudioContext.named1(int numberOfChannels, int length, double sampleRate) {
+  factory SsrOfflineaudiocontext.named1(int numberOfChannels, int length, double sampleRate) {
     throw UnsupportedWebApiError('OfflineAudioContext constructor'
       , exposed: 'Window'
     );
@@ -18655,8 +18655,8 @@ final class SsrOfflineAudioContext implements OfflineAudioContext {
   );
 }
 
-final class SsrOffscreenCanvas implements OffscreenCanvas {
-  factory SsrOffscreenCanvas(int width, int height) {
+final class SsrOffscreencanvas implements OffscreenCanvas {
+  factory SsrOffscreencanvas(int width, int height) {
     throw UnsupportedWebApiError('OffscreenCanvas constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -18707,8 +18707,8 @@ final class SsrOffscreenCanvas implements OffscreenCanvas {
   );
 }
 
-final class SsrOffscreenCanvasRenderingContext2D implements OffscreenCanvasRenderingContext2D {
-  factory SsrOffscreenCanvasRenderingContext2D() {
+final class SsrOffscreencanvasrenderingcontext2d implements OffscreenCanvasRenderingContext2D {
+  factory SsrOffscreencanvasrenderingcontext2d() {
     throw UnsupportedWebApiError('OffscreenCanvasRenderingContext2D constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -19099,8 +19099,8 @@ final class SsrOffscreenCanvasRenderingContext2D implements OffscreenCanvasRende
   );
 }
 
-final class SsrOrientationSensor implements OrientationSensor {
-  factory SsrOrientationSensor() {
+final class SsrOrientationsensor implements OrientationSensor {
+  factory SsrOrientationsensor() {
     throw UnsupportedWebApiError('OrientationSensor constructor'
       , exposed: 'Window'
     );
@@ -19115,8 +19115,8 @@ final class SsrOrientationSensor implements OrientationSensor {
   );
 }
 
-final class SsrOscillatorNode implements OscillatorNode {
-  factory SsrOscillatorNode(BaseAudioContext context, [OscillatorOptions? options]) {
+final class SsrOscillatornode implements OscillatorNode {
+  factory SsrOscillatornode(BaseAudioContext context, [OscillatorOptions? options]) {
     throw UnsupportedWebApiError('OscillatorNode constructor'
       , exposed: 'Window'
     );
@@ -19143,8 +19143,8 @@ final class SsrOscillatorNode implements OscillatorNode {
   );
 }
 
-final class SsrOverconstrainedError implements OverconstrainedError {
-  factory SsrOverconstrainedError(String constraint, [String? message]) {
+final class SsrOverconstrainederror implements OverconstrainedError {
+  factory SsrOverconstrainederror(String constraint, [String? message]) {
     throw UnsupportedWebApiError('OverconstrainedError constructor'
       , exposed: 'Window'
     );
@@ -19155,8 +19155,8 @@ final class SsrOverconstrainedError implements OverconstrainedError {
   );
 }
 
-final class SsrPageTransitionEvent implements PageTransitionEvent {
-  factory SsrPageTransitionEvent(String type, [PageTransitionEventInit? eventInitDict]) {
+final class SsrPagetransitionevent implements PageTransitionEvent {
+  factory SsrPagetransitionevent(String type, [PageTransitionEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PageTransitionEvent constructor'
       , exposed: 'Window'
     );
@@ -19167,8 +19167,8 @@ final class SsrPageTransitionEvent implements PageTransitionEvent {
   );
 }
 
-final class SsrPaintRenderingContext2D implements PaintRenderingContext2D {
-  factory SsrPaintRenderingContext2D() {
+final class SsrPaintrenderingcontext2d implements PaintRenderingContext2D {
+  factory SsrPaintrenderingcontext2d() {
     throw UnsupportedWebApiError('PaintRenderingContext2D constructor'
       , exposed: 'PaintWorklet'
     );
@@ -19443,8 +19443,8 @@ final class SsrPaintRenderingContext2D implements PaintRenderingContext2D {
   );
 }
 
-final class SsrPaintSize implements PaintSize {
-  factory SsrPaintSize() {
+final class SsrPaintsize implements PaintSize {
+  factory SsrPaintsize() {
     throw UnsupportedWebApiError('PaintSize constructor'
       , exposed: 'PaintWorklet'
     );
@@ -19459,8 +19459,8 @@ final class SsrPaintSize implements PaintSize {
   );
 }
 
-final class SsrPannerNode implements PannerNode {
-  factory SsrPannerNode(BaseAudioContext context, [PannerOptions? options]) {
+final class SsrPannernode implements PannerNode {
+  factory SsrPannernode(BaseAudioContext context, [PannerOptions? options]) {
     throw UnsupportedWebApiError('PannerNode constructor'
       , exposed: 'Window'
     );
@@ -19563,8 +19563,8 @@ final class SsrPannerNode implements PannerNode {
   );
 }
 
-final class SsrPath2D implements Path2D {
-  factory SsrPath2D([Object? path]) {
+final class SsrPath2d implements Path2D {
+  factory SsrPath2d([Object? path]) {
     throw UnsupportedWebApiError('Path2D constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -19615,8 +19615,8 @@ final class SsrPath2D implements Path2D {
   );
 }
 
-final class SsrPaymentMethodChangeEvent implements PaymentMethodChangeEvent {
-  factory SsrPaymentMethodChangeEvent(String type, [PaymentMethodChangeEventInit? eventInitDict]) {
+final class SsrPaymentmethodchangeevent implements PaymentMethodChangeEvent {
+  factory SsrPaymentmethodchangeevent(String type, [PaymentMethodChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PaymentMethodChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -19631,8 +19631,8 @@ final class SsrPaymentMethodChangeEvent implements PaymentMethodChangeEvent {
   );
 }
 
-final class SsrPaymentRequest implements PaymentRequest {
-  factory SsrPaymentRequest(List<PaymentMethodData> methodData, PaymentDetailsInit details) {
+final class SsrPaymentrequest implements PaymentRequest {
+  factory SsrPaymentrequest(List<PaymentMethodData> methodData, PaymentDetailsInit details) {
     throw UnsupportedWebApiError('PaymentRequest constructor'
       , exposed: 'Window'
     );
@@ -19663,8 +19663,8 @@ final class SsrPaymentRequest implements PaymentRequest {
   );
 }
 
-final class SsrPaymentRequestUpdateEvent implements PaymentRequestUpdateEvent {
-  factory SsrPaymentRequestUpdateEvent(String type, [PaymentRequestUpdateEventInit? eventInitDict]) {
+final class SsrPaymentrequestupdateevent implements PaymentRequestUpdateEvent {
+  factory SsrPaymentrequestupdateevent(String type, [PaymentRequestUpdateEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PaymentRequestUpdateEvent constructor'
       , exposed: 'Window'
     );
@@ -19675,8 +19675,8 @@ final class SsrPaymentRequestUpdateEvent implements PaymentRequestUpdateEvent {
   );
 }
 
-final class SsrPaymentResponse implements PaymentResponse {
-  factory SsrPaymentResponse() {
+final class SsrPaymentresponse implements PaymentResponse {
+  factory SsrPaymentresponse() {
     throw UnsupportedWebApiError('PaymentResponse constructor'
       , exposed: 'Window'
     );
@@ -19783,8 +19783,8 @@ final class SsrPerformance implements Performance {
   );
 }
 
-final class SsrPerformanceEntry implements PerformanceEntry {
-  factory SsrPerformanceEntry() {
+final class SsrPerformanceentry implements PerformanceEntry {
+  factory SsrPerformanceentry() {
     throw UnsupportedWebApiError('PerformanceEntry constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -19811,8 +19811,8 @@ final class SsrPerformanceEntry implements PerformanceEntry {
   );
 }
 
-final class SsrPerformanceEventTiming implements PerformanceEventTiming {
-  factory SsrPerformanceEventTiming() {
+final class SsrPerformanceeventtiming implements PerformanceEventTiming {
+  factory SsrPerformanceeventtiming() {
     throw UnsupportedWebApiError('PerformanceEventTiming constructor'
       , exposed: 'Window'
     );
@@ -19835,8 +19835,8 @@ final class SsrPerformanceEventTiming implements PerformanceEventTiming {
   );
 }
 
-final class SsrPerformanceMark implements PerformanceMark {
-  factory SsrPerformanceMark(String markName, [PerformanceMarkOptions? markOptions]) {
+final class SsrPerformancemark implements PerformanceMark {
+  factory SsrPerformancemark(String markName, [PerformanceMarkOptions? markOptions]) {
     throw UnsupportedWebApiError('PerformanceMark constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -19847,8 +19847,8 @@ final class SsrPerformanceMark implements PerformanceMark {
   );
 }
 
-final class SsrPerformanceMeasure implements PerformanceMeasure {
-  factory SsrPerformanceMeasure() {
+final class SsrPerformancemeasure implements PerformanceMeasure {
+  factory SsrPerformancemeasure() {
     throw UnsupportedWebApiError('PerformanceMeasure constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -19859,8 +19859,8 @@ final class SsrPerformanceMeasure implements PerformanceMeasure {
   );
 }
 
-final class SsrPerformanceNavigation implements PerformanceNavigation {
-  factory SsrPerformanceNavigation() {
+final class SsrPerformancenavigation implements PerformanceNavigation {
+  factory SsrPerformancenavigation() {
     throw UnsupportedWebApiError('PerformanceNavigation constructor'
       , exposed: 'Window'
     );
@@ -19879,8 +19879,8 @@ final class SsrPerformanceNavigation implements PerformanceNavigation {
   );
 }
 
-final class SsrPerformanceNavigationTiming implements PerformanceNavigationTiming {
-  factory SsrPerformanceNavigationTiming() {
+final class SsrPerformancenavigationtiming implements PerformanceNavigationTiming {
+  factory SsrPerformancenavigationtiming() {
     throw UnsupportedWebApiError('PerformanceNavigationTiming constructor'
       , exposed: 'Window'
     );
@@ -19927,8 +19927,8 @@ final class SsrPerformanceNavigationTiming implements PerformanceNavigationTimin
   );
 }
 
-final class SsrPerformanceObserver implements PerformanceObserver {
-  factory SsrPerformanceObserver(PerformanceObserverCallback callback) {
+final class SsrPerformanceobserver implements PerformanceObserver {
+  factory SsrPerformanceobserver(PerformanceObserverCallback callback) {
     throw UnsupportedWebApiError('PerformanceObserver constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -19947,8 +19947,8 @@ final class SsrPerformanceObserver implements PerformanceObserver {
   );
 }
 
-final class SsrPerformanceObserverEntryList implements PerformanceObserverEntryList {
-  factory SsrPerformanceObserverEntryList() {
+final class SsrPerformanceobserverentrylist implements PerformanceObserverEntryList {
+  factory SsrPerformanceobserverentrylist() {
     throw UnsupportedWebApiError('PerformanceObserverEntryList constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -19967,16 +19967,16 @@ final class SsrPerformanceObserverEntryList implements PerformanceObserverEntryL
   );
 }
 
-final class SsrPerformancePaintTiming implements PerformancePaintTiming {
-  factory SsrPerformancePaintTiming() {
+final class SsrPerformancepainttiming implements PerformancePaintTiming {
+  factory SsrPerformancepainttiming() {
     throw UnsupportedWebApiError('PerformancePaintTiming constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrPerformanceResourceTiming implements PerformanceResourceTiming {
-  factory SsrPerformanceResourceTiming() {
+final class SsrPerformanceresourcetiming implements PerformanceResourceTiming {
+  factory SsrPerformanceresourcetiming() {
     throw UnsupportedWebApiError('PerformanceResourceTiming constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -20059,8 +20059,8 @@ final class SsrPerformanceResourceTiming implements PerformanceResourceTiming {
   );
 }
 
-final class SsrPerformanceServerTiming implements PerformanceServerTiming {
-  factory SsrPerformanceServerTiming() {
+final class SsrPerformanceservertiming implements PerformanceServerTiming {
+  factory SsrPerformanceservertiming() {
     throw UnsupportedWebApiError('PerformanceServerTiming constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -20083,8 +20083,8 @@ final class SsrPerformanceServerTiming implements PerformanceServerTiming {
   );
 }
 
-final class SsrPerformanceTiming implements PerformanceTiming {
-  factory SsrPerformanceTiming() {
+final class SsrPerformancetiming implements PerformanceTiming {
+  factory SsrPerformancetiming() {
     throw UnsupportedWebApiError('PerformanceTiming constructor'
       , exposed: 'Window'
     );
@@ -20179,16 +20179,16 @@ final class SsrPerformanceTiming implements PerformanceTiming {
   );
 }
 
-final class SsrPeriodicWave implements PeriodicWave {
-  factory SsrPeriodicWave(BaseAudioContext context, [PeriodicWaveOptions? options]) {
+final class SsrPeriodicwave implements PeriodicWave {
+  factory SsrPeriodicwave(BaseAudioContext context, [PeriodicWaveOptions? options]) {
     throw UnsupportedWebApiError('PeriodicWave constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrPermissionStatus implements PermissionStatus {
-  factory SsrPermissionStatus() {
+final class SsrPermissionstatus implements PermissionStatus {
+  factory SsrPermissionstatus() {
     throw UnsupportedWebApiError('PermissionStatus constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -20227,8 +20227,8 @@ final class SsrPermissions implements Permissions {
   );
 }
 
-final class SsrPictureInPictureEvent implements PictureInPictureEvent {
-  factory SsrPictureInPictureEvent(String type, PictureInPictureEventInit eventInitDict) {
+final class SsrPictureinpictureevent implements PictureInPictureEvent {
+  factory SsrPictureinpictureevent(String type, PictureInPictureEventInit eventInitDict) {
     throw UnsupportedWebApiError('PictureInPictureEvent constructor'
       , exposed: 'Window'
     );
@@ -20239,8 +20239,8 @@ final class SsrPictureInPictureEvent implements PictureInPictureEvent {
   );
 }
 
-final class SsrPictureInPictureWindow implements PictureInPictureWindow {
-  factory SsrPictureInPictureWindow() {
+final class SsrPictureinpicturewindow implements PictureInPictureWindow {
+  factory SsrPictureinpicturewindow() {
     throw UnsupportedWebApiError('PictureInPictureWindow constructor'
       , exposed: 'Window'
     );
@@ -20295,8 +20295,8 @@ final class SsrPlugin implements Plugin {
   );
 }
 
-final class SsrPluginArray implements PluginArray {
-  factory SsrPluginArray() {
+final class SsrPluginarray implements PluginArray {
+  factory SsrPluginarray() {
     throw UnsupportedWebApiError('PluginArray constructor'
       , exposed: 'Window'
     );
@@ -20319,8 +20319,8 @@ final class SsrPluginArray implements PluginArray {
   );
 }
 
-final class SsrPointerEvent implements PointerEvent {
-  factory SsrPointerEvent(String type, [PointerEventInit? eventInitDict]) {
+final class SsrPointerevent implements PointerEvent {
+  factory SsrPointerevent(String type, [PointerEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PointerEvent constructor'
       , exposed: 'Window'
     );
@@ -20375,8 +20375,8 @@ final class SsrPointerEvent implements PointerEvent {
   );
 }
 
-final class SsrPopStateEvent implements PopStateEvent {
-  factory SsrPopStateEvent(String type, [PopStateEventInit? eventInitDict]) {
+final class SsrPopstateevent implements PopStateEvent {
+  factory SsrPopstateevent(String type, [PopStateEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PopStateEvent constructor'
       , exposed: 'Window'
     );
@@ -20391,8 +20391,8 @@ final class SsrPopStateEvent implements PopStateEvent {
   );
 }
 
-final class SsrProcessingInstruction implements ProcessingInstruction {
-  factory SsrProcessingInstruction() {
+final class SsrProcessinginstruction implements ProcessingInstruction {
+  factory SsrProcessinginstruction() {
     throw UnsupportedWebApiError('ProcessingInstruction constructor'
       , exposed: 'Window'
     );
@@ -20407,8 +20407,8 @@ final class SsrProcessingInstruction implements ProcessingInstruction {
   );
 }
 
-final class SsrProgressEvent implements ProgressEvent {
-  factory SsrProgressEvent(String type, [ProgressEventInit? eventInitDict]) {
+final class SsrProgressevent implements ProgressEvent {
+  factory SsrProgressevent(String type, [ProgressEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ProgressEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -20427,8 +20427,8 @@ final class SsrProgressEvent implements ProgressEvent {
   );
 }
 
-final class SsrPromiseRejectionEvent implements PromiseRejectionEvent {
-  factory SsrPromiseRejectionEvent(String type, PromiseRejectionEventInit eventInitDict) {
+final class SsrPromiserejectionevent implements PromiseRejectionEvent {
+  factory SsrPromiserejectionevent(String type, PromiseRejectionEventInit eventInitDict) {
     throw UnsupportedWebApiError('PromiseRejectionEvent constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -20443,8 +20443,8 @@ final class SsrPromiseRejectionEvent implements PromiseRejectionEvent {
   );
 }
 
-final class SsrPublicKeyCredential implements PublicKeyCredential {
-  factory SsrPublicKeyCredential() {
+final class SsrPublickeycredential implements PublicKeyCredential {
+  factory SsrPublickeycredential() {
     throw UnsupportedWebApiError('PublicKeyCredential constructor'
       , exposed: 'Window'
     );
@@ -20467,8 +20467,8 @@ final class SsrPublicKeyCredential implements PublicKeyCredential {
   );
 }
 
-final class SsrPushEvent implements PushEvent {
-  factory SsrPushEvent(String type, [PushEventInit? eventInitDict]) {
+final class SsrPushevent implements PushEvent {
+  factory SsrPushevent(String type, [PushEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PushEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -20479,8 +20479,8 @@ final class SsrPushEvent implements PushEvent {
   );
 }
 
-final class SsrPushManager implements PushManager {
-  factory SsrPushManager() {
+final class SsrPushmanager implements PushManager {
+  factory SsrPushmanager() {
     throw UnsupportedWebApiError('PushManager constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -20499,8 +20499,8 @@ final class SsrPushManager implements PushManager {
   );
 }
 
-final class SsrPushMessageData implements PushMessageData {
-  factory SsrPushMessageData() {
+final class SsrPushmessagedata implements PushMessageData {
+  factory SsrPushmessagedata() {
     throw UnsupportedWebApiError('PushMessageData constructor'
       , exposed: 'ServiceWorker'
     );
@@ -20523,8 +20523,8 @@ final class SsrPushMessageData implements PushMessageData {
   );
 }
 
-final class SsrPushSubscription implements PushSubscription {
-  factory SsrPushSubscription() {
+final class SsrPushsubscription implements PushSubscription {
+  factory SsrPushsubscription() {
     throw UnsupportedWebApiError('PushSubscription constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -20555,8 +20555,8 @@ final class SsrPushSubscription implements PushSubscription {
   );
 }
 
-final class SsrPushSubscriptionChangeEvent implements PushSubscriptionChangeEvent {
-  factory SsrPushSubscriptionChangeEvent(String type, [PushSubscriptionChangeEventInit? eventInitDict]) {
+final class SsrPushsubscriptionchangeevent implements PushSubscriptionChangeEvent {
+  factory SsrPushsubscriptionchangeevent(String type, [PushSubscriptionChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PushSubscriptionChangeEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -20571,8 +20571,8 @@ final class SsrPushSubscriptionChangeEvent implements PushSubscriptionChangeEven
   );
 }
 
-final class SsrPushSubscriptionOptions implements PushSubscriptionOptions {
-  factory SsrPushSubscriptionOptions() {
+final class SsrPushsubscriptionoptions implements PushSubscriptionOptions {
+  factory SsrPushsubscriptionoptions() {
     throw UnsupportedWebApiError('PushSubscriptionOptions constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -20587,8 +20587,8 @@ final class SsrPushSubscriptionOptions implements PushSubscriptionOptions {
   );
 }
 
-final class SsrRTCCertificate implements RTCCertificate {
-  factory SsrRTCCertificate() {
+final class SsrRtccertificate implements RTCCertificate {
+  factory SsrRtccertificate() {
     throw UnsupportedWebApiError('RTCCertificate constructor'
       , exposed: 'Window'
     );
@@ -20603,8 +20603,8 @@ final class SsrRTCCertificate implements RTCCertificate {
   );
 }
 
-final class SsrRTCDTMFSender implements RTCDTMFSender {
-  factory SsrRTCDTMFSender() {
+final class SsrRtcdtmfsender implements RTCDTMFSender {
+  factory SsrRtcdtmfsender() {
     throw UnsupportedWebApiError('RTCDTMFSender constructor'
       , exposed: 'Window'
     );
@@ -20631,8 +20631,8 @@ final class SsrRTCDTMFSender implements RTCDTMFSender {
   );
 }
 
-final class SsrRTCDTMFToneChangeEvent implements RTCDTMFToneChangeEvent {
-  factory SsrRTCDTMFToneChangeEvent(String type, [RTCDTMFToneChangeEventInit? eventInitDict]) {
+final class SsrRtcdtmftonechangeevent implements RTCDTMFToneChangeEvent {
+  factory SsrRtcdtmftonechangeevent(String type, [RTCDTMFToneChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('RTCDTMFToneChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -20643,8 +20643,8 @@ final class SsrRTCDTMFToneChangeEvent implements RTCDTMFToneChangeEvent {
   );
 }
 
-final class SsrRTCDataChannel implements RTCDataChannel {
-  factory SsrRTCDataChannel() {
+final class SsrRtcdatachannel implements RTCDataChannel {
+  factory SsrRtcdatachannel() {
     throw UnsupportedWebApiError('RTCDataChannel constructor'
       , exposed: 'Window'
     );
@@ -20759,8 +20759,8 @@ final class SsrRTCDataChannel implements RTCDataChannel {
   );
 }
 
-final class SsrRTCDataChannelEvent implements RTCDataChannelEvent {
-  factory SsrRTCDataChannelEvent(String type, RTCDataChannelEventInit eventInitDict) {
+final class SsrRtcdatachannelevent implements RTCDataChannelEvent {
+  factory SsrRtcdatachannelevent(String type, RTCDataChannelEventInit eventInitDict) {
     throw UnsupportedWebApiError('RTCDataChannelEvent constructor'
       , exposed: 'Window'
     );
@@ -20771,8 +20771,8 @@ final class SsrRTCDataChannelEvent implements RTCDataChannelEvent {
   );
 }
 
-final class SsrRTCDtlsTransport implements RTCDtlsTransport {
-  factory SsrRTCDtlsTransport() {
+final class SsrRtcdtlstransport implements RTCDtlsTransport {
+  factory SsrRtcdtlstransport() {
     throw UnsupportedWebApiError('RTCDtlsTransport constructor'
       , exposed: 'Window'
     );
@@ -20807,8 +20807,8 @@ final class SsrRTCDtlsTransport implements RTCDtlsTransport {
   );
 }
 
-final class SsrRTCEncodedAudioFrame implements RTCEncodedAudioFrame {
-  factory SsrRTCEncodedAudioFrame(RTCEncodedAudioFrame originalFrame, [RTCEncodedAudioFrameOptions? options]) {
+final class SsrRtcencodedaudioframe implements RTCEncodedAudioFrame {
+  factory SsrRtcencodedaudioframe(RTCEncodedAudioFrame originalFrame, [RTCEncodedAudioFrameOptions? options]) {
     throw UnsupportedWebApiError('RTCEncodedAudioFrame constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
@@ -20827,8 +20827,8 @@ final class SsrRTCEncodedAudioFrame implements RTCEncodedAudioFrame {
   );
 }
 
-final class SsrRTCEncodedVideoFrame implements RTCEncodedVideoFrame {
-  factory SsrRTCEncodedVideoFrame(RTCEncodedVideoFrame originalFrame, [RTCEncodedVideoFrameOptions? options]) {
+final class SsrRtcencodedvideoframe implements RTCEncodedVideoFrame {
+  factory SsrRtcencodedvideoframe(RTCEncodedVideoFrame originalFrame, [RTCEncodedVideoFrameOptions? options]) {
     throw UnsupportedWebApiError('RTCEncodedVideoFrame constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
@@ -20851,8 +20851,8 @@ final class SsrRTCEncodedVideoFrame implements RTCEncodedVideoFrame {
   );
 }
 
-final class SsrRTCError implements RTCError {
-  factory SsrRTCError(RTCErrorInit init, [String? message]) {
+final class SsrRtcerror implements RTCError {
+  factory SsrRtcerror(RTCErrorInit init, [String? message]) {
     throw UnsupportedWebApiError('RTCError constructor'
       , exposed: 'Window'
     );
@@ -20883,8 +20883,8 @@ final class SsrRTCError implements RTCError {
   );
 }
 
-final class SsrRTCErrorEvent implements RTCErrorEvent {
-  factory SsrRTCErrorEvent(String type, RTCErrorEventInit eventInitDict) {
+final class SsrRtcerrorevent implements RTCErrorEvent {
+  factory SsrRtcerrorevent(String type, RTCErrorEventInit eventInitDict) {
     throw UnsupportedWebApiError('RTCErrorEvent constructor'
       , exposed: 'Window'
     );
@@ -20895,8 +20895,8 @@ final class SsrRTCErrorEvent implements RTCErrorEvent {
   );
 }
 
-final class SsrRTCIceCandidate implements RTCIceCandidate {
-  factory SsrRTCIceCandidate([RTCIceCandidateInit? candidateInitDict]) {
+final class SsrRtcicecandidate implements RTCIceCandidate {
+  factory SsrRtcicecandidate([RTCIceCandidateInit? candidateInitDict]) {
     throw UnsupportedWebApiError('RTCIceCandidate constructor'
       , exposed: 'Window'
     );
@@ -20963,8 +20963,8 @@ final class SsrRTCIceCandidate implements RTCIceCandidate {
   );
 }
 
-final class SsrRTCIceTransport implements RTCIceTransport {
-  factory SsrRTCIceTransport() {
+final class SsrRtcicetransport implements RTCIceTransport {
+  factory SsrRtcicetransport() {
     throw UnsupportedWebApiError('RTCIceTransport constructor'
       , exposed: 'Window'
     );
@@ -21043,8 +21043,8 @@ final class SsrRTCIceTransport implements RTCIceTransport {
   );
 }
 
-final class SsrRTCPeerConnection implements RTCPeerConnection {
-  factory SsrRTCPeerConnection([RTCConfiguration? configuration]) {
+final class SsrRtcpeerconnection implements RTCPeerConnection {
+  factory SsrRtcpeerconnection([RTCConfiguration? configuration]) {
     throw UnsupportedWebApiError('RTCPeerConnection constructor'
       , exposed: 'Window'
     );
@@ -21255,8 +21255,8 @@ final class SsrRTCPeerConnection implements RTCPeerConnection {
   );
 }
 
-final class SsrRTCPeerConnectionIceErrorEvent implements RTCPeerConnectionIceErrorEvent {
-  factory SsrRTCPeerConnectionIceErrorEvent(String type, RTCPeerConnectionIceErrorEventInit eventInitDict) {
+final class SsrRtcpeerconnectioniceerrorevent implements RTCPeerConnectionIceErrorEvent {
+  factory SsrRtcpeerconnectioniceerrorevent(String type, RTCPeerConnectionIceErrorEventInit eventInitDict) {
     throw UnsupportedWebApiError('RTCPeerConnectionIceErrorEvent constructor'
       , exposed: 'Window'
     );
@@ -21283,8 +21283,8 @@ final class SsrRTCPeerConnectionIceErrorEvent implements RTCPeerConnectionIceErr
   );
 }
 
-final class SsrRTCPeerConnectionIceEvent implements RTCPeerConnectionIceEvent {
-  factory SsrRTCPeerConnectionIceEvent(String type, [RTCPeerConnectionIceEventInit? eventInitDict]) {
+final class SsrRtcpeerconnectioniceevent implements RTCPeerConnectionIceEvent {
+  factory SsrRtcpeerconnectioniceevent(String type, [RTCPeerConnectionIceEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('RTCPeerConnectionIceEvent constructor'
       , exposed: 'Window'
     );
@@ -21299,8 +21299,8 @@ final class SsrRTCPeerConnectionIceEvent implements RTCPeerConnectionIceEvent {
   );
 }
 
-final class SsrRTCRtpReceiver implements RTCRtpReceiver {
-  factory SsrRTCRtpReceiver() {
+final class SsrRtcrtpreceiver implements RTCRtpReceiver {
+  factory SsrRtcrtpreceiver() {
     throw UnsupportedWebApiError('RTCRtpReceiver constructor'
       , exposed: 'Window'
     );
@@ -21347,16 +21347,16 @@ final class SsrRTCRtpReceiver implements RTCRtpReceiver {
   );
 }
 
-final class SsrRTCRtpScriptTransform implements RTCRtpScriptTransform {
-  factory SsrRTCRtpScriptTransform(Worker worker, [Object? options, List<Object>? transfer]) {
+final class SsrRtcrtpscripttransform implements RTCRtpScriptTransform {
+  factory SsrRtcrtpscripttransform(Worker worker, [Object? options, List<Object>? transfer]) {
     throw UnsupportedWebApiError('RTCRtpScriptTransform constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrRTCRtpScriptTransformer implements RTCRtpScriptTransformer {
-  factory SsrRTCRtpScriptTransformer() {
+final class SsrRtcrtpscripttransformer implements RTCRtpScriptTransformer {
+  factory SsrRtcrtpscripttransformer() {
     throw UnsupportedWebApiError('RTCRtpScriptTransformer constructor'
       , exposed: 'DedicatedWorker'
     );
@@ -21383,8 +21383,8 @@ final class SsrRTCRtpScriptTransformer implements RTCRtpScriptTransformer {
   );
 }
 
-final class SsrRTCRtpSender implements RTCRtpSender {
-  factory SsrRTCRtpSender() {
+final class SsrRtcrtpsender implements RTCRtpSender {
+  factory SsrRtcrtpsender() {
     throw UnsupportedWebApiError('RTCRtpSender constructor'
       , exposed: 'Window'
     );
@@ -21431,8 +21431,8 @@ final class SsrRTCRtpSender implements RTCRtpSender {
   );
 }
 
-final class SsrRTCRtpTransceiver implements RTCRtpTransceiver {
-  factory SsrRTCRtpTransceiver() {
+final class SsrRtcrtptransceiver implements RTCRtpTransceiver {
+  factory SsrRtcrtptransceiver() {
     throw UnsupportedWebApiError('RTCRtpTransceiver constructor'
       , exposed: 'Window'
     );
@@ -21471,8 +21471,8 @@ final class SsrRTCRtpTransceiver implements RTCRtpTransceiver {
   );
 }
 
-final class SsrRTCSctpTransport implements RTCSctpTransport {
-  factory SsrRTCSctpTransport() {
+final class SsrRtcsctptransport implements RTCSctpTransport {
+  factory SsrRtcsctptransport() {
     throw UnsupportedWebApiError('RTCSctpTransport constructor'
       , exposed: 'Window'
     );
@@ -21503,8 +21503,8 @@ final class SsrRTCSctpTransport implements RTCSctpTransport {
   );
 }
 
-final class SsrRTCSessionDescription implements RTCSessionDescription {
-  factory SsrRTCSessionDescription(RTCSessionDescriptionInit descriptionInitDict) {
+final class SsrRtcsessiondescription implements RTCSessionDescription {
+  factory SsrRtcsessiondescription(RTCSessionDescriptionInit descriptionInitDict) {
     throw UnsupportedWebApiError('RTCSessionDescription constructor'
       , exposed: 'Window'
     );
@@ -21523,16 +21523,16 @@ final class SsrRTCSessionDescription implements RTCSessionDescription {
   );
 }
 
-final class SsrRTCStatsReport implements RTCStatsReport {
-  factory SsrRTCStatsReport() {
+final class SsrRtcstatsreport implements RTCStatsReport {
+  factory SsrRtcstatsreport() {
     throw UnsupportedWebApiError('RTCStatsReport constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrRTCTrackEvent implements RTCTrackEvent {
-  factory SsrRTCTrackEvent(String type, RTCTrackEventInit eventInitDict) {
+final class SsrRtctrackevent implements RTCTrackEvent {
+  factory SsrRtctrackevent(String type, RTCTrackEventInit eventInitDict) {
     throw UnsupportedWebApiError('RTCTrackEvent constructor'
       , exposed: 'Window'
     );
@@ -21555,8 +21555,8 @@ final class SsrRTCTrackEvent implements RTCTrackEvent {
   );
 }
 
-final class SsrRTCTransformEvent implements RTCTransformEvent {
-  factory SsrRTCTransformEvent() {
+final class SsrRtctransformevent implements RTCTransformEvent {
+  factory SsrRtctransformevent() {
     throw UnsupportedWebApiError('RTCTransformEvent constructor'
       , exposed: 'DedicatedWorker'
     );
@@ -21567,8 +21567,8 @@ final class SsrRTCTransformEvent implements RTCTransformEvent {
   );
 }
 
-final class SsrRadioNodeList implements RadioNodeList {
-  factory SsrRadioNodeList() {
+final class SsrRadionodelist implements RadioNodeList {
+  factory SsrRadionodelist() {
     throw UnsupportedWebApiError('RadioNodeList constructor'
       , exposed: 'Window'
     );
@@ -21687,8 +21687,8 @@ final class SsrRange implements Range {
   );
 }
 
-final class SsrReadableByteStreamController implements ReadableByteStreamController {
-  factory SsrReadableByteStreamController() {
+final class SsrReadablebytestreamcontroller implements ReadableByteStreamController {
+  factory SsrReadablebytestreamcontroller() {
     throw UnsupportedWebApiError('ReadableByteStreamController constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -21715,8 +21715,8 @@ final class SsrReadableByteStreamController implements ReadableByteStreamControl
   );
 }
 
-final class SsrReadableStream implements ReadableStream {
-  factory SsrReadableStream([Object? underlyingSource, QueuingStrategy? strategy]) {
+final class SsrReadablestream implements ReadableStream {
+  factory SsrReadablestream([Object? underlyingSource, QueuingStrategy? strategy]) {
     throw UnsupportedWebApiError('ReadableStream constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -21747,8 +21747,8 @@ final class SsrReadableStream implements ReadableStream {
   );
 }
 
-final class SsrReadableStreamBYOBReader implements ReadableStreamBYOBReader {
-  factory SsrReadableStreamBYOBReader(ReadableStream stream) {
+final class SsrReadablestreambyobreader implements ReadableStreamBYOBReader {
+  factory SsrReadablestreambyobreader(ReadableStream stream) {
     throw UnsupportedWebApiError('ReadableStreamBYOBReader constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -21771,8 +21771,8 @@ final class SsrReadableStreamBYOBReader implements ReadableStreamBYOBReader {
   );
 }
 
-final class SsrReadableStreamBYOBRequest implements ReadableStreamBYOBRequest {
-  factory SsrReadableStreamBYOBRequest() {
+final class SsrReadablestreambyobrequest implements ReadableStreamBYOBRequest {
+  factory SsrReadablestreambyobrequest() {
     throw UnsupportedWebApiError('ReadableStreamBYOBRequest constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -21791,8 +21791,8 @@ final class SsrReadableStreamBYOBRequest implements ReadableStreamBYOBRequest {
   );
 }
 
-final class SsrReadableStreamDefaultController implements ReadableStreamDefaultController {
-  factory SsrReadableStreamDefaultController() {
+final class SsrReadablestreamdefaultcontroller implements ReadableStreamDefaultController {
+  factory SsrReadablestreamdefaultcontroller() {
     throw UnsupportedWebApiError('ReadableStreamDefaultController constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -21815,8 +21815,8 @@ final class SsrReadableStreamDefaultController implements ReadableStreamDefaultC
   );
 }
 
-final class SsrReadableStreamDefaultReader implements ReadableStreamDefaultReader {
-  factory SsrReadableStreamDefaultReader(ReadableStream stream) {
+final class SsrReadablestreamdefaultreader implements ReadableStreamDefaultReader {
+  factory SsrReadablestreamdefaultreader(ReadableStream stream) {
     throw UnsupportedWebApiError('ReadableStreamDefaultReader constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -21839,16 +21839,16 @@ final class SsrReadableStreamDefaultReader implements ReadableStreamDefaultReade
   );
 }
 
-final class SsrRelativeOrientationSensor implements RelativeOrientationSensor {
-  factory SsrRelativeOrientationSensor([OrientationSensorOptions? sensorOptions]) {
+final class SsrRelativeorientationsensor implements RelativeOrientationSensor {
+  factory SsrRelativeorientationsensor([OrientationSensorOptions? sensorOptions]) {
     throw UnsupportedWebApiError('RelativeOrientationSensor constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrRemotePlayback implements RemotePlayback {
-  factory SsrRemotePlayback() {
+final class SsrRemoteplayback implements RemotePlayback {
+  factory SsrRemoteplayback() {
     throw UnsupportedWebApiError('RemotePlayback constructor'
       , exposed: 'Window'
     );
@@ -21919,8 +21919,8 @@ final class SsrReport implements Report {
   );
 }
 
-final class SsrReportBody implements ReportBody {
-  factory SsrReportBody() {
+final class SsrReportbody implements ReportBody {
+  factory SsrReportbody() {
     throw UnsupportedWebApiError('ReportBody constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -21931,8 +21931,8 @@ final class SsrReportBody implements ReportBody {
   );
 }
 
-final class SsrReportingObserver implements ReportingObserver {
-  factory SsrReportingObserver(ReportingObserverCallback callback, [ReportingObserverOptions? options]) {
+final class SsrReportingobserver implements ReportingObserver {
+  factory SsrReportingobserver(ReportingObserverCallback callback, [ReportingObserverOptions? options]) {
     throw UnsupportedWebApiError('ReportingObserver constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -22051,8 +22051,8 @@ final class SsrRequest implements Request {
   );
 }
 
-final class SsrResizeObserver implements ResizeObserver {
-  factory SsrResizeObserver(ResizeObserverCallback callback) {
+final class SsrResizeobserver implements ResizeObserver {
+  factory SsrResizeobserver(ResizeObserverCallback callback) {
     throw UnsupportedWebApiError('ResizeObserver constructor'
       , exposed: '[{value: Window}]'
     );
@@ -22071,8 +22071,8 @@ final class SsrResizeObserver implements ResizeObserver {
   );
 }
 
-final class SsrResizeObserverEntry implements ResizeObserverEntry {
-  factory SsrResizeObserverEntry() {
+final class SsrResizeobserverentry implements ResizeObserverEntry {
+  factory SsrResizeobserverentry() {
     throw UnsupportedWebApiError('ResizeObserverEntry constructor'
       , exposed: 'Window'
     );
@@ -22099,8 +22099,8 @@ final class SsrResizeObserverEntry implements ResizeObserverEntry {
   );
 }
 
-final class SsrResizeObserverSize implements ResizeObserverSize {
-  factory SsrResizeObserverSize() {
+final class SsrResizeobserversize implements ResizeObserverSize {
+  factory SsrResizeobserversize() {
     throw UnsupportedWebApiError('ResizeObserverSize constructor'
       , exposed: 'Window'
     );
@@ -22187,8 +22187,8 @@ final class SsrResponse implements Response {
   );
 }
 
-final class SsrSVGAElement implements SVGAElement {
-  factory SsrSVGAElement() {
+final class SsrSvgaelement implements SVGAElement {
+  factory SsrSvgaelement() {
     throw UnsupportedWebApiError('SVGAElement constructor'
       , exposed: 'Window'
     );
@@ -22263,8 +22263,8 @@ final class SsrSVGAElement implements SVGAElement {
   );
 }
 
-final class SsrSVGAngle implements SVGAngle {
-  factory SsrSVGAngle() {
+final class SsrSvgangle implements SVGAngle {
+  factory SsrSvgangle() {
     throw UnsupportedWebApiError('SVGAngle constructor'
       , exposed: 'Window'
     );
@@ -22307,32 +22307,32 @@ final class SsrSVGAngle implements SVGAngle {
   );
 }
 
-final class SsrSVGAnimateElement implements SVGAnimateElement {
-  factory SsrSVGAnimateElement() {
+final class SsrSvganimateelement implements SVGAnimateElement {
+  factory SsrSvganimateelement() {
     throw UnsupportedWebApiError('SVGAnimateElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGAnimateMotionElement implements SVGAnimateMotionElement {
-  factory SsrSVGAnimateMotionElement() {
+final class SsrSvganimatemotionelement implements SVGAnimateMotionElement {
+  factory SsrSvganimatemotionelement() {
     throw UnsupportedWebApiError('SVGAnimateMotionElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGAnimateTransformElement implements SVGAnimateTransformElement {
-  factory SsrSVGAnimateTransformElement() {
+final class SsrSvganimatetransformelement implements SVGAnimateTransformElement {
+  factory SsrSvganimatetransformelement() {
     throw UnsupportedWebApiError('SVGAnimateTransformElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGAnimatedAngle implements SVGAnimatedAngle {
-  factory SsrSVGAnimatedAngle() {
+final class SsrSvganimatedangle implements SVGAnimatedAngle {
+  factory SsrSvganimatedangle() {
     throw UnsupportedWebApiError('SVGAnimatedAngle constructor'
       , exposed: 'Window'
     );
@@ -22347,8 +22347,8 @@ final class SsrSVGAnimatedAngle implements SVGAnimatedAngle {
   );
 }
 
-final class SsrSVGAnimatedBoolean implements SVGAnimatedBoolean {
-  factory SsrSVGAnimatedBoolean() {
+final class SsrSvganimatedboolean implements SVGAnimatedBoolean {
+  factory SsrSvganimatedboolean() {
     throw UnsupportedWebApiError('SVGAnimatedBoolean constructor'
       , exposed: 'Window'
     );
@@ -22367,8 +22367,8 @@ final class SsrSVGAnimatedBoolean implements SVGAnimatedBoolean {
   );
 }
 
-final class SsrSVGAnimatedEnumeration implements SVGAnimatedEnumeration {
-  factory SsrSVGAnimatedEnumeration() {
+final class SsrSvganimatedenumeration implements SVGAnimatedEnumeration {
+  factory SsrSvganimatedenumeration() {
     throw UnsupportedWebApiError('SVGAnimatedEnumeration constructor'
       , exposed: 'Window'
     );
@@ -22387,8 +22387,8 @@ final class SsrSVGAnimatedEnumeration implements SVGAnimatedEnumeration {
   );
 }
 
-final class SsrSVGAnimatedInteger implements SVGAnimatedInteger {
-  factory SsrSVGAnimatedInteger() {
+final class SsrSvganimatedinteger implements SVGAnimatedInteger {
+  factory SsrSvganimatedinteger() {
     throw UnsupportedWebApiError('SVGAnimatedInteger constructor'
       , exposed: 'Window'
     );
@@ -22407,8 +22407,8 @@ final class SsrSVGAnimatedInteger implements SVGAnimatedInteger {
   );
 }
 
-final class SsrSVGAnimatedLength implements SVGAnimatedLength {
-  factory SsrSVGAnimatedLength() {
+final class SsrSvganimatedlength implements SVGAnimatedLength {
+  factory SsrSvganimatedlength() {
     throw UnsupportedWebApiError('SVGAnimatedLength constructor'
       , exposed: 'Window'
     );
@@ -22423,8 +22423,8 @@ final class SsrSVGAnimatedLength implements SVGAnimatedLength {
   );
 }
 
-final class SsrSVGAnimatedLengthList implements SVGAnimatedLengthList {
-  factory SsrSVGAnimatedLengthList() {
+final class SsrSvganimatedlengthlist implements SVGAnimatedLengthList {
+  factory SsrSvganimatedlengthlist() {
     throw UnsupportedWebApiError('SVGAnimatedLengthList constructor'
       , exposed: 'Window'
     );
@@ -22439,8 +22439,8 @@ final class SsrSVGAnimatedLengthList implements SVGAnimatedLengthList {
   );
 }
 
-final class SsrSVGAnimatedNumber implements SVGAnimatedNumber {
-  factory SsrSVGAnimatedNumber() {
+final class SsrSvganimatednumber implements SVGAnimatedNumber {
+  factory SsrSvganimatednumber() {
     throw UnsupportedWebApiError('SVGAnimatedNumber constructor'
       , exposed: 'Window'
     );
@@ -22459,8 +22459,8 @@ final class SsrSVGAnimatedNumber implements SVGAnimatedNumber {
   );
 }
 
-final class SsrSVGAnimatedNumberList implements SVGAnimatedNumberList {
-  factory SsrSVGAnimatedNumberList() {
+final class SsrSvganimatednumberlist implements SVGAnimatedNumberList {
+  factory SsrSvganimatednumberlist() {
     throw UnsupportedWebApiError('SVGAnimatedNumberList constructor'
       , exposed: 'Window'
     );
@@ -22475,8 +22475,8 @@ final class SsrSVGAnimatedNumberList implements SVGAnimatedNumberList {
   );
 }
 
-final class SsrSVGAnimatedPreserveAspectRatio implements SVGAnimatedPreserveAspectRatio {
-  factory SsrSVGAnimatedPreserveAspectRatio() {
+final class SsrSvganimatedpreserveaspectratio implements SVGAnimatedPreserveAspectRatio {
+  factory SsrSvganimatedpreserveaspectratio() {
     throw UnsupportedWebApiError('SVGAnimatedPreserveAspectRatio constructor'
       , exposed: 'Window'
     );
@@ -22491,8 +22491,8 @@ final class SsrSVGAnimatedPreserveAspectRatio implements SVGAnimatedPreserveAspe
   );
 }
 
-final class SsrSVGAnimatedRect implements SVGAnimatedRect {
-  factory SsrSVGAnimatedRect() {
+final class SsrSvganimatedrect implements SVGAnimatedRect {
+  factory SsrSvganimatedrect() {
     throw UnsupportedWebApiError('SVGAnimatedRect constructor'
       , exposed: 'Window'
     );
@@ -22507,8 +22507,8 @@ final class SsrSVGAnimatedRect implements SVGAnimatedRect {
   );
 }
 
-final class SsrSVGAnimatedString implements SVGAnimatedString {
-  factory SsrSVGAnimatedString() {
+final class SsrSvganimatedstring implements SVGAnimatedString {
+  factory SsrSvganimatedstring() {
     throw UnsupportedWebApiError('SVGAnimatedString constructor'
       , exposed: 'Window'
     );
@@ -22527,8 +22527,8 @@ final class SsrSVGAnimatedString implements SVGAnimatedString {
   );
 }
 
-final class SsrSVGAnimatedTransformList implements SVGAnimatedTransformList {
-  factory SsrSVGAnimatedTransformList() {
+final class SsrSvganimatedtransformlist implements SVGAnimatedTransformList {
+  factory SsrSvganimatedtransformlist() {
     throw UnsupportedWebApiError('SVGAnimatedTransformList constructor'
       , exposed: 'Window'
     );
@@ -22543,8 +22543,8 @@ final class SsrSVGAnimatedTransformList implements SVGAnimatedTransformList {
   );
 }
 
-final class SsrSVGAnimationElement implements SVGAnimationElement {
-  factory SsrSVGAnimationElement() {
+final class SsrSvganimationelement implements SVGAnimationElement {
+  factory SsrSvganimationelement() {
     throw UnsupportedWebApiError('SVGAnimationElement constructor'
       , exposed: 'Window'
     );
@@ -22599,8 +22599,8 @@ final class SsrSVGAnimationElement implements SVGAnimationElement {
   );
 }
 
-final class SsrSVGCircleElement implements SVGCircleElement {
-  factory SsrSVGCircleElement() {
+final class SsrSvgcircleelement implements SVGCircleElement {
+  factory SsrSvgcircleelement() {
     throw UnsupportedWebApiError('SVGCircleElement constructor'
       , exposed: 'Window'
     );
@@ -22619,8 +22619,8 @@ final class SsrSVGCircleElement implements SVGCircleElement {
   );
 }
 
-final class SsrSVGClipPathElement implements SVGClipPathElement {
-  factory SsrSVGClipPathElement() {
+final class SsrSvgclippathelement implements SVGClipPathElement {
+  factory SsrSvgclippathelement() {
     throw UnsupportedWebApiError('SVGClipPathElement constructor'
       , exposed: 'Window'
     );
@@ -22635,8 +22635,8 @@ final class SsrSVGClipPathElement implements SVGClipPathElement {
   );
 }
 
-final class SsrSVGComponentTransferFunctionElement implements SVGComponentTransferFunctionElement {
-  factory SsrSVGComponentTransferFunctionElement() {
+final class SsrSvgcomponenttransferfunctionelement implements SVGComponentTransferFunctionElement {
+  factory SsrSvgcomponenttransferfunctionelement() {
     throw UnsupportedWebApiError('SVGComponentTransferFunctionElement constructor'
       , exposed: 'Window'
     );
@@ -22671,24 +22671,24 @@ final class SsrSVGComponentTransferFunctionElement implements SVGComponentTransf
   );
 }
 
-final class SsrSVGDefsElement implements SVGDefsElement {
-  factory SsrSVGDefsElement() {
+final class SsrSvgdefselement implements SVGDefsElement {
+  factory SsrSvgdefselement() {
     throw UnsupportedWebApiError('SVGDefsElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGDescElement implements SVGDescElement {
-  factory SsrSVGDescElement() {
+final class SsrSvgdescelement implements SVGDescElement {
+  factory SsrSvgdescelement() {
     throw UnsupportedWebApiError('SVGDescElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGElement implements SVGElement {
-  factory SsrSVGElement() {
+final class SsrSvgelement implements SVGElement {
+  factory SsrSvgelement() {
     throw UnsupportedWebApiError('SVGElement constructor'
       , exposed: 'Window'
     );
@@ -23583,8 +23583,8 @@ final class SsrSVGElement implements SVGElement {
   );
 }
 
-final class SsrSVGEllipseElement implements SVGEllipseElement {
-  factory SsrSVGEllipseElement() {
+final class SsrSvgellipseelement implements SVGEllipseElement {
+  factory SsrSvgellipseelement() {
     throw UnsupportedWebApiError('SVGEllipseElement constructor'
       , exposed: 'Window'
     );
@@ -23607,8 +23607,8 @@ final class SsrSVGEllipseElement implements SVGEllipseElement {
   );
 }
 
-final class SsrSVGFEBlendElement implements SVGFEBlendElement {
-  factory SsrSVGFEBlendElement() {
+final class SsrSvgfeblendelement implements SVGFEBlendElement {
+  factory SsrSvgfeblendelement() {
     throw UnsupportedWebApiError('SVGFEBlendElement constructor'
       , exposed: 'Window'
     );
@@ -23647,8 +23647,8 @@ final class SsrSVGFEBlendElement implements SVGFEBlendElement {
   );
 }
 
-final class SsrSVGFEColorMatrixElement implements SVGFEColorMatrixElement {
-  factory SsrSVGFEColorMatrixElement() {
+final class SsrSvgfecolormatrixelement implements SVGFEColorMatrixElement {
+  factory SsrSvgfecolormatrixelement() {
     throw UnsupportedWebApiError('SVGFEColorMatrixElement constructor'
       , exposed: 'Window'
     );
@@ -23687,8 +23687,8 @@ final class SsrSVGFEColorMatrixElement implements SVGFEColorMatrixElement {
   );
 }
 
-final class SsrSVGFEComponentTransferElement implements SVGFEComponentTransferElement {
-  factory SsrSVGFEComponentTransferElement() {
+final class SsrSvgfecomponenttransferelement implements SVGFEComponentTransferElement {
+  factory SsrSvgfecomponenttransferelement() {
     throw UnsupportedWebApiError('SVGFEComponentTransferElement constructor'
       , exposed: 'Window'
     );
@@ -23719,8 +23719,8 @@ final class SsrSVGFEComponentTransferElement implements SVGFEComponentTransferEl
   );
 }
 
-final class SsrSVGFECompositeElement implements SVGFECompositeElement {
-  factory SsrSVGFECompositeElement() {
+final class SsrSvgfecompositeelement implements SVGFECompositeElement {
+  factory SsrSvgfecompositeelement() {
     throw UnsupportedWebApiError('SVGFECompositeElement constructor'
       , exposed: 'Window'
     );
@@ -23775,8 +23775,8 @@ final class SsrSVGFECompositeElement implements SVGFECompositeElement {
   );
 }
 
-final class SsrSVGFEConvolveMatrixElement implements SVGFEConvolveMatrixElement {
-  factory SsrSVGFEConvolveMatrixElement() {
+final class SsrSvgfeconvolvematrixelement implements SVGFEConvolveMatrixElement {
+  factory SsrSvgfeconvolvematrixelement() {
     throw UnsupportedWebApiError('SVGFEConvolveMatrixElement constructor'
       , exposed: 'Window'
     );
@@ -23851,8 +23851,8 @@ final class SsrSVGFEConvolveMatrixElement implements SVGFEConvolveMatrixElement 
   );
 }
 
-final class SsrSVGFEDiffuseLightingElement implements SVGFEDiffuseLightingElement {
-  factory SsrSVGFEDiffuseLightingElement() {
+final class SsrSvgfediffuselightingelement implements SVGFEDiffuseLightingElement {
+  factory SsrSvgfediffuselightingelement() {
     throw UnsupportedWebApiError('SVGFEDiffuseLightingElement constructor'
       , exposed: 'Window'
     );
@@ -23899,8 +23899,8 @@ final class SsrSVGFEDiffuseLightingElement implements SVGFEDiffuseLightingElemen
   );
 }
 
-final class SsrSVGFEDisplacementMapElement implements SVGFEDisplacementMapElement {
-  factory SsrSVGFEDisplacementMapElement() {
+final class SsrSvgfedisplacementmapelement implements SVGFEDisplacementMapElement {
+  factory SsrSvgfedisplacementmapelement() {
     throw UnsupportedWebApiError('SVGFEDisplacementMapElement constructor'
       , exposed: 'Window'
     );
@@ -23947,8 +23947,8 @@ final class SsrSVGFEDisplacementMapElement implements SVGFEDisplacementMapElemen
   );
 }
 
-final class SsrSVGFEDistantLightElement implements SVGFEDistantLightElement {
-  factory SsrSVGFEDistantLightElement() {
+final class SsrSvgfedistantlightelement implements SVGFEDistantLightElement {
+  factory SsrSvgfedistantlightelement() {
     throw UnsupportedWebApiError('SVGFEDistantLightElement constructor'
       , exposed: 'Window'
     );
@@ -23963,8 +23963,8 @@ final class SsrSVGFEDistantLightElement implements SVGFEDistantLightElement {
   );
 }
 
-final class SsrSVGFEDropShadowElement implements SVGFEDropShadowElement {
-  factory SsrSVGFEDropShadowElement() {
+final class SsrSvgfedropshadowelement implements SVGFEDropShadowElement {
+  factory SsrSvgfedropshadowelement() {
     throw UnsupportedWebApiError('SVGFEDropShadowElement constructor'
       , exposed: 'Window'
     );
@@ -24015,8 +24015,8 @@ final class SsrSVGFEDropShadowElement implements SVGFEDropShadowElement {
   );
 }
 
-final class SsrSVGFEFloodElement implements SVGFEFloodElement {
-  factory SsrSVGFEFloodElement() {
+final class SsrSvgfefloodelement implements SVGFEFloodElement {
+  factory SsrSvgfefloodelement() {
     throw UnsupportedWebApiError('SVGFEFloodElement constructor'
       , exposed: 'Window'
     );
@@ -24043,40 +24043,40 @@ final class SsrSVGFEFloodElement implements SVGFEFloodElement {
   );
 }
 
-final class SsrSVGFEFuncAElement implements SVGFEFuncAElement {
-  factory SsrSVGFEFuncAElement() {
+final class SsrSvgfefuncaelement implements SVGFEFuncAElement {
+  factory SsrSvgfefuncaelement() {
     throw UnsupportedWebApiError('SVGFEFuncAElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGFEFuncBElement implements SVGFEFuncBElement {
-  factory SsrSVGFEFuncBElement() {
+final class SsrSvgfefuncbelement implements SVGFEFuncBElement {
+  factory SsrSvgfefuncbelement() {
     throw UnsupportedWebApiError('SVGFEFuncBElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGFEFuncGElement implements SVGFEFuncGElement {
-  factory SsrSVGFEFuncGElement() {
+final class SsrSvgfefuncgelement implements SVGFEFuncGElement {
+  factory SsrSvgfefuncgelement() {
     throw UnsupportedWebApiError('SVGFEFuncGElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGFEFuncRElement implements SVGFEFuncRElement {
-  factory SsrSVGFEFuncRElement() {
+final class SsrSvgfefuncrelement implements SVGFEFuncRElement {
+  factory SsrSvgfefuncrelement() {
     throw UnsupportedWebApiError('SVGFEFuncRElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGFEGaussianBlurElement implements SVGFEGaussianBlurElement {
-  factory SsrSVGFEGaussianBlurElement() {
+final class SsrSvgfegaussianblurelement implements SVGFEGaussianBlurElement {
+  factory SsrSvgfegaussianblurelement() {
     throw UnsupportedWebApiError('SVGFEGaussianBlurElement constructor'
       , exposed: 'Window'
     );
@@ -24123,8 +24123,8 @@ final class SsrSVGFEGaussianBlurElement implements SVGFEGaussianBlurElement {
   );
 }
 
-final class SsrSVGFEImageElement implements SVGFEImageElement {
-  factory SsrSVGFEImageElement() {
+final class SsrSvgfeimageelement implements SVGFEImageElement {
+  factory SsrSvgfeimageelement() {
     throw UnsupportedWebApiError('SVGFEImageElement constructor'
       , exposed: 'Window'
     );
@@ -24163,8 +24163,8 @@ final class SsrSVGFEImageElement implements SVGFEImageElement {
   );
 }
 
-final class SsrSVGFEMergeElement implements SVGFEMergeElement {
-  factory SsrSVGFEMergeElement() {
+final class SsrSvgfemergeelement implements SVGFEMergeElement {
+  factory SsrSvgfemergeelement() {
     throw UnsupportedWebApiError('SVGFEMergeElement constructor'
       , exposed: 'Window'
     );
@@ -24191,8 +24191,8 @@ final class SsrSVGFEMergeElement implements SVGFEMergeElement {
   );
 }
 
-final class SsrSVGFEMergeNodeElement implements SVGFEMergeNodeElement {
-  factory SsrSVGFEMergeNodeElement() {
+final class SsrSvgfemergenodeelement implements SVGFEMergeNodeElement {
+  factory SsrSvgfemergenodeelement() {
     throw UnsupportedWebApiError('SVGFEMergeNodeElement constructor'
       , exposed: 'Window'
     );
@@ -24203,8 +24203,8 @@ final class SsrSVGFEMergeNodeElement implements SVGFEMergeNodeElement {
   );
 }
 
-final class SsrSVGFEMorphologyElement implements SVGFEMorphologyElement {
-  factory SsrSVGFEMorphologyElement() {
+final class SsrSvgfemorphologyelement implements SVGFEMorphologyElement {
+  factory SsrSvgfemorphologyelement() {
     throw UnsupportedWebApiError('SVGFEMorphologyElement constructor'
       , exposed: 'Window'
     );
@@ -24247,8 +24247,8 @@ final class SsrSVGFEMorphologyElement implements SVGFEMorphologyElement {
   );
 }
 
-final class SsrSVGFEOffsetElement implements SVGFEOffsetElement {
-  factory SsrSVGFEOffsetElement() {
+final class SsrSvgfeoffsetelement implements SVGFEOffsetElement {
+  factory SsrSvgfeoffsetelement() {
     throw UnsupportedWebApiError('SVGFEOffsetElement constructor'
       , exposed: 'Window'
     );
@@ -24287,8 +24287,8 @@ final class SsrSVGFEOffsetElement implements SVGFEOffsetElement {
   );
 }
 
-final class SsrSVGFEPointLightElement implements SVGFEPointLightElement {
-  factory SsrSVGFEPointLightElement() {
+final class SsrSvgfepointlightelement implements SVGFEPointLightElement {
+  factory SsrSvgfepointlightelement() {
     throw UnsupportedWebApiError('SVGFEPointLightElement constructor'
       , exposed: 'Window'
     );
@@ -24307,8 +24307,8 @@ final class SsrSVGFEPointLightElement implements SVGFEPointLightElement {
   );
 }
 
-final class SsrSVGFESpecularLightingElement implements SVGFESpecularLightingElement {
-  factory SsrSVGFESpecularLightingElement() {
+final class SsrSvgfespecularlightingelement implements SVGFESpecularLightingElement {
+  factory SsrSvgfespecularlightingelement() {
     throw UnsupportedWebApiError('SVGFESpecularLightingElement constructor'
       , exposed: 'Window'
     );
@@ -24359,8 +24359,8 @@ final class SsrSVGFESpecularLightingElement implements SVGFESpecularLightingElem
   );
 }
 
-final class SsrSVGFESpotLightElement implements SVGFESpotLightElement {
-  factory SsrSVGFESpotLightElement() {
+final class SsrSvgfespotlightelement implements SVGFESpotLightElement {
+  factory SsrSvgfespotlightelement() {
     throw UnsupportedWebApiError('SVGFESpotLightElement constructor'
       , exposed: 'Window'
     );
@@ -24399,8 +24399,8 @@ final class SsrSVGFESpotLightElement implements SVGFESpotLightElement {
   );
 }
 
-final class SsrSVGFETileElement implements SVGFETileElement {
-  factory SsrSVGFETileElement() {
+final class SsrSvgfetileelement implements SVGFETileElement {
+  factory SsrSvgfetileelement() {
     throw UnsupportedWebApiError('SVGFETileElement constructor'
       , exposed: 'Window'
     );
@@ -24431,8 +24431,8 @@ final class SsrSVGFETileElement implements SVGFETileElement {
   );
 }
 
-final class SsrSVGFETurbulenceElement implements SVGFETurbulenceElement {
-  factory SsrSVGFETurbulenceElement() {
+final class SsrSvgfeturbulenceelement implements SVGFETurbulenceElement {
+  factory SsrSvgfeturbulenceelement() {
     throw UnsupportedWebApiError('SVGFETurbulenceElement constructor'
       , exposed: 'Window'
     );
@@ -24483,8 +24483,8 @@ final class SsrSVGFETurbulenceElement implements SVGFETurbulenceElement {
   );
 }
 
-final class SsrSVGFilterElement implements SVGFilterElement {
-  factory SsrSVGFilterElement() {
+final class SsrSvgfilterelement implements SVGFilterElement {
+  factory SsrSvgfilterelement() {
     throw UnsupportedWebApiError('SVGFilterElement constructor'
       , exposed: 'Window'
     );
@@ -24519,8 +24519,8 @@ final class SsrSVGFilterElement implements SVGFilterElement {
   );
 }
 
-final class SsrSVGForeignObjectElement implements SVGForeignObjectElement {
-  factory SsrSVGForeignObjectElement() {
+final class SsrSvgforeignobjectelement implements SVGForeignObjectElement {
+  factory SsrSvgforeignobjectelement() {
     throw UnsupportedWebApiError('SVGForeignObjectElement constructor'
       , exposed: 'Window'
     );
@@ -24543,16 +24543,16 @@ final class SsrSVGForeignObjectElement implements SVGForeignObjectElement {
   );
 }
 
-final class SsrSVGGElement implements SVGGElement {
-  factory SsrSVGGElement() {
+final class SsrSvggelement implements SVGGElement {
+  factory SsrSvggelement() {
     throw UnsupportedWebApiError('SVGGElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGGeometryElement implements SVGGeometryElement {
-  factory SsrSVGGeometryElement() {
+final class SsrSvggeometryelement implements SVGGeometryElement {
+  factory SsrSvggeometryelement() {
     throw UnsupportedWebApiError('SVGGeometryElement constructor'
       , exposed: 'Window'
     );
@@ -24579,8 +24579,8 @@ final class SsrSVGGeometryElement implements SVGGeometryElement {
   );
 }
 
-final class SsrSVGGradientElement implements SVGGradientElement {
-  factory SsrSVGGradientElement() {
+final class SsrSvggradientelement implements SVGGradientElement {
+  factory SsrSvggradientelement() {
     throw UnsupportedWebApiError('SVGGradientElement constructor'
       , exposed: 'Window'
     );
@@ -24603,8 +24603,8 @@ final class SsrSVGGradientElement implements SVGGradientElement {
   );
 }
 
-final class SsrSVGGraphicsElement implements SVGGraphicsElement {
-  factory SsrSVGGraphicsElement() {
+final class SsrSvggraphicselement implements SVGGraphicsElement {
+  factory SsrSvggraphicselement() {
     throw UnsupportedWebApiError('SVGGraphicsElement constructor'
       , exposed: 'Window'
     );
@@ -24635,8 +24635,8 @@ final class SsrSVGGraphicsElement implements SVGGraphicsElement {
   );
 }
 
-final class SsrSVGImageElement implements SVGImageElement {
-  factory SsrSVGImageElement() {
+final class SsrSvgimageelement implements SVGImageElement {
+  factory SsrSvgimageelement() {
     throw UnsupportedWebApiError('SVGImageElement constructor'
       , exposed: 'Window'
     );
@@ -24675,8 +24675,8 @@ final class SsrSVGImageElement implements SVGImageElement {
   );
 }
 
-final class SsrSVGLength implements SVGLength {
-  factory SsrSVGLength() {
+final class SsrSvglength implements SVGLength {
+  factory SsrSvglength() {
     throw UnsupportedWebApiError('SVGLength constructor'
       , exposed: 'Window'
     );
@@ -24719,8 +24719,8 @@ final class SsrSVGLength implements SVGLength {
   );
 }
 
-final class SsrSVGLengthList implements SVGLengthList {
-  factory SsrSVGLengthList() {
+final class SsrSvglengthlist implements SVGLengthList {
+  factory SsrSvglengthlist() {
     throw UnsupportedWebApiError('SVGLengthList constructor'
       , exposed: 'Window'
     );
@@ -24763,8 +24763,8 @@ final class SsrSVGLengthList implements SVGLengthList {
   );
 }
 
-final class SsrSVGLineElement implements SVGLineElement {
-  factory SsrSVGLineElement() {
+final class SsrSvglineelement implements SVGLineElement {
+  factory SsrSvglineelement() {
     throw UnsupportedWebApiError('SVGLineElement constructor'
       , exposed: 'Window'
     );
@@ -24787,8 +24787,8 @@ final class SsrSVGLineElement implements SVGLineElement {
   );
 }
 
-final class SsrSVGLinearGradientElement implements SVGLinearGradientElement {
-  factory SsrSVGLinearGradientElement() {
+final class SsrSvglineargradientelement implements SVGLinearGradientElement {
+  factory SsrSvglineargradientelement() {
     throw UnsupportedWebApiError('SVGLinearGradientElement constructor'
       , exposed: 'Window'
     );
@@ -24811,8 +24811,8 @@ final class SsrSVGLinearGradientElement implements SVGLinearGradientElement {
   );
 }
 
-final class SsrSVGMPathElement implements SVGMPathElement {
-  factory SsrSVGMPathElement() {
+final class SsrSvgmpathelement implements SVGMPathElement {
+  factory SsrSvgmpathelement() {
     throw UnsupportedWebApiError('SVGMPathElement constructor'
       , exposed: 'Window'
     );
@@ -24823,8 +24823,8 @@ final class SsrSVGMPathElement implements SVGMPathElement {
   );
 }
 
-final class SsrSVGMarkerElement implements SVGMarkerElement {
-  factory SsrSVGMarkerElement() {
+final class SsrSvgmarkerelement implements SVGMarkerElement {
+  factory SsrSvgmarkerelement() {
     throw UnsupportedWebApiError('SVGMarkerElement constructor'
       , exposed: 'Window'
     );
@@ -24883,8 +24883,8 @@ final class SsrSVGMarkerElement implements SVGMarkerElement {
   );
 }
 
-final class SsrSVGMaskElement implements SVGMaskElement {
-  factory SsrSVGMaskElement() {
+final class SsrSvgmaskelement implements SVGMaskElement {
+  factory SsrSvgmaskelement() {
     throw UnsupportedWebApiError('SVGMaskElement constructor'
       , exposed: 'Window'
     );
@@ -24915,16 +24915,16 @@ final class SsrSVGMaskElement implements SVGMaskElement {
   );
 }
 
-final class SsrSVGMetadataElement implements SVGMetadataElement {
-  factory SsrSVGMetadataElement() {
+final class SsrSvgmetadataelement implements SVGMetadataElement {
+  factory SsrSvgmetadataelement() {
     throw UnsupportedWebApiError('SVGMetadataElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGNumber implements SVGNumber {
-  factory SsrSVGNumber() {
+final class SsrSvgnumber implements SVGNumber {
+  factory SsrSvgnumber() {
     throw UnsupportedWebApiError('SVGNumber constructor'
       , exposed: 'Window'
     );
@@ -24939,8 +24939,8 @@ final class SsrSVGNumber implements SVGNumber {
   );
 }
 
-final class SsrSVGNumberList implements SVGNumberList {
-  factory SsrSVGNumberList() {
+final class SsrSvgnumberlist implements SVGNumberList {
+  factory SsrSvgnumberlist() {
     throw UnsupportedWebApiError('SVGNumberList constructor'
       , exposed: 'Window'
     );
@@ -24983,16 +24983,16 @@ final class SsrSVGNumberList implements SVGNumberList {
   );
 }
 
-final class SsrSVGPathElement implements SVGPathElement {
-  factory SsrSVGPathElement() {
+final class SsrSvgpathelement implements SVGPathElement {
+  factory SsrSvgpathelement() {
     throw UnsupportedWebApiError('SVGPathElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGPatternElement implements SVGPatternElement {
-  factory SsrSVGPatternElement() {
+final class SsrSvgpatternelement implements SVGPatternElement {
+  factory SsrSvgpatternelement() {
     throw UnsupportedWebApiError('SVGPatternElement constructor'
       , exposed: 'Window'
     );
@@ -25039,8 +25039,8 @@ final class SsrSVGPatternElement implements SVGPatternElement {
   );
 }
 
-final class SsrSVGPointList implements SVGPointList {
-  factory SsrSVGPointList() {
+final class SsrSvgpointlist implements SVGPointList {
+  factory SsrSvgpointlist() {
     throw UnsupportedWebApiError('SVGPointList constructor'
       , exposed: 'Window'
     );
@@ -25083,8 +25083,8 @@ final class SsrSVGPointList implements SVGPointList {
   );
 }
 
-final class SsrSVGPolygonElement implements SVGPolygonElement {
-  factory SsrSVGPolygonElement() {
+final class SsrSvgpolygonelement implements SVGPolygonElement {
+  factory SsrSvgpolygonelement() {
     throw UnsupportedWebApiError('SVGPolygonElement constructor'
       , exposed: 'Window'
     );
@@ -25099,8 +25099,8 @@ final class SsrSVGPolygonElement implements SVGPolygonElement {
   );
 }
 
-final class SsrSVGPolylineElement implements SVGPolylineElement {
-  factory SsrSVGPolylineElement() {
+final class SsrSvgpolylineelement implements SVGPolylineElement {
+  factory SsrSvgpolylineelement() {
     throw UnsupportedWebApiError('SVGPolylineElement constructor'
       , exposed: 'Window'
     );
@@ -25115,8 +25115,8 @@ final class SsrSVGPolylineElement implements SVGPolylineElement {
   );
 }
 
-final class SsrSVGPreserveAspectRatio implements SVGPreserveAspectRatio {
-  factory SsrSVGPreserveAspectRatio() {
+final class SsrSvgpreserveaspectratio implements SVGPreserveAspectRatio {
+  factory SsrSvgpreserveaspectratio() {
     throw UnsupportedWebApiError('SVGPreserveAspectRatio constructor'
       , exposed: 'Window'
     );
@@ -25139,8 +25139,8 @@ final class SsrSVGPreserveAspectRatio implements SVGPreserveAspectRatio {
   );
 }
 
-final class SsrSVGRadialGradientElement implements SVGRadialGradientElement {
-  factory SsrSVGRadialGradientElement() {
+final class SsrSvgradialgradientelement implements SVGRadialGradientElement {
+  factory SsrSvgradialgradientelement() {
     throw UnsupportedWebApiError('SVGRadialGradientElement constructor'
       , exposed: 'Window'
     );
@@ -25171,8 +25171,8 @@ final class SsrSVGRadialGradientElement implements SVGRadialGradientElement {
   );
 }
 
-final class SsrSVGRectElement implements SVGRectElement {
-  factory SsrSVGRectElement() {
+final class SsrSvgrectelement implements SVGRectElement {
+  factory SsrSvgrectelement() {
     throw UnsupportedWebApiError('SVGRectElement constructor'
       , exposed: 'Window'
     );
@@ -25203,8 +25203,8 @@ final class SsrSVGRectElement implements SVGRectElement {
   );
 }
 
-final class SsrSVGSVGElement implements SVGSVGElement {
-  factory SsrSVGSVGElement() {
+final class SsrSvgsvgelement implements SVGSVGElement {
+  factory SsrSvgsvgelement() {
     throw UnsupportedWebApiError('SVGSVGElement constructor'
       , exposed: 'Window'
     );
@@ -25507,8 +25507,8 @@ final class SsrSVGSVGElement implements SVGSVGElement {
   );
 }
 
-final class SsrSVGScriptElement implements SVGScriptElement {
-  factory SsrSVGScriptElement() {
+final class SsrSvgscriptelement implements SVGScriptElement {
+  factory SsrSvgscriptelement() {
     throw UnsupportedWebApiError('SVGScriptElement constructor'
       , exposed: 'Window'
     );
@@ -25535,16 +25535,16 @@ final class SsrSVGScriptElement implements SVGScriptElement {
   );
 }
 
-final class SsrSVGSetElement implements SVGSetElement {
-  factory SsrSVGSetElement() {
+final class SsrSvgsetelement implements SVGSetElement {
+  factory SsrSvgsetelement() {
     throw UnsupportedWebApiError('SVGSetElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGStopElement implements SVGStopElement {
-  factory SsrSVGStopElement() {
+final class SsrSvgstopelement implements SVGStopElement {
+  factory SsrSvgstopelement() {
     throw UnsupportedWebApiError('SVGStopElement constructor'
       , exposed: 'Window'
     );
@@ -25555,8 +25555,8 @@ final class SsrSVGStopElement implements SVGStopElement {
   );
 }
 
-final class SsrSVGStringList implements SVGStringList {
-  factory SsrSVGStringList() {
+final class SsrSvgstringlist implements SVGStringList {
+  factory SsrSvgstringlist() {
     throw UnsupportedWebApiError('SVGStringList constructor'
       , exposed: 'Window'
     );
@@ -25595,8 +25595,8 @@ final class SsrSVGStringList implements SVGStringList {
   );
 }
 
-final class SsrSVGStyleElement implements SVGStyleElement {
-  factory SsrSVGStyleElement() {
+final class SsrSvgstyleelement implements SVGStyleElement {
+  factory SsrSvgstyleelement() {
     throw UnsupportedWebApiError('SVGStyleElement constructor'
       , exposed: 'Window'
     );
@@ -25631,16 +25631,16 @@ final class SsrSVGStyleElement implements SVGStyleElement {
   );
 }
 
-final class SsrSVGSwitchElement implements SVGSwitchElement {
-  factory SsrSVGSwitchElement() {
+final class SsrSvgswitchelement implements SVGSwitchElement {
+  factory SsrSvgswitchelement() {
     throw UnsupportedWebApiError('SVGSwitchElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGSymbolElement implements SVGSymbolElement {
-  factory SsrSVGSymbolElement() {
+final class SsrSvgsymbolelement implements SVGSymbolElement {
+  factory SsrSvgsymbolelement() {
     throw UnsupportedWebApiError('SVGSymbolElement constructor'
       , exposed: 'Window'
     );
@@ -25655,16 +25655,16 @@ final class SsrSVGSymbolElement implements SVGSymbolElement {
   );
 }
 
-final class SsrSVGTSpanElement implements SVGTSpanElement {
-  factory SsrSVGTSpanElement() {
+final class SsrSvgtspanelement implements SVGTSpanElement {
+  factory SsrSvgtspanelement() {
     throw UnsupportedWebApiError('SVGTSpanElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGTextContentElement implements SVGTextContentElement {
-  factory SsrSVGTextContentElement() {
+final class SsrSvgtextcontentelement implements SVGTextContentElement {
+  factory SsrSvgtextcontentelement() {
     throw UnsupportedWebApiError('SVGTextContentElement constructor'
       , exposed: 'Window'
     );
@@ -25715,16 +25715,16 @@ final class SsrSVGTextContentElement implements SVGTextContentElement {
   );
 }
 
-final class SsrSVGTextElement implements SVGTextElement {
-  factory SsrSVGTextElement() {
+final class SsrSvgtextelement implements SVGTextElement {
+  factory SsrSvgtextelement() {
     throw UnsupportedWebApiError('SVGTextElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGTextPathElement implements SVGTextPathElement {
-  factory SsrSVGTextPathElement() {
+final class SsrSvgtextpathelement implements SVGTextPathElement {
+  factory SsrSvgtextpathelement() {
     throw UnsupportedWebApiError('SVGTextPathElement constructor'
       , exposed: 'Window'
     );
@@ -25747,8 +25747,8 @@ final class SsrSVGTextPathElement implements SVGTextPathElement {
   );
 }
 
-final class SsrSVGTextPositioningElement implements SVGTextPositioningElement {
-  factory SsrSVGTextPositioningElement() {
+final class SsrSvgtextpositioningelement implements SVGTextPositioningElement {
+  factory SsrSvgtextpositioningelement() {
     throw UnsupportedWebApiError('SVGTextPositioningElement constructor'
       , exposed: 'Window'
     );
@@ -25775,16 +25775,16 @@ final class SsrSVGTextPositioningElement implements SVGTextPositioningElement {
   );
 }
 
-final class SsrSVGTitleElement implements SVGTitleElement {
-  factory SsrSVGTitleElement() {
+final class SsrSvgtitleelement implements SVGTitleElement {
+  factory SsrSvgtitleelement() {
     throw UnsupportedWebApiError('SVGTitleElement constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGTransform implements SVGTransform {
-  factory SsrSVGTransform() {
+final class SsrSvgtransform implements SVGTransform {
+  factory SsrSvgtransform() {
     throw UnsupportedWebApiError('SVGTransform constructor'
       , exposed: 'Window'
     );
@@ -25827,8 +25827,8 @@ final class SsrSVGTransform implements SVGTransform {
   );
 }
 
-final class SsrSVGTransformList implements SVGTransformList {
-  factory SsrSVGTransformList() {
+final class SsrSvgtransformlist implements SVGTransformList {
+  factory SsrSvgtransformlist() {
     throw UnsupportedWebApiError('SVGTransformList constructor'
       , exposed: 'Window'
     );
@@ -25875,16 +25875,16 @@ final class SsrSVGTransformList implements SVGTransformList {
   );
 }
 
-final class SsrSVGUnitTypes implements SVGUnitTypes {
-  factory SsrSVGUnitTypes() {
+final class SsrSvgunittypes implements SVGUnitTypes {
+  factory SsrSvgunittypes() {
     throw UnsupportedWebApiError('SVGUnitTypes constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrSVGUseElement implements SVGUseElement {
-  factory SsrSVGUseElement() {
+final class SsrSvguseelement implements SVGUseElement {
+  factory SsrSvguseelement() {
     throw UnsupportedWebApiError('SVGUseElement constructor'
       , exposed: 'Window'
     );
@@ -25911,8 +25911,8 @@ final class SsrSVGUseElement implements SVGUseElement {
   );
 }
 
-final class SsrSVGViewElement implements SVGViewElement {
-  factory SsrSVGViewElement() {
+final class SsrSvgviewelement implements SVGViewElement {
+  factory SsrSvgviewelement() {
     throw UnsupportedWebApiError('SVGViewElement constructor'
       , exposed: 'Window'
     );
@@ -25991,8 +25991,8 @@ final class SsrScreen implements Screen {
   );
 }
 
-final class SsrScreenOrientation implements ScreenOrientation {
-  factory SsrScreenOrientation() {
+final class SsrScreenorientation implements ScreenOrientation {
+  factory SsrScreenorientation() {
     throw UnsupportedWebApiError('ScreenOrientation constructor'
       , exposed: 'Window'
     );
@@ -26023,8 +26023,8 @@ final class SsrScreenOrientation implements ScreenOrientation {
   );
 }
 
-final class SsrScriptProcessorNode implements ScriptProcessorNode {
-  factory SsrScriptProcessorNode() {
+final class SsrScriptprocessornode implements ScriptProcessorNode {
+  factory SsrScriptprocessornode() {
     throw UnsupportedWebApiError('ScriptProcessorNode constructor'
       , exposed: 'Window'
     );
@@ -26043,8 +26043,8 @@ final class SsrScriptProcessorNode implements ScriptProcessorNode {
   );
 }
 
-final class SsrSecurityPolicyViolationEvent implements SecurityPolicyViolationEvent {
-  factory SsrSecurityPolicyViolationEvent(String type, [SecurityPolicyViolationEventInit? eventInitDict]) {
+final class SsrSecuritypolicyviolationevent implements SecurityPolicyViolationEvent {
+  factory SsrSecuritypolicyviolationevent(String type, [SecurityPolicyViolationEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('SecurityPolicyViolationEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -26251,8 +26251,8 @@ final class SsrSensor implements Sensor {
   );
 }
 
-final class SsrSensorErrorEvent implements SensorErrorEvent {
-  factory SsrSensorErrorEvent(String type, SensorErrorEventInit errorEventInitDict) {
+final class SsrSensorerrorevent implements SensorErrorEvent {
+  factory SsrSensorerrorevent(String type, SensorErrorEventInit errorEventInitDict) {
     throw UnsupportedWebApiError('SensorErrorEvent constructor'
       , exposed: '[{value: DedicatedWorker}, {value: Window}]'
     );
@@ -26263,8 +26263,8 @@ final class SsrSensorErrorEvent implements SensorErrorEvent {
   );
 }
 
-final class SsrServiceWorker implements ServiceWorker {
-  factory SsrServiceWorker() {
+final class SsrServiceworker implements ServiceWorker {
+  factory SsrServiceworker() {
     throw UnsupportedWebApiError('ServiceWorker constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -26299,8 +26299,8 @@ final class SsrServiceWorker implements ServiceWorker {
   );
 }
 
-final class SsrServiceWorkerContainer implements ServiceWorkerContainer {
-  factory SsrServiceWorkerContainer() {
+final class SsrServiceworkercontainer implements ServiceWorkerContainer {
+  factory SsrServiceworkercontainer() {
     throw UnsupportedWebApiError('ServiceWorkerContainer constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -26355,8 +26355,8 @@ final class SsrServiceWorkerContainer implements ServiceWorkerContainer {
   );
 }
 
-final class SsrServiceWorkerGlobalScope implements ServiceWorkerGlobalScope {
-  factory SsrServiceWorkerGlobalScope() {
+final class SsrServiceworkerglobalscope implements ServiceWorkerGlobalScope {
+  factory SsrServiceworkerglobalscope() {
     throw UnsupportedWebApiError('ServiceWorkerGlobalScope constructor'
       , exposed: 'ServiceWorker'
     );
@@ -26459,8 +26459,8 @@ final class SsrServiceWorkerGlobalScope implements ServiceWorkerGlobalScope {
   );
 }
 
-final class SsrServiceWorkerRegistration implements ServiceWorkerRegistration {
-  factory SsrServiceWorkerRegistration() {
+final class SsrServiceworkerregistration implements ServiceWorkerRegistration {
+  factory SsrServiceworkerregistration() {
     throw UnsupportedWebApiError('ServiceWorkerRegistration constructor'
       , exposed: '[{value: ServiceWorker}, {value: Window}]'
     );
@@ -26523,8 +26523,8 @@ final class SsrServiceWorkerRegistration implements ServiceWorkerRegistration {
   );
 }
 
-final class SsrShadowRoot implements ShadowRoot {
-  factory SsrShadowRoot() {
+final class SsrShadowroot implements ShadowRoot {
+  factory SsrShadowroot() {
     throw UnsupportedWebApiError('ShadowRoot constructor'
       , exposed: 'Window'
     );
@@ -26611,8 +26611,8 @@ final class SsrShadowRoot implements ShadowRoot {
   );
 }
 
-final class SsrSharedWorker implements SharedWorker {
-  factory SsrSharedWorker(Object scriptURL, [Object? options]) {
+final class SsrSharedworker implements SharedWorker {
+  factory SsrSharedworker(Object scriptURL, [Object? options]) {
     throw UnsupportedWebApiError('SharedWorker constructor'
       , exposed: 'Window'
     );
@@ -26631,8 +26631,8 @@ final class SsrSharedWorker implements SharedWorker {
   );
 }
 
-final class SsrSharedWorkerGlobalScope implements SharedWorkerGlobalScope {
-  factory SsrSharedWorkerGlobalScope() {
+final class SsrSharedworkerglobalscope implements SharedWorkerGlobalScope {
+  factory SsrSharedworkerglobalscope() {
     throw UnsupportedWebApiError('SharedWorkerGlobalScope constructor'
       , exposed: 'SharedWorker'
     );
@@ -26655,8 +26655,8 @@ final class SsrSharedWorkerGlobalScope implements SharedWorkerGlobalScope {
   );
 }
 
-final class SsrSourceBuffer implements SourceBuffer {
-  factory SsrSourceBuffer() {
+final class SsrSourcebuffer implements SourceBuffer {
+  factory SsrSourcebuffer() {
     throw UnsupportedWebApiError('SourceBuffer constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
@@ -26767,8 +26767,8 @@ final class SsrSourceBuffer implements SourceBuffer {
   );
 }
 
-final class SsrSourceBufferList implements SourceBufferList {
-  factory SsrSourceBufferList() {
+final class SsrSourcebufferlist implements SourceBufferList {
+  factory SsrSourcebufferlist() {
     throw UnsupportedWebApiError('SourceBufferList constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
@@ -26795,8 +26795,8 @@ final class SsrSourceBufferList implements SourceBufferList {
   );
 }
 
-final class SsrSpeechRecognition implements SpeechRecognition {
-  factory SsrSpeechRecognition() {
+final class SsrSpeechrecognition implements SpeechRecognition {
+  factory SsrSpeechrecognition() {
     throw UnsupportedWebApiError('SpeechRecognition constructor'
       , exposed: 'Window'
     );
@@ -26943,8 +26943,8 @@ final class SsrSpeechRecognition implements SpeechRecognition {
   );
 }
 
-final class SsrSpeechRecognitionAlternative implements SpeechRecognitionAlternative {
-  factory SsrSpeechRecognitionAlternative() {
+final class SsrSpeechrecognitionalternative implements SpeechRecognitionAlternative {
+  factory SsrSpeechrecognitionalternative() {
     throw UnsupportedWebApiError('SpeechRecognitionAlternative constructor'
       , exposed: 'Window'
     );
@@ -26959,8 +26959,8 @@ final class SsrSpeechRecognitionAlternative implements SpeechRecognitionAlternat
   );
 }
 
-final class SsrSpeechRecognitionErrorEvent implements SpeechRecognitionErrorEvent {
-  factory SsrSpeechRecognitionErrorEvent(String type, SpeechRecognitionErrorEventInit eventInitDict) {
+final class SsrSpeechrecognitionerrorevent implements SpeechRecognitionErrorEvent {
+  factory SsrSpeechrecognitionerrorevent(String type, SpeechRecognitionErrorEventInit eventInitDict) {
     throw UnsupportedWebApiError('SpeechRecognitionErrorEvent constructor'
       , exposed: 'Window'
     );
@@ -26975,8 +26975,8 @@ final class SsrSpeechRecognitionErrorEvent implements SpeechRecognitionErrorEven
   );
 }
 
-final class SsrSpeechRecognitionEvent implements SpeechRecognitionEvent {
-  factory SsrSpeechRecognitionEvent(String type, SpeechRecognitionEventInit eventInitDict) {
+final class SsrSpeechrecognitionevent implements SpeechRecognitionEvent {
+  factory SsrSpeechrecognitionevent(String type, SpeechRecognitionEventInit eventInitDict) {
     throw UnsupportedWebApiError('SpeechRecognitionEvent constructor'
       , exposed: 'Window'
     );
@@ -26991,8 +26991,8 @@ final class SsrSpeechRecognitionEvent implements SpeechRecognitionEvent {
   );
 }
 
-final class SsrSpeechRecognitionResult implements SpeechRecognitionResult {
-  factory SsrSpeechRecognitionResult() {
+final class SsrSpeechrecognitionresult implements SpeechRecognitionResult {
+  factory SsrSpeechrecognitionresult() {
     throw UnsupportedWebApiError('SpeechRecognitionResult constructor'
       , exposed: 'Window'
     );
@@ -27011,8 +27011,8 @@ final class SsrSpeechRecognitionResult implements SpeechRecognitionResult {
   );
 }
 
-final class SsrSpeechRecognitionResultList implements SpeechRecognitionResultList {
-  factory SsrSpeechRecognitionResultList() {
+final class SsrSpeechrecognitionresultlist implements SpeechRecognitionResultList {
+  factory SsrSpeechrecognitionresultlist() {
     throw UnsupportedWebApiError('SpeechRecognitionResultList constructor'
       , exposed: 'Window'
     );
@@ -27027,8 +27027,8 @@ final class SsrSpeechRecognitionResultList implements SpeechRecognitionResultLis
   );
 }
 
-final class SsrSpeechSynthesis implements SpeechSynthesis {
-  factory SsrSpeechSynthesis() {
+final class SsrSpeechsynthesis implements SpeechSynthesis {
+  factory SsrSpeechsynthesis() {
     throw UnsupportedWebApiError('SpeechSynthesis constructor'
       , exposed: 'Window'
     );
@@ -27075,8 +27075,8 @@ final class SsrSpeechSynthesis implements SpeechSynthesis {
   );
 }
 
-final class SsrSpeechSynthesisErrorEvent implements SpeechSynthesisErrorEvent {
-  factory SsrSpeechSynthesisErrorEvent(String type, SpeechSynthesisErrorEventInit eventInitDict) {
+final class SsrSpeechsynthesiserrorevent implements SpeechSynthesisErrorEvent {
+  factory SsrSpeechsynthesiserrorevent(String type, SpeechSynthesisErrorEventInit eventInitDict) {
     throw UnsupportedWebApiError('SpeechSynthesisErrorEvent constructor'
       , exposed: 'Window'
     );
@@ -27087,8 +27087,8 @@ final class SsrSpeechSynthesisErrorEvent implements SpeechSynthesisErrorEvent {
   );
 }
 
-final class SsrSpeechSynthesisEvent implements SpeechSynthesisEvent {
-  factory SsrSpeechSynthesisEvent(String type, SpeechSynthesisEventInit eventInitDict) {
+final class SsrSpeechsynthesisevent implements SpeechSynthesisEvent {
+  factory SsrSpeechsynthesisevent(String type, SpeechSynthesisEventInit eventInitDict) {
     throw UnsupportedWebApiError('SpeechSynthesisEvent constructor'
       , exposed: 'Window'
     );
@@ -27115,8 +27115,8 @@ final class SsrSpeechSynthesisEvent implements SpeechSynthesisEvent {
   );
 }
 
-final class SsrSpeechSynthesisUtterance implements SpeechSynthesisUtterance {
-  factory SsrSpeechSynthesisUtterance([String? text]) {
+final class SsrSpeechsynthesisutterance implements SpeechSynthesisUtterance {
+  factory SsrSpeechsynthesisutterance([String? text]) {
     throw UnsupportedWebApiError('SpeechSynthesisUtterance constructor'
       , exposed: 'Window'
     );
@@ -27227,8 +27227,8 @@ final class SsrSpeechSynthesisUtterance implements SpeechSynthesisUtterance {
   );
 }
 
-final class SsrSpeechSynthesisVoice implements SpeechSynthesisVoice {
-  factory SsrSpeechSynthesisVoice() {
+final class SsrSpeechsynthesisvoice implements SpeechSynthesisVoice {
+  factory SsrSpeechsynthesisvoice() {
     throw UnsupportedWebApiError('SpeechSynthesisVoice constructor'
       , exposed: 'Window'
     );
@@ -27255,16 +27255,16 @@ final class SsrSpeechSynthesisVoice implements SpeechSynthesisVoice {
   );
 }
 
-final class SsrStaticRange implements StaticRange {
-  factory SsrStaticRange(StaticRangeInit init) {
+final class SsrStaticrange implements StaticRange {
+  factory SsrStaticrange(StaticRangeInit init) {
     throw UnsupportedWebApiError('StaticRange constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrStereoPannerNode implements StereoPannerNode {
-  factory SsrStereoPannerNode(BaseAudioContext context, [StereoPannerOptions? options]) {
+final class SsrStereopannernode implements StereoPannerNode {
+  factory SsrStereopannernode(BaseAudioContext context, [StereoPannerOptions? options]) {
     throw UnsupportedWebApiError('StereoPannerNode constructor'
       , exposed: 'Window'
     );
@@ -27307,8 +27307,8 @@ final class SsrStorage implements Storage {
   );
 }
 
-final class SsrStorageAccessHandle implements StorageAccessHandle {
-  factory SsrStorageAccessHandle() {
+final class SsrStorageaccesshandle implements StorageAccessHandle {
+  factory SsrStorageaccesshandle() {
     throw UnsupportedWebApiError('StorageAccessHandle constructor'
       , exposed: 'Window'
     );
@@ -27351,8 +27351,8 @@ final class SsrStorageAccessHandle implements StorageAccessHandle {
   );
 }
 
-final class SsrStorageEvent implements StorageEvent {
-  factory SsrStorageEvent(String type, [StorageEventInit? eventInitDict]) {
+final class SsrStorageevent implements StorageEvent {
+  factory SsrStorageevent(String type, [StorageEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('StorageEvent constructor'
       , exposed: 'Window'
     );
@@ -27383,8 +27383,8 @@ final class SsrStorageEvent implements StorageEvent {
   );
 }
 
-final class SsrStorageManager implements StorageManager {
-  factory SsrStorageManager() {
+final class SsrStoragemanager implements StorageManager {
+  factory SsrStoragemanager() {
     throw UnsupportedWebApiError('StorageManager constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -27407,8 +27407,8 @@ final class SsrStorageManager implements StorageManager {
   );
 }
 
-final class SsrStylePropertyMap implements StylePropertyMap {
-  factory SsrStylePropertyMap() {
+final class SsrStylepropertymap implements StylePropertyMap {
+  factory SsrStylepropertymap() {
     throw UnsupportedWebApiError('StylePropertyMap constructor'
       , exposed: 'Window'
     );
@@ -27431,8 +27431,8 @@ final class SsrStylePropertyMap implements StylePropertyMap {
   );
 }
 
-final class SsrStylePropertyMapReadOnly implements StylePropertyMapReadOnly {
-  factory SsrStylePropertyMapReadOnly() {
+final class SsrStylepropertymapreadonly implements StylePropertyMapReadOnly {
+  factory SsrStylepropertymapreadonly() {
     throw UnsupportedWebApiError('StylePropertyMapReadOnly constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
     );
@@ -27455,8 +27455,8 @@ final class SsrStylePropertyMapReadOnly implements StylePropertyMapReadOnly {
   );
 }
 
-final class SsrStyleSheet implements StyleSheet {
-  factory SsrStyleSheet() {
+final class SsrStylesheet implements StyleSheet {
+  factory SsrStylesheet() {
     throw UnsupportedWebApiError('StyleSheet constructor'
       , exposed: 'Window'
     );
@@ -27495,8 +27495,8 @@ final class SsrStyleSheet implements StyleSheet {
   );
 }
 
-final class SsrStyleSheetList implements StyleSheetList {
-  factory SsrStyleSheetList() {
+final class SsrStylesheetlist implements StyleSheetList {
+  factory SsrStylesheetlist() {
     throw UnsupportedWebApiError('StyleSheetList constructor'
       , exposed: 'Window'
     );
@@ -27511,8 +27511,8 @@ final class SsrStyleSheetList implements StyleSheetList {
   );
 }
 
-final class SsrSubmitEvent implements SubmitEvent {
-  factory SsrSubmitEvent(String type, [SubmitEventInit? eventInitDict]) {
+final class SsrSubmitevent implements SubmitEvent {
+  factory SsrSubmitevent(String type, [SubmitEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('SubmitEvent constructor'
       , exposed: 'Window'
     );
@@ -27523,8 +27523,8 @@ final class SsrSubmitEvent implements SubmitEvent {
   );
 }
 
-final class SsrSubtleCrypto implements SubtleCrypto {
-  factory SsrSubtleCrypto() {
+final class SsrSubtlecrypto implements SubtleCrypto {
+  factory SsrSubtlecrypto() {
     throw UnsupportedWebApiError('SubtleCrypto constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -27579,8 +27579,8 @@ final class SsrSubtleCrypto implements SubtleCrypto {
   );
 }
 
-final class SsrSyncEvent implements SyncEvent {
-  factory SsrSyncEvent(String type, SyncEventInit init) {
+final class SsrSyncevent implements SyncEvent {
+  factory SsrSyncevent(String type, SyncEventInit init) {
     throw UnsupportedWebApiError('SyncEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -27595,8 +27595,8 @@ final class SsrSyncEvent implements SyncEvent {
   );
 }
 
-final class SsrSyncManager implements SyncManager {
-  factory SsrSyncManager() {
+final class SsrSyncmanager implements SyncManager {
+  factory SsrSyncmanager() {
     throw UnsupportedWebApiError('SyncManager constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -27611,8 +27611,8 @@ final class SsrSyncManager implements SyncManager {
   );
 }
 
-final class SsrTaskController implements TaskController {
-  factory SsrTaskController([TaskControllerInit? init]) {
+final class SsrTaskcontroller implements TaskController {
+  factory SsrTaskcontroller([TaskControllerInit? init]) {
     throw UnsupportedWebApiError('TaskController constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -27623,8 +27623,8 @@ final class SsrTaskController implements TaskController {
   );
 }
 
-final class SsrTaskPriorityChangeEvent implements TaskPriorityChangeEvent {
-  factory SsrTaskPriorityChangeEvent(String type, TaskPriorityChangeEventInit priorityChangeEventInitDict) {
+final class SsrTaskprioritychangeevent implements TaskPriorityChangeEvent {
+  factory SsrTaskprioritychangeevent(String type, TaskPriorityChangeEventInit priorityChangeEventInitDict) {
     throw UnsupportedWebApiError('TaskPriorityChangeEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -27635,8 +27635,8 @@ final class SsrTaskPriorityChangeEvent implements TaskPriorityChangeEvent {
   );
 }
 
-final class SsrTaskSignal implements TaskSignal {
-  factory SsrTaskSignal() {
+final class SsrTasksignal implements TaskSignal {
+  factory SsrTasksignal() {
     throw UnsupportedWebApiError('TaskSignal constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -27691,8 +27691,8 @@ final class SsrText implements Text {
   );
 }
 
-final class SsrTextDecoder implements TextDecoder {
-  factory SsrTextDecoder([String? label, TextDecoderOptions? options]) {
+final class SsrTextdecoder implements TextDecoder {
+  factory SsrTextdecoder([String? label, TextDecoderOptions? options]) {
     throw UnsupportedWebApiError('TextDecoder constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -27715,8 +27715,8 @@ final class SsrTextDecoder implements TextDecoder {
   );
 }
 
-final class SsrTextDecoderStream implements TextDecoderStream {
-  factory SsrTextDecoderStream([String? label, TextDecoderOptions? options]) {
+final class SsrTextdecoderstream implements TextDecoderStream {
+  factory SsrTextdecoderstream([String? label, TextDecoderOptions? options]) {
     throw UnsupportedWebApiError('TextDecoderStream constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -27743,8 +27743,8 @@ final class SsrTextDecoderStream implements TextDecoderStream {
   );
 }
 
-final class SsrTextEncoder implements TextEncoder {
-  factory SsrTextEncoder() {
+final class SsrTextencoder implements TextEncoder {
+  factory SsrTextencoder() {
     throw UnsupportedWebApiError('TextEncoder constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -27763,8 +27763,8 @@ final class SsrTextEncoder implements TextEncoder {
   );
 }
 
-final class SsrTextEncoderStream implements TextEncoderStream {
-  factory SsrTextEncoderStream() {
+final class SsrTextencoderstream implements TextEncoderStream {
+  factory SsrTextencoderstream() {
     throw UnsupportedWebApiError('TextEncoderStream constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -27783,8 +27783,8 @@ final class SsrTextEncoderStream implements TextEncoderStream {
   );
 }
 
-final class SsrTextEvent implements TextEvent {
-  factory SsrTextEvent() {
+final class SsrTextevent implements TextEvent {
+  factory SsrTextevent() {
     throw UnsupportedWebApiError('TextEvent constructor'
       , exposed: 'Window'
     );
@@ -27799,8 +27799,8 @@ final class SsrTextEvent implements TextEvent {
   );
 }
 
-final class SsrTextMetrics implements TextMetrics {
-  factory SsrTextMetrics() {
+final class SsrTextmetrics implements TextMetrics {
+  factory SsrTextmetrics() {
     throw UnsupportedWebApiError('TextMetrics constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -27855,8 +27855,8 @@ final class SsrTextMetrics implements TextMetrics {
   );
 }
 
-final class SsrTextTrack implements TextTrack {
-  factory SsrTextTrack() {
+final class SsrTexttrack implements TextTrack {
+  factory SsrTexttrack() {
     throw UnsupportedWebApiError('TextTrack constructor'
       , exposed: 'Window'
     );
@@ -27919,8 +27919,8 @@ final class SsrTextTrack implements TextTrack {
   );
 }
 
-final class SsrTextTrackCue implements TextTrackCue {
-  factory SsrTextTrackCue() {
+final class SsrTexttrackcue implements TextTrackCue {
+  factory SsrTexttrackcue() {
     throw UnsupportedWebApiError('TextTrackCue constructor'
       , exposed: 'Window'
     );
@@ -27979,8 +27979,8 @@ final class SsrTextTrackCue implements TextTrackCue {
   );
 }
 
-final class SsrTextTrackCueList implements TextTrackCueList {
-  factory SsrTextTrackCueList() {
+final class SsrTexttrackcuelist implements TextTrackCueList {
+  factory SsrTexttrackcuelist() {
     throw UnsupportedWebApiError('TextTrackCueList constructor'
       , exposed: 'Window'
     );
@@ -27995,8 +27995,8 @@ final class SsrTextTrackCueList implements TextTrackCueList {
   );
 }
 
-final class SsrTextTrackList implements TextTrackList {
-  factory SsrTextTrackList() {
+final class SsrTexttracklist implements TextTrackList {
+  factory SsrTexttracklist() {
     throw UnsupportedWebApiError('TextTrackList constructor'
       , exposed: 'Window'
     );
@@ -28035,8 +28035,8 @@ final class SsrTextTrackList implements TextTrackList {
   );
 }
 
-final class SsrTimeEvent implements TimeEvent {
-  factory SsrTimeEvent() {
+final class SsrTimeevent implements TimeEvent {
+  factory SsrTimeevent() {
     throw UnsupportedWebApiError('TimeEvent constructor'
       , exposed: 'Window'
     );
@@ -28055,8 +28055,8 @@ final class SsrTimeEvent implements TimeEvent {
   );
 }
 
-final class SsrTimeRanges implements TimeRanges {
-  factory SsrTimeRanges() {
+final class SsrTimeranges implements TimeRanges {
+  factory SsrTimeranges() {
     throw UnsupportedWebApiError('TimeRanges constructor'
       , exposed: 'Window'
     );
@@ -28075,8 +28075,8 @@ final class SsrTimeRanges implements TimeRanges {
   );
 }
 
-final class SsrToggleEvent implements ToggleEvent {
-  factory SsrToggleEvent(String type, [ToggleEventInit? eventInitDict]) {
+final class SsrToggleevent implements ToggleEvent {
+  factory SsrToggleevent(String type, [ToggleEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ToggleEvent constructor'
       , exposed: 'Window'
     );
@@ -28159,8 +28159,8 @@ final class SsrTouch implements Touch {
   );
 }
 
-final class SsrTouchEvent implements TouchEvent {
-  factory SsrTouchEvent(String type, [TouchEventInit? eventInitDict]) {
+final class SsrTouchevent implements TouchEvent {
+  factory SsrTouchevent(String type, [TouchEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('TouchEvent constructor'
       , exposed: 'Window'
     );
@@ -28195,8 +28195,8 @@ final class SsrTouchEvent implements TouchEvent {
   );
 }
 
-final class SsrTouchList implements TouchList {
-  factory SsrTouchList() {
+final class SsrTouchlist implements TouchList {
+  factory SsrTouchlist() {
     throw UnsupportedWebApiError('TouchList constructor'
       , exposed: 'Window'
     );
@@ -28211,8 +28211,8 @@ final class SsrTouchList implements TouchList {
   );
 }
 
-final class SsrTrackEvent implements TrackEvent {
-  factory SsrTrackEvent(String type, [TrackEventInit? eventInitDict]) {
+final class SsrTrackevent implements TrackEvent {
+  factory SsrTrackevent(String type, [TrackEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('TrackEvent constructor'
       , exposed: 'Window'
     );
@@ -28223,8 +28223,8 @@ final class SsrTrackEvent implements TrackEvent {
   );
 }
 
-final class SsrTransformStream implements TransformStream {
-  factory SsrTransformStream([Object? transformer, QueuingStrategy? writableStrategy, QueuingStrategy? readableStrategy]) {
+final class SsrTransformstream implements TransformStream {
+  factory SsrTransformstream([Object? transformer, QueuingStrategy? writableStrategy, QueuingStrategy? readableStrategy]) {
     throw UnsupportedWebApiError('TransformStream constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -28239,8 +28239,8 @@ final class SsrTransformStream implements TransformStream {
   );
 }
 
-final class SsrTransformStreamDefaultController implements TransformStreamDefaultController {
-  factory SsrTransformStreamDefaultController() {
+final class SsrTransformstreamdefaultcontroller implements TransformStreamDefaultController {
+  factory SsrTransformstreamdefaultcontroller() {
     throw UnsupportedWebApiError('TransformStreamDefaultController constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -28263,8 +28263,8 @@ final class SsrTransformStreamDefaultController implements TransformStreamDefaul
   );
 }
 
-final class SsrTransitionEvent implements TransitionEvent {
-  factory SsrTransitionEvent(Object type, [TransitionEventInit? transitionEventInitDict]) {
+final class SsrTransitionevent implements TransitionEvent {
+  factory SsrTransitionevent(Object type, [TransitionEventInit? transitionEventInitDict]) {
     throw UnsupportedWebApiError('TransitionEvent constructor'
       , exposed: 'Window'
     );
@@ -28283,8 +28283,8 @@ final class SsrTransitionEvent implements TransitionEvent {
   );
 }
 
-final class SsrTreeWalker implements TreeWalker {
-  factory SsrTreeWalker() {
+final class SsrTreewalker implements TreeWalker {
+  factory SsrTreewalker() {
     throw UnsupportedWebApiError('TreeWalker constructor'
       , exposed: 'Window'
     );
@@ -28339,8 +28339,8 @@ final class SsrTreeWalker implements TreeWalker {
   );
 }
 
-final class SsrTrustedHTML implements TrustedHTML {
-  factory SsrTrustedHTML() {
+final class SsrTrustedhtml implements TrustedHTML {
+  factory SsrTrustedhtml() {
     throw UnsupportedWebApiError('TrustedHTML constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -28351,8 +28351,8 @@ final class SsrTrustedHTML implements TrustedHTML {
   );
 }
 
-final class SsrTrustedScript implements TrustedScript {
-  factory SsrTrustedScript() {
+final class SsrTrustedscript implements TrustedScript {
+  factory SsrTrustedscript() {
     throw UnsupportedWebApiError('TrustedScript constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -28363,8 +28363,8 @@ final class SsrTrustedScript implements TrustedScript {
   );
 }
 
-final class SsrTrustedScriptURL implements TrustedScriptURL {
-  factory SsrTrustedScriptURL() {
+final class SsrTrustedscripturl implements TrustedScriptURL {
+  factory SsrTrustedscripturl() {
     throw UnsupportedWebApiError('TrustedScriptURL constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -28375,8 +28375,8 @@ final class SsrTrustedScriptURL implements TrustedScriptURL {
   );
 }
 
-final class SsrTrustedTypePolicy implements TrustedTypePolicy {
-  factory SsrTrustedTypePolicy() {
+final class SsrTrustedtypepolicy implements TrustedTypePolicy {
+  factory SsrTrustedtypepolicy() {
     throw UnsupportedWebApiError('TrustedTypePolicy constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -28399,8 +28399,8 @@ final class SsrTrustedTypePolicy implements TrustedTypePolicy {
   );
 }
 
-final class SsrTrustedTypePolicyFactory implements TrustedTypePolicyFactory {
-  factory SsrTrustedTypePolicyFactory() {
+final class SsrTrustedtypepolicyfactory implements TrustedTypePolicyFactory {
+  factory SsrTrustedtypepolicyfactory() {
     throw UnsupportedWebApiError('TrustedTypePolicyFactory constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -28443,8 +28443,8 @@ final class SsrTrustedTypePolicyFactory implements TrustedTypePolicyFactory {
   );
 }
 
-final class SsrUIEvent implements UIEvent {
-  factory SsrUIEvent(String type, [UIEventInit? eventInitDict]) {
+final class SsrUievent implements UIEvent {
+  factory SsrUievent(String type, [UIEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('UIEvent constructor'
       , exposed: 'Window'
     );
@@ -28467,8 +28467,8 @@ final class SsrUIEvent implements UIEvent {
   );
 }
 
-final class SsrURL implements URL {
-  factory SsrURL(String url, [String? base]) {
+final class SsrUrl implements URL {
+  factory SsrUrl(String url, [String? base]) {
     throw UnsupportedWebApiError('URL constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
     );
@@ -28567,8 +28567,8 @@ final class SsrURL implements URL {
   );
 }
 
-final class SsrURLSearchParams implements URLSearchParams {
-  factory SsrURLSearchParams([Object? init]) {
+final class SsrUrlsearchparams implements URLSearchParams {
+  factory SsrUrlsearchparams([Object? init]) {
     throw UnsupportedWebApiError('URLSearchParams constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -28607,8 +28607,8 @@ final class SsrURLSearchParams implements URLSearchParams {
   );
 }
 
-final class SsrUserActivation implements UserActivation {
-  factory SsrUserActivation() {
+final class SsrUseractivation implements UserActivation {
+  factory SsrUseractivation() {
     throw UnsupportedWebApiError('UserActivation constructor'
       , exposed: 'Window'
     );
@@ -28623,8 +28623,8 @@ final class SsrUserActivation implements UserActivation {
   );
 }
 
-final class SsrVTTCue implements VTTCue {
-  factory SsrVTTCue(double startTime, double endTime, String text) {
+final class SsrVttcue implements VTTCue {
+  factory SsrVttcue(double startTime, double endTime, String text) {
     throw UnsupportedWebApiError('VTTCue constructor'
       , exposed: 'Window'
     );
@@ -28715,8 +28715,8 @@ final class SsrVTTCue implements VTTCue {
   );
 }
 
-final class SsrVTTRegion implements VTTRegion {
-  factory SsrVTTRegion() {
+final class SsrVttregion implements VTTRegion {
+  factory SsrVttregion() {
     throw UnsupportedWebApiError('VTTRegion constructor'
       , exposed: 'Window'
     );
@@ -28787,8 +28787,8 @@ final class SsrVTTRegion implements VTTRegion {
   );
 }
 
-final class SsrValidityState implements ValidityState {
-  factory SsrValidityState() {
+final class SsrValiditystate implements ValidityState {
+  factory SsrValiditystate() {
     throw UnsupportedWebApiError('ValidityState constructor'
       , exposed: 'Window'
     );
@@ -28839,8 +28839,8 @@ final class SsrValidityState implements ValidityState {
   );
 }
 
-final class SsrVideoColorSpace implements VideoColorSpace {
-  factory SsrVideoColorSpace([VideoColorSpaceInit? init]) {
+final class SsrVideocolorspace implements VideoColorSpace {
+  factory SsrVideocolorspace([VideoColorSpaceInit? init]) {
     throw UnsupportedWebApiError('VideoColorSpace constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
@@ -28867,8 +28867,8 @@ final class SsrVideoColorSpace implements VideoColorSpace {
   );
 }
 
-final class SsrVideoDecoder implements VideoDecoder {
-  factory SsrVideoDecoder(VideoDecoderInit init) {
+final class SsrVideodecoder implements VideoDecoder {
+  factory SsrVideodecoder(VideoDecoderInit init) {
     throw UnsupportedWebApiError('VideoDecoder constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
@@ -28911,8 +28911,8 @@ final class SsrVideoDecoder implements VideoDecoder {
   );
 }
 
-final class SsrVideoEncoder implements VideoEncoder {
-  factory SsrVideoEncoder(VideoEncoderInit init) {
+final class SsrVideoencoder implements VideoEncoder {
+  factory SsrVideoencoder(VideoEncoderInit init) {
     throw UnsupportedWebApiError('VideoEncoder constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
@@ -28955,13 +28955,13 @@ final class SsrVideoEncoder implements VideoEncoder {
   );
 }
 
-final class SsrVideoFrame implements VideoFrame {
-  factory SsrVideoFrame(CanvasImageSource image, [VideoFrameInit? init]) {
+final class SsrVideoframe implements VideoFrame {
+  factory SsrVideoframe(CanvasImageSource image, [VideoFrameInit? init]) {
     throw UnsupportedWebApiError('VideoFrame constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
   }
-  factory SsrVideoFrame.named1(AllowSharedBufferSource data, VideoFrameBufferInit init) {
+  factory SsrVideoframe.named1(AllowSharedBufferSource data, VideoFrameBufferInit init) {
     throw UnsupportedWebApiError('VideoFrame constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
     );
@@ -29024,8 +29024,8 @@ final class SsrVideoFrame implements VideoFrame {
   );
 }
 
-final class SsrVideoPlaybackQuality implements VideoPlaybackQuality {
-  factory SsrVideoPlaybackQuality() {
+final class SsrVideoplaybackquality implements VideoPlaybackQuality {
+  factory SsrVideoplaybackquality() {
     throw UnsupportedWebApiError('VideoPlaybackQuality constructor'
       , exposed: 'Window'
     );
@@ -29048,8 +29048,8 @@ final class SsrVideoPlaybackQuality implements VideoPlaybackQuality {
   );
 }
 
-final class SsrVideoTrack implements VideoTrack {
-  factory SsrVideoTrack() {
+final class SsrVideotrack implements VideoTrack {
+  factory SsrVideotrack() {
     throw UnsupportedWebApiError('VideoTrack constructor'
       , exposed: 'Window'
     );
@@ -29084,8 +29084,8 @@ final class SsrVideoTrack implements VideoTrack {
   );
 }
 
-final class SsrVideoTrackList implements VideoTrackList {
-  factory SsrVideoTrackList() {
+final class SsrVideotracklist implements VideoTrackList {
+  factory SsrVideotracklist() {
     throw UnsupportedWebApiError('VideoTrackList constructor'
       , exposed: 'Window'
     );
@@ -29128,8 +29128,8 @@ final class SsrVideoTrackList implements VideoTrackList {
   );
 }
 
-final class SsrViewTransition implements ViewTransition {
-  factory SsrViewTransition() {
+final class SsrViewtransition implements ViewTransition {
+  factory SsrViewtransition() {
     throw UnsupportedWebApiError('ViewTransition constructor'
       , exposed: 'Window'
     );
@@ -29152,8 +29152,8 @@ final class SsrViewTransition implements ViewTransition {
   );
 }
 
-final class SsrVisualViewport implements VisualViewport {
-  factory SsrVisualViewport() {
+final class SsrVisualviewport implements VisualViewport {
+  factory SsrVisualviewport() {
     throw UnsupportedWebApiError('VisualViewport constructor'
       , exposed: 'Window'
     );
@@ -29212,16 +29212,16 @@ final class SsrVisualViewport implements VisualViewport {
   );
 }
 
-final class SsrWEBGL_color_buffer_float implements WEBGL_color_buffer_float {
-  factory SsrWEBGL_color_buffer_float() {
+final class SsrWebglColorBufferFloat implements WEBGL_color_buffer_float {
+  factory SsrWebglColorBufferFloat() {
     throw UnsupportedWebApiError('WEBGL_color_buffer_float constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWEBGL_compressed_texture_astc implements WEBGL_compressed_texture_astc {
-  factory SsrWEBGL_compressed_texture_astc() {
+final class SsrWebglCompressedTextureAstc implements WEBGL_compressed_texture_astc {
+  factory SsrWebglCompressedTextureAstc() {
     throw UnsupportedWebApiError('WEBGL_compressed_texture_astc constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -29232,56 +29232,56 @@ final class SsrWEBGL_compressed_texture_astc implements WEBGL_compressed_texture
   );
 }
 
-final class SsrWEBGL_compressed_texture_etc implements WEBGL_compressed_texture_etc {
-  factory SsrWEBGL_compressed_texture_etc() {
+final class SsrWebglCompressedTextureEtc implements WEBGL_compressed_texture_etc {
+  factory SsrWebglCompressedTextureEtc() {
     throw UnsupportedWebApiError('WEBGL_compressed_texture_etc constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWEBGL_compressed_texture_etc1 implements WEBGL_compressed_texture_etc1 {
-  factory SsrWEBGL_compressed_texture_etc1() {
+final class SsrWebglCompressedTextureEtc1 implements WEBGL_compressed_texture_etc1 {
+  factory SsrWebglCompressedTextureEtc1() {
     throw UnsupportedWebApiError('WEBGL_compressed_texture_etc1 constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWEBGL_compressed_texture_pvrtc implements WEBGL_compressed_texture_pvrtc {
-  factory SsrWEBGL_compressed_texture_pvrtc() {
+final class SsrWebglCompressedTexturePvrtc implements WEBGL_compressed_texture_pvrtc {
+  factory SsrWebglCompressedTexturePvrtc() {
     throw UnsupportedWebApiError('WEBGL_compressed_texture_pvrtc constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWEBGL_compressed_texture_s3tc implements WEBGL_compressed_texture_s3tc {
-  factory SsrWEBGL_compressed_texture_s3tc() {
+final class SsrWebglCompressedTextureS3tc implements WEBGL_compressed_texture_s3tc {
+  factory SsrWebglCompressedTextureS3tc() {
     throw UnsupportedWebApiError('WEBGL_compressed_texture_s3tc constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWEBGL_compressed_texture_s3tc_srgb implements WEBGL_compressed_texture_s3tc_srgb {
-  factory SsrWEBGL_compressed_texture_s3tc_srgb() {
+final class SsrWebglCompressedTextureS3tcSrgb implements WEBGL_compressed_texture_s3tc_srgb {
+  factory SsrWebglCompressedTextureS3tcSrgb() {
     throw UnsupportedWebApiError('WEBGL_compressed_texture_s3tc_srgb constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWEBGL_debug_renderer_info implements WEBGL_debug_renderer_info {
-  factory SsrWEBGL_debug_renderer_info() {
+final class SsrWebglDebugRendererInfo implements WEBGL_debug_renderer_info {
+  factory SsrWebglDebugRendererInfo() {
     throw UnsupportedWebApiError('WEBGL_debug_renderer_info constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWEBGL_debug_shaders implements WEBGL_debug_shaders {
-  factory SsrWEBGL_debug_shaders() {
+final class SsrWebglDebugShaders implements WEBGL_debug_shaders {
+  factory SsrWebglDebugShaders() {
     throw UnsupportedWebApiError('WEBGL_debug_shaders constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -29292,16 +29292,16 @@ final class SsrWEBGL_debug_shaders implements WEBGL_debug_shaders {
   );
 }
 
-final class SsrWEBGL_depth_texture implements WEBGL_depth_texture {
-  factory SsrWEBGL_depth_texture() {
+final class SsrWebglDepthTexture implements WEBGL_depth_texture {
+  factory SsrWebglDepthTexture() {
     throw UnsupportedWebApiError('WEBGL_depth_texture constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWEBGL_draw_buffers implements WEBGL_draw_buffers {
-  factory SsrWEBGL_draw_buffers() {
+final class SsrWebglDrawBuffers implements WEBGL_draw_buffers {
+  factory SsrWebglDrawBuffers() {
     throw UnsupportedWebApiError('WEBGL_draw_buffers constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -29312,8 +29312,8 @@ final class SsrWEBGL_draw_buffers implements WEBGL_draw_buffers {
   );
 }
 
-final class SsrWEBGL_lose_context implements WEBGL_lose_context {
-  factory SsrWEBGL_lose_context() {
+final class SsrWebglLoseContext implements WEBGL_lose_context {
+  factory SsrWebglLoseContext() {
     throw UnsupportedWebApiError('WEBGL_lose_context constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -29328,8 +29328,8 @@ final class SsrWEBGL_lose_context implements WEBGL_lose_context {
   );
 }
 
-final class SsrWEBGL_multi_draw implements WEBGL_multi_draw {
-  factory SsrWEBGL_multi_draw() {
+final class SsrWebglMultiDraw implements WEBGL_multi_draw {
+  factory SsrWebglMultiDraw() {
     throw UnsupportedWebApiError('WEBGL_multi_draw constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -29352,8 +29352,8 @@ final class SsrWEBGL_multi_draw implements WEBGL_multi_draw {
   );
 }
 
-final class SsrWakeLock implements WakeLock {
-  factory SsrWakeLock() {
+final class SsrWakelock implements WakeLock {
+  factory SsrWakelock() {
     throw UnsupportedWebApiError('WakeLock constructor'
       , exposed: '[{value: Window}]'
     );
@@ -29364,8 +29364,8 @@ final class SsrWakeLock implements WakeLock {
   );
 }
 
-final class SsrWakeLockSentinel implements WakeLockSentinel {
-  factory SsrWakeLockSentinel() {
+final class SsrWakelocksentinel implements WakeLockSentinel {
+  factory SsrWakelocksentinel() {
     throw UnsupportedWebApiError('WakeLockSentinel constructor'
       , exposed: '[{value: Window}]'
     );
@@ -29392,8 +29392,8 @@ final class SsrWakeLockSentinel implements WakeLockSentinel {
   );
 }
 
-final class SsrWaveShaperNode implements WaveShaperNode {
-  factory SsrWaveShaperNode(BaseAudioContext context, [WaveShaperOptions? options]) {
+final class SsrWaveshapernode implements WaveShaperNode {
+  factory SsrWaveshapernode(BaseAudioContext context, [WaveShaperOptions? options]) {
     throw UnsupportedWebApiError('WaveShaperNode constructor'
       , exposed: 'Window'
     );
@@ -29416,8 +29416,8 @@ final class SsrWaveShaperNode implements WaveShaperNode {
   );
 }
 
-final class SsrWebGL2RenderingContext implements WebGL2RenderingContext {
-  factory SsrWebGL2RenderingContext() {
+final class SsrWebgl2renderingcontext implements WebGL2RenderingContext {
+  factory SsrWebgl2renderingcontext() {
     throw UnsupportedWebApiError('WebGL2RenderingContext constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -30360,8 +30360,8 @@ final class SsrWebGL2RenderingContext implements WebGL2RenderingContext {
   );
 }
 
-final class SsrWebGLActiveInfo implements WebGLActiveInfo {
-  factory SsrWebGLActiveInfo() {
+final class SsrWebglactiveinfo implements WebGLActiveInfo {
+  factory SsrWebglactiveinfo() {
     throw UnsupportedWebApiError('WebGLActiveInfo constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -30380,16 +30380,16 @@ final class SsrWebGLActiveInfo implements WebGLActiveInfo {
   );
 }
 
-final class SsrWebGLBuffer implements WebGLBuffer {
-  factory SsrWebGLBuffer() {
+final class SsrWebglbuffer implements WebGLBuffer {
+  factory SsrWebglbuffer() {
     throw UnsupportedWebApiError('WebGLBuffer constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLContextEvent implements WebGLContextEvent {
-  factory SsrWebGLContextEvent(String type, [WebGLContextEventInit? eventInit]) {
+final class SsrWebglcontextevent implements WebGLContextEvent {
+  factory SsrWebglcontextevent(String type, [WebGLContextEventInit? eventInit]) {
     throw UnsupportedWebApiError('WebGLContextEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -30400,40 +30400,40 @@ final class SsrWebGLContextEvent implements WebGLContextEvent {
   );
 }
 
-final class SsrWebGLFramebuffer implements WebGLFramebuffer {
-  factory SsrWebGLFramebuffer() {
+final class SsrWebglframebuffer implements WebGLFramebuffer {
+  factory SsrWebglframebuffer() {
     throw UnsupportedWebApiError('WebGLFramebuffer constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLProgram implements WebGLProgram {
-  factory SsrWebGLProgram() {
+final class SsrWebglprogram implements WebGLProgram {
+  factory SsrWebglprogram() {
     throw UnsupportedWebApiError('WebGLProgram constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLQuery implements WebGLQuery {
-  factory SsrWebGLQuery() {
+final class SsrWebglquery implements WebGLQuery {
+  factory SsrWebglquery() {
     throw UnsupportedWebApiError('WebGLQuery constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLRenderbuffer implements WebGLRenderbuffer {
-  factory SsrWebGLRenderbuffer() {
+final class SsrWebglrenderbuffer implements WebGLRenderbuffer {
+  factory SsrWebglrenderbuffer() {
     throw UnsupportedWebApiError('WebGLRenderbuffer constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLRenderingContext implements WebGLRenderingContext {
-  factory SsrWebGLRenderingContext() {
+final class SsrWebglrenderingcontext implements WebGLRenderingContext {
+  factory SsrWebglrenderingcontext() {
     throw UnsupportedWebApiError('WebGLRenderingContext constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -31024,24 +31024,24 @@ final class SsrWebGLRenderingContext implements WebGLRenderingContext {
   );
 }
 
-final class SsrWebGLSampler implements WebGLSampler {
-  factory SsrWebGLSampler() {
+final class SsrWebglsampler implements WebGLSampler {
+  factory SsrWebglsampler() {
     throw UnsupportedWebApiError('WebGLSampler constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLShader implements WebGLShader {
-  factory SsrWebGLShader() {
+final class SsrWebglshader implements WebGLShader {
+  factory SsrWebglshader() {
     throw UnsupportedWebApiError('WebGLShader constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLShaderPrecisionFormat implements WebGLShaderPrecisionFormat {
-  factory SsrWebGLShaderPrecisionFormat() {
+final class SsrWebglshaderprecisionformat implements WebGLShaderPrecisionFormat {
+  factory SsrWebglshaderprecisionformat() {
     throw UnsupportedWebApiError('WebGLShaderPrecisionFormat constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -31060,64 +31060,64 @@ final class SsrWebGLShaderPrecisionFormat implements WebGLShaderPrecisionFormat 
   );
 }
 
-final class SsrWebGLSync implements WebGLSync {
-  factory SsrWebGLSync() {
+final class SsrWebglsync implements WebGLSync {
+  factory SsrWebglsync() {
     throw UnsupportedWebApiError('WebGLSync constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLTexture implements WebGLTexture {
-  factory SsrWebGLTexture() {
+final class SsrWebgltexture implements WebGLTexture {
+  factory SsrWebgltexture() {
     throw UnsupportedWebApiError('WebGLTexture constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLTimerQueryEXT implements WebGLTimerQueryEXT {
-  factory SsrWebGLTimerQueryEXT() {
+final class SsrWebgltimerqueryext implements WebGLTimerQueryEXT {
+  factory SsrWebgltimerqueryext() {
     throw UnsupportedWebApiError('WebGLTimerQueryEXT constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLTransformFeedback implements WebGLTransformFeedback {
-  factory SsrWebGLTransformFeedback() {
+final class SsrWebgltransformfeedback implements WebGLTransformFeedback {
+  factory SsrWebgltransformfeedback() {
     throw UnsupportedWebApiError('WebGLTransformFeedback constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLUniformLocation implements WebGLUniformLocation {
-  factory SsrWebGLUniformLocation() {
+final class SsrWebgluniformlocation implements WebGLUniformLocation {
+  factory SsrWebgluniformlocation() {
     throw UnsupportedWebApiError('WebGLUniformLocation constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLVertexArrayObject implements WebGLVertexArrayObject {
-  factory SsrWebGLVertexArrayObject() {
+final class SsrWebglvertexarrayobject implements WebGLVertexArrayObject {
+  factory SsrWebglvertexarrayobject() {
     throw UnsupportedWebApiError('WebGLVertexArrayObject constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebGLVertexArrayObjectOES implements WebGLVertexArrayObjectOES {
-  factory SsrWebGLVertexArrayObjectOES() {
+final class SsrWebglvertexarrayobjectoes implements WebGLVertexArrayObjectOES {
+  factory SsrWebglvertexarrayobjectoes() {
     throw UnsupportedWebApiError('WebGLVertexArrayObjectOES constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
   }
 }
 
-final class SsrWebSocket implements WebSocket {
-  factory SsrWebSocket(String url, [Object? protocols]) {
+final class SsrWebsocket implements WebSocket {
+  factory SsrWebsocket(String url, [Object? protocols]) {
     throw UnsupportedWebApiError('WebSocket constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -31192,8 +31192,8 @@ final class SsrWebSocket implements WebSocket {
   );
 }
 
-final class SsrWebTransport implements WebTransport {
-  factory SsrWebTransport(String url, [WebTransportOptions? options]) {
+final class SsrWebtransport implements WebTransport {
+  factory SsrWebtransport(String url, [WebTransportOptions? options]) {
     throw UnsupportedWebApiError('WebTransport constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -31232,8 +31232,8 @@ final class SsrWebTransport implements WebTransport {
   );
 }
 
-final class SsrWebTransportBidirectionalStream implements WebTransportBidirectionalStream {
-  factory SsrWebTransportBidirectionalStream() {
+final class SsrWebtransportbidirectionalstream implements WebTransportBidirectionalStream {
+  factory SsrWebtransportbidirectionalstream() {
     throw UnsupportedWebApiError('WebTransportBidirectionalStream constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -31248,8 +31248,8 @@ final class SsrWebTransportBidirectionalStream implements WebTransportBidirectio
   );
 }
 
-final class SsrWebTransportDatagramDuplexStream implements WebTransportDatagramDuplexStream {
-  factory SsrWebTransportDatagramDuplexStream() {
+final class SsrWebtransportdatagramduplexstream implements WebTransportDatagramDuplexStream {
+  factory SsrWebtransportdatagramduplexstream() {
     throw UnsupportedWebApiError('WebTransportDatagramDuplexStream constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -31300,8 +31300,8 @@ final class SsrWebTransportDatagramDuplexStream implements WebTransportDatagramD
   );
 }
 
-final class SsrWebTransportError implements WebTransportError {
-  factory SsrWebTransportError([String? message, WebTransportErrorOptions? options]) {
+final class SsrWebtransporterror implements WebTransportError {
+  factory SsrWebtransporterror([String? message, WebTransportErrorOptions? options]) {
     throw UnsupportedWebApiError('WebTransportError constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -31316,8 +31316,8 @@ final class SsrWebTransportError implements WebTransportError {
   );
 }
 
-final class SsrWheelEvent implements WheelEvent {
-  factory SsrWheelEvent(String type, [WheelEventInit? eventInitDict]) {
+final class SsrWheelevent implements WheelEvent {
+  factory SsrWheelevent(String type, [WheelEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('WheelEvent constructor'
       , exposed: 'Window'
     );
@@ -32748,8 +32748,8 @@ final class SsrWindow implements Window {
   );
 }
 
-final class SsrWindowClient implements WindowClient {
-  factory SsrWindowClient() {
+final class SsrWindowclient implements WindowClient {
+  factory SsrWindowclient() {
     throw UnsupportedWebApiError('WindowClient constructor'
       , exposed: 'ServiceWorker'
     );
@@ -32812,8 +32812,8 @@ final class SsrWorker implements Worker {
   );
 }
 
-final class SsrWorkerGlobalScope implements WorkerGlobalScope {
-  factory SsrWorkerGlobalScope() {
+final class SsrWorkerglobalscope implements WorkerGlobalScope {
+  factory SsrWorkerglobalscope() {
     throw UnsupportedWebApiError('WorkerGlobalScope constructor'
       , exposed: 'Worker'
     );
@@ -32968,8 +32968,8 @@ final class SsrWorkerGlobalScope implements WorkerGlobalScope {
   );
 }
 
-final class SsrWorkerLocation implements WorkerLocation {
-  factory SsrWorkerLocation() {
+final class SsrWorkerlocation implements WorkerLocation {
+  factory SsrWorkerlocation() {
     throw UnsupportedWebApiError('WorkerLocation constructor'
       , exposed: 'Worker'
     );
@@ -33012,8 +33012,8 @@ final class SsrWorkerLocation implements WorkerLocation {
   );
 }
 
-final class SsrWorkerNavigator implements WorkerNavigator {
-  factory SsrWorkerNavigator() {
+final class SsrWorkernavigator implements WorkerNavigator {
+  factory SsrWorkernavigator() {
     throw UnsupportedWebApiError('WorkerNavigator constructor'
       , exposed: 'Worker'
     );
@@ -33148,16 +33148,16 @@ final class SsrWorklet implements Worklet {
   );
 }
 
-final class SsrWorkletGlobalScope implements WorkletGlobalScope {
-  factory SsrWorkletGlobalScope() {
+final class SsrWorkletglobalscope implements WorkletGlobalScope {
+  factory SsrWorkletglobalscope() {
     throw UnsupportedWebApiError('WorkletGlobalScope constructor'
       , exposed: 'Worklet'
     );
   }
 }
 
-final class SsrWritableStream implements WritableStream {
-  factory SsrWritableStream([Object? underlyingSink, QueuingStrategy? strategy]) {
+final class SsrWritablestream implements WritableStream {
+  factory SsrWritablestream([Object? underlyingSink, QueuingStrategy? strategy]) {
     throw UnsupportedWebApiError('WritableStream constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -33180,8 +33180,8 @@ final class SsrWritableStream implements WritableStream {
   );
 }
 
-final class SsrWritableStreamDefaultController implements WritableStreamDefaultController {
-  factory SsrWritableStreamDefaultController() {
+final class SsrWritablestreamdefaultcontroller implements WritableStreamDefaultController {
+  factory SsrWritablestreamdefaultcontroller() {
     throw UnsupportedWebApiError('WritableStreamDefaultController constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -33196,8 +33196,8 @@ final class SsrWritableStreamDefaultController implements WritableStreamDefaultC
   );
 }
 
-final class SsrWritableStreamDefaultWriter implements WritableStreamDefaultWriter {
-  factory SsrWritableStreamDefaultWriter(WritableStream stream) {
+final class SsrWritablestreamdefaultwriter implements WritableStreamDefaultWriter {
+  factory SsrWritablestreamdefaultwriter(WritableStream stream) {
     throw UnsupportedWebApiError('WritableStreamDefaultWriter constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -33232,16 +33232,16 @@ final class SsrWritableStreamDefaultWriter implements WritableStreamDefaultWrite
   );
 }
 
-final class SsrXMLDocument implements XMLDocument {
-  factory SsrXMLDocument() {
+final class SsrXmldocument implements XMLDocument {
+  factory SsrXmldocument() {
     throw UnsupportedWebApiError('XMLDocument constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrXMLHttpRequest implements XMLHttpRequest {
-  factory SsrXMLHttpRequest() {
+final class SsrXmlhttprequest implements XMLHttpRequest {
+  factory SsrXmlhttprequest() {
     throw UnsupportedWebApiError('XMLHttpRequest constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
     );
@@ -33340,8 +33340,8 @@ final class SsrXMLHttpRequest implements XMLHttpRequest {
   );
 }
 
-final class SsrXMLHttpRequestEventTarget implements XMLHttpRequestEventTarget {
-  factory SsrXMLHttpRequestEventTarget() {
+final class SsrXmlhttprequesteventtarget implements XMLHttpRequestEventTarget {
+  factory SsrXmlhttprequesteventtarget() {
     throw UnsupportedWebApiError('XMLHttpRequestEventTarget constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
     );
@@ -33404,16 +33404,16 @@ final class SsrXMLHttpRequestEventTarget implements XMLHttpRequestEventTarget {
   );
 }
 
-final class SsrXMLHttpRequestUpload implements XMLHttpRequestUpload {
-  factory SsrXMLHttpRequestUpload() {
+final class SsrXmlhttprequestupload implements XMLHttpRequestUpload {
+  factory SsrXmlhttprequestupload() {
     throw UnsupportedWebApiError('XMLHttpRequestUpload constructor'
       , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
     );
   }
 }
 
-final class SsrXMLSerializer implements XMLSerializer {
-  factory SsrXMLSerializer() {
+final class SsrXmlserializer implements XMLSerializer {
+  factory SsrXmlserializer() {
     throw UnsupportedWebApiError('XMLSerializer constructor'
       , exposed: 'Window'
     );
@@ -33424,8 +33424,8 @@ final class SsrXMLSerializer implements XMLSerializer {
   );
 }
 
-final class SsrXPathEvaluator implements XPathEvaluator {
-  factory SsrXPathEvaluator() {
+final class SsrXpathevaluator implements XPathEvaluator {
+  factory SsrXpathevaluator() {
     throw UnsupportedWebApiError('XPathEvaluator constructor'
       , exposed: 'Window'
     );
@@ -33444,8 +33444,8 @@ final class SsrXPathEvaluator implements XPathEvaluator {
   );
 }
 
-final class SsrXPathExpression implements XPathExpression {
-  factory SsrXPathExpression() {
+final class SsrXpathexpression implements XPathExpression {
+  factory SsrXpathexpression() {
     throw UnsupportedWebApiError('XPathExpression constructor'
       , exposed: 'Window'
     );
@@ -33456,8 +33456,8 @@ final class SsrXPathExpression implements XPathExpression {
   );
 }
 
-final class SsrXPathResult implements XPathResult {
-  factory SsrXPathResult() {
+final class SsrXpathresult implements XPathResult {
+  factory SsrXpathresult() {
     throw UnsupportedWebApiError('XPathResult constructor'
       , exposed: 'Window'
     );
@@ -33500,16 +33500,16 @@ final class SsrXPathResult implements XPathResult {
   );
 }
 
-final class SsrXRHand implements XRHand {
-  factory SsrXRHand() {
+final class SsrXrhand implements XRHand {
+  factory SsrXrhand() {
     throw UnsupportedWebApiError('XRHand constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrXRInputSource implements XRInputSource {
-  factory SsrXRInputSource() {
+final class SsrXrinputsource implements XRInputSource {
+  factory SsrXrinputsource() {
     throw UnsupportedWebApiError('XRInputSource constructor'
       , exposed: 'Window'
     );
@@ -33544,8 +33544,8 @@ final class SsrXRInputSource implements XRInputSource {
   );
 }
 
-final class SsrXRInputSourceEvent implements XRInputSourceEvent {
-  factory SsrXRInputSourceEvent(String type, XRInputSourceEventInit eventInitDict) {
+final class SsrXrinputsourceevent implements XRInputSourceEvent {
+  factory SsrXrinputsourceevent(String type, XRInputSourceEventInit eventInitDict) {
     throw UnsupportedWebApiError('XRInputSourceEvent constructor'
       , exposed: 'Window'
     );
@@ -33560,8 +33560,8 @@ final class SsrXRInputSourceEvent implements XRInputSourceEvent {
   );
 }
 
-final class SsrXRInputSourcesChangeEvent implements XRInputSourcesChangeEvent {
-  factory SsrXRInputSourcesChangeEvent(String type, XRInputSourcesChangeEventInit eventInitDict) {
+final class SsrXrinputsourceschangeevent implements XRInputSourcesChangeEvent {
+  factory SsrXrinputsourceschangeevent(String type, XRInputSourcesChangeEventInit eventInitDict) {
     throw UnsupportedWebApiError('XRInputSourcesChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -33580,8 +33580,8 @@ final class SsrXRInputSourcesChangeEvent implements XRInputSourcesChangeEvent {
   );
 }
 
-final class SsrXRJointPose implements XRJointPose {
-  factory SsrXRJointPose() {
+final class SsrXrjointpose implements XRJointPose {
+  factory SsrXrjointpose() {
     throw UnsupportedWebApiError('XRJointPose constructor'
       , exposed: 'Window'
     );
@@ -33592,8 +33592,8 @@ final class SsrXRJointPose implements XRJointPose {
   );
 }
 
-final class SsrXRJointSpace implements XRJointSpace {
-  factory SsrXRJointSpace() {
+final class SsrXrjointspace implements XRJointSpace {
+  factory SsrXrjointspace() {
     throw UnsupportedWebApiError('XRJointSpace constructor'
       , exposed: 'Window'
     );
@@ -33604,8 +33604,8 @@ final class SsrXRJointSpace implements XRJointSpace {
   );
 }
 
-final class SsrXRPose implements XRPose {
-  factory SsrXRPose() {
+final class SsrXrpose implements XRPose {
+  factory SsrXrpose() {
     throw UnsupportedWebApiError('XRPose constructor'
       , exposed: 'Window'
     );
@@ -33628,8 +33628,8 @@ final class SsrXRPose implements XRPose {
   );
 }
 
-final class SsrXRReferenceSpace implements XRReferenceSpace {
-  factory SsrXRReferenceSpace() {
+final class SsrXrreferencespace implements XRReferenceSpace {
+  factory SsrXrreferencespace() {
     throw UnsupportedWebApiError('XRReferenceSpace constructor'
       , exposed: 'Window'
     );
@@ -33648,8 +33648,8 @@ final class SsrXRReferenceSpace implements XRReferenceSpace {
   );
 }
 
-final class SsrXRReferenceSpaceEvent implements XRReferenceSpaceEvent {
-  factory SsrXRReferenceSpaceEvent(String type, XRReferenceSpaceEventInit eventInitDict) {
+final class SsrXrreferencespaceevent implements XRReferenceSpaceEvent {
+  factory SsrXrreferencespaceevent(String type, XRReferenceSpaceEventInit eventInitDict) {
     throw UnsupportedWebApiError('XRReferenceSpaceEvent constructor'
       , exposed: 'Window'
     );
@@ -33664,8 +33664,8 @@ final class SsrXRReferenceSpaceEvent implements XRReferenceSpaceEvent {
   );
 }
 
-final class SsrXRRigidTransform implements XRRigidTransform {
-  factory SsrXRRigidTransform([DOMPointInit? position, DOMPointInit? orientation]) {
+final class SsrXrrigidtransform implements XRRigidTransform {
+  factory SsrXrrigidtransform([DOMPointInit? position, DOMPointInit? orientation]) {
     throw UnsupportedWebApiError('XRRigidTransform constructor'
       , exposed: 'Window'
     );
@@ -33688,8 +33688,8 @@ final class SsrXRRigidTransform implements XRRigidTransform {
   );
 }
 
-final class SsrXRSessionEvent implements XRSessionEvent {
-  factory SsrXRSessionEvent(String type, XRSessionEventInit eventInitDict) {
+final class SsrXrsessionevent implements XRSessionEvent {
+  factory SsrXrsessionevent(String type, XRSessionEventInit eventInitDict) {
     throw UnsupportedWebApiError('XRSessionEvent constructor'
       , exposed: 'Window'
     );
@@ -33700,16 +33700,16 @@ final class SsrXRSessionEvent implements XRSessionEvent {
   );
 }
 
-final class SsrXRSpace implements XRSpace {
-  factory SsrXRSpace() {
+final class SsrXrspace implements XRSpace {
+  factory SsrXrspace() {
     throw UnsupportedWebApiError('XRSpace constructor'
       , exposed: 'Window'
     );
   }
 }
 
-final class SsrXRViewerPose implements XRViewerPose {
-  factory SsrXRViewerPose() {
+final class SsrXrviewerpose implements XRViewerPose {
+  factory SsrXrviewerpose() {
     throw UnsupportedWebApiError('XRViewerPose constructor'
       , exposed: 'Window'
     );
@@ -33720,8 +33720,8 @@ final class SsrXRViewerPose implements XRViewerPose {
   );
 }
 
-final class SsrXRViewport implements XRViewport {
-  factory SsrXRViewport() {
+final class SsrXrviewport implements XRViewport {
+  factory SsrXrviewport() {
     throw UnsupportedWebApiError('XRViewport constructor'
       , exposed: 'Window'
     );
@@ -33744,8 +33744,8 @@ final class SsrXRViewport implements XRViewport {
   );
 }
 
-final class SsrXSLTProcessor implements XSLTProcessor {
-  factory SsrXSLTProcessor() {
+final class SsrXsltprocessor implements XSLTProcessor {
+  factory SsrXsltprocessor() {
     throw UnsupportedWebApiError('XSLTProcessor constructor'
       , exposed: 'Window'
     );

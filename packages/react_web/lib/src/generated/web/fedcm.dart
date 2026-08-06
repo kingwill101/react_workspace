@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 // Neutral Web surface for spec: FedCM
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
@@ -77,16 +78,16 @@ final class CredentialRequestOptionsValue implements CredentialRequestOptions {
 }
 
 abstract interface class DisconnectedAccount {
-  String get account_id;
-  set account_id(String value);
+  String get accountId;
+  set accountId(String value);
 }
 
 final class DisconnectedAccountValue implements DisconnectedAccount {
   @override
-  String account_id;
+  String accountId;
 
   DisconnectedAccountValue({
-    required this.account_id,
+    required this.accountId,
   });
 }
 
@@ -126,40 +127,40 @@ final class IdentityCredentialRequestOptionsValue implements IdentityCredentialR
 typedef IdentityCredentialRequestOptionsContext = String;
 
 abstract interface class IdentityProviderAPIConfig {
-  String get accounts_endpoint;
-  set accounts_endpoint(String value);
-  String get client_metadata_endpoint;
-  set client_metadata_endpoint(String value);
-  String get id_assertion_endpoint;
-  set id_assertion_endpoint(String value);
-  String get login_url;
-  set login_url(String value);
-  String? get disconnect_endpoint;
-  set disconnect_endpoint(String? value);
+  String get accountsEndpoint;
+  set accountsEndpoint(String value);
+  String get clientMetadataEndpoint;
+  set clientMetadataEndpoint(String value);
+  String get idAssertionEndpoint;
+  set idAssertionEndpoint(String value);
+  String get loginUrl;
+  set loginUrl(String value);
+  String? get disconnectEndpoint;
+  set disconnectEndpoint(String? value);
   IdentityProviderBranding? get branding;
   set branding(IdentityProviderBranding? value);
 }
 
 final class IdentityProviderAPIConfigValue implements IdentityProviderAPIConfig {
   @override
-  String accounts_endpoint;
+  String accountsEndpoint;
   @override
-  String client_metadata_endpoint;
+  String clientMetadataEndpoint;
   @override
-  String id_assertion_endpoint;
+  String idAssertionEndpoint;
   @override
-  String login_url;
+  String loginUrl;
   @override
-  String? disconnect_endpoint;
+  String? disconnectEndpoint;
   @override
   IdentityProviderBranding? branding;
 
   IdentityProviderAPIConfigValue({
-    required this.accounts_endpoint,
-    required this.client_metadata_endpoint,
-    required this.id_assertion_endpoint,
-    required this.login_url,
-    this.disconnect_endpoint,
+    required this.accountsEndpoint,
+    required this.clientMetadataEndpoint,
+    required this.idAssertionEndpoint,
+    required this.loginUrl,
+    this.disconnectEndpoint,
     this.branding,
   });
 }
@@ -171,16 +172,16 @@ abstract interface class IdentityProviderAccount {
   set name(String value);
   String get email;
   set email(String value);
-  String? get given_name;
-  set given_name(String? value);
+  String? get givenName;
+  set givenName(String? value);
   String? get picture;
   set picture(String? value);
-  List<String>? get approved_clients;
-  set approved_clients(List<String>? value);
-  List<String>? get login_hints;
-  set login_hints(List<String>? value);
-  List<String>? get domain_hints;
-  set domain_hints(List<String>? value);
+  List<String>? get approvedClients;
+  set approvedClients(List<String>? value);
+  List<String>? get loginHints;
+  set loginHints(List<String>? value);
+  List<String>? get domainHints;
+  set domainHints(List<String>? value);
 }
 
 final class IdentityProviderAccountValue implements IdentityProviderAccount {
@@ -191,25 +192,25 @@ final class IdentityProviderAccountValue implements IdentityProviderAccount {
   @override
   String email;
   @override
-  String? given_name;
+  String? givenName;
   @override
   String? picture;
   @override
-  List<String>? approved_clients;
+  List<String>? approvedClients;
   @override
-  List<String>? login_hints;
+  List<String>? loginHints;
   @override
-  List<String>? domain_hints;
+  List<String>? domainHints;
 
   IdentityProviderAccountValue({
     required this.id,
     required this.name,
     required this.email,
-    this.given_name,
+    this.givenName,
     this.picture,
-    this.approved_clients,
-    this.login_hints,
-    this.domain_hints,
+    this.approvedClients,
+    this.loginHints,
+    this.domainHints,
   });
 }
 
@@ -228,8 +229,8 @@ final class IdentityProviderAccountListValue implements IdentityProviderAccountL
 }
 
 abstract interface class IdentityProviderBranding {
-  String? get background_color;
-  set background_color(String? value);
+  String? get backgroundColor;
+  set backgroundColor(String? value);
   String? get color;
   set color(String? value);
   List<IdentityProviderIcon>? get icons;
@@ -240,7 +241,7 @@ abstract interface class IdentityProviderBranding {
 
 final class IdentityProviderBrandingValue implements IdentityProviderBranding {
   @override
-  String? background_color;
+  String? backgroundColor;
   @override
   String? color;
   @override
@@ -249,7 +250,7 @@ final class IdentityProviderBrandingValue implements IdentityProviderBranding {
   String? name;
 
   IdentityProviderBrandingValue({
-    this.background_color,
+    this.backgroundColor,
     this.color,
     this.icons,
     this.name,
@@ -257,21 +258,21 @@ final class IdentityProviderBrandingValue implements IdentityProviderBranding {
 }
 
 abstract interface class IdentityProviderClientMetadata {
-  String? get privacy_policy_url;
-  set privacy_policy_url(String? value);
-  String? get terms_of_service_url;
-  set terms_of_service_url(String? value);
+  String? get privacyPolicyUrl;
+  set privacyPolicyUrl(String? value);
+  String? get termsOfServiceUrl;
+  set termsOfServiceUrl(String? value);
 }
 
 final class IdentityProviderClientMetadataValue implements IdentityProviderClientMetadata {
   @override
-  String? privacy_policy_url;
+  String? privacyPolicyUrl;
   @override
-  String? terms_of_service_url;
+  String? termsOfServiceUrl;
 
   IdentityProviderClientMetadataValue({
-    this.privacy_policy_url,
-    this.terms_of_service_url,
+    this.privacyPolicyUrl,
+    this.termsOfServiceUrl,
   });
 }
 
@@ -352,16 +353,16 @@ final class IdentityProviderTokenValue implements IdentityProviderToken {
 }
 
 abstract interface class IdentityProviderWellKnown {
-  List<String> get provider_urls;
-  set provider_urls(List<String> value);
+  List<String> get providerUrls;
+  set providerUrls(List<String> value);
 }
 
 final class IdentityProviderWellKnownValue implements IdentityProviderWellKnown {
   @override
-  List<String> provider_urls;
+  List<String> providerUrls;
 
   IdentityProviderWellKnownValue({
-    required this.provider_urls,
+    required this.providerUrls,
   });
 }
 

@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 // Neutral Web surface for spec: saa-non-cookie-storage
 // ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import
 
@@ -62,10 +63,10 @@ abstract interface class StorageAccessTypes {
   set createObjectURL(bool? value);
   bool? get revokeObjectURL;
   set revokeObjectURL(bool? value);
-  bool? get BroadcastChannel;
-  set BroadcastChannel(bool? value);
-  bool? get SharedWorker;
-  set SharedWorker(bool? value);
+  bool? get broadcastChannel;
+  set broadcastChannel(bool? value);
+  bool? get sharedWorker;
+  set sharedWorker(bool? value);
 }
 
 final class StorageAccessTypesValue implements StorageAccessTypes {
@@ -92,9 +93,9 @@ final class StorageAccessTypesValue implements StorageAccessTypes {
   @override
   bool? revokeObjectURL;
   @override
-  bool? BroadcastChannel;
+  bool? broadcastChannel;
   @override
-  bool? SharedWorker;
+  bool? sharedWorker;
 
   StorageAccessTypesValue({
     this.all,
@@ -108,8 +109,8 @@ final class StorageAccessTypesValue implements StorageAccessTypes {
     this.estimate,
     this.createObjectURL,
     this.revokeObjectURL,
-    this.BroadcastChannel,
-    this.SharedWorker,
+    this.broadcastChannel,
+    this.sharedWorker,
   });
 }
 

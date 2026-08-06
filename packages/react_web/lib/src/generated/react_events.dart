@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 
 /// Neutral React synthetic event interfaces.
 ///

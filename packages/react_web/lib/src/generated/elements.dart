@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 
 import 'package:react/react.dart';
 import 'package:react_web/src/generated/react_events.dart';
@@ -6,6 +7,7 @@ import 'package:react_web/src/generated/web/web.dart';
 
 const _divHostType = HostType<Map<String, Object?>>('html', 'div');
 
+@WebApiRuntimeInfo(id: "HTML.div", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)
 ReactNode div({
   String? title,
   String? lang,
@@ -133,6 +135,7 @@ ReactNode div({
 
 const _spanHostType = HostType<Map<String, Object?>>('html', 'span');
 
+@WebApiRuntimeInfo(id: "HTML.span", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)
 ReactNode span({
   String? title,
   String? lang,
@@ -260,6 +263,7 @@ ReactNode span({
 
 const _buttonHostType = HostType<Map<String, Object?>>('html', 'button');
 
+@WebApiRuntimeInfo(id: "HTML.button", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)
 ReactNode button({
   bool? disabled,
   HTMLFormElement? form,
@@ -415,6 +419,7 @@ ReactNode button({
 
 const _inputHostType = HostType<Map<String, Object?>>('html', 'input');
 
+@WebApiRuntimeInfo(id: "HTML.input", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)
 ReactNode input({
   String? accept,
   String? alt,
@@ -628,6 +633,7 @@ ReactNode input({
 
 const _formHostType = HostType<Map<String, Object?>>('html', 'form');
 
+@WebApiRuntimeInfo(id: "HTML.form", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)
 ReactNode form({
   String? acceptCharset,
   String? action,
@@ -781,6 +787,7 @@ ReactNode form({
 
 const _labelHostType = HostType<Map<String, Object?>>('html', 'label');
 
+@WebApiRuntimeInfo(id: "HTML.label", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)
 ReactNode label({
   HTMLFormElement? form,
   String? htmlFor,
@@ -914,6 +921,7 @@ ReactNode label({
 
 const _textareaHostType = HostType<Map<String, Object?>>('html', 'textarea');
 
+@WebApiRuntimeInfo(id: "HTML.textarea", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)
 ReactNode textarea({
   String? autocomplete,
   int? cols,
@@ -1089,6 +1097,7 @@ ReactNode textarea({
 
 const _selectHostType = HostType<Map<String, Object?>>('html', 'select');
 
+@WebApiRuntimeInfo(id: "HTML.select", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)
 ReactNode select({
   String? autocomplete,
   bool? disabled,
@@ -1250,6 +1259,7 @@ ReactNode select({
 
 const _optionHostType = HostType<Map<String, Object?>>('html', 'option');
 
+@WebApiRuntimeInfo(id: "HTML.option", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)
 ReactNode option({
   bool? disabled,
   HTMLFormElement? form,
@@ -1393,6 +1403,7 @@ ReactNode option({
 
 const _aHostType = HostType<Map<String, Object?>>('html', 'a');
 
+@WebApiRuntimeInfo(id: "HTML.a", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)
 ReactNode a({
   String? target,
   String? download,
@@ -1538,6 +1549,7 @@ ReactNode a({
 
 const _imgHostType = HostType<Map<String, Object?>>('html', 'img');
 
+@WebApiRuntimeInfo(id: "HTML.img", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)
 ReactNode img({
   String? alt,
   String? src,
