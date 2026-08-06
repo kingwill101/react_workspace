@@ -1,11 +1,11 @@
-import 'package:analyzer/dart/ast/ast.dart';
+library;
 
 /// Shared runtime-symbol metadata — the analyzer and generator must agree on this.
 ///
 /// These types mirror the annotations that will be emitted on generated
 /// Dart bindings (see docs/analyzer_plugin.md). Defining them here lets the
 /// analyzer resolve them without a dependency cycle on `react_codegen`.
-library;
+import 'package:analyzer/dart/ast/ast.dart';
 
 /// The kind of runtime symbol a Dart declaration bridges to.
 enum ReactRuntimeSymbolKind {

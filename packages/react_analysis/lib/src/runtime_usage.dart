@@ -128,14 +128,6 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
         final key = (args.first as StringLiteral).stringValue;
         if (key != null && key.isNotEmpty) {
           components.add(key);
-          final path = node.thisOrAncestorOfType<CompilationUnit>()
-                  ?.declaredElement
-                  ?.source
-                  .fullName ??
-              '';
-          if (path.isNotEmpty) {
-            rawComponentKeys.putIfAbsent(path, () => []).add(key);
-          }
         }
       }
     }
@@ -147,14 +139,6 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
     final hookKey = _hookRuntimeKey(element);
     if (hookKey != null) {
       hooks.add(hookKey);
-      final path = node.thisOrAncestorOfType<CompilationUnit>()
-              ?.declaredElement
-              ?.source
-              .fullName ??
-          '';
-      if (path.isNotEmpty) {
-        rawHookKeys.putIfAbsent(path, () => []).add(hookKey);
-      }
     }
 
     super.visitMethodInvocation(node);
@@ -166,17 +150,7 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
       final args = node.argumentList.arguments;
       if (args.isNotEmpty && args.first is StringLiteral) {
         final key = (args.first as StringLiteral).stringValue;
-        if (key != null) {
-          components.add(key);
-          final path = node.thisOrAncestorOfType<CompilationUnit>()
-                  ?.declaredElement
-                  ?.source
-                  .fullName ??
-              '';
-          if (path.isNotEmpty) {
-            rawComponentKeys.putIfAbsent(path, () => []).add(key);
-          }
-        }
+        if (key != null) components.add(key);
       }
     }
     super.visitInstanceCreationExpression(node);
@@ -184,34 +158,31 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
 
   String? _hookRuntimeKey(Element? element) {
     if (element == null) return null;
+    // First, look for @ReactRuntimeSymbol with a runtimeKey (generated hooks).
     for (final ann in element.metadata.annotations) {
       final e = ann.element;
       if (e == null) continue;
       final enclosing = e.enclosingElement?.name;
       final isRuntimeSymbol =
           enclosing == 'ReactRuntimeSymbol' || e.displayName == 'ReactRuntimeSymbol';
-      final isHook = enclosing == 'ReactHook' || e.displayName == 'ReactHook';
-      if (!isRuntimeSymbol && !isHook) continue;
-
-      // Resolved evaluation — do not regex toSource().
+      if (!isRuntimeSymbol) continue;
       final constant = ann.computeConstantValue();
       final runtimeKey = constant?.getField('runtimeKey')?.toStringValue();
       if (runtimeKey != null && runtimeKey.isNotEmpty) {
-        // For @ReactRuntimeSymbol, only treat as hook when kind == hook.
-        if (isRuntimeSymbol) {
-          final kind = constant?.getField('kind')?.getField('index')?.toIntValue();
-          // kind index 2 == hook (see ReactRuntimeSymbolKind); if unavailable, trust runtimeKey.
-          if (kind != null && kind != 2) continue;
-        }
+        final kind = constant?.getField('kind')?.getField('index')?.toIntValue();
+        if (kind != null && kind != 1) continue;
         return runtimeKey;
       }
-      // Bare @ReactHook without runtimeKey — no namespace inference; return element name
-      // only for custom hooks where the analyzer can later prove hook usage.
-      if (isHook) {
-        final name = element.displayName;
-        // Do not infer namespace from uri; caller must provide runtimeKey for generated hooks.
-        if (name != null && name.isNotEmpty) return name;
-      }
+    }
+    // Fallback: bare @ReactHook (custom hooks) — return element name.
+    for (final ann in element.metadata.annotations) {
+      final e = ann.element;
+      if (e == null) continue;
+      final enclosing = e.enclosingElement?.name;
+      final isHook = enclosing == 'ReactHook' || e.displayName == 'ReactHook';
+      if (!isHook) continue;
+      final name = element.displayName;
+      if (name != null && name.isNotEmpty) return name;
     }
     return null;
   }

@@ -89,6 +89,7 @@ final class _SsrVisitor extends RecursiveAstVisitor<void> {
             severity: ReactDiagnosticSeverity.warning,
             correction:
                 'Move to useEffect, mark component @ClientOnly, or guard with a browser check.',
+            node: node,
           ),
         );
       }
@@ -100,6 +101,7 @@ final class _SsrVisitor extends RecursiveAstVisitor<void> {
             message:
                 '$name appears to be a browser-only API used during render.',
             severity: ReactDiagnosticSeverity.warning,
+            node: node,
           ),
         );
       }
@@ -120,6 +122,7 @@ final class _SsrVisitor extends RecursiveAstVisitor<void> {
             message:
                 '${info.id} is unavailable during SSR (accessed during render).',
             severity: ReactDiagnosticSeverity.warning,
+            node: node,
           ),
         );
       }
@@ -135,6 +138,7 @@ final class _SsrVisitor extends RecursiveAstVisitor<void> {
                   '$target.${node.propertyName.name} is unavailable during SSR.',
               severity: ReactDiagnosticSeverity.warning,
               correction: 'Guard with useEffect or @ClientOnly.',
+              node: node,
             ),
           );
         }
@@ -154,6 +158,7 @@ final class _SsrVisitor extends RecursiveAstVisitor<void> {
             message:
                 '${node.prefix.name}.${node.identifier.name} is unavailable during SSR.',
             severity: ReactDiagnosticSeverity.warning,
+            node: node,
           ),
         );
       }
@@ -168,16 +173,18 @@ final class _SsrVisitor extends RecursiveAstVisitor<void> {
       if (e == null) continue;
       if (e.displayName == 'WebApiRuntimeInfo' ||
           e.enclosingElement?.name == 'WebApiRuntimeInfo') {
-        final src = ann.toSource();
-        final idMatch = RegExp(r"id\s*:\s*['""]([^'""]+)['""]").firstMatch(src);
-        final ssrMatch = RegExp(r'ssr\s*:\s*WebSsrSupport\.(\w+)').firstMatch(src);
-        final id = idMatch?.group(1) ?? element.displayName;
-        final ssr = switch (ssrMatch?.group(1)) {
-          'available' => WebSsrSupport.available,
-          'emulated' => WebSsrSupport.emulated,
+        final constant = ann.computeConstantValue();
+        final id = constant?.getField('id')?.toStringValue() ?? element.displayName ?? 'unknown';
+        final ssrField = constant?.getField('ssr');
+        final ssrIndex = ssrField?.getField('index')?.toIntValue();
+        final ssr = switch (ssrIndex) {
+          0 => WebSsrSupport.available,
+          1 => WebSsrSupport.unavailable,
+          2 => WebSsrSupport.emulated,
           _ => WebSsrSupport.unavailable,
         };
-        return WebApiRuntimeInfo(id: id, exposed: const {WebRealm.window}, ssr: ssr);
+        final exposed = <WebRealm>{WebRealm.window};
+        return WebApiRuntimeInfo(id: id, exposed: exposed, ssr: ssr);
       }
     }
     return null;

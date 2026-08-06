@@ -36,14 +36,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     final diagnostics = analyzer.analyzeUnit(node);
     for (final diagnostic in diagnostics) {
       final target = diagnostic.node ?? node;
-      rule.reportAtNode(
-        target,
-        errorCode: LintCode(
-          diagnostic.code,
-          diagnostic.message,
-          correctionMessage: diagnostic.correction,
-        ),
-      );
+      rule.reportAtNode(target);
     }
   }
 }

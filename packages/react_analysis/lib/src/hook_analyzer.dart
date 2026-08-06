@@ -300,7 +300,7 @@ final class ReactHookAnalyzer {
       if (isRuntimeHook) {
         final constant = ann.computeConstantValue();
         final kind = constant?.getField('kind')?.getField('index')?.toIntValue();
-        if (kind == 2) return true;
+        if (kind == 1) return true;
         if (kind == null) {
           // If kind not resolvable but runtimeKey present, treat as hook if name looks like hook.
           final hasKey = constant?.getField('runtimeKey')?.toStringValue() != null;
@@ -365,7 +365,7 @@ final class _HookCallCollector extends RecursiveAstVisitor<void> {
       if (enclosing == 'ReactRuntimeSymbol' || e.displayName == 'ReactRuntimeSymbol') {
         final constant = ann.computeConstantValue();
         final kind = constant?.getField('kind')?.getField('index')?.toIntValue();
-        if (kind == 2) return true; // hook
+        if (kind == 1) return true; // hook
         // If kind unavailable but runtimeKey present, trust it as hook.
         if (kind == null && constant?.getField('runtimeKey')?.toStringValue() != null) {
           return true;
