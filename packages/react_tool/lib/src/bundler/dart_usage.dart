@@ -122,51 +122,31 @@ final class DartUsageCollector {
       if (result is ResolvedUnitResult) {
         resolvedCount++;
         units.add(result.unit);
-        // Traverse imported libraries, exported libraries, and parts via
-        // the resolved library element.
-        final lib = result.unit.declaredElement?.library;
-        if (lib != null) {
-          for (final imp in lib.importedLibraries) {
-            final uri = imp.source.fullName;
-            if (uri.isNotEmpty) await visitLibrary(uri);
-          }
-          for (final exp in lib.exportedLibraries) {
-            final uri = exp.source.fullName;
-            if (uri.isNotEmpty) await visitLibrary(uri);
-          }
-          for (final part in lib.parts) {
-            final uri = part.source.fullName;
-            if (uri.isNotEmpty) await visitLibrary(uri);
-          }
-        } else {
-          // Fallback: directive-based walk if element not available.
-          for (final directive in result.unit.directives) {
-            if (directive is ImportDirective) {
-              final uriStr = directive.uri.stringValue;
-              if (uriStr == null) continue;
-              final imported = _resolveDirectiveUri(
-                session,
-                result.unit,
-                directive,
-                normalized,
-              );
-              if (imported != null) await visitLibrary(imported);
-            } else if (directive is ExportDirective) {
-              final uriStr = directive.uri.stringValue;
-              if (uriStr == null) continue;
-              final exported = _resolveDirectiveUri(
-                session,
-                result.unit,
-                directive,
-                normalized,
-              );
-              if (exported != null) await visitLibrary(exported);
-            } else if (directive is PartDirective) {
-              final uriStr = directive.uri.stringValue;
-              if (uriStr == null) continue;
-              final partPath = p.normalize(p.join(p.dirname(normalized), uriStr));
-              await visitLibrary(partPath);
+        // Traverse imports/exports/parts via resolved directives.
+        // Only recurse into project-local files to avoid traversing the
+        // entire SDK / .pub-cache (which would timeout the test).
+        for (final directive in result.unit.directives) {
+          if (directive is ImportDirective) {
+            final imported = directive.libraryImport?.importedLibrary;
+            final path = imported?.firstFragment?.source.fullName;
+            if (path != null &&
+                path.isNotEmpty &&
+                (path.startsWith(root) || path.contains('test_app'))) {
+              await visitLibrary(path);
             }
+          } else if (directive is ExportDirective) {
+            final exported = directive.libraryExport?.exportedLibrary;
+            final path = exported?.firstFragment?.source.fullName;
+            if (path != null &&
+                path.isNotEmpty &&
+                (path.startsWith(root) || path.contains('test_app'))) {
+              await visitLibrary(path);
+            }
+          } else if (directive is PartDirective) {
+            final uriStr = directive.uri.stringValue;
+            if (uriStr == null) continue;
+            final partPath = p.normalize(p.join(p.dirname(normalized), uriStr));
+            if (partPath.startsWith(root)) await visitLibrary(partPath);
           }
         }
       } else {
@@ -187,37 +167,6 @@ final class DartUsageCollector {
       resolvedLibraries: resolvedCount,
       unresolvedLibraries: unresolved,
     );
-  }
-
-  String? _resolveDirectiveUri(
-    dynamic session,
-    CompilationUnit unit,
-    Directive directive,
-    String parentPath,
-  ) {
-    // Try to resolve via element's source if available.
-    LibraryElement? lib;
-    if (directive is ImportDirective) {
-      lib = directive.element?.importedLibrary;
-    } else if (directive is ExportDirective) {
-      lib = directive.element?.exportedLibrary;
-    }
-    if (lib != null) {
-      final fullName = lib.source.fullName;
-      if (fullName.isNotEmpty) return fullName;
-    }
-    // Fallback for package: uris — let analysis context handle them; if we
-    // can't resolve, return null and let unresolved tracking handle it.
-    final uriStr = (directive as dynamic).uri.stringValue as String?;
-    if (uriStr == null) return null;
-    if (uriStr.startsWith('dart:')) return null;
-    if (uriStr.startsWith('package:')) {
-      // We can't resolve package: to file path without package config;
-      // rely on library element traversal above. Return null to avoid
-      // double-counting via filesystem.
-      return null;
-    }
-    return p.normalize(p.join(p.dirname(parentPath), uriStr));
   }
 
   void _walk(String path, Set<String> visited, List<String> units) {

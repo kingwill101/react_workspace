@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:artisanal/args.dart';
 import 'package:path/path.dart' as p;
 import 'build.dart';
+import 'bundler/dart_usage.dart';
 import 'bundler/bundle_manifest.dart';
 import 'project_config.dart';
 import 'scaffold.dart';
@@ -74,7 +75,7 @@ final class DoctorCommand extends Command<void> {
     final hasAnalyzerPlugin = config.file('pubspec.yaml').readAsStringSync().contains('react_analyzer');
     line('  analysis: ${hasAnalysis ? '✓ analysis_options.yaml' : '✗ missing'} ${hasAnalyzerPlugin ? '+ react_analyzer' : ''}');
     if (!hasAnalysis) {
-      info('    Run `dart run react_analysis` or add analysis_options.yaml for live diagnostics.');
+      info('    Run `dart run react_tool:react analyze` or add analysis_options.yaml for live diagnostics.');
     }
     // Check for react_analysis import usage
     final hasReactAnalysisDep = config.file('pubspec.yaml').readAsStringSync().contains('react_analysis');
@@ -527,9 +528,7 @@ final class AnalyzeCommand extends Command<void> {
     final path = option('path') as String? ?? '.';
     final config = ReactProjectConfig.load(Directory(path));
     line('Analyzing ${config.root.path} with react_analysis…');
-    // Delegate to dart analyze for now — react_analysis rules run via
-    // analysis_options.yaml plugin. This command ensures the plugin is
-    // configured and surfaces a summary.
+    // Delegate to dart analyze (react_analyzer rules run via plugin).
     final result = await Process.run(
       'dart',
       ['analyze', if (verbose) '--verbose', '.'],
@@ -539,20 +538,39 @@ final class AnalyzeCommand extends Command<void> {
     if (result.stderr.toString().trim().isNotEmpty) {
       warn(result.stderr.toString());
     }
+    // Run resolved DartUsageCollector for per-target manifest preview.
+    try {
+      final dotReact = Directory(p.join(config.root.path, '.dart_tool', 'react'));
+      final clientPath = config.clientEntrypoint != null
+          ? p.join(config.root.path, config.clientEntrypoint!)
+          : null;
+      final ssrPath = config.ssrEntrypoint != null
+          ? p.join(config.root.path, config.ssrEntrypoint!)
+          : null;
+      if (clientPath != null || ssrPath != null) {
+        line('Usage preview (resolved Dart, fail-safe until complete):');
+        if (clientPath != null && File(clientPath).existsSync()) {
+          final collector = DartUsageCollector();
+          final res = await collector.collectEntrypointResolved(clientPath,
+              projectRoot: config.root.path);
+          line(
+              '  client: ${config.pathFor(config.clientEntrypoint!)} → components: ${res.components} hooks: ${res.hooks} complete: ${res.complete} resolved: ${res.resolvedLibraries} unresolved: ${res.unresolvedLibraries}');
+        }
+        if (ssrPath != null && File(ssrPath).existsSync()) {
+          final collector = DartUsageCollector();
+          final res = await collector.collectEntrypointResolved(ssrPath,
+              projectRoot: config.root.path);
+          line(
+              '  ssr: ${config.pathFor(config.ssrEntrypoint!)} → components: ${res.components} hooks: ${res.hooks} complete: ${res.complete}');
+        }
+      }
+    } catch (e) {
+      warn('Usage preview failed: $e');
+    }
     if (result.exitCode != 0) {
       throw ReactToolException('Analysis found issues (exit ${result.exitCode}).');
     }
     info('Analysis passed — no react_analysis diagnostics.');
-    // Also run the DartUsageCollector to show per-target manifest preview
-    try {
-      final client = config.clientEntrypoint;
-      final ssr = config.ssrEntrypoint;
-      if (client != null || ssr != null) {
-        line('Usage preview (from Dart source, not compiled JS):');
-        if (client != null) line('  client: ${config.pathFor(client)}');
-        if (ssr != null) line('  ssr: ${config.pathFor(ssr)}');
-      }
-    } catch (_) {}
   }
 }
 

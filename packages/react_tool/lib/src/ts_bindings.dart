@@ -1223,7 +1223,8 @@ String generateHooks({
   buffer.write(_hookHelpers());
 
   for (final hook in hooks) {
-    buffer.write(_emitHook(hook, registry, bridgeTarget: bridgeTarget));
+    buffer.write(_emitHook(hook, registry,
+        bridgeTarget: bridgeTarget, namespace: namespace, specifier: specifier));
     buffer.writeln();
   }
 
@@ -1569,6 +1570,8 @@ String _emitHook(
   TsIrDeclaration hook,
   _TypeRegistry registry, {
   required String bridgeTarget,
+  required String namespace,
+  required String specifier,
 }) {
   final name = hook.name;
   final rawName = '_${name}Raw';
