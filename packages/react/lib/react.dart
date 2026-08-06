@@ -1,5 +1,6 @@
 export 'src/annotations.dart';
 export 'src/callback.dart';
+export 'src/dom.dart';
 export 'src/runtime_symbol.dart';
 export 'src/component_id.dart';
 export 'src/hooks.dart';
