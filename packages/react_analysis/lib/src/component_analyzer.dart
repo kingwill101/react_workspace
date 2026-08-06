@@ -44,6 +44,7 @@ final class ReactComponentAnalyzer {
   /// Analyze a single function element. Public for unit testing and for the
   /// `analysis_server_plugin` rule which visits AST nodes.
   List<ReactDiagnostic> analyzeFunction(ExecutableElement element) {
+    if (!_hasReactComponent(element)) return const [];
     final lib = element.library;
     return _analyzeFunction(element, lib, <String>{});
   }

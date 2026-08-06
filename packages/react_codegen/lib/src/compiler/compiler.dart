@@ -29,14 +29,30 @@ final class ReactCompiler {
   ReactCompileOutput? compile(LibraryElement library, AssetId input) {
     // Shared validator is source of truth — run before reading model so
     // diagnostics match what the analyzer plugin reports.
-    final analyzer = ReactComponentAnalyzer();
-    final diagnostics = analyzer.analyzeLibrary(library);
-    final errors = diagnostics
-        .where((d) => d.severity == ReactDiagnosticSeverity.error)
+    // Report per-element so build_runner shows file + function, not just library.
+    const analyzer = ReactComponentAnalyzer();
+    for (final element in library.topLevelFunctions) {
+      final diags = analyzer.analyzeFunction(element);
+      final errors = diags
+          .where((d) => d.severity == ReactDiagnosticSeverity.error)
+          .toList();
+      if (errors.isNotEmpty) {
+        final first = errors.first;
+        final name = element.name ?? '<anonymous>';
+        throw InvalidGenerationSourceError(
+          '$name: ${first.message} (${first.code}) at ${input.path}',
+          element: element,
+        );
+      }
+    }
+    // Also catch library-scoped diagnostics (e.g. duplicate componentId)
+    final libDiagnostics = analyzer.analyzeLibrary(library);
+    final libErrors = libDiagnostics
+        .where((d) => d.code == ReactDiagnosticCode.duplicateComponentId)
         .toList();
-    if (errors.isNotEmpty) {
+    if (libErrors.isNotEmpty) {
       throw InvalidGenerationSourceError(
-        errors.first.message,
+        '${libErrors.first.message} at ${input.path}',
         element: library,
       );
     }
