@@ -12,6 +12,11 @@ import 'package:react/react.dart';
 ///
 /// fallbackElement?: React.ReactNode; router: Record<string, unknown>
 /// future?: { value?: any }
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.RouterProvider',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode routerProvider({
   String? key,
     ReactNode? fallbackElement,
@@ -34,6 +39,11 @@ ReactNode routerProvider({
 /// basename?: string; children?: React.ReactNode
 /// future?: { v7_relativeSplatPath?: boolean; v7_startTransition?: boolean }
 /// window?: any
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.BrowserRouter',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode browserRouter({
   String? key,
   List<ReactNode> children = const [],
@@ -58,6 +68,11 @@ ReactNode browserRouter({
 /// basename?: string; children?: React.ReactNode
 /// future?: { v7_relativeSplatPath?: boolean; v7_startTransition?: boolean }
 /// window?: any
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.HashRouter',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode hashRouter({
   String? key,
   List<ReactNode> children = const [],
@@ -86,6 +101,11 @@ ReactNode hashRouter({
 /// reloadDocument?: boolean; replace?: boolean; state?: any
 /// preventScrollReset?: boolean; relative?: "route" | "path"; to: any
 /// unstable_viewTransition?: boolean
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.Link',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode link({
   String? key,
   List<ReactNode> children = const [],
@@ -148,6 +168,11 @@ ReactNode link({
 /// reloadDocument?: boolean; replace?: boolean; state?: any
 /// preventScrollReset?: boolean; relative?: "route" | "path"; to: any
 /// unstable_viewTransition?: boolean; caseSensitive?: boolean; end?: boolean
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.NavLink',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode navLink({
   String? key,
   List<ReactNode> children = const [],
@@ -213,6 +238,11 @@ ReactNode navLink({
 /// onSubmit?: any; fetcherKey?: string; navigate?: boolean
 /// reloadDocument?: boolean; replace?: boolean; state?: any
 /// unstable_viewTransition?: boolean
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.Form',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode form({
   String? key,
     Object? method,
@@ -252,6 +282,11 @@ ReactNode form({
 ///
 /// getKey?: (location: { pathname: string; search: string; hash: string; state: any; key: string }, matches: { id: string; pathname: string; params: unknown; data: any; handle: any }[]) => string
 /// storageKey?: string
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.ScrollRestoration',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode scrollRestoration({
   String? key,
     /// TS: (location: { pathname: string; search: string; hash: string; state: any; key: string }, matches: { id: string; pathname: string; params: unknown; data: any; handle: any }[]) => string
@@ -280,6 +315,11 @@ ReactNode scrollRestoration({
 /// basename?: string; children?: React.ReactNode; initialEntries?: any[]
 /// initialIndex?: number
 /// future?: { v7_relativeSplatPath?: boolean; v7_startTransition?: boolean }
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.MemoryRouter',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode memoryRouter({
   String? key,
   List<ReactNode> children = const [],
@@ -304,6 +344,11 @@ ReactNode memoryRouter({
 /// Props from `Navigate`:
 ///
 /// to: any; replace?: boolean; state?: any; relative?: "route" | "path"
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.Navigate',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode navigate({
   String? key,
     required Object to,
@@ -326,6 +371,11 @@ ReactNode navigate({
 /// Props from `Outlet`:
 ///
 /// context?: unknown
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.Outlet',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode outlet({
   String? key,
     Object? context,
@@ -347,6 +397,11 @@ ReactNode outlet({
 /// element?: React.ReactNode; hydrateFallbackElement?: React.ReactNode
 /// errorElement?: React.ReactNode; Component?: any; HydrateFallback?: any
 /// ErrorBoundary?: any
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.Route',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode route({
   String? key,
   List<ReactNode> children = const [],
@@ -399,6 +454,11 @@ ReactNode route({
 /// navigationType?: "POP" | "PUSH" | "REPLACE"
 /// navigator: { createHref: (to: any) => string; encodeLocation?: (to: any) => { pathname: string; search: string; hash: string }; go: (delta: number) => void; push: (to: any, state: any, opts: { replace?: boolean; state?: any; preventScrollReset?: boolean; relative?: "route" | "path"; unstable_flushSync?: boolean; unstable_viewTransition?: boolean }) => void; replace: (to: any, state: any, opts: { replace?: boolean; state?: any; preventScrollReset?: boolean; relative?: "route" | "path"; unstable_flushSync?: boolean; unstable_viewTransition?: boolean }) => void }
 /// static?: boolean; future?: { value?: any }
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.Router',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode router({
   String? key,
   List<ReactNode> children = const [],
@@ -427,6 +487,11 @@ ReactNode router({
 /// Props from `Routes`:
 ///
 /// children?: React.ReactNode; location?: any
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.Routes',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode routes({
   String? key,
   List<ReactNode> children = const [],
@@ -445,6 +510,11 @@ ReactNode routes({
 /// Props from `Await`:
 ///
 /// children: any; errorElement?: React.ReactNode; resolve: any
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.Await',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode await({
   String? key,
   required List<ReactNode> children,
@@ -465,6 +535,11 @@ ReactNode await({
 /// Props from `renderMatches`:
 ///
 /// value: { params: unknown; pathname: string; pathnameBase: string; route: any }[]
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.renderMatches',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode renderMatches({
   String? key,
     required List<RouteMatch> value,

@@ -5,6 +5,7 @@
 // ignore_for_file: type=lint
 
 import 'dart:js_interop';
+import 'package:react/react.dart';
 import 'react_router_bindings.g.dart';
 
 // Hook bindings for `react-router-dom`. Each hook is only available
@@ -41,6 +42,12 @@ List<T> _decodeList<T>(JSArray raw, T Function(JSAny? item) decode) {
 @JS('globalThis.__reactDartBindings.reactRouter.useLinkClickHandler')
 external JSFunction _useLinkClickHandlerRaw(JSAny? a0, JSAny? a1);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useLinkClickHandler',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 void Function(Object? event) useLinkClickHandler(Object? to, {Object? target, bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_viewTransition}) {
   final options = <String, Object?>{if (target != null) 'target': target, if (replace != null) 'replace': replace, if (state != null) 'state': state, if (preventScrollReset != null) 'preventScrollReset': preventScrollReset, if (relative != null) 'relative': relative.value, if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition};
   final fn = _useLinkClickHandlerRaw(to.jsify(), options.jsify());
@@ -53,6 +60,12 @@ void Function(Object? event) useLinkClickHandler(Object? to, {Object? target, bo
 @JS('globalThis.__reactDartBindings.reactRouter.useSearchParams')
 external JSArray _useSearchParamsRaw(JSAny? a0);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useSearchParams',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 (Map<String, String>, void Function(Object? nextInit, {bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_flushSync, bool? unstable_viewTransition})) useSearchParams([Object? defaultInit]) {
   final raw = _useSearchParamsRaw(defaultInit.jsify());
   return (_decodePairs(raw[0] as JSArray), (Object? nextInit, {bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_flushSync, bool? unstable_viewTransition}) { (raw[1] as JSFunction).callAsFunction(null, nextInit.jsify(), <String, Object?>{if (replace != null) 'replace': replace, if (state != null) 'state': state, if (preventScrollReset != null) 'preventScrollReset': preventScrollReset, if (relative != null) 'relative': relative.value, if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync, if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition}.jsify()); });
@@ -64,6 +77,12 @@ external JSArray _useSearchParamsRaw(JSAny? a0);
 @JS('globalThis.__reactDartBindings.reactRouter.useSubmit')
 external JSFunction _useSubmitRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useSubmit',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 void Function(Object? target, {Object? method, String? action, FormEncType? encType, RelativeRoutingType? relative, bool? preventScrollReset, bool? unstable_flushSync, bool? replace, Object? state, String? fetcherKey, bool? navigate, bool? unstable_viewTransition}) useSubmit() {
   final fn = _useSubmitRaw();
   return (Object? target, {Object? method, String? action, FormEncType? encType, RelativeRoutingType? relative, bool? preventScrollReset, bool? unstable_flushSync, bool? replace, Object? state, String? fetcherKey, bool? navigate, bool? unstable_viewTransition}) { fn.callAsFunction(null, target.jsify(), <String, Object?>{if (method != null) 'method': method, if (action != null) 'action': action, if (encType != null) 'encType': encType.value, if (relative != null) 'relative': relative.value, if (preventScrollReset != null) 'preventScrollReset': preventScrollReset, if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync, if (replace != null) 'replace': replace, if (state != null) 'state': state, if (fetcherKey != null) 'fetcherKey': fetcherKey, if (navigate != null) 'navigate': navigate, if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition}.jsify()); };
@@ -75,6 +94,12 @@ void Function(Object? target, {Object? method, String? action, FormEncType? encT
 @JS('globalThis.__reactDartBindings.reactRouter.useFormAction')
 external JSString _useFormActionRaw(JSAny? a0, JSAny? a1);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useFormAction',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 String useFormAction(String? action, {RelativeRoutingType? relative}) {
   final options = <String, Object?>{if (relative != null) 'relative': relative.value};
   return _useFormActionRaw(action.jsify(), options.jsify()).toDart;
@@ -86,6 +111,12 @@ String useFormAction(String? action, {RelativeRoutingType? relative}) {
 @JS('globalThis.__reactDartBindings.reactRouter.useFetcher')
 external JSObject _useFetcherRaw(JSAny? a0);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useFetcher',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 FetcherReturn useFetcher({String? elementKey}) {
   final options = <String, Object?>{if (elementKey != null) 'key': elementKey};
   return FetcherReturn.fromJs(_useFetcherRaw(options.jsify()));
@@ -97,6 +128,12 @@ FetcherReturn useFetcher({String? elementKey}) {
 @JS('globalThis.__reactDartBindings.reactRouter.useFetchers')
 external JSArray _useFetchersRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useFetchers',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 List<FetchersReturnElement> useFetchers() {
   return _decodeList(_useFetchersRaw(), (e) => FetchersReturnElement.fromJs(e as JSObject));
 }
@@ -107,6 +144,12 @@ List<FetchersReturnElement> useFetchers() {
 @JS('globalThis.__reactDartBindings.reactRouter.useBeforeUnload')
 external JSAny? _useBeforeUnloadRaw(JSAny? a0, JSAny? a1);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useBeforeUnload',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Object? useBeforeUnload(Object? callback, {bool? capture}) {
   final options = <String, Object?>{if (capture != null) 'capture': capture};
   return _useBeforeUnloadRaw(callback.jsify(), options.jsify());
@@ -118,6 +161,12 @@ Object? useBeforeUnload(Object? callback, {bool? capture}) {
 @JS('globalThis.__reactDartBindings.reactRouter.useHref')
 external JSString _useHrefRaw(JSAny? a0, JSAny? a1);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useHref',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 String useHref(Object? to, {RelativeRoutingType? relative}) {
   final options = <String, Object?>{if (relative != null) 'relative': relative.value};
   return _useHrefRaw(to.jsify(), options.jsify()).toDart;
@@ -129,6 +178,12 @@ String useHref(Object? to, {RelativeRoutingType? relative}) {
 @JS('globalThis.__reactDartBindings.reactRouter.useInRouterContext')
 external JSBoolean _useInRouterContextRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useInRouterContext',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 bool useInRouterContext() {
   return _useInRouterContextRaw().toDart;
 }
@@ -139,6 +194,12 @@ bool useInRouterContext() {
 @JS('globalThis.__reactDartBindings.reactRouter.useLocation')
 external JSObject _useLocationRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useLocation',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Location useLocation() {
   return Location.fromJs(_useLocationRaw());
 }
@@ -149,6 +210,12 @@ Location useLocation() {
 @JS('globalThis.__reactDartBindings.reactRouter.useNavigationType')
 external JSString _useNavigationTypeRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useNavigationType',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 NavigationType useNavigationType() {
   return NavigationType.fromValue(_useNavigationTypeRaw().toDart);
 }
@@ -159,6 +226,12 @@ NavigationType useNavigationType() {
 @JS('globalThis.__reactDartBindings.reactRouter.useMatch')
 external JSObject _useMatchRaw(JSAny? a0);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useMatch',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 PathMatch useMatch({Path? path, bool? caseSensitive, bool? end, String? pathname, String? search, String? hash}) {
   final options = <String, Object?>{if (path != null) 'path': path, if (caseSensitive != null) 'caseSensitive': caseSensitive, if (end != null) 'end': end, if (pathname != null) 'pathname': pathname, if (search != null) 'search': search, if (hash != null) 'hash': hash};
   return PathMatch.fromJs(_useMatchRaw(options.jsify()));
@@ -170,6 +243,12 @@ PathMatch useMatch({Path? path, bool? caseSensitive, bool? end, String? pathname
 @JS('globalThis.__reactDartBindings.reactRouter.useNavigate')
 external JSFunction _useNavigateRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useNavigate',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 void Function(Object? to, {bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_flushSync, bool? unstable_viewTransition}) useNavigate() {
   final fn = _useNavigateRaw();
   return (Object? to, {bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_flushSync, bool? unstable_viewTransition}) { fn.callAsFunction(null, to.jsify(), <String, Object?>{if (replace != null) 'replace': replace, if (state != null) 'state': state, if (preventScrollReset != null) 'preventScrollReset': preventScrollReset, if (relative != null) 'relative': relative.value, if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync, if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition}.jsify()); };
@@ -181,6 +260,12 @@ void Function(Object? to, {bool? replace, Object? state, bool? preventScrollRese
 @JS('globalThis.__reactDartBindings.reactRouter.useOutletContext')
 external JSAny? _useOutletContextRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useOutletContext',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Object? useOutletContext() {
   return _useOutletContextRaw();
 }
@@ -191,6 +276,12 @@ Object? useOutletContext() {
 @JS('globalThis.__reactDartBindings.reactRouter.useOutlet')
 external JSAny? _useOutletRaw(JSAny? a0);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useOutlet',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Object? useOutlet([Object? context]) {
   return _useOutletRaw(context.jsify());
 }
@@ -201,6 +292,12 @@ Object? useOutlet([Object? context]) {
 @JS('globalThis.__reactDartBindings.reactRouter.useParams')
 external JSArray _useParamsRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useParams',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Map<String, String> useParams() {
   return _decodePairs(_useParamsRaw());
 }
@@ -211,6 +308,12 @@ Map<String, String> useParams() {
 @JS('globalThis.__reactDartBindings.reactRouter.useResolvedPath')
 external JSObject _useResolvedPathRaw(JSAny? a0, JSAny? a1);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useResolvedPath',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Path useResolvedPath(Object? to, {RelativeRoutingType? relative}) {
   final options = <String, Object?>{if (relative != null) 'relative': relative.value};
   return Path.fromJs(_useResolvedPathRaw(to.jsify(), options.jsify()));
@@ -222,6 +325,12 @@ Path useResolvedPath(Object? to, {RelativeRoutingType? relative}) {
 @JS('globalThis.__reactDartBindings.reactRouter.useRoutes')
 external JSAny? _useRoutesRaw(JSAny? a0, JSAny? a1);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useRoutes',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Object? useRoutes(List<Object?> routes, [Object? locationArg]) {
   return _useRoutesRaw(routes.jsify(), locationArg.jsify());
 }
@@ -232,6 +341,12 @@ Object? useRoutes(List<Object?> routes, [Object? locationArg]) {
 @JS('globalThis.__reactDartBindings.reactRouter.useNavigation')
 external JSObject _useNavigationRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useNavigation',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 NavigationReturn useNavigation() {
   return NavigationReturn.fromJs(_useNavigationRaw());
 }
@@ -242,6 +357,12 @@ NavigationReturn useNavigation() {
 @JS('globalThis.__reactDartBindings.reactRouter.useRevalidator')
 external JSObject _useRevalidatorRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useRevalidator',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 RevalidatorReturn useRevalidator() {
   return RevalidatorReturn.fromJs(_useRevalidatorRaw());
 }
@@ -252,6 +373,12 @@ RevalidatorReturn useRevalidator() {
 @JS('globalThis.__reactDartBindings.reactRouter.useMatches')
 external JSArray _useMatchesRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useMatches',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 List<UIMatch> useMatches() {
   return _decodeList(_useMatchesRaw(), (e) => UIMatch.fromJs(e as JSObject));
 }
@@ -262,6 +389,12 @@ List<UIMatch> useMatches() {
 @JS('globalThis.__reactDartBindings.reactRouter.useLoaderData')
 external JSAny? _useLoaderDataRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useLoaderData',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Object? useLoaderData() {
   return _useLoaderDataRaw();
 }
@@ -272,6 +405,12 @@ Object? useLoaderData() {
 @JS('globalThis.__reactDartBindings.reactRouter.useRouteLoaderData')
 external JSAny? _useRouteLoaderDataRaw(JSAny? a0);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useRouteLoaderData',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Object? useRouteLoaderData(String routeId) {
   return _useRouteLoaderDataRaw(routeId.jsify());
 }
@@ -282,6 +421,12 @@ Object? useRouteLoaderData(String routeId) {
 @JS('globalThis.__reactDartBindings.reactRouter.useActionData')
 external JSAny? _useActionDataRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useActionData',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Object? useActionData() {
   return _useActionDataRaw();
 }
@@ -292,6 +437,12 @@ Object? useActionData() {
 @JS('globalThis.__reactDartBindings.reactRouter.useRouteError')
 external JSAny? _useRouteErrorRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useRouteError',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Object? useRouteError() {
   return _useRouteErrorRaw();
 }
@@ -302,6 +453,12 @@ Object? useRouteError() {
 @JS('globalThis.__reactDartBindings.reactRouter.useAsyncValue')
 external JSAny? _useAsyncValueRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useAsyncValue',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Object? useAsyncValue() {
   return _useAsyncValueRaw();
 }
@@ -312,6 +469,12 @@ Object? useAsyncValue() {
 @JS('globalThis.__reactDartBindings.reactRouter.useAsyncError')
 external JSAny? _useAsyncErrorRaw();
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useAsyncError',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 Object? useAsyncError() {
   return _useAsyncErrorRaw();
 }
@@ -322,6 +485,12 @@ Object? useAsyncError() {
 @JS('globalThis.__reactDartBindings.reactRouter.useBlocker')
 external JSObject _useBlockerRaw(JSAny? a0);
 
+@ReactHook()
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.hook,
+  runtimeKey: 'reactRouter.useBlocker',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 BlockerReturn useBlocker(Object? shouldBlock) {
   return BlockerReturn.fromJs(_useBlockerRaw(shouldBlock.jsify()));
 }

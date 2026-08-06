@@ -12,6 +12,11 @@ import 'package:react/react.dart';
 ///
 /// basename?: string; children?: React.ReactNode; location: any
 /// future?: { v7_fetcherPersist?: boolean; v7_normalizeFormMethod?: boolean; v7_partialHydration?: boolean; v7_prependBasename?: boolean; v7_relativeSplatPath?: boolean; v7_skipActionErrorRevalidation?: boolean }
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.StaticRouter',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode staticRouter({
   String? key,
   List<ReactNode> children = const [],
@@ -36,6 +41,11 @@ ReactNode staticRouter({
 /// context: { basename: () => string; location: { pathname: string; search: string; hash: string; state: any; key: string }; matches: { params: unknown; pathname: string; pathnameBase: string; route: any }[]; loaderData: Record<string, unknown>; actionData: Record<string, unknown>; errors: Record<string, unknown>; statusCode: number; loaderHeaders: unknown; actionHeaders: unknown; activeDeferreds: unknown; _deepestRenderedBoundaryId?: string }
 /// router: { basename: () => string; future: () => { v7_fetcherPersist: boolean; v7_normalizeFormMethod: boolean; v7_partialHydration: boolean; v7_prependBasename: boolean; v7_relativeSplatPath: boolean; v7_skipActionErrorRevalidation: boolean }; state: () => { historyAction: "POP" | "PUSH" | "REPLACE"; location: { pathname: string; search: string; hash: string; state: any; key: string }; matches: { params: any; pathname: string; pathnameBase: string; route: any }[]; initialized: boolean; restoreScrollPosition: any; preventScrollReset: boolean; navigation: { state: "idle" | "loading" | "submitting"; location: { pathname: any; search: any; hash: any; state: any; key: any }; formMethod: any; formAction: any; formEncType: any; formData: any; json: any; text: any }; revalidation: "idle" | "loading"; loaderData: Record<string, unknown>; actionData: Record<string, unknown>; errors: Record<string, unknown>; fetchers: unknown; blockers: unknown }; routes: () => { __ref: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any; children?: any; index: any }; id: string; children?: any[] }[]; window: () => any; initialize: () => any; subscribe: (fn: (state: { historyAction: any; location: any; matches: any; initialized: any; restoreScrollPosition: any; preventScrollReset: any; navigation: any; revalidation: any; loaderData: any; actionData: any; errors: any; fetchers: any; blockers: any }, opts: { deletedFetchers: any; unstable_viewTransitionOpts?: any; unstable_flushSync: any }) => void) => () => void; enableScrollRestoration: (savedScrollPositions: unknown, getScrollPosition: () => number, getKey: (location: { pathname: any; search: any; hash: any; state: any; key: any }, matches: { id: any; pathname: any; params: any; data: any; handle: any }[]) => string) => () => void; navigate: (to: number) => any; fetch: (key: string, routeId: string, href: string, opts: { preventScrollReset?: boolean; relative?: "route" | "path"; unstable_flushSync?: boolean; __ref: { preventScrollReset?: any; relative?: any; unstable_flushSync?: any } }) => void; revalidate: () => void; createHref: (location: { pathname: string; search: string; hash: string; state: any; key: string }) => string; encodeLocation: (to: any) => { pathname: string; search: string; hash: string }; getFetcher: (key: string) => { state: "idle" | "loading" | "submitting"; formMethod: Record<string, unknown>; formAction: string; formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; text: string; formData: any; json: Record<string, unknown>; data: any }; deleteFetcher: (key: string) => void; dispose: () => void; getBlocker: (key: string, fn: (args: { currentLocation: any; nextLocation: any; historyAction: any }) => boolean) => { state: "unblocked" | "blocked" | "proceeding"; reset: () => void; proceed: () => void; location: { pathname: string; search: string; hash: string; state: any; key: string } }; deleteBlocker: (key: string) => void; patchRoutes: (routeId: string, children: { __ref: any; children?: any[]; index: true | false }[]) => void; _internalSetRoutes: (routes: { __ref: any; children?: any[]; index: true | false }[]) => void; _internalFetchControllers: unknown; _internalActiveDeferreds: unknown }
 /// hydrate?: boolean; nonce?: string
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.component,
+  runtimeKey: 'reactRouter.StaticRouterProvider',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
 ReactNode staticRouterProvider({
   String? key,
     required ServerStaticHandlerContext context,
