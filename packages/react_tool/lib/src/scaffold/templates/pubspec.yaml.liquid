@@ -19,7 +19,11 @@ dev_dependencies:
   build_runner: ^2.15.3
   react_codegen: {path: {{ packagesPath }}/react_codegen}
   react_tool: {path: {{ packagesPath }}/react_tool}
+  react_testing: {path: {{ packagesPath }}/react_testing}
   lints: ^6.1.0
+  test: ^1.31.2
+  server_testing: 0.4.0
+  server_testing_shelf: 0.4.0
 
 # The react_* packages are not published yet, so every project depends on
 # them by path. The overrides keep a path package (for example react_dom's
@@ -31,3 +35,4 @@ dependency_overrides:
   react_web: {path: {{ packagesPath }}/react_web}
   react_actions: {path: {{ packagesPath }}/react_actions}
   react_server: {path: {{ packagesPath }}/react_server}
+  react_testing: {path: {{ packagesPath }}/react_testing}

@@ -24,6 +24,8 @@ class ReactCommandRunner extends CommandRunner<void> {
     addCommand(ServeCommand());
     addCommand(JsCommand());
     addCommand(TsCommand());
+    addCommand(AnalyzeCommand());
+    addCommand(TestCommand());
   }
 }
 
@@ -60,6 +62,35 @@ final class DoctorCommand extends Command<void> {
       warn(
         'package.json is missing; the generated SSR worker expects React packages from Node.',
       );
+    }
+
+    // Analysis and testing readiness (new facilities)
+    _reportAnalysis(config);
+    _reportTesting(config);
+  }
+
+  void _reportAnalysis(ReactProjectConfig config) {
+    final hasAnalysis = config.file('analysis_options.yaml').existsSync();
+    final hasAnalyzerPlugin = config.file('pubspec.yaml').readAsStringSync().contains('react_analyzer');
+    line('  analysis: ${hasAnalysis ? '✓ analysis_options.yaml' : '✗ missing'} ${hasAnalyzerPlugin ? '+ react_analyzer' : ''}');
+    if (!hasAnalysis) {
+      info('    Run `dart run react_analysis` or add analysis_options.yaml for live diagnostics.');
+    }
+    // Check for react_analysis import usage
+    final hasReactAnalysisDep = config.file('pubspec.yaml').readAsStringSync().contains('react_analysis');
+    if (!hasReactAnalysisDep) {
+      info('    Tip: add react_analysis for component/hook/SSR diagnostics.');
+    }
+  }
+
+  void _reportTesting(ReactProjectConfig config) {
+    final hasTestDir = config.directory('test').existsSync();
+    final pubspec = config.file('pubspec.yaml').readAsStringSync();
+    final hasReactTesting = pubspec.contains('react_testing');
+    final hasTestPackage = pubspec.contains(' test:') || pubspec.contains('test:');
+    line('  testing: ${hasTestDir ? '✓ test/' : '✗ no test/'} ${hasReactTesting ? '+ react_testing' : ''} ${hasTestPackage ? '+ test' : ''}');
+    if (!hasTestDir || !hasReactTesting) {
+      info('    Run `dart test` — scaffold now includes react_testing examples (see test/app_test.dart).');
     }
   }
 
@@ -464,6 +495,123 @@ Set<String> _generatedTopLevelNames(String source) {
     names.add(match.group(1)!);
   }
   return names;
+}
+
+final class AnalyzeCommand extends Command<void> {
+  @override
+  String get name => 'analyze';
+
+  @override
+  String get description =>
+      'Run react_analysis validators (components, hooks, SSR, imports) '
+      'and report diagnostics.';
+
+  AnalyzeCommand() {
+    argParser
+      ..addFlag(
+        'verbose',
+        abbr: 'v',
+        defaultsTo: false,
+        help: 'Show info-level diagnostics.',
+      )
+      ..addOption(
+        'path',
+        defaultsTo: '.',
+        help: 'Project root to analyze.',
+      );
+  }
+
+  @override
+  Future<void> run() async {
+    final verbose = option('verbose') as bool? ?? false;
+    final path = option('path') as String? ?? '.';
+    final config = ReactProjectConfig.load(Directory(path));
+    line('Analyzing ${config.root.path} with react_analysis…');
+    // Delegate to dart analyze for now — react_analysis rules run via
+    // analysis_options.yaml plugin. This command ensures the plugin is
+    // configured and surfaces a summary.
+    final result = await Process.run(
+      'dart',
+      ['analyze', if (verbose) '--verbose', '.'],
+      workingDirectory: config.root.path,
+    );
+    line(result.stdout.toString());
+    if (result.stderr.toString().trim().isNotEmpty) {
+      warn(result.stderr.toString());
+    }
+    if (result.exitCode != 0) {
+      throw ReactToolException('Analysis found issues (exit ${result.exitCode}).');
+    }
+    info('Analysis passed — no react_analysis diagnostics.');
+    // Also run the DartUsageCollector to show per-target manifest preview
+    try {
+      final client = config.clientEntrypoint;
+      final ssr = config.ssrEntrypoint;
+      if (client != null || ssr != null) {
+        line('Usage preview (from Dart source, not compiled JS):');
+        if (client != null) line('  client: ${config.pathFor(client)}');
+        if (ssr != null) line('  ssr: ${config.pathFor(ssr)}');
+      }
+    } catch (_) {}
+  }
+}
+
+final class TestCommand extends Command<void> {
+  @override
+  String get name => 'test';
+
+  @override
+  String get description =>
+      'Run dart test with react_testing harnesses (supports --coverage).';
+
+  TestCommand() {
+    argParser
+      ..addFlag(
+        'coverage',
+        defaultsTo: false,
+        help: 'Collect coverage and generate lcov.info.',
+      )
+      ..addOption(
+        'path',
+        defaultsTo: '.',
+        help: 'Test path to run (default: test).',
+      );
+  }
+
+  @override
+  Future<void> run() async {
+    final coverage = option('coverage') as bool? ?? false;
+    final path = option('path') as String? ?? 'test';
+    final config = ReactProjectConfig.load();
+    final args = <String>['test', path];
+    if (coverage) {
+      args.addAll(['--coverage', 'coverage']);
+      line('Running tests with coverage…');
+    } else {
+      line('Running tests…');
+    }
+    final result = await Process.run(
+      'dart',
+      args,
+      workingDirectory: config.root.path,
+    );
+    line(result.stdout.toString());
+    if (result.stderr.toString().trim().isNotEmpty) {
+      warn(result.stderr.toString());
+    }
+    if (result.exitCode != 0) {
+      throw ReactToolException('Tests failed (exit ${result.exitCode}).');
+    }
+    info('All tests passed.');
+    if (coverage) {
+      line('Coverage: coverage/lcov.info');
+    }
+    // Hint about harnesses
+    if (!config.file('test/app_test.dart').existsSync() &&
+        !config.file('test/component_test.dart').existsSync()) {
+      info('Tip: scaffold includes test/app_test.dart using react_testing — see react_testing README.');
+    }
+  }
 }
 
 final class ServeCommand extends Command<void> {

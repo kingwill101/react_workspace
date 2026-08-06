@@ -24,6 +24,36 @@ The server runs on `http://localhost:8080` and the SSR worker on port
 `3001`. Server functions live in `lib/greeting.dart` and are called from
 the browser through the generated client (`lib/greeting.client.g.dart`).
 
+## Test
+
+```sh
+# Fast unit tests (no build, uses react_testing harnesses)
+dart test
+
+# With coverage
+dart run react_tool:react test --coverage
+# or
+dart test --coverage
+
+# Full-stack SSR + server-function integration (builds + boots Node worker)
+dart test -t integration
+```
+
+Tests use `react_testing`: `ServerFunctionHarness` for server functions,
+`SsrTestHarness`/`InMemorySsrHarness` for SSR documents and
+`ReactComponentHarness` for components. See `test/app_test.dart` and
+`test/greeting_test.dart`.
+
+## Analyze
+
+```sh
+dart run react_tool:react analyze
+# verbose
+dart run react_tool:react analyze --verbose
+```
+
+Uses `react_analysis` for component, hook and SSR diagnostics (same engine as the IDE plugin). Run `dart run react_tool:react doctor` to check setup.
+
 ## Docker
 
 The multi-stage `Dockerfile` builds the server binary and JS bundles in

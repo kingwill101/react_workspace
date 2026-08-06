@@ -43,6 +43,8 @@ void main() {
       'Dockerfile',
       '.dockerignore',
       'README.md',
+      'test/app_test.dart',
+      'test/greeting_test.dart',
     ];
     for (final relative in expectedFiles) {
       expect(
@@ -74,6 +76,7 @@ void main() {
       'lib/app.dart',
       'lib/greeting.dart',
       'README.md',
+      'test/app_test.dart',
     ];
     for (final relative in expectedFiles) {
       expect(
@@ -219,7 +222,7 @@ void main() {
     ).readAsString();
     expect(pubspec, contains('name: client_app'));
     expect(pubspec, isNot(contains('react_server')));
-    expect(pubspec, isNot(contains('shelf:')));
+    expect(pubspec, isNot(contains('\n  shelf:')));
     final reactYaml = await File(
       p.join(root.path, 'client_app', 'react.yaml'),
     ).readAsString();

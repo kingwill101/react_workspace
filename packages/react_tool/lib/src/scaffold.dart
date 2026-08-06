@@ -28,6 +28,8 @@ const _ssrTemplateOutputs = <String, String>{
   'Dockerfile.liquid': 'Dockerfile',
   '.dockerignore.liquid': '.dockerignore',
   'README.md.liquid': 'README.md',
+  'test/app_test.dart.liquid': 'test/app_test.dart',
+  'test/greeting_test.dart.liquid': 'test/greeting_test.dart',
 };
 
 /// Scaffold templates for a client-only project (no SSR, no server).
@@ -43,6 +45,7 @@ const _clientTemplateOutputs = <String, String>{
   'lib/app.client.dart.liquid': 'lib/app.dart',
   'lib/greeting.client.dart.liquid': 'lib/greeting.dart',
   'README.client.md.liquid': 'README.md',
+  'test/app_test.client.dart.liquid': 'test/app_test.dart',
 };
 
 /// Generates a new React Dart project from Liquid templates.
