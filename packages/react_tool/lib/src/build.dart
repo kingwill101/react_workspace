@@ -10,6 +10,7 @@ import 'bundler/bundle_report.dart';
 import 'bundler/bundle_request.dart';
 import 'bundler/bundle_result.dart';
 import 'bundler/bundler.dart';
+import 'bundler/dart_usage.dart';
 import 'bundler/esbuild_bundler.dart';
 import 'bundler/rolldown_bundler.dart';
 import 'bundler/shim_pruning.dart';
@@ -115,7 +116,35 @@ final class ReactBuilder {
       log('Skipping SSR build: ${ssr ?? '(not configured)'} not found.');
     }
 
-    await _bundleForeignTargets(jsEnvironment);
+    // Semantic Dart usage manifests (authoritative, bundler-preferred).
+    // Written after compilation so builds work even when .dart_tool is clean.
+    final dotReactDir = Directory(p.join('.dart_tool', 'react'));
+    final browserUsage = writeUsageManifest(
+      entryPath: config.clientEntrypoint != null
+          ? p.join(config.root.path, config.clientEntrypoint!)
+          : null,
+      target: 'browser',
+      dotDartToolReact: dotReactDir,
+    );
+    final ssrUsage = writeUsageManifest(
+      entryPath: config.ssrEntrypoint != null
+          ? p.join(config.root.path, config.ssrEntrypoint!)
+          : null,
+      target: 'ssr',
+      dotDartToolReact: dotReactDir,
+    );
+    // Native SSR compatibility stub — extended once WebApiRuntimeInfo generation lands.
+    await _writeNativeSsrCompatibility(
+      browserUsage: browserUsage,
+      ssrUsage: ssrUsage,
+      dotDartToolReact: dotReactDir,
+    );
+
+    await _bundleForeignTargets(
+      jsEnvironment,
+      dartBrowserUsage: browserUsage,
+      dartSsrUsage: ssrUsage,
+    );
 
     final serverBinary = server ? await _compileServer() : null;
 
@@ -349,7 +378,27 @@ final class ReactBuilder {
   /// the rest of the npm package), and project-level foreign components whose
   /// key never appears are dropped entirely. When a target was not compiled,
   /// its aggregate is emitted unpruned.
-  Future<void> _bundleForeignTargets(JsEnvironment? environment) async {
+  Future<void> _writeNativeSsrCompatibility({
+    required dynamic browserUsage,
+    required dynamic ssrUsage,
+    required Directory dotDartToolReact,
+  }) async {
+    final out = File(p.join(dotDartToolReact.path, 'native_ssr_compatibility.json'));
+    await dotDartToolReact.create(recursive: true);
+    await out.writeAsString(
+      const JsonEncoder.withIndent('  ').convert({
+        'summary': 'native SSR compatibility — WebApiRuntimeInfo emission pending',
+        'browserComponents': (browserUsage?.components ?? []),
+        'ssrComponents': (ssrUsage?.components ?? []),
+      }) + '\n',
+    );
+  }
+
+  Future<void> _bundleForeignTargets(
+    JsEnvironment? environment, {
+    dynamic dartBrowserUsage,
+    dynamic dartSsrUsage,
+  }) async {
     final wrappers = await _discoverWrappers();
     final hasProjectModules =
         config.foreignModules.isNotEmpty || config.foreignComponents.isNotEmpty;
@@ -379,9 +428,13 @@ final class ReactBuilder {
       final componentKeys = [
         for (final component in config.foreignComponents) component.name,
       ];
-      final usedComponents = dartJs == null
-          ? componentKeys.toSet()
-          : usedComponentsIn(dartJs, componentKeys).toSet();
+      // Prefer Dart semantic manifests when present; fall back to JS scan.
+      final dartUsage = target == 'browser' ? dartBrowserUsage : dartSsrUsage;
+      final usedComponents = dartUsage != null
+          ? Set<String>.from(dartUsage.components as List)
+          : dartJs == null
+              ? componentKeys.toSet()
+              : usedComponentsIn(dartJs, componentKeys).toSet();
       for (final component in config.foreignComponents) {
         if (!usedComponents.contains(component.name)) continue;
         final path = await _resolveModulePath(component.module);
@@ -398,6 +451,8 @@ final class ReactBuilder {
       // (files that only import local modules) are rewritten to import the
       // pruned copies; opaque entries (raw registration modules, prebuilt
       // bundles) are imported as-is.
+      final dartUsageForTarget =
+          target == 'browser' ? dartBrowserUsage : dartSsrUsage;
       for (final wrapper in wrappers) {
         final entry = wrapper.entryFor(target);
         if (entry == null) continue;
@@ -409,6 +464,7 @@ final class ReactBuilder {
             target: target,
             foreignDir: foreignDir,
             dartJs: dartJs,
+            dartUsage: dartUsageForTarget,
           ),
         );
       }
@@ -503,6 +559,7 @@ final class ReactBuilder {
     required String target,
     required Directory foreignDir,
     required String? dartJs,
+    dynamic dartUsage,
   }) async {
     final source = await File(entryPath).readAsString();
     final dir = Directory(p.join(foreignDir.path, target, packageName));
@@ -511,14 +568,20 @@ final class ReactBuilder {
 
     final shim = parseForeignShim(source);
     if (shim != null) {
-      final usedComponents = dartJs == null
-          ? shim.componentKeys.toSet()
-          : usedComponentsIn(dartJs, shim.componentKeys).toSet();
-      final usedHooks = dartJs == null
-          ? _allHookKeys(shim)
-          : usedHooksIn(dartJs, [
-              if (shim.namespace != null) shim.namespace!,
-            ]).where(_allHookKeys(shim).contains).toSet();
+      final usedComponents = dartUsage != null
+          ? Set<String>.from(
+              (dartUsage.components as List).where(shim.componentKeys.contains))
+          : dartJs == null
+              ? shim.componentKeys.toSet()
+              : usedComponentsIn(dartJs, shim.componentKeys).toSet();
+      final usedHooks = dartUsage != null
+          ? Set<String>.from(
+              (dartUsage.hooks as List).where(_allHookKeys(shim).contains))
+          : dartJs == null
+              ? _allHookKeys(shim)
+              : usedHooksIn(dartJs, [
+                  if (shim.namespace != null) shim.namespace!,
+                ]).where(_allHookKeys(shim).contains).toSet();
       await File(outPath).writeAsString(
         pruneShim(
           source,
@@ -562,6 +625,7 @@ final class ReactBuilder {
         target: target,
         foreignDir: foreignDir,
         dartJs: dartJs,
+        dartUsage: dartUsage,
       );
       var relative = p.relative(materialized, from: dir.path);
       if (!relative.startsWith('.')) relative = './$relative';

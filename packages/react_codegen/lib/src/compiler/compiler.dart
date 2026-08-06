@@ -1,10 +1,12 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
+import 'package:react_analysis/react_analysis.dart';
+import 'package:source_gen/source_gen.dart';
 
 import 'package:react_codegen/src/analyzer/component_reader.dart';
 import 'package:react_codegen/src/model/model.dart';
-import 'package:react_codegen/src/output/public_api_emitter.dart';
 import 'package:react_codegen/src/output/js_bridge_emitter.dart';
+import 'package:react_codegen/src/output/public_api_emitter.dart';
 
 final class ReactCompileOutput {
   final String publicApi;
@@ -25,6 +27,20 @@ final class ReactCompiler {
   });
 
   ReactCompileOutput? compile(LibraryElement library, AssetId input) {
+    // Shared validator is source of truth — run before reading model so
+    // diagnostics match what the analyzer plugin reports.
+    final analyzer = ReactComponentAnalyzer();
+    final diagnostics = analyzer.analyzeLibrary(library);
+    final errors = diagnostics
+        .where((d) => d.severity == ReactDiagnosticSeverity.error)
+        .toList();
+    if (errors.isNotEmpty) {
+      throw InvalidGenerationSourceError(
+        errors.first.message,
+        element: library,
+      );
+    }
+
     final model = reader.read(library, input);
 
     if (model.isEmpty) {

@@ -19,6 +19,7 @@ workspace:
   - packages/react_analysis
   - packages/react_analyzer
   - examples/ssr
+  - examples/plugin_validation
   - examples/client
   - examples/superdesk
 dependencies:

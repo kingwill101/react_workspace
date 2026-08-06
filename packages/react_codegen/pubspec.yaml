@@ -10,5 +10,7 @@ dependencies:
   crypto: ">=3.0.0"
   react_actions:
     path: ../react_actions
+  react_analysis:
+    path: ../react_analysis
 dev_dependencies:
   test: ^1.31.2

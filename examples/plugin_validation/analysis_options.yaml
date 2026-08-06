@@ -1,0 +1,19 @@
+include: package:lints/recommended.yaml
+
+#plugins:
+#  react_analyzer:
+#    path: ../../packages/react_analyzer
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+  errors:
+    todo: ignore
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+linter:
+  rules:
+    - prefer_const_constructors

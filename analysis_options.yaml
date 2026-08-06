@@ -1,4 +1,9 @@
 include: package:lints/recommended.yaml
+
+plugins:
+  react_analyzer:
+    path: packages/react_analyzer
+
 analyzer:
   exclude:
     - tool/vendor/**
