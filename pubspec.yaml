@@ -16,6 +16,8 @@ workspace:
   - packages/react_zustand
   - packages/react_riverpod
   - packages/react_bloc
+  - packages/react_analysis
+  - packages/react_analyzer
   - examples/ssr
   - examples/client
   - examples/superdesk
