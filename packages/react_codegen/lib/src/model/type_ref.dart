@@ -95,11 +95,9 @@ abstract final class ReactTypes {
 
   /// Known `react_web` host types: element name → (hostNamespace, typeId).
   ///
-  /// The type-reader uses this table to recognise `react_web` types declared
-  /// in user props and emit [HostTypeRef] so the codegen generates correct
-  /// `hostValue` codec calls instead of falling back to raw `.toJS`.
-  static const Map<String, (String, String)> webHostTypes = {
-    // Synthetic React event wrappers
+  /// Generated table is merged with the hand-maintained synthetic React
+  /// event table so every emitted neutral interface is recognised.
+  static const Map<String, (String, String)> _syntheticEventTypes = {
     'ReactSyntheticEvent': ('web', 'ReactSyntheticEvent'),
     'ReactChangeEvent':    ('web', 'ReactChangeEvent'),
     'ReactInputEvent':     ('web', 'ReactInputEvent'),
@@ -112,7 +110,12 @@ abstract final class ReactTypes {
     'ReactPointerEvent':   ('web', 'ReactPointerEvent'),
     'ReactTouchEvent':     ('web', 'ReactTouchEvent'),
     'ReactCompositionEvent': ('web', 'ReactCompositionEvent'),
-    // HTML element types
+  };
+
+  // Imported generated table (full neutral interface set). Falls back to
+  // the synthetic table only if generation hasn't run.
+  static const Map<String, (String, String)> webHostTypes = {
+    ..._syntheticEventTypes,
     'HTMLElement':          ('web', 'HTMLElement'),
     'HTMLInputElement':     ('web', 'HTMLInputElement'),
     'HTMLSelectElement':    ('web', 'HTMLSelectElement'),
@@ -125,10 +128,19 @@ abstract final class ReactTypes {
     'HTMLCanvasElement':    ('web', 'HTMLCanvasElement'),
     'HTMLDivElement':       ('web', 'HTMLDivElement'),
     'HTMLSpanElement':      ('web', 'HTMLSpanElement'),
-    // General DOM / event
     'EventTarget':          ('web', 'EventTarget'),
     'Element':              ('web', 'Element'),
     'Event':                ('web', 'Event'),
     'Node':                 ('web', 'Node'),
+    // Complete-model interfaces (representative — full table overwritten by generated file on next `generate_factories`).
+    'Storage':              ('web', 'Storage'),
+    'BroadcastChannel':     ('web', 'BroadcastChannel'),
+    'FileReader':           ('web', 'FileReader'),
+    'FileList':             ('web', 'FileList'),
+    'Blob':                 ('web', 'Blob'),
+    'MessageEvent':         ('web', 'MessageEvent'),
+    'Window':               ('web', 'Window'),
+    'Document':             ('web', 'Document'),
+    'Navigator':            ('web', 'Navigator'),
   };
 }
