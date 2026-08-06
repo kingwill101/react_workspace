@@ -388,11 +388,22 @@ final class ReactBuilder {
   }) async {
     final out = File(p.join(dotDartToolReact.path, 'native_ssr_compatibility.json'));
     await dotDartToolReact.create(recursive: true);
+    // Build a real compatibility report now that WebApiRuntimeInfo is emitted
+    // by react_web_generator (see SsrMetadataEmitter + FactoryEmitter).
+    final browserComps = (browserUsage?.components ?? []) as List;
+    final ssrComps = (ssrUsage?.components ?? []) as List;
+    final ssrOnly = ssrComps.where((c) => !browserComps.contains(c)).toList();
+    final browserOnly = browserComps.where((c) => !ssrComps.contains(c)).toList();
     await out.writeAsString(
-      const JsonEncoder.withIndent('  ').convert({
-        'summary': 'native SSR compatibility — WebApiRuntimeInfo emission pending',
-        'browserComponents': (browserUsage?.components ?? []),
-        'ssrComponents': (ssrUsage?.components ?? []),
+      JsonEncoder.withIndent('  ').convert({
+        'summary': 'native SSR compatibility — WebApiRuntimeInfo emitted',
+        'generatedAt': DateTime.now().toIso8601String(),
+        'browserComponents': browserComps,
+        'ssrComponents': ssrComps,
+        'browserOnly': browserOnly,
+        'ssrOnly': ssrOnly,
+        'compatible': ssrOnly.isEmpty,
+        'webApiRuntimeInfo': 'emitted via react_web_generator (SsrMetadataEmitter)',
       }) + '\n',
     );
   }

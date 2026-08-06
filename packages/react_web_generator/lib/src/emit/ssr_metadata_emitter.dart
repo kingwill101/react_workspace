@@ -13,6 +13,7 @@ final class SsrMetadataEmitter {
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
     buf.writeln();
+    buf.writeln("import 'package:react_analysis/src/model/runtime_symbol.dart';");
     buf.writeln("import 'package:react_web/src/ssr_metadata.dart';");
     buf.writeln();
 
@@ -37,6 +38,9 @@ final class SsrMetadataEmitter {
   }
 
   void _emitElementSsrDefinition(StringBuffer buf, WebHostElementIR el) {
+    // Each element definition is now annotated so ReactSsrAnalyzer can
+    // resolve WebApiRuntimeInfo without falling back to hard-coded lists.
+    buf.writeln('@WebApiRuntimeInfo(id: "${el.tagName}", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)');
     buf.writeln(
       'const ${_camelToPascal(el.tagName)}SsrDefinition = WebElementSsrDefinition(',
     );
