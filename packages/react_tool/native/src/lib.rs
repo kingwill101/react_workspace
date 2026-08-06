@@ -186,6 +186,8 @@ enum TsDecl {
     Component { props: Option<TyExpr>, returns: Option<TyExpr> },
     /// A `use*` function: formal params + return type.
     Hook { params: Vec<TsProp>, returns: TyExpr },
+    /// A plain function (not a component nor a hook) — e.g. `renderMatches`.
+    Function { params: Vec<TsProp>, returns: TyExpr },
 }
 
 #[derive(Default)]
@@ -533,7 +535,8 @@ fn extract_function(f: &Function, exported: bool, out: &mut ParsedFile) {
                     name.to_string(),
                     TsDecl::Hook { params, returns },
                 ));
-            } else {
+            } else if name.chars().next().map(|c| c.is_uppercase()).unwrap_or(false) {
+                // PascalCase → component (e.g. `Link`, `RouterProvider`)
                 let props = f.params.items.first().and_then(|p| {
                     p.type_annotation
                         .as_ref()
@@ -546,6 +549,18 @@ fn extract_function(f: &Function, exported: bool, out: &mut ParsedFile) {
                 out.decls.push((
                     name.to_string(),
                     TsDecl::Component { props, returns },
+                ));
+            } else {
+                // lowerCamel → plain function (e.g. `renderMatches`)
+                let params = formal_params(&f.params);
+                let returns = f
+                    .return_type
+                    .as_ref()
+                    .map(|ta| ty_to_expr(&ta.type_annotation))
+                    .unwrap_or(TyExpr::Prim("void"));
+                out.decls.push((
+                    name.to_string(),
+                    TsDecl::Function { params, returns },
                 ));
             }
         }
@@ -572,17 +587,26 @@ fn extract_variable(v: &VariableDeclaration, exported: bool, out: &mut ParsedFil
                         inner = &p.type_annotation;
                     }
                     if let TSType::TSFunctionType(f) = inner {
-                        let props = f.params.items.first().and_then(|p| {
-                            p.type_annotation
-                                .as_ref()
-                                .map(|ta| ty_to_expr(&ta.type_annotation))
-                        });
-                        let returns =
-                            Some(ty_to_expr(&f.return_type.type_annotation));
-                        out.decls.push((
-                            name,
-                            TsDecl::Component { props, returns },
-                        ));
+                        if name.chars().next().map(|c| c.is_uppercase()).unwrap_or(false) {
+                            let props = f.params.items.first().and_then(|p| {
+                                p.type_annotation
+                                    .as_ref()
+                                    .map(|ta| ty_to_expr(&ta.type_annotation))
+                            });
+                            let returns =
+                                Some(ty_to_expr(&f.return_type.type_annotation));
+                            out.decls.push((
+                                name.clone(),
+                                TsDecl::Component { props, returns },
+                            ));
+                        } else {
+                            let params = formal_params(&f.params);
+                            let returns = ty_to_expr(&f.return_type.type_annotation);
+                            out.decls.push((
+                                name.clone(),
+                                TsDecl::Function { params, returns },
+                            ));
+                        }
                     }
                 }
             }
@@ -1196,7 +1220,10 @@ fn extract(
         for (name, decl) in &parsed.decls {
             store.insert(name, decl.clone());
             if all
-                && matches!(decl, TsDecl::Component { .. } | TsDecl::Hook { .. })
+                && matches!(
+                    decl,
+                    TsDecl::Component { .. } | TsDecl::Hook { .. } | TsDecl::Function { .. }
+                )
                 && candidate_seen.insert(name.clone())
             {
                 candidates.push(name.clone());
@@ -1381,6 +1408,17 @@ fn serialize_decl(
                 returns: Some(returns),
             }
         }
+        TsDecl::Function { params, returns } => {
+            let params = serialize_props(params, store, visiting, depth + 1);
+            let returns = serialize_ty(returns, store, visiting, depth + 1);
+            IrDecl {
+                name: name.to_string(),
+                kind: "function".to_string(),
+                props: Vec::new(),
+                params: Some(params),
+                returns: Some(returns),
+            }
+        }
     }
 }
 
@@ -1426,6 +1464,7 @@ fn props_for_expr(
                     .map(|p| props_for_expr(p, store, visiting))
                     .unwrap_or_default(),
                 Some(TsDecl::Hook { .. }) => Vec::new(),
+                Some(TsDecl::Function { .. }) => Vec::new(),
                 None => vec![TsProp {
                     name: "value".into(),
                     optional: false,
@@ -1867,6 +1906,7 @@ fn serialize_ty(
                     out
                 }
                 Some(TsDecl::Hook { .. }) => prim("any"),
+                Some(TsDecl::Function { .. }) => prim("any"),
                 None => prim("any"),
             }
         }

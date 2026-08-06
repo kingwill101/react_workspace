@@ -4,6 +4,8 @@
 // (extracted from /run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/.dart_tool/react/js/node_modules/react-router-dom/server.d.ts)
 // ignore_for_file: type=lint
 
+import 'dart:js_interop';
+
 import 'package:react/react.dart';
 
 /// Typed helper for the `reactRouter.StaticRouter` foreign component.
@@ -60,6 +62,168 @@ ReactNode staticRouterProvider({
     'router': router.toJson(),
     if (hydrate != null) 'hydrate': hydrate,
     if (nonce != null) 'nonce': nonce,
+  },
+);
+
+/// Typed helper for the `reactRouter.createStaticHandler` function.
+///
+/// See https://reactrouter.com/api/createStaticHandler.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.createStaticHandler',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.createStaticHandler')
+external JSAny? _createStaticHandlerRaw(JSAny? routes, JSAny? opts);
+ServerStaticHandler? createStaticHandler(List<ServerCreateStaticHandlerRoutes> routes, [Object? opts]) {
+  final raw = _createStaticHandlerRaw(routes.jsify(), opts.jsify());
+  if (raw == null) return null;
+  return raw as ServerStaticHandler?;
+}
+
+/// Typed helper for the `reactRouter.createStaticRouter` function.
+///
+/// See https://reactrouter.com/api/createStaticRouter.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.createStaticRouter',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.createStaticRouter')
+external JSAny? _createStaticRouterRaw(JSAny? routes, JSAny? context, JSAny? opts);
+ServerRemixRouter? createStaticRouter(List<ServerCreateStaticHandlerRoutes> routes, ServerStaticHandlerContext context, [ServerCreateStaticRouterOpts? opts]) {
+  final raw = _createStaticRouterRaw(routes.jsify(), context.jsify(), opts.jsify());
+  if (raw == null) return null;
+  return raw as ServerRemixRouter?;
+}
+
+/// TS: (request: any, opts: { requestContext?: unknown; skipLoaderErrorBubbling?: boolean; unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any }) => any
+typedef ServerCreateStaticHandlerReturnQueryCallback = Object? Function(Object? request, Object? opts);
+
+/// Wraps a [ServerCreateStaticHandlerReturnQueryCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverCreateStaticHandlerReturnQueryCallback(ServerCreateStaticHandlerReturnQueryCallback fn) => ReactCallback(
+  debugName: 'ServerCreateStaticHandlerReturnQueryCallback',
+  signature: const (
+    positional: [reactAny, reactAny],
+    result: reactAny,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    return fn(arguments[0], arguments[1]);
+  },
+);
+
+/// TS: (request: any, opts: { routeId?: string; requestContext?: unknown; unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any }) => any
+typedef ServerCreateStaticHandlerReturnQueryRouteCallback = Object? Function(Object? request, Object? opts);
+
+/// Wraps a [ServerCreateStaticHandlerReturnQueryRouteCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverCreateStaticHandlerReturnQueryRouteCallback(ServerCreateStaticHandlerReturnQueryRouteCallback fn) => ReactCallback(
+  debugName: 'ServerCreateStaticHandlerReturnQueryRouteCallback',
+  signature: const (
+    positional: [reactAny, reactAny],
+    result: reactAny,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    return fn(arguments[0], arguments[1]);
+  },
+);
+
+/// TS: (savedScrollPositions: unknown, getScrollPosition: () => number, getKey: (location: { pathname: string; search: string; hash: string; state: any; key: string }, matches: { id: any; pathname: any; params: any; data: any; handle: any }[]) => string) => () => void
+typedef ServerCreateStaticRouterReturnEnableScrollRestorationCallback = Object? Function(Object? savedScrollPositions, Object? getScrollPosition, Object? getKey);
+
+/// Wraps a [ServerCreateStaticRouterReturnEnableScrollRestorationCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverCreateStaticRouterReturnEnableScrollRestorationCallback(ServerCreateStaticRouterReturnEnableScrollRestorationCallback fn) => ReactCallback(
+  debugName: 'ServerCreateStaticRouterReturnEnableScrollRestorationCallback',
+  signature: const (
+    positional: [reactAny, reactAny, reactAny],
+    result: reactAny,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    return fn(arguments[0], arguments[1], arguments[2]);
+  },
+);
+
+/// TS: (key: string, fn: (args: { currentLocation: { pathname: any; search: any; hash: any; state: any; key: any }; nextLocation: { pathname: any; search: any; hash: any; state: any; key: any }; historyAction: any }) => boolean) => { state: "unblocked" | "blocked" | "proceeding"; reset: () => void; proceed: () => void; location: { pathname: string; search: string; hash: string; state: any; key: string } }
+typedef ServerCreateStaticRouterReturnGetBlockerCallback = Object? Function(String elementKey, Object? fn);
+
+/// Wraps a [ServerCreateStaticRouterReturnGetBlockerCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverCreateStaticRouterReturnGetBlockerCallback(ServerCreateStaticRouterReturnGetBlockerCallback fn) => ReactCallback(
+  debugName: 'ServerCreateStaticRouterReturnGetBlockerCallback',
+  signature: const (
+    positional: [reactString, reactAny],
+    result: reactAny,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    return fn(arguments[0] as String, arguments[1]);
+  },
+);
+
+/// TS: (routes: { __ref: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any }; children?: any[]; index: true | false }[]) => void
+typedef ServerCreateStaticRouterReturnInternalSetRoutesCallback = void Function(Object? routes);
+
+/// Wraps a [ServerCreateStaticRouterReturnInternalSetRoutesCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverCreateStaticRouterReturnInternalSetRoutesCallback(ServerCreateStaticRouterReturnInternalSetRoutesCallback fn) => ReactCallback(
+  debugName: 'ServerCreateStaticRouterReturnInternalSetRoutesCallback',
+  signature: const (
+    positional: [reactAny],
+    result: reactVoid,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    fn(arguments[0]);
+    return null;
+  },
+);
+
+/// TS: (routeId: string, children: { __ref: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any }; children?: any[]; index: true | false }[]) => void
+typedef ServerCreateStaticRouterReturnPatchRoutesCallback = void Function(String routeId, Object? children);
+
+/// Wraps a [ServerCreateStaticRouterReturnPatchRoutesCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverCreateStaticRouterReturnPatchRoutesCallback(ServerCreateStaticRouterReturnPatchRoutesCallback fn) => ReactCallback(
+  debugName: 'ServerCreateStaticRouterReturnPatchRoutesCallback',
+  signature: const (
+    positional: [reactString, reactAny],
+    result: reactVoid,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    fn(arguments[0] as String, arguments[1]);
+    return null;
+  },
+);
+
+/// TS: () => { historyAction: "POP" | "PUSH" | "REPLACE"; location: { pathname: string; search: string; hash: string; state: any; key: string }; matches: { params: unknown; pathname: string; pathnameBase: string; route: any }[]; initialized: boolean; restoreScrollPosition: any; preventScrollReset: boolean; navigation: { state: "idle" | "loading" | "submitting"; location: { pathname: any; search: any; hash: any; state: any; key: any }; formMethod: Record<string, unknown>; formAction: string; formEncType: any; formData: any; json: any; text: string }; revalidation: "idle" | "loading"; loaderData: Record<string, unknown>; actionData: Record<string, unknown>; errors: Record<string, unknown>; fetchers: unknown; blockers: unknown }
+typedef ServerCreateStaticRouterReturnStateCallback = Object? Function();
+
+/// Wraps a [ServerCreateStaticRouterReturnStateCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverCreateStaticRouterReturnStateCallback(ServerCreateStaticRouterReturnStateCallback fn) => ReactCallback(
+  debugName: 'ServerCreateStaticRouterReturnStateCallback',
+  signature: const (
+    positional: [],
+    result: reactAny,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    return fn();
+  },
+);
+
+/// TS: (fn: (state: { historyAction: any; location: { pathname: any; search: any; hash: any; state: any; key: any }; matches: any[]; initialized: boolean; restoreScrollPosition: any; preventScrollReset: boolean; navigation: any; revalidation: any; loaderData: Record<string, unknown>; actionData: Record<string, unknown>; errors: Record<string, unknown>; fetchers: unknown; blockers: unknown }, opts: { deletedFetchers: any[]; unstable_viewTransitionOpts?: any; unstable_flushSync: boolean }) => void) => () => void
+typedef ServerCreateStaticRouterReturnSubscribeCallback = Object? Function(Object? fn);
+
+/// Wraps a [ServerCreateStaticRouterReturnSubscribeCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverCreateStaticRouterReturnSubscribeCallback(ServerCreateStaticRouterReturnSubscribeCallback fn) => ReactCallback(
+  debugName: 'ServerCreateStaticRouterReturnSubscribeCallback',
+  signature: const (
+    positional: [reactAny],
+    result: reactAny,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    return fn(arguments[0]);
   },
 );
 
@@ -372,6 +536,222 @@ class ServerAgnosticDataRouteMatch {
   };
 }
 
+/// Typed props for `ServerCreateStaticHandlerReturnDataRoutes`.
+///
+/// __ref: { caseSensitive?: boolean; path?: string; id?: string; loader?: any; action?: any; hasErrorBoundary?: boolean; shouldRevalidate?: any; handle?: any; lazy?: any; children?: null; index: true }
+/// id: string; children?: any[]
+class ServerCreateStaticHandlerReturnDataRoutes {
+  const ServerCreateStaticHandlerReturnDataRoutes({
+    required ServerCreateStaticHandlerReturnDataRoutesRef this.__ref,
+    required String this.id,
+    List<Object?>? this.children,
+  });
+
+  /// TS: { caseSensitive?: boolean; path?: string; id?: string; loader?: any; action?: any; hasErrorBoundary?: boolean; shouldRevalidate?: any; handle?: any; lazy?: any; children?: null; index: true }
+  final ServerCreateStaticHandlerReturnDataRoutesRef __ref;
+
+  /// TS: string
+  final String id;
+
+  /// TS: any[]
+  final List<Object?>? children;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    '__ref': __ref.toJson(),
+    'id': id,
+    if (children != null) 'children': children,
+  };
+}
+
+/// Typed props for `ServerCreateStaticHandlerReturnDataRoutesRef`.
+///
+/// caseSensitive?: boolean; path?: string; id?: string; loader?: any
+/// action?: any; hasErrorBoundary?: boolean; shouldRevalidate?: any
+/// handle?: any; lazy?: any; children?: null; index: true
+class ServerCreateStaticHandlerReturnDataRoutesRef {
+  const ServerCreateStaticHandlerReturnDataRoutesRef({
+    bool? this.caseSensitive,
+    String? this.path,
+    String? this.id,
+    Object? this.loader,
+    Object? this.action,
+    bool? this.hasErrorBoundary,
+    Object? this.shouldRevalidate,
+    Object? this.handle,
+    Object? this.lazy,
+    Object? this.children,
+    required bool this.index,
+  });
+
+  /// TS: boolean
+  final bool? caseSensitive;
+
+  /// TS: string
+  final String? path;
+
+  /// TS: string
+  final String? id;
+
+  /// TS: any
+  final Object? loader;
+
+  /// TS: any
+  final Object? action;
+
+  /// TS: boolean
+  final bool? hasErrorBoundary;
+
+  /// TS: any
+  final Object? shouldRevalidate;
+
+  /// TS: any
+  final Object? handle;
+
+  /// TS: any
+  final Object? lazy;
+
+  /// TS: null
+  final Object? children;
+
+  /// TS: true
+  final bool index;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (caseSensitive != null) 'caseSensitive': caseSensitive,
+    if (path != null) 'path': path,
+    if (id != null) 'id': id,
+    if (loader != null) 'loader': loader,
+    if (action != null) 'action': action,
+    if (hasErrorBoundary != null) 'hasErrorBoundary': hasErrorBoundary,
+    if (shouldRevalidate != null) 'shouldRevalidate': shouldRevalidate,
+    if (handle != null) 'handle': handle,
+    if (lazy != null) 'lazy': lazy,
+    if (children != null) 'children': children,
+    'index': index,
+  };
+}
+
+/// Typed props for `ServerCreateStaticHandlerRoutes`.
+///
+/// caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any
+/// hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any
+/// index: true | false; children?: any[]; element?: React.ReactNode
+/// hydrateFallbackElement?: React.ReactNode; errorElement?: React.ReactNode
+/// Component?: any; HydrateFallback?: any; ErrorBoundary?: any
+/// lazy?: () => any
+class ServerCreateStaticHandlerRoutes {
+  const ServerCreateStaticHandlerRoutes({
+    Object? this.caseSensitive,
+    Object? this.path,
+    Object? this.id,
+    Object? this.loader,
+    Object? this.action,
+    Object? this.hasErrorBoundary,
+    Object? this.shouldRevalidate,
+    Object? this.handle,
+    required bool this.index,
+    List<Object?>? this.children,
+    ReactNode? this.element,
+    ReactNode? this.hydrateFallbackElement,
+    ReactNode? this.errorElement,
+    Object? this.Component,
+    Object? this.HydrateFallback,
+    Object? this.ErrorBoundary,
+    ServerStaticRouterProviderRouterWindowCallback? this.lazy,
+  });
+
+  /// TS: any
+  final Object? caseSensitive;
+
+  /// TS: any
+  final Object? path;
+
+  /// TS: any
+  final Object? id;
+
+  /// TS: any
+  final Object? loader;
+
+  /// TS: any
+  final Object? action;
+
+  /// TS: any
+  final Object? hasErrorBoundary;
+
+  /// TS: any
+  final Object? shouldRevalidate;
+
+  /// TS: any
+  final Object? handle;
+
+  /// TS: true | false
+  final bool index;
+
+  /// TS: any[]
+  final List<Object?>? children;
+
+  /// TS: React.ReactNode
+  final ReactNode? element;
+
+  /// TS: React.ReactNode
+  final ReactNode? hydrateFallbackElement;
+
+  /// TS: React.ReactNode
+  final ReactNode? errorElement;
+
+  /// TS: any
+  final Object? Component;
+
+  /// TS: any
+  final Object? HydrateFallback;
+
+  /// TS: any
+  final Object? ErrorBoundary;
+
+  /// TS: () => any
+  final ServerStaticRouterProviderRouterWindowCallback? lazy;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (caseSensitive != null) 'caseSensitive': caseSensitive,
+    if (path != null) 'path': path,
+    if (id != null) 'id': id,
+    if (loader != null) 'loader': loader,
+    if (action != null) 'action': action,
+    if (hasErrorBoundary != null) 'hasErrorBoundary': hasErrorBoundary,
+    if (shouldRevalidate != null) 'shouldRevalidate': shouldRevalidate,
+    if (handle != null) 'handle': handle,
+    'index': index,
+    if (children != null) 'children': children,
+    if (element != null) 'element': element,
+    if (hydrateFallbackElement != null) 'hydrateFallbackElement': hydrateFallbackElement,
+    if (errorElement != null) 'errorElement': errorElement,
+    if (Component != null) 'Component': Component,
+    if (HydrateFallback != null) 'HydrateFallback': HydrateFallback,
+    if (ErrorBoundary != null) 'ErrorBoundary': ErrorBoundary,
+    if (lazy != null) 'lazy': lazy,
+  };
+}
+
+/// Typed props for `ServerCreateStaticRouterOpts`.
+///
+/// future?: { value?: any }
+class ServerCreateStaticRouterOpts {
+  const ServerCreateStaticRouterOpts({
+    ServerPick? this.future,
+  });
+
+  /// TS: { value?: any }
+  final ServerPick? future;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (future != null) 'future': future!.toJson(),
+  };
+}
+
 /// Typed props for `FutureConfig`.
 ///
 /// v7_fetcherPersist?: boolean; v7_normalizeFormMethod?: boolean
@@ -450,6 +830,23 @@ class ServerLocation {
     'hash': hash,
     'state': state,
     'key': elementKey,
+  };
+}
+
+/// Typed props for `Pick`.
+///
+/// value?: any
+class ServerPick {
+  const ServerPick({
+    Object? this.value,
+  });
+
+  /// TS: any
+  final Object? value;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (value != null) 'value': value,
   };
 }
 
@@ -590,6 +987,35 @@ class ServerRemixRouter {
     '_internalSetRoutes': _internalSetRoutes,
     '_internalFetchControllers': _internalFetchControllers,
     '_internalActiveDeferreds': _internalActiveDeferreds,
+  };
+}
+
+/// Typed props for `StaticHandler`.
+///
+/// dataRoutes: { __ref: { caseSensitive?: boolean; path?: string; id?: string; loader?: any; action?: any; hasErrorBoundary?: boolean; shouldRevalidate?: any; handle?: any; lazy?: any; children?: null; index: true }; id: string; children?: any[] }[]
+/// query: (request: any, opts: { requestContext?: unknown; skipLoaderErrorBubbling?: boolean; unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any }) => any
+/// queryRoute: (request: any, opts: { routeId?: string; requestContext?: unknown; unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any }) => any
+class ServerStaticHandler {
+  const ServerStaticHandler({
+    required List<ServerCreateStaticHandlerReturnDataRoutes> this.dataRoutes,
+    required ServerCreateStaticHandlerReturnQueryCallback this.query,
+    required ServerCreateStaticHandlerReturnQueryRouteCallback this.queryRoute,
+  });
+
+  /// TS: { __ref: { caseSensitive?: boolean; path?: string; id?: string; loader?: any; action?: any; hasErrorBoundary?: boolean; shouldRevalidate?: any; handle?: any; lazy?: any; children?: null; index: true }; id: string; children?: any[] }[]
+  final List<ServerCreateStaticHandlerReturnDataRoutes> dataRoutes;
+
+  /// TS: (request: any, opts: { requestContext?: unknown; skipLoaderErrorBubbling?: boolean; unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any }) => any
+  final ServerCreateStaticHandlerReturnQueryCallback query;
+
+  /// TS: (request: any, opts: { routeId?: string; requestContext?: unknown; unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any }) => any
+  final ServerCreateStaticHandlerReturnQueryRouteCallback queryRoute;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'dataRoutes': dataRoutes.map((e) => e.toJson()).toList(),
+    'query': query,
+    'queryRoute': queryRoute,
   };
 }
 

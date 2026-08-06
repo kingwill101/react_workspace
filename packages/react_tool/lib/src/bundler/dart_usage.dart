@@ -116,10 +116,11 @@ final class DartUsageCollector {
     var resolvedCount = 0;
 
     bool isFrameworkSkippable(String path) {
-      // SDK, framework packages and pub cache don't contain foreign symbols
-      // that affect DCE; skipping them doesn't affect completeness.
-      return path.contains('.pub-cache') ||
-          path.contains('/.dart_tool/') ||
+      // Only framework packages that are proven incapable of containing
+      // user runtime symbols may be skipped without affecting completeness.
+      // Hosted packages (in .pub-cache) must NOT be whitelisted — they can
+      // contain user code like shared_widgets that uses reactRouter hooks.
+      return path.contains('/.dart_tool/') ||
           path.contains('/dart-sdk/') ||
           path.contains('packages/react/') ||
           path.contains('packages/react_analysis/') ||

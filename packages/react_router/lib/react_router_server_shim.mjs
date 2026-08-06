@@ -5,7 +5,7 @@
 // `reactRouter.*` names used by the generated Dart helpers.
 // Wire this module into react.yaml under `foreign.modules`.
 
-import { StaticRouter as __reactDartStaticRouter, StaticRouterProvider as __reactDartStaticRouterProvider } from 'react-router-dom/server';
+import { StaticRouter as __reactDartStaticRouter, StaticRouterProvider as __reactDartStaticRouterProvider, createStaticHandler as __reactDartCreateStaticHandler, createStaticRouter as __reactDartCreateStaticRouter } from 'react-router-dom/server';
 
 const components = {
   'reactRouter.StaticRouter': __reactDartStaticRouter,
@@ -15,3 +15,24 @@ const components = {
 for (const [name, component] of Object.entries(components)) {
   globalThis.__reactDartRegisterComponent?.(name, component);
 }
+
+// Hook bridge: the generated Dart hooks (`--hooks` output) call
+// these members during render. Results are decoded into
+// primitives or `[[key, value], ...]` pairs (via `toPairs`)
+// because dart2js cannot cast a raw callAsFunction result.
+const toPairs = (v) => {
+  if (v == null) return v;
+  if (Array.isArray(v)) return v.map(toPairs);
+  if (typeof v === 'object') {
+    if (typeof v.entries === 'function') return [...v.entries()];
+    return Object.entries(v).map(([k, val]) => [k, toPairs(val)]);
+  }
+  return v;
+};
+
+const hooks = {
+  createStaticHandler: (a0) => __reactDartCreateStaticHandler(a0),
+  createStaticRouter: (a0) => __reactDartCreateStaticRouter(a0),
+};
+
+globalThis.__reactDartHooks = hooks;

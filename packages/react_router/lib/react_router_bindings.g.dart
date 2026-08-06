@@ -4,7 +4,41 @@
 // (extracted from /run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/.dart_tool/react/js/node_modules/react-router-dom/./dist/index.d.ts)
 // ignore_for_file: type=lint
 
+import 'dart:js_interop';
+
 import 'package:react/react.dart';
+
+/// Typed helper for the `reactRouter.createBrowserRouter` function.
+///
+/// See https://reactrouter.com/api/createBrowserRouter.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.createBrowserRouter',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.createBrowserRouter')
+external JSAny? _createBrowserRouterRaw(JSAny? routes, JSAny? opts);
+Object? createBrowserRouter(List<CreateBrowserRouterRoutes> routes, [DOMRouterOpts? opts]) {
+  final raw = _createBrowserRouterRaw(routes.jsify(), opts.jsify());
+  if (raw == null) return null;
+  return raw as Object?;
+}
+
+/// Typed helper for the `reactRouter.createHashRouter` function.
+///
+/// See https://reactrouter.com/api/createHashRouter.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.createHashRouter',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.createHashRouter')
+external JSAny? _createHashRouterRaw(JSAny? routes, JSAny? opts);
+Object? createHashRouter(List<CreateBrowserRouterRoutes> routes, [DOMRouterOpts? opts]) {
+  final raw = _createHashRouterRaw(routes.jsify(), opts.jsify());
+  if (raw == null) return null;
+  return raw as Object?;
+}
 
 /// Typed helper for the `reactRouter.RouterProvider` foreign component.
 ///
@@ -308,6 +342,38 @@ ReactNode scrollRestoration({
 
 
 
+/// Typed helper for the `reactRouter.createMemoryRouter` function.
+///
+/// See https://reactrouter.com/api/createMemoryRouter.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.createMemoryRouter',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.createMemoryRouter')
+external JSAny? _createMemoryRouterRaw(JSAny? routes, JSAny? opts);
+Object? createMemoryRouter(List<CreateBrowserRouterRoutes> routes, [CreateMemoryRouterOpts? opts]) {
+  final raw = _createMemoryRouterRaw(routes.jsify(), opts.jsify());
+  if (raw == null) return null;
+  return raw as Object?;
+}
+
+/// Typed helper for the `reactRouter.createSearchParams` function.
+///
+/// See https://reactrouter.com/api/createSearchParams.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.createSearchParams',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.createSearchParams')
+external JSAny? _createSearchParamsRaw(JSAny? init);
+Object? createSearchParams([Object? init]) {
+  final raw = _createSearchParamsRaw(init.jsify());
+  if (raw == null) return null;
+  return raw as Object?;
+}
+
 /// Typed helper for the `reactRouter.MemoryRouter` foreign component.
 ///
 /// Props from `MemoryRouter`:
@@ -409,7 +475,7 @@ ReactNode route({
     Object? path,
     Object? id,
     /// TS: () => any
-    RouteLazyCallback? lazy,
+    CreateBrowserRouterRoutesLazyCallback? lazy,
     Object? loader,
     Object? action,
     Object? hasErrorBoundary,
@@ -530,26 +596,37 @@ ReactNode await({
   children: children,
 );
 
-/// Typed helper for the `reactRouter.renderMatches` foreign component.
+/// Typed helper for the `reactRouter.createRoutesFromChildren` function.
 ///
-/// Props from `renderMatches`:
-///
-/// value: { params: unknown; pathname: string; pathnameBase: string; route: any }[]
+/// See https://reactrouter.com/api/createRoutesFromChildren.
 @ReactRuntimeSymbol(
-  kind: ReactRuntimeSymbolKind.component,
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.createRoutesFromChildren',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.createRoutesFromChildren')
+external JSAny? _createRoutesFromChildrenRaw(JSAny? children, JSAny? parentPath);
+List<CreateBrowserRouterRoutes>? createRoutesFromChildren(ReactNode children, [List<num>? parentPath]) {
+  final raw = _createRoutesFromChildrenRaw(children.jsify(), parentPath.jsify());
+  if (raw == null) return null;
+  return raw as List<CreateBrowserRouterRoutes>?;
+}
+
+/// Typed helper for the `reactRouter.renderMatches` function.
+///
+/// See https://reactrouter.com/api/renderMatches.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
   runtimeKey: 'reactRouter.renderMatches',
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
-ReactNode renderMatches({
-  String? key,
-    required List<RouteMatch> value,
-}) => foreignComponent(
-  'reactRouter.renderMatches',
-  key: key,
-  props: {
-    'value': value.map((e) => e.toJson()).toList(),
-  },
-);
+@JS('globalThis.__reactDartBindings.reactRouter.renderMatches')
+external JSAny? _renderMatchesRaw(JSAny? matches);
+Object? renderMatches(List<RouteMatch> matches) {
+  final raw = _renderMatchesRaw(matches.jsify());
+  if (raw == null) return null;
+  return raw as Object?;
+}
 
 
 
@@ -571,13 +648,125 @@ ReactNode renderMatches({
 
 
 
+
+/// Typed helper for the `reactRouter.matchRoutes` function.
+///
+/// See https://reactrouter.com/api/matchRoutes.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.matchRoutes',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.matchRoutes')
+external JSAny? _matchRoutesRaw(JSAny? routes, JSAny? locationArg, JSAny? basename);
+List<AgnosticRouteMatch>? matchRoutes(List<Object?> routes, Object locationArg, [String? basename]) {
+  final raw = _matchRoutesRaw(routes.jsify(), locationArg.jsify(), basename.jsify());
+  if (raw == null) return null;
+  return raw as List<AgnosticRouteMatch>?;
+}
+
+/// Typed helper for the `reactRouter.generatePath` function.
+///
+/// See https://reactrouter.com/api/generatePath.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.generatePath',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.generatePath')
+external JSAny? _generatePathRaw(JSAny? originalPath, JSAny? params);
+String? generatePath(Path originalPath, [Object? params]) {
+  final raw = _generatePathRaw(originalPath.jsify(), params.jsify());
+  if (raw == null) return null;
+  return raw as String?;
+}
+
+/// Typed helper for the `reactRouter.matchPath` function.
+///
+/// See https://reactrouter.com/api/matchPath.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.matchPath',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.matchPath')
+external JSAny? _matchPathRaw(JSAny? pattern, JSAny? pathname);
+PathMatch? matchPath(MatchPathPattern pattern, String pathname) {
+  final raw = _matchPathRaw(pattern.jsify(), pathname.jsify());
+  if (raw == null) return null;
+  return raw as PathMatch?;
+}
+
+/// Typed helper for the `reactRouter.resolvePath` function.
+///
+/// See https://reactrouter.com/api/resolvePath.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.resolvePath',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.resolvePath')
+external JSAny? _resolvePathRaw(JSAny? to, JSAny? fromPathname);
+Path? resolvePath(Object to, [String? fromPathname]) {
+  final raw = _resolvePathRaw(to.jsify(), fromPathname.jsify());
+  if (raw == null) return null;
+  return raw as Path?;
+}
+
+/// Typed helper for the `reactRouter.isRouteErrorResponse` function.
+///
+/// See https://reactrouter.com/api/isRouteErrorResponse.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.isRouteErrorResponse',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.isRouteErrorResponse')
+external JSAny? _isRouteErrorResponseRaw(JSAny? error);
+Object? isRouteErrorResponse(Object error) {
+  final raw = _isRouteErrorResponseRaw(error.jsify());
+  if (raw == null) return null;
+  return raw as Object?;
+}
+
+/// Typed helper for the `reactRouter.createPath` function.
+///
+/// See https://reactrouter.com/api/createPath.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.createPath',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.createPath')
+external JSAny? _createPathRaw(JSAny? arg);
+String? createPath(Path arg) {
+  final raw = _createPathRaw(arg.jsify());
+  if (raw == null) return null;
+  return raw as String?;
+}
+
+/// Typed helper for the `reactRouter.parsePath` function.
+///
+/// See https://reactrouter.com/api/parsePath.
+@ReactRuntimeSymbol(
+  kind: ReactRuntimeSymbolKind.function,
+  runtimeKey: 'reactRouter.parsePath',
+  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
+)
+@JS('globalThis.__reactDartBindings.reactRouter.parsePath')
+external JSAny? _parsePathRaw(JSAny? path);
+Path? parsePath(String path) {
+  final raw = _parsePathRaw(path.jsify());
+  if (raw == null) return null;
+  return raw as Path?;
+}
 
 /// TS: () => any
-typedef RouteLazyCallback = Object? Function();
+typedef CreateBrowserRouterRoutesLazyCallback = Object? Function();
 
-/// Wraps a [RouteLazyCallback] into a [ReactCallback] for prop encoding.
-ReactCallback routeLazyCallback(RouteLazyCallback fn) => ReactCallback(
-  debugName: 'RouteLazyCallback',
+/// Wraps a [CreateBrowserRouterRoutesLazyCallback] into a [ReactCallback] for prop encoding.
+ReactCallback createBrowserRouterRoutesLazyCallback(CreateBrowserRouterRoutesLazyCallback fn) => ReactCallback(
+  debugName: 'CreateBrowserRouterRoutesLazyCallback',
   signature: const (
     positional: [],
     result: reactAny,
@@ -714,6 +903,233 @@ enum RelativeRoutingType {
   );
 }
 
+/// Typed props for `AgnosticRouteMatch`.
+///
+/// params: unknown; pathname: string; pathnameBase: string; route: any
+class AgnosticRouteMatch {
+  const AgnosticRouteMatch({
+    required Object? this.params,
+    required String this.pathname,
+    required String this.pathnameBase,
+    required Object this.route,
+  });
+
+  /// TS: unknown
+  final Object? params;
+
+  /// TS: string
+  final String pathname;
+
+  /// TS: string
+  final String pathnameBase;
+
+  /// TS: any
+  final Object route;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'params': params,
+    'pathname': pathname,
+    'pathnameBase': pathnameBase,
+    'route': route,
+  };
+}
+
+/// Typed props for `CreateBrowserRouterRoutes`.
+///
+/// caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any
+/// hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any
+/// index: true | false; children?: any[]; element?: React.ReactNode
+/// hydrateFallbackElement?: React.ReactNode; errorElement?: React.ReactNode
+/// Component?: any; HydrateFallback?: any; ErrorBoundary?: any
+/// lazy?: () => any
+class CreateBrowserRouterRoutes {
+  const CreateBrowserRouterRoutes({
+    Object? this.caseSensitive,
+    Object? this.path,
+    Object? this.id,
+    Object? this.loader,
+    Object? this.action,
+    Object? this.hasErrorBoundary,
+    Object? this.shouldRevalidate,
+    Object? this.handle,
+    required bool this.index,
+    List<Object?>? this.children,
+    ReactNode? this.element,
+    ReactNode? this.hydrateFallbackElement,
+    ReactNode? this.errorElement,
+    Object? this.Component,
+    Object? this.HydrateFallback,
+    Object? this.ErrorBoundary,
+    CreateBrowserRouterRoutesLazyCallback? this.lazy,
+  });
+
+  /// TS: any
+  final Object? caseSensitive;
+
+  /// TS: any
+  final Object? path;
+
+  /// TS: any
+  final Object? id;
+
+  /// TS: any
+  final Object? loader;
+
+  /// TS: any
+  final Object? action;
+
+  /// TS: any
+  final Object? hasErrorBoundary;
+
+  /// TS: any
+  final Object? shouldRevalidate;
+
+  /// TS: any
+  final Object? handle;
+
+  /// TS: true | false
+  final bool index;
+
+  /// TS: any[]
+  final List<Object?>? children;
+
+  /// TS: React.ReactNode
+  final ReactNode? element;
+
+  /// TS: React.ReactNode
+  final ReactNode? hydrateFallbackElement;
+
+  /// TS: React.ReactNode
+  final ReactNode? errorElement;
+
+  /// TS: any
+  final Object? Component;
+
+  /// TS: any
+  final Object? HydrateFallback;
+
+  /// TS: any
+  final Object? ErrorBoundary;
+
+  /// TS: () => any
+  final CreateBrowserRouterRoutesLazyCallback? lazy;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (caseSensitive != null) 'caseSensitive': caseSensitive,
+    if (path != null) 'path': path,
+    if (id != null) 'id': id,
+    if (loader != null) 'loader': loader,
+    if (action != null) 'action': action,
+    if (hasErrorBoundary != null) 'hasErrorBoundary': hasErrorBoundary,
+    if (shouldRevalidate != null) 'shouldRevalidate': shouldRevalidate,
+    if (handle != null) 'handle': handle,
+    'index': index,
+    if (children != null) 'children': children,
+    if (element != null) 'element': element,
+    if (hydrateFallbackElement != null) 'hydrateFallbackElement': hydrateFallbackElement,
+    if (errorElement != null) 'errorElement': errorElement,
+    if (Component != null) 'Component': Component,
+    if (HydrateFallback != null) 'HydrateFallback': HydrateFallback,
+    if (ErrorBoundary != null) 'ErrorBoundary': ErrorBoundary,
+    if (lazy != null) 'lazy': lazy,
+  };
+}
+
+/// Typed props for `CreateMemoryRouterOpts`.
+///
+/// basename?: string; future?: { value?: any }; hydrationData?: { value?: any }
+/// initialEntries?: any[]; initialIndex?: number; unstable_dataStrategy?: any
+/// unstable_patchRoutesOnNavigation?: Record<string, unknown>
+class CreateMemoryRouterOpts {
+  const CreateMemoryRouterOpts({
+    String? this.basename,
+    Omit? this.future,
+    Pick? this.hydrationData,
+    List<Object?>? this.initialEntries,
+    num? this.initialIndex,
+    Object? this.unstable_dataStrategy,
+    Object? this.unstable_patchRoutesOnNavigation,
+  });
+
+  /// TS: string
+  final String? basename;
+
+  /// TS: { value?: any }
+  final Omit? future;
+
+  /// TS: { value?: any }
+  final Pick? hydrationData;
+
+  /// TS: any[]
+  final List<Object?>? initialEntries;
+
+  /// TS: number
+  final num? initialIndex;
+
+  /// TS: any
+  final Object? unstable_dataStrategy;
+
+  /// TS: Record<string, unknown>
+  final Object? unstable_patchRoutesOnNavigation;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (basename != null) 'basename': basename,
+    if (future != null) 'future': future!.toJson(),
+    if (hydrationData != null) 'hydrationData': hydrationData!.toJson(),
+    if (initialEntries != null) 'initialEntries': initialEntries,
+    if (initialIndex != null) 'initialIndex': initialIndex,
+    if (unstable_dataStrategy != null) 'unstable_dataStrategy': unstable_dataStrategy,
+    if (unstable_patchRoutesOnNavigation != null) 'unstable_patchRoutesOnNavigation': unstable_patchRoutesOnNavigation,
+  };
+}
+
+/// Typed props for `DOMRouterOpts`.
+///
+/// basename?: string; future?: { value?: any }; hydrationData?: { value?: any }
+/// unstable_dataStrategy?: any
+/// unstable_patchRoutesOnNavigation?: Record<string, unknown>; window?: any
+class DOMRouterOpts {
+  const DOMRouterOpts({
+    String? this.basename,
+    Omit? this.future,
+    Pick? this.hydrationData,
+    Object? this.unstable_dataStrategy,
+    Object? this.unstable_patchRoutesOnNavigation,
+    Object? this.window,
+  });
+
+  /// TS: string
+  final String? basename;
+
+  /// TS: { value?: any }
+  final Omit? future;
+
+  /// TS: { value?: any }
+  final Pick? hydrationData;
+
+  /// TS: any
+  final Object? unstable_dataStrategy;
+
+  /// TS: Record<string, unknown>
+  final Object? unstable_patchRoutesOnNavigation;
+
+  /// TS: any
+  final Object? window;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (basename != null) 'basename': basename,
+    if (future != null) 'future': future!.toJson(),
+    if (hydrationData != null) 'hydrationData': hydrationData!.toJson(),
+    if (unstable_dataStrategy != null) 'unstable_dataStrategy': unstable_dataStrategy,
+    if (unstable_patchRoutesOnNavigation != null) 'unstable_patchRoutesOnNavigation': unstable_patchRoutesOnNavigation,
+    if (window != null) 'window': window,
+  };
+}
+
 /// Typed props for `FutureConfig`.
 ///
 /// v7_relativeSplatPath?: boolean; v7_startTransition?: boolean
@@ -733,6 +1149,50 @@ class FutureConfig {
   Map<String, Object?> toJson() => {
     if (v7_relativeSplatPath != null) 'v7_relativeSplatPath': v7_relativeSplatPath,
     if (v7_startTransition != null) 'v7_startTransition': v7_startTransition,
+  };
+}
+
+/// Typed props for `MatchPathPattern`.
+///
+/// path: { pathname: string; search: string; hash: string }
+/// caseSensitive?: boolean; end?: boolean; pathname: string; search: string
+/// hash: string
+class MatchPathPattern {
+  const MatchPathPattern({
+    required Path this.path,
+    bool? this.caseSensitive,
+    bool? this.end,
+    required String this.pathname,
+    required String this.search,
+    required String this.hash,
+  });
+
+  /// TS: { pathname: string; search: string; hash: string }
+  final Path path;
+
+  /// TS: boolean
+  final bool? caseSensitive;
+
+  /// TS: boolean
+  final bool? end;
+
+  /// TS: string
+  final String pathname;
+
+  /// TS: string
+  final String search;
+
+  /// TS: string
+  final String hash;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'path': path.toJson(),
+    if (caseSensitive != null) 'caseSensitive': caseSensitive,
+    if (end != null) 'end': end,
+    'pathname': pathname,
+    'search': search,
+    'hash': hash,
   };
 }
 
@@ -774,6 +1234,111 @@ class Navigator {
     'go': go,
     'push': push,
     'replace': replace,
+  };
+}
+
+/// Typed props for `Omit`.
+///
+/// value?: any
+class Omit {
+  const Omit({
+    Object? this.value,
+  });
+
+  /// TS: any
+  final Object? value;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (value != null) 'value': value,
+  };
+}
+
+/// Typed props for `Path`.
+///
+/// pathname: string; search: string; hash: string
+class Path {
+  const Path({
+    required String this.pathname,
+    required String this.search,
+    required String this.hash,
+  });
+
+  /// TS: string
+  final String pathname;
+
+  /// TS: string
+  final String search;
+
+  /// TS: string
+  final String hash;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'pathname': pathname,
+    'search': search,
+    'hash': hash,
+  };
+}
+
+/// Typed props for `PathMatch`.
+///
+/// params: unknown; pathname: string; pathnameBase: string
+/// pattern: { path: { pathname: string; search: string; hash: string }; caseSensitive?: boolean; end?: boolean }
+class PathMatch {
+  const PathMatch({
+    required Object? this.params,
+    required String this.pathname,
+    required String this.pathnameBase,
+    required PathPattern this.pattern,
+  });
+
+  /// TS: unknown
+  final Object? params;
+
+  /// TS: string
+  final String pathname;
+
+  /// TS: string
+  final String pathnameBase;
+
+  /// TS: { path: { pathname: string; search: string; hash: string }; caseSensitive?: boolean; end?: boolean }
+  final PathPattern pattern;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'params': params,
+    'pathname': pathname,
+    'pathnameBase': pathnameBase,
+    'pattern': pattern.toJson(),
+  };
+}
+
+/// Typed props for `PathPattern`.
+///
+/// path: { pathname: string; search: string; hash: string }
+/// caseSensitive?: boolean; end?: boolean
+class PathPattern {
+  const PathPattern({
+    required Path this.path,
+    bool? this.caseSensitive,
+    bool? this.end,
+  });
+
+  /// TS: { pathname: string; search: string; hash: string }
+  final Path path;
+
+  /// TS: boolean
+  final bool? caseSensitive;
+
+  /// TS: boolean
+  final bool? end;
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'path': path.toJson(),
+    if (caseSensitive != null) 'caseSensitive': caseSensitive,
+    if (end != null) 'end': end,
   };
 }
 

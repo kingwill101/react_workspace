@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'model/runtime_symbol.dart';
 
 
 /// Semantic foreign-binding usage collector.
@@ -188,16 +189,25 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
       }
     }
 
-    // Hook bridge calls — resolve via element annotation if available.
-    // The namespace must come exclusively from generated metadata
-    // (`runtimeKey` on @ReactRuntimeSymbol), not from hard-coded uri checks.
     final element = node.methodName.element;
-    final hookKey = _hookRuntimeKey(element);
-    if (hookKey != null) {
-      hooks.add(hookKey);
-      if (currentPath != null) {
-        rawHookKeys.putIfAbsent(currentPath!, () => []).add(hookKey);
-      }
+    final symbol = _runtimeSymbol(element);
+    switch (symbol?.kind) {
+      case ReactRuntimeSymbolKind.component:
+        components.add(symbol!.runtimeKey);
+        if (currentPath != null) {
+          rawComponentKeys.putIfAbsent(currentPath!, () => []).add(symbol.runtimeKey);
+        }
+        break;
+      case ReactRuntimeSymbolKind.hook:
+        hooks.add(symbol!.runtimeKey);
+        if (currentPath != null) {
+          rawHookKeys.putIfAbsent(currentPath!, () => []).add(symbol.runtimeKey);
+        }
+        break;
+      case ReactRuntimeSymbolKind.function:
+      case ReactRuntimeSymbolKind.value:
+      case null:
+        break;
     }
 
     super.visitMethodInvocation(node);
@@ -220,25 +230,21 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
     super.visitInstanceCreationExpression(node);
   }
 
-  String? _hookRuntimeKey(Element? element) {
+  ({ReactRuntimeSymbolKind kind, String runtimeKey})? _runtimeSymbol(
+      Element? element) {
     if (element == null) return null;
-    // First, look for @ReactRuntimeSymbol with a runtimeKey (generated hooks).
     for (final ann in element.metadata.annotations) {
-      final e = ann.element;
-      if (e == null) continue;
-      final enclosing = e.enclosingElement?.name;
-      final isRuntimeSymbol =
-          enclosing == 'ReactRuntimeSymbol' || e.displayName == 'ReactRuntimeSymbol';
-      if (!isRuntimeSymbol) continue;
-      final constant = ann.computeConstantValue();
-      final runtimeKey = constant?.getField('runtimeKey')?.toStringValue();
-      if (runtimeKey != null && runtimeKey.isNotEmpty) {
-        final kind = constant?.getField('kind')?.getField('index')?.toIntValue();
-        if (kind != null && kind != 1) continue;
-        return runtimeKey;
-      }
+      final value = ann.computeConstantValue();
+      if (value == null) continue;
+      final key = value.getField('runtimeKey')?.toStringValue();
+      final kindIndex = value.getField('kind')?.getField('index')?.toIntValue();
+      if (key == null || kindIndex == null) continue;
+      return (
+        kind: ReactRuntimeSymbolKind.values[kindIndex],
+        runtimeKey: key,
+      );
     }
-    // Fallback: bare @ReactHook (custom hooks) — return element name.
+    // Fallback for bare @ReactHook without runtimeKey (custom hooks)
     for (final ann in element.metadata.annotations) {
       final e = ann.element;
       if (e == null) continue;
@@ -246,7 +252,9 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
       final isHook = enclosing == 'ReactHook' || e.displayName == 'ReactHook';
       if (!isHook) continue;
       final name = element.displayName;
-      if (name != null && name.isNotEmpty) return name;
+      if (name != null && name.isNotEmpty) {
+        return (kind: ReactRuntimeSymbolKind.hook, runtimeKey: name);
+      }
     }
     return null;
   }

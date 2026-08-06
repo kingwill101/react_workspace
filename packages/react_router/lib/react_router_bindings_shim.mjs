@@ -5,7 +5,7 @@
 // `reactRouter.*` names used by the generated Dart helpers.
 // Wire this module into react.yaml under `foreign.modules`.
 
-import { RouterProvider as __reactDartRouterProvider, BrowserRouter as __reactDartBrowserRouter, HashRouter as __reactDartHashRouter, Link as __reactDartLink, NavLink as __reactDartNavLink, Form as __reactDartForm, ScrollRestoration as __reactDartScrollRestoration, MemoryRouter as __reactDartMemoryRouter, Navigate as __reactDartNavigate, Outlet as __reactDartOutlet, Route as __reactDartRoute, Router as __reactDartRouter, Routes as __reactDartRoutes, Await as __reactDartAwait, renderMatches as __reactDartRenderMatches, useLinkClickHandler as __reactDartUseLinkClickHandler, useSearchParams as __reactDartUseSearchParams, useSubmit as __reactDartUseSubmit, useFormAction as __reactDartUseFormAction, useFetcher as __reactDartUseFetcher, useFetchers as __reactDartUseFetchers, useBeforeUnload as __reactDartUseBeforeUnload, useHref as __reactDartUseHref, useInRouterContext as __reactDartUseInRouterContext, useLocation as __reactDartUseLocation, useNavigationType as __reactDartUseNavigationType, useMatch as __reactDartUseMatch, useNavigate as __reactDartUseNavigate, useOutletContext as __reactDartUseOutletContext, useOutlet as __reactDartUseOutlet, useParams as __reactDartUseParams, useResolvedPath as __reactDartUseResolvedPath, useRoutes as __reactDartUseRoutes, useNavigation as __reactDartUseNavigation, useRevalidator as __reactDartUseRevalidator, useMatches as __reactDartUseMatches, useLoaderData as __reactDartUseLoaderData, useRouteLoaderData as __reactDartUseRouteLoaderData, useActionData as __reactDartUseActionData, useRouteError as __reactDartUseRouteError, useAsyncValue as __reactDartUseAsyncValue, useAsyncError as __reactDartUseAsyncError, useBlocker as __reactDartUseBlocker } from 'react-router-dom';
+import { RouterProvider as __reactDartRouterProvider, BrowserRouter as __reactDartBrowserRouter, HashRouter as __reactDartHashRouter, Link as __reactDartLink, NavLink as __reactDartNavLink, Form as __reactDartForm, ScrollRestoration as __reactDartScrollRestoration, MemoryRouter as __reactDartMemoryRouter, Navigate as __reactDartNavigate, Outlet as __reactDartOutlet, Route as __reactDartRoute, Router as __reactDartRouter, Routes as __reactDartRoutes, Await as __reactDartAwait, useLinkClickHandler as __reactDartUseLinkClickHandler, useSearchParams as __reactDartUseSearchParams, useSubmit as __reactDartUseSubmit, useFormAction as __reactDartUseFormAction, useFetcher as __reactDartUseFetcher, useFetchers as __reactDartUseFetchers, useBeforeUnload as __reactDartUseBeforeUnload, useHref as __reactDartUseHref, useInRouterContext as __reactDartUseInRouterContext, useLocation as __reactDartUseLocation, useNavigationType as __reactDartUseNavigationType, useMatch as __reactDartUseMatch, useNavigate as __reactDartUseNavigate, useOutletContext as __reactDartUseOutletContext, useOutlet as __reactDartUseOutlet, useParams as __reactDartUseParams, useResolvedPath as __reactDartUseResolvedPath, useRoutes as __reactDartUseRoutes, useNavigation as __reactDartUseNavigation, useRevalidator as __reactDartUseRevalidator, useMatches as __reactDartUseMatches, useLoaderData as __reactDartUseLoaderData, useRouteLoaderData as __reactDartUseRouteLoaderData, useActionData as __reactDartUseActionData, useRouteError as __reactDartUseRouteError, useAsyncValue as __reactDartUseAsyncValue, useAsyncError as __reactDartUseAsyncError, useBlocker as __reactDartUseBlocker, createBrowserRouter as __reactDartCreateBrowserRouter, createHashRouter as __reactDartCreateHashRouter, createMemoryRouter as __reactDartCreateMemoryRouter, createSearchParams as __reactDartCreateSearchParams, createRoutesFromChildren as __reactDartCreateRoutesFromChildren, renderMatches as __reactDartRenderMatches, matchRoutes as __reactDartMatchRoutes, generatePath as __reactDartGeneratePath, matchPath as __reactDartMatchPath, resolvePath as __reactDartResolvePath, isRouteErrorResponse as __reactDartIsRouteErrorResponse, createPath as __reactDartCreatePath, parsePath as __reactDartParsePath } from 'react-router-dom';
 
 const components = {
   'reactRouter.RouterProvider': __reactDartRouterProvider,
@@ -22,7 +22,6 @@ const components = {
   'reactRouter.Router': __reactDartRouter,
   'reactRouter.Routes': __reactDartRoutes,
   'reactRouter.Await': __reactDartAwait,
-  'reactRouter.renderMatches': __reactDartRenderMatches,
 };
 
 for (const [name, component] of Object.entries(components)) {
@@ -72,6 +71,19 @@ const hooks = {
   useAsyncValue: () => __reactDartUseAsyncValue(),
   useAsyncError: () => __reactDartUseAsyncError(),
   useBlocker: (a0) => { const v = __reactDartUseBlocker(a0); return v; },
+  createBrowserRouter: (a0) => __reactDartCreateBrowserRouter(a0),
+  createHashRouter: (a0) => __reactDartCreateHashRouter(a0),
+  createMemoryRouter: (a0) => __reactDartCreateMemoryRouter(a0),
+  createSearchParams: (a0) => __reactDartCreateSearchParams(a0),
+  createRoutesFromChildren: (a0) => __reactDartCreateRoutesFromChildren(a0),
+  renderMatches: (a0) => __reactDartRenderMatches(a0),
+  matchRoutes: (a0) => __reactDartMatchRoutes(a0),
+  generatePath: (a0) => __reactDartGeneratePath(a0),
+  matchPath: (a0) => __reactDartMatchPath(a0),
+  resolvePath: (a0) => __reactDartResolvePath(a0),
+  isRouteErrorResponse: (a0) => __reactDartIsRouteErrorResponse(a0),
+  createPath: (a0) => __reactDartCreatePath(a0),
+  parsePath: (a0) => __reactDartParsePath(a0),
 };
 
 globalThis.__reactDartBindings ??= Object.create(null);
