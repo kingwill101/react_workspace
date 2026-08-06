@@ -140,6 +140,16 @@ JSFunction? _handlerToJs(Object? value) {
 
 dynamic _convert(JSAny? value, String kind) {
   if (value == null || value.isNull || value.isUndefined) return null;
+  if (kind == "promise" && value is JSPromise) {
+    return (value as JSPromise<JSAny?>).toDart;
+  }
+  if (kind == "list" && value is JSArray) {
+    return (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, "wrap")).toList();
+  }
+  if (kind == "map" && value is JSObject) {
+    // record<K,V> → JS object with string keys; best-effort map view.
+    return _wrapObject(value as JSObject);
+  }
   return switch (kind) {
     'bool' => (value as JSBoolean).toDart,
     'int' => (value as JSNumber).toDartInt,
@@ -147,6 +157,9 @@ dynamic _convert(JSAny? value, String kind) {
     'string' => (value as JSString).toDart,
     'void' => null,
     'jsfunction' => value,
+    'promise' => (value is JSPromise ? (value as JSPromise<JSAny?>).toDart : _wrapObject(value as JSObject)),
+    'list' => (value is JSArray ? (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, 'wrap')).toList() : _wrapObject(value as JSObject)),
+    'typedArray' => value,
     _ => value is JSString
         ? (value as JSString).toDart
         : value is JSBoolean
@@ -236,7 +249,7 @@ const Map<String, String> _kinds = {
   'BrowserAudioBuffer.copyFromChannel': 'void',
   'BrowserAudioBuffer.copyToChannel': 'void',
   'BrowserAudioBuffer.duration': 'double',
-  'BrowserAudioBuffer.getChannelData': 'wrap',
+  'BrowserAudioBuffer.getChannelData': 'typedArray',
   'BrowserAudioBuffer.length': 'int',
   'BrowserAudioBuffer.numberOfChannels': 'int',
   'BrowserAudioBuffer.sampleRate': 'double',
@@ -507,8 +520,8 @@ const Map<String, String> _kinds = {
   'BrowserDOMMatrixReadOnly.scaleNonUniform': 'wrap',
   'BrowserDOMMatrixReadOnly.skewX': 'wrap',
   'BrowserDOMMatrixReadOnly.skewY': 'wrap',
-  'BrowserDOMMatrixReadOnly.toFloat32Array': 'wrap',
-  'BrowserDOMMatrixReadOnly.toFloat64Array': 'wrap',
+  'BrowserDOMMatrixReadOnly.toFloat32Array': 'typedArray',
+  'BrowserDOMMatrixReadOnly.toFloat64Array': 'typedArray',
   'BrowserDOMMatrixReadOnly.toJSON': 'wrap',
   'BrowserDOMMatrixReadOnly.transformPoint': 'wrap',
   'BrowserDOMMatrixReadOnly.translate': 'wrap',
@@ -594,7 +607,7 @@ const Map<String, String> _kinds = {
   'BrowserDocument.URL': 'string',
   'BrowserDocument.activeElement': 'wrap',
   'BrowserDocument.adoptNode': 'wrap',
-  'BrowserDocument.adoptedStyleSheets': 'wrap',
+  'BrowserDocument.adoptedStyleSheets': 'list',
   'BrowserDocument.alinkColor': 'string',
   'BrowserDocument.all': 'wrap',
   'BrowserDocument.anchors': 'wrap',
@@ -751,6 +764,7 @@ const Map<String, String> _kinds = {
   'BrowserDocument.onreadystatechange': 'jsfunction',
   'BrowserDocument.onreset': 'jsfunction',
   'BrowserDocument.onresize': 'jsfunction',
+  'BrowserDocument.onresume': 'jsfunction',
   'BrowserDocument.onscroll': 'jsfunction',
   'BrowserDocument.onscrollend': 'jsfunction',
   'BrowserDocument.onsecuritypolicyviolation': 'jsfunction',
@@ -1238,6 +1252,7 @@ const Map<String, String> _kinds = {
   'BrowserHTMLBodyElement.onmessageerror': 'jsfunction',
   'BrowserHTMLBodyElement.onoffline': 'jsfunction',
   'BrowserHTMLBodyElement.ononline': 'jsfunction',
+  'BrowserHTMLBodyElement.onorientationchange': 'jsfunction',
   'BrowserHTMLBodyElement.onpagehide': 'jsfunction',
   'BrowserHTMLBodyElement.onpagereveal': 'jsfunction',
   'BrowserHTMLBodyElement.onpageshow': 'jsfunction',
@@ -1993,7 +2008,7 @@ const Map<String, String> _kinds = {
   'BrowserImageBitmap.height': 'int',
   'BrowserImageBitmap.width': 'int',
   'BrowserImageData.colorSpace': 'wrap',
-  'BrowserImageData.data': 'wrap',
+  'BrowserImageData.data': 'typedArray',
   'BrowserImageData.height': 'int',
   'BrowserImageData.width': 'int',
   'BrowserInputEvent.data': 'string',
@@ -2050,7 +2065,7 @@ const Map<String, String> _kinds = {
   'BrowserLockManager.query': 'wrap',
   'BrowserLockManager.request': 'wrap',
   'BrowserMIDIConnectionEvent.port': 'wrap',
-  'BrowserMIDIMessageEvent.data': 'wrap',
+  'BrowserMIDIMessageEvent.data': 'typedArray',
   'BrowserMIDIPort.close': 'wrap',
   'BrowserMIDIPort.connection': 'wrap',
   'BrowserMIDIPort.id': 'string',
@@ -2287,6 +2302,7 @@ const Map<String, String> _kinds = {
   'BrowserMessageEvent.ports': 'wrap',
   'BrowserMessageEvent.source': 'wrap',
   'BrowserMessagePort.close': 'void',
+  'BrowserMessagePort.onclose': 'jsfunction',
   'BrowserMessagePort.onmessage': 'jsfunction',
   'BrowserMessagePort.onmessageerror': 'jsfunction',
   'BrowserMessagePort.postMessage': 'void',
@@ -2661,7 +2677,9 @@ const Map<String, String> _kinds = {
   'BrowserRTCIceTransport.getRemoteCandidates': 'wrap',
   'BrowserRTCIceTransport.getRemoteParameters': 'wrap',
   'BrowserRTCIceTransport.getSelectedCandidatePair': 'wrap',
+  'BrowserRTCIceTransport.onerror': 'jsfunction',
   'BrowserRTCIceTransport.ongatheringstatechange': 'jsfunction',
+  'BrowserRTCIceTransport.onicecandidate': 'jsfunction',
   'BrowserRTCIceTransport.onselectedcandidatepairchange': 'jsfunction',
   'BrowserRTCIceTransport.onstatechange': 'jsfunction',
   'BrowserRTCIceTransport.role': 'wrap',
@@ -2986,6 +3004,7 @@ const Map<String, String> _kinds = {
   'BrowserSVGAnimationElement.getCurrentTime': 'double',
   'BrowserSVGAnimationElement.getSimpleDuration': 'double',
   'BrowserSVGAnimationElement.getStartTime': 'double',
+  'BrowserSVGAnimationElement.onend': 'jsfunction',
   'BrowserSVGAnimationElement.requiredExtensions': 'wrap',
   'BrowserSVGAnimationElement.systemLanguage': 'wrap',
   'BrowserSVGAnimationElement.targetElement': 'wrap',
@@ -3533,6 +3552,7 @@ const Map<String, String> _kinds = {
   'BrowserScreen.availWidth': 'int',
   'BrowserScreen.colorDepth': 'int',
   'BrowserScreen.height': 'int',
+  'BrowserScreen.onchange': 'jsfunction',
   'BrowserScreen.orientation': 'wrap',
   'BrowserScreen.pixelDepth': 'int',
   'BrowserScreen.width': 'int',
@@ -3592,7 +3612,7 @@ const Map<String, String> _kinds = {
   'BrowserServiceWorkerContainer.register': 'wrap',
   'BrowserServiceWorkerContainer.startMessages': 'void',
   'BrowserShadowRoot.activeElement': 'wrap',
-  'BrowserShadowRoot.adoptedStyleSheets': 'wrap',
+  'BrowserShadowRoot.adoptedStyleSheets': 'list',
   'BrowserShadowRoot.clonable': 'bool',
   'BrowserShadowRoot.delegatesFocus': 'bool',
   'BrowserShadowRoot.fullscreenElement': 'wrap',
@@ -3601,6 +3621,7 @@ const Map<String, String> _kinds = {
   'BrowserShadowRoot.host': 'wrap',
   'BrowserShadowRoot.innerHTML': 'wrap',
   'BrowserShadowRoot.mode': 'wrap',
+  'BrowserShadowRoot.onslotchange': 'jsfunction',
   'BrowserShadowRoot.pictureInPictureElement': 'wrap',
   'BrowserShadowRoot.pointerLockElement': 'wrap',
   'BrowserShadowRoot.serializable': 'bool',
@@ -3752,7 +3773,7 @@ const Map<String, String> _kinds = {
   'BrowserTextDecoderStream.ignoreBOM': 'bool',
   'BrowserTextDecoderStream.readable': 'wrap',
   'BrowserTextDecoderStream.writable': 'wrap',
-  'BrowserTextEncoder.encode': 'wrap',
+  'BrowserTextEncoder.encode': 'typedArray',
   'BrowserTextEncoder.encodeInto': 'wrap',
   'BrowserTextEncoder.encoding': 'string',
   'BrowserTextEncoderStream.encoding': 'string',
@@ -3969,7 +3990,7 @@ const Map<String, String> _kinds = {
   'BrowserVisualViewport.scale': 'double',
   'BrowserVisualViewport.width': 'double',
   'BrowserWakeLock.request': 'wrap',
-  'BrowserWaveShaperNode.curve': 'wrap',
+  'BrowserWaveShaperNode.curve': 'typedArray',
   'BrowserWaveShaperNode.oversample': 'wrap',
   'BrowserWebGLContextEvent.statusMessage': 'string',
   'BrowserWebSocket.binaryType': 'wrap',
@@ -4288,7 +4309,7 @@ const Map<String, String> _kinds = {
   'BrowserXRReferenceSpaceEvent.referenceSpace': 'wrap',
   'BrowserXRReferenceSpaceEvent.transform': 'wrap',
   'BrowserXRRigidTransform.inverse': 'wrap',
-  'BrowserXRRigidTransform.matrix': 'wrap',
+  'BrowserXRRigidTransform.matrix': 'typedArray',
   'BrowserXRRigidTransform.orientation': 'wrap',
   'BrowserXRRigidTransform.position': 'wrap',
   'BrowserXRSessionEvent.session': 'wrap',
@@ -10305,6 +10326,27 @@ final class BrowserWebRuntime implements WebRuntime {
       throw UnsupportedWebApiError('$name constructor');
     }
     return ctor(arguments) as T;
+  }
+  @override
+  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments) {
+    final ns = globalContext.getProperty(namespace.toJS);
+    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("$namespace.$member");
+    final jsArgs = [for (final a in arguments) _toJs(a)];
+    final result = (ns as JSObject).callMethodVarArgs(member.toJS, jsArgs);
+    return _convert(result, "wrap");
+  }
+  @override
+  dynamic getNamespaceProperty(String namespace, String property) {
+    final ns = globalContext.getProperty(namespace.toJS);
+    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("$namespace.$property");
+    final value = (ns as JSObject).getProperty(property.toJS);
+    return _convert(value, "wrap");
+  }
+  @override
+  void setNamespaceProperty(String namespace, String property, Object? value) {
+    final ns = globalContext.getProperty(namespace.toJS);
+    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("$namespace.$property");
+    (ns as JSObject).setProperty(property.toJS, _toJs(value));
   }
 }
 

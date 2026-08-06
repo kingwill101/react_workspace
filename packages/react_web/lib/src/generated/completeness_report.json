@@ -2,13 +2,13 @@
   "sourceRevision": null,
   "definitions": {
     "source": 2167,
-    "emitted": 2167,
-    "opaque": 0,
+    "emitted": 2166,
+    "opaque": 1,
     "dropped": 0
   },
   "members": {
-    "source": 8868,
-    "emitted": 8868,
+    "source": 10395,
+    "emitted": 10395,
     "opaque": 0,
     "dropped": 0
   },
@@ -39,12 +39,14 @@
     },
     "callback": {
       "source": 63,
-      "emitted": 63
+      "emitted": 62
     },
     "callbackInterface": {
       "source": 3,
       "emitted": 3
     }
   },
-  "opaqueLowerings": []
+  "opaqueLowerings": [
+    "callback:Function"
+  ]
 }
