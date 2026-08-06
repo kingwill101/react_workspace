@@ -12,6 +12,7 @@ final class ClientFileEmitter {
     final buffer = StringBuffer();
 
     buffer.writeln('// GENERATED CODE - DO NOT EDIT');
+    buffer.writeln('// ignore_for_file: type=lint');
     buffer.writeln();
     buffer.writeln("import 'package:react_actions/react_actions.dart';");
     final first = models.first;

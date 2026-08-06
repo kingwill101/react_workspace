@@ -1,6 +1,6 @@
 // GENERATED CODE — DO NOT EDIT
 // SSR throwing surface: every live Web API throws at runtime.
-// ignore_for_file: unused_local_variable
+// ignore_for_file: type=lint
 
 import 'package:react_web/src/web_runtime.dart';
 import 'package:react_web/src/generated/web/web.dart';

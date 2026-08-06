@@ -73,6 +73,35 @@ String _memberKey(IdlMember m) {
   };
 }
 
+String _toLowerCamel(String s) {
+  // Convert SCREAMING_SNAKE, snake_case, or PascalCase to lowerCamelCase.
+  // e.g. VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE -> vertexAttribArrayDivisorAngle
+  //      AddSearchProvider -> addSearchProvider
+  //      URL -> url
+  //      is_search_provider_installed -> isSearchProviderInstalled
+  if (s.isEmpty) return s;
+  // Normalize separators to _
+  var normalized = s.replaceAll('-', '_').replaceAll(' ', '_').replaceAll('.', '_').replaceAll('#', '_');
+  // Split by _ and also handle when no _ but has mixed case like AddSearchProvider
+  // For single segment without _, just lower first char
+  if (!normalized.contains('_')) {
+    // Handle all-caps like URL -> url
+    if (normalized == normalized.toUpperCase() && normalized.length > 1) {
+      return normalized.toLowerCase();
+    }
+    // PascalCase -> lowerCamelCase: lower first char
+    return normalized[0].toLowerCase() + normalized.substring(1);
+  }
+  final parts = normalized.split('_').where((p) => p.isNotEmpty).toList();
+  if (parts.isEmpty) return '_';
+  final first = parts.first.toLowerCase();
+  final rest = parts.skip(1).map((p) {
+    final lower = p.toLowerCase();
+    return lower[0].toUpperCase() + lower.substring(1);
+  }).join();
+  return '$first$rest';
+}
+
 String escapeIdentifier(String name) {
   var s = name
       .replaceAll('-', '_')
@@ -81,8 +110,21 @@ String escapeIdentifier(String name) {
       .replaceAll('#', '_');
   if (s.isEmpty) s = '_';
   if (RegExp(r'^[0-9]').hasMatch(s)) s = '_$s';
+  // Convert to lowerCamelCase for Dart style
+  s = _toLowerCamel(s);
   if (_keywords.contains(s)) return '${s}_';
   return s;
+}
+
+String toUpperCamelCase(String s) {
+  if (s.isEmpty) return s;
+  var normalized = s.replaceAll('-', '_').replaceAll(' ', '_').replaceAll('.', '_').replaceAll('#', '_');
+  final parts = normalized.split('_').where((p) => p.isNotEmpty).toList();
+  if (parts.isEmpty) return '_';
+  return parts.map((p) {
+    final lower = p.toLowerCase();
+    return lower[0].toUpperCase() + lower.substring(1);
+  }).join();
 }
 
 const _keywords = <String>{

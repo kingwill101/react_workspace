@@ -9,6 +9,7 @@ library;
 import 'dart:io';
 
 import '../definition.dart';
+import '../members.dart';
 import '../member.dart';
 import '../members.dart';
 import '../model.dart';
@@ -24,7 +25,7 @@ final class SsrSurfaceEmitter {
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
     buf.writeln('// SSR throwing surface: every live Web API throws at runtime.');
-    buf.writeln('// ignore_for_file: unused_local_variable');
+    buf.writeln('// ignore_for_file: type=lint');
     buf.writeln();
     buf.writeln("import 'package:react_web/src/web_runtime.dart';");
     buf.writeln("import 'package:react_web/src/generated/web/web.dart';", );
@@ -75,8 +76,9 @@ final class SsrSurfaceEmitter {
 
   void _emitSsrClass(StringBuffer buf, IdlInterface d) {
     final name = d.name;
+    final dartName = 'Ssr${toUpperCamelCase(name)}';
     final exposed = _exposed(d);
-    buf.writeln('final class Ssr$name implements $name {');
+    buf.writeln('final class $dartName implements $name {');
 
     // Constructors.
     final ctors = d.members.whereType<IdlConstructor>().toList();
@@ -85,9 +87,9 @@ final class SsrSurfaceEmitter {
       for (final c in ctors) {
         final params = _factoryParams(c.parameters);
         if (i == 0) {
-          buf.writeln('  factory Ssr$name($params) {');
+          buf.writeln('  factory $dartName($params) {');
         } else {
-          buf.writeln('  factory Ssr$name.named$i($params) {');
+          buf.writeln('  factory $dartName.named$i($params) {');
         }
         buf.writeln("    throw UnsupportedWebApiError('$name constructor'");
         if (exposed != null) {
@@ -98,7 +100,7 @@ final class SsrSurfaceEmitter {
         i++;
       }
     } else {
-      buf.writeln('  factory Ssr$name() {');
+      buf.writeln('  factory $dartName() {');
       buf.writeln("    throw UnsupportedWebApiError('$name constructor'");
       if (exposed != null) {
         buf.writeln("      , exposed: '$exposed'");

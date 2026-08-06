@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 
 import 'package:react_server/react_server.dart';
 import 'package:example/todos/todos_actions.registry.g.dart' as serverActions0;

@@ -103,6 +103,7 @@ class AggregateBuilder implements Builder {
 
     final buf = StringBuffer()
       ..writeln('// GENERATED CODE — DO NOT EDIT')
+      ..writeln('// ignore_for_file: type=lint')
       ..writeln()
       ..writeln("import 'package:react_server/react_server.dart';");
     for (final imp in imports) {
@@ -138,6 +139,7 @@ class AggregateBuilder implements Builder {
   ) async {
     final buf = StringBuffer()
       ..writeln('// GENERATED CODE — DO NOT EDIT')
+      ..writeln('// ignore_for_file: type=lint')
       ..writeln();
     for (final imp in imports) {
       buf.writeln(imp);
@@ -168,6 +170,7 @@ class AggregateBuilder implements Builder {
   ) async {
     final buf = StringBuffer()
       ..writeln('// GENERATED CODE — DO NOT EDIT')
+      ..writeln('// ignore_for_file: type=lint')
       ..writeln();
     buf.writeln("import 'package:react/react.dart';");
     for (final imp in idImports) {

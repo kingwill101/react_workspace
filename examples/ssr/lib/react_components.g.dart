@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 
 import 'package:example/about_page.react.g.dart' as aboutPage;
 import 'package:example/app.react.g.dart' as app;

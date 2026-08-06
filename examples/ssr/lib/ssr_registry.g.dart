@@ -1,4 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
+// ignore_for_file: type=lint
 
 import 'package:react/react.dart';
 import 'package:example/about_page.react.dart' show idAboutPage;

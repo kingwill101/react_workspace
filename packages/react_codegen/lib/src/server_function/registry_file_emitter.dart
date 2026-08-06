@@ -12,6 +12,7 @@ final class RegistryFileEmitter {
     final buffer = StringBuffer();
 
     buffer.writeln('// GENERATED CODE - DO NOT EDIT');
+    buffer.writeln('// ignore_for_file: type=lint');
     buffer.writeln();
     buffer.writeln("import 'package:react_server/react_server.dart';");
     buffer.writeln();
