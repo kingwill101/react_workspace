@@ -1,5 +1,4 @@
 name: {{ name }}
-resolution: workspace
 description: A React Dart application (client-only).
 publish_to: none
 
@@ -17,4 +16,16 @@ dev_dependencies:
   build_runner: ^2.15.3
   react_codegen: {path: {{ packagesPath }}/react_codegen}
   react_tool: {path: {{ packagesPath }}/react_tool}
+  react_testing: {path: {{ packagesPath }}/react_testing}
   lints: ^6.1.0
+  test: ^1.31.2
+  server_testing: 0.4.0
+  server_testing_shelf: 0.4.0
+
+dependency_overrides:
+  react: {path: {{ packagesPath }}/react}
+  react_js: {path: {{ packagesPath }}/react_js}
+  react_dom: {path: {{ packagesPath }}/react_dom}
+  react_web: {path: {{ packagesPath }}/react_web}
+  react_actions: {path: {{ packagesPath }}/react_actions}
+  react_testing: {path: {{ packagesPath }}/react_testing}

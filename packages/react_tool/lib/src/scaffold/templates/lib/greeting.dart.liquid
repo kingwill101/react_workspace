@@ -3,6 +3,12 @@ import 'package:react_server/react_server.dart';
 
 /// A server function: the implementation runs only on the server, invoked
 /// from the browser through the generated client in `greeting.client.g.dart`.
+///
+/// The manual `greetRef` below lets `test/greeting_test.dart` run with
+/// `ServerFunctionHarness` immediately after `dart pub get` without first
+/// running `dart run build_runner build`. The generated
+/// `greeting.g.dart`/`greeting.client.g.dart` will replace/augment this
+/// when you run codegen.
 @serverFunction
 Future<String> greet(
   ServerFunctionContext context, {
@@ -13,3 +19,32 @@ Future<String> greet(
   return 'Hello, $name! The server answered at '
       '${DateTime.now().toIso8601String()}.';
 }
+
+// Manual codecs + ref so tests work without codegen.
+// After codegen, `greeting.g.dart` provides the canonical versions; this
+// stub keeps the starter green before the first build.
+class _GreetArgsCodec extends ServerFunctionJsonCodec<({String name})> {
+  @override
+  dynamic encode(({String name}) value) => {'name': value.name};
+
+  @override
+  ({String name}) decode(dynamic json) {
+    final map = json as Map;
+    return (name: map['name'] as String);
+  }
+}
+
+class _GreetResultCodec extends ServerFunctionJsonCodec<String> {
+  @override
+  dynamic encode(String value) => value;
+
+  @override
+  String decode(dynamic json) => json as String;
+}
+
+final greetRef = ServerFunctionRef<({String name}), String>(
+  id: ServerFunctionId('greet'),
+  contractHash: 'starter-greet-v1',
+  argumentsCodec: _GreetArgsCodec(),
+  resultCodec: _GreetResultCodec(),
+);

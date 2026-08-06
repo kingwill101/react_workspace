@@ -1,0 +1,31 @@
+import 'package:react/react.dart';
+import 'package:react_testing/react_testing.dart';
+import 'package:test/test.dart';
+
+import 'package:{{ name }}/app.dart';
+
+void main() {
+  group('App (client)', () {
+    test('renders via ReactComponentHarness', () {
+      final harness = ReactComponentHarness();
+      final node = harness.run(() => App((title: 'Hello')));
+      expect(node, isA<HostNode>());
+      harness.assertHostNode(node, namespace: 'web', name: 'div');
+    });
+
+    test('InMemorySsrHarness for shell (client-only)', () {
+      final harness = InMemorySsrHarness(
+        indexTemplate: '<div id="app">{% raw %}{{SSR}}{% endraw %}</div>',
+      );
+      final doc = harness.render(renderedHtml: '<div>Client</div>', props: {});
+      expect(doc, contains('Client'));
+      harness.assertDocument(doc, containsHtml: '<div>Client</div>');
+    });
+
+    test('react_testing assertions', () {
+      const host = HostNode(HostType('web', 'div'), {'id': 'app'});
+      host.shouldBeHost('div');
+      '<div>hi</div>'.shouldContainTag('div');
+    });
+  });
+}

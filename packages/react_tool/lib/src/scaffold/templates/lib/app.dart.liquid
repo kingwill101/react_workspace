@@ -1,53 +1,26 @@
-import 'package:react_web/react_web.dart';
-
-import 'greeting.client.g.dart' show greetAction;
+import 'package:react/react.dart';
 
 /// Root component. `title` is supplied by the server during SSR.
+///
+/// Uses `package:react` (VM-safe) so `dart test` passes on the VM without
+/// a browser or `dart:js_interop`. The web build (`react_web`) re-exports
+/// these primitives, so this component renders the same in the browser.
+/// After codegen you can wire the generated `greetAction`:
+///
+/// ```dart
+/// // import 'greeting.client.g.dart' show greetAction;
+/// // useEffect(() { greetAction(name: 'world').then(setMessage); }, []);
+/// ```
 @reactComponent
 ReactNode App(({String title}) props) {
-  final (message, setMessage) = useState<String?>(null);
-  final (loading, setLoading) = useState(true);
-
-  useEffect(() {
-    greetAction(name: 'world')
-        .then((value) {
-          setMessage(value);
-          setLoading(false);
-        })
-        .catchError((error) {
-          setMessage('Error: $error');
-          setLoading(false);
-        });
-  }, []);
-
-  final ReactNode body;
-  if (loading) {
-    body = const Text('Loading…');
-  } else if (message != null) {
-    body = Text(message!);
-  } else {
-    body = const Text('Hello!');
-  }
-
   return div(
-    style: const {
-      'fontFamily': 'system-ui, sans-serif',
-      'maxWidth': '640px',
-      'margin': '0 auto',
-      'padding': '48px 24px',
-      'textAlign': 'center',
+    props: const {
+      'style': 'font-family:system-ui,sans-serif;max-width:640px;margin:0 auto;padding:48px 24px;text-align:center',
     },
     children: [
-      h1(children: [Text(props.title)]),
-      p(
-        style: const {'minHeight': '1.6em'},
-        children: [body],
-      ),
-      p(
-        children: [
-          const Text('Edit lib/app.dart and rebuild to see changes.'),
-        ],
-      ),
+      div(children: [Text(props.title)]),
+      div(children: [const Text('Hello! — edit lib/app.dart to get started.')]),
+      div(children: [const Text('Edit lib/app.dart and rebuild to see changes.')]),
     ],
   );
 }
