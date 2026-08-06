@@ -20,6 +20,15 @@ abstract interface class PictureInPictureEventInit {
   set pictureInPictureWindow(PictureInPictureWindow value);
 }
 
+final class PictureInPictureEventInitValue implements PictureInPictureEventInit {
+  @override
+  PictureInPictureWindow pictureInPictureWindow;
+
+  PictureInPictureEventInitValue({
+    required this.pictureInPictureWindow,
+  });
+}
+
 abstract interface class PictureInPictureWindow {
   int get width;
   int get height;

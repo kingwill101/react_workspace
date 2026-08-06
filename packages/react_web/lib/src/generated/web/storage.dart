@@ -9,9 +9,21 @@ abstract interface class NavigatorStorage {
 }
 
 abstract interface class StorageEstimate {
-  int get usage;
-  set usage(int value);
-  int get quota;
-  set quota(int value);
+  int? get usage;
+  set usage(int? value);
+  int? get quota;
+  set quota(int? value);
+}
+
+final class StorageEstimateValue implements StorageEstimate {
+  @override
+  int? usage;
+  @override
+  int? quota;
+
+  StorageEstimateValue({
+    this.usage,
+    this.quota,
+  });
 }
 

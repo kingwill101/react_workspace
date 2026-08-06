@@ -18,30 +18,78 @@ typedef AnimationReplaceState = String;
 abstract interface class BaseComputedKeyframe {
   double? get offset;
   set offset(double? value);
-  double get computedOffset;
-  set computedOffset(double value);
-  String get easing;
-  set easing(String value);
-  CompositeOperationOrAuto get composite;
-  set composite(CompositeOperationOrAuto value);
+  double? get computedOffset;
+  set computedOffset(double? value);
+  String? get easing;
+  set easing(String? value);
+  CompositeOperationOrAuto? get composite;
+  set composite(CompositeOperationOrAuto? value);
+}
+
+final class BaseComputedKeyframeValue implements BaseComputedKeyframe {
+  @override
+  double? offset;
+  @override
+  double? computedOffset;
+  @override
+  String? easing;
+  @override
+  CompositeOperationOrAuto? composite;
+
+  BaseComputedKeyframeValue({
+    this.offset,
+    this.computedOffset,
+    this.easing,
+    this.composite,
+  });
 }
 
 abstract interface class BaseKeyframe {
   double? get offset;
   set offset(double? value);
-  String get easing;
-  set easing(String value);
-  CompositeOperationOrAuto get composite;
-  set composite(CompositeOperationOrAuto value);
+  String? get easing;
+  set easing(String? value);
+  CompositeOperationOrAuto? get composite;
+  set composite(CompositeOperationOrAuto? value);
+}
+
+final class BaseKeyframeValue implements BaseKeyframe {
+  @override
+  double? offset;
+  @override
+  String? easing;
+  @override
+  CompositeOperationOrAuto? composite;
+
+  BaseKeyframeValue({
+    this.offset,
+    this.easing,
+    this.composite,
+  });
 }
 
 abstract interface class BasePropertyIndexedKeyframe {
-  Object get offset;
-  set offset(Object value);
-  Object get easing;
-  set easing(Object value);
-  Object get composite;
-  set composite(Object value);
+  Object? get offset;
+  set offset(Object? value);
+  Object? get easing;
+  set easing(Object? value);
+  Object? get composite;
+  set composite(Object? value);
+}
+
+final class BasePropertyIndexedKeyframeValue implements BasePropertyIndexedKeyframe {
+  @override
+  Object? offset;
+  @override
+  Object? easing;
+  @override
+  Object? composite;
+
+  BasePropertyIndexedKeyframeValue({
+    this.offset,
+    this.easing,
+    this.composite,
+  });
 }
 
 typedef CompositeOperation = String;
@@ -57,15 +105,33 @@ abstract interface class DocumentTimeline {
 }
 
 abstract interface class DocumentTimelineOptions {
-  DOMHighResTimeStamp get originTime;
-  set originTime(DOMHighResTimeStamp value);
+  DOMHighResTimeStamp? get originTime;
+  set originTime(DOMHighResTimeStamp? value);
+}
+
+final class DocumentTimelineOptionsValue implements DocumentTimelineOptions {
+  @override
+  DOMHighResTimeStamp? originTime;
+
+  DocumentTimelineOptionsValue({
+    this.originTime,
+  });
 }
 
 typedef FillMode = String;
 
 abstract interface class GetAnimationsOptions {
-  bool get subtree;
-  set subtree(bool value);
+  bool? get subtree;
+  set subtree(bool? value);
+}
+
+final class GetAnimationsOptionsValue implements GetAnimationsOptions {
+  @override
+  bool? subtree;
+
+  GetAnimationsOptionsValue({
+    this.subtree,
+  });
 }
 
 typedef PlaybackDirection = String;

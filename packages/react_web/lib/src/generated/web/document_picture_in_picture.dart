@@ -10,12 +10,36 @@ abstract interface class DocumentPictureInPictureEventInit {
   set window(Window value);
 }
 
+final class DocumentPictureInPictureEventInitValue implements DocumentPictureInPictureEventInit {
+  @override
+  Window window;
+
+  DocumentPictureInPictureEventInitValue({
+    required this.window,
+  });
+}
+
 abstract interface class DocumentPictureInPictureOptions {
-  int get width;
-  set width(int value);
-  int get height;
-  set height(int value);
-  bool get disallowReturnToOpener;
-  set disallowReturnToOpener(bool value);
+  int? get width;
+  set width(int? value);
+  int? get height;
+  set height(int? value);
+  bool? get disallowReturnToOpener;
+  set disallowReturnToOpener(bool? value);
+}
+
+final class DocumentPictureInPictureOptionsValue implements DocumentPictureInPictureOptions {
+  @override
+  int? width;
+  @override
+  int? height;
+  @override
+  bool? disallowReturnToOpener;
+
+  DocumentPictureInPictureOptionsValue({
+    this.width,
+    this.height,
+    this.disallowReturnToOpener,
+  });
 }
 

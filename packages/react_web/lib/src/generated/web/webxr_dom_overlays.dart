@@ -9,9 +9,27 @@ abstract interface class XRDOMOverlayInit {
   set root(Element value);
 }
 
+final class XRDOMOverlayInitValue implements XRDOMOverlayInit {
+  @override
+  Element root;
+
+  XRDOMOverlayInitValue({
+    required this.root,
+  });
+}
+
 abstract interface class XRDOMOverlayState {
-  XRDOMOverlayType get type;
-  set type(XRDOMOverlayType value);
+  XRDOMOverlayType? get type;
+  set type(XRDOMOverlayType? value);
+}
+
+final class XRDOMOverlayStateValue implements XRDOMOverlayState {
+  @override
+  XRDOMOverlayType? type;
+
+  XRDOMOverlayStateValue({
+    this.type,
+  });
 }
 
 typedef XRDOMOverlayType = String;

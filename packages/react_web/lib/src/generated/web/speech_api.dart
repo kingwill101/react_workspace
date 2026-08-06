@@ -69,8 +69,20 @@ abstract interface class SpeechRecognitionErrorEvent {
 abstract interface class SpeechRecognitionErrorEventInit {
   SpeechRecognitionErrorCode get error;
   set error(SpeechRecognitionErrorCode value);
-  String get message;
-  set message(String value);
+  String? get message;
+  set message(String? value);
+}
+
+final class SpeechRecognitionErrorEventInitValue implements SpeechRecognitionErrorEventInit {
+  @override
+  SpeechRecognitionErrorCode error;
+  @override
+  String? message;
+
+  SpeechRecognitionErrorEventInitValue({
+    required this.error,
+    this.message,
+  });
 }
 
 abstract interface class SpeechRecognitionEvent {
@@ -84,10 +96,22 @@ abstract interface class SpeechRecognitionEvent {
 }
 
 abstract interface class SpeechRecognitionEventInit {
-  int get resultIndex;
-  set resultIndex(int value);
+  int? get resultIndex;
+  set resultIndex(int? value);
   SpeechRecognitionResultList get results;
   set results(SpeechRecognitionResultList value);
+}
+
+final class SpeechRecognitionEventInitValue implements SpeechRecognitionEventInit {
+  @override
+  int? resultIndex;
+  @override
+  SpeechRecognitionResultList results;
+
+  SpeechRecognitionEventInitValue({
+    this.resultIndex,
+    required this.results,
+  });
 }
 
 abstract interface class SpeechRecognitionResult {
@@ -130,6 +154,15 @@ abstract interface class SpeechSynthesisErrorEventInit {
   set error(SpeechSynthesisErrorCode value);
 }
 
+final class SpeechSynthesisErrorEventInitValue implements SpeechSynthesisErrorEventInit {
+  @override
+  SpeechSynthesisErrorCode error;
+
+  SpeechSynthesisErrorEventInitValue({
+    required this.error,
+  });
+}
+
 abstract interface class SpeechSynthesisEvent {
   factory SpeechSynthesisEvent(String type, SpeechSynthesisEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<SpeechSynthesisEvent>(
@@ -146,14 +179,35 @@ abstract interface class SpeechSynthesisEvent {
 abstract interface class SpeechSynthesisEventInit {
   SpeechSynthesisUtterance get utterance;
   set utterance(SpeechSynthesisUtterance value);
-  int get charIndex;
-  set charIndex(int value);
-  int get charLength;
-  set charLength(int value);
-  double get elapsedTime;
-  set elapsedTime(double value);
-  String get name;
-  set name(String value);
+  int? get charIndex;
+  set charIndex(int? value);
+  int? get charLength;
+  set charLength(int? value);
+  double? get elapsedTime;
+  set elapsedTime(double? value);
+  String? get name;
+  set name(String? value);
+}
+
+final class SpeechSynthesisEventInitValue implements SpeechSynthesisEventInit {
+  @override
+  SpeechSynthesisUtterance utterance;
+  @override
+  int? charIndex;
+  @override
+  int? charLength;
+  @override
+  double? elapsedTime;
+  @override
+  String? name;
+
+  SpeechSynthesisEventInitValue({
+    required this.utterance,
+    this.charIndex,
+    this.charLength,
+    this.elapsedTime,
+    this.name,
+  });
 }
 
 abstract interface class SpeechSynthesisUtterance {

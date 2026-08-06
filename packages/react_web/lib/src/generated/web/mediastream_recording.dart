@@ -23,8 +23,20 @@ abstract interface class BlobEvent {
 abstract interface class BlobEventInit {
   Blob get data;
   set data(Blob value);
-  DOMHighResTimeStamp get timecode;
-  set timecode(DOMHighResTimeStamp value);
+  DOMHighResTimeStamp? get timecode;
+  set timecode(DOMHighResTimeStamp? value);
+}
+
+final class BlobEventInitValue implements BlobEventInit {
+  @override
+  Blob data;
+  @override
+  DOMHighResTimeStamp? timecode;
+
+  BlobEventInitValue({
+    required this.data,
+    this.timecode,
+  });
 }
 
 abstract interface class MediaRecorder {
@@ -58,20 +70,47 @@ abstract interface class MediaRecorder {
 }
 
 abstract interface class MediaRecorderOptions {
-  String get mimeType;
-  set mimeType(String value);
-  int get audioBitsPerSecond;
-  set audioBitsPerSecond(int value);
-  int get videoBitsPerSecond;
-  set videoBitsPerSecond(int value);
-  int get bitsPerSecond;
-  set bitsPerSecond(int value);
-  BitrateMode get audioBitrateMode;
-  set audioBitrateMode(BitrateMode value);
-  DOMHighResTimeStamp get videoKeyFrameIntervalDuration;
-  set videoKeyFrameIntervalDuration(DOMHighResTimeStamp value);
-  int get videoKeyFrameIntervalCount;
-  set videoKeyFrameIntervalCount(int value);
+  String? get mimeType;
+  set mimeType(String? value);
+  int? get audioBitsPerSecond;
+  set audioBitsPerSecond(int? value);
+  int? get videoBitsPerSecond;
+  set videoBitsPerSecond(int? value);
+  int? get bitsPerSecond;
+  set bitsPerSecond(int? value);
+  BitrateMode? get audioBitrateMode;
+  set audioBitrateMode(BitrateMode? value);
+  DOMHighResTimeStamp? get videoKeyFrameIntervalDuration;
+  set videoKeyFrameIntervalDuration(DOMHighResTimeStamp? value);
+  int? get videoKeyFrameIntervalCount;
+  set videoKeyFrameIntervalCount(int? value);
+}
+
+final class MediaRecorderOptionsValue implements MediaRecorderOptions {
+  @override
+  String? mimeType;
+  @override
+  int? audioBitsPerSecond;
+  @override
+  int? videoBitsPerSecond;
+  @override
+  int? bitsPerSecond;
+  @override
+  BitrateMode? audioBitrateMode;
+  @override
+  DOMHighResTimeStamp? videoKeyFrameIntervalDuration;
+  @override
+  int? videoKeyFrameIntervalCount;
+
+  MediaRecorderOptionsValue({
+    this.mimeType,
+    this.audioBitsPerSecond,
+    this.videoBitsPerSecond,
+    this.bitsPerSecond,
+    this.audioBitrateMode,
+    this.videoKeyFrameIntervalDuration,
+    this.videoKeyFrameIntervalCount,
+  });
 }
 
 typedef RecordingState = String;

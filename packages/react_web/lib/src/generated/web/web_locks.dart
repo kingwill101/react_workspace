@@ -12,12 +12,27 @@ abstract interface class Lock {
 typedef LockGrantedCallback = Future<Object> Function(Lock? lock,);
 
 abstract interface class LockInfo {
-  String get name;
-  set name(String value);
-  LockMode get mode;
-  set mode(LockMode value);
-  String get clientId;
-  set clientId(String value);
+  String? get name;
+  set name(String? value);
+  LockMode? get mode;
+  set mode(LockMode? value);
+  String? get clientId;
+  set clientId(String? value);
+}
+
+final class LockInfoValue implements LockInfo {
+  @override
+  String? name;
+  @override
+  LockMode? mode;
+  @override
+  String? clientId;
+
+  LockInfoValue({
+    this.name,
+    this.mode,
+    this.clientId,
+  });
 }
 
 abstract interface class LockManager {
@@ -26,23 +41,53 @@ abstract interface class LockManager {
 }
 
 abstract interface class LockManagerSnapshot {
-  List<LockInfo> get held;
-  set held(List<LockInfo> value);
-  List<LockInfo> get pending;
-  set pending(List<LockInfo> value);
+  List<LockInfo>? get held;
+  set held(List<LockInfo>? value);
+  List<LockInfo>? get pending;
+  set pending(List<LockInfo>? value);
+}
+
+final class LockManagerSnapshotValue implements LockManagerSnapshot {
+  @override
+  List<LockInfo>? held;
+  @override
+  List<LockInfo>? pending;
+
+  LockManagerSnapshotValue({
+    this.held,
+    this.pending,
+  });
 }
 
 typedef LockMode = String;
 
 abstract interface class LockOptions {
-  LockMode get mode;
-  set mode(LockMode value);
-  bool get ifAvailable;
-  set ifAvailable(bool value);
-  bool get steal;
-  set steal(bool value);
-  AbortSignal get signal;
-  set signal(AbortSignal value);
+  LockMode? get mode;
+  set mode(LockMode? value);
+  bool? get ifAvailable;
+  set ifAvailable(bool? value);
+  bool? get steal;
+  set steal(bool? value);
+  AbortSignal? get signal;
+  set signal(AbortSignal? value);
+}
+
+final class LockOptionsValue implements LockOptions {
+  @override
+  LockMode? mode;
+  @override
+  bool? ifAvailable;
+  @override
+  bool? steal;
+  @override
+  AbortSignal? signal;
+
+  LockOptionsValue({
+    this.mode,
+    this.ifAvailable,
+    this.steal,
+    this.signal,
+  });
 }
 
 abstract interface class NavigatorLocks {

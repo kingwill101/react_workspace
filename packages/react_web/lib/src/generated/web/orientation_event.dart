@@ -32,15 +32,48 @@ abstract interface class DeviceMotionEventAccelerationInit {
   set z(double? value);
 }
 
+final class DeviceMotionEventAccelerationInitValue implements DeviceMotionEventAccelerationInit {
+  @override
+  double? x;
+  @override
+  double? y;
+  @override
+  double? z;
+
+  DeviceMotionEventAccelerationInitValue({
+    this.x,
+    this.y,
+    this.z,
+  });
+}
+
 abstract interface class DeviceMotionEventInit {
-  DeviceMotionEventAccelerationInit get acceleration;
-  set acceleration(DeviceMotionEventAccelerationInit value);
-  DeviceMotionEventAccelerationInit get accelerationIncludingGravity;
-  set accelerationIncludingGravity(DeviceMotionEventAccelerationInit value);
-  DeviceMotionEventRotationRateInit get rotationRate;
-  set rotationRate(DeviceMotionEventRotationRateInit value);
-  double get interval;
-  set interval(double value);
+  DeviceMotionEventAccelerationInit? get acceleration;
+  set acceleration(DeviceMotionEventAccelerationInit? value);
+  DeviceMotionEventAccelerationInit? get accelerationIncludingGravity;
+  set accelerationIncludingGravity(DeviceMotionEventAccelerationInit? value);
+  DeviceMotionEventRotationRateInit? get rotationRate;
+  set rotationRate(DeviceMotionEventRotationRateInit? value);
+  double? get interval;
+  set interval(double? value);
+}
+
+final class DeviceMotionEventInitValue implements DeviceMotionEventInit {
+  @override
+  DeviceMotionEventAccelerationInit? acceleration;
+  @override
+  DeviceMotionEventAccelerationInit? accelerationIncludingGravity;
+  @override
+  DeviceMotionEventRotationRateInit? rotationRate;
+  @override
+  double? interval;
+
+  DeviceMotionEventInitValue({
+    this.acceleration,
+    this.accelerationIncludingGravity,
+    this.rotationRate,
+    this.interval,
+  });
 }
 
 abstract interface class DeviceMotionEventRotationRate {
@@ -56,6 +89,21 @@ abstract interface class DeviceMotionEventRotationRateInit {
   set beta(double? value);
   double? get gamma;
   set gamma(double? value);
+}
+
+final class DeviceMotionEventRotationRateInitValue implements DeviceMotionEventRotationRateInit {
+  @override
+  double? alpha;
+  @override
+  double? beta;
+  @override
+  double? gamma;
+
+  DeviceMotionEventRotationRateInitValue({
+    this.alpha,
+    this.beta,
+    this.gamma,
+  });
 }
 
 abstract interface class DeviceOrientationEvent {
@@ -77,7 +125,25 @@ abstract interface class DeviceOrientationEventInit {
   set beta(double? value);
   double? get gamma;
   set gamma(double? value);
-  bool get absolute;
-  set absolute(bool value);
+  bool? get absolute;
+  set absolute(bool? value);
+}
+
+final class DeviceOrientationEventInitValue implements DeviceOrientationEventInit {
+  @override
+  double? alpha;
+  @override
+  double? beta;
+  @override
+  double? gamma;
+  @override
+  bool? absolute;
+
+  DeviceOrientationEventInitValue({
+    this.alpha,
+    this.beta,
+    this.gamma,
+    this.absolute,
+  });
 }
 

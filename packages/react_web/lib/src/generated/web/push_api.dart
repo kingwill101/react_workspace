@@ -21,8 +21,17 @@ abstract interface class PushEvent {
 }
 
 abstract interface class PushEventInit {
-  PushMessageDataInit get data;
-  set data(PushMessageDataInit value);
+  PushMessageDataInit? get data;
+  set data(PushMessageDataInit? value);
+}
+
+final class PushEventInitValue implements PushEventInit {
+  @override
+  PushMessageDataInit? data;
+
+  PushEventInitValue({
+    this.data,
+  });
 }
 
 abstract interface class PushManager {
@@ -41,8 +50,17 @@ abstract interface class PushMessageData {
 typedef PushMessageDataInit = Object;
 
 abstract interface class PushPermissionDescriptor {
-  bool get userVisibleOnly;
-  set userVisibleOnly(bool value);
+  bool? get userVisibleOnly;
+  set userVisibleOnly(bool? value);
+}
+
+final class PushPermissionDescriptorValue implements PushPermissionDescriptor {
+  @override
+  bool? userVisibleOnly;
+
+  PushPermissionDescriptorValue({
+    this.userVisibleOnly,
+  });
 }
 
 abstract interface class PushSubscription {
@@ -65,19 +83,46 @@ abstract interface class PushSubscriptionChangeEvent {
 }
 
 abstract interface class PushSubscriptionChangeEventInit {
-  PushSubscription get newSubscription;
-  set newSubscription(PushSubscription value);
-  PushSubscription get oldSubscription;
-  set oldSubscription(PushSubscription value);
+  PushSubscription? get newSubscription;
+  set newSubscription(PushSubscription? value);
+  PushSubscription? get oldSubscription;
+  set oldSubscription(PushSubscription? value);
+}
+
+final class PushSubscriptionChangeEventInitValue implements PushSubscriptionChangeEventInit {
+  @override
+  PushSubscription? newSubscription;
+  @override
+  PushSubscription? oldSubscription;
+
+  PushSubscriptionChangeEventInitValue({
+    this.newSubscription,
+    this.oldSubscription,
+  });
 }
 
 abstract interface class PushSubscriptionJSON {
-  String get endpoint;
-  set endpoint(String value);
+  String? get endpoint;
+  set endpoint(String? value);
   EpochTimeStamp? get expirationTime;
   set expirationTime(EpochTimeStamp? value);
-  Map<String, String> get keys;
-  set keys(Map<String, String> value);
+  Map<String, String>? get keys;
+  set keys(Map<String, String>? value);
+}
+
+final class PushSubscriptionJSONValue implements PushSubscriptionJSON {
+  @override
+  String? endpoint;
+  @override
+  EpochTimeStamp? expirationTime;
+  @override
+  Map<String, String>? keys;
+
+  PushSubscriptionJSONValue({
+    this.endpoint,
+    this.expirationTime,
+    this.keys,
+  });
 }
 
 abstract interface class PushSubscriptionOptions {
@@ -86,9 +131,21 @@ abstract interface class PushSubscriptionOptions {
 }
 
 abstract interface class PushSubscriptionOptionsInit {
-  bool get userVisibleOnly;
-  set userVisibleOnly(bool value);
-  Object get applicationServerKey;
-  set applicationServerKey(Object value);
+  bool? get userVisibleOnly;
+  set userVisibleOnly(bool? value);
+  Object? get applicationServerKey;
+  set applicationServerKey(Object? value);
+}
+
+final class PushSubscriptionOptionsInitValue implements PushSubscriptionOptionsInit {
+  @override
+  bool? userVisibleOnly;
+  @override
+  Object? applicationServerKey;
+
+  PushSubscriptionOptionsInitValue({
+    this.userVisibleOnly,
+    this.applicationServerKey,
+  });
 }
 

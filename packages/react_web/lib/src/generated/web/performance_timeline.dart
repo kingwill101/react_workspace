@@ -30,8 +30,17 @@ abstract interface class PerformanceObserver {
 typedef PerformanceObserverCallback = void Function(PerformanceObserverEntryList entries, PerformanceObserver observer, PerformanceObserverCallbackOptions options,);
 
 abstract interface class PerformanceObserverCallbackOptions {
-  int get droppedEntriesCount;
-  set droppedEntriesCount(int value);
+  int? get droppedEntriesCount;
+  set droppedEntriesCount(int? value);
+}
+
+final class PerformanceObserverCallbackOptionsValue implements PerformanceObserverCallbackOptions {
+  @override
+  int? droppedEntriesCount;
+
+  PerformanceObserverCallbackOptionsValue({
+    this.droppedEntriesCount,
+  });
 }
 
 abstract interface class PerformanceObserverEntryList {

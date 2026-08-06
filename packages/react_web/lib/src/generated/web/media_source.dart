@@ -10,10 +10,22 @@ import 'package:react_web/src/web_runtime.dart';
 typedef AppendMode = String;
 
 abstract interface class BufferedChangeEventInit {
-  TimeRanges get addedRanges;
-  set addedRanges(TimeRanges value);
-  TimeRanges get removedRanges;
-  set removedRanges(TimeRanges value);
+  TimeRanges? get addedRanges;
+  set addedRanges(TimeRanges? value);
+  TimeRanges? get removedRanges;
+  set removedRanges(TimeRanges? value);
+}
+
+final class BufferedChangeEventInitValue implements BufferedChangeEventInit {
+  @override
+  TimeRanges? addedRanges;
+  @override
+  TimeRanges? removedRanges;
+
+  BufferedChangeEventInitValue({
+    this.addedRanges,
+    this.removedRanges,
+  });
 }
 
 typedef EndOfStreamError = String;

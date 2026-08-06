@@ -19,7 +19,16 @@ abstract interface class Gyroscope {
 typedef GyroscopeLocalCoordinateSystem = String;
 
 abstract interface class GyroscopeSensorOptions {
-  GyroscopeLocalCoordinateSystem get referenceFrame;
-  set referenceFrame(GyroscopeLocalCoordinateSystem value);
+  GyroscopeLocalCoordinateSystem? get referenceFrame;
+  set referenceFrame(GyroscopeLocalCoordinateSystem? value);
+}
+
+final class GyroscopeSensorOptionsValue implements GyroscopeSensorOptions {
+  @override
+  GyroscopeLocalCoordinateSystem? referenceFrame;
+
+  GyroscopeSensorOptionsValue({
+    this.referenceFrame,
+  });
 }
 

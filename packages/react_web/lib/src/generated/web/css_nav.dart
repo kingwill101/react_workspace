@@ -218,15 +218,36 @@ abstract interface class Element {
 typedef FocusableAreaSearchMode = String;
 
 abstract interface class FocusableAreasOption {
-  FocusableAreaSearchMode get mode;
-  set mode(FocusableAreaSearchMode value);
+  FocusableAreaSearchMode? get mode;
+  set mode(FocusableAreaSearchMode? value);
+}
+
+final class FocusableAreasOptionValue implements FocusableAreasOption {
+  @override
+  FocusableAreaSearchMode? mode;
+
+  FocusableAreasOptionValue({
+    this.mode,
+  });
 }
 
 abstract interface class NavigationEventInit {
-  SpatialNavigationDirection get dir;
-  set dir(SpatialNavigationDirection value);
+  SpatialNavigationDirection? get dir;
+  set dir(SpatialNavigationDirection? value);
   EventTarget? get relatedTarget;
   set relatedTarget(EventTarget? value);
+}
+
+final class NavigationEventInitValue implements NavigationEventInit {
+  @override
+  SpatialNavigationDirection? dir;
+  @override
+  EventTarget? relatedTarget;
+
+  NavigationEventInitValue({
+    this.dir,
+    this.relatedTarget,
+  });
 }
 
 typedef SpatialNavigationDirection = String;
@@ -236,5 +257,17 @@ abstract interface class SpatialNavigationSearchOptions {
   set candidates(List<Node>? value);
   Node? get container;
   set container(Node? value);
+}
+
+final class SpatialNavigationSearchOptionsValue implements SpatialNavigationSearchOptions {
+  @override
+  List<Node>? candidates;
+  @override
+  Node? container;
+
+  SpatialNavigationSearchOptionsValue({
+    this.candidates,
+    this.container,
+  });
 }
 

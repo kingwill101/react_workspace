@@ -41,26 +41,62 @@ abstract interface class FontFace {
 }
 
 abstract interface class FontFaceDescriptors {
-  Object get style;
-  set style(Object value);
-  Object get weight;
-  set weight(Object value);
-  Object get stretch;
-  set stretch(Object value);
-  Object get unicodeRange;
-  set unicodeRange(Object value);
-  Object get featureSettings;
-  set featureSettings(Object value);
-  Object get variationSettings;
-  set variationSettings(Object value);
-  Object get display;
-  set display(Object value);
-  Object get ascentOverride;
-  set ascentOverride(Object value);
-  Object get descentOverride;
-  set descentOverride(Object value);
-  Object get lineGapOverride;
-  set lineGapOverride(Object value);
+  Object? get style;
+  set style(Object? value);
+  Object? get weight;
+  set weight(Object? value);
+  Object? get stretch;
+  set stretch(Object? value);
+  Object? get unicodeRange;
+  set unicodeRange(Object? value);
+  Object? get featureSettings;
+  set featureSettings(Object? value);
+  Object? get variationSettings;
+  set variationSettings(Object? value);
+  Object? get display;
+  set display(Object? value);
+  Object? get ascentOverride;
+  set ascentOverride(Object? value);
+  Object? get descentOverride;
+  set descentOverride(Object? value);
+  Object? get lineGapOverride;
+  set lineGapOverride(Object? value);
+}
+
+final class FontFaceDescriptorsValue implements FontFaceDescriptors {
+  @override
+  Object? style;
+  @override
+  Object? weight;
+  @override
+  Object? stretch;
+  @override
+  Object? unicodeRange;
+  @override
+  Object? featureSettings;
+  @override
+  Object? variationSettings;
+  @override
+  Object? display;
+  @override
+  Object? ascentOverride;
+  @override
+  Object? descentOverride;
+  @override
+  Object? lineGapOverride;
+
+  FontFaceDescriptorsValue({
+    this.style,
+    this.weight,
+    this.stretch,
+    this.unicodeRange,
+    this.featureSettings,
+    this.variationSettings,
+    this.display,
+    this.ascentOverride,
+    this.descentOverride,
+    this.lineGapOverride,
+  });
 }
 
 typedef FontFaceLoadStatus = String;
@@ -96,8 +132,17 @@ abstract interface class FontFaceSetLoadEvent {
 }
 
 abstract interface class FontFaceSetLoadEventInit {
-  List<FontFace> get fontfaces;
-  set fontfaces(List<FontFace> value);
+  List<FontFace>? get fontfaces;
+  set fontfaces(List<FontFace>? value);
+}
+
+final class FontFaceSetLoadEventInitValue implements FontFaceSetLoadEventInit {
+  @override
+  List<FontFace>? fontfaces;
+
+  FontFaceSetLoadEventInitValue({
+    this.fontfaces,
+  });
 }
 
 typedef FontFaceSetLoadStatus = String;

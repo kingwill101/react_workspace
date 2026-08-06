@@ -8,3 +8,12 @@ abstract interface class VideoEncoderEncodeOptionsForVp9 {
   set quantizer(int? value);
 }
 
+final class VideoEncoderEncodeOptionsForVp9Value implements VideoEncoderEncodeOptionsForVp9 {
+  @override
+  int? quantizer;
+
+  VideoEncoderEncodeOptionsForVp9Value({
+    this.quantizer,
+  });
+}
+

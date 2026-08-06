@@ -13,23 +13,59 @@ typedef RunFunctionForSharedStorageSelectURLOperation = Future<int> Function(Lis
 typedef SharedStorageResponse = Object;
 
 abstract interface class SharedStorageRunOperationMethodOptions {
-  Object get data;
-  set data(Object value);
-  bool get resolveToConfig;
-  set resolveToConfig(bool value);
-  bool get keepAlive;
-  set keepAlive(bool value);
+  Object? get data;
+  set data(Object? value);
+  bool? get resolveToConfig;
+  set resolveToConfig(bool? value);
+  bool? get keepAlive;
+  set keepAlive(bool? value);
+}
+
+final class SharedStorageRunOperationMethodOptionsValue implements SharedStorageRunOperationMethodOptions {
+  @override
+  Object? data;
+  @override
+  bool? resolveToConfig;
+  @override
+  bool? keepAlive;
+
+  SharedStorageRunOperationMethodOptionsValue({
+    this.data,
+    this.resolveToConfig,
+    this.keepAlive,
+  });
 }
 
 abstract interface class SharedStorageSetMethodOptions {
-  bool get ignoreIfPresent;
-  set ignoreIfPresent(bool value);
+  bool? get ignoreIfPresent;
+  set ignoreIfPresent(bool? value);
+}
+
+final class SharedStorageSetMethodOptionsValue implements SharedStorageSetMethodOptions {
+  @override
+  bool? ignoreIfPresent;
+
+  SharedStorageSetMethodOptionsValue({
+    this.ignoreIfPresent,
+  });
 }
 
 abstract interface class SharedStorageUrlWithMetadata {
   String get url;
   set url(String value);
-  Object get reportingMetadata;
-  set reportingMetadata(Object value);
+  Object? get reportingMetadata;
+  set reportingMetadata(Object? value);
+}
+
+final class SharedStorageUrlWithMetadataValue implements SharedStorageUrlWithMetadata {
+  @override
+  String url;
+  @override
+  Object? reportingMetadata;
+
+  SharedStorageUrlWithMetadataValue({
+    required this.url,
+    this.reportingMetadata,
+  });
 }
 

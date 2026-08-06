@@ -19,52 +19,130 @@ abstract interface class AttributionReportingRequestOptions {
   set triggerEligible(bool value);
 }
 
+final class AttributionReportingRequestOptionsValue implements AttributionReportingRequestOptions {
+  @override
+  bool eventSourceEligible;
+  @override
+  bool triggerEligible;
+
+  AttributionReportingRequestOptionsValue({
+    required this.eventSourceEligible,
+    required this.triggerEligible,
+  });
+}
+
 abstract interface class HTMLAttributionSrcElementUtils {
   String get attributionSrc;
    set attributionSrc(String value);
 }
 
 abstract interface class RequestInit {
-  AttributionReportingRequestOptions get attributionReporting;
-  set attributionReporting(AttributionReportingRequestOptions value);
-  String get method;
-  set method(String value);
-  HeadersInit get headers;
-  set headers(HeadersInit value);
+  AttributionReportingRequestOptions? get attributionReporting;
+  set attributionReporting(AttributionReportingRequestOptions? value);
+  String? get method;
+  set method(String? value);
+  HeadersInit? get headers;
+  set headers(HeadersInit? value);
   BodyInit? get body;
   set body(BodyInit? value);
-  String get referrer;
-  set referrer(String value);
-  ReferrerPolicy get referrerPolicy;
-  set referrerPolicy(ReferrerPolicy value);
-  RequestMode get mode;
-  set mode(RequestMode value);
-  RequestCredentials get credentials;
-  set credentials(RequestCredentials value);
-  RequestCache get cache;
-  set cache(RequestCache value);
-  RequestRedirect get redirect;
-  set redirect(RequestRedirect value);
-  String get integrity;
-  set integrity(String value);
-  bool get keepalive;
-  set keepalive(bool value);
+  String? get referrer;
+  set referrer(String? value);
+  ReferrerPolicy? get referrerPolicy;
+  set referrerPolicy(ReferrerPolicy? value);
+  RequestMode? get mode;
+  set mode(RequestMode? value);
+  RequestCredentials? get credentials;
+  set credentials(RequestCredentials? value);
+  RequestCache? get cache;
+  set cache(RequestCache? value);
+  RequestRedirect? get redirect;
+  set redirect(RequestRedirect? value);
+  String? get integrity;
+  set integrity(String? value);
+  bool? get keepalive;
+  set keepalive(bool? value);
   AbortSignal? get signal;
   set signal(AbortSignal? value);
-  RequestDuplex get duplex;
-  set duplex(RequestDuplex value);
-  RequestPriority get priority;
-  set priority(RequestPriority value);
-  Object get window;
-  set window(Object value);
-  IPAddressSpace get targetAddressSpace;
-  set targetAddressSpace(IPAddressSpace value);
-  bool get sharedStorageWritable;
-  set sharedStorageWritable(bool value);
-  PrivateToken get privateToken;
-  set privateToken(PrivateToken value);
-  bool get adAuctionHeaders;
-  set adAuctionHeaders(bool value);
+  RequestDuplex? get duplex;
+  set duplex(RequestDuplex? value);
+  RequestPriority? get priority;
+  set priority(RequestPriority? value);
+  Object? get window;
+  set window(Object? value);
+  IPAddressSpace? get targetAddressSpace;
+  set targetAddressSpace(IPAddressSpace? value);
+  bool? get sharedStorageWritable;
+  set sharedStorageWritable(bool? value);
+  PrivateToken? get privateToken;
+  set privateToken(PrivateToken? value);
+  bool? get adAuctionHeaders;
+  set adAuctionHeaders(bool? value);
+}
+
+final class RequestInitValue implements RequestInit {
+  @override
+  AttributionReportingRequestOptions? attributionReporting;
+  @override
+  String? method;
+  @override
+  HeadersInit? headers;
+  @override
+  BodyInit? body;
+  @override
+  String? referrer;
+  @override
+  ReferrerPolicy? referrerPolicy;
+  @override
+  RequestMode? mode;
+  @override
+  RequestCredentials? credentials;
+  @override
+  RequestCache? cache;
+  @override
+  RequestRedirect? redirect;
+  @override
+  String? integrity;
+  @override
+  bool? keepalive;
+  @override
+  AbortSignal? signal;
+  @override
+  RequestDuplex? duplex;
+  @override
+  RequestPriority? priority;
+  @override
+  Object? window;
+  @override
+  IPAddressSpace? targetAddressSpace;
+  @override
+  bool? sharedStorageWritable;
+  @override
+  PrivateToken? privateToken;
+  @override
+  bool? adAuctionHeaders;
+
+  RequestInitValue({
+    this.attributionReporting,
+    this.method,
+    this.headers,
+    this.body,
+    this.referrer,
+    this.referrerPolicy,
+    this.mode,
+    this.credentials,
+    this.cache,
+    this.redirect,
+    this.integrity,
+    this.keepalive,
+    this.signal,
+    this.duplex,
+    this.priority,
+    this.window,
+    this.targetAddressSpace,
+    this.sharedStorageWritable,
+    this.privateToken,
+    this.adAuctionHeaders,
+  });
 }
 
 abstract interface class XMLHttpRequest {

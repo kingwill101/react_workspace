@@ -23,13 +23,34 @@ abstract interface class InputEvent {
 abstract interface class InputEventInit {
   DataTransfer? get dataTransfer;
   set dataTransfer(DataTransfer? value);
-  List<StaticRange> get targetRanges;
-  set targetRanges(List<StaticRange> value);
+  List<StaticRange>? get targetRanges;
+  set targetRanges(List<StaticRange>? value);
   String? get data;
   set data(String? value);
-  bool get isComposing;
-  set isComposing(bool value);
-  String get inputType;
-  set inputType(String value);
+  bool? get isComposing;
+  set isComposing(bool? value);
+  String? get inputType;
+  set inputType(String? value);
+}
+
+final class InputEventInitValue implements InputEventInit {
+  @override
+  DataTransfer? dataTransfer;
+  @override
+  List<StaticRange>? targetRanges;
+  @override
+  String? data;
+  @override
+  bool? isComposing;
+  @override
+  String? inputType;
+
+  InputEventInitValue({
+    this.dataTransfer,
+    this.targetRanges,
+    this.data,
+    this.isComposing,
+    this.inputType,
+  });
 }
 

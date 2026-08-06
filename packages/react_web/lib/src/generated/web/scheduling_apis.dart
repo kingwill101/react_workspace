@@ -15,21 +15,48 @@ abstract interface class Scheduler {
 typedef SchedulerPostTaskCallback = Object Function();
 
 abstract interface class SchedulerPostTaskOptions {
-  AbortSignal get signal;
-  set signal(AbortSignal value);
-  TaskPriority get priority;
-  set priority(TaskPriority value);
-  int get delay;
-  set delay(int value);
+  AbortSignal? get signal;
+  set signal(AbortSignal? value);
+  TaskPriority? get priority;
+  set priority(TaskPriority? value);
+  int? get delay;
+  set delay(int? value);
+}
+
+final class SchedulerPostTaskOptionsValue implements SchedulerPostTaskOptions {
+  @override
+  AbortSignal? signal;
+  @override
+  TaskPriority? priority;
+  @override
+  int? delay;
+
+  SchedulerPostTaskOptionsValue({
+    this.signal,
+    this.priority,
+    this.delay,
+  });
 }
 
 typedef SchedulerSignalInherit = String;
 
 abstract interface class SchedulerYieldOptions {
-  Object get signal;
-  set signal(Object value);
-  ContinuationPriority get priority;
-  set priority(ContinuationPriority value);
+  Object? get signal;
+  set signal(Object? value);
+  ContinuationPriority? get priority;
+  set priority(ContinuationPriority? value);
+}
+
+final class SchedulerYieldOptionsValue implements SchedulerYieldOptions {
+  @override
+  Object? signal;
+  @override
+  ContinuationPriority? priority;
+
+  SchedulerYieldOptionsValue({
+    this.signal,
+    this.priority,
+  });
 }
 
 abstract interface class TaskController {
@@ -42,8 +69,17 @@ abstract interface class TaskController {
 }
 
 abstract interface class TaskControllerInit {
-  TaskPriority get priority;
-  set priority(TaskPriority value);
+  TaskPriority? get priority;
+  set priority(TaskPriority? value);
+}
+
+final class TaskControllerInitValue implements TaskControllerInit {
+  @override
+  TaskPriority? priority;
+
+  TaskControllerInitValue({
+    this.priority,
+  });
 }
 
 typedef TaskPriority = String;
@@ -62,6 +98,15 @@ abstract interface class TaskPriorityChangeEventInit {
   set previousPriority(TaskPriority value);
 }
 
+final class TaskPriorityChangeEventInitValue implements TaskPriorityChangeEventInit {
+  @override
+  TaskPriority previousPriority;
+
+  TaskPriorityChangeEventInitValue({
+    required this.previousPriority,
+  });
+}
+
 abstract interface class TaskSignal {
   TaskPriority get priority;
   EventHandler get onprioritychange;
@@ -69,7 +114,16 @@ abstract interface class TaskSignal {
 }
 
 abstract interface class TaskSignalAnyInit {
-  Object get priority;
-  set priority(Object value);
+  Object? get priority;
+  set priority(Object? value);
+}
+
+final class TaskSignalAnyInitValue implements TaskSignalAnyInit {
+  @override
+  Object? priority;
+
+  TaskSignalAnyInitValue({
+    this.priority,
+  });
 }
 

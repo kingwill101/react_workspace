@@ -6,12 +6,30 @@ import 'dom.dart';
 import 'html.dart';
 
 abstract interface class PortalActivateEventInit {
-  Object get data;
-  set data(Object value);
+  Object? get data;
+  set data(Object? value);
+}
+
+final class PortalActivateEventInitValue implements PortalActivateEventInit {
+  @override
+  Object? data;
+
+  PortalActivateEventInitValue({
+    this.data,
+  });
 }
 
 abstract interface class PortalActivateOptions {
-  Object get data;
-  set data(Object value);
+  Object? get data;
+  set data(Object? value);
+}
+
+final class PortalActivateOptionsValue implements PortalActivateOptions {
+  @override
+  Object? data;
+
+  PortalActivateOptionsValue({
+    this.data,
+  });
 }
 

@@ -6,7 +6,16 @@
 typedef AppBannerPromptOutcome = String;
 
 abstract interface class PromptResponseObject {
-  AppBannerPromptOutcome get userChoice;
-  set userChoice(AppBannerPromptOutcome value);
+  AppBannerPromptOutcome? get userChoice;
+  set userChoice(AppBannerPromptOutcome? value);
+}
+
+final class PromptResponseObjectValue implements PromptResponseObject {
+  @override
+  AppBannerPromptOutcome? userChoice;
+
+  PromptResponseObjectValue({
+    this.userChoice,
+  });
 }
 

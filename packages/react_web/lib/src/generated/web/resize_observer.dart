@@ -30,8 +30,17 @@ abstract interface class ResizeObserverEntry {
 }
 
 abstract interface class ResizeObserverOptions {
-  ResizeObserverBoxOptions get box;
-  set box(ResizeObserverBoxOptions value);
+  ResizeObserverBoxOptions? get box;
+  set box(ResizeObserverBoxOptions? value);
+}
+
+final class ResizeObserverOptionsValue implements ResizeObserverOptions {
+  @override
+  ResizeObserverBoxOptions? box;
+
+  ResizeObserverOptionsValue({
+    this.box,
+  });
 }
 
 abstract interface class ResizeObserverSize {

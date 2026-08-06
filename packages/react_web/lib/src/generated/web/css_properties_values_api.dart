@@ -13,11 +13,29 @@ abstract interface class CSSPropertyRule {
 abstract interface class PropertyDefinition {
   String get name;
   set name(String value);
-  String get syntax;
-  set syntax(String value);
+  String? get syntax;
+  set syntax(String? value);
   bool get inherits;
   set inherits(bool value);
-  String get initialValue;
-  set initialValue(String value);
+  String? get initialValue;
+  set initialValue(String? value);
+}
+
+final class PropertyDefinitionValue implements PropertyDefinition {
+  @override
+  String name;
+  @override
+  String? syntax;
+  @override
+  bool inherits;
+  @override
+  String? initialValue;
+
+  PropertyDefinitionValue({
+    required this.name,
+    this.syntax,
+    required this.inherits,
+    this.initialValue,
+  });
 }
 

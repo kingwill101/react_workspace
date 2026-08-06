@@ -4,8 +4,17 @@
 
 
 abstract interface class OTPCredentialRequestOptions {
-  List<OTPCredentialTransportType> get transport;
-  set transport(List<OTPCredentialTransportType> value);
+  List<OTPCredentialTransportType>? get transport;
+  set transport(List<OTPCredentialTransportType>? value);
+}
+
+final class OTPCredentialRequestOptionsValue implements OTPCredentialRequestOptions {
+  @override
+  List<OTPCredentialTransportType>? transport;
+
+  OTPCredentialRequestOptionsValue({
+    this.transport,
+  });
 }
 
 typedef OTPCredentialTransportType = String;

@@ -351,6 +351,8 @@ abstract interface class Document {
   void captureEvents();
   void releaseEvents();
   HTMLAllCollection get all;
+  EventHandler get onresume;
+   set onresume(EventHandler value);
   bool get pictureInPictureEnabled;
   Future<void> exitPictureInPicture();
   EventHandler get onpointerlockchange;
@@ -472,14 +474,32 @@ abstract interface class SVGAnimatedTransformList {
 }
 
 abstract interface class SVGBoundingBoxOptions {
-  bool get fill;
-  set fill(bool value);
-  bool get stroke;
-  set stroke(bool value);
-  bool get markers;
-  set markers(bool value);
-  bool get clipped;
-  set clipped(bool value);
+  bool? get fill;
+  set fill(bool? value);
+  bool? get stroke;
+  set stroke(bool? value);
+  bool? get markers;
+  set markers(bool? value);
+  bool? get clipped;
+  set clipped(bool? value);
+}
+
+final class SVGBoundingBoxOptionsValue implements SVGBoundingBoxOptions {
+  @override
+  bool? fill;
+  @override
+  bool? stroke;
+  @override
+  bool? markers;
+  @override
+  bool? clipped;
+
+  SVGBoundingBoxOptionsValue({
+    this.fill,
+    this.stroke,
+    this.markers,
+    this.clipped,
+  });
 }
 
 abstract interface class SVGCircleElement {

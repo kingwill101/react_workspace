@@ -9,11 +9,26 @@ abstract interface class NavigatorStorageBuckets {
 }
 
 abstract interface class StorageBucketOptions {
-  bool get persisted;
-  set persisted(bool value);
-  int get quota;
-  set quota(int value);
-  DOMHighResTimeStamp get expires;
-  set expires(DOMHighResTimeStamp value);
+  bool? get persisted;
+  set persisted(bool? value);
+  int? get quota;
+  set quota(int? value);
+  DOMHighResTimeStamp? get expires;
+  set expires(DOMHighResTimeStamp? value);
+}
+
+final class StorageBucketOptionsValue implements StorageBucketOptions {
+  @override
+  bool? persisted;
+  @override
+  int? quota;
+  @override
+  DOMHighResTimeStamp? expires;
+
+  StorageBucketOptionsValue({
+    this.persisted,
+    this.quota,
+    this.expires,
+  });
 }
 

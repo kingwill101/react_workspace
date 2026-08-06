@@ -113,12 +113,27 @@ abstract interface class Response {
 }
 
 abstract interface class ResponseInit {
-  int get status;
-  set status(int value);
-  String get statusText;
-  set statusText(String value);
-  HeadersInit get headers;
-  set headers(HeadersInit value);
+  int? get status;
+  set status(int? value);
+  String? get statusText;
+  set statusText(String? value);
+  HeadersInit? get headers;
+  set headers(HeadersInit? value);
+}
+
+final class ResponseInitValue implements ResponseInit {
+  @override
+  int? status;
+  @override
+  String? statusText;
+  @override
+  HeadersInit? headers;
+
+  ResponseInitValue({
+    this.status,
+    this.statusText,
+    this.headers,
+  });
 }
 
 typedef ResponseType = String;

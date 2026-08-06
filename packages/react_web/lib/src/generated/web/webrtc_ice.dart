@@ -7,19 +7,46 @@ import 'html.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class RTCIceGatherOptions {
-  RTCIceTransportPolicy get gatherPolicy;
-  set gatherPolicy(RTCIceTransportPolicy value);
-  List<RTCIceServer> get iceServers;
-  set iceServers(List<RTCIceServer> value);
+  RTCIceTransportPolicy? get gatherPolicy;
+  set gatherPolicy(RTCIceTransportPolicy? value);
+  List<RTCIceServer>? get iceServers;
+  set iceServers(List<RTCIceServer>? value);
+}
+
+final class RTCIceGatherOptionsValue implements RTCIceGatherOptions {
+  @override
+  RTCIceTransportPolicy? gatherPolicy;
+  @override
+  List<RTCIceServer>? iceServers;
+
+  RTCIceGatherOptionsValue({
+    this.gatherPolicy,
+    this.iceServers,
+  });
 }
 
 abstract interface class RTCIceParameters {
-  bool get iceLite;
-  set iceLite(bool value);
-  String get usernameFragment;
-  set usernameFragment(String value);
-  String get password;
-  set password(String value);
+  bool? get iceLite;
+  set iceLite(bool? value);
+  String? get usernameFragment;
+  set usernameFragment(String? value);
+  String? get password;
+  set password(String? value);
+}
+
+final class RTCIceParametersValue implements RTCIceParameters {
+  @override
+  bool? iceLite;
+  @override
+  String? usernameFragment;
+  @override
+  String? password;
+
+  RTCIceParametersValue({
+    this.iceLite,
+    this.usernameFragment,
+    this.password,
+  });
 }
 
 abstract interface class RTCIceTransport {
@@ -28,6 +55,10 @@ abstract interface class RTCIceTransport {
         'RTCIceTransport',
         [],
       );
+  EventHandler get onerror;
+   set onerror(EventHandler value);
+  EventHandler get onicecandidate;
+   set onicecandidate(EventHandler value);
   RTCIceRole get role;
   RTCIceTransportState get state;
   RTCIceGathererState get gatheringState;

@@ -13,16 +13,46 @@ abstract interface class XRDepthStateInit {
   set dataFormatPreference(List<XRDepthDataFormat> value);
 }
 
+final class XRDepthStateInitValue implements XRDepthStateInit {
+  @override
+  List<XRDepthUsage> usagePreference;
+  @override
+  List<XRDepthDataFormat> dataFormatPreference;
+
+  XRDepthStateInitValue({
+    required this.usagePreference,
+    required this.dataFormatPreference,
+  });
+}
+
 typedef XRDepthUsage = String;
 
 abstract interface class XRSessionInit {
-  XRDepthStateInit get depthSensing;
-  set depthSensing(XRDepthStateInit value);
+  XRDepthStateInit? get depthSensing;
+  set depthSensing(XRDepthStateInit? value);
   XRDOMOverlayInit? get domOverlay;
   set domOverlay(XRDOMOverlayInit? value);
-  List<String> get requiredFeatures;
-  set requiredFeatures(List<String> value);
-  List<String> get optionalFeatures;
-  set optionalFeatures(List<String> value);
+  List<String>? get requiredFeatures;
+  set requiredFeatures(List<String>? value);
+  List<String>? get optionalFeatures;
+  set optionalFeatures(List<String>? value);
+}
+
+final class XRSessionInitValue implements XRSessionInit {
+  @override
+  XRDepthStateInit? depthSensing;
+  @override
+  XRDOMOverlayInit? domOverlay;
+  @override
+  List<String>? requiredFeatures;
+  @override
+  List<String>? optionalFeatures;
+
+  XRSessionInitValue({
+    this.depthSensing,
+    this.domOverlay,
+    this.requiredFeatures,
+    this.optionalFeatures,
+  });
 }
 

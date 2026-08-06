@@ -76,8 +76,17 @@ abstract interface class PaintRenderingContext2D {
 }
 
 abstract interface class PaintRenderingContext2DSettings {
-  bool get alpha;
-  set alpha(bool value);
+  bool? get alpha;
+  set alpha(bool? value);
+}
+
+final class PaintRenderingContext2DSettingsValue implements PaintRenderingContext2DSettings {
+  @override
+  bool? alpha;
+
+  PaintRenderingContext2DSettingsValue({
+    this.alpha,
+  });
 }
 
 abstract interface class PaintSize {

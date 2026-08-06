@@ -13,6 +13,15 @@ abstract interface class PaymentCompleteDetails {
   set data(Object? value);
 }
 
+final class PaymentCompleteDetailsValue implements PaymentCompleteDetails {
+  @override
+  Object? data;
+
+  PaymentCompleteDetailsValue({
+    this.data,
+  });
+}
+
 abstract interface class PaymentCurrencyAmount {
   String get currency;
   set currency(String value);
@@ -20,36 +29,102 @@ abstract interface class PaymentCurrencyAmount {
   set value(String value);
 }
 
+final class PaymentCurrencyAmountValue implements PaymentCurrencyAmount {
+  @override
+  String currency;
+  @override
+  String value;
+
+  PaymentCurrencyAmountValue({
+    required this.currency,
+    required this.value,
+  });
+}
+
 abstract interface class PaymentDetailsBase {
-  List<PaymentItem> get displayItems;
-  set displayItems(List<PaymentItem> value);
-  List<PaymentDetailsModifier> get modifiers;
-  set modifiers(List<PaymentDetailsModifier> value);
+  List<PaymentItem>? get displayItems;
+  set displayItems(List<PaymentItem>? value);
+  List<PaymentDetailsModifier>? get modifiers;
+  set modifiers(List<PaymentDetailsModifier>? value);
+}
+
+final class PaymentDetailsBaseValue implements PaymentDetailsBase {
+  @override
+  List<PaymentItem>? displayItems;
+  @override
+  List<PaymentDetailsModifier>? modifiers;
+
+  PaymentDetailsBaseValue({
+    this.displayItems,
+    this.modifiers,
+  });
 }
 
 abstract interface class PaymentDetailsInit {
-  String get id;
-  set id(String value);
+  String? get id;
+  set id(String? value);
   PaymentItem get total;
   set total(PaymentItem value);
+}
+
+final class PaymentDetailsInitValue implements PaymentDetailsInit {
+  @override
+  String? id;
+  @override
+  PaymentItem total;
+
+  PaymentDetailsInitValue({
+    this.id,
+    required this.total,
+  });
 }
 
 abstract interface class PaymentDetailsModifier {
   String get supportedMethods;
   set supportedMethods(String value);
-  PaymentItem get total;
-  set total(PaymentItem value);
-  List<PaymentItem> get additionalDisplayItems;
-  set additionalDisplayItems(List<PaymentItem> value);
-  Object get data;
-  set data(Object value);
+  PaymentItem? get total;
+  set total(PaymentItem? value);
+  List<PaymentItem>? get additionalDisplayItems;
+  set additionalDisplayItems(List<PaymentItem>? value);
+  Object? get data;
+  set data(Object? value);
+}
+
+final class PaymentDetailsModifierValue implements PaymentDetailsModifier {
+  @override
+  String supportedMethods;
+  @override
+  PaymentItem? total;
+  @override
+  List<PaymentItem>? additionalDisplayItems;
+  @override
+  Object? data;
+
+  PaymentDetailsModifierValue({
+    required this.supportedMethods,
+    this.total,
+    this.additionalDisplayItems,
+    this.data,
+  });
 }
 
 abstract interface class PaymentDetailsUpdate {
-  PaymentItem get total;
-  set total(PaymentItem value);
-  Object get paymentMethodErrors;
-  set paymentMethodErrors(Object value);
+  PaymentItem? get total;
+  set total(PaymentItem? value);
+  Object? get paymentMethodErrors;
+  set paymentMethodErrors(Object? value);
+}
+
+final class PaymentDetailsUpdateValue implements PaymentDetailsUpdate {
+  @override
+  PaymentItem? total;
+  @override
+  Object? paymentMethodErrors;
+
+  PaymentDetailsUpdateValue({
+    this.total,
+    this.paymentMethodErrors,
+  });
 }
 
 abstract interface class PaymentItem {
@@ -57,8 +132,23 @@ abstract interface class PaymentItem {
   set label(String value);
   PaymentCurrencyAmount get amount;
   set amount(PaymentCurrencyAmount value);
-  bool get pending;
-  set pending(bool value);
+  bool? get pending;
+  set pending(bool? value);
+}
+
+final class PaymentItemValue implements PaymentItem {
+  @override
+  String label;
+  @override
+  PaymentCurrencyAmount amount;
+  @override
+  bool? pending;
+
+  PaymentItemValue({
+    required this.label,
+    required this.amount,
+    this.pending,
+  });
 }
 
 abstract interface class PaymentMethodChangeEvent {
@@ -72,17 +162,41 @@ abstract interface class PaymentMethodChangeEvent {
 }
 
 abstract interface class PaymentMethodChangeEventInit {
-  String get methodName;
-  set methodName(String value);
+  String? get methodName;
+  set methodName(String? value);
   Object? get methodDetails;
   set methodDetails(Object? value);
+}
+
+final class PaymentMethodChangeEventInitValue implements PaymentMethodChangeEventInit {
+  @override
+  String? methodName;
+  @override
+  Object? methodDetails;
+
+  PaymentMethodChangeEventInitValue({
+    this.methodName,
+    this.methodDetails,
+  });
 }
 
 abstract interface class PaymentMethodData {
   String get supportedMethods;
   set supportedMethods(String value);
-  Object get data;
-  set data(Object value);
+  Object? get data;
+  set data(Object? value);
+}
+
+final class PaymentMethodDataValue implements PaymentMethodData {
+  @override
+  String supportedMethods;
+  @override
+  Object? data;
+
+  PaymentMethodDataValue({
+    required this.supportedMethods,
+    this.data,
+  });
 }
 
 abstract interface class PaymentRequest {
@@ -111,6 +225,11 @@ abstract interface class PaymentRequestUpdateEvent {
 abstract interface class PaymentRequestUpdateEventInit {
 }
 
+final class PaymentRequestUpdateEventInitValue implements PaymentRequestUpdateEventInit {
+
+  PaymentRequestUpdateEventInitValue();
+}
+
 abstract interface class PaymentResponse {
   Object toJSON();
   String get requestId;
@@ -121,9 +240,21 @@ abstract interface class PaymentResponse {
 }
 
 abstract interface class PaymentValidationErrors {
-  String get error;
-  set error(String value);
-  Object get paymentMethod;
-  set paymentMethod(Object value);
+  String? get error;
+  set error(String? value);
+  Object? get paymentMethod;
+  set paymentMethod(Object? value);
+}
+
+final class PaymentValidationErrorsValue implements PaymentValidationErrors {
+  @override
+  String? error;
+  @override
+  Object? paymentMethod;
+
+  PaymentValidationErrorsValue({
+    this.error,
+    this.paymentMethod,
+  });
 }
 

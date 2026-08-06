@@ -26,8 +26,17 @@ abstract interface class MIDIConnectionEvent {
 }
 
 abstract interface class MIDIConnectionEventInit {
-  MIDIPort get port;
-  set port(MIDIPort value);
+  MIDIPort? get port;
+  set port(MIDIPort? value);
+}
+
+final class MIDIConnectionEventInitValue implements MIDIConnectionEventInit {
+  @override
+  MIDIPort? port;
+
+  MIDIConnectionEventInitValue({
+    this.port,
+  });
 }
 
 abstract interface class MIDIInput {
@@ -48,15 +57,36 @@ abstract interface class MIDIMessageEvent {
 }
 
 abstract interface class MIDIMessageEventInit {
-  Object get data;
-  set data(Object value);
+  Object? get data;
+  set data(Object? value);
+}
+
+final class MIDIMessageEventInitValue implements MIDIMessageEventInit {
+  @override
+  Object? data;
+
+  MIDIMessageEventInitValue({
+    this.data,
+  });
 }
 
 abstract interface class MIDIOptions {
-  bool get sysex;
-  set sysex(bool value);
-  bool get software;
-  set software(bool value);
+  bool? get sysex;
+  set sysex(bool? value);
+  bool? get software;
+  set software(bool? value);
+}
+
+final class MIDIOptionsValue implements MIDIOptions {
+  @override
+  bool? sysex;
+  @override
+  bool? software;
+
+  MIDIOptionsValue({
+    this.sysex,
+    this.software,
+  });
 }
 
 abstract interface class MIDIOutput {
@@ -88,7 +118,16 @@ typedef MIDIPortDeviceState = String;
 typedef MIDIPortType = String;
 
 abstract interface class MidiPermissionDescriptor {
-  bool get sysex;
-  set sysex(bool value);
+  bool? get sysex;
+  set sysex(bool? value);
+}
+
+final class MidiPermissionDescriptorValue implements MidiPermissionDescriptor {
+  @override
+  bool? sysex;
+
+  MidiPermissionDescriptorValue({
+    this.sysex,
+  });
 }
 

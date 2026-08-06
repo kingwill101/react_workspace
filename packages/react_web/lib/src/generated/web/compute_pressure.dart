@@ -4,8 +4,17 @@
 
 
 abstract interface class PressureObserverOptions {
-  int get sampleInterval;
-  set sampleInterval(int value);
+  int? get sampleInterval;
+  set sampleInterval(int? value);
+}
+
+final class PressureObserverOptionsValue implements PressureObserverOptions {
+  @override
+  int? sampleInterval;
+
+  PressureObserverOptionsValue({
+    this.sampleInterval,
+  });
 }
 
 typedef PressureSource = String;

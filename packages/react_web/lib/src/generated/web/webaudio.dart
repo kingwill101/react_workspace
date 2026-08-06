@@ -33,14 +33,32 @@ abstract interface class AnalyserNode {
 }
 
 abstract interface class AnalyserOptions {
-  int get fftSize;
-  set fftSize(int value);
-  double get maxDecibels;
-  set maxDecibels(double value);
-  double get minDecibels;
-  set minDecibels(double value);
-  double get smoothingTimeConstant;
-  set smoothingTimeConstant(double value);
+  int? get fftSize;
+  set fftSize(int? value);
+  double? get maxDecibels;
+  set maxDecibels(double? value);
+  double? get minDecibels;
+  set minDecibels(double? value);
+  double? get smoothingTimeConstant;
+  set smoothingTimeConstant(double? value);
+}
+
+final class AnalyserOptionsValue implements AnalyserOptions {
+  @override
+  int? fftSize;
+  @override
+  double? maxDecibels;
+  @override
+  double? minDecibels;
+  @override
+  double? smoothingTimeConstant;
+
+  AnalyserOptionsValue({
+    this.fftSize,
+    this.maxDecibels,
+    this.minDecibels,
+    this.smoothingTimeConstant,
+  });
 }
 
 abstract interface class AudioBuffer {
@@ -59,12 +77,27 @@ abstract interface class AudioBuffer {
 }
 
 abstract interface class AudioBufferOptions {
-  int get numberOfChannels;
-  set numberOfChannels(int value);
+  int? get numberOfChannels;
+  set numberOfChannels(int? value);
   int get length;
   set length(int value);
   double get sampleRate;
   set sampleRate(double value);
+}
+
+final class AudioBufferOptionsValue implements AudioBufferOptions {
+  @override
+  int? numberOfChannels;
+  @override
+  int length;
+  @override
+  double sampleRate;
+
+  AudioBufferOptionsValue({
+    this.numberOfChannels,
+    required this.length,
+    required this.sampleRate,
+  });
 }
 
 abstract interface class AudioBufferSourceNode {
@@ -89,16 +122,40 @@ abstract interface class AudioBufferSourceNode {
 abstract interface class AudioBufferSourceOptions {
   AudioBuffer? get buffer;
   set buffer(AudioBuffer? value);
-  double get detune;
-  set detune(double value);
-  bool get loop;
-  set loop(bool value);
-  double get loopEnd;
-  set loopEnd(double value);
-  double get loopStart;
-  set loopStart(double value);
-  double get playbackRate;
-  set playbackRate(double value);
+  double? get detune;
+  set detune(double? value);
+  bool? get loop;
+  set loop(bool? value);
+  double? get loopEnd;
+  set loopEnd(double? value);
+  double? get loopStart;
+  set loopStart(double? value);
+  double? get playbackRate;
+  set playbackRate(double? value);
+}
+
+final class AudioBufferSourceOptionsValue implements AudioBufferSourceOptions {
+  @override
+  AudioBuffer? buffer;
+  @override
+  double? detune;
+  @override
+  bool? loop;
+  @override
+  double? loopEnd;
+  @override
+  double? loopStart;
+  @override
+  double? playbackRate;
+
+  AudioBufferSourceOptionsValue({
+    this.buffer,
+    this.detune,
+    this.loop,
+    this.loopEnd,
+    this.loopStart,
+    this.playbackRate,
+  });
 }
 
 abstract interface class AudioContext {
@@ -122,14 +179,32 @@ abstract interface class AudioContext {
 typedef AudioContextLatencyCategory = String;
 
 abstract interface class AudioContextOptions {
-  Object get latencyHint;
-  set latencyHint(Object value);
-  double get sampleRate;
-  set sampleRate(double value);
-  Object get sinkId;
-  set sinkId(Object value);
-  Object get renderSizeHint;
-  set renderSizeHint(Object value);
+  Object? get latencyHint;
+  set latencyHint(Object? value);
+  double? get sampleRate;
+  set sampleRate(double? value);
+  Object? get sinkId;
+  set sinkId(Object? value);
+  Object? get renderSizeHint;
+  set renderSizeHint(Object? value);
+}
+
+final class AudioContextOptionsValue implements AudioContextOptions {
+  @override
+  Object? latencyHint;
+  @override
+  double? sampleRate;
+  @override
+  Object? sinkId;
+  @override
+  Object? renderSizeHint;
+
+  AudioContextOptionsValue({
+    this.latencyHint,
+    this.sampleRate,
+    this.sinkId,
+    this.renderSizeHint,
+  });
 }
 
 typedef AudioContextRenderSizeCategory = String;
@@ -169,12 +244,27 @@ abstract interface class AudioNode {
 }
 
 abstract interface class AudioNodeOptions {
-  int get channelCount;
-  set channelCount(int value);
-  ChannelCountMode get channelCountMode;
-  set channelCountMode(ChannelCountMode value);
-  ChannelInterpretation get channelInterpretation;
-  set channelInterpretation(ChannelInterpretation value);
+  int? get channelCount;
+  set channelCount(int? value);
+  ChannelCountMode? get channelCountMode;
+  set channelCountMode(ChannelCountMode? value);
+  ChannelInterpretation? get channelInterpretation;
+  set channelInterpretation(ChannelInterpretation? value);
+}
+
+final class AudioNodeOptionsValue implements AudioNodeOptions {
+  @override
+  int? channelCount;
+  @override
+  ChannelCountMode? channelCountMode;
+  @override
+  ChannelInterpretation? channelInterpretation;
+
+  AudioNodeOptionsValue({
+    this.channelCount,
+    this.channelCountMode,
+    this.channelInterpretation,
+  });
 }
 
 abstract interface class AudioParam {
@@ -197,14 +287,35 @@ abstract interface class AudioParam {
 abstract interface class AudioParamDescriptor {
   String get name;
   set name(String value);
-  double get defaultValue;
-  set defaultValue(double value);
-  double get minValue;
-  set minValue(double value);
-  double get maxValue;
-  set maxValue(double value);
-  AutomationRate get automationRate;
-  set automationRate(AutomationRate value);
+  double? get defaultValue;
+  set defaultValue(double? value);
+  double? get minValue;
+  set minValue(double? value);
+  double? get maxValue;
+  set maxValue(double? value);
+  AutomationRate? get automationRate;
+  set automationRate(AutomationRate? value);
+}
+
+final class AudioParamDescriptorValue implements AudioParamDescriptor {
+  @override
+  String name;
+  @override
+  double? defaultValue;
+  @override
+  double? minValue;
+  @override
+  double? maxValue;
+  @override
+  AutomationRate? automationRate;
+
+  AudioParamDescriptorValue({
+    required this.name,
+    this.defaultValue,
+    this.minValue,
+    this.maxValue,
+    this.automationRate,
+  });
 }
 
 abstract interface class AudioParamMap {
@@ -230,20 +341,62 @@ abstract interface class AudioProcessingEventInit {
   set outputBuffer(AudioBuffer value);
 }
 
+final class AudioProcessingEventInitValue implements AudioProcessingEventInit {
+  @override
+  double playbackTime;
+  @override
+  AudioBuffer inputBuffer;
+  @override
+  AudioBuffer outputBuffer;
+
+  AudioProcessingEventInitValue({
+    required this.playbackTime,
+    required this.inputBuffer,
+    required this.outputBuffer,
+  });
+}
+
 abstract interface class AudioRenderCapacityEventInit {
-  double get timestamp;
-  set timestamp(double value);
-  double get averageLoad;
-  set averageLoad(double value);
-  double get peakLoad;
-  set peakLoad(double value);
-  double get underrunRatio;
-  set underrunRatio(double value);
+  double? get timestamp;
+  set timestamp(double? value);
+  double? get averageLoad;
+  set averageLoad(double? value);
+  double? get peakLoad;
+  set peakLoad(double? value);
+  double? get underrunRatio;
+  set underrunRatio(double? value);
+}
+
+final class AudioRenderCapacityEventInitValue implements AudioRenderCapacityEventInit {
+  @override
+  double? timestamp;
+  @override
+  double? averageLoad;
+  @override
+  double? peakLoad;
+  @override
+  double? underrunRatio;
+
+  AudioRenderCapacityEventInitValue({
+    this.timestamp,
+    this.averageLoad,
+    this.peakLoad,
+    this.underrunRatio,
+  });
 }
 
 abstract interface class AudioRenderCapacityOptions {
-  double get updateInterval;
-  set updateInterval(double value);
+  double? get updateInterval;
+  set updateInterval(double? value);
+}
+
+final class AudioRenderCapacityOptionsValue implements AudioRenderCapacityOptions {
+  @override
+  double? updateInterval;
+
+  AudioRenderCapacityOptionsValue({
+    this.updateInterval,
+  });
 }
 
 abstract interface class AudioScheduledSourceNode {
@@ -258,13 +411,34 @@ abstract interface class AudioSinkOptions {
   set type(AudioSinkType value);
 }
 
+final class AudioSinkOptionsValue implements AudioSinkOptions {
+  @override
+  AudioSinkType type;
+
+  AudioSinkOptionsValue({
+    required this.type,
+  });
+}
+
 typedef AudioSinkType = String;
 
 abstract interface class AudioTimestamp {
-  double get contextTime;
-  set contextTime(double value);
-  DOMHighResTimeStamp get performanceTime;
-  set performanceTime(DOMHighResTimeStamp value);
+  double? get contextTime;
+  set contextTime(double? value);
+  DOMHighResTimeStamp? get performanceTime;
+  set performanceTime(DOMHighResTimeStamp? value);
+}
+
+final class AudioTimestampValue implements AudioTimestamp {
+  @override
+  double? contextTime;
+  @override
+  DOMHighResTimeStamp? performanceTime;
+
+  AudioTimestampValue({
+    this.contextTime,
+    this.performanceTime,
+  });
 }
 
 abstract interface class AudioWorklet {
@@ -290,16 +464,37 @@ abstract interface class AudioWorkletNode {
 }
 
 abstract interface class AudioWorkletNodeOptions {
-  int get numberOfInputs;
-  set numberOfInputs(int value);
-  int get numberOfOutputs;
-  set numberOfOutputs(int value);
-  List<int> get outputChannelCount;
-  set outputChannelCount(List<int> value);
-  Map<String, double> get parameterData;
-  set parameterData(Map<String, double> value);
-  Object get processorOptions;
-  set processorOptions(Object value);
+  int? get numberOfInputs;
+  set numberOfInputs(int? value);
+  int? get numberOfOutputs;
+  set numberOfOutputs(int? value);
+  List<int>? get outputChannelCount;
+  set outputChannelCount(List<int>? value);
+  Map<String, double>? get parameterData;
+  set parameterData(Map<String, double>? value);
+  Object? get processorOptions;
+  set processorOptions(Object? value);
+}
+
+final class AudioWorkletNodeOptionsValue implements AudioWorkletNodeOptions {
+  @override
+  int? numberOfInputs;
+  @override
+  int? numberOfOutputs;
+  @override
+  List<int>? outputChannelCount;
+  @override
+  Map<String, double>? parameterData;
+  @override
+  Object? processorOptions;
+
+  AudioWorkletNodeOptionsValue({
+    this.numberOfInputs,
+    this.numberOfOutputs,
+    this.outputChannelCount,
+    this.parameterData,
+    this.processorOptions,
+  });
 }
 
 typedef AudioWorkletProcessCallback = bool Function(List<List<Object>> inputs, List<List<Object>> outputs, Object parameters,);
@@ -363,16 +558,37 @@ abstract interface class BiquadFilterNode {
 }
 
 abstract interface class BiquadFilterOptions {
-  BiquadFilterType get type;
-  set type(BiquadFilterType value);
-  double get Q;
-  set Q(double value);
-  double get detune;
-  set detune(double value);
-  double get frequency;
-  set frequency(double value);
-  double get gain;
-  set gain(double value);
+  BiquadFilterType? get type;
+  set type(BiquadFilterType? value);
+  double? get Q;
+  set Q(double? value);
+  double? get detune;
+  set detune(double? value);
+  double? get frequency;
+  set frequency(double? value);
+  double? get gain;
+  set gain(double? value);
+}
+
+final class BiquadFilterOptionsValue implements BiquadFilterOptions {
+  @override
+  BiquadFilterType? type;
+  @override
+  double? Q;
+  @override
+  double? detune;
+  @override
+  double? frequency;
+  @override
+  double? gain;
+
+  BiquadFilterOptionsValue({
+    this.type,
+    this.Q,
+    this.detune,
+    this.frequency,
+    this.gain,
+  });
 }
 
 typedef BiquadFilterType = String;
@@ -390,8 +606,17 @@ abstract interface class ChannelMergerNode {
 }
 
 abstract interface class ChannelMergerOptions {
-  int get numberOfInputs;
-  set numberOfInputs(int value);
+  int? get numberOfInputs;
+  set numberOfInputs(int? value);
+}
+
+final class ChannelMergerOptionsValue implements ChannelMergerOptions {
+  @override
+  int? numberOfInputs;
+
+  ChannelMergerOptionsValue({
+    this.numberOfInputs,
+  });
 }
 
 abstract interface class ChannelSplitterNode {
@@ -403,8 +628,17 @@ abstract interface class ChannelSplitterNode {
 }
 
 abstract interface class ChannelSplitterOptions {
-  int get numberOfOutputs;
-  set numberOfOutputs(int value);
+  int? get numberOfOutputs;
+  set numberOfOutputs(int? value);
+}
+
+final class ChannelSplitterOptionsValue implements ChannelSplitterOptions {
+  @override
+  int? numberOfOutputs;
+
+  ChannelSplitterOptionsValue({
+    this.numberOfOutputs,
+  });
 }
 
 abstract interface class ConstantSourceNode {
@@ -417,8 +651,17 @@ abstract interface class ConstantSourceNode {
 }
 
 abstract interface class ConstantSourceOptions {
-  double get offset;
-  set offset(double value);
+  double? get offset;
+  set offset(double? value);
+}
+
+final class ConstantSourceOptionsValue implements ConstantSourceOptions {
+  @override
+  double? offset;
+
+  ConstantSourceOptionsValue({
+    this.offset,
+  });
 }
 
 abstract interface class ConvolverNode {
@@ -436,8 +679,20 @@ abstract interface class ConvolverNode {
 abstract interface class ConvolverOptions {
   AudioBuffer? get buffer;
   set buffer(AudioBuffer? value);
-  bool get disableNormalization;
-  set disableNormalization(bool value);
+  bool? get disableNormalization;
+  set disableNormalization(bool? value);
+}
+
+final class ConvolverOptionsValue implements ConvolverOptions {
+  @override
+  AudioBuffer? buffer;
+  @override
+  bool? disableNormalization;
+
+  ConvolverOptionsValue({
+    this.buffer,
+    this.disableNormalization,
+  });
 }
 
 typedef DecodeErrorCallback = void Function(DOMException error,);
@@ -454,10 +709,22 @@ abstract interface class DelayNode {
 }
 
 abstract interface class DelayOptions {
-  double get maxDelayTime;
-  set maxDelayTime(double value);
-  double get delayTime;
-  set delayTime(double value);
+  double? get maxDelayTime;
+  set maxDelayTime(double? value);
+  double? get delayTime;
+  set delayTime(double? value);
+}
+
+final class DelayOptionsValue implements DelayOptions {
+  @override
+  double? maxDelayTime;
+  @override
+  double? delayTime;
+
+  DelayOptionsValue({
+    this.maxDelayTime,
+    this.delayTime,
+  });
 }
 
 typedef DistanceModelType = String;
@@ -477,16 +744,37 @@ abstract interface class DynamicsCompressorNode {
 }
 
 abstract interface class DynamicsCompressorOptions {
-  double get attack;
-  set attack(double value);
-  double get knee;
-  set knee(double value);
-  double get ratio;
-  set ratio(double value);
-  double get release;
-  set release(double value);
-  double get threshold;
-  set threshold(double value);
+  double? get attack;
+  set attack(double? value);
+  double? get knee;
+  set knee(double? value);
+  double? get ratio;
+  set ratio(double? value);
+  double? get release;
+  set release(double? value);
+  double? get threshold;
+  set threshold(double? value);
+}
+
+final class DynamicsCompressorOptionsValue implements DynamicsCompressorOptions {
+  @override
+  double? attack;
+  @override
+  double? knee;
+  @override
+  double? ratio;
+  @override
+  double? release;
+  @override
+  double? threshold;
+
+  DynamicsCompressorOptionsValue({
+    this.attack,
+    this.knee,
+    this.ratio,
+    this.release,
+    this.threshold,
+  });
 }
 
 abstract interface class GainNode {
@@ -499,8 +787,17 @@ abstract interface class GainNode {
 }
 
 abstract interface class GainOptions {
-  double get gain;
-  set gain(double value);
+  double? get gain;
+  set gain(double? value);
+}
+
+final class GainOptionsValue implements GainOptions {
+  @override
+  double? gain;
+
+  GainOptionsValue({
+    this.gain,
+  });
 }
 
 abstract interface class IIRFilterNode {
@@ -519,6 +816,18 @@ abstract interface class IIRFilterOptions {
   set feedback(List<double> value);
 }
 
+final class IIRFilterOptionsValue implements IIRFilterOptions {
+  @override
+  List<double> feedforward;
+  @override
+  List<double> feedback;
+
+  IIRFilterOptionsValue({
+    required this.feedforward,
+    required this.feedback,
+  });
+}
+
 abstract interface class MediaElementAudioSourceNode {
   factory MediaElementAudioSourceNode(AudioContext context, MediaElementAudioSourceOptions options) =>
       WebRuntime.current.createWebObject<MediaElementAudioSourceNode>(
@@ -531,6 +840,15 @@ abstract interface class MediaElementAudioSourceNode {
 abstract interface class MediaElementAudioSourceOptions {
   HTMLMediaElement get mediaElement;
   set mediaElement(HTMLMediaElement value);
+}
+
+final class MediaElementAudioSourceOptionsValue implements MediaElementAudioSourceOptions {
+  @override
+  HTMLMediaElement mediaElement;
+
+  MediaElementAudioSourceOptionsValue({
+    required this.mediaElement,
+  });
 }
 
 abstract interface class MediaStreamAudioDestinationNode {
@@ -556,6 +874,15 @@ abstract interface class MediaStreamAudioSourceOptions {
   set mediaStream(MediaStream value);
 }
 
+final class MediaStreamAudioSourceOptionsValue implements MediaStreamAudioSourceOptions {
+  @override
+  MediaStream mediaStream;
+
+  MediaStreamAudioSourceOptionsValue({
+    required this.mediaStream,
+  });
+}
+
 abstract interface class MediaStreamTrackAudioSourceNode {
   factory MediaStreamTrackAudioSourceNode(AudioContext context, MediaStreamTrackAudioSourceOptions options) =>
       WebRuntime.current.createWebObject<MediaStreamTrackAudioSourceNode>(
@@ -567,6 +894,15 @@ abstract interface class MediaStreamTrackAudioSourceNode {
 abstract interface class MediaStreamTrackAudioSourceOptions {
   MediaStreamTrack get mediaStreamTrack;
   set mediaStreamTrack(MediaStreamTrack value);
+}
+
+final class MediaStreamTrackAudioSourceOptionsValue implements MediaStreamTrackAudioSourceOptions {
+  @override
+  MediaStreamTrack mediaStreamTrack;
+
+  MediaStreamTrackAudioSourceOptionsValue({
+    required this.mediaStreamTrack,
+  });
 }
 
 abstract interface class OfflineAudioCompletionEvent {
@@ -581,6 +917,15 @@ abstract interface class OfflineAudioCompletionEvent {
 abstract interface class OfflineAudioCompletionEventInit {
   AudioBuffer get renderedBuffer;
   set renderedBuffer(AudioBuffer value);
+}
+
+final class OfflineAudioCompletionEventInitValue implements OfflineAudioCompletionEventInit {
+  @override
+  AudioBuffer renderedBuffer;
+
+  OfflineAudioCompletionEventInitValue({
+    required this.renderedBuffer,
+  });
 }
 
 abstract interface class OfflineAudioContext {
@@ -603,14 +948,32 @@ abstract interface class OfflineAudioContext {
 }
 
 abstract interface class OfflineAudioContextOptions {
-  int get numberOfChannels;
-  set numberOfChannels(int value);
+  int? get numberOfChannels;
+  set numberOfChannels(int? value);
   int get length;
   set length(int value);
   double get sampleRate;
   set sampleRate(double value);
-  Object get renderSizeHint;
-  set renderSizeHint(Object value);
+  Object? get renderSizeHint;
+  set renderSizeHint(Object? value);
+}
+
+final class OfflineAudioContextOptionsValue implements OfflineAudioContextOptions {
+  @override
+  int? numberOfChannels;
+  @override
+  int length;
+  @override
+  double sampleRate;
+  @override
+  Object? renderSizeHint;
+
+  OfflineAudioContextOptionsValue({
+    this.numberOfChannels,
+    required this.length,
+    required this.sampleRate,
+    this.renderSizeHint,
+  });
 }
 
 abstract interface class OscillatorNode {
@@ -627,14 +990,32 @@ abstract interface class OscillatorNode {
 }
 
 abstract interface class OscillatorOptions {
-  OscillatorType get type;
-  set type(OscillatorType value);
-  double get frequency;
-  set frequency(double value);
-  double get detune;
-  set detune(double value);
-  PeriodicWave get periodicWave;
-  set periodicWave(PeriodicWave value);
+  OscillatorType? get type;
+  set type(OscillatorType? value);
+  double? get frequency;
+  set frequency(double? value);
+  double? get detune;
+  set detune(double? value);
+  PeriodicWave? get periodicWave;
+  set periodicWave(PeriodicWave? value);
+}
+
+final class OscillatorOptionsValue implements OscillatorOptions {
+  @override
+  OscillatorType? type;
+  @override
+  double? frequency;
+  @override
+  double? detune;
+  @override
+  PeriodicWave? periodicWave;
+
+  OscillatorOptionsValue({
+    this.type,
+    this.frequency,
+    this.detune,
+    this.periodicWave,
+  });
 }
 
 typedef OscillatorType = String;
@@ -674,34 +1055,82 @@ abstract interface class PannerNode {
 }
 
 abstract interface class PannerOptions {
-  PanningModelType get panningModel;
-  set panningModel(PanningModelType value);
-  DistanceModelType get distanceModel;
-  set distanceModel(DistanceModelType value);
-  double get positionX;
-  set positionX(double value);
-  double get positionY;
-  set positionY(double value);
-  double get positionZ;
-  set positionZ(double value);
-  double get orientationX;
-  set orientationX(double value);
-  double get orientationY;
-  set orientationY(double value);
-  double get orientationZ;
-  set orientationZ(double value);
-  double get refDistance;
-  set refDistance(double value);
-  double get maxDistance;
-  set maxDistance(double value);
-  double get rolloffFactor;
-  set rolloffFactor(double value);
-  double get coneInnerAngle;
-  set coneInnerAngle(double value);
-  double get coneOuterAngle;
-  set coneOuterAngle(double value);
-  double get coneOuterGain;
-  set coneOuterGain(double value);
+  PanningModelType? get panningModel;
+  set panningModel(PanningModelType? value);
+  DistanceModelType? get distanceModel;
+  set distanceModel(DistanceModelType? value);
+  double? get positionX;
+  set positionX(double? value);
+  double? get positionY;
+  set positionY(double? value);
+  double? get positionZ;
+  set positionZ(double? value);
+  double? get orientationX;
+  set orientationX(double? value);
+  double? get orientationY;
+  set orientationY(double? value);
+  double? get orientationZ;
+  set orientationZ(double? value);
+  double? get refDistance;
+  set refDistance(double? value);
+  double? get maxDistance;
+  set maxDistance(double? value);
+  double? get rolloffFactor;
+  set rolloffFactor(double? value);
+  double? get coneInnerAngle;
+  set coneInnerAngle(double? value);
+  double? get coneOuterAngle;
+  set coneOuterAngle(double? value);
+  double? get coneOuterGain;
+  set coneOuterGain(double? value);
+}
+
+final class PannerOptionsValue implements PannerOptions {
+  @override
+  PanningModelType? panningModel;
+  @override
+  DistanceModelType? distanceModel;
+  @override
+  double? positionX;
+  @override
+  double? positionY;
+  @override
+  double? positionZ;
+  @override
+  double? orientationX;
+  @override
+  double? orientationY;
+  @override
+  double? orientationZ;
+  @override
+  double? refDistance;
+  @override
+  double? maxDistance;
+  @override
+  double? rolloffFactor;
+  @override
+  double? coneInnerAngle;
+  @override
+  double? coneOuterAngle;
+  @override
+  double? coneOuterGain;
+
+  PannerOptionsValue({
+    this.panningModel,
+    this.distanceModel,
+    this.positionX,
+    this.positionY,
+    this.positionZ,
+    this.orientationX,
+    this.orientationY,
+    this.orientationZ,
+    this.refDistance,
+    this.maxDistance,
+    this.rolloffFactor,
+    this.coneInnerAngle,
+    this.coneOuterAngle,
+    this.coneOuterGain,
+  });
 }
 
 typedef PanningModelType = String;
@@ -715,15 +1144,36 @@ abstract interface class PeriodicWave {
 }
 
 abstract interface class PeriodicWaveConstraints {
-  bool get disableNormalization;
-  set disableNormalization(bool value);
+  bool? get disableNormalization;
+  set disableNormalization(bool? value);
+}
+
+final class PeriodicWaveConstraintsValue implements PeriodicWaveConstraints {
+  @override
+  bool? disableNormalization;
+
+  PeriodicWaveConstraintsValue({
+    this.disableNormalization,
+  });
 }
 
 abstract interface class PeriodicWaveOptions {
-  List<double> get real;
-  set real(List<double> value);
-  List<double> get imag;
-  set imag(List<double> value);
+  List<double>? get real;
+  set real(List<double>? value);
+  List<double>? get imag;
+  set imag(List<double>? value);
+}
+
+final class PeriodicWaveOptionsValue implements PeriodicWaveOptions {
+  @override
+  List<double>? real;
+  @override
+  List<double>? imag;
+
+  PeriodicWaveOptionsValue({
+    this.real,
+    this.imag,
+  });
 }
 
 abstract interface class ScriptProcessorNode {
@@ -742,8 +1192,17 @@ abstract interface class StereoPannerNode {
 }
 
 abstract interface class StereoPannerOptions {
-  double get pan;
-  set pan(double value);
+  double? get pan;
+  set pan(double? value);
+}
+
+final class StereoPannerOptionsValue implements StereoPannerOptions {
+  @override
+  double? pan;
+
+  StereoPannerOptionsValue({
+    this.pan,
+  });
 }
 
 abstract interface class WaveShaperNode {
@@ -759,9 +1218,21 @@ abstract interface class WaveShaperNode {
 }
 
 abstract interface class WaveShaperOptions {
-  List<double> get curve;
-  set curve(List<double> value);
-  OverSampleType get oversample;
-  set oversample(OverSampleType value);
+  List<double>? get curve;
+  set curve(List<double>? value);
+  OverSampleType? get oversample;
+  set oversample(OverSampleType? value);
+}
+
+final class WaveShaperOptionsValue implements WaveShaperOptions {
+  @override
+  List<double>? curve;
+  @override
+  OverSampleType? oversample;
+
+  WaveShaperOptionsValue({
+    this.curve,
+    this.oversample,
+  });
 }
 

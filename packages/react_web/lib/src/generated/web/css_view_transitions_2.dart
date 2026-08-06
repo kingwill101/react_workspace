@@ -11,6 +11,18 @@ abstract interface class StartViewTransitionOptions {
   set types(List<String>? value);
 }
 
+final class StartViewTransitionOptionsValue implements StartViewTransitionOptions {
+  @override
+  UpdateCallback? update;
+  @override
+  List<String>? types;
+
+  StartViewTransitionOptionsValue({
+    this.update,
+    this.types,
+  });
+}
+
 abstract interface class ViewTransition {
   Future<void> get updateCallbackDone;
   Future<void> get ready;

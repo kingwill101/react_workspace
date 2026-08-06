@@ -10,10 +10,28 @@ abstract interface class PrivateToken {
   set version(TokenVersion value);
   OperationType get operation;
   set operation(OperationType value);
-  RefreshPolicy get refreshPolicy;
-  set refreshPolicy(RefreshPolicy value);
-  List<String> get issuers;
-  set issuers(List<String> value);
+  RefreshPolicy? get refreshPolicy;
+  set refreshPolicy(RefreshPolicy? value);
+  List<String>? get issuers;
+  set issuers(List<String>? value);
+}
+
+final class PrivateTokenValue implements PrivateToken {
+  @override
+  TokenVersion version;
+  @override
+  OperationType operation;
+  @override
+  RefreshPolicy? refreshPolicy;
+  @override
+  List<String>? issuers;
+
+  PrivateTokenValue({
+    required this.version,
+    required this.operation,
+    this.refreshPolicy,
+    this.issuers,
+  });
 }
 
 typedef RefreshPolicy = String;

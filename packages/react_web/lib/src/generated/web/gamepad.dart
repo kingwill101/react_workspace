@@ -14,18 +14,42 @@ abstract interface class GamepadButton {
 }
 
 abstract interface class GamepadEffectParameters {
-  int get duration;
-  set duration(int value);
-  int get startDelay;
-  set startDelay(int value);
-  double get strongMagnitude;
-  set strongMagnitude(double value);
-  double get weakMagnitude;
-  set weakMagnitude(double value);
-  double get leftTrigger;
-  set leftTrigger(double value);
-  double get rightTrigger;
-  set rightTrigger(double value);
+  int? get duration;
+  set duration(int? value);
+  int? get startDelay;
+  set startDelay(int? value);
+  double? get strongMagnitude;
+  set strongMagnitude(double? value);
+  double? get weakMagnitude;
+  set weakMagnitude(double? value);
+  double? get leftTrigger;
+  set leftTrigger(double? value);
+  double? get rightTrigger;
+  set rightTrigger(double? value);
+}
+
+final class GamepadEffectParametersValue implements GamepadEffectParameters {
+  @override
+  int? duration;
+  @override
+  int? startDelay;
+  @override
+  double? strongMagnitude;
+  @override
+  double? weakMagnitude;
+  @override
+  double? leftTrigger;
+  @override
+  double? rightTrigger;
+
+  GamepadEffectParametersValue({
+    this.duration,
+    this.startDelay,
+    this.strongMagnitude,
+    this.weakMagnitude,
+    this.leftTrigger,
+    this.rightTrigger,
+  });
 }
 
 abstract interface class GamepadEvent {
@@ -40,6 +64,15 @@ abstract interface class GamepadEvent {
 abstract interface class GamepadEventInit {
   Gamepad get gamepad;
   set gamepad(Gamepad value);
+}
+
+final class GamepadEventInitValue implements GamepadEventInit {
+  @override
+  Gamepad gamepad;
+
+  GamepadEventInitValue({
+    required this.gamepad,
+  });
 }
 
 typedef GamepadHapticEffectType = String;

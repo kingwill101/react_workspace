@@ -4,8 +4,17 @@
 
 
 abstract interface class DigitalCredentialRequestOptions {
-  List<IdentityRequestProvider> get providers;
-  set providers(List<IdentityRequestProvider> value);
+  List<IdentityRequestProvider>? get providers;
+  set providers(List<IdentityRequestProvider>? value);
+}
+
+final class DigitalCredentialRequestOptionsValue implements DigitalCredentialRequestOptions {
+  @override
+  List<IdentityRequestProvider>? providers;
+
+  DigitalCredentialRequestOptionsValue({
+    this.providers,
+  });
 }
 
 abstract interface class IdentityRequestProvider {
@@ -13,5 +22,17 @@ abstract interface class IdentityRequestProvider {
   set protocol(String value);
   Object get request;
   set request(Object value);
+}
+
+final class IdentityRequestProviderValue implements IdentityRequestProvider {
+  @override
+  String protocol;
+  @override
+  Object request;
+
+  IdentityRequestProviderValue({
+    required this.protocol,
+    required this.request,
+  });
 }
 

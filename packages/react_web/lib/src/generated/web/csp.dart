@@ -42,29 +42,71 @@ abstract interface class SecurityPolicyViolationEvent {
 typedef SecurityPolicyViolationEventDisposition = String;
 
 abstract interface class SecurityPolicyViolationEventInit {
-  String get documentURI;
-  set documentURI(String value);
-  String get referrer;
-  set referrer(String value);
-  String get blockedURI;
-  set blockedURI(String value);
-  String get violatedDirective;
-  set violatedDirective(String value);
-  String get effectiveDirective;
-  set effectiveDirective(String value);
-  String get originalPolicy;
-  set originalPolicy(String value);
-  String get sourceFile;
-  set sourceFile(String value);
-  String get sample;
-  set sample(String value);
-  SecurityPolicyViolationEventDisposition get disposition;
-  set disposition(SecurityPolicyViolationEventDisposition value);
-  int get statusCode;
-  set statusCode(int value);
-  int get lineNumber;
-  set lineNumber(int value);
-  int get columnNumber;
-  set columnNumber(int value);
+  String? get documentURI;
+  set documentURI(String? value);
+  String? get referrer;
+  set referrer(String? value);
+  String? get blockedURI;
+  set blockedURI(String? value);
+  String? get violatedDirective;
+  set violatedDirective(String? value);
+  String? get effectiveDirective;
+  set effectiveDirective(String? value);
+  String? get originalPolicy;
+  set originalPolicy(String? value);
+  String? get sourceFile;
+  set sourceFile(String? value);
+  String? get sample;
+  set sample(String? value);
+  SecurityPolicyViolationEventDisposition? get disposition;
+  set disposition(SecurityPolicyViolationEventDisposition? value);
+  int? get statusCode;
+  set statusCode(int? value);
+  int? get lineNumber;
+  set lineNumber(int? value);
+  int? get columnNumber;
+  set columnNumber(int? value);
+}
+
+final class SecurityPolicyViolationEventInitValue implements SecurityPolicyViolationEventInit {
+  @override
+  String? documentURI;
+  @override
+  String? referrer;
+  @override
+  String? blockedURI;
+  @override
+  String? violatedDirective;
+  @override
+  String? effectiveDirective;
+  @override
+  String? originalPolicy;
+  @override
+  String? sourceFile;
+  @override
+  String? sample;
+  @override
+  SecurityPolicyViolationEventDisposition? disposition;
+  @override
+  int? statusCode;
+  @override
+  int? lineNumber;
+  @override
+  int? columnNumber;
+
+  SecurityPolicyViolationEventInitValue({
+    this.documentURI,
+    this.referrer,
+    this.blockedURI,
+    this.violatedDirective,
+    this.effectiveDirective,
+    this.originalPolicy,
+    this.sourceFile,
+    this.sample,
+    this.disposition,
+    this.statusCode,
+    this.lineNumber,
+    this.columnNumber,
+  });
 }
 

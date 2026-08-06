@@ -6,7 +6,16 @@ import 'webidl.dart';
 import 'webcryptoapi.dart';
 
 abstract interface class Ed448Params {
-  BufferSource get context;
-  set context(BufferSource value);
+  BufferSource? get context;
+  set context(BufferSource? value);
+}
+
+final class Ed448ParamsValue implements Ed448Params {
+  @override
+  BufferSource? context;
+
+  Ed448ParamsValue({
+    this.context,
+  });
 }
 

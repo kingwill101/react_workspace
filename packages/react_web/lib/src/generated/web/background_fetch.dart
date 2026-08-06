@@ -14,20 +14,50 @@ abstract interface class BackgroundFetchEventInit {
   set registration(Object value);
 }
 
+final class BackgroundFetchEventInitValue implements BackgroundFetchEventInit {
+  @override
+  Object registration;
+
+  BackgroundFetchEventInitValue({
+    required this.registration,
+  });
+}
+
 typedef BackgroundFetchFailureReason = String;
 
 abstract interface class BackgroundFetchOptions {
-  int get downloadTotal;
-  set downloadTotal(int value);
+  int? get downloadTotal;
+  set downloadTotal(int? value);
+}
+
+final class BackgroundFetchOptionsValue implements BackgroundFetchOptions {
+  @override
+  int? downloadTotal;
+
+  BackgroundFetchOptionsValue({
+    this.downloadTotal,
+  });
 }
 
 typedef BackgroundFetchResult = String;
 
 abstract interface class BackgroundFetchUIOptions {
-  List<ImageResource> get icons;
-  set icons(List<ImageResource> value);
-  String get title;
-  set title(String value);
+  List<ImageResource>? get icons;
+  set icons(List<ImageResource>? value);
+  String? get title;
+  set title(String? value);
+}
+
+final class BackgroundFetchUIOptionsValue implements BackgroundFetchUIOptions {
+  @override
+  List<ImageResource>? icons;
+  @override
+  String? title;
+
+  BackgroundFetchUIOptionsValue({
+    this.icons,
+    this.title,
+  });
 }
 
 abstract interface class ServiceWorkerGlobalScope {

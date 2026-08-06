@@ -7,19 +7,46 @@ import 'mediacapture_streams.dart';
 import 'image_capture.dart';
 
 abstract interface class CaptureHandle {
-  String get origin;
-  set origin(String value);
-  String get handle;
-  set handle(String value);
+  String? get origin;
+  set origin(String? value);
+  String? get handle;
+  set handle(String? value);
+}
+
+final class CaptureHandleValue implements CaptureHandle {
+  @override
+  String? origin;
+  @override
+  String? handle;
+
+  CaptureHandleValue({
+    this.origin,
+    this.handle,
+  });
 }
 
 abstract interface class CaptureHandleConfig {
-  bool get exposeOrigin;
-  set exposeOrigin(bool value);
-  String get handle;
-  set handle(String value);
-  List<String> get permittedOrigins;
-  set permittedOrigins(List<String> value);
+  bool? get exposeOrigin;
+  set exposeOrigin(bool? value);
+  String? get handle;
+  set handle(String? value);
+  List<String>? get permittedOrigins;
+  set permittedOrigins(List<String>? value);
+}
+
+final class CaptureHandleConfigValue implements CaptureHandleConfig {
+  @override
+  bool? exposeOrigin;
+  @override
+  String? handle;
+  @override
+  List<String>? permittedOrigins;
+
+  CaptureHandleConfigValue({
+    this.exposeOrigin,
+    this.handle,
+    this.permittedOrigins,
+  });
 }
 
 abstract interface class MediaStreamTrack {

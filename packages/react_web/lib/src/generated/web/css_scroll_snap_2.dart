@@ -11,3 +11,15 @@ abstract interface class SnapEventInit {
   set snapTargetInline(Node? value);
 }
 
+final class SnapEventInitValue implements SnapEventInit {
+  @override
+  Node? snapTargetBlock;
+  @override
+  Node? snapTargetInline;
+
+  SnapEventInitValue({
+    this.snapTargetBlock,
+    this.snapTargetInline,
+  });
+}
+

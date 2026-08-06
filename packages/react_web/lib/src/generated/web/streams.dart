@@ -32,15 +32,36 @@ abstract interface class GenericTransformStream {
 }
 
 abstract interface class QueuingStrategy {
-  double get highWaterMark;
-  set highWaterMark(double value);
-  QueuingStrategySize get size;
-  set size(QueuingStrategySize value);
+  double? get highWaterMark;
+  set highWaterMark(double? value);
+  QueuingStrategySize? get size;
+  set size(QueuingStrategySize? value);
+}
+
+final class QueuingStrategyValue implements QueuingStrategy {
+  @override
+  double? highWaterMark;
+  @override
+  QueuingStrategySize? size;
+
+  QueuingStrategyValue({
+    this.highWaterMark,
+    this.size,
+  });
 }
 
 abstract interface class QueuingStrategyInit {
   double get highWaterMark;
   set highWaterMark(double value);
+}
+
+final class QueuingStrategyInitValue implements QueuingStrategyInit {
+  @override
+  double highWaterMark;
+
+  QueuingStrategyInitValue({
+    required this.highWaterMark,
+  });
 }
 
 typedef QueuingStrategySize = double Function(Object chunk,);
@@ -80,8 +101,17 @@ abstract interface class ReadableStreamBYOBReader {
 }
 
 abstract interface class ReadableStreamBYOBReaderReadOptions {
-  int get min;
-  set min(int value);
+  int? get min;
+  set min(int? value);
+}
+
+final class ReadableStreamBYOBReaderReadOptionsValue implements ReadableStreamBYOBReaderReadOptions {
+  @override
+  int? min;
+
+  ReadableStreamBYOBReaderReadOptionsValue({
+    this.min,
+  });
 }
 
 abstract interface class ReadableStreamBYOBRequest {
@@ -117,20 +147,50 @@ abstract interface class ReadableStreamGenericReader {
 }
 
 abstract interface class ReadableStreamGetReaderOptions {
-  ReadableStreamReaderMode get mode;
-  set mode(ReadableStreamReaderMode value);
+  ReadableStreamReaderMode? get mode;
+  set mode(ReadableStreamReaderMode? value);
+}
+
+final class ReadableStreamGetReaderOptionsValue implements ReadableStreamGetReaderOptions {
+  @override
+  ReadableStreamReaderMode? mode;
+
+  ReadableStreamGetReaderOptionsValue({
+    this.mode,
+  });
 }
 
 abstract interface class ReadableStreamIteratorOptions {
-  bool get preventCancel;
-  set preventCancel(bool value);
+  bool? get preventCancel;
+  set preventCancel(bool? value);
+}
+
+final class ReadableStreamIteratorOptionsValue implements ReadableStreamIteratorOptions {
+  @override
+  bool? preventCancel;
+
+  ReadableStreamIteratorOptionsValue({
+    this.preventCancel,
+  });
 }
 
 abstract interface class ReadableStreamReadResult {
-  Object get value;
-  set value(Object value);
-  bool get done;
-  set done(bool value);
+  Object? get value;
+  set value(Object? value);
+  bool? get done;
+  set done(bool? value);
+}
+
+final class ReadableStreamReadResultValue implements ReadableStreamReadResult {
+  @override
+  Object? value;
+  @override
+  bool? done;
+
+  ReadableStreamReadResultValue({
+    this.value,
+    this.done,
+  });
 }
 
 typedef ReadableStreamReader = Object;
@@ -146,15 +206,45 @@ abstract interface class ReadableWritablePair {
   set writable(WritableStream value);
 }
 
+final class ReadableWritablePairValue implements ReadableWritablePair {
+  @override
+  ReadableStream readable;
+  @override
+  WritableStream writable;
+
+  ReadableWritablePairValue({
+    required this.readable,
+    required this.writable,
+  });
+}
+
 abstract interface class StreamPipeOptions {
-  bool get preventClose;
-  set preventClose(bool value);
-  bool get preventAbort;
-  set preventAbort(bool value);
-  bool get preventCancel;
-  set preventCancel(bool value);
-  AbortSignal get signal;
-  set signal(AbortSignal value);
+  bool? get preventClose;
+  set preventClose(bool? value);
+  bool? get preventAbort;
+  set preventAbort(bool? value);
+  bool? get preventCancel;
+  set preventCancel(bool? value);
+  AbortSignal? get signal;
+  set signal(AbortSignal? value);
+}
+
+final class StreamPipeOptionsValue implements StreamPipeOptions {
+  @override
+  bool? preventClose;
+  @override
+  bool? preventAbort;
+  @override
+  bool? preventCancel;
+  @override
+  AbortSignal? signal;
+
+  StreamPipeOptionsValue({
+    this.preventClose,
+    this.preventAbort,
+    this.preventCancel,
+    this.signal,
+  });
 }
 
 abstract interface class TransformStream {
@@ -175,18 +265,42 @@ abstract interface class TransformStreamDefaultController {
 }
 
 abstract interface class Transformer {
-  TransformerStartCallback get start;
-  set start(TransformerStartCallback value);
-  TransformerTransformCallback get transform;
-  set transform(TransformerTransformCallback value);
-  TransformerFlushCallback get flush;
-  set flush(TransformerFlushCallback value);
-  TransformerCancelCallback get cancel;
-  set cancel(TransformerCancelCallback value);
-  Object get readableType;
-  set readableType(Object value);
-  Object get writableType;
-  set writableType(Object value);
+  TransformerStartCallback? get start;
+  set start(TransformerStartCallback? value);
+  TransformerTransformCallback? get transform;
+  set transform(TransformerTransformCallback? value);
+  TransformerFlushCallback? get flush;
+  set flush(TransformerFlushCallback? value);
+  TransformerCancelCallback? get cancel;
+  set cancel(TransformerCancelCallback? value);
+  Object? get readableType;
+  set readableType(Object? value);
+  Object? get writableType;
+  set writableType(Object? value);
+}
+
+final class TransformerValue implements Transformer {
+  @override
+  TransformerStartCallback? start;
+  @override
+  TransformerTransformCallback? transform;
+  @override
+  TransformerFlushCallback? flush;
+  @override
+  TransformerCancelCallback? cancel;
+  @override
+  Object? readableType;
+  @override
+  Object? writableType;
+
+  TransformerValue({
+    this.start,
+    this.transform,
+    this.flush,
+    this.cancel,
+    this.readableType,
+    this.writableType,
+  });
 }
 
 typedef TransformerCancelCallback = Future<void> Function(Object reason,);
@@ -198,16 +312,37 @@ typedef TransformerStartCallback = Object Function(TransformStreamDefaultControl
 typedef TransformerTransformCallback = Future<void> Function(Object chunk, TransformStreamDefaultController controller,);
 
 abstract interface class UnderlyingSink {
-  UnderlyingSinkStartCallback get start;
-  set start(UnderlyingSinkStartCallback value);
-  UnderlyingSinkWriteCallback get write;
-  set write(UnderlyingSinkWriteCallback value);
-  UnderlyingSinkCloseCallback get close;
-  set close(UnderlyingSinkCloseCallback value);
-  UnderlyingSinkAbortCallback get abort;
-  set abort(UnderlyingSinkAbortCallback value);
-  Object get type;
-  set type(Object value);
+  UnderlyingSinkStartCallback? get start;
+  set start(UnderlyingSinkStartCallback? value);
+  UnderlyingSinkWriteCallback? get write;
+  set write(UnderlyingSinkWriteCallback? value);
+  UnderlyingSinkCloseCallback? get close;
+  set close(UnderlyingSinkCloseCallback? value);
+  UnderlyingSinkAbortCallback? get abort;
+  set abort(UnderlyingSinkAbortCallback? value);
+  Object? get type;
+  set type(Object? value);
+}
+
+final class UnderlyingSinkValue implements UnderlyingSink {
+  @override
+  UnderlyingSinkStartCallback? start;
+  @override
+  UnderlyingSinkWriteCallback? write;
+  @override
+  UnderlyingSinkCloseCallback? close;
+  @override
+  UnderlyingSinkAbortCallback? abort;
+  @override
+  Object? type;
+
+  UnderlyingSinkValue({
+    this.start,
+    this.write,
+    this.close,
+    this.abort,
+    this.type,
+  });
 }
 
 typedef UnderlyingSinkAbortCallback = Future<void> Function(Object reason,);
@@ -219,16 +354,37 @@ typedef UnderlyingSinkStartCallback = Object Function(WritableStreamDefaultContr
 typedef UnderlyingSinkWriteCallback = Future<void> Function(Object chunk, WritableStreamDefaultController controller,);
 
 abstract interface class UnderlyingSource {
-  UnderlyingSourceStartCallback get start;
-  set start(UnderlyingSourceStartCallback value);
-  UnderlyingSourcePullCallback get pull;
-  set pull(UnderlyingSourcePullCallback value);
-  UnderlyingSourceCancelCallback get cancel;
-  set cancel(UnderlyingSourceCancelCallback value);
-  ReadableStreamType get type;
-  set type(ReadableStreamType value);
-  int get autoAllocateChunkSize;
-  set autoAllocateChunkSize(int value);
+  UnderlyingSourceStartCallback? get start;
+  set start(UnderlyingSourceStartCallback? value);
+  UnderlyingSourcePullCallback? get pull;
+  set pull(UnderlyingSourcePullCallback? value);
+  UnderlyingSourceCancelCallback? get cancel;
+  set cancel(UnderlyingSourceCancelCallback? value);
+  ReadableStreamType? get type;
+  set type(ReadableStreamType? value);
+  int? get autoAllocateChunkSize;
+  set autoAllocateChunkSize(int? value);
+}
+
+final class UnderlyingSourceValue implements UnderlyingSource {
+  @override
+  UnderlyingSourceStartCallback? start;
+  @override
+  UnderlyingSourcePullCallback? pull;
+  @override
+  UnderlyingSourceCancelCallback? cancel;
+  @override
+  ReadableStreamType? type;
+  @override
+  int? autoAllocateChunkSize;
+
+  UnderlyingSourceValue({
+    this.start,
+    this.pull,
+    this.cancel,
+    this.type,
+    this.autoAllocateChunkSize,
+  });
 }
 
 typedef UnderlyingSourceCancelCallback = Future<void> Function(Object reason,);

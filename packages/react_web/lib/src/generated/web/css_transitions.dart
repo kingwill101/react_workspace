@@ -17,11 +17,26 @@ abstract interface class TransitionEvent {
 }
 
 abstract interface class TransitionEventInit {
-  Object get propertyName;
-  set propertyName(Object value);
-  double get elapsedTime;
-  set elapsedTime(double value);
-  Object get pseudoElement;
-  set pseudoElement(Object value);
+  Object? get propertyName;
+  set propertyName(Object? value);
+  double? get elapsedTime;
+  set elapsedTime(double? value);
+  Object? get pseudoElement;
+  set pseudoElement(Object? value);
+}
+
+final class TransitionEventInitValue implements TransitionEventInit {
+  @override
+  Object? propertyName;
+  @override
+  double? elapsedTime;
+  @override
+  Object? pseudoElement;
+
+  TransitionEventInitValue({
+    this.propertyName,
+    this.elapsedTime,
+    this.pseudoElement,
+  });
 }
 

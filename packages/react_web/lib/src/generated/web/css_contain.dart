@@ -15,7 +15,16 @@ abstract interface class ContentVisibilityAutoStateChangeEvent {
 }
 
 abstract interface class ContentVisibilityAutoStateChangeEventInit {
-  bool get skipped;
-  set skipped(bool value);
+  bool? get skipped;
+  set skipped(bool? value);
+}
+
+final class ContentVisibilityAutoStateChangeEventInitValue implements ContentVisibilityAutoStateChangeEventInit {
+  @override
+  bool? skipped;
+
+  ContentVisibilityAutoStateChangeEventInitValue({
+    this.skipped,
+  });
 }
 

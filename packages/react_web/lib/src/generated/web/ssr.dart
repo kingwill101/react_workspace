@@ -5805,6 +5805,14 @@ final class SsrDocument implements Document {
       , exposed: 'Window'
   );
   @override
+  EventHandler get onresume => throw UnsupportedWebApiError('Document.onresume'
+      , exposed: 'Window'
+  );
+  @override
+  set onresume(EventHandler value) => throw UnsupportedWebApiError('Document.onresume'
+      , exposed: 'Window'
+  );
+  @override
   bool get pictureInPictureEnabled => throw UnsupportedWebApiError('Document.pictureInPictureEnabled'
       , exposed: 'Window'
   );
@@ -9142,6 +9150,14 @@ final class SsrHTMLBodyElement implements HTMLBodyElement {
   );
   @override
   set onportalactivate(EventHandler value) => throw UnsupportedWebApiError('HTMLBodyElement.onportalactivate'
+      , exposed: 'Window'
+  );
+  @override
+  EventHandler get onorientationchange => throw UnsupportedWebApiError('HTMLBodyElement.onorientationchange'
+      , exposed: 'Window'
+  );
+  @override
+  set onorientationchange(EventHandler value) => throw UnsupportedWebApiError('HTMLBodyElement.onorientationchange'
       , exposed: 'Window'
   );
   @override
@@ -14813,11 +14829,27 @@ final class SsrIDBDatabase implements IDBDatabase {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
+  EventHandler get onabort => throw UnsupportedWebApiError('IDBDatabase.onabort'
+      , exposed: '[{value: Window}, {value: Worker}]'
+  );
+  @override
+  set onabort(EventHandler value) => throw UnsupportedWebApiError('IDBDatabase.onabort'
+      , exposed: '[{value: Window}, {value: Worker}]'
+  );
+  @override
   EventHandler get onclose => throw UnsupportedWebApiError('IDBDatabase.onclose'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
   set onclose(EventHandler value) => throw UnsupportedWebApiError('IDBDatabase.onclose'
+      , exposed: '[{value: Window}, {value: Worker}]'
+  );
+  @override
+  EventHandler get onerror => throw UnsupportedWebApiError('IDBDatabase.onerror'
+      , exposed: '[{value: Window}, {value: Worker}]'
+  );
+  @override
+  set onerror(EventHandler value) => throw UnsupportedWebApiError('IDBDatabase.onerror'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -17590,6 +17622,14 @@ final class SsrMessagePort implements MessagePort {
   );
   @override
   set onmessageerror(EventHandler value) => throw UnsupportedWebApiError('MessagePort.onmessageerror'
+      , exposed: '[{value: Window}, {value: Worker}, {value: AudioWorklet}]'
+  );
+  @override
+  EventHandler get onclose => throw UnsupportedWebApiError('MessagePort.onclose'
+      , exposed: '[{value: Window}, {value: Worker}, {value: AudioWorklet}]'
+  );
+  @override
+  set onclose(EventHandler value) => throw UnsupportedWebApiError('MessagePort.onclose'
       , exposed: '[{value: Window}, {value: Worker}, {value: AudioWorklet}]'
   );
 }
@@ -20930,6 +20970,22 @@ final class SsrRTCIceTransport implements RTCIceTransport {
     );
   }
   @override
+  EventHandler get onerror => throw UnsupportedWebApiError('RTCIceTransport.onerror'
+      , exposed: 'Window'
+  );
+  @override
+  set onerror(EventHandler value) => throw UnsupportedWebApiError('RTCIceTransport.onerror'
+      , exposed: 'Window'
+  );
+  @override
+  EventHandler get onicecandidate => throw UnsupportedWebApiError('RTCIceTransport.onicecandidate'
+      , exposed: 'Window'
+  );
+  @override
+  set onicecandidate(EventHandler value) => throw UnsupportedWebApiError('RTCIceTransport.onicecandidate'
+      , exposed: 'Window'
+  );
+  @override
   RTCIceRole get role => throw UnsupportedWebApiError('RTCIceTransport.role'
       , exposed: 'Window'
   );
@@ -22503,6 +22559,14 @@ final class SsrSVGAnimationElement implements SVGAnimationElement {
   );
   @override
   SVGElement? get targetElement => throw UnsupportedWebApiError('SVGAnimationElement.targetElement'
+      , exposed: 'Window'
+  );
+  @override
+  EventHandler get onend => throw UnsupportedWebApiError('SVGAnimationElement.onend'
+      , exposed: 'Window'
+  );
+  @override
+  set onend(EventHandler value) => throw UnsupportedWebApiError('SVGAnimationElement.onend'
       , exposed: 'Window'
   );
   @override
@@ -25917,6 +25981,14 @@ final class SsrScreen implements Screen {
   ScreenOrientation get orientation => throw UnsupportedWebApiError('Screen.orientation'
       , exposed: 'Window'
   );
+  @override
+  EventHandler get onchange => throw UnsupportedWebApiError('Screen.onchange'
+      , exposed: 'Window'
+  );
+  @override
+  set onchange(EventHandler value) => throw UnsupportedWebApiError('Screen.onchange'
+      , exposed: 'Window'
+  );
 }
 
 final class SsrScreenOrientation implements ScreenOrientation {
@@ -26511,6 +26583,14 @@ final class SsrShadowRoot implements ShadowRoot {
   );
   @override
   Element get host => throw UnsupportedWebApiError('ShadowRoot.host'
+      , exposed: 'Window'
+  );
+  @override
+  EventHandler get onslotchange => throw UnsupportedWebApiError('ShadowRoot.onslotchange'
+      , exposed: 'Window'
+  );
+  @override
+  set onslotchange(EventHandler value) => throw UnsupportedWebApiError('ShadowRoot.onslotchange'
       , exposed: 'Window'
   );
   @override
@@ -33266,6 +33346,62 @@ final class SsrXMLHttpRequestEventTarget implements XMLHttpRequestEventTarget {
       , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
     );
   }
+  @override
+  EventHandler get onloadstart => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onloadstart'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  set onloadstart(EventHandler value) => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onloadstart'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  EventHandler get onprogress => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onprogress'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  set onprogress(EventHandler value) => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onprogress'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  EventHandler get onabort => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onabort'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  set onabort(EventHandler value) => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onabort'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  EventHandler get onerror => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onerror'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  set onerror(EventHandler value) => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onerror'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  EventHandler get onload => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onload'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  set onload(EventHandler value) => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onload'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  EventHandler get ontimeout => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.ontimeout'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  set ontimeout(EventHandler value) => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.ontimeout'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  EventHandler get onloadend => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onloadend'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
+  @override
+  set onloadend(EventHandler value) => throw UnsupportedWebApiError('XMLHttpRequestEventTarget.onloadend'
+      , exposed: '[{value: Window}, {value: DedicatedWorker}, {value: SharedWorker}]'
+  );
 }
 
 final class SsrXMLHttpRequestUpload implements XMLHttpRequestUpload {
@@ -33661,6 +33797,15 @@ final class SsrWebRuntime implements WebRuntime {
   @override
   T createWebObject<T extends Object>(String name, List<Object?> arguments) =>
       throw UnsupportedWebApiError('$name constructor');
+  @override
+  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments) =>
+      throw UnsupportedWebApiError('$namespace.$member');
+  @override
+  dynamic getNamespaceProperty(String namespace, String property) =>
+      throw UnsupportedWebApiError('$namespace.$property');
+  @override
+  void setNamespaceProperty(String namespace, String property, Object? value) =>
+      throw UnsupportedWebApiError('$namespace.$property');
 }
 
 /// Installs the SSR [WebRuntime]. Safe to call repeatedly.

@@ -5,7 +5,16 @@
 import 'permissions.dart';
 
 abstract interface class TopLevelStorageAccessPermissionDescriptor {
-  String get requestedOrigin;
-  set requestedOrigin(String value);
+  String? get requestedOrigin;
+  set requestedOrigin(String? value);
+}
+
+final class TopLevelStorageAccessPermissionDescriptorValue implements TopLevelStorageAccessPermissionDescriptor {
+  @override
+  String? requestedOrigin;
+
+  TopLevelStorageAccessPermissionDescriptorValue({
+    this.requestedOrigin,
+  });
 }
 

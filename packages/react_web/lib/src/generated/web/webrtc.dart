@@ -18,6 +18,11 @@ import 'package:react_web/src/web_runtime.dart';
 abstract interface class RTCAnswerOptions {
 }
 
+final class RTCAnswerOptionsValue implements RTCAnswerOptions {
+
+  RTCAnswerOptionsValue();
+}
+
 typedef RTCBundlePolicy = String;
 
 abstract interface class RTCCertificate {
@@ -26,8 +31,17 @@ abstract interface class RTCCertificate {
 }
 
 abstract interface class RTCCertificateExpiration {
-  int get expires;
-  set expires(int value);
+  int? get expires;
+  set expires(int? value);
+}
+
+final class RTCCertificateExpirationValue implements RTCCertificateExpiration {
+  @override
+  int? expires;
+
+  RTCCertificateExpirationValue({
+    this.expires,
+  });
 }
 
 abstract interface class RTCDTMFSender {
@@ -48,8 +62,17 @@ abstract interface class RTCDTMFToneChangeEvent {
 }
 
 abstract interface class RTCDTMFToneChangeEventInit {
-  String get tone;
-  set tone(String value);
+  String? get tone;
+  set tone(String? value);
+}
+
+final class RTCDTMFToneChangeEventInitValue implements RTCDTMFToneChangeEventInit {
+  @override
+  String? tone;
+
+  RTCDTMFToneChangeEventInitValue({
+    this.tone,
+  });
 }
 
 abstract interface class RTCDataChannelEvent {
@@ -66,13 +89,34 @@ abstract interface class RTCDataChannelEventInit {
   set channel(RTCDataChannel value);
 }
 
+final class RTCDataChannelEventInitValue implements RTCDataChannelEventInit {
+  @override
+  RTCDataChannel channel;
+
+  RTCDataChannelEventInitValue({
+    required this.channel,
+  });
+}
+
 typedef RTCDataChannelState = String;
 
 abstract interface class RTCDtlsFingerprint {
-  String get algorithm;
-  set algorithm(String value);
-  String get value;
-  set value(String value);
+  String? get algorithm;
+  set algorithm(String? value);
+  String? get value;
+  set value(String? value);
+}
+
+final class RTCDtlsFingerprintValue implements RTCDtlsFingerprint {
+  @override
+  String? algorithm;
+  @override
+  String? value;
+
+  RTCDtlsFingerprintValue({
+    this.algorithm,
+    this.value,
+  });
 }
 
 abstract interface class RTCDtlsTransport {
@@ -103,6 +147,15 @@ abstract interface class RTCErrorEventInit {
   set error(RTCError value);
 }
 
+final class RTCErrorEventInitValue implements RTCErrorEventInit {
+  @override
+  RTCError error;
+
+  RTCErrorEventInitValue({
+    required this.error,
+  });
+}
+
 abstract interface class RTCIceCandidate {
   factory RTCIceCandidate([RTCIceCandidateInit? candidateInitDict]) =>
       WebRuntime.current.createWebObject<RTCIceCandidate>(
@@ -127,14 +180,32 @@ abstract interface class RTCIceCandidate {
 }
 
 abstract interface class RTCIceCandidateInit {
-  String get candidate;
-  set candidate(String value);
+  String? get candidate;
+  set candidate(String? value);
   String? get sdpMid;
   set sdpMid(String? value);
   int? get sdpMLineIndex;
   set sdpMLineIndex(int? value);
   String? get usernameFragment;
   set usernameFragment(String? value);
+}
+
+final class RTCIceCandidateInitValue implements RTCIceCandidateInit {
+  @override
+  String? candidate;
+  @override
+  String? sdpMid;
+  @override
+  int? sdpMLineIndex;
+  @override
+  String? usernameFragment;
+
+  RTCIceCandidateInitValue({
+    this.candidate,
+    this.sdpMid,
+    this.sdpMLineIndex,
+    this.usernameFragment,
+  });
 }
 
 typedef RTCIceCandidateType = String;
@@ -154,10 +225,25 @@ typedef RTCIceRole = String;
 abstract interface class RTCIceServer {
   Object get urls;
   set urls(Object value);
-  String get username;
-  set username(String value);
-  String get credential;
-  set credential(String value);
+  String? get username;
+  set username(String? value);
+  String? get credential;
+  set credential(String? value);
+}
+
+final class RTCIceServerValue implements RTCIceServer {
+  @override
+  Object urls;
+  @override
+  String? username;
+  @override
+  String? credential;
+
+  RTCIceServerValue({
+    required this.urls,
+    this.username,
+    this.credential,
+  });
 }
 
 typedef RTCIceServerTransportProtocol = String;
@@ -169,22 +255,54 @@ typedef RTCIceTransportPolicy = String;
 typedef RTCIceTransportState = String;
 
 abstract interface class RTCLocalSessionDescriptionInit {
-  RTCSdpType get type;
-  set type(RTCSdpType value);
-  String get sdp;
-  set sdp(String value);
+  RTCSdpType? get type;
+  set type(RTCSdpType? value);
+  String? get sdp;
+  set sdp(String? value);
+}
+
+final class RTCLocalSessionDescriptionInitValue implements RTCLocalSessionDescriptionInit {
+  @override
+  RTCSdpType? type;
+  @override
+  String? sdp;
+
+  RTCLocalSessionDescriptionInitValue({
+    this.type,
+    this.sdp,
+  });
 }
 
 abstract interface class RTCOfferAnswerOptions {
 }
 
+final class RTCOfferAnswerOptionsValue implements RTCOfferAnswerOptions {
+
+  RTCOfferAnswerOptionsValue();
+}
+
 abstract interface class RTCOfferOptions {
-  bool get iceRestart;
-  set iceRestart(bool value);
-  bool get offerToReceiveAudio;
-  set offerToReceiveAudio(bool value);
-  bool get offerToReceiveVideo;
-  set offerToReceiveVideo(bool value);
+  bool? get iceRestart;
+  set iceRestart(bool? value);
+  bool? get offerToReceiveAudio;
+  set offerToReceiveAudio(bool? value);
+  bool? get offerToReceiveVideo;
+  set offerToReceiveVideo(bool? value);
+}
+
+final class RTCOfferOptionsValue implements RTCOfferOptions {
+  @override
+  bool? iceRestart;
+  @override
+  bool? offerToReceiveAudio;
+  @override
+  bool? offerToReceiveVideo;
+
+  RTCOfferOptionsValue({
+    this.iceRestart,
+    this.offerToReceiveAudio,
+    this.offerToReceiveVideo,
+  });
 }
 
 typedef RTCPeerConnectionErrorCallback = void Function(DOMException error,);
@@ -207,12 +325,33 @@ abstract interface class RTCPeerConnectionIceErrorEventInit {
   set address(String? value);
   int? get port;
   set port(int? value);
-  String get url;
-  set url(String value);
+  String? get url;
+  set url(String? value);
   int get errorCode;
   set errorCode(int value);
-  String get errorText;
-  set errorText(String value);
+  String? get errorText;
+  set errorText(String? value);
+}
+
+final class RTCPeerConnectionIceErrorEventInitValue implements RTCPeerConnectionIceErrorEventInit {
+  @override
+  String? address;
+  @override
+  int? port;
+  @override
+  String? url;
+  @override
+  int errorCode;
+  @override
+  String? errorText;
+
+  RTCPeerConnectionIceErrorEventInitValue({
+    this.address,
+    this.port,
+    this.url,
+    required this.errorCode,
+    this.errorText,
+  });
 }
 
 abstract interface class RTCPeerConnectionIceEvent {
@@ -232,15 +371,39 @@ abstract interface class RTCPeerConnectionIceEventInit {
   set url(String? value);
 }
 
+final class RTCPeerConnectionIceEventInitValue implements RTCPeerConnectionIceEventInit {
+  @override
+  RTCIceCandidate? candidate;
+  @override
+  String? url;
+
+  RTCPeerConnectionIceEventInitValue({
+    this.candidate,
+    this.url,
+  });
+}
+
 typedef RTCPeerConnectionState = String;
 
 typedef RTCRtcpMuxPolicy = String;
 
 abstract interface class RTCRtcpParameters {
-  String get cname;
-  set cname(String value);
-  bool get reducedSize;
-  set reducedSize(bool value);
+  String? get cname;
+  set cname(String? value);
+  bool? get reducedSize;
+  set reducedSize(bool? value);
+}
+
+final class RTCRtcpParametersValue implements RTCRtcpParameters {
+  @override
+  String? cname;
+  @override
+  bool? reducedSize;
+
+  RTCRtcpParametersValue({
+    this.cname,
+    this.reducedSize,
+  });
 }
 
 abstract interface class RTCRtpCapabilities {
@@ -250,15 +413,45 @@ abstract interface class RTCRtpCapabilities {
   set headerExtensions(List<RTCRtpHeaderExtensionCapability> value);
 }
 
+final class RTCRtpCapabilitiesValue implements RTCRtpCapabilities {
+  @override
+  List<RTCRtpCodec> codecs;
+  @override
+  List<RTCRtpHeaderExtensionCapability> headerExtensions;
+
+  RTCRtpCapabilitiesValue({
+    required this.codecs,
+    required this.headerExtensions,
+  });
+}
+
 abstract interface class RTCRtpCodec {
   String get mimeType;
   set mimeType(String value);
   int get clockRate;
   set clockRate(int value);
-  int get channels;
-  set channels(int value);
-  String get sdpFmtpLine;
-  set sdpFmtpLine(String value);
+  int? get channels;
+  set channels(int? value);
+  String? get sdpFmtpLine;
+  set sdpFmtpLine(String? value);
+}
+
+final class RTCRtpCodecValue implements RTCRtpCodec {
+  @override
+  String mimeType;
+  @override
+  int clockRate;
+  @override
+  int? channels;
+  @override
+  String? sdpFmtpLine;
+
+  RTCRtpCodecValue({
+    required this.mimeType,
+    required this.clockRate,
+    this.channels,
+    this.sdpFmtpLine,
+  });
 }
 
 abstract interface class RTCRtpCodecParameters {
@@ -266,9 +459,27 @@ abstract interface class RTCRtpCodecParameters {
   set payloadType(Object value);
 }
 
+final class RTCRtpCodecParametersValue implements RTCRtpCodecParameters {
+  @override
+  Object payloadType;
+
+  RTCRtpCodecParametersValue({
+    required this.payloadType,
+  });
+}
+
 abstract interface class RTCRtpCodingParameters {
-  String get rid;
-  set rid(String value);
+  String? get rid;
+  set rid(String? value);
+}
+
+final class RTCRtpCodingParametersValue implements RTCRtpCodingParameters {
+  @override
+  String? rid;
+
+  RTCRtpCodingParametersValue({
+    this.rid,
+  });
 }
 
 abstract interface class RTCRtpContributingSource {
@@ -276,10 +487,28 @@ abstract interface class RTCRtpContributingSource {
   set timestamp(DOMHighResTimeStamp value);
   int get source;
   set source(int value);
-  double get audioLevel;
-  set audioLevel(double value);
+  double? get audioLevel;
+  set audioLevel(double? value);
   int get rtpTimestamp;
   set rtpTimestamp(int value);
+}
+
+final class RTCRtpContributingSourceValue implements RTCRtpContributingSource {
+  @override
+  DOMHighResTimeStamp timestamp;
+  @override
+  int source;
+  @override
+  double? audioLevel;
+  @override
+  int rtpTimestamp;
+
+  RTCRtpContributingSourceValue({
+    required this.timestamp,
+    required this.source,
+    this.audioLevel,
+    required this.rtpTimestamp,
+  });
 }
 
 abstract interface class RTCRtpHeaderExtensionCapability {
@@ -287,13 +516,37 @@ abstract interface class RTCRtpHeaderExtensionCapability {
   set uri(String value);
 }
 
+final class RTCRtpHeaderExtensionCapabilityValue implements RTCRtpHeaderExtensionCapability {
+  @override
+  String uri;
+
+  RTCRtpHeaderExtensionCapabilityValue({
+    required this.uri,
+  });
+}
+
 abstract interface class RTCRtpHeaderExtensionParameters {
   String get uri;
   set uri(String value);
   int get id;
   set id(int value);
-  bool get encrypted;
-  set encrypted(bool value);
+  bool? get encrypted;
+  set encrypted(bool? value);
+}
+
+final class RTCRtpHeaderExtensionParametersValue implements RTCRtpHeaderExtensionParameters {
+  @override
+  String uri;
+  @override
+  int id;
+  @override
+  bool? encrypted;
+
+  RTCRtpHeaderExtensionParametersValue({
+    required this.uri,
+    required this.id,
+    this.encrypted,
+  });
 }
 
 abstract interface class RTCRtpParameters {
@@ -305,10 +558,35 @@ abstract interface class RTCRtpParameters {
   set codecs(List<RTCRtpCodecParameters> value);
 }
 
+final class RTCRtpParametersValue implements RTCRtpParameters {
+  @override
+  List<RTCRtpHeaderExtensionParameters> headerExtensions;
+  @override
+  RTCRtcpParameters rtcp;
+  @override
+  List<RTCRtpCodecParameters> codecs;
+
+  RTCRtpParametersValue({
+    required this.headerExtensions,
+    required this.rtcp,
+    required this.codecs,
+  });
+}
+
 abstract interface class RTCRtpReceiveParameters {
 }
 
+final class RTCRtpReceiveParametersValue implements RTCRtpReceiveParameters {
+
+  RTCRtpReceiveParametersValue();
+}
+
 abstract interface class RTCRtpSynchronizationSource {
+}
+
+final class RTCRtpSynchronizationSourceValue implements RTCRtpSynchronizationSource {
+
+  RTCRtpSynchronizationSourceValue();
 }
 
 abstract interface class RTCRtpTransceiver {
@@ -325,12 +603,27 @@ abstract interface class RTCRtpTransceiver {
 typedef RTCRtpTransceiverDirection = String;
 
 abstract interface class RTCRtpTransceiverInit {
-  RTCRtpTransceiverDirection get direction;
-  set direction(RTCRtpTransceiverDirection value);
-  List<MediaStream> get streams;
-  set streams(List<MediaStream> value);
-  List<RTCRtpEncodingParameters> get sendEncodings;
-  set sendEncodings(List<RTCRtpEncodingParameters> value);
+  RTCRtpTransceiverDirection? get direction;
+  set direction(RTCRtpTransceiverDirection? value);
+  List<MediaStream>? get streams;
+  set streams(List<MediaStream>? value);
+  List<RTCRtpEncodingParameters>? get sendEncodings;
+  set sendEncodings(List<RTCRtpEncodingParameters>? value);
+}
+
+final class RTCRtpTransceiverInitValue implements RTCRtpTransceiverInit {
+  @override
+  RTCRtpTransceiverDirection? direction;
+  @override
+  List<MediaStream>? streams;
+  @override
+  List<RTCRtpEncodingParameters>? sendEncodings;
+
+  RTCRtpTransceiverInitValue({
+    this.direction,
+    this.streams,
+    this.sendEncodings,
+  });
 }
 
 abstract interface class RTCSctpTransport {
@@ -362,11 +655,28 @@ typedef RTCSessionDescriptionCallback = void Function(RTCSessionDescriptionInit 
 abstract interface class RTCSessionDescriptionInit {
   RTCSdpType get type;
   set type(RTCSdpType value);
-  String get sdp;
-  set sdp(String value);
+  String? get sdp;
+  set sdp(String? value);
+}
+
+final class RTCSessionDescriptionInitValue implements RTCSessionDescriptionInit {
+  @override
+  RTCSdpType type;
+  @override
+  String? sdp;
+
+  RTCSessionDescriptionInitValue({
+    required this.type,
+    this.sdp,
+  });
 }
 
 abstract interface class RTCSetParameterOptions {
+}
+
+final class RTCSetParameterOptionsValue implements RTCSetParameterOptions {
+
+  RTCSetParameterOptionsValue();
 }
 
 typedef RTCSignalingState = String;
@@ -378,6 +688,21 @@ abstract interface class RTCStats {
   set type(RTCStatsType value);
   String get id;
   set id(String value);
+}
+
+final class RTCStatsValue implements RTCStats {
+  @override
+  DOMHighResTimeStamp timestamp;
+  @override
+  RTCStatsType type;
+  @override
+  String id;
+
+  RTCStatsValue({
+    required this.timestamp,
+    required this.type,
+    required this.id,
+  });
 }
 
 abstract interface class RTCStatsReport {
@@ -400,9 +725,27 @@ abstract interface class RTCTrackEventInit {
   set receiver(RTCRtpReceiver value);
   MediaStreamTrack get track;
   set track(MediaStreamTrack value);
-  List<MediaStream> get streams;
-  set streams(List<MediaStream> value);
+  List<MediaStream>? get streams;
+  set streams(List<MediaStream>? value);
   RTCRtpTransceiver get transceiver;
   set transceiver(RTCRtpTransceiver value);
+}
+
+final class RTCTrackEventInitValue implements RTCTrackEventInit {
+  @override
+  RTCRtpReceiver receiver;
+  @override
+  MediaStreamTrack track;
+  @override
+  List<MediaStream>? streams;
+  @override
+  RTCRtpTransceiver transceiver;
+
+  RTCTrackEventInitValue({
+    required this.receiver,
+    required this.track,
+    this.streams,
+    required this.transceiver,
+  });
 }
 

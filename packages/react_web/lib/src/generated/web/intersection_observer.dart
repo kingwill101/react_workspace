@@ -57,14 +57,59 @@ abstract interface class IntersectionObserverEntryInit {
   set target(Element value);
 }
 
+final class IntersectionObserverEntryInitValue implements IntersectionObserverEntryInit {
+  @override
+  DOMHighResTimeStamp time;
+  @override
+  DOMRectInit? rootBounds;
+  @override
+  DOMRectInit boundingClientRect;
+  @override
+  DOMRectInit intersectionRect;
+  @override
+  bool isIntersecting;
+  @override
+  double intersectionRatio;
+  @override
+  Element target;
+
+  IntersectionObserverEntryInitValue({
+    required this.time,
+    required this.rootBounds,
+    required this.boundingClientRect,
+    required this.intersectionRect,
+    required this.isIntersecting,
+    required this.intersectionRatio,
+    required this.target,
+  });
+}
+
 abstract interface class IntersectionObserverInit {
-  Object get root;
-  set root(Object value);
-  String get rootMargin;
-  set rootMargin(String value);
-  String get scrollMargin;
-  set scrollMargin(String value);
-  Object get threshold;
-  set threshold(Object value);
+  Object? get root;
+  set root(Object? value);
+  String? get rootMargin;
+  set rootMargin(String? value);
+  String? get scrollMargin;
+  set scrollMargin(String? value);
+  Object? get threshold;
+  set threshold(Object? value);
+}
+
+final class IntersectionObserverInitValue implements IntersectionObserverInit {
+  @override
+  Object? root;
+  @override
+  String? rootMargin;
+  @override
+  String? scrollMargin;
+  @override
+  Object? threshold;
+
+  IntersectionObserverInitValue({
+    this.root,
+    this.rootMargin,
+    this.scrollMargin,
+    this.threshold,
+  });
 }
 

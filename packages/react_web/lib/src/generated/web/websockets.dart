@@ -22,12 +22,27 @@ abstract interface class CloseEvent {
 }
 
 abstract interface class CloseEventInit {
-  bool get wasClean;
-  set wasClean(bool value);
-  int get code;
-  set code(int value);
-  String get reason;
-  set reason(String value);
+  bool? get wasClean;
+  set wasClean(bool? value);
+  int? get code;
+  set code(int? value);
+  String? get reason;
+  set reason(String? value);
+}
+
+final class CloseEventInitValue implements CloseEventInit {
+  @override
+  bool? wasClean;
+  @override
+  int? code;
+  @override
+  String? reason;
+
+  CloseEventInitValue({
+    this.wasClean,
+    this.code,
+    this.reason,
+  });
 }
 
 abstract interface class WebSocket {

@@ -4,9 +4,21 @@
 
 
 abstract interface class FlacEncoderConfig {
-  int get blockSize;
-  set blockSize(int value);
-  int get compressLevel;
-  set compressLevel(int value);
+  int? get blockSize;
+  set blockSize(int? value);
+  int? get compressLevel;
+  set compressLevel(int? value);
+}
+
+final class FlacEncoderConfigValue implements FlacEncoderConfig {
+  @override
+  int? blockSize;
+  @override
+  int? compressLevel;
+
+  FlacEncoderConfigValue({
+    this.blockSize,
+    this.compressLevel,
+  });
 }
 

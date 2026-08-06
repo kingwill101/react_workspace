@@ -19,39 +19,96 @@ abstract interface class CompositionEvent {
 }
 
 abstract interface class CompositionEventInit {
-  String get data;
-  set data(String value);
+  String? get data;
+  set data(String? value);
+}
+
+final class CompositionEventInitValue implements CompositionEventInit {
+  @override
+  String? data;
+
+  CompositionEventInitValue({
+    this.data,
+  });
 }
 
 abstract interface class EventModifierInit {
-  bool get ctrlKey;
-  set ctrlKey(bool value);
-  bool get shiftKey;
-  set shiftKey(bool value);
-  bool get altKey;
-  set altKey(bool value);
-  bool get metaKey;
-  set metaKey(bool value);
-  bool get modifierAltGraph;
-  set modifierAltGraph(bool value);
-  bool get modifierCapsLock;
-  set modifierCapsLock(bool value);
-  bool get modifierFn;
-  set modifierFn(bool value);
-  bool get modifierFnLock;
-  set modifierFnLock(bool value);
-  bool get modifierHyper;
-  set modifierHyper(bool value);
-  bool get modifierNumLock;
-  set modifierNumLock(bool value);
-  bool get modifierScrollLock;
-  set modifierScrollLock(bool value);
-  bool get modifierSuper;
-  set modifierSuper(bool value);
-  bool get modifierSymbol;
-  set modifierSymbol(bool value);
-  bool get modifierSymbolLock;
-  set modifierSymbolLock(bool value);
+  bool? get ctrlKey;
+  set ctrlKey(bool? value);
+  bool? get shiftKey;
+  set shiftKey(bool? value);
+  bool? get altKey;
+  set altKey(bool? value);
+  bool? get metaKey;
+  set metaKey(bool? value);
+  bool? get modifierAltGraph;
+  set modifierAltGraph(bool? value);
+  bool? get modifierCapsLock;
+  set modifierCapsLock(bool? value);
+  bool? get modifierFn;
+  set modifierFn(bool? value);
+  bool? get modifierFnLock;
+  set modifierFnLock(bool? value);
+  bool? get modifierHyper;
+  set modifierHyper(bool? value);
+  bool? get modifierNumLock;
+  set modifierNumLock(bool? value);
+  bool? get modifierScrollLock;
+  set modifierScrollLock(bool? value);
+  bool? get modifierSuper;
+  set modifierSuper(bool? value);
+  bool? get modifierSymbol;
+  set modifierSymbol(bool? value);
+  bool? get modifierSymbolLock;
+  set modifierSymbolLock(bool? value);
+}
+
+final class EventModifierInitValue implements EventModifierInit {
+  @override
+  bool? ctrlKey;
+  @override
+  bool? shiftKey;
+  @override
+  bool? altKey;
+  @override
+  bool? metaKey;
+  @override
+  bool? modifierAltGraph;
+  @override
+  bool? modifierCapsLock;
+  @override
+  bool? modifierFn;
+  @override
+  bool? modifierFnLock;
+  @override
+  bool? modifierHyper;
+  @override
+  bool? modifierNumLock;
+  @override
+  bool? modifierScrollLock;
+  @override
+  bool? modifierSuper;
+  @override
+  bool? modifierSymbol;
+  @override
+  bool? modifierSymbolLock;
+
+  EventModifierInitValue({
+    this.ctrlKey,
+    this.shiftKey,
+    this.altKey,
+    this.metaKey,
+    this.modifierAltGraph,
+    this.modifierCapsLock,
+    this.modifierFn,
+    this.modifierFnLock,
+    this.modifierHyper,
+    this.modifierNumLock,
+    this.modifierScrollLock,
+    this.modifierSuper,
+    this.modifierSymbol,
+    this.modifierSymbolLock,
+  });
 }
 
 abstract interface class FocusEvent {
@@ -66,6 +123,15 @@ abstract interface class FocusEvent {
 abstract interface class FocusEventInit {
   EventTarget? get relatedTarget;
   set relatedTarget(EventTarget? value);
+}
+
+final class FocusEventInitValue implements FocusEventInit {
+  @override
+  EventTarget? relatedTarget;
+
+  FocusEventInitValue({
+    this.relatedTarget,
+  });
 }
 
 abstract interface class KeyboardEvent {
@@ -90,20 +156,47 @@ abstract interface class KeyboardEvent {
 }
 
 abstract interface class KeyboardEventInit {
-  String get key;
-  set key(String value);
-  String get code;
-  set code(String value);
-  int get location;
-  set location(int value);
-  bool get repeat;
-  set repeat(bool value);
-  bool get isComposing;
-  set isComposing(bool value);
-  int get charCode;
-  set charCode(int value);
-  int get keyCode;
-  set keyCode(int value);
+  String? get key;
+  set key(String? value);
+  String? get code;
+  set code(String? value);
+  int? get location;
+  set location(int? value);
+  bool? get repeat;
+  set repeat(bool? value);
+  bool? get isComposing;
+  set isComposing(bool? value);
+  int? get charCode;
+  set charCode(int? value);
+  int? get keyCode;
+  set keyCode(int? value);
+}
+
+final class KeyboardEventInitValue implements KeyboardEventInit {
+  @override
+  String? key;
+  @override
+  String? code;
+  @override
+  int? location;
+  @override
+  bool? repeat;
+  @override
+  bool? isComposing;
+  @override
+  int? charCode;
+  @override
+  int? keyCode;
+
+  KeyboardEventInitValue({
+    this.key,
+    this.code,
+    this.location,
+    this.repeat,
+    this.isComposing,
+    this.charCode,
+    this.keyCode,
+  });
 }
 
 abstract interface class MutationEvent {
@@ -133,13 +226,31 @@ abstract interface class WheelEvent {
 }
 
 abstract interface class WheelEventInit {
-  double get deltaX;
-  set deltaX(double value);
-  double get deltaY;
-  set deltaY(double value);
-  double get deltaZ;
-  set deltaZ(double value);
-  int get deltaMode;
-  set deltaMode(int value);
+  double? get deltaX;
+  set deltaX(double? value);
+  double? get deltaY;
+  set deltaY(double? value);
+  double? get deltaZ;
+  set deltaZ(double? value);
+  int? get deltaMode;
+  set deltaMode(int? value);
+}
+
+final class WheelEventInitValue implements WheelEventInit {
+  @override
+  double? deltaX;
+  @override
+  double? deltaY;
+  @override
+  double? deltaZ;
+  @override
+  int? deltaMode;
+
+  WheelEventInitValue({
+    this.deltaX,
+    this.deltaY,
+    this.deltaZ,
+    this.deltaMode,
+  });
 }
 

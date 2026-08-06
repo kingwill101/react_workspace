@@ -40,13 +40,31 @@ abstract interface class PerformanceEventTiming {
 }
 
 abstract interface class PerformanceObserverInit {
-  DOMHighResTimeStamp get durationThreshold;
-  set durationThreshold(DOMHighResTimeStamp value);
-  List<String> get entryTypes;
-  set entryTypes(List<String> value);
-  String get type;
-  set type(String value);
-  bool get buffered;
-  set buffered(bool value);
+  DOMHighResTimeStamp? get durationThreshold;
+  set durationThreshold(DOMHighResTimeStamp? value);
+  List<String>? get entryTypes;
+  set entryTypes(List<String>? value);
+  String? get type;
+  set type(String? value);
+  bool? get buffered;
+  set buffered(bool? value);
+}
+
+final class PerformanceObserverInitValue implements PerformanceObserverInit {
+  @override
+  DOMHighResTimeStamp? durationThreshold;
+  @override
+  List<String>? entryTypes;
+  @override
+  String? type;
+  @override
+  bool? buffered;
+
+  PerformanceObserverInitValue({
+    this.durationThreshold,
+    this.entryTypes,
+    this.type,
+    this.buffered,
+  });
 }
 

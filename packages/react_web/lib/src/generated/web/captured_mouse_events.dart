@@ -5,9 +5,21 @@
 import 'dom.dart';
 
 abstract interface class CapturedMouseEventInit {
-  int get surfaceX;
-  set surfaceX(int value);
-  int get surfaceY;
-  set surfaceY(int value);
+  int? get surfaceX;
+  set surfaceX(int? value);
+  int? get surfaceY;
+  set surfaceY(int? value);
+}
+
+final class CapturedMouseEventInitValue implements CapturedMouseEventInit {
+  @override
+  int? surfaceX;
+  @override
+  int? surfaceY;
+
+  CapturedMouseEventInitValue({
+    this.surfaceX,
+    this.surfaceY,
+  });
 }
 

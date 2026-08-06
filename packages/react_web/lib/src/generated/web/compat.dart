@@ -53,6 +53,8 @@ abstract interface class HTMLBodyElement {
    set onunload(EventHandler value);
   EventHandler get onportalactivate;
    set onportalactivate(EventHandler value);
+  EventHandler get onorientationchange;
+   set onorientationchange(EventHandler value);
   String get text;
    set text(String value);
   String get link;

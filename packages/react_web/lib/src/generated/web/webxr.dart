@@ -35,6 +35,18 @@ abstract interface class XRInputSourceEventInit {
   set inputSource(XRInputSource value);
 }
 
+final class XRInputSourceEventInitValue implements XRInputSourceEventInit {
+  @override
+  Object frame;
+  @override
+  XRInputSource inputSource;
+
+  XRInputSourceEventInitValue({
+    required this.frame,
+    required this.inputSource,
+  });
+}
+
 abstract interface class XRInputSourcesChangeEvent {
   factory XRInputSourcesChangeEvent(String type, XRInputSourcesChangeEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<XRInputSourcesChangeEvent>(
@@ -55,13 +67,43 @@ abstract interface class XRInputSourcesChangeEventInit {
   set removed(List<XRInputSource> value);
 }
 
+final class XRInputSourcesChangeEventInitValue implements XRInputSourcesChangeEventInit {
+  @override
+  Object session;
+  @override
+  List<XRInputSource> added;
+  @override
+  List<XRInputSource> removed;
+
+  XRInputSourcesChangeEventInitValue({
+    required this.session,
+    required this.added,
+    required this.removed,
+  });
+}
+
 abstract interface class XRPermissionDescriptor {
-  XRSessionMode get mode;
-  set mode(XRSessionMode value);
-  List<String> get requiredFeatures;
-  set requiredFeatures(List<String> value);
-  List<String> get optionalFeatures;
-  set optionalFeatures(List<String> value);
+  XRSessionMode? get mode;
+  set mode(XRSessionMode? value);
+  List<String>? get requiredFeatures;
+  set requiredFeatures(List<String>? value);
+  List<String>? get optionalFeatures;
+  set optionalFeatures(List<String>? value);
+}
+
+final class XRPermissionDescriptorValue implements XRPermissionDescriptor {
+  @override
+  XRSessionMode? mode;
+  @override
+  List<String>? requiredFeatures;
+  @override
+  List<String>? optionalFeatures;
+
+  XRPermissionDescriptorValue({
+    this.mode,
+    this.requiredFeatures,
+    this.optionalFeatures,
+  });
 }
 
 abstract interface class XRPose {
@@ -94,19 +136,52 @@ abstract interface class XRReferenceSpaceEventInit {
   set transform(XRRigidTransform? value);
 }
 
+final class XRReferenceSpaceEventInitValue implements XRReferenceSpaceEventInit {
+  @override
+  XRReferenceSpace referenceSpace;
+  @override
+  XRRigidTransform? transform;
+
+  XRReferenceSpaceEventInitValue({
+    required this.referenceSpace,
+    this.transform,
+  });
+}
+
 typedef XRReferenceSpaceType = String;
 
 abstract interface class XRRenderStateInit {
-  double get depthNear;
-  set depthNear(double value);
-  double get depthFar;
-  set depthFar(double value);
-  double get inlineVerticalFieldOfView;
-  set inlineVerticalFieldOfView(double value);
-  Object get baseLayer;
-  set baseLayer(Object value);
-  List<Object> get layers;
-  set layers(List<Object> value);
+  double? get depthNear;
+  set depthNear(double? value);
+  double? get depthFar;
+  set depthFar(double? value);
+  double? get inlineVerticalFieldOfView;
+  set inlineVerticalFieldOfView(double? value);
+  Object? get baseLayer;
+  set baseLayer(Object? value);
+  List<Object>? get layers;
+  set layers(List<Object>? value);
+}
+
+final class XRRenderStateInitValue implements XRRenderStateInit {
+  @override
+  double? depthNear;
+  @override
+  double? depthFar;
+  @override
+  double? inlineVerticalFieldOfView;
+  @override
+  Object? baseLayer;
+  @override
+  List<Object>? layers;
+
+  XRRenderStateInitValue({
+    this.depthNear,
+    this.depthFar,
+    this.inlineVerticalFieldOfView,
+    this.baseLayer,
+    this.layers,
+  });
 }
 
 abstract interface class XRRigidTransform {
@@ -135,11 +210,29 @@ abstract interface class XRSessionEventInit {
   set session(Object value);
 }
 
+final class XRSessionEventInitValue implements XRSessionEventInit {
+  @override
+  Object session;
+
+  XRSessionEventInitValue({
+    required this.session,
+  });
+}
+
 typedef XRSessionMode = String;
 
 abstract interface class XRSessionSupportedPermissionDescriptor {
-  XRSessionMode get mode;
-  set mode(XRSessionMode value);
+  XRSessionMode? get mode;
+  set mode(XRSessionMode? value);
+}
+
+final class XRSessionSupportedPermissionDescriptorValue implements XRSessionSupportedPermissionDescriptor {
+  @override
+  XRSessionMode? mode;
+
+  XRSessionSupportedPermissionDescriptorValue({
+    this.mode,
+  });
 }
 
 abstract interface class XRSpace {
@@ -161,18 +254,42 @@ abstract interface class XRViewport {
 typedef XRVisibilityState = String;
 
 abstract interface class XRWebGLLayerInit {
-  bool get antialias;
-  set antialias(bool value);
-  bool get depth;
-  set depth(bool value);
-  bool get stencil;
-  set stencil(bool value);
-  bool get alpha;
-  set alpha(bool value);
-  bool get ignoreDepthValues;
-  set ignoreDepthValues(bool value);
-  double get framebufferScaleFactor;
-  set framebufferScaleFactor(double value);
+  bool? get antialias;
+  set antialias(bool? value);
+  bool? get depth;
+  set depth(bool? value);
+  bool? get stencil;
+  set stencil(bool? value);
+  bool? get alpha;
+  set alpha(bool? value);
+  bool? get ignoreDepthValues;
+  set ignoreDepthValues(bool? value);
+  double? get framebufferScaleFactor;
+  set framebufferScaleFactor(double? value);
+}
+
+final class XRWebGLLayerInitValue implements XRWebGLLayerInit {
+  @override
+  bool? antialias;
+  @override
+  bool? depth;
+  @override
+  bool? stencil;
+  @override
+  bool? alpha;
+  @override
+  bool? ignoreDepthValues;
+  @override
+  double? framebufferScaleFactor;
+
+  XRWebGLLayerInitValue({
+    this.antialias,
+    this.depth,
+    this.stencil,
+    this.alpha,
+    this.ignoreDepthValues,
+    this.framebufferScaleFactor,
+  });
 }
 
 typedef XRWebGLRenderingContext = Object;

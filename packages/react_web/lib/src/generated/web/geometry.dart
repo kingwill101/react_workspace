@@ -69,55 +69,136 @@ abstract interface class DOMMatrix {
 }
 
 abstract interface class DOMMatrix2DInit {
-  double get a;
-  set a(double value);
-  double get b;
-  set b(double value);
-  double get c;
-  set c(double value);
-  double get d;
-  set d(double value);
-  double get e;
-  set e(double value);
-  double get f;
-  set f(double value);
-  double get m11;
-  set m11(double value);
-  double get m12;
-  set m12(double value);
-  double get m21;
-  set m21(double value);
-  double get m22;
-  set m22(double value);
-  double get m41;
-  set m41(double value);
-  double get m42;
-  set m42(double value);
+  double? get a;
+  set a(double? value);
+  double? get b;
+  set b(double? value);
+  double? get c;
+  set c(double? value);
+  double? get d;
+  set d(double? value);
+  double? get e;
+  set e(double? value);
+  double? get f;
+  set f(double? value);
+  double? get m11;
+  set m11(double? value);
+  double? get m12;
+  set m12(double? value);
+  double? get m21;
+  set m21(double? value);
+  double? get m22;
+  set m22(double? value);
+  double? get m41;
+  set m41(double? value);
+  double? get m42;
+  set m42(double? value);
+}
+
+final class DOMMatrix2DInitValue implements DOMMatrix2DInit {
+  @override
+  double? a;
+  @override
+  double? b;
+  @override
+  double? c;
+  @override
+  double? d;
+  @override
+  double? e;
+  @override
+  double? f;
+  @override
+  double? m11;
+  @override
+  double? m12;
+  @override
+  double? m21;
+  @override
+  double? m22;
+  @override
+  double? m41;
+  @override
+  double? m42;
+
+  DOMMatrix2DInitValue({
+    this.a,
+    this.b,
+    this.c,
+    this.d,
+    this.e,
+    this.f,
+    this.m11,
+    this.m12,
+    this.m21,
+    this.m22,
+    this.m41,
+    this.m42,
+  });
 }
 
 abstract interface class DOMMatrixInit {
-  double get m13;
-  set m13(double value);
-  double get m14;
-  set m14(double value);
-  double get m23;
-  set m23(double value);
-  double get m24;
-  set m24(double value);
-  double get m31;
-  set m31(double value);
-  double get m32;
-  set m32(double value);
-  double get m33;
-  set m33(double value);
-  double get m34;
-  set m34(double value);
-  double get m43;
-  set m43(double value);
-  double get m44;
-  set m44(double value);
-  bool get is2D;
-  set is2D(bool value);
+  double? get m13;
+  set m13(double? value);
+  double? get m14;
+  set m14(double? value);
+  double? get m23;
+  set m23(double? value);
+  double? get m24;
+  set m24(double? value);
+  double? get m31;
+  set m31(double? value);
+  double? get m32;
+  set m32(double? value);
+  double? get m33;
+  set m33(double? value);
+  double? get m34;
+  set m34(double? value);
+  double? get m43;
+  set m43(double? value);
+  double? get m44;
+  set m44(double? value);
+  bool? get is2D;
+  set is2D(bool? value);
+}
+
+final class DOMMatrixInitValue implements DOMMatrixInit {
+  @override
+  double? m13;
+  @override
+  double? m14;
+  @override
+  double? m23;
+  @override
+  double? m24;
+  @override
+  double? m31;
+  @override
+  double? m32;
+  @override
+  double? m33;
+  @override
+  double? m34;
+  @override
+  double? m43;
+  @override
+  double? m44;
+  @override
+  bool? is2D;
+
+  DOMMatrixInitValue({
+    this.m13,
+    this.m14,
+    this.m23,
+    this.m24,
+    this.m31,
+    this.m32,
+    this.m33,
+    this.m34,
+    this.m43,
+    this.m44,
+    this.is2D,
+  });
 }
 
 abstract interface class DOMMatrixReadOnly {
@@ -186,14 +267,32 @@ abstract interface class DOMPoint {
 }
 
 abstract interface class DOMPointInit {
-  double get x;
-  set x(double value);
-  double get y;
-  set y(double value);
-  double get z;
-  set z(double value);
-  double get w;
-  set w(double value);
+  double? get x;
+  set x(double? value);
+  double? get y;
+  set y(double? value);
+  double? get z;
+  set z(double? value);
+  double? get w;
+  set w(double? value);
+}
+
+final class DOMPointInitValue implements DOMPointInit {
+  @override
+  double? x;
+  @override
+  double? y;
+  @override
+  double? z;
+  @override
+  double? w;
+
+  DOMPointInitValue({
+    this.x,
+    this.y,
+    this.z,
+    this.w,
+  });
 }
 
 abstract interface class DOMPointReadOnly {
@@ -225,14 +324,32 @@ abstract interface class DOMQuad {
 }
 
 abstract interface class DOMQuadInit {
-  DOMPointInit get p1;
-  set p1(DOMPointInit value);
-  DOMPointInit get p2;
-  set p2(DOMPointInit value);
-  DOMPointInit get p3;
-  set p3(DOMPointInit value);
-  DOMPointInit get p4;
-  set p4(DOMPointInit value);
+  DOMPointInit? get p1;
+  set p1(DOMPointInit? value);
+  DOMPointInit? get p2;
+  set p2(DOMPointInit? value);
+  DOMPointInit? get p3;
+  set p3(DOMPointInit? value);
+  DOMPointInit? get p4;
+  set p4(DOMPointInit? value);
+}
+
+final class DOMQuadInitValue implements DOMQuadInit {
+  @override
+  DOMPointInit? p1;
+  @override
+  DOMPointInit? p2;
+  @override
+  DOMPointInit? p3;
+  @override
+  DOMPointInit? p4;
+
+  DOMQuadInitValue({
+    this.p1,
+    this.p2,
+    this.p3,
+    this.p4,
+  });
 }
 
 abstract interface class DOMRect {
@@ -252,14 +369,32 @@ abstract interface class DOMRect {
 }
 
 abstract interface class DOMRectInit {
-  double get x;
-  set x(double value);
-  double get y;
-  set y(double value);
-  double get width;
-  set width(double value);
-  double get height;
-  set height(double value);
+  double? get x;
+  set x(double? value);
+  double? get y;
+  set y(double? value);
+  double? get width;
+  set width(double? value);
+  double? get height;
+  set height(double? value);
+}
+
+final class DOMRectInitValue implements DOMRectInit {
+  @override
+  double? x;
+  @override
+  double? y;
+  @override
+  double? width;
+  @override
+  double? height;
+
+  DOMRectInitValue({
+    this.x,
+    this.y,
+    this.width,
+    this.height,
+  });
 }
 
 abstract interface class DOMRectList {

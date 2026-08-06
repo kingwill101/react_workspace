@@ -54,10 +54,22 @@ abstract interface class FileSystemFileEntry {
 }
 
 abstract interface class FileSystemFlags {
-  bool get create;
-  set create(bool value);
-  bool get exclusive;
-  set exclusive(bool value);
+  bool? get create;
+  set create(bool? value);
+  bool? get exclusive;
+  set exclusive(bool? value);
+}
+
+final class FileSystemFlagsValue implements FileSystemFlags {
+  @override
+  bool? create;
+  @override
+  bool? exclusive;
+
+  FileSystemFlagsValue({
+    this.create,
+    this.exclusive,
+  });
 }
 
 abstract interface class HTMLInputElement {

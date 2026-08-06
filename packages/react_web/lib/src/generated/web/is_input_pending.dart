@@ -4,7 +4,16 @@
 
 
 abstract interface class IsInputPendingOptions {
-  bool get includeContinuous;
-  set includeContinuous(bool value);
+  bool? get includeContinuous;
+  set includeContinuous(bool? value);
+}
+
+final class IsInputPendingOptionsValue implements IsInputPendingOptions {
+  @override
+  bool? includeContinuous;
+
+  IsInputPendingOptionsValue({
+    this.includeContinuous,
+  });
 }
 

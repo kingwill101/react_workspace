@@ -37,11 +37,26 @@ typedef PositionCallback = void Function(GeolocationPosition position,);
 typedef PositionErrorCallback = void Function(GeolocationPositionError positionError,);
 
 abstract interface class PositionOptions {
-  bool get enableHighAccuracy;
-  set enableHighAccuracy(bool value);
-  int get timeout;
-  set timeout(int value);
-  int get maximumAge;
-  set maximumAge(int value);
+  bool? get enableHighAccuracy;
+  set enableHighAccuracy(bool? value);
+  int? get timeout;
+  set timeout(int? value);
+  int? get maximumAge;
+  set maximumAge(int? value);
+}
+
+final class PositionOptionsValue implements PositionOptions {
+  @override
+  bool? enableHighAccuracy;
+  @override
+  int? timeout;
+  @override
+  int? maximumAge;
+
+  PositionOptionsValue({
+    this.enableHighAccuracy,
+    this.timeout,
+    this.maximumAge,
+  });
 }
 

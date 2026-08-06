@@ -9,11 +9,32 @@ abstract interface class PermissionDescriptor {
   set name(String value);
 }
 
+final class PermissionDescriptorValue implements PermissionDescriptor {
+  @override
+  String name;
+
+  PermissionDescriptorValue({
+    required this.name,
+  });
+}
+
 abstract interface class PermissionSetParameters {
   Object get descriptor;
   set descriptor(Object value);
   PermissionState get state;
   set state(PermissionState value);
+}
+
+final class PermissionSetParametersValue implements PermissionSetParameters {
+  @override
+  Object descriptor;
+  @override
+  PermissionState state;
+
+  PermissionSetParametersValue({
+    required this.descriptor,
+    required this.state,
+  });
 }
 
 typedef PermissionState = String;

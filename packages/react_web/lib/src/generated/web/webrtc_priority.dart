@@ -39,38 +39,92 @@ abstract interface class RTCDataChannel {
 }
 
 abstract interface class RTCDataChannelInit {
-  RTCPriorityType get priority;
-  set priority(RTCPriorityType value);
-  bool get ordered;
-  set ordered(bool value);
-  int get maxPacketLifeTime;
-  set maxPacketLifeTime(int value);
-  int get maxRetransmits;
-  set maxRetransmits(int value);
-  String get protocol;
-  set protocol(String value);
-  bool get negotiated;
-  set negotiated(bool value);
-  int get id;
-  set id(int value);
+  RTCPriorityType? get priority;
+  set priority(RTCPriorityType? value);
+  bool? get ordered;
+  set ordered(bool? value);
+  int? get maxPacketLifeTime;
+  set maxPacketLifeTime(int? value);
+  int? get maxRetransmits;
+  set maxRetransmits(int? value);
+  String? get protocol;
+  set protocol(String? value);
+  bool? get negotiated;
+  set negotiated(bool? value);
+  int? get id;
+  set id(int? value);
+}
+
+final class RTCDataChannelInitValue implements RTCDataChannelInit {
+  @override
+  RTCPriorityType? priority;
+  @override
+  bool? ordered;
+  @override
+  int? maxPacketLifeTime;
+  @override
+  int? maxRetransmits;
+  @override
+  String? protocol;
+  @override
+  bool? negotiated;
+  @override
+  int? id;
+
+  RTCDataChannelInitValue({
+    this.priority,
+    this.ordered,
+    this.maxPacketLifeTime,
+    this.maxRetransmits,
+    this.protocol,
+    this.negotiated,
+    this.id,
+  });
 }
 
 typedef RTCPriorityType = String;
 
 abstract interface class RTCRtpEncodingParameters {
-  RTCPriorityType get priority;
-  set priority(RTCPriorityType value);
-  RTCPriorityType get networkPriority;
-  set networkPriority(RTCPriorityType value);
-  String get scalabilityMode;
-  set scalabilityMode(String value);
-  bool get active;
-  set active(bool value);
-  int get maxBitrate;
-  set maxBitrate(int value);
-  double get maxFramerate;
-  set maxFramerate(double value);
-  double get scaleResolutionDownBy;
-  set scaleResolutionDownBy(double value);
+  RTCPriorityType? get priority;
+  set priority(RTCPriorityType? value);
+  RTCPriorityType? get networkPriority;
+  set networkPriority(RTCPriorityType? value);
+  String? get scalabilityMode;
+  set scalabilityMode(String? value);
+  bool? get active;
+  set active(bool? value);
+  int? get maxBitrate;
+  set maxBitrate(int? value);
+  double? get maxFramerate;
+  set maxFramerate(double? value);
+  double? get scaleResolutionDownBy;
+  set scaleResolutionDownBy(double? value);
+}
+
+final class RTCRtpEncodingParametersValue implements RTCRtpEncodingParameters {
+  @override
+  RTCPriorityType? priority;
+  @override
+  RTCPriorityType? networkPriority;
+  @override
+  String? scalabilityMode;
+  @override
+  bool? active;
+  @override
+  int? maxBitrate;
+  @override
+  double? maxFramerate;
+  @override
+  double? scaleResolutionDownBy;
+
+  RTCRtpEncodingParametersValue({
+    this.priority,
+    this.networkPriority,
+    this.scalabilityMode,
+    this.active,
+    this.maxBitrate,
+    this.maxFramerate,
+    this.scaleResolutionDownBy,
+  });
 }
 

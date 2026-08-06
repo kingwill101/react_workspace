@@ -26,23 +26,56 @@ abstract interface class RTCEncodedAudioFrame {
 }
 
 abstract interface class RTCEncodedAudioFrameMetadata {
-  int get synchronizationSource;
-  set synchronizationSource(int value);
-  Object get payloadType;
-  set payloadType(Object value);
-  List<int> get contributingSources;
-  set contributingSources(List<int> value);
-  int get sequenceNumber;
-  set sequenceNumber(int value);
-  int get rtpTimestamp;
-  set rtpTimestamp(int value);
-  String get mimeType;
-  set mimeType(String value);
+  int? get synchronizationSource;
+  set synchronizationSource(int? value);
+  Object? get payloadType;
+  set payloadType(Object? value);
+  List<int>? get contributingSources;
+  set contributingSources(List<int>? value);
+  int? get sequenceNumber;
+  set sequenceNumber(int? value);
+  int? get rtpTimestamp;
+  set rtpTimestamp(int? value);
+  String? get mimeType;
+  set mimeType(String? value);
+}
+
+final class RTCEncodedAudioFrameMetadataValue implements RTCEncodedAudioFrameMetadata {
+  @override
+  int? synchronizationSource;
+  @override
+  Object? payloadType;
+  @override
+  List<int>? contributingSources;
+  @override
+  int? sequenceNumber;
+  @override
+  int? rtpTimestamp;
+  @override
+  String? mimeType;
+
+  RTCEncodedAudioFrameMetadataValue({
+    this.synchronizationSource,
+    this.payloadType,
+    this.contributingSources,
+    this.sequenceNumber,
+    this.rtpTimestamp,
+    this.mimeType,
+  });
 }
 
 abstract interface class RTCEncodedAudioFrameOptions {
-  RTCEncodedAudioFrameMetadata get metadata;
-  set metadata(RTCEncodedAudioFrameMetadata value);
+  RTCEncodedAudioFrameMetadata? get metadata;
+  set metadata(RTCEncodedAudioFrameMetadata? value);
+}
+
+final class RTCEncodedAudioFrameOptionsValue implements RTCEncodedAudioFrameOptions {
+  @override
+  RTCEncodedAudioFrameMetadata? metadata;
+
+  RTCEncodedAudioFrameOptionsValue({
+    this.metadata,
+  });
 }
 
 abstract interface class RTCEncodedVideoFrame {
@@ -58,35 +91,86 @@ abstract interface class RTCEncodedVideoFrame {
 }
 
 abstract interface class RTCEncodedVideoFrameMetadata {
-  int get frameId;
-  set frameId(int value);
-  List<int> get dependencies;
-  set dependencies(List<int> value);
-  int get width;
-  set width(int value);
-  int get height;
-  set height(int value);
-  int get spatialIndex;
-  set spatialIndex(int value);
-  int get temporalIndex;
-  set temporalIndex(int value);
-  int get synchronizationSource;
-  set synchronizationSource(int value);
-  Object get payloadType;
-  set payloadType(Object value);
-  List<int> get contributingSources;
-  set contributingSources(List<int> value);
-  int get timestamp;
-  set timestamp(int value);
-  int get rtpTimestamp;
-  set rtpTimestamp(int value);
-  String get mimeType;
-  set mimeType(String value);
+  int? get frameId;
+  set frameId(int? value);
+  List<int>? get dependencies;
+  set dependencies(List<int>? value);
+  int? get width;
+  set width(int? value);
+  int? get height;
+  set height(int? value);
+  int? get spatialIndex;
+  set spatialIndex(int? value);
+  int? get temporalIndex;
+  set temporalIndex(int? value);
+  int? get synchronizationSource;
+  set synchronizationSource(int? value);
+  Object? get payloadType;
+  set payloadType(Object? value);
+  List<int>? get contributingSources;
+  set contributingSources(List<int>? value);
+  int? get timestamp;
+  set timestamp(int? value);
+  int? get rtpTimestamp;
+  set rtpTimestamp(int? value);
+  String? get mimeType;
+  set mimeType(String? value);
+}
+
+final class RTCEncodedVideoFrameMetadataValue implements RTCEncodedVideoFrameMetadata {
+  @override
+  int? frameId;
+  @override
+  List<int>? dependencies;
+  @override
+  int? width;
+  @override
+  int? height;
+  @override
+  int? spatialIndex;
+  @override
+  int? temporalIndex;
+  @override
+  int? synchronizationSource;
+  @override
+  Object? payloadType;
+  @override
+  List<int>? contributingSources;
+  @override
+  int? timestamp;
+  @override
+  int? rtpTimestamp;
+  @override
+  String? mimeType;
+
+  RTCEncodedVideoFrameMetadataValue({
+    this.frameId,
+    this.dependencies,
+    this.width,
+    this.height,
+    this.spatialIndex,
+    this.temporalIndex,
+    this.synchronizationSource,
+    this.payloadType,
+    this.contributingSources,
+    this.timestamp,
+    this.rtpTimestamp,
+    this.mimeType,
+  });
 }
 
 abstract interface class RTCEncodedVideoFrameOptions {
-  RTCEncodedVideoFrameMetadata get metadata;
-  set metadata(RTCEncodedVideoFrameMetadata value);
+  RTCEncodedVideoFrameMetadata? get metadata;
+  set metadata(RTCEncodedVideoFrameMetadata? value);
+}
+
+final class RTCEncodedVideoFrameOptionsValue implements RTCEncodedVideoFrameOptions {
+  @override
+  RTCEncodedVideoFrameMetadata? metadata;
+
+  RTCEncodedVideoFrameOptionsValue({
+    this.metadata,
+  });
 }
 
 typedef RTCEncodedVideoFrameType = String;
@@ -148,11 +232,35 @@ abstract interface class SFrameTransformErrorEventInit {
   set keyID(CryptoKeyID? value);
 }
 
+final class SFrameTransformErrorEventInitValue implements SFrameTransformErrorEventInit {
+  @override
+  SFrameTransformErrorEventType errorType;
+  @override
+  Object frame;
+  @override
+  CryptoKeyID? keyID;
+
+  SFrameTransformErrorEventInitValue({
+    required this.errorType,
+    required this.frame,
+    this.keyID,
+  });
+}
+
 typedef SFrameTransformErrorEventType = String;
 
 abstract interface class SFrameTransformOptions {
-  SFrameTransformRole get role;
-  set role(SFrameTransformRole value);
+  SFrameTransformRole? get role;
+  set role(SFrameTransformRole? value);
+}
+
+final class SFrameTransformOptionsValue implements SFrameTransformOptions {
+  @override
+  SFrameTransformRole? role;
+
+  SFrameTransformOptionsValue({
+    this.role,
+  });
 }
 
 typedef SFrameTransformRole = String;

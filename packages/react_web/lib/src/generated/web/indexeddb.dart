@@ -41,17 +41,33 @@ abstract interface class IDBDatabase {
   void close();
   IDBObjectStore createObjectStore(String name, [IDBObjectStoreParameters? options]);
   void deleteObjectStore(String name);
+  EventHandler get onabort;
+   set onabort(EventHandler value);
   EventHandler get onclose;
    set onclose(EventHandler value);
+  EventHandler get onerror;
+   set onerror(EventHandler value);
   EventHandler get onversionchange;
    set onversionchange(EventHandler value);
 }
 
 abstract interface class IDBDatabaseInfo {
-  String get name;
-  set name(String value);
-  int get version;
-  set version(int value);
+  String? get name;
+  set name(String? value);
+  int? get version;
+  set version(int? value);
+}
+
+final class IDBDatabaseInfoValue implements IDBDatabaseInfo {
+  @override
+  String? name;
+  @override
+  int? version;
+
+  IDBDatabaseInfoValue({
+    this.name,
+    this.version,
+  });
 }
 
 abstract interface class IDBFactory {
@@ -78,10 +94,22 @@ abstract interface class IDBIndex {
 }
 
 abstract interface class IDBIndexParameters {
-  bool get unique;
-  set unique(bool value);
-  bool get multiEntry;
-  set multiEntry(bool value);
+  bool? get unique;
+  set unique(bool? value);
+  bool? get multiEntry;
+  set multiEntry(bool? value);
+}
+
+final class IDBIndexParametersValue implements IDBIndexParameters {
+  @override
+  bool? unique;
+  @override
+  bool? multiEntry;
+
+  IDBIndexParametersValue({
+    this.unique,
+    this.multiEntry,
+  });
 }
 
 abstract interface class IDBKeyRange {
@@ -116,10 +144,22 @@ abstract interface class IDBObjectStore {
 }
 
 abstract interface class IDBObjectStoreParameters {
-  Object get keyPath;
-  set keyPath(Object value);
-  bool get autoIncrement;
-  set autoIncrement(bool value);
+  Object? get keyPath;
+  set keyPath(Object? value);
+  bool? get autoIncrement;
+  set autoIncrement(bool? value);
+}
+
+final class IDBObjectStoreParametersValue implements IDBObjectStoreParameters {
+  @override
+  Object? keyPath;
+  @override
+  bool? autoIncrement;
+
+  IDBObjectStoreParametersValue({
+    this.keyPath,
+    this.autoIncrement,
+  });
 }
 
 abstract interface class IDBOpenDBRequest {
@@ -165,8 +205,17 @@ typedef IDBTransactionDurability = String;
 typedef IDBTransactionMode = String;
 
 abstract interface class IDBTransactionOptions {
-  IDBTransactionDurability get durability;
-  set durability(IDBTransactionDurability value);
+  IDBTransactionDurability? get durability;
+  set durability(IDBTransactionDurability? value);
+}
+
+final class IDBTransactionOptionsValue implements IDBTransactionOptions {
+  @override
+  IDBTransactionDurability? durability;
+
+  IDBTransactionOptionsValue({
+    this.durability,
+  });
 }
 
 abstract interface class IDBVersionChangeEvent {
@@ -180,10 +229,22 @@ abstract interface class IDBVersionChangeEvent {
 }
 
 abstract interface class IDBVersionChangeEventInit {
-  int get oldVersion;
-  set oldVersion(int value);
+  int? get oldVersion;
+  set oldVersion(int? value);
   int? get newVersion;
   set newVersion(int? value);
+}
+
+final class IDBVersionChangeEventInitValue implements IDBVersionChangeEventInit {
+  @override
+  int? oldVersion;
+  @override
+  int? newVersion;
+
+  IDBVersionChangeEventInitValue({
+    this.oldVersion,
+    this.newVersion,
+  });
 }
 
 abstract interface class WindowOrWorkerGlobalScope {

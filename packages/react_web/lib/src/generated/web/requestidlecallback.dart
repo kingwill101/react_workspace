@@ -12,7 +12,16 @@ abstract interface class IdleDeadline {
 typedef IdleRequestCallback = void Function(IdleDeadline deadline,);
 
 abstract interface class IdleRequestOptions {
-  int get timeout;
-  set timeout(int value);
+  int? get timeout;
+  set timeout(int? value);
+}
+
+final class IdleRequestOptionsValue implements IdleRequestOptions {
+  @override
+  int? timeout;
+
+  IdleRequestOptionsValue({
+    this.timeout,
+  });
 }
 

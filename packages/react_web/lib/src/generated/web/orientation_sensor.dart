@@ -22,8 +22,17 @@ abstract interface class OrientationSensor {
 typedef OrientationSensorLocalCoordinateSystem = String;
 
 abstract interface class OrientationSensorOptions {
-  OrientationSensorLocalCoordinateSystem get referenceFrame;
-  set referenceFrame(OrientationSensorLocalCoordinateSystem value);
+  OrientationSensorLocalCoordinateSystem? get referenceFrame;
+  set referenceFrame(OrientationSensorLocalCoordinateSystem? value);
+}
+
+final class OrientationSensorOptionsValue implements OrientationSensorOptions {
+  @override
+  OrientationSensorLocalCoordinateSystem? referenceFrame;
+
+  OrientationSensorOptionsValue({
+    this.referenceFrame,
+  });
 }
 
 abstract interface class RelativeOrientationSensor {

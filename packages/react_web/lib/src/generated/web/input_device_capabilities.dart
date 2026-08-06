@@ -7,10 +7,22 @@ import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class InputDeviceCapabilitiesInit {
-  bool get firesTouchEvents;
-  set firesTouchEvents(bool value);
-  bool get pointerMovementScrolls;
-  set pointerMovementScrolls(bool value);
+  bool? get firesTouchEvents;
+  set firesTouchEvents(bool? value);
+  bool? get pointerMovementScrolls;
+  set pointerMovementScrolls(bool? value);
+}
+
+final class InputDeviceCapabilitiesInitValue implements InputDeviceCapabilitiesInit {
+  @override
+  bool? firesTouchEvents;
+  @override
+  bool? pointerMovementScrolls;
+
+  InputDeviceCapabilitiesInitValue({
+    this.firesTouchEvents,
+    this.pointerMovementScrolls,
+  });
 }
 
 abstract interface class UIEvent {
@@ -26,13 +38,31 @@ abstract interface class UIEvent {
 }
 
 abstract interface class UIEventInit {
-  Object get sourceCapabilities;
-  set sourceCapabilities(Object value);
+  Object? get sourceCapabilities;
+  set sourceCapabilities(Object? value);
   Window? get view;
   set view(Window? value);
-  int get detail;
-  set detail(int value);
-  int get which;
-  set which(int value);
+  int? get detail;
+  set detail(int? value);
+  int? get which;
+  set which(int? value);
+}
+
+final class UIEventInitValue implements UIEventInit {
+  @override
+  Object? sourceCapabilities;
+  @override
+  Window? view;
+  @override
+  int? detail;
+  @override
+  int? which;
+
+  UIEventInitValue({
+    this.sourceCapabilities,
+    this.view,
+    this.detail,
+    this.which,
+  });
 }
 

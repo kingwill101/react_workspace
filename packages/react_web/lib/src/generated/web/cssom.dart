@@ -68,12 +68,27 @@ abstract interface class CSSStyleSheet {
 }
 
 abstract interface class CSSStyleSheetInit {
-  String get baseURL;
-  set baseURL(String value);
-  Object get media;
-  set media(Object value);
-  bool get disabled;
-  set disabled(bool value);
+  String? get baseURL;
+  set baseURL(String? value);
+  Object? get media;
+  set media(Object? value);
+  bool? get disabled;
+  set disabled(bool? value);
+}
+
+final class CSSStyleSheetInitValue implements CSSStyleSheetInit {
+  @override
+  String? baseURL;
+  @override
+  Object? media;
+  @override
+  bool? disabled;
+
+  CSSStyleSheetInitValue({
+    this.baseURL,
+    this.media,
+    this.disabled,
+  });
 }
 
 abstract interface class DocumentOrShadowRoot {

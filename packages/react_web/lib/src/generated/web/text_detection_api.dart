@@ -14,3 +14,18 @@ abstract interface class DetectedText {
   set cornerPoints(List<Point2D> value);
 }
 
+final class DetectedTextValue implements DetectedText {
+  @override
+  DOMRectReadOnly boundingBox;
+  @override
+  String rawValue;
+  @override
+  List<Point2D> cornerPoints;
+
+  DetectedTextValue({
+    required this.boundingBox,
+    required this.rawValue,
+    required this.cornerPoints,
+  });
+}
+

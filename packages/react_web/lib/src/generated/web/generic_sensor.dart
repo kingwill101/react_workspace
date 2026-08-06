@@ -36,8 +36,26 @@ abstract interface class SensorErrorEventInit {
   set error(DOMException value);
 }
 
+final class SensorErrorEventInitValue implements SensorErrorEventInit {
+  @override
+  DOMException error;
+
+  SensorErrorEventInitValue({
+    required this.error,
+  });
+}
+
 abstract interface class SensorOptions {
-  double get frequency;
-  set frequency(double value);
+  double? get frequency;
+  set frequency(double? value);
+}
+
+final class SensorOptionsValue implements SensorOptions {
+  @override
+  double? frequency;
+
+  SensorOptionsValue({
+    this.frequency,
+  });
 }
 

@@ -8,8 +8,17 @@ import 'package:react_web/src/web_runtime.dart';
 typedef AccelerometerLocalCoordinateSystem = String;
 
 abstract interface class AccelerometerSensorOptions {
-  AccelerometerLocalCoordinateSystem get referenceFrame;
-  set referenceFrame(AccelerometerLocalCoordinateSystem value);
+  AccelerometerLocalCoordinateSystem? get referenceFrame;
+  set referenceFrame(AccelerometerLocalCoordinateSystem? value);
+}
+
+final class AccelerometerSensorOptionsValue implements AccelerometerSensorOptions {
+  @override
+  AccelerometerLocalCoordinateSystem? referenceFrame;
+
+  AccelerometerSensorOptionsValue({
+    this.referenceFrame,
+  });
 }
 
 abstract interface class GravitySensor {

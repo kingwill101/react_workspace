@@ -53,26 +53,62 @@ abstract interface class WebGLBuffer {
 }
 
 abstract interface class WebGLContextAttributes {
-  bool get alpha;
-  set alpha(bool value);
-  bool get depth;
-  set depth(bool value);
-  bool get stencil;
-  set stencil(bool value);
-  bool get antialias;
-  set antialias(bool value);
-  bool get premultipliedAlpha;
-  set premultipliedAlpha(bool value);
-  bool get preserveDrawingBuffer;
-  set preserveDrawingBuffer(bool value);
-  WebGLPowerPreference get powerPreference;
-  set powerPreference(WebGLPowerPreference value);
-  bool get failIfMajorPerformanceCaveat;
-  set failIfMajorPerformanceCaveat(bool value);
-  bool get desynchronized;
-  set desynchronized(bool value);
-  bool get xrCompatible;
-  set xrCompatible(bool value);
+  bool? get alpha;
+  set alpha(bool? value);
+  bool? get depth;
+  set depth(bool? value);
+  bool? get stencil;
+  set stencil(bool? value);
+  bool? get antialias;
+  set antialias(bool? value);
+  bool? get premultipliedAlpha;
+  set premultipliedAlpha(bool? value);
+  bool? get preserveDrawingBuffer;
+  set preserveDrawingBuffer(bool? value);
+  WebGLPowerPreference? get powerPreference;
+  set powerPreference(WebGLPowerPreference? value);
+  bool? get failIfMajorPerformanceCaveat;
+  set failIfMajorPerformanceCaveat(bool? value);
+  bool? get desynchronized;
+  set desynchronized(bool? value);
+  bool? get xrCompatible;
+  set xrCompatible(bool? value);
+}
+
+final class WebGLContextAttributesValue implements WebGLContextAttributes {
+  @override
+  bool? alpha;
+  @override
+  bool? depth;
+  @override
+  bool? stencil;
+  @override
+  bool? antialias;
+  @override
+  bool? premultipliedAlpha;
+  @override
+  bool? preserveDrawingBuffer;
+  @override
+  WebGLPowerPreference? powerPreference;
+  @override
+  bool? failIfMajorPerformanceCaveat;
+  @override
+  bool? desynchronized;
+  @override
+  bool? xrCompatible;
+
+  WebGLContextAttributesValue({
+    this.alpha,
+    this.depth,
+    this.stencil,
+    this.antialias,
+    this.premultipliedAlpha,
+    this.preserveDrawingBuffer,
+    this.powerPreference,
+    this.failIfMajorPerformanceCaveat,
+    this.desynchronized,
+    this.xrCompatible,
+  });
 }
 
 abstract interface class WebGLContextEvent {
@@ -85,8 +121,17 @@ abstract interface class WebGLContextEvent {
 }
 
 abstract interface class WebGLContextEventInit {
-  String get statusMessage;
-  set statusMessage(String value);
+  String? get statusMessage;
+  set statusMessage(String? value);
+}
+
+final class WebGLContextEventInitValue implements WebGLContextEventInit {
+  @override
+  String? statusMessage;
+
+  WebGLContextEventInitValue({
+    this.statusMessage,
+  });
 }
 
 abstract interface class WebGLFramebuffer {

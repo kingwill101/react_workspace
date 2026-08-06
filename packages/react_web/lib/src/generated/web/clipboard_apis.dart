@@ -29,6 +29,15 @@ abstract interface class ClipboardEventInit {
   set clipboardData(DataTransfer? value);
 }
 
+final class ClipboardEventInitValue implements ClipboardEventInit {
+  @override
+  DataTransfer? clipboardData;
+
+  ClipboardEventInitValue({
+    this.clipboardData,
+  });
+}
+
 abstract interface class ClipboardItem {
   factory ClipboardItem(Map<String, ClipboardItemData> items, [ClipboardItemOptions? options]) =>
       WebRuntime.current.createWebObject<ClipboardItem>(
@@ -43,20 +52,47 @@ abstract interface class ClipboardItem {
 typedef ClipboardItemData = Future<Object>;
 
 abstract interface class ClipboardItemOptions {
-  PresentationStyle get presentationStyle;
-  set presentationStyle(PresentationStyle value);
+  PresentationStyle? get presentationStyle;
+  set presentationStyle(PresentationStyle? value);
+}
+
+final class ClipboardItemOptionsValue implements ClipboardItemOptions {
+  @override
+  PresentationStyle? presentationStyle;
+
+  ClipboardItemOptionsValue({
+    this.presentationStyle,
+  });
 }
 
 typedef ClipboardItems = List<ClipboardItem>;
 
 abstract interface class ClipboardPermissionDescriptor {
-  bool get allowWithoutGesture;
-  set allowWithoutGesture(bool value);
+  bool? get allowWithoutGesture;
+  set allowWithoutGesture(bool? value);
+}
+
+final class ClipboardPermissionDescriptorValue implements ClipboardPermissionDescriptor {
+  @override
+  bool? allowWithoutGesture;
+
+  ClipboardPermissionDescriptorValue({
+    this.allowWithoutGesture,
+  });
 }
 
 abstract interface class ClipboardUnsanitizedFormats {
-  List<String> get unsanitized;
-  set unsanitized(List<String> value);
+  List<String>? get unsanitized;
+  set unsanitized(List<String>? value);
+}
+
+final class ClipboardUnsanitizedFormatsValue implements ClipboardUnsanitizedFormats {
+  @override
+  List<String>? unsanitized;
+
+  ClipboardUnsanitizedFormatsValue({
+    this.unsanitized,
+  });
 }
 
 typedef PresentationStyle = String;

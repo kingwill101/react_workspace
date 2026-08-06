@@ -7,7 +7,16 @@ import 'permissions.dart';
 typedef IPAddressSpace = String;
 
 abstract interface class PrivateNetworkAccessPermissionDescriptor {
-  String get id;
-  set id(String value);
+  String? get id;
+  set id(String? value);
+}
+
+final class PrivateNetworkAccessPermissionDescriptorValue implements PrivateNetworkAccessPermissionDescriptor {
+  @override
+  String? id;
+
+  PrivateNetworkAccessPermissionDescriptorValue({
+    this.id,
+  });
 }
 

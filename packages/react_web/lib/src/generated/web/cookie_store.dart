@@ -19,10 +19,22 @@ abstract interface class CookieChangeEvent {
 }
 
 abstract interface class CookieChangeEventInit {
-  CookieList get changed;
-  set changed(CookieList value);
-  CookieList get deleted;
-  set deleted(CookieList value);
+  CookieList? get changed;
+  set changed(CookieList? value);
+  CookieList? get deleted;
+  set deleted(CookieList? value);
+}
+
+final class CookieChangeEventInitValue implements CookieChangeEventInit {
+  @override
+  CookieList? changed;
+  @override
+  CookieList? deleted;
+
+  CookieChangeEventInitValue({
+    this.changed,
+    this.deleted,
+  });
 }
 
 abstract interface class CookieInit {
@@ -34,33 +46,90 @@ abstract interface class CookieInit {
   set expires(DOMHighResTimeStamp? value);
   String? get domain;
   set domain(String? value);
-  String get path;
-  set path(String value);
-  CookieSameSite get sameSite;
-  set sameSite(CookieSameSite value);
-  bool get partitioned;
-  set partitioned(bool value);
+  String? get path;
+  set path(String? value);
+  CookieSameSite? get sameSite;
+  set sameSite(CookieSameSite? value);
+  bool? get partitioned;
+  set partitioned(bool? value);
+}
+
+final class CookieInitValue implements CookieInit {
+  @override
+  String name;
+  @override
+  String value;
+  @override
+  DOMHighResTimeStamp? expires;
+  @override
+  String? domain;
+  @override
+  String? path;
+  @override
+  CookieSameSite? sameSite;
+  @override
+  bool? partitioned;
+
+  CookieInitValue({
+    required this.name,
+    required this.value,
+    this.expires,
+    this.domain,
+    this.path,
+    this.sameSite,
+    this.partitioned,
+  });
 }
 
 typedef CookieList = List<CookieListItem>;
 
 abstract interface class CookieListItem {
-  String get name;
-  set name(String value);
-  String get value;
-  set value(String value);
+  String? get name;
+  set name(String? value);
+  String? get value;
+  set value(String? value);
   String? get domain;
   set domain(String? value);
-  String get path;
-  set path(String value);
+  String? get path;
+  set path(String? value);
   DOMHighResTimeStamp? get expires;
   set expires(DOMHighResTimeStamp? value);
-  bool get secure;
-  set secure(bool value);
-  CookieSameSite get sameSite;
-  set sameSite(CookieSameSite value);
-  bool get partitioned;
-  set partitioned(bool value);
+  bool? get secure;
+  set secure(bool? value);
+  CookieSameSite? get sameSite;
+  set sameSite(CookieSameSite? value);
+  bool? get partitioned;
+  set partitioned(bool? value);
+}
+
+final class CookieListItemValue implements CookieListItem {
+  @override
+  String? name;
+  @override
+  String? value;
+  @override
+  String? domain;
+  @override
+  String? path;
+  @override
+  DOMHighResTimeStamp? expires;
+  @override
+  bool? secure;
+  @override
+  CookieSameSite? sameSite;
+  @override
+  bool? partitioned;
+
+  CookieListItemValue({
+    this.name,
+    this.value,
+    this.domain,
+    this.path,
+    this.expires,
+    this.secure,
+    this.sameSite,
+    this.partitioned,
+  });
 }
 
 typedef CookieSameSite = String;
@@ -79,17 +148,47 @@ abstract interface class CookieStoreDeleteOptions {
   set name(String value);
   String? get domain;
   set domain(String? value);
-  String get path;
-  set path(String value);
-  bool get partitioned;
-  set partitioned(bool value);
+  String? get path;
+  set path(String? value);
+  bool? get partitioned;
+  set partitioned(bool? value);
+}
+
+final class CookieStoreDeleteOptionsValue implements CookieStoreDeleteOptions {
+  @override
+  String name;
+  @override
+  String? domain;
+  @override
+  String? path;
+  @override
+  bool? partitioned;
+
+  CookieStoreDeleteOptionsValue({
+    required this.name,
+    this.domain,
+    this.path,
+    this.partitioned,
+  });
 }
 
 abstract interface class CookieStoreGetOptions {
-  String get name;
-  set name(String value);
-  String get url;
-  set url(String value);
+  String? get name;
+  set name(String? value);
+  String? get url;
+  set url(String? value);
+}
+
+final class CookieStoreGetOptionsValue implements CookieStoreGetOptions {
+  @override
+  String? name;
+  @override
+  String? url;
+
+  CookieStoreGetOptionsValue({
+    this.name,
+    this.url,
+  });
 }
 
 abstract interface class CookieStoreManager {
@@ -109,9 +208,21 @@ abstract interface class ExtendableCookieChangeEvent {
 }
 
 abstract interface class ExtendableCookieChangeEventInit {
-  CookieList get changed;
-  set changed(CookieList value);
-  CookieList get deleted;
-  set deleted(CookieList value);
+  CookieList? get changed;
+  set changed(CookieList? value);
+  CookieList? get deleted;
+  set deleted(CookieList? value);
+}
+
+final class ExtendableCookieChangeEventInitValue implements ExtendableCookieChangeEventInit {
+  @override
+  CookieList? changed;
+  @override
+  CookieList? deleted;
+
+  ExtendableCookieChangeEventInitValue({
+    this.changed,
+    this.deleted,
+  });
 }
 

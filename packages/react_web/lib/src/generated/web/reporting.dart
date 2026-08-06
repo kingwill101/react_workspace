@@ -7,8 +7,20 @@ import 'package:react_web/src/web_runtime.dart';
 abstract interface class GenerateTestReportParameters {
   String get message;
   set message(String value);
-  String get group;
-  set group(String value);
+  String? get group;
+  set group(String? value);
+}
+
+final class GenerateTestReportParametersValue implements GenerateTestReportParameters {
+  @override
+  String message;
+  @override
+  String? group;
+
+  GenerateTestReportParametersValue({
+    required this.message,
+    this.group,
+  });
 }
 
 abstract interface class Report {
@@ -38,9 +50,21 @@ abstract interface class ReportingObserver {
 typedef ReportingObserverCallback = void Function(List<Report> reports, ReportingObserver observer,);
 
 abstract interface class ReportingObserverOptions {
-  List<String> get types;
-  set types(List<String> value);
-  bool get buffered;
-  set buffered(bool value);
+  List<String>? get types;
+  set types(List<String>? value);
+  bool? get buffered;
+  set buffered(bool? value);
+}
+
+final class ReportingObserverOptionsValue implements ReportingObserverOptions {
+  @override
+  List<String>? types;
+  @override
+  bool? buffered;
+
+  ReportingObserverOptionsValue({
+    this.types,
+    this.buffered,
+  });
 }
 

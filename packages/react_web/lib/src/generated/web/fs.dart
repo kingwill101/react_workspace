@@ -8,8 +8,17 @@ import 'webidl.dart';
 import 'storage.dart';
 
 abstract interface class FileSystemCreateWritableOptions {
-  bool get keepExistingData;
-  set keepExistingData(bool value);
+  bool? get keepExistingData;
+  set keepExistingData(bool? value);
+}
+
+final class FileSystemCreateWritableOptionsValue implements FileSystemCreateWritableOptions {
+  @override
+  bool? keepExistingData;
+
+  FileSystemCreateWritableOptionsValue({
+    this.keepExistingData,
+  });
 }
 
 abstract interface class FileSystemDirectoryHandle {
@@ -26,25 +35,61 @@ abstract interface class FileSystemFileHandle {
 }
 
 abstract interface class FileSystemGetDirectoryOptions {
-  bool get create;
-  set create(bool value);
+  bool? get create;
+  set create(bool? value);
+}
+
+final class FileSystemGetDirectoryOptionsValue implements FileSystemGetDirectoryOptions {
+  @override
+  bool? create;
+
+  FileSystemGetDirectoryOptionsValue({
+    this.create,
+  });
 }
 
 abstract interface class FileSystemGetFileOptions {
-  bool get create;
-  set create(bool value);
+  bool? get create;
+  set create(bool? value);
+}
+
+final class FileSystemGetFileOptionsValue implements FileSystemGetFileOptions {
+  @override
+  bool? create;
+
+  FileSystemGetFileOptionsValue({
+    this.create,
+  });
 }
 
 typedef FileSystemHandleKind = String;
 
 abstract interface class FileSystemReadWriteOptions {
-  int get at;
-  set at(int value);
+  int? get at;
+  set at(int? value);
+}
+
+final class FileSystemReadWriteOptionsValue implements FileSystemReadWriteOptions {
+  @override
+  int? at;
+
+  FileSystemReadWriteOptionsValue({
+    this.at,
+  });
 }
 
 abstract interface class FileSystemRemoveOptions {
-  bool get recursive;
-  set recursive(bool value);
+  bool? get recursive;
+  set recursive(bool? value);
+}
+
+final class FileSystemRemoveOptionsValue implements FileSystemRemoveOptions {
+  @override
+  bool? recursive;
+
+  FileSystemRemoveOptionsValue({
+    this.recursive,
+  });
 }
 
 abstract interface class FileSystemSyncAccessHandle {
@@ -80,7 +125,25 @@ abstract interface class WriteParams {
   set size(int? value);
   int? get position;
   set position(int? value);
-  Object get data;
-  set data(Object value);
+  Object? get data;
+  set data(Object? value);
+}
+
+final class WriteParamsValue implements WriteParams {
+  @override
+  WriteCommandType type;
+  @override
+  int? size;
+  @override
+  int? position;
+  @override
+  Object? data;
+
+  WriteParamsValue({
+    required this.type,
+    this.size,
+    this.position,
+    this.data,
+  });
 }
 

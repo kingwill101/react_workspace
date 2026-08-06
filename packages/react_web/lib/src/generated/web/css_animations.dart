@@ -19,12 +19,27 @@ abstract interface class AnimationEvent {
 }
 
 abstract interface class AnimationEventInit {
-  Object get animationName;
-  set animationName(Object value);
-  double get elapsedTime;
-  set elapsedTime(double value);
-  Object get pseudoElement;
-  set pseudoElement(Object value);
+  Object? get animationName;
+  set animationName(Object? value);
+  double? get elapsedTime;
+  set elapsedTime(double? value);
+  Object? get pseudoElement;
+  set pseudoElement(Object? value);
+}
+
+final class AnimationEventInitValue implements AnimationEventInit {
+  @override
+  Object? animationName;
+  @override
+  double? elapsedTime;
+  @override
+  Object? pseudoElement;
+
+  AnimationEventInitValue({
+    this.animationName,
+    this.elapsedTime,
+    this.pseudoElement,
+  });
 }
 
 abstract interface class CSSKeyframeRule {

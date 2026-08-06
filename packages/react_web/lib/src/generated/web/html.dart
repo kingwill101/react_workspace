@@ -50,8 +50,17 @@ abstract interface class AnimationFrameProvider {
 }
 
 abstract interface class AssignedNodesOptions {
-  bool get flatten;
-  set flatten(bool value);
+  bool? get flatten;
+  set flatten(bool? value);
+}
+
+final class AssignedNodesOptionsValue implements AssignedNodesOptions {
+  @override
+  bool? flatten;
+
+  AssignedNodesOptionsValue({
+    this.flatten,
+  });
 }
 
 abstract interface class AudioTrack {
@@ -313,14 +322,32 @@ abstract interface class CanvasRenderingContext2D {
 }
 
 abstract interface class CanvasRenderingContext2DSettings {
-  bool get alpha;
-  set alpha(bool value);
-  bool get desynchronized;
-  set desynchronized(bool value);
-  PredefinedColorSpace get colorSpace;
-  set colorSpace(PredefinedColorSpace value);
-  bool get willReadFrequently;
-  set willReadFrequently(bool value);
+  bool? get alpha;
+  set alpha(bool? value);
+  bool? get desynchronized;
+  set desynchronized(bool? value);
+  PredefinedColorSpace? get colorSpace;
+  set colorSpace(PredefinedColorSpace? value);
+  bool? get willReadFrequently;
+  set willReadFrequently(bool? value);
+}
+
+final class CanvasRenderingContext2DSettingsValue implements CanvasRenderingContext2DSettings {
+  @override
+  bool? alpha;
+  @override
+  bool? desynchronized;
+  @override
+  PredefinedColorSpace? colorSpace;
+  @override
+  bool? willReadFrequently;
+
+  CanvasRenderingContext2DSettingsValue({
+    this.alpha,
+    this.desynchronized,
+    this.colorSpace,
+    this.willReadFrequently,
+  });
 }
 
 abstract interface class CanvasShadowStyles {
@@ -392,8 +419,17 @@ abstract interface class CanvasUserInterface {
 }
 
 abstract interface class CloseWatcherOptions {
-  AbortSignal get signal;
-  set signal(AbortSignal value);
+  AbortSignal? get signal;
+  set signal(AbortSignal? value);
+}
+
+final class CloseWatcherOptionsValue implements CloseWatcherOptions {
+  @override
+  AbortSignal? signal;
+
+  CloseWatcherOptionsValue({
+    this.signal,
+  });
 }
 
 typedef ColorSpaceConversion = String;
@@ -489,6 +525,15 @@ abstract interface class DragEventInit {
   set dataTransfer(DataTransfer? value);
 }
 
+final class DragEventInitValue implements DragEventInit {
+  @override
+  DataTransfer? dataTransfer;
+
+  DragEventInitValue({
+    this.dataTransfer,
+  });
+}
+
 abstract interface class ElementContentEditable {
   String get contentEditable;
    set contentEditable(String value);
@@ -502,8 +547,17 @@ abstract interface class ElementContentEditable {
 }
 
 abstract interface class ElementDefinitionOptions {
-  String get extends_;
-  set extends_(String value);
+  String? get extends_;
+  set extends_(String? value);
+}
+
+final class ElementDefinitionOptionsValue implements ElementDefinitionOptions {
+  @override
+  String? extends_;
+
+  ElementDefinitionOptionsValue({
+    this.extends_,
+  });
 }
 
 abstract interface class ElementInternals {
@@ -636,16 +690,37 @@ abstract interface class ErrorEvent {
 }
 
 abstract interface class ErrorEventInit {
-  String get message;
-  set message(String value);
-  String get filename;
-  set filename(String value);
-  int get lineno;
-  set lineno(int value);
-  int get colno;
-  set colno(int value);
-  Object get error;
-  set error(Object value);
+  String? get message;
+  set message(String? value);
+  String? get filename;
+  set filename(String? value);
+  int? get lineno;
+  set lineno(int? value);
+  int? get colno;
+  set colno(int? value);
+  Object? get error;
+  set error(Object? value);
+}
+
+final class ErrorEventInitValue implements ErrorEventInit {
+  @override
+  String? message;
+  @override
+  String? filename;
+  @override
+  int? lineno;
+  @override
+  int? colno;
+  @override
+  Object? error;
+
+  ErrorEventInitValue({
+    this.message,
+    this.filename,
+    this.lineno,
+    this.colno,
+    this.error,
+  });
 }
 
 typedef EventHandler = EventHandlerNonNull?;
@@ -671,8 +746,17 @@ abstract interface class EventSource {
 }
 
 abstract interface class EventSourceInit {
-  bool get withCredentials;
-  set withCredentials(bool value);
+  bool? get withCredentials;
+  set withCredentials(bool? value);
+}
+
+final class EventSourceInitValue implements EventSourceInit {
+  @override
+  bool? withCredentials;
+
+  EventSourceInitValue({
+    this.withCredentials,
+  });
 }
 
 abstract interface class External {
@@ -681,10 +765,22 @@ abstract interface class External {
 }
 
 abstract interface class FocusOptions {
-  bool get preventScroll;
-  set preventScroll(bool value);
-  bool get focusVisible;
-  set focusVisible(bool value);
+  bool? get preventScroll;
+  set preventScroll(bool? value);
+  bool? get focusVisible;
+  set focusVisible(bool? value);
+}
+
+final class FocusOptionsValue implements FocusOptions {
+  @override
+  bool? preventScroll;
+  @override
+  bool? focusVisible;
+
+  FocusOptionsValue({
+    this.preventScroll,
+    this.focusVisible,
+  });
 }
 
 abstract interface class FormDataEvent {
@@ -701,15 +797,36 @@ abstract interface class FormDataEventInit {
   set formData(FormData value);
 }
 
+final class FormDataEventInitValue implements FormDataEventInit {
+  @override
+  FormData formData;
+
+  FormDataEventInitValue({
+    required this.formData,
+  });
+}
+
 typedef FrameRequestCallback = void Function(DOMHighResTimeStamp time,);
 
 typedef FunctionStringCallback = void Function(String data,);
 
 abstract interface class GetHTMLOptions {
-  bool get serializableShadowRoots;
-  set serializableShadowRoots(bool value);
-  List<ShadowRoot> get shadowRoots;
-  set shadowRoots(List<ShadowRoot> value);
+  bool? get serializableShadowRoots;
+  set serializableShadowRoots(bool? value);
+  List<ShadowRoot>? get shadowRoots;
+  set shadowRoots(List<ShadowRoot>? value);
+}
+
+final class GetHTMLOptionsValue implements GetHTMLOptions {
+  @override
+  bool? serializableShadowRoots;
+  @override
+  List<ShadowRoot>? shadowRoots;
+
+  GetHTMLOptionsValue({
+    this.serializableShadowRoots,
+    this.shadowRoots,
+  });
 }
 
 abstract interface class HTMLAllCollection {
@@ -2084,10 +2201,22 @@ abstract interface class HashChangeEvent {
 }
 
 abstract interface class HashChangeEventInit {
-  String get oldURL;
-  set oldURL(String value);
-  String get newURL;
-  set newURL(String value);
+  String? get oldURL;
+  set oldURL(String? value);
+  String? get newURL;
+  set newURL(String? value);
+}
+
+final class HashChangeEventInitValue implements HashChangeEventInit {
+  @override
+  String? oldURL;
+  @override
+  String? newURL;
+
+  HashChangeEventInitValue({
+    this.oldURL,
+    this.newURL,
+  });
 }
 
 abstract interface class History {
@@ -2109,18 +2238,42 @@ abstract interface class ImageBitmap {
 }
 
 abstract interface class ImageBitmapOptions {
-  ImageOrientation get imageOrientation;
-  set imageOrientation(ImageOrientation value);
-  PremultiplyAlpha get premultiplyAlpha;
-  set premultiplyAlpha(PremultiplyAlpha value);
-  ColorSpaceConversion get colorSpaceConversion;
-  set colorSpaceConversion(ColorSpaceConversion value);
-  int get resizeWidth;
-  set resizeWidth(int value);
-  int get resizeHeight;
-  set resizeHeight(int value);
-  ResizeQuality get resizeQuality;
-  set resizeQuality(ResizeQuality value);
+  ImageOrientation? get imageOrientation;
+  set imageOrientation(ImageOrientation? value);
+  PremultiplyAlpha? get premultiplyAlpha;
+  set premultiplyAlpha(PremultiplyAlpha? value);
+  ColorSpaceConversion? get colorSpaceConversion;
+  set colorSpaceConversion(ColorSpaceConversion? value);
+  int? get resizeWidth;
+  set resizeWidth(int? value);
+  int? get resizeHeight;
+  set resizeHeight(int? value);
+  ResizeQuality? get resizeQuality;
+  set resizeQuality(ResizeQuality? value);
+}
+
+final class ImageBitmapOptionsValue implements ImageBitmapOptions {
+  @override
+  ImageOrientation? imageOrientation;
+  @override
+  PremultiplyAlpha? premultiplyAlpha;
+  @override
+  ColorSpaceConversion? colorSpaceConversion;
+  @override
+  int? resizeWidth;
+  @override
+  int? resizeHeight;
+  @override
+  ResizeQuality? resizeQuality;
+
+  ImageBitmapOptionsValue({
+    this.imageOrientation,
+    this.premultiplyAlpha,
+    this.colorSpaceConversion,
+    this.resizeWidth,
+    this.resizeHeight,
+    this.resizeQuality,
+  });
 }
 
 abstract interface class ImageBitmapRenderingContext {
@@ -2129,8 +2282,17 @@ abstract interface class ImageBitmapRenderingContext {
 }
 
 abstract interface class ImageBitmapRenderingContextSettings {
-  bool get alpha;
-  set alpha(bool value);
+  bool? get alpha;
+  set alpha(bool? value);
+}
+
+final class ImageBitmapRenderingContextSettingsValue implements ImageBitmapRenderingContextSettings {
+  @override
+  bool? alpha;
+
+  ImageBitmapRenderingContextSettingsValue({
+    this.alpha,
+  });
 }
 
 typedef ImageBitmapSource = Object;
@@ -2153,15 +2315,36 @@ abstract interface class ImageData {
 }
 
 abstract interface class ImageDataSettings {
-  PredefinedColorSpace get colorSpace;
-  set colorSpace(PredefinedColorSpace value);
+  PredefinedColorSpace? get colorSpace;
+  set colorSpace(PredefinedColorSpace? value);
+}
+
+final class ImageDataSettingsValue implements ImageDataSettings {
+  @override
+  PredefinedColorSpace? colorSpace;
+
+  ImageDataSettingsValue({
+    this.colorSpace,
+  });
 }
 
 abstract interface class ImageEncodeOptions {
-  String get type;
-  set type(String value);
-  double get quality;
-  set quality(double value);
+  String? get type;
+  set type(String? value);
+  double? get quality;
+  set quality(double? value);
+}
+
+final class ImageEncodeOptionsValue implements ImageEncodeOptions {
+  @override
+  String? type;
+  @override
+  double? quality;
+
+  ImageEncodeOptionsValue({
+    this.type,
+    this.quality,
+  });
 }
 
 typedef ImageOrientation = String;
@@ -2224,16 +2407,37 @@ abstract interface class MessageEvent {
 }
 
 abstract interface class MessageEventInit {
-  Object get data;
-  set data(Object value);
-  String get origin;
-  set origin(String value);
-  String get lastEventId;
-  set lastEventId(String value);
+  Object? get data;
+  set data(Object? value);
+  String? get origin;
+  set origin(String? value);
+  String? get lastEventId;
+  set lastEventId(String? value);
   MessageEventSource? get source;
   set source(MessageEventSource? value);
-  List<MessagePort> get ports;
-  set ports(List<MessagePort> value);
+  List<MessagePort>? get ports;
+  set ports(List<MessagePort>? value);
+}
+
+final class MessageEventInitValue implements MessageEventInit {
+  @override
+  Object? data;
+  @override
+  String? origin;
+  @override
+  String? lastEventId;
+  @override
+  MessageEventSource? source;
+  @override
+  List<MessagePort>? ports;
+
+  MessageEventInitValue({
+    this.data,
+    this.origin,
+    this.lastEventId,
+    this.source,
+    this.ports,
+  });
 }
 
 typedef MessageEventSource = Object;
@@ -2246,6 +2450,8 @@ abstract interface class MessagePort {
    set onmessage(EventHandler value);
   EventHandler get onmessageerror;
    set onmessageerror(EventHandler value);
+  EventHandler get onclose;
+   set onclose(EventHandler value);
 }
 
 abstract interface class MimeType {
@@ -2262,26 +2468,62 @@ abstract interface class MimeTypeArray {
 }
 
 abstract interface class NavigateEventInit {
-  NavigationType get navigationType;
-  set navigationType(NavigationType value);
+  NavigationType? get navigationType;
+  set navigationType(NavigationType? value);
   Object get destination;
   set destination(Object value);
-  bool get canIntercept;
-  set canIntercept(bool value);
-  bool get userInitiated;
-  set userInitiated(bool value);
-  bool get hashChange;
-  set hashChange(bool value);
+  bool? get canIntercept;
+  set canIntercept(bool? value);
+  bool? get userInitiated;
+  set userInitiated(bool? value);
+  bool? get hashChange;
+  set hashChange(bool? value);
   AbortSignal get signal;
   set signal(AbortSignal value);
   FormData? get formData;
   set formData(FormData? value);
   String? get downloadRequest;
   set downloadRequest(String? value);
-  Object get info;
-  set info(Object value);
-  bool get hasUAVisualTransition;
-  set hasUAVisualTransition(bool value);
+  Object? get info;
+  set info(Object? value);
+  bool? get hasUAVisualTransition;
+  set hasUAVisualTransition(bool? value);
+}
+
+final class NavigateEventInitValue implements NavigateEventInit {
+  @override
+  NavigationType? navigationType;
+  @override
+  Object destination;
+  @override
+  bool? canIntercept;
+  @override
+  bool? userInitiated;
+  @override
+  bool? hashChange;
+  @override
+  AbortSignal signal;
+  @override
+  FormData? formData;
+  @override
+  String? downloadRequest;
+  @override
+  Object? info;
+  @override
+  bool? hasUAVisualTransition;
+
+  NavigateEventInitValue({
+    this.navigationType,
+    required this.destination,
+    this.canIntercept,
+    this.userInitiated,
+    this.hashChange,
+    required this.signal,
+    this.formData,
+    this.downloadRequest,
+    this.info,
+    this.hasUAVisualTransition,
+  });
 }
 
 abstract interface class NavigationCurrentEntryChangeEventInit {
@@ -2291,6 +2533,18 @@ abstract interface class NavigationCurrentEntryChangeEventInit {
   set from(Object value);
 }
 
+final class NavigationCurrentEntryChangeEventInitValue implements NavigationCurrentEntryChangeEventInit {
+  @override
+  NavigationType? navigationType;
+  @override
+  Object from;
+
+  NavigationCurrentEntryChangeEventInitValue({
+    this.navigationType,
+    required this.from,
+  });
+}
+
 typedef NavigationFocusReset = String;
 
 typedef NavigationHistoryBehavior = String;
@@ -2298,36 +2552,93 @@ typedef NavigationHistoryBehavior = String;
 typedef NavigationInterceptHandler = Future<void> Function();
 
 abstract interface class NavigationInterceptOptions {
-  NavigationInterceptHandler get handler;
-  set handler(NavigationInterceptHandler value);
-  NavigationFocusReset get focusReset;
-  set focusReset(NavigationFocusReset value);
-  NavigationScrollBehavior get scroll;
-  set scroll(NavigationScrollBehavior value);
+  NavigationInterceptHandler? get handler;
+  set handler(NavigationInterceptHandler? value);
+  NavigationFocusReset? get focusReset;
+  set focusReset(NavigationFocusReset? value);
+  NavigationScrollBehavior? get scroll;
+  set scroll(NavigationScrollBehavior? value);
+}
+
+final class NavigationInterceptOptionsValue implements NavigationInterceptOptions {
+  @override
+  NavigationInterceptHandler? handler;
+  @override
+  NavigationFocusReset? focusReset;
+  @override
+  NavigationScrollBehavior? scroll;
+
+  NavigationInterceptOptionsValue({
+    this.handler,
+    this.focusReset,
+    this.scroll,
+  });
 }
 
 abstract interface class NavigationNavigateOptions {
-  Object get state;
-  set state(Object value);
-  NavigationHistoryBehavior get history;
-  set history(NavigationHistoryBehavior value);
+  Object? get state;
+  set state(Object? value);
+  NavigationHistoryBehavior? get history;
+  set history(NavigationHistoryBehavior? value);
+}
+
+final class NavigationNavigateOptionsValue implements NavigationNavigateOptions {
+  @override
+  Object? state;
+  @override
+  NavigationHistoryBehavior? history;
+
+  NavigationNavigateOptionsValue({
+    this.state,
+    this.history,
+  });
 }
 
 abstract interface class NavigationOptions {
-  Object get info;
-  set info(Object value);
+  Object? get info;
+  set info(Object? value);
+}
+
+final class NavigationOptionsValue implements NavigationOptions {
+  @override
+  Object? info;
+
+  NavigationOptionsValue({
+    this.info,
+  });
 }
 
 abstract interface class NavigationReloadOptions {
-  Object get state;
-  set state(Object value);
+  Object? get state;
+  set state(Object? value);
+}
+
+final class NavigationReloadOptionsValue implements NavigationReloadOptions {
+  @override
+  Object? state;
+
+  NavigationReloadOptionsValue({
+    this.state,
+  });
 }
 
 abstract interface class NavigationResult {
-  Future<Object> get committed;
-  set committed(Future<Object> value);
-  Future<Object> get finished;
-  set finished(Future<Object> value);
+  Future<Object>? get committed;
+  set committed(Future<Object>? value);
+  Future<Object>? get finished;
+  set finished(Future<Object>? value);
+}
+
+final class NavigationResultValue implements NavigationResult {
+  @override
+  Future<Object>? committed;
+  @override
+  Future<Object>? finished;
+
+  NavigationResultValue({
+    this.committed,
+    this.finished,
+  });
 }
 
 typedef NavigationScrollBehavior = String;
@@ -2337,6 +2648,15 @@ typedef NavigationType = String;
 abstract interface class NavigationUpdateCurrentEntryOptions {
   Object get state;
   set state(Object value);
+}
+
+final class NavigationUpdateCurrentEntryOptionsValue implements NavigationUpdateCurrentEntryOptions {
+  @override
+  Object state;
+
+  NavigationUpdateCurrentEntryOptionsValue({
+    required this.state,
+  });
 }
 
 abstract interface class NavigatorConcurrentHardware {
@@ -2517,11 +2837,32 @@ abstract interface class PageRevealEventInit {
   set viewTransition(ViewTransition? value);
 }
 
+final class PageRevealEventInitValue implements PageRevealEventInit {
+  @override
+  ViewTransition? viewTransition;
+
+  PageRevealEventInitValue({
+    this.viewTransition,
+  });
+}
+
 abstract interface class PageSwapEventInit {
-  Object get activation;
-  set activation(Object value);
+  Object? get activation;
+  set activation(Object? value);
   ViewTransition? get viewTransition;
   set viewTransition(ViewTransition? value);
+}
+
+final class PageSwapEventInitValue implements PageSwapEventInit {
+  @override
+  Object? activation;
+  @override
+  ViewTransition? viewTransition;
+
+  PageSwapEventInitValue({
+    this.activation,
+    this.viewTransition,
+  });
 }
 
 abstract interface class PageTransitionEvent {
@@ -2534,8 +2875,17 @@ abstract interface class PageTransitionEvent {
 }
 
 abstract interface class PageTransitionEventInit {
-  bool get persisted;
-  set persisted(bool value);
+  bool? get persisted;
+  set persisted(bool? value);
+}
+
+final class PageTransitionEventInitValue implements PageTransitionEventInit {
+  @override
+  bool? persisted;
+
+  PageTransitionEventInitValue({
+    this.persisted,
+  });
 }
 
 abstract interface class Path2D {
@@ -2584,10 +2934,22 @@ abstract interface class PopStateEvent {
 }
 
 abstract interface class PopStateEventInit {
-  Object get state;
-  set state(Object value);
-  bool get hasUAVisualTransition;
-  set hasUAVisualTransition(bool value);
+  Object? get state;
+  set state(Object? value);
+  bool? get hasUAVisualTransition;
+  set hasUAVisualTransition(bool? value);
+}
+
+final class PopStateEventInitValue implements PopStateEventInit {
+  @override
+  Object? state;
+  @override
+  bool? hasUAVisualTransition;
+
+  PopStateEventInitValue({
+    this.state,
+    this.hasUAVisualTransition,
+  });
 }
 
 abstract interface class PopoverInvokerElement {
@@ -2614,8 +2976,20 @@ abstract interface class PromiseRejectionEvent {
 abstract interface class PromiseRejectionEventInit {
   Object get promise;
   set promise(Object value);
-  Object get reason;
-  set reason(Object value);
+  Object? get reason;
+  set reason(Object? value);
+}
+
+final class PromiseRejectionEventInitValue implements PromiseRejectionEventInit {
+  @override
+  Object promise;
+  @override
+  Object? reason;
+
+  PromiseRejectionEventInitValue({
+    required this.promise,
+    this.reason,
+  });
 }
 
 abstract interface class RadioNodeList {
@@ -2679,15 +3053,45 @@ abstract interface class StorageEventInit {
   set oldValue(String? value);
   String? get newValue;
   set newValue(String? value);
-  String get url;
-  set url(String value);
+  String? get url;
+  set url(String? value);
   Storage? get storageArea;
   set storageArea(Storage? value);
 }
 
+final class StorageEventInitValue implements StorageEventInit {
+  @override
+  String? key;
+  @override
+  String? oldValue;
+  @override
+  String? newValue;
+  @override
+  String? url;
+  @override
+  Storage? storageArea;
+
+  StorageEventInitValue({
+    this.key,
+    this.oldValue,
+    this.newValue,
+    this.url,
+    this.storageArea,
+  });
+}
+
 abstract interface class StructuredSerializeOptions {
-  List<Object> get transfer;
-  set transfer(List<Object> value);
+  List<Object>? get transfer;
+  set transfer(List<Object>? value);
+}
+
+final class StructuredSerializeOptionsValue implements StructuredSerializeOptions {
+  @override
+  List<Object>? transfer;
+
+  StructuredSerializeOptionsValue({
+    this.transfer,
+  });
 }
 
 abstract interface class SubmitEvent {
@@ -2702,6 +3106,15 @@ abstract interface class SubmitEvent {
 abstract interface class SubmitEventInit {
   HTMLElement? get submitter;
   set submitter(HTMLElement? value);
+}
+
+final class SubmitEventInitValue implements SubmitEventInit {
+  @override
+  HTMLElement? submitter;
+
+  SubmitEventInitValue({
+    this.submitter,
+  });
 }
 
 abstract interface class TextMetrics {
@@ -2791,10 +3204,22 @@ abstract interface class ToggleEvent {
 }
 
 abstract interface class ToggleEventInit {
-  String get oldState;
-  set oldState(String value);
-  String get newState;
-  set newState(String value);
+  String? get oldState;
+  set oldState(String? value);
+  String? get newState;
+  set newState(String? value);
+}
+
+final class ToggleEventInitValue implements ToggleEventInit {
+  @override
+  String? oldState;
+  @override
+  String? newState;
+
+  ToggleEventInitValue({
+    this.oldState,
+    this.newState,
+  });
 }
 
 abstract interface class TrackEvent {
@@ -2807,8 +3232,17 @@ abstract interface class TrackEvent {
 }
 
 abstract interface class TrackEventInit {
-  Object get track;
-  set track(Object value);
+  Object? get track;
+  set track(Object? value);
+}
+
+final class TrackEventInitValue implements TrackEventInit {
+  @override
+  Object? track;
+
+  TrackEventInitValue({
+    this.track,
+  });
 }
 
 abstract interface class UserActivation {
@@ -2831,26 +3265,62 @@ abstract interface class ValidityState {
 }
 
 abstract interface class ValidityStateFlags {
-  bool get valueMissing;
-  set valueMissing(bool value);
-  bool get typeMismatch;
-  set typeMismatch(bool value);
-  bool get patternMismatch;
-  set patternMismatch(bool value);
-  bool get tooLong;
-  set tooLong(bool value);
-  bool get tooShort;
-  set tooShort(bool value);
-  bool get rangeUnderflow;
-  set rangeUnderflow(bool value);
-  bool get rangeOverflow;
-  set rangeOverflow(bool value);
-  bool get stepMismatch;
-  set stepMismatch(bool value);
-  bool get badInput;
-  set badInput(bool value);
-  bool get customError;
-  set customError(bool value);
+  bool? get valueMissing;
+  set valueMissing(bool? value);
+  bool? get typeMismatch;
+  set typeMismatch(bool? value);
+  bool? get patternMismatch;
+  set patternMismatch(bool? value);
+  bool? get tooLong;
+  set tooLong(bool? value);
+  bool? get tooShort;
+  set tooShort(bool? value);
+  bool? get rangeUnderflow;
+  set rangeUnderflow(bool? value);
+  bool? get rangeOverflow;
+  set rangeOverflow(bool? value);
+  bool? get stepMismatch;
+  set stepMismatch(bool? value);
+  bool? get badInput;
+  set badInput(bool? value);
+  bool? get customError;
+  set customError(bool? value);
+}
+
+final class ValidityStateFlagsValue implements ValidityStateFlags {
+  @override
+  bool? valueMissing;
+  @override
+  bool? typeMismatch;
+  @override
+  bool? patternMismatch;
+  @override
+  bool? tooLong;
+  @override
+  bool? tooShort;
+  @override
+  bool? rangeUnderflow;
+  @override
+  bool? rangeOverflow;
+  @override
+  bool? stepMismatch;
+  @override
+  bool? badInput;
+  @override
+  bool? customError;
+
+  ValidityStateFlagsValue({
+    this.valueMissing,
+    this.typeMismatch,
+    this.patternMismatch,
+    this.tooLong,
+    this.tooShort,
+    this.rangeUnderflow,
+    this.rangeOverflow,
+    this.stepMismatch,
+    this.badInput,
+    this.customError,
+  });
 }
 
 abstract interface class VideoTrack {
@@ -2880,8 +3350,17 @@ abstract interface class WindowLocalStorage {
 }
 
 abstract interface class WindowPostMessageOptions {
-  String get targetOrigin;
-  set targetOrigin(String value);
+  String? get targetOrigin;
+  set targetOrigin(String? value);
+}
+
+final class WindowPostMessageOptionsValue implements WindowPostMessageOptions {
+  @override
+  String? targetOrigin;
+
+  WindowPostMessageOptionsValue({
+    this.targetOrigin,
+  });
 }
 
 abstract interface class WindowSessionStorage {
@@ -2989,12 +3468,27 @@ abstract interface class WorkerNavigator {
 }
 
 abstract interface class WorkerOptions {
-  WorkerType get type;
-  set type(WorkerType value);
-  RequestCredentials get credentials;
-  set credentials(RequestCredentials value);
-  String get name;
-  set name(String value);
+  WorkerType? get type;
+  set type(WorkerType? value);
+  RequestCredentials? get credentials;
+  set credentials(RequestCredentials? value);
+  String? get name;
+  set name(String? value);
+}
+
+final class WorkerOptionsValue implements WorkerOptions {
+  @override
+  WorkerType? type;
+  @override
+  RequestCredentials? credentials;
+  @override
+  String? name;
+
+  WorkerOptionsValue({
+    this.type,
+    this.credentials,
+    this.name,
+  });
 }
 
 typedef WorkerType = String;
@@ -3007,7 +3501,16 @@ abstract interface class WorkletGlobalScope {
 }
 
 abstract interface class WorkletOptions {
-  RequestCredentials get credentials;
-  set credentials(RequestCredentials value);
+  RequestCredentials? get credentials;
+  set credentials(RequestCredentials? value);
+}
+
+final class WorkletOptionsValue implements WorkletOptions {
+  @override
+  RequestCredentials? credentials;
+
+  WorkletOptionsValue({
+    this.credentials,
+  });
 }
 

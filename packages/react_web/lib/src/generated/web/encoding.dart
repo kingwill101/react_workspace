@@ -7,8 +7,17 @@ import 'streams.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class TextDecodeOptions {
-  bool get stream;
-  set stream(bool value);
+  bool? get stream;
+  set stream(bool? value);
+}
+
+final class TextDecodeOptionsValue implements TextDecodeOptions {
+  @override
+  bool? stream;
+
+  TextDecodeOptionsValue({
+    this.stream,
+  });
 }
 
 abstract interface class TextDecoder {
@@ -30,10 +39,22 @@ abstract interface class TextDecoderCommon {
 }
 
 abstract interface class TextDecoderOptions {
-  bool get fatal;
-  set fatal(bool value);
-  bool get ignoreBOM;
-  set ignoreBOM(bool value);
+  bool? get fatal;
+  set fatal(bool? value);
+  bool? get ignoreBOM;
+  set ignoreBOM(bool? value);
+}
+
+final class TextDecoderOptionsValue implements TextDecoderOptions {
+  @override
+  bool? fatal;
+  @override
+  bool? ignoreBOM;
+
+  TextDecoderOptionsValue({
+    this.fatal,
+    this.ignoreBOM,
+  });
 }
 
 abstract interface class TextDecoderStream {
@@ -65,10 +86,22 @@ abstract interface class TextEncoderCommon {
 }
 
 abstract interface class TextEncoderEncodeIntoResult {
-  int get read;
-  set read(int value);
-  int get written;
-  set written(int value);
+  int? get read;
+  set read(int? value);
+  int? get written;
+  set written(int? value);
+}
+
+final class TextEncoderEncodeIntoResultValue implements TextEncoderEncodeIntoResult {
+  @override
+  int? read;
+  @override
+  int? written;
+
+  TextEncoderEncodeIntoResultValue({
+    this.read,
+    this.written,
+  });
 }
 
 abstract interface class TextEncoderStream {

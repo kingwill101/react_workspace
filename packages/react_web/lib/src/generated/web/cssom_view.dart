@@ -16,37 +16,91 @@ import 'screen_orientation.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class BoxQuadOptions {
-  CSSBoxType get box;
-  set box(CSSBoxType value);
-  GeometryNode get relativeTo;
-  set relativeTo(GeometryNode value);
+  CSSBoxType? get box;
+  set box(CSSBoxType? value);
+  GeometryNode? get relativeTo;
+  set relativeTo(GeometryNode? value);
+}
+
+final class BoxQuadOptionsValue implements BoxQuadOptions {
+  @override
+  CSSBoxType? box;
+  @override
+  GeometryNode? relativeTo;
+
+  BoxQuadOptionsValue({
+    this.box,
+    this.relativeTo,
+  });
 }
 
 typedef CSSBoxType = String;
 
 abstract interface class CaretPositionFromPointOptions {
-  List<ShadowRoot> get shadowRoots;
-  set shadowRoots(List<ShadowRoot> value);
+  List<ShadowRoot>? get shadowRoots;
+  set shadowRoots(List<ShadowRoot>? value);
+}
+
+final class CaretPositionFromPointOptionsValue implements CaretPositionFromPointOptions {
+  @override
+  List<ShadowRoot>? shadowRoots;
+
+  CaretPositionFromPointOptionsValue({
+    this.shadowRoots,
+  });
 }
 
 abstract interface class CheckVisibilityOptions {
-  bool get checkOpacity;
-  set checkOpacity(bool value);
-  bool get checkVisibilityCSS;
-  set checkVisibilityCSS(bool value);
-  bool get contentVisibilityAuto;
-  set contentVisibilityAuto(bool value);
-  bool get opacityProperty;
-  set opacityProperty(bool value);
-  bool get visibilityProperty;
-  set visibilityProperty(bool value);
+  bool? get checkOpacity;
+  set checkOpacity(bool? value);
+  bool? get checkVisibilityCSS;
+  set checkVisibilityCSS(bool? value);
+  bool? get contentVisibilityAuto;
+  set contentVisibilityAuto(bool? value);
+  bool? get opacityProperty;
+  set opacityProperty(bool? value);
+  bool? get visibilityProperty;
+  set visibilityProperty(bool? value);
+}
+
+final class CheckVisibilityOptionsValue implements CheckVisibilityOptions {
+  @override
+  bool? checkOpacity;
+  @override
+  bool? checkVisibilityCSS;
+  @override
+  bool? contentVisibilityAuto;
+  @override
+  bool? opacityProperty;
+  @override
+  bool? visibilityProperty;
+
+  CheckVisibilityOptionsValue({
+    this.checkOpacity,
+    this.checkVisibilityCSS,
+    this.contentVisibilityAuto,
+    this.opacityProperty,
+    this.visibilityProperty,
+  });
 }
 
 abstract interface class ConvertCoordinateOptions {
-  CSSBoxType get fromBox;
-  set fromBox(CSSBoxType value);
-  CSSBoxType get toBox;
-  set toBox(CSSBoxType value);
+  CSSBoxType? get fromBox;
+  set fromBox(CSSBoxType? value);
+  CSSBoxType? get toBox;
+  set toBox(CSSBoxType? value);
+}
+
+final class ConvertCoordinateOptionsValue implements ConvertCoordinateOptions {
+  @override
+  CSSBoxType? fromBox;
+  @override
+  CSSBoxType? toBox;
+
+  ConvertCoordinateOptionsValue({
+    this.fromBox,
+    this.toBox,
+  });
 }
 
 typedef GeometryNode = Object;
@@ -408,10 +462,22 @@ abstract interface class MediaQueryListEvent {
 }
 
 abstract interface class MediaQueryListEventInit {
-  Object get media;
-  set media(Object value);
-  bool get matches;
-  set matches(bool value);
+  Object? get media;
+  set media(Object? value);
+  bool? get matches;
+  set matches(bool? value);
+}
+
+final class MediaQueryListEventInitValue implements MediaQueryListEventInit {
+  @override
+  Object? media;
+  @override
+  bool? matches;
+
+  MediaQueryListEventInitValue({
+    this.media,
+    this.matches,
+  });
 }
 
 abstract interface class MouseEvent {
@@ -483,29 +549,64 @@ abstract interface class Screen {
   int get colorDepth;
   int get pixelDepth;
   ScreenOrientation get orientation;
+  EventHandler get onchange;
+   set onchange(EventHandler value);
 }
 
 typedef ScrollBehavior = String;
 
 abstract interface class ScrollIntoViewOptions {
-  ScrollLogicalPosition get block;
-  set block(ScrollLogicalPosition value);
-  ScrollLogicalPosition get inline;
-  set inline(ScrollLogicalPosition value);
+  ScrollLogicalPosition? get block;
+  set block(ScrollLogicalPosition? value);
+  ScrollLogicalPosition? get inline;
+  set inline(ScrollLogicalPosition? value);
+}
+
+final class ScrollIntoViewOptionsValue implements ScrollIntoViewOptions {
+  @override
+  ScrollLogicalPosition? block;
+  @override
+  ScrollLogicalPosition? inline;
+
+  ScrollIntoViewOptionsValue({
+    this.block,
+    this.inline,
+  });
 }
 
 typedef ScrollLogicalPosition = String;
 
 abstract interface class ScrollOptions {
-  ScrollBehavior get behavior;
-  set behavior(ScrollBehavior value);
+  ScrollBehavior? get behavior;
+  set behavior(ScrollBehavior? value);
+}
+
+final class ScrollOptionsValue implements ScrollOptions {
+  @override
+  ScrollBehavior? behavior;
+
+  ScrollOptionsValue({
+    this.behavior,
+  });
 }
 
 abstract interface class ScrollToOptions {
-  double get left;
-  set left(double value);
-  double get top;
-  set top(double value);
+  double? get left;
+  set left(double? value);
+  double? get top;
+  set top(double? value);
+}
+
+final class ScrollToOptionsValue implements ScrollToOptions {
+  @override
+  double? left;
+  @override
+  double? top;
+
+  ScrollToOptionsValue({
+    this.left,
+    this.top,
+  });
 }
 
 abstract interface class VisualViewport {

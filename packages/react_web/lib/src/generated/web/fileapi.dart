@@ -25,10 +25,22 @@ abstract interface class Blob {
 typedef BlobPart = Object;
 
 abstract interface class BlobPropertyBag {
-  String get type;
-  set type(String value);
-  EndingType get endings;
-  set endings(EndingType value);
+  String? get type;
+  set type(String? value);
+  EndingType? get endings;
+  set endings(EndingType? value);
+}
+
+final class BlobPropertyBagValue implements BlobPropertyBag {
+  @override
+  String? type;
+  @override
+  EndingType? endings;
+
+  BlobPropertyBagValue({
+    this.type,
+    this.endings,
+  });
 }
 
 typedef EndingType = String;
@@ -50,8 +62,17 @@ abstract interface class FileList {
 }
 
 abstract interface class FilePropertyBag {
-  int get lastModified;
-  set lastModified(int value);
+  int? get lastModified;
+  set lastModified(int? value);
+}
+
+final class FilePropertyBagValue implements FilePropertyBag {
+  @override
+  int? lastModified;
+
+  FilePropertyBagValue({
+    this.lastModified,
+  });
 }
 
 abstract interface class FileReader {

@@ -40,12 +40,27 @@ abstract interface class AbstractRange {
 }
 
 abstract interface class AddEventListenerOptions {
-  bool get passive;
-  set passive(bool value);
-  bool get once;
-  set once(bool value);
-  AbortSignal get signal;
-  set signal(AbortSignal value);
+  bool? get passive;
+  set passive(bool? value);
+  bool? get once;
+  set once(bool? value);
+  AbortSignal? get signal;
+  set signal(AbortSignal? value);
+}
+
+final class AddEventListenerOptionsValue implements AddEventListenerOptions {
+  @override
+  bool? passive;
+  @override
+  bool? once;
+  @override
+  AbortSignal? signal;
+
+  AddEventListenerOptionsValue({
+    this.passive,
+    this.once,
+    this.signal,
+  });
 }
 
 abstract interface class Attr {
@@ -105,8 +120,17 @@ abstract interface class CustomEvent {
 }
 
 abstract interface class CustomEventInit {
-  Object get detail;
-  set detail(Object value);
+  Object? get detail;
+  set detail(Object? value);
+}
+
+final class CustomEventInitValue implements CustomEventInit {
+  @override
+  Object? detail;
+
+  CustomEventInitValue({
+    this.detail,
+  });
 }
 
 abstract interface class DOMImplementation {
@@ -158,8 +182,17 @@ abstract interface class DocumentType {
 }
 
 abstract interface class ElementCreationOptions {
-  String get is_;
-  set is_(String value);
+  String? get is_;
+  set is_(String? value);
+}
+
+final class ElementCreationOptionsValue implements ElementCreationOptions {
+  @override
+  String? is_;
+
+  ElementCreationOptionsValue({
+    this.is_,
+  });
 }
 
 abstract interface class Event {
@@ -191,12 +224,27 @@ abstract interface class Event {
 }
 
 abstract interface class EventInit {
-  bool get bubbles;
-  set bubbles(bool value);
-  bool get cancelable;
-  set cancelable(bool value);
-  bool get composed;
-  set composed(bool value);
+  bool? get bubbles;
+  set bubbles(bool? value);
+  bool? get cancelable;
+  set cancelable(bool? value);
+  bool? get composed;
+  set composed(bool? value);
+}
+
+final class EventInitValue implements EventInit {
+  @override
+  bool? bubbles;
+  @override
+  bool? cancelable;
+  @override
+  bool? composed;
+
+  EventInitValue({
+    this.bubbles,
+    this.cancelable,
+    this.composed,
+  });
 }
 
 abstract interface class EventListener {
@@ -204,8 +252,17 @@ abstract interface class EventListener {
 }
 
 abstract interface class EventListenerOptions {
-  bool get capture;
-  set capture(bool value);
+  bool? get capture;
+  set capture(bool? value);
+}
+
+final class EventListenerOptionsValue implements EventListenerOptions {
+  @override
+  bool? capture;
+
+  EventListenerOptionsValue({
+    this.capture,
+  });
 }
 
 abstract interface class EventTarget {
@@ -220,8 +277,17 @@ abstract interface class EventTarget {
 }
 
 abstract interface class GetRootNodeOptions {
-  bool get composed;
-  set composed(bool value);
+  bool? get composed;
+  set composed(bool? value);
+}
+
+final class GetRootNodeOptionsValue implements GetRootNodeOptions {
+  @override
+  bool? composed;
+
+  GetRootNodeOptionsValue({
+    this.composed,
+  });
 }
 
 abstract interface class HTMLCollection {
@@ -244,20 +310,47 @@ abstract interface class MutationObserver {
 }
 
 abstract interface class MutationObserverInit {
-  bool get childList;
-  set childList(bool value);
-  bool get attributes;
-  set attributes(bool value);
-  bool get characterData;
-  set characterData(bool value);
-  bool get subtree;
-  set subtree(bool value);
-  bool get attributeOldValue;
-  set attributeOldValue(bool value);
-  bool get characterDataOldValue;
-  set characterDataOldValue(bool value);
-  List<String> get attributeFilter;
-  set attributeFilter(List<String> value);
+  bool? get childList;
+  set childList(bool? value);
+  bool? get attributes;
+  set attributes(bool? value);
+  bool? get characterData;
+  set characterData(bool? value);
+  bool? get subtree;
+  set subtree(bool? value);
+  bool? get attributeOldValue;
+  set attributeOldValue(bool? value);
+  bool? get characterDataOldValue;
+  set characterDataOldValue(bool? value);
+  List<String>? get attributeFilter;
+  set attributeFilter(List<String>? value);
+}
+
+final class MutationObserverInitValue implements MutationObserverInit {
+  @override
+  bool? childList;
+  @override
+  bool? attributes;
+  @override
+  bool? characterData;
+  @override
+  bool? subtree;
+  @override
+  bool? attributeOldValue;
+  @override
+  bool? characterDataOldValue;
+  @override
+  List<String>? attributeFilter;
+
+  MutationObserverInitValue({
+    this.childList,
+    this.attributes,
+    this.characterData,
+    this.subtree,
+    this.attributeOldValue,
+    this.characterDataOldValue,
+    this.attributeFilter,
+  });
 }
 
 abstract interface class MutationRecord {
@@ -410,6 +503,8 @@ abstract interface class ShadowRoot {
   bool get clonable;
   bool get serializable;
   Element get host;
+  EventHandler get onslotchange;
+   set onslotchange(EventHandler value);
   void setHTMLUnsafe(Object html);
   String getHTML([GetHTMLOptions? options]);
   Object get innerHTML;
@@ -419,14 +514,35 @@ abstract interface class ShadowRoot {
 abstract interface class ShadowRootInit {
   ShadowRootMode get mode;
   set mode(ShadowRootMode value);
-  bool get delegatesFocus;
-  set delegatesFocus(bool value);
-  SlotAssignmentMode get slotAssignment;
-  set slotAssignment(SlotAssignmentMode value);
-  bool get clonable;
-  set clonable(bool value);
-  bool get serializable;
-  set serializable(bool value);
+  bool? get delegatesFocus;
+  set delegatesFocus(bool? value);
+  SlotAssignmentMode? get slotAssignment;
+  set slotAssignment(SlotAssignmentMode? value);
+  bool? get clonable;
+  set clonable(bool? value);
+  bool? get serializable;
+  set serializable(bool? value);
+}
+
+final class ShadowRootInitValue implements ShadowRootInit {
+  @override
+  ShadowRootMode mode;
+  @override
+  bool? delegatesFocus;
+  @override
+  SlotAssignmentMode? slotAssignment;
+  @override
+  bool? clonable;
+  @override
+  bool? serializable;
+
+  ShadowRootInitValue({
+    required this.mode,
+    this.delegatesFocus,
+    this.slotAssignment,
+    this.clonable,
+    this.serializable,
+  });
 }
 
 typedef ShadowRootMode = String;
@@ -454,6 +570,24 @@ abstract interface class StaticRangeInit {
   set endContainer(Node value);
   int get endOffset;
   set endOffset(int value);
+}
+
+final class StaticRangeInitValue implements StaticRangeInit {
+  @override
+  Node startContainer;
+  @override
+  int startOffset;
+  @override
+  Node endContainer;
+  @override
+  int endOffset;
+
+  StaticRangeInitValue({
+    required this.startContainer,
+    required this.startOffset,
+    required this.endContainer,
+    required this.endOffset,
+  });
 }
 
 abstract interface class Text {

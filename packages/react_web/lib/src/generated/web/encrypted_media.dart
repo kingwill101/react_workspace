@@ -18,10 +18,22 @@ abstract interface class MediaEncryptedEvent {
 }
 
 abstract interface class MediaEncryptedEventInit {
-  String get initDataType;
-  set initDataType(String value);
-  Object get initData;
-  set initData(Object value);
+  String? get initDataType;
+  set initDataType(String? value);
+  Object? get initData;
+  set initData(Object? value);
+}
+
+final class MediaEncryptedEventInitValue implements MediaEncryptedEventInit {
+  @override
+  String? initDataType;
+  @override
+  Object? initData;
+
+  MediaEncryptedEventInitValue({
+    this.initDataType,
+    this.initData,
+  });
 }
 
 abstract interface class MediaKeyMessageEvent {
@@ -39,6 +51,18 @@ abstract interface class MediaKeyMessageEventInit {
   set messageType(MediaKeyMessageType value);
   Object get message;
   set message(Object value);
+}
+
+final class MediaKeyMessageEventInitValue implements MediaKeyMessageEventInit {
+  @override
+  MediaKeyMessageType messageType;
+  @override
+  Object message;
+
+  MediaKeyMessageEventInitValue({
+    required this.messageType,
+    required this.message,
+  });
 }
 
 typedef MediaKeyMessageType = String;
@@ -78,29 +102,71 @@ abstract interface class MediaKeySystemAccess {
 }
 
 abstract interface class MediaKeySystemConfiguration {
-  String get label;
-  set label(String value);
-  List<String> get initDataTypes;
-  set initDataTypes(List<String> value);
-  List<MediaKeySystemMediaCapability> get audioCapabilities;
-  set audioCapabilities(List<MediaKeySystemMediaCapability> value);
-  List<MediaKeySystemMediaCapability> get videoCapabilities;
-  set videoCapabilities(List<MediaKeySystemMediaCapability> value);
-  MediaKeysRequirement get distinctiveIdentifier;
-  set distinctiveIdentifier(MediaKeysRequirement value);
-  MediaKeysRequirement get persistentState;
-  set persistentState(MediaKeysRequirement value);
-  List<String> get sessionTypes;
-  set sessionTypes(List<String> value);
+  String? get label;
+  set label(String? value);
+  List<String>? get initDataTypes;
+  set initDataTypes(List<String>? value);
+  List<MediaKeySystemMediaCapability>? get audioCapabilities;
+  set audioCapabilities(List<MediaKeySystemMediaCapability>? value);
+  List<MediaKeySystemMediaCapability>? get videoCapabilities;
+  set videoCapabilities(List<MediaKeySystemMediaCapability>? value);
+  MediaKeysRequirement? get distinctiveIdentifier;
+  set distinctiveIdentifier(MediaKeysRequirement? value);
+  MediaKeysRequirement? get persistentState;
+  set persistentState(MediaKeysRequirement? value);
+  List<String>? get sessionTypes;
+  set sessionTypes(List<String>? value);
+}
+
+final class MediaKeySystemConfigurationValue implements MediaKeySystemConfiguration {
+  @override
+  String? label;
+  @override
+  List<String>? initDataTypes;
+  @override
+  List<MediaKeySystemMediaCapability>? audioCapabilities;
+  @override
+  List<MediaKeySystemMediaCapability>? videoCapabilities;
+  @override
+  MediaKeysRequirement? distinctiveIdentifier;
+  @override
+  MediaKeysRequirement? persistentState;
+  @override
+  List<String>? sessionTypes;
+
+  MediaKeySystemConfigurationValue({
+    this.label,
+    this.initDataTypes,
+    this.audioCapabilities,
+    this.videoCapabilities,
+    this.distinctiveIdentifier,
+    this.persistentState,
+    this.sessionTypes,
+  });
 }
 
 abstract interface class MediaKeySystemMediaCapability {
-  String get contentType;
-  set contentType(String value);
+  String? get contentType;
+  set contentType(String? value);
   String? get encryptionScheme;
   set encryptionScheme(String? value);
-  String get robustness;
-  set robustness(String value);
+  String? get robustness;
+  set robustness(String? value);
+}
+
+final class MediaKeySystemMediaCapabilityValue implements MediaKeySystemMediaCapability {
+  @override
+  String? contentType;
+  @override
+  String? encryptionScheme;
+  @override
+  String? robustness;
+
+  MediaKeySystemMediaCapabilityValue({
+    this.contentType,
+    this.encryptionScheme,
+    this.robustness,
+  });
 }
 
 abstract interface class MediaKeys {
@@ -110,8 +176,17 @@ abstract interface class MediaKeys {
 }
 
 abstract interface class MediaKeysPolicy {
-  String get minHdcpVersion;
-  set minHdcpVersion(String value);
+  String? get minHdcpVersion;
+  set minHdcpVersion(String? value);
+}
+
+final class MediaKeysPolicyValue implements MediaKeysPolicy {
+  @override
+  String? minHdcpVersion;
+
+  MediaKeysPolicyValue({
+    this.minHdcpVersion,
+  });
 }
 
 typedef MediaKeysRequirement = String;

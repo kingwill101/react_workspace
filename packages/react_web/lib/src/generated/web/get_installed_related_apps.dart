@@ -6,11 +6,29 @@
 abstract interface class RelatedApplication {
   String get platform;
   set platform(String value);
-  String get url;
-  set url(String value);
-  String get id;
-  set id(String value);
-  String get version;
-  set version(String value);
+  String? get url;
+  set url(String? value);
+  String? get id;
+  set id(String? value);
+  String? get version;
+  set version(String? value);
+}
+
+final class RelatedApplicationValue implements RelatedApplication {
+  @override
+  String platform;
+  @override
+  String? url;
+  @override
+  String? id;
+  @override
+  String? version;
+
+  RelatedApplicationValue({
+    required this.platform,
+    this.url,
+    this.id,
+    this.version,
+  });
 }
 

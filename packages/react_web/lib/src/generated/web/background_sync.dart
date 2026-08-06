@@ -18,8 +18,20 @@ abstract interface class SyncEvent {
 abstract interface class SyncEventInit {
   String get tag;
   set tag(String value);
-  bool get lastChance;
-  set lastChance(bool value);
+  bool? get lastChance;
+  set lastChance(bool? value);
+}
+
+final class SyncEventInitValue implements SyncEventInit {
+  @override
+  String tag;
+  @override
+  bool? lastChance;
+
+  SyncEventInitValue({
+    required this.tag,
+    this.lastChance,
+  });
 }
 
 abstract interface class SyncManager {

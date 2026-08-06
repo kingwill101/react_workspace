@@ -22,12 +22,27 @@ abstract interface class Cache {
 }
 
 abstract interface class CacheQueryOptions {
-  bool get ignoreSearch;
-  set ignoreSearch(bool value);
-  bool get ignoreMethod;
-  set ignoreMethod(bool value);
-  bool get ignoreVary;
-  set ignoreVary(bool value);
+  bool? get ignoreSearch;
+  set ignoreSearch(bool? value);
+  bool? get ignoreMethod;
+  set ignoreMethod(bool? value);
+  bool? get ignoreVary;
+  set ignoreVary(bool? value);
+}
+
+final class CacheQueryOptionsValue implements CacheQueryOptions {
+  @override
+  bool? ignoreSearch;
+  @override
+  bool? ignoreMethod;
+  @override
+  bool? ignoreVary;
+
+  CacheQueryOptionsValue({
+    this.ignoreSearch,
+    this.ignoreMethod,
+    this.ignoreVary,
+  });
 }
 
 abstract interface class CacheStorage {
@@ -39,10 +54,22 @@ abstract interface class CacheStorage {
 }
 
 abstract interface class ClientQueryOptions {
-  bool get includeUncontrolled;
-  set includeUncontrolled(bool value);
-  ClientType get type;
-  set type(ClientType value);
+  bool? get includeUncontrolled;
+  set includeUncontrolled(bool? value);
+  ClientType? get type;
+  set type(ClientType? value);
+}
+
+final class ClientQueryOptionsValue implements ClientQueryOptions {
+  @override
+  bool? includeUncontrolled;
+  @override
+  ClientType? type;
+
+  ClientQueryOptionsValue({
+    this.includeUncontrolled,
+    this.type,
+  });
 }
 
 typedef ClientType = String;
@@ -66,6 +93,11 @@ abstract interface class ExtendableEvent {
 abstract interface class ExtendableEventInit {
 }
 
+final class ExtendableEventInitValue implements ExtendableEventInit {
+
+  ExtendableEventInitValue();
+}
+
 abstract interface class ExtendableMessageEvent {
   factory ExtendableMessageEvent(String type, [ExtendableMessageEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<ExtendableMessageEvent>(
@@ -80,16 +112,37 @@ abstract interface class ExtendableMessageEvent {
 }
 
 abstract interface class ExtendableMessageEventInit {
-  Object get data;
-  set data(Object value);
-  String get origin;
-  set origin(String value);
-  String get lastEventId;
-  set lastEventId(String value);
-  Object get source;
-  set source(Object value);
-  List<MessagePort> get ports;
-  set ports(List<MessagePort> value);
+  Object? get data;
+  set data(Object? value);
+  String? get origin;
+  set origin(String? value);
+  String? get lastEventId;
+  set lastEventId(String? value);
+  Object? get source;
+  set source(Object? value);
+  List<MessagePort>? get ports;
+  set ports(List<MessagePort>? value);
+}
+
+final class ExtendableMessageEventInitValue implements ExtendableMessageEventInit {
+  @override
+  Object? data;
+  @override
+  String? origin;
+  @override
+  String? lastEventId;
+  @override
+  Object? source;
+  @override
+  List<MessagePort>? ports;
+
+  ExtendableMessageEventInitValue({
+    this.data,
+    this.origin,
+    this.lastEventId,
+    this.source,
+    this.ports,
+  });
 }
 
 abstract interface class FetchEvent {
@@ -110,16 +163,40 @@ abstract interface class FetchEvent {
 abstract interface class FetchEventInit {
   Request get request;
   set request(Request value);
-  Future<Object> get preloadResponse;
-  set preloadResponse(Future<Object> value);
-  String get clientId;
-  set clientId(String value);
-  String get resultingClientId;
-  set resultingClientId(String value);
-  String get replacesClientId;
-  set replacesClientId(String value);
-  Future<void> get handled;
-  set handled(Future<void> value);
+  Future<Object>? get preloadResponse;
+  set preloadResponse(Future<Object>? value);
+  String? get clientId;
+  set clientId(String? value);
+  String? get resultingClientId;
+  set resultingClientId(String? value);
+  String? get replacesClientId;
+  set replacesClientId(String? value);
+  Future<void>? get handled;
+  set handled(Future<void>? value);
+}
+
+final class FetchEventInitValue implements FetchEventInit {
+  @override
+  Request request;
+  @override
+  Future<Object>? preloadResponse;
+  @override
+  String? clientId;
+  @override
+  String? resultingClientId;
+  @override
+  String? replacesClientId;
+  @override
+  Future<void>? handled;
+
+  FetchEventInitValue({
+    required this.request,
+    this.preloadResponse,
+    this.clientId,
+    this.resultingClientId,
+    this.replacesClientId,
+    this.handled,
+  });
 }
 
 typedef FrameType = String;
@@ -128,8 +205,17 @@ abstract interface class InstallEvent {
 }
 
 abstract interface class MultiCacheQueryOptions {
-  String get cacheName;
-  set cacheName(String value);
+  String? get cacheName;
+  set cacheName(String? value);
+}
+
+final class MultiCacheQueryOptionsValue implements MultiCacheQueryOptions {
+  @override
+  String? cacheName;
+
+  MultiCacheQueryOptionsValue({
+    this.cacheName,
+  });
 }
 
 abstract interface class NavigationPreloadManager {
@@ -140,36 +226,90 @@ abstract interface class NavigationPreloadManager {
 }
 
 abstract interface class NavigationPreloadState {
-  bool get enabled;
-  set enabled(bool value);
-  String get headerValue;
-  set headerValue(String value);
+  bool? get enabled;
+  set enabled(bool? value);
+  String? get headerValue;
+  set headerValue(String? value);
+}
+
+final class NavigationPreloadStateValue implements NavigationPreloadState {
+  @override
+  bool? enabled;
+  @override
+  String? headerValue;
+
+  NavigationPreloadStateValue({
+    this.enabled,
+    this.headerValue,
+  });
 }
 
 abstract interface class RegistrationOptions {
-  String get scope;
-  set scope(String value);
-  WorkerType get type;
-  set type(WorkerType value);
-  ServiceWorkerUpdateViaCache get updateViaCache;
-  set updateViaCache(ServiceWorkerUpdateViaCache value);
+  String? get scope;
+  set scope(String? value);
+  WorkerType? get type;
+  set type(WorkerType? value);
+  ServiceWorkerUpdateViaCache? get updateViaCache;
+  set updateViaCache(ServiceWorkerUpdateViaCache? value);
+}
+
+final class RegistrationOptionsValue implements RegistrationOptions {
+  @override
+  String? scope;
+  @override
+  WorkerType? type;
+  @override
+  ServiceWorkerUpdateViaCache? updateViaCache;
+
+  RegistrationOptionsValue({
+    this.scope,
+    this.type,
+    this.updateViaCache,
+  });
 }
 
 abstract interface class RouterCondition {
-  URLPatternCompatible get urlPattern;
-  set urlPattern(URLPatternCompatible value);
-  String get requestMethod;
-  set requestMethod(String value);
-  RequestMode get requestMode;
-  set requestMode(RequestMode value);
-  RequestDestination get requestDestination;
-  set requestDestination(RequestDestination value);
-  RunningStatus get runningStatus;
-  set runningStatus(RunningStatus value);
-  List<RouterCondition> get or;
-  set or(List<RouterCondition> value);
-  RouterCondition get not;
-  set not(RouterCondition value);
+  URLPatternCompatible? get urlPattern;
+  set urlPattern(URLPatternCompatible? value);
+  String? get requestMethod;
+  set requestMethod(String? value);
+  RequestMode? get requestMode;
+  set requestMode(RequestMode? value);
+  RequestDestination? get requestDestination;
+  set requestDestination(RequestDestination? value);
+  RunningStatus? get runningStatus;
+  set runningStatus(RunningStatus? value);
+  List<RouterCondition>? get or;
+  set or(List<RouterCondition>? value);
+  RouterCondition? get not;
+  set not(RouterCondition? value);
+}
+
+final class RouterConditionValue implements RouterCondition {
+  @override
+  URLPatternCompatible? urlPattern;
+  @override
+  String? requestMethod;
+  @override
+  RequestMode? requestMode;
+  @override
+  RequestDestination? requestDestination;
+  @override
+  RunningStatus? runningStatus;
+  @override
+  List<RouterCondition>? or;
+  @override
+  RouterCondition? not;
+
+  RouterConditionValue({
+    this.urlPattern,
+    this.requestMethod,
+    this.requestMode,
+    this.requestDestination,
+    this.runningStatus,
+    this.or,
+    this.not,
+  });
 }
 
 abstract interface class RouterRule {
@@ -179,11 +319,32 @@ abstract interface class RouterRule {
   set source(RouterSource value);
 }
 
+final class RouterRuleValue implements RouterRule {
+  @override
+  RouterCondition condition;
+  @override
+  RouterSource source;
+
+  RouterRuleValue({
+    required this.condition,
+    required this.source,
+  });
+}
+
 typedef RouterSource = Object;
 
 abstract interface class RouterSourceDict {
-  String get cacheName;
-  set cacheName(String value);
+  String? get cacheName;
+  set cacheName(String? value);
+}
+
+final class RouterSourceDictValue implements RouterSourceDict {
+  @override
+  String? cacheName;
+
+  RouterSourceDictValue({
+    this.cacheName,
+  });
 }
 
 typedef RouterSourceEnum = String;

@@ -18,7 +18,19 @@ abstract interface class MediaStreamTrackProcessor {
 abstract interface class MediaStreamTrackProcessorInit {
   MediaStreamTrack get track;
   set track(MediaStreamTrack value);
-  int get maxBufferSize;
-  set maxBufferSize(int value);
+  int? get maxBufferSize;
+  set maxBufferSize(int? value);
+}
+
+final class MediaStreamTrackProcessorInitValue implements MediaStreamTrackProcessorInit {
+  @override
+  MediaStreamTrack track;
+  @override
+  int? maxBufferSize;
+
+  MediaStreamTrackProcessorInitValue({
+    required this.track,
+    this.maxBufferSize,
+  });
 }
 

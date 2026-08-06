@@ -10,8 +10,17 @@ import 'image_capture.dart';
 import 'screen_capture.dart';
 
 abstract interface class AudioOutputOptions {
-  String get deviceId;
-  set deviceId(String value);
+  String? get deviceId;
+  set deviceId(String? value);
+}
+
+final class AudioOutputOptionsValue implements AudioOutputOptions {
+  @override
+  String? deviceId;
+
+  AudioOutputOptionsValue({
+    this.deviceId,
+  });
 }
 
 abstract interface class HTMLMediaElement {

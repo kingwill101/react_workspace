@@ -4,8 +4,17 @@
 
 
 abstract interface class XRLightProbeInit {
-  XRReflectionFormat get reflectionFormat;
-  set reflectionFormat(XRReflectionFormat value);
+  XRReflectionFormat? get reflectionFormat;
+  set reflectionFormat(XRReflectionFormat? value);
+}
+
+final class XRLightProbeInitValue implements XRLightProbeInit {
+  @override
+  XRReflectionFormat? reflectionFormat;
+
+  XRLightProbeInitValue({
+    this.reflectionFormat,
+  });
 }
 
 typedef XRReflectionFormat = String;

@@ -111,8 +111,17 @@ abstract interface class CSSMatrixComponent {
 }
 
 abstract interface class CSSMatrixComponentOptions {
-  bool get is2D;
-  set is2D(bool value);
+  bool? get is2D;
+  set is2D(bool? value);
+}
+
+final class CSSMatrixComponentOptionsValue implements CSSMatrixComponentOptions {
+  @override
+  bool? is2D;
+
+  CSSMatrixComponentOptionsValue({
+    this.is2D,
+  });
 }
 
 typedef CSSNumberish = Object;
@@ -124,22 +133,52 @@ abstract interface class CSSNumericArray {
 typedef CSSNumericBaseType = String;
 
 abstract interface class CSSNumericType {
-  int get length;
-  set length(int value);
-  int get angle;
-  set angle(int value);
-  int get time;
-  set time(int value);
-  int get frequency;
-  set frequency(int value);
-  int get resolution;
-  set resolution(int value);
-  int get flex;
-  set flex(int value);
-  int get percent;
-  set percent(int value);
-  CSSNumericBaseType get percentHint;
-  set percentHint(CSSNumericBaseType value);
+  int? get length;
+  set length(int? value);
+  int? get angle;
+  set angle(int? value);
+  int? get time;
+  set time(int? value);
+  int? get frequency;
+  set frequency(int? value);
+  int? get resolution;
+  set resolution(int? value);
+  int? get flex;
+  set flex(int? value);
+  int? get percent;
+  set percent(int? value);
+  CSSNumericBaseType? get percentHint;
+  set percentHint(CSSNumericBaseType? value);
+}
+
+final class CSSNumericTypeValue implements CSSNumericType {
+  @override
+  int? length;
+  @override
+  int? angle;
+  @override
+  int? time;
+  @override
+  int? frequency;
+  @override
+  int? resolution;
+  @override
+  int? flex;
+  @override
+  int? percent;
+  @override
+  CSSNumericBaseType? percentHint;
+
+  CSSNumericTypeValue({
+    this.length,
+    this.angle,
+    this.time,
+    this.frequency,
+    this.resolution,
+    this.flex,
+    this.percent,
+    this.percentHint,
+  });
 }
 
 abstract interface class CSSNumericValue {

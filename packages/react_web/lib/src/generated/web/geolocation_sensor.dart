@@ -9,6 +9,11 @@ import 'dom.dart';
 abstract interface class GeolocationSensorOptions {
 }
 
+final class GeolocationSensorOptionsValue implements GeolocationSensorOptions {
+
+  GeolocationSensorOptionsValue();
+}
+
 abstract interface class GeolocationSensorReading {
   DOMHighResTimeStamp? get timestamp;
   set timestamp(DOMHighResTimeStamp? value);
@@ -28,8 +33,47 @@ abstract interface class GeolocationSensorReading {
   set speed(double? value);
 }
 
+final class GeolocationSensorReadingValue implements GeolocationSensorReading {
+  @override
+  DOMHighResTimeStamp? timestamp;
+  @override
+  double? latitude;
+  @override
+  double? longitude;
+  @override
+  double? altitude;
+  @override
+  double? accuracy;
+  @override
+  double? altitudeAccuracy;
+  @override
+  double? heading;
+  @override
+  double? speed;
+
+  GeolocationSensorReadingValue({
+    this.timestamp,
+    this.latitude,
+    this.longitude,
+    this.altitude,
+    this.accuracy,
+    this.altitudeAccuracy,
+    this.heading,
+    this.speed,
+  });
+}
+
 abstract interface class ReadOptions {
   AbortSignal? get signal;
   set signal(AbortSignal? value);
+}
+
+final class ReadOptionsValue implements ReadOptions {
+  @override
+  AbortSignal? signal;
+
+  ReadOptionsValue({
+    this.signal,
+  });
 }
 

@@ -43,11 +43,26 @@ abstract interface class TrustedTypePolicyFactory {
 }
 
 abstract interface class TrustedTypePolicyOptions {
-  CreateHTMLCallback get createHTML;
-  set createHTML(CreateHTMLCallback value);
-  CreateScriptCallback get createScript;
-  set createScript(CreateScriptCallback value);
-  CreateScriptURLCallback get createScriptURL;
-  set createScriptURL(CreateScriptURLCallback value);
+  CreateHTMLCallback? get createHTML;
+  set createHTML(CreateHTMLCallback? value);
+  CreateScriptCallback? get createScript;
+  set createScript(CreateScriptCallback? value);
+  CreateScriptURLCallback? get createScriptURL;
+  set createScriptURL(CreateScriptURLCallback? value);
+}
+
+final class TrustedTypePolicyOptionsValue implements TrustedTypePolicyOptions {
+  @override
+  CreateHTMLCallback? createHTML;
+  @override
+  CreateScriptCallback? createScript;
+  @override
+  CreateScriptURLCallback? createScriptURL;
+
+  TrustedTypePolicyOptionsValue({
+    this.createHTML,
+    this.createScript,
+    this.createScriptURL,
+  });
 }
 
