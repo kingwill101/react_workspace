@@ -112,41 +112,57 @@ final class DartUsageCollector {
 
     final visitedLibraries = <String>{};
     final unresolved = <String>[];
-    final units = <CompilationUnit>[];
+    final pathUnits = <String, CompilationUnit>{};
     var resolvedCount = 0;
 
+    bool isFrameworkSkippable(String path) {
+      // SDK, framework packages and pub cache don't contain foreign symbols
+      // that affect DCE; skipping them doesn't affect completeness.
+      return path.contains('.pub-cache') ||
+          path.contains('/.dart_tool/') ||
+          path.contains('/dart-sdk/') ||
+          path.contains('packages/react/') ||
+          path.contains('packages/react_analysis/') ||
+          path.contains('packages/react_tool/') ||
+          path.contains('packages/analyzer/');
+    }
+
+    final skipped = <String>[];
     Future<void> visitLibrary(String libPath) async {
       final normalized = p.normalize(p.absolute(libPath));
       if (!visitedLibraries.add(normalized)) return;
       final result = await session.getResolvedUnit(normalized);
       if (result is ResolvedUnitResult) {
         resolvedCount++;
-        units.add(result.unit);
+        pathUnits[normalized] = result.unit;
         // Traverse imports/exports/parts via resolved directives.
-        // Only recurse into project-local files to avoid traversing the
-        // entire SDK / .pub-cache (which would timeout the test).
+        // Only traverse project-local files; record skipped non-framework
+        // package deps so completeness is false when any reachable library
+        // that could contain symbols was not inspected.
         for (final directive in result.unit.directives) {
           if (directive is ImportDirective) {
             final imported = directive.libraryImport?.importedLibrary;
             final path = imported?.firstFragment?.source.fullName;
-            if (path != null &&
-                path.isNotEmpty &&
-                (path.startsWith(root) || path.contains('test_app'))) {
-              await visitLibrary(path);
+            if (path == null || path.isEmpty || path.startsWith('dart:')) continue;
+            if (!path.startsWith(root)) {
+              if (!isFrameworkSkippable(path)) skipped.add(path);
+              continue;
             }
+            await visitLibrary(path);
           } else if (directive is ExportDirective) {
             final exported = directive.libraryExport?.exportedLibrary;
             final path = exported?.firstFragment?.source.fullName;
-            if (path != null &&
-                path.isNotEmpty &&
-                (path.startsWith(root) || path.contains('test_app'))) {
-              await visitLibrary(path);
+            if (path == null || path.isEmpty || path.startsWith('dart:')) continue;
+            if (!path.startsWith(root)) {
+              if (!isFrameworkSkippable(path)) skipped.add(path);
+              continue;
             }
+            await visitLibrary(path);
           } else if (directive is PartDirective) {
             final uriStr = directive.uri.stringValue;
             if (uriStr == null) continue;
             final partPath = p.normalize(p.join(p.dirname(normalized), uriStr));
-            if (partPath.startsWith(root)) await visitLibrary(partPath);
+            await visitLibrary(partPath);
           }
         }
       } else {
@@ -156,8 +172,9 @@ final class DartUsageCollector {
 
     await visitLibrary(absoluteEntry);
 
-    final collected = _collector.collectUnits(units);
-    final complete = unresolved.isEmpty;
+    final allUnresolved = [...unresolved, ...skipped];
+    final complete = unresolved.isEmpty && skipped.isEmpty;
+    final collected = _collector.collectUnitsWithPaths(pathUnits);
     return ReactUsageResult(
       components: collected.components,
       hooks: collected.hooks,
@@ -165,7 +182,7 @@ final class DartUsageCollector {
       rawHookKeys: collected.rawHookKeys,
       complete: complete,
       resolvedLibraries: resolvedCount,
-      unresolvedLibraries: unresolved,
+      unresolvedLibraries: allUnresolved,
     );
   }
 
@@ -192,8 +209,9 @@ final class DartUsageCollector {
 /// Prefers resolved collection; falls back to legacy walk on failure.
 Future<ReactUsageResult?> writeUsageManifest({
   required String? entryPath,
-  required String target, // 'browser' or 'ssr'
+  required String target,
   required Directory dotDartToolReact,
+  String? projectRoot,
 }) async {
   if (entryPath == null) return null;
   final file = File(entryPath);
@@ -201,7 +219,8 @@ Future<ReactUsageResult?> writeUsageManifest({
   final collector = DartUsageCollector();
   ReactUsageResult result;
   try {
-    result = await collector.collectEntrypointResolved(entryPath);
+    result = await collector.collectEntrypointResolved(entryPath,
+        projectRoot: projectRoot);
   } catch (_) {
     result = collector.collectEntrypoint(entryPath);
   }

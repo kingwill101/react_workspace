@@ -33,6 +33,18 @@ final class ReactRuntimeUsageCollector {
     );
   }
 
+  /// Collect from a single unit with a known file path (for provenance).
+  ReactUsageResult collectUnitWithPath(CompilationUnit unit, String path) {
+    final visitor = _UsageVisitor(currentPath: path);
+    unit.visitChildren(visitor);
+    return ReactUsageResult(
+      components: visitor.components.toList()..sort(),
+      hooks: visitor.hooks.toList()..sort(),
+      rawComponentKeys: visitor.rawComponentKeys,
+      rawHookKeys: visitor.rawHookKeys,
+    );
+  }
+
   /// Collect from multiple units (e.g. library + reachable imports).
   ReactUsageResult collectUnits(Iterable<CompilationUnit> units) {
     final components = <String>{};
@@ -44,14 +56,52 @@ final class ReactRuntimeUsageCollector {
       final r = collectUnit(unit);
       components.addAll(r.components);
       hooks.addAll(r.hooks);
-      rawComponents.addAll(r.rawComponentKeys);
-      rawHooks.addAll(r.rawHookKeys);
+      for (final e in r.rawComponentKeys.entries) {
+        rawComponents.putIfAbsent(e.key, () => []).addAll(e.value);
+      }
+      for (final e in r.rawHookKeys.entries) {
+        rawHooks.putIfAbsent(e.key, () => []).addAll(e.value);
+      }
     }
     return ReactUsageResult(
       components: components.toList()..sort(),
       hooks: hooks.toList()..sort(),
-      rawComponentKeys: rawComponents,
-      rawHookKeys: rawHooks,
+      rawComponentKeys: {
+        for (final e in rawComponents.entries) e.key: (e.value.toSet().toList()..sort()),
+      },
+      rawHookKeys: {
+        for (final e in rawHooks.entries) e.key: (e.value.toSet().toList()..sort()),
+      },
+    );
+  }
+
+  /// Collect from multiple units with known paths (for provenance).
+  ReactUsageResult collectUnitsWithPaths(Map<String, CompilationUnit> pathUnits) {
+    final components = <String>{};
+    final hooks = <String>{};
+    final rawComponents = <String, List<String>>{};
+    final rawHooks = <String, List<String>>{};
+
+    for (final entry in pathUnits.entries) {
+      final r = collectUnitWithPath(entry.value, entry.key);
+      components.addAll(r.components);
+      hooks.addAll(r.hooks);
+      for (final e in r.rawComponentKeys.entries) {
+        rawComponents.putIfAbsent(e.key, () => []).addAll(e.value);
+      }
+      for (final e in r.rawHookKeys.entries) {
+        rawHooks.putIfAbsent(e.key, () => []).addAll(e.value);
+      }
+    }
+    return ReactUsageResult(
+      components: components.toList()..sort(),
+      hooks: hooks.toList()..sort(),
+      rawComponentKeys: {
+        for (final e in rawComponents.entries) e.key: (e.value.toSet().toList()..sort()),
+      },
+      rawHookKeys: {
+        for (final e in rawHooks.entries) e.key: (e.value.toSet().toList()..sort()),
+      },
     );
   }
 }
@@ -113,6 +163,9 @@ final class ReactUsageResult {
 }
 
 final class _UsageVisitor extends RecursiveAstVisitor<void> {
+  final String? currentPath;
+  _UsageVisitor({this.currentPath});
+
   final Set<String> components = {};
   final Set<String> hooks = {};
   final Map<String, List<String>> rawComponentKeys = {};
@@ -128,6 +181,9 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
         final key = (args.first as StringLiteral).stringValue;
         if (key != null && key.isNotEmpty) {
           components.add(key);
+          if (currentPath != null) {
+            rawComponentKeys.putIfAbsent(currentPath!, () => []).add(key);
+          }
         }
       }
     }
@@ -139,6 +195,9 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
     final hookKey = _hookRuntimeKey(element);
     if (hookKey != null) {
       hooks.add(hookKey);
+      if (currentPath != null) {
+        rawHookKeys.putIfAbsent(currentPath!, () => []).add(hookKey);
+      }
     }
 
     super.visitMethodInvocation(node);
@@ -150,7 +209,12 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
       final args = node.argumentList.arguments;
       if (args.isNotEmpty && args.first is StringLiteral) {
         final key = (args.first as StringLiteral).stringValue;
-        if (key != null) components.add(key);
+        if (key != null) {
+          components.add(key);
+          if (currentPath != null) {
+            rawComponentKeys.putIfAbsent(currentPath!, () => []).add(key);
+          }
+        }
       }
     }
     super.visitInstanceCreationExpression(node);

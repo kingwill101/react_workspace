@@ -126,6 +126,7 @@ final class ReactBuilder {
           : null,
       target: 'browser',
       dotDartToolReact: dotReactDir,
+      projectRoot: config.root.path,
     );
     final ssrUsage = await writeUsageManifest(
       entryPath: config.ssrEntrypoint != null
@@ -133,6 +134,7 @@ final class ReactBuilder {
           : null,
       target: 'ssr',
       dotDartToolReact: dotReactDir,
+      projectRoot: config.root.path,
     );
     // Native SSR compatibility stub — extended once WebApiRuntimeInfo generation lands.
     await _writeNativeSsrCompatibility(
