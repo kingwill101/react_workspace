@@ -199,7 +199,7 @@ final class NeutralSurfaceEmitter {
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
     buf.writeln('// Neutral Web surface for spec: $spec');
-    buf.writeln('// ignore_for_file: constant_identifier_names, unnecessary_late, non_constant_identifier_names, unused_local_variable, camel_case_types, unused_import');
+    buf.writeln('// ignore_for_file: type=lint');
     buf.writeln();
 
     final importSpecs = _requiredSpecs(defs, allSpecs)..remove(spec);
@@ -595,6 +595,7 @@ final class NeutralSurfaceEmitter {
   void _emitWebBarrel(Directory dir, List<String> specs) {
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
+    buf.writeln('// ignore_for_file: type=lint');
     buf.writeln('// Exports the complete neutral Web surface.');
     buf.writeln();
     for (final s in specs.toList()..sort()) {
@@ -607,6 +608,7 @@ final class NeutralSurfaceEmitter {
   void _emitGlobals(Directory dir) {
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
+    buf.writeln('// ignore_for_file: type=lint');
     buf.writeln();
     buf.writeln("import 'package:react_web/src/web_runtime.dart';");
     buf.writeln("import 'web.dart';");

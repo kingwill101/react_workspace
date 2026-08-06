@@ -1,6 +1,5 @@
 // GENERATED CODE — DO NOT EDIT
 // ignore_for_file: type=lint
-// ignore_for_file: constant_identifier_names, non_constant_identifier_names, avoid_renaming_method_parameters, invalid_runtime_check_with_js_interop_types
 
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';

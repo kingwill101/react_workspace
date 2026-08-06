@@ -8,7 +8,8 @@ final class FactoryEmitter {
 
   String emit() {
     final buf = StringBuffer();
-    buf.writeln("// GENERATED CODE — DO NOT EDIT");
+    buf.writeln('// GENERATED CODE — DO NOT EDIT');
+    buf.writeln('// ignore_for_file: type=lint');
     buf.writeln();
 
     buf.writeln("import 'package:react/react.dart';");

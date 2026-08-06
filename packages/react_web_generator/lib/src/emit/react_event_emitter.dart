@@ -16,6 +16,7 @@ final class ReactEventEmitter {
   void emitToDirectory(String outputDir) {
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
+    buf.writeln('// ignore_for_file: type=lint');
     buf.writeln();
     buf.writeln('/// Neutral React synthetic event interfaces.');
     buf.writeln('///');

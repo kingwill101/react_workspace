@@ -238,9 +238,7 @@ final class BrowserAdapterEmitter {
   void emitToDirectory(String outputDir) {
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
-    buf.writeln(
-      '// ignore_for_file: constant_identifier_names, non_constant_identifier_names, avoid_renaming_method_parameters, invalid_runtime_check_with_js_interop_types',
-    );
+    buf.writeln('// ignore_for_file: type=lint');
     buf.writeln();
     buf.writeln("import 'dart:js_interop';");
     buf.writeln("import 'dart:js_interop_unsafe';");
