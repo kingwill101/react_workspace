@@ -1,0 +1,172 @@
+import 'package:react/react.dart';
+import 'package:react/src/dom.dart' as dom;
+import 'package:test/test.dart';
+
+void main() {
+  group('ReactNode hierarchy', () {
+    test('HostNode stores type, props, children, key', () {
+      const type = HostType<Map<String, Object?>>('web', 'div');
+      final node = HostNode(type, {'id': 'a'}, children: const [Text('hi')], key: 'k');
+      expect(node.type, type);
+      expect(node.props['id'], 'a');
+      expect(node.children, hasLength(1));
+      expect(node.key, 'k');
+    });
+
+    test('HostType toString is namespace:name', () {
+      const type = HostType<String>('web', 'button');
+      expect(type.toString(), 'web:button');
+    });
+
+    test('ForeignComponent stores name, props, children', () {
+      const node = ForeignComponent('MyWidget', props: {'value': 42});
+      expect(node.name, 'MyWidget');
+      expect(node.props['value'], 42);
+    });
+
+    test('foreignComponent helper creates ForeignComponent', () {
+      final node = foreignComponent('Card', props: {'label': 'hi'});
+      expect(node.name, 'Card');
+      expect(node.props['label'], 'hi');
+    });
+
+    test('Component stores id and props', () {
+      const id = ComponentId('app#MyComp');
+      final node = Component<String>(id, 'props', children: const [Text('c')]);
+      expect(node.id.value, 'app#MyComp');
+      expect(node.props, 'props');
+      expect(node.children, hasLength(1));
+    });
+
+    test('Text stores value', () {
+      const t = Text('hello');
+      expect(t.value, 'hello');
+    });
+
+    test('Fragment stores children and key', () {
+      const f = Fragment([Text('a'), Text('b')], key: 'frag');
+      expect(f.children, hasLength(2));
+      expect(f.key, 'frag');
+    });
+
+    test('Empty is a node', () {
+      expect(const Empty(), isA<ReactNode>());
+    });
+
+    test('ComponentId is extension type of String', () {
+      const id = ComponentId('foo#bar');
+      expect(id.value, 'foo#bar');
+      expect(id is String, isTrue);
+    });
+  });
+
+  group('ReactContext', () {
+    test('provider creates ContextProvider node', () {
+      const ctx = ReactContext<int>(42);
+      final node = ctx.provider(100, const [Text('child')]);
+      expect(node, isA<ContextProvider<int>>());
+      final provider = node as ContextProvider<int>;
+      expect(provider.value, 100);
+      expect(provider.children, hasLength(1));
+    });
+
+    test('defaultValue is preserved', () {
+      const ctx = ReactContext<String>('default');
+      expect(ctx.defaultValue, 'default');
+    });
+  });
+
+  group('ReactRef', () {
+    test('current getter/setter', () {
+      final ref = ReactRef<int>(42);
+      expect(ref.current, 42);
+      ref.current = 100;
+      expect(ref.current, 100);
+    });
+
+    test('linked ref notifies onChanged', () {
+      Object? notified;
+      final ref = ReactRef<String>.linked('initial', (v) => notified = v);
+      ref.current = 'updated';
+      expect(notified, 'updated');
+      expect(ref.current, 'updated');
+    });
+
+    test('initial value can be null', () {
+      final ref = ReactRef<String>();
+      expect(ref.current, isNull);
+    });
+  });
+
+  group('dom helpers', () {
+    test('div creates HostNode', () {
+      final node = dom.div(children: const [Text('hi')]);
+      expect(node, isA<HostNode>());
+      final host = node as HostNode;
+      expect(host.type.name, 'div');
+      expect(host.children, hasLength(1));
+    });
+
+    test('button with onClick creates callback prop', () {
+      var clicked = false;
+      final node = dom.button(onClick: () => clicked = true);
+      expect(node, isA<HostNode>());
+      final host = node as HostNode<Map<String, Object?>>;
+      expect(host.props.containsKey('onClick'), isTrue);
+      final cb = host.props['onClick'] as ReactCallback;
+      cb.invoke([]);
+      expect(clicked, isTrue);
+    });
+
+    test('button without onClick has no callback', () {
+      final node = dom.button();
+      final host = node as HostNode<Map<String, Object?>>;
+      expect(host.props.containsKey('onClick'), isFalse);
+    });
+  });
+
+  group('ReactValueKind', () {
+    test('constants are distinct', () {
+      expect(reactVoid.kind, ReactValueKind.void_);
+      expect(reactString.kind, ReactValueKind.string);
+      expect(reactInt.kind, ReactValueKind.integer);
+      expect(reactBool.kind, ReactValueKind.boolean);
+      expect(reactAny.kind, ReactValueKind.any);
+      expect(reactHostValue.kind, ReactValueKind.hostValue);
+    });
+
+    test('nullable variants', () {
+      expect(reactNullableString.nullable, isTrue);
+      expect(reactString.nullable, isFalse);
+    });
+  });
+
+  group('ReactCallback', () {
+    test('stores signature and invoke', () {
+      final cb = ReactCallback(
+        signature: const (positional: [], result: reactVoid, asynchronous: false),
+        invoke: (args) => 'result',
+      );
+      expect(cb.invoke([]), 'result');
+      expect(cb.signature.positional, isEmpty);
+    });
+
+    test('ReactEventProp wraps callback', () {
+      final cb = ReactCallback(
+        signature: const (positional: [], result: reactVoid, asynchronous: false),
+        invoke: (_) => null,
+      );
+      final prop = ReactEventProp(cb);
+      expect(prop.callback, same(cb));
+    });
+
+    test('ReactRefProp wraps callback', () {
+      final cb = ReactCallback(
+        signature: const (positional: [], result: reactVoid, asynchronous: false),
+        invoke: (_) => null,
+      );
+      final prop = ReactRefProp(cb);
+      expect(prop.callback, same(cb));
+    });
+  });
+}
