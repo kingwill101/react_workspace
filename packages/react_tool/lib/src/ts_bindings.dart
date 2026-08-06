@@ -658,6 +658,11 @@ void _emitDeclaration(
         ..writeln('/// Props from `${declaration.name}`:')
         ..writeln('///')
         ..writeln('/// ${_propsDoc(props)}')
+        ..writeln('@ReactRuntimeSymbol(')
+        ..writeln('  kind: ReactRuntimeSymbolKind.component,')
+        ..writeln("  runtimeKey: '$foreignName',")
+        ..writeln('  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},')
+        ..writeln(')')
         ..writeln('ReactNode $functionName({')
         ..writeln('  String? key,');
       if (hasChildren) {
@@ -1202,7 +1207,8 @@ String generateHooks({
     )
     ..writeln('// ignore_for_file: type=lint')
     ..writeln()
-    ..writeln("import 'dart:js_interop';");
+    ..writeln("import 'dart:js_interop';")
+    ..writeln("import 'package:react/react.dart';");
   if (bindingsImport != null) {
     buffer.writeln("import '$bindingsImport';");
   }
@@ -1621,11 +1627,19 @@ String _emitHook(
       ? 'Object?'
       : _hookDartType(returns, registry);
 
+  final effectiveNamespace = namespace.isNotEmpty ? namespace : lowerCamel(specifier.split('/').first);
+  final runtimeKey = '$effectiveNamespace.$name';
   final buffer = StringBuffer()
     ..writeln('/// ${_hookDoc(hook)}')
     ..writeln('///')
     ..writeln('/// See https://reactrouter.com/hooks/${_hookUrl(name)}.')
     ..write(external.toString())
+    ..writeln('@ReactHook()')
+    ..writeln('@ReactRuntimeSymbol(')
+    ..writeln('  kind: ReactRuntimeSymbolKind.hook,')
+    ..writeln("  runtimeKey: '$runtimeKey',")
+    ..writeln('  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},')
+    ..writeln(')')
     ..writeln('$returnType $name(${sig.join(', ')}) {');
 
   // Options local (shared by the hook call and closure capture).

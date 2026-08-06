@@ -1,3 +1,5 @@
+import 'package:analyzer/dart/ast/ast.dart';
+
 /// Shared runtime-symbol metadata — the analyzer and generator must agree on this.
 ///
 /// These types mirror the annotations that will be emitted on generated
@@ -88,12 +90,14 @@ final class ReactDiagnostic {
   final String message;
   final ReactDiagnosticSeverity severity;
   final String? correction;
+  final AstNode? node;
 
   const ReactDiagnostic({
     required this.code,
     required this.message,
     required this.severity,
     this.correction,
+    this.node,
   });
 
   @override

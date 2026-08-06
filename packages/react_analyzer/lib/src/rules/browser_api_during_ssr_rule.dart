@@ -34,9 +34,16 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitCompilationUnit(CompilationUnit node) {
     const analyzer = ReactSsrAnalyzer();
     final diagnostics = analyzer.analyzeUnit(node);
-    for (final _ in diagnostics) {
-      rule.reportAtNode(node);
-      break;
+    for (final diagnostic in diagnostics) {
+      final target = diagnostic.node ?? node;
+      rule.reportAtNode(
+        target,
+        errorCode: LintCode(
+          diagnostic.code,
+          diagnostic.message,
+          correctionMessage: diagnostic.correction,
+        ),
+      );
     }
   }
 }

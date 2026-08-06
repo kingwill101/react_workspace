@@ -85,6 +85,7 @@ final class ReactHookAnalyzer {
                 'Hook ${call.methodName} called outside a component or custom hook.',
             severity: ReactDiagnosticSeverity.error,
             correction: 'Move the hook into a @ReactComponent or use* function.',
+            node: call.node,
           ),
         );
       }
@@ -128,6 +129,7 @@ final class ReactHookAnalyzer {
               message: 'Hook ${call.methodName} called inside a conditional.',
               severity: ReactDiagnosticSeverity.error,
               correction: 'Move hooks to the top level of $enclosingName.',
+              node: call.node,
             ),
           );
         }
@@ -138,6 +140,7 @@ final class ReactHookAnalyzer {
               message: 'Hook ${call.methodName} called inside a loop.',
               severity: ReactDiagnosticSeverity.error,
               correction: 'Move hooks to the top level; loop over results instead.',
+              node: call.node,
             ),
           );
         }
@@ -150,6 +153,7 @@ final class ReactHookAnalyzer {
               severity: ReactDiagnosticSeverity.error,
               correction:
                   'Move hooks above the return or guard the component earlier.',
+              node: call.node,
             ),
           );
         }
@@ -219,6 +223,7 @@ final class ReactHookAnalyzer {
           message: 'Hook ${call.methodName} called inside a conditional branch.',
           severity: ReactDiagnosticSeverity.error,
           correction: 'Move hooks to the top level of $enclosingName.',
+          node: call.node,
         ),
       );
     }
@@ -288,13 +293,20 @@ final class ReactHookAnalyzer {
     for (final ann in element.metadata.annotations) {
       final e = ann.element;
       if (e == null) continue;
-      if (e.displayName == 'ReactHook' ||
-          e.enclosingElement?.name == 'ReactHook' ||
-          e.enclosingElement?.name == 'ReactRuntimeSymbol') {
-        // Check if ReactRuntimeSymbol kind is hook.
-        // Best-effort: if annotated with ReactRuntimeSymbol, treat as hook only if kind == hook.
-        // Without constant evaluation, fall back to name check.
-        return true;
+      final isHook = e.displayName == 'ReactHook' || e.enclosingElement?.name == 'ReactHook';
+      final isRuntimeHook = e.enclosingElement?.name == 'ReactRuntimeSymbol' ||
+          e.displayName == 'ReactRuntimeSymbol';
+      if (isHook) return true;
+      if (isRuntimeHook) {
+        final constant = ann.computeConstantValue();
+        final kind = constant?.getField('kind')?.getField('index')?.toIntValue();
+        if (kind == 2) return true;
+        if (kind == null) {
+          // If kind not resolvable but runtimeKey present, treat as hook if name looks like hook.
+          final hasKey = constant?.getField('runtimeKey')?.toStringValue() != null;
+          if (hasKey) return true;
+        }
+        continue;
       }
     }
     // Fallback: name convention for custom hooks.
@@ -314,8 +326,9 @@ final class _HookCallCollector extends RecursiveAstVisitor<void> {
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    if (_isHookName(node.methodName.name)) {
-      hookCalls.add(_HookCall(node.methodName.name, node));
+    final name = node.methodName.name;
+    if (_isHookCall(node, name)) {
+      hookCalls.add(_HookCall(name, node));
     }
     super.visitMethodInvocation(node);
   }
@@ -325,13 +338,53 @@ final class _HookCallCollector extends RecursiveAstVisitor<void> {
     final name = node.function is PropertyAccess
         ? (node.function as PropertyAccess).propertyName.name
         : node.function.toString();
-    if (_isHookName(name)) {
+    if (_isHookName(name) && _isHookElementForName(node, name)) {
       hookCalls.add(_HookCall(name, node));
     }
     super.visitFunctionReference(node);
   }
 
-  bool _isHookName(String name) => name.startsWith('use') && name.length > 3;
+  bool _isHookCall(MethodInvocation node, String name) {
+    // Primary: resolved element has @ReactHook or @ReactRuntimeSymbol(kind: hook)
+    final element = node.methodName.element;
+    if (element != null) {
+      if (_isHookElement(element)) return true;
+      // Resolved but not annotated — not a hook, even if name matches use*.
+      return false;
+    }
+    // Unresolved (parseString tests) — fall back to strict name convention.
+    return _isHookName(name);
+  }
+
+  bool _isHookElement(Element element) {
+    for (final ann in element.metadata.annotations) {
+      final e = ann.element;
+      if (e == null) continue;
+      final enclosing = e.enclosingElement?.name;
+      if (enclosing == 'ReactHook' || e.displayName == 'ReactHook') return true;
+      if (enclosing == 'ReactRuntimeSymbol' || e.displayName == 'ReactRuntimeSymbol') {
+        final constant = ann.computeConstantValue();
+        final kind = constant?.getField('kind')?.getField('index')?.toIntValue();
+        if (kind == 2) return true; // hook
+        // If kind unavailable but runtimeKey present, trust it as hook.
+        if (kind == null && constant?.getField('runtimeKey')?.toStringValue() != null) {
+          return true;
+        }
+      }
+    }
+    // Fallback for user-defined custom hooks: name convention
+    final n = element.displayName ?? '';
+    return _isHookName(n);
+  }
+
+  bool _isHookElementForName(AstNode node, String name) {
+    // For FunctionReference, try to resolve via static element if available.
+    // Fallback to name check for unresolved units.
+    return _isHookName(name);
+  }
+
+  bool _isHookName(String name) =>
+      name.startsWith('use') && name.length > 3 && name[3].toUpperCase() == name[3];
 }
 
 extension AstNodeExtension on AstNode {
