@@ -29,8 +29,12 @@ final class ReactRuntimeUsageCollector {
     return ReactUsageResult(
       components: visitor.components.toList()..sort(),
       hooks: visitor.hooks.toList()..sort(),
+      functions: visitor.functions.toList()..sort(),
+      values: visitor.values.toList()..sort(),
       rawComponentKeys: visitor.rawComponentKeys,
       rawHookKeys: visitor.rawHookKeys,
+      rawFunctionKeys: visitor.rawFunctionKeys,
+      rawValueKeys: visitor.rawValueKeys,
     );
   }
 
@@ -50,28 +54,48 @@ final class ReactRuntimeUsageCollector {
   ReactUsageResult collectUnits(Iterable<CompilationUnit> units) {
     final components = <String>{};
     final hooks = <String>{};
+    final functions = <String>{};
+    final values = <String>{};
     final rawComponents = <String, List<String>>{};
     final rawHooks = <String, List<String>>{};
+    final rawFunctions = <String, List<String>>{};
+    final rawValues = <String, List<String>>{};
 
     for (final unit in units) {
       final r = collectUnit(unit);
       components.addAll(r.components);
       hooks.addAll(r.hooks);
+      functions.addAll(r.functions);
+      values.addAll(r.values);
       for (final e in r.rawComponentKeys.entries) {
         rawComponents.putIfAbsent(e.key, () => []).addAll(e.value);
       }
       for (final e in r.rawHookKeys.entries) {
         rawHooks.putIfAbsent(e.key, () => []).addAll(e.value);
       }
+      for (final e in r.rawFunctionKeys.entries) {
+        rawFunctions.putIfAbsent(e.key, () => []).addAll(e.value);
+      }
+      for (final e in r.rawValueKeys.entries) {
+        rawValues.putIfAbsent(e.key, () => []).addAll(e.value);
+      }
     }
     return ReactUsageResult(
       components: components.toList()..sort(),
       hooks: hooks.toList()..sort(),
+      functions: functions.toList()..sort(),
+      values: values.toList()..sort(),
       rawComponentKeys: {
         for (final e in rawComponents.entries) e.key: (e.value.toSet().toList()..sort()),
       },
       rawHookKeys: {
         for (final e in rawHooks.entries) e.key: (e.value.toSet().toList()..sort()),
+      },
+      rawFunctionKeys: {
+        for (final e in rawFunctions.entries) e.key: (e.value.toSet().toList()..sort()),
+      },
+      rawValueKeys: {
+        for (final e in rawValues.entries) e.key: (e.value.toSet().toList()..sort()),
       },
     );
   }
@@ -80,28 +104,48 @@ final class ReactRuntimeUsageCollector {
   ReactUsageResult collectUnitsWithPaths(Map<String, CompilationUnit> pathUnits) {
     final components = <String>{};
     final hooks = <String>{};
+    final functions = <String>{};
+    final values = <String>{};
     final rawComponents = <String, List<String>>{};
     final rawHooks = <String, List<String>>{};
+    final rawFunctions = <String, List<String>>{};
+    final rawValues = <String, List<String>>{};
 
     for (final entry in pathUnits.entries) {
       final r = collectUnitWithPath(entry.value, entry.key);
       components.addAll(r.components);
       hooks.addAll(r.hooks);
+      functions.addAll(r.functions);
+      values.addAll(r.values);
       for (final e in r.rawComponentKeys.entries) {
         rawComponents.putIfAbsent(e.key, () => []).addAll(e.value);
       }
       for (final e in r.rawHookKeys.entries) {
         rawHooks.putIfAbsent(e.key, () => []).addAll(e.value);
       }
+      for (final e in r.rawFunctionKeys.entries) {
+        rawFunctions.putIfAbsent(e.key, () => []).addAll(e.value);
+      }
+      for (final e in r.rawValueKeys.entries) {
+        rawValues.putIfAbsent(e.key, () => []).addAll(e.value);
+      }
     }
     return ReactUsageResult(
       components: components.toList()..sort(),
       hooks: hooks.toList()..sort(),
+      functions: functions.toList()..sort(),
+      values: values.toList()..sort(),
       rawComponentKeys: {
         for (final e in rawComponents.entries) e.key: (e.value.toSet().toList()..sort()),
       },
       rawHookKeys: {
         for (final e in rawHooks.entries) e.key: (e.value.toSet().toList()..sort()),
+      },
+      rawFunctionKeys: {
+        for (final e in rawFunctions.entries) e.key: (e.value.toSet().toList()..sort()),
+      },
+      rawValueKeys: {
+        for (final e in rawValues.entries) e.key: (e.value.toSet().toList()..sort()),
       },
     );
   }
@@ -110,16 +154,25 @@ final class ReactRuntimeUsageCollector {
 /// Result of a usage collection pass.
 final class ReactUsageResult {
   /// Sorted, deduplicated foreign component keys (e.g. `reactRouter.Route`).
-  final List<String> components;
+  List<String> get components => symbols[ReactRuntimeSymbolKind.component] ?? const [];
+  List<String> get hooks => symbols[ReactRuntimeSymbolKind.hook] ?? const [];
+  List<String> get functions => symbols[ReactRuntimeSymbolKind.function] ?? const [];
+  List<String> get values => symbols[ReactRuntimeSymbolKind.value] ?? const [];
 
-  /// Sorted, deduplicated hook keys (e.g. `reactRouter.useLocation`).
-  final List<String> hooks;
+  /// Canonical map by kind — single source of truth for all symbol kinds.
+  final Map<ReactRuntimeSymbolKind, List<String>> symbols;
 
   /// Where each component key was found — file path → keys (for diagnostics).
   final Map<String, List<String>> rawComponentKeys;
 
   /// Where each hook key was found.
   final Map<String, List<String>> rawHookKeys;
+
+  /// Where each function key was found.
+  final Map<String, List<String>> rawFunctionKeys;
+
+  /// Where each value key was found.
+  final Map<String, List<String>> rawValueKeys;
 
   /// Whether this result was produced from a fully resolved analysis context.
   ///
@@ -133,34 +186,86 @@ final class ReactUsageResult {
   /// Libraries that could not be resolved (e.g. missing package config).
   final List<String> unresolvedLibraries;
 
-  const ReactUsageResult({
-    required this.components,
-    required this.hooks,
+  ReactUsageResult({
+    Map<ReactRuntimeSymbolKind, List<String>>? symbols,
+    List<String>? components,
+    List<String>? hooks,
+    List<String>? functions,
+    List<String>? values,
     this.rawComponentKeys = const {},
     this.rawHookKeys = const {},
+    this.rawFunctionKeys = const {},
+    this.rawValueKeys = const {},
     this.complete = false,
     this.resolvedLibraries = 0,
     this.unresolvedLibraries = const [],
-  });
+  })  : assert(symbols == null || (components == null && hooks == null && functions == null && values == null),
+            'Provide either symbols or per-kind lists, not both'),
+        symbols = symbols ??
+            {
+              ReactRuntimeSymbolKind.component: ?components,
+              ReactRuntimeSymbolKind.hook: ?hooks,
+              ReactRuntimeSymbolKind.function: ?functions,
+              ReactRuntimeSymbolKind.value: ?values,
+            };
 
   Map<String, Object?> toJson() => {
         'components': components,
         'hooks': hooks,
+        'functions': functions,
+        'values': values,
+        'symbols': {
+          for (final e in symbols.entries) e.key.name: e.value,
+        },
         'complete': complete,
         'resolvedLibraries': resolvedLibraries,
         'unresolvedLibraries': unresolvedLibraries,
+        'rawComponentKeys': rawComponentKeys,
+        'rawHookKeys': rawHookKeys,
+        'rawFunctionKeys': rawFunctionKeys,
+        'rawValueKeys': rawValueKeys,
       };
 
-  factory ReactUsageResult.fromJson(Map<String, dynamic> json) => ReactUsageResult(
-        components: List<String>.from(json['components'] as List? ?? const []),
-        hooks: List<String>.from(json['hooks'] as List? ?? const []),
-        complete: json['complete'] as bool? ?? false,
-        resolvedLibraries: (json['resolvedLibraries'] as num?)?.toInt() ?? 0,
-        unresolvedLibraries: List<String>.from(
-            json['unresolvedLibraries'] as List? ?? const []),
-      );
+  factory ReactUsageResult.fromJson(Map<String, dynamic> json) {
+    // Prefer canonical symbols map if present, else legacy per-kind arrays.
+    Map<ReactRuntimeSymbolKind, List<String>>? symbols;
+    if (json['symbols'] is Map) {
+      symbols = {
+        for (final entry in (json['symbols'] as Map).entries)
+          ReactRuntimeSymbolKind.values.byName(entry.key as String):
+              List<String>.from(entry.value as List? ?? const []),
+      };
+    }
+    return ReactUsageResult(
+      components: symbols == null ? List<String>.from(json['components'] as List? ?? const []) : null,
+      hooks: symbols == null ? List<String>.from(json['hooks'] as List? ?? const []) : null,
+      functions: symbols == null ? List<String>.from(json['functions'] as List? ?? const []) : null,
+      values: symbols == null ? List<String>.from(json['values'] as List? ?? const []) : null,
+      symbols: symbols,
+      complete: json['complete'] as bool? ?? false,
+      resolvedLibraries: (json['resolvedLibraries'] as num?)?.toInt() ?? 0,
+      unresolvedLibraries: List<String>.from(
+          json['unresolvedLibraries'] as List? ?? const []),
+      rawComponentKeys: (json['rawComponentKeys'] as Map?)?.map(
+            (k, v) => MapEntry(k as String, List<String>.from(v as List? ?? const [])),
+          ) ??
+          const {},
+      rawHookKeys: (json['rawHookKeys'] as Map?)?.map(
+            (k, v) => MapEntry(k as String, List<String>.from(v as List? ?? const [])),
+          ) ??
+          const {},
+      rawFunctionKeys: (json['rawFunctionKeys'] as Map?)?.map(
+            (k, v) => MapEntry(k as String, List<String>.from(v as List? ?? const [])),
+          ) ??
+          const {},
+      rawValueKeys: (json['rawValueKeys'] as Map?)?.map(
+            (k, v) => MapEntry(k as String, List<String>.from(v as List? ?? const [])),
+          ) ??
+          const {},
+    );
+  }
 
-  bool get isEmpty => components.isEmpty && hooks.isEmpty;
+  bool get isEmpty => symbols.values.every((l) => l.isEmpty);
 }
 
 final class _UsageVisitor extends RecursiveAstVisitor<void> {
@@ -169,8 +274,12 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
 
   final Set<String> components = {};
   final Set<String> hooks = {};
+  final Set<String> functions = {};
+  final Set<String> values = {};
   final Map<String, List<String>> rawComponentKeys = {};
   final Map<String, List<String>> rawHookKeys = {};
+  final Map<String, List<String>> rawFunctionKeys = {};
+  final Map<String, List<String>> rawValueKeys = {};
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
@@ -205,7 +314,17 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
         }
         break;
       case ReactRuntimeSymbolKind.function:
+        functions.add(symbol!.runtimeKey);
+        if (currentPath != null) {
+          rawFunctionKeys.putIfAbsent(currentPath!, () => []).add(symbol.runtimeKey);
+        }
+        break;
       case ReactRuntimeSymbolKind.value:
+        values.add(symbol!.runtimeKey);
+        if (currentPath != null) {
+          rawValueKeys.putIfAbsent(currentPath!, () => []).add(symbol.runtimeKey);
+        }
+        break;
       case null:
         break;
     }
@@ -252,7 +371,7 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
       final isHook = enclosing == 'ReactHook' || e.displayName == 'ReactHook';
       if (!isHook) continue;
       final name = element.displayName;
-      if (name != null && name.isNotEmpty) {
+      if (name.isNotEmpty) {
         return (kind: ReactRuntimeSymbolKind.hook, runtimeKey: name);
       }
     }

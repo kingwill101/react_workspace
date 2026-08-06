@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
@@ -97,7 +98,7 @@ ReactNode E() => A();
       // Simulate build.dart union logic.
       final semantic = ['testPkg.useCustom'];
       final js = ['reactRouter.useLocation', 'testPkg.useCustom'];
-      final complete = false;
+      const complete = false;
       final retained = complete ? semantic.toSet() : {...semantic, ...js}.toSet();
       expect(retained, containsAll(['reactRouter.useLocation', 'testPkg.useCustom']));
       final retainedComplete = true ? semantic.toSet() : {...semantic, ...js}.toSet();
@@ -366,11 +367,16 @@ void main() { App(); }
 
         final manifestFile = File(p.join(dotReact.path, 'browser_usage.json'));
         expect(await manifestFile.exists(), isTrue);
-        final json = await manifestFile.readAsString();
-        expect(json, contains('testPkg.useCustom'));
-        expect(json, contains('myApp.Header'));
-        // Provenance is serialized via raw keys in the result object;
-        // verify the file contains the same data.
+        final jsonStr = await manifestFile.readAsString();
+        expect(jsonStr, contains('testPkg.useCustom'));
+        expect(jsonStr, contains('myApp.Header'));
+        final decoded = jsonDecode(jsonStr) as Map<String, dynamic>;
+        // Verify provenance survives serialization (not just in-memory).
+        expect((decoded['rawHookKeys'] as Map).values.expand((v) => (v as List)).toList(), contains('testPkg.useCustom'));
+        expect((decoded['rawComponentKeys'] as Map).values.expand((v) => (v as List)).toList(), contains('myApp.Header'));
+        expect(decoded['rawHookKeys'].toString(), contains('app.dart'));
+        expect(decoded['rawComponentKeys'].toString(), contains('app.dart'));
+        // Also verify in-memory provenance.
         expect(result.rawHookKeys.values.expand((e) => e), contains('testPkg.useCustom'));
         expect(result.rawComponentKeys.values.expand((e) => e), contains('myApp.Header'));
       } finally {

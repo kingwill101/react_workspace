@@ -33,8 +33,12 @@ final class DartUsageCollector {
     return ReactUsageResult(
       components: res.components,
       hooks: res.hooks,
+      functions: res.functions,
+      values: res.values,
       rawComponentKeys: res.rawComponentKeys,
       rawHookKeys: res.rawHookKeys,
+      rawFunctionKeys: res.rawFunctionKeys,
+      rawValueKeys: res.rawValueKeys,
       complete: false,
       resolvedLibraries: 0,
       unresolvedLibraries: [p.normalize(p.absolute(path))],
@@ -57,19 +61,31 @@ final class DartUsageCollector {
     }
     final components = <String>{};
     final hooks = <String>{};
+    final functions = <String>{};
+    final values = <String>{};
     final rawComp = <String, List<String>>{};
     final rawHooks = <String, List<String>>{};
+    final rawFunctions = <String, List<String>>{};
+    final rawValues = <String, List<String>>{};
     for (final r in results) {
       components.addAll(r.components);
       hooks.addAll(r.hooks);
+      functions.addAll(r.functions);
+      values.addAll(r.values);
       rawComp.addAll(r.rawComponentKeys);
       rawHooks.addAll(r.rawHookKeys);
+      rawFunctions.addAll(r.rawFunctionKeys);
+      rawValues.addAll(r.rawValueKeys);
     }
     return ReactUsageResult(
       components: components.toList()..sort(),
       hooks: hooks.toList()..sort(),
+      functions: functions.toList()..sort(),
+      values: values.toList()..sort(),
       rawComponentKeys: rawComp,
       rawHookKeys: rawHooks,
+      rawFunctionKeys: rawFunctions,
+      rawValueKeys: rawValues,
       complete: false,
       resolvedLibraries: 0,
       unresolvedLibraries: ['legacy-walk-incomplete'],
@@ -143,7 +159,7 @@ final class DartUsageCollector {
         for (final directive in result.unit.directives) {
           if (directive is ImportDirective) {
             final imported = directive.libraryImport?.importedLibrary;
-            final path = imported?.firstFragment?.source.fullName;
+            final path = imported?.firstFragment.source.fullName;
             if (path == null || path.isEmpty || path.startsWith('dart:')) continue;
             if (!path.startsWith(root)) {
               if (!isFrameworkSkippable(path)) skipped.add(path);
@@ -152,7 +168,7 @@ final class DartUsageCollector {
             await visitLibrary(path);
           } else if (directive is ExportDirective) {
             final exported = directive.libraryExport?.exportedLibrary;
-            final path = exported?.firstFragment?.source.fullName;
+            final path = exported?.firstFragment.source.fullName;
             if (path == null || path.isEmpty || path.startsWith('dart:')) continue;
             if (!path.startsWith(root)) {
               if (!isFrameworkSkippable(path)) skipped.add(path);
@@ -174,16 +190,29 @@ final class DartUsageCollector {
     await visitLibrary(absoluteEntry);
 
     final allUnresolved = [...unresolved, ...skipped];
-    final complete = unresolved.isEmpty && skipped.isEmpty;
     final collected = _collector.collectUnitsWithPaths(pathUnits);
+    // Temporary safe rule: any invoked function/value forces incomplete until
+    // the bundler correctly prunes function/value keys via shim pruning.
+    // Once the shim exposes functionKeys/valueKeys and _bundleForeignTargets
+    // handles them, this can be removed and completeness can be purely
+    // unresolved/skipped based. For now, force union with JS scan.
+    final hasFunctionOrValue = collected.functions.isNotEmpty || collected.values.isNotEmpty;
+    final baseComplete = unresolved.isEmpty && skipped.isEmpty;
+    final complete = baseComplete && !hasFunctionOrValue;
     return ReactUsageResult(
       components: collected.components,
       hooks: collected.hooks,
+      functions: collected.functions,
+      values: collected.values,
       rawComponentKeys: collected.rawComponentKeys,
       rawHookKeys: collected.rawHookKeys,
+      rawFunctionKeys: collected.rawFunctionKeys,
+      rawValueKeys: collected.rawValueKeys,
       complete: complete,
       resolvedLibraries: resolvedCount,
-      unresolvedLibraries: allUnresolved,
+      unresolvedLibraries: hasFunctionOrValue && baseComplete
+          ? [...allUnresolved, 'function/value-invoked-force-incomplete']
+          : allUnresolved,
     );
   }
 
@@ -228,7 +257,7 @@ Future<ReactUsageResult?> writeUsageManifest({
   dotDartToolReact.createSync(recursive: true);
   final out = File(p.join(dotDartToolReact.path, '${target}_usage.json'));
   out.writeAsStringSync(
-    const JsonEncoder.withIndent('  ').convert(result.toJson()) + '\n',
+    '${const JsonEncoder.withIndent('  ').convert(result.toJson())}\n',
   );
   return result;
 }
@@ -247,7 +276,7 @@ ReactUsageResult? writeUsageManifestSync({
   dotDartToolReact.createSync(recursive: true);
   final out = File(p.join(dotDartToolReact.path, '${target}_usage.json'));
   out.writeAsStringSync(
-    const JsonEncoder.withIndent('  ').convert(result.toJson()) + '\n',
+    '${const JsonEncoder.withIndent('  ').convert(result.toJson())}\n',
   );
   return result;
 }

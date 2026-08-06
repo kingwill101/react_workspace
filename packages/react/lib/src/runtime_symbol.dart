@@ -39,3 +39,29 @@ final class ClientOnly {
 }
 
 const clientOnly = ClientOnly();
+
+/// Describes a Web API's realm exposure and SSR support.
+enum WebRealm {
+  window,
+  document,
+  worker,
+  shared,
+}
+
+enum WebSsrSupport {
+  available,
+  unavailable,
+  emulated,
+}
+
+final class WebApiRuntimeInfo {
+  final String id;
+  final Set<WebRealm> exposed;
+  final WebSsrSupport ssr;
+
+  const WebApiRuntimeInfo({
+    required this.id,
+    required this.exposed,
+    required this.ssr,
+  });
+}

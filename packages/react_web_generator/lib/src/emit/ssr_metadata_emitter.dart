@@ -13,7 +13,7 @@ final class SsrMetadataEmitter {
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
     buf.writeln();
-    buf.writeln("import 'package:react_analysis/src/model/runtime_symbol.dart';");
+    buf.writeln("import 'package:react/react.dart';");
     buf.writeln("import 'package:react_web/src/ssr_metadata.dart';");
     buf.writeln();
 

@@ -594,10 +594,16 @@ String generateBindings({
     ..writeln();
   if (hasFunction) {
     buffer.writeln("import 'dart:js_interop';");
+    buffer.writeln("import 'dart:js_interop_unsafe';");
     buffer.writeln();
   }
   buffer.writeln("import 'package:react/react.dart';");
   buffer.writeln();
+  if (hasFunction) {
+    // Reuse the typed hook decoder helpers for function return values.
+    buffer.writeln(_hookHelpers());
+    buffer.writeln();
+  }
 
   // First pass: emit helpers and register all referenced types.
   final helperText = StringBuffer();
@@ -674,11 +680,9 @@ void _emitDeclaration(
         ..writeln("  runtimeKey: '$foreignName',")
         ..writeln('  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},')
         ..writeln(')');
-      // Generate a plain function wrapper — positional params, nullable if not required.
-      // Return type is nullable when the IR marks it as such.
-      final dartReturnRaw = funcReturns != null ? _dartType(funcReturns, registry) : 'JSAny?';
-      // If the TS return includes null/undefined, make it nullable
-      final dartReturn = dartReturnRaw.endsWith('?') ? dartReturnRaw : '$dartReturnRaw?';
+      // Generate a plain function wrapper using the shared hook codec.
+      // Input encoding: dictionary/object values use toJson().jsify(), primitives use jsify().
+      // Return decoding reuses the hook helpers (_decodePairs, _decodeList, fromJs).
       final rawName = '_${functionName}Raw';
       final jsTarget = 'globalThis.__reactDartBindings.$prefix.${declaration.name}';
       buffer.writeln("@JS('$jsTarget')");
@@ -689,7 +693,7 @@ void _emitDeclaration(
       final optionalParams = <String>[];
       for (var i = 0; i < funcParams.length; i++) {
         final p = funcParams[i];
-        final t = _dartType(p.type, registry);
+        final t = _hookDartType(p.type, registry);
         final typeStr = p.required ? t : _nullableType(t, false);
         final paramStr = '$typeStr ${_safeParamName(p.name)}';
         if (p.required) {
@@ -708,15 +712,43 @@ void _emitDeclaration(
       } else {
         sig = '${requiredParams.join(', ')}, [${optionalParams.join(', ')}]';
       }
-      buffer.writeln('$dartReturn $functionName($sig) {');
-      final callArgs = funcParams.map((p) => '${_safeParamName(p.name)}.jsify()').join(', ');
+      final dartReturn = funcReturns != null ? _hookDartType(funcReturns, registry) : 'Object?';
+      final publicReturn = funcReturns == null ? 'JSAny?' : (funcReturns.kind == 'void' ? 'void' : '$dartReturn?');
+      buffer.writeln('$publicReturn $functionName($sig) {');
+      // Encode each argument: object/dictionary values that have toJson use it, else jsify.
+      final callArgs = funcParams.map((p) {
+        final n = _safeParamName(p.name);
+        final isObject = p.type.kind == 'object' && (p.type.members?.isNotEmpty ?? false);
+        final isRecord = p.type.kind == 'record' || p.type.kind == 'urlSearchParams';
+        if (isObject || isRecord) {
+          // Generated types have toJson(); use it when available, else jsify the map.
+          return '($n == null ? null : ($n is List || $n is Map ? $n.jsify() : ($n as dynamic).toJson().jsify())) as JSAny?';
+        }
+        return '$n.jsify() as JSAny?';
+      }).join(', ');
       buffer.writeln('  final raw = $rawName($callArgs);');
-      if (dartReturnRaw == 'JSAny?') {
-        buffer.writeln('  return raw;');
+      if (funcReturns == null || funcReturns.kind == 'void') {
+        buffer.writeln('  return;');
+      } else if (funcReturns.kind == 'string' || funcReturns.kind == 'number' || funcReturns.kind == 'boolean') {
+        buffer.writeln('  if (raw == null) return null as $publicReturn;');
+        if (funcReturns.kind == 'string') {
+          buffer.writeln('  return (raw as JSString).toDart as $publicReturn;');
+        } else if (funcReturns.kind == 'number') buffer.writeln('  return (raw as JSNumber).toDartDouble as $publicReturn;');
+        else buffer.writeln('  return (raw as JSBoolean).toDart as $publicReturn;');
+      } else if (funcReturns.kind == 'array') {
+        final inner = funcReturns.element ?? const TsIrType(kind: 'any');
+        final innerDart = _hookDartType(inner, registry);
+        buffer.writeln('  if (raw == null) return null as $publicReturn;');
+        if (innerDart == 'String') {
+          buffer.writeln('  return (raw as JSArray).toDart.map((e) => (e as JSString).toDart).toList() as $publicReturn;');
+        } else if (inner.kind == 'object') buffer.writeln('  return _decodeList<$innerDart>(raw as JSArray, (e) => $innerDart.fromJs(e as JSObject)) as $publicReturn;');
+        else buffer.writeln('  return (raw as JSArray).toDart as $publicReturn;');
+      } else if (funcReturns.kind == 'object') {
+        buffer.writeln('  if (raw == null) return null as $publicReturn;');
+        buffer.writeln('  return $dartReturn.fromJs(raw as JSObject) as $publicReturn;');
       } else {
-        buffer.writeln('  if (raw == null) return null;');
-        // For now, return as Object? and let caller cast; proper decode would need type-specific logic
-        buffer.writeln('  return raw as $dartReturn;');
+        buffer.writeln('  if (raw == null) return ${funcReturns.kind == 'void' ? '' : 'null as $publicReturn;'}');
+        if (funcReturns.kind != 'void') buffer.writeln('  return raw as $publicReturn;');
       }
       buffer.writeln('}');
       return;

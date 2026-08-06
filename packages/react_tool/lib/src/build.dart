@@ -387,25 +387,80 @@ final class ReactBuilder {
     required Directory dotDartToolReact,
   }) async {
     final out = File(p.join(dotDartToolReact.path, 'native_ssr_compatibility.json'));
+    final diffOut = File(p.join(dotDartToolReact.path, 'browser_ssr_symbol_diff.json'));
     await dotDartToolReact.create(recursive: true);
-    // Build a real compatibility report now that WebApiRuntimeInfo is emitted
-    // by react_web_generator (see SsrMetadataEmitter + FactoryEmitter).
-    final browserComps = (browserUsage?.components ?? []) as List;
-    final ssrComps = (ssrUsage?.components ?? []) as List;
-    final ssrOnly = ssrComps.where((c) => !browserComps.contains(c)).toList();
-    final browserOnly = browserComps.where((c) => !ssrComps.contains(c)).toList();
-    await out.writeAsString(
-      JsonEncoder.withIndent('  ').convert({
-        'summary': 'native SSR compatibility — WebApiRuntimeInfo emitted',
-        'generatedAt': DateTime.now().toIso8601String(),
-        'browserComponents': browserComps,
-        'ssrComponents': ssrComps,
-        'browserOnly': browserOnly,
-        'ssrOnly': ssrOnly,
-        'compatible': ssrOnly.isEmpty,
-        'webApiRuntimeInfo': 'emitted via react_web_generator (SsrMetadataEmitter)',
-      }) + '\n',
-    );
+    // Comprehensive symbol diff — not yet a full native SSR compatibility analysis.
+    // The current report compares all runtime-symbol kinds and notes that a true
+    // compatibility analysis would need: resolved SSR entry graph + WebApiRuntimeInfo
+    // findings + native adapter registry + client-only boundaries + hook support matrix.
+    List<String> asList(dynamic usage, String key) {
+      if (usage == null) return const [];
+      final v = usage is Map ? usage[key] : null;
+      if (v is List) return v.map((e) => e.toString()).toList();
+      // Fallback for ReactUsageResult objects.
+      try {
+        final m = (usage as dynamic).toJson() as Map;
+        final lv = m[key];
+        if (lv is List) return lv.map((e) => e.toString()).toList();
+      } catch (_) {}
+      return const [];
+    }
+
+    final browserComps = asList(browserUsage, 'components');
+    final ssrComps = asList(ssrUsage, 'components');
+    final browserHooks = asList(browserUsage, 'hooks');
+    final ssrHooks = asList(ssrUsage, 'hooks');
+    final browserFunctions = asList(browserUsage, 'functions');
+    final ssrFunctions = asList(ssrUsage, 'functions');
+    final browserValues = asList(browserUsage, 'values');
+    final ssrValues = asList(ssrUsage, 'values');
+
+    List<String> diff(List<String> a, List<String> b) => a.where((c) => !b.contains(c)).toList();
+
+    final payload = {
+      'summary': 'browser/ssr symbol diff — WebApiRuntimeInfo emitted, not yet full native SSR compatibility',
+      'note': 'A real compatibility report needs: resolved SSR graph + WebApiRuntimeInfo + adapter registry + client-only boundaries + hook matrix. This file is a symbol diff.',
+      'generatedAt': DateTime.now().toIso8601String(),
+      'browserComponents': browserComps,
+      'ssrComponents': ssrComps,
+      'browserHooks': browserHooks,
+      'ssrHooks': ssrHooks,
+      'browserFunctions': browserFunctions,
+      'ssrFunctions': ssrFunctions,
+      'browserValues': browserValues,
+      'ssrValues': ssrValues,
+      'browserOnly': {
+        'components': diff(browserComps, ssrComps),
+        'hooks': diff(browserHooks, ssrHooks),
+        'functions': diff(browserFunctions, ssrFunctions),
+        'values': diff(browserValues, ssrValues),
+      },
+      'ssrOnly': {
+        'components': diff(ssrComps, browserComps),
+        'hooks': diff(ssrHooks, browserHooks),
+        'functions': diff(ssrFunctions, browserFunctions),
+        'values': diff(ssrValues, browserValues),
+      },
+      // Temporary heuristic: compatible only if SSR has no exclusive symbols.
+      // Real check would inspect browserApi issues, adapter registry, etc.
+      'compatible': diff(ssrComps, browserComps).isEmpty &&
+          diff(ssrHooks, browserHooks).isEmpty &&
+          diff(ssrFunctions, browserFunctions).isEmpty &&
+          diff(ssrValues, browserValues).isEmpty,
+      'webApiRuntimeInfo': 'emitted via react_web_generator (SsrMetadataEmitter + FactoryEmitter) on HTML.* factories',
+      'issues': [
+        if (diff(ssrComps, browserComps).isNotEmpty)
+          {
+            'kind': 'ssrOnlyComponent',
+            'symbols': diff(ssrComps, browserComps),
+            'reason': 'SSR uses components not in browser bundle — may be deliberate server-only, or missing browser entry'
+          },
+      ],
+    };
+
+    // Write both the historical name (for backward compat) and the accurately named diff.
+    await out.writeAsString('${const JsonEncoder.withIndent('  ').convert(payload)}\n');
+    await diffOut.writeAsString('${const JsonEncoder.withIndent('  ').convert(payload)}\n');
   }
 
   Future<void> _bundleForeignTargets(

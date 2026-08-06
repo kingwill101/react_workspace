@@ -53,6 +53,9 @@ final class FactoryEmitter {
     );
     buf.writeln();
 
+    // Annotate the factory so ReactSsrAnalyzer can resolve WebApiRuntimeInfo
+    // on the actual invoked method (div(...)), not on the SsrDefinition const.
+    buf.writeln('@WebApiRuntimeInfo(id: "HTML.${el.tagName}", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)');
     buf.writeln("ReactNode ${el.factoryName}({");
     for (final p in el.props) {
       buf.writeln("  ${_dt(p.dartType, nullable: true)} ${p.reactName},");
