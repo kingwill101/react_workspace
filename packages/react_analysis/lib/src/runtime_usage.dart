@@ -70,17 +70,44 @@ final class ReactUsageResult {
   /// Where each hook key was found.
   final Map<String, List<String>> rawHookKeys;
 
+  /// Whether this result was produced from a fully resolved analysis context.
+  ///
+  /// Only when `complete` is true may the builder treat the semantic manifest
+  /// as authoritative; otherwise it must be unioned with the compiled-JS scan.
+  final bool complete;
+
+  /// Number of libraries successfully resolved.
+  final int resolvedLibraries;
+
+  /// Libraries that could not be resolved (e.g. missing package config).
+  final List<String> unresolvedLibraries;
+
   const ReactUsageResult({
     required this.components,
     required this.hooks,
     this.rawComponentKeys = const {},
     this.rawHookKeys = const {},
+    this.complete = false,
+    this.resolvedLibraries = 0,
+    this.unresolvedLibraries = const [],
   });
 
   Map<String, Object?> toJson() => {
         'components': components,
         'hooks': hooks,
+        'complete': complete,
+        'resolvedLibraries': resolvedLibraries,
+        'unresolvedLibraries': unresolvedLibraries,
       };
+
+  factory ReactUsageResult.fromJson(Map<String, dynamic> json) => ReactUsageResult(
+        components: List<String>.from(json['components'] as List? ?? const []),
+        hooks: List<String>.from(json['hooks'] as List? ?? const []),
+        complete: json['complete'] as bool? ?? false,
+        resolvedLibraries: (json['resolvedLibraries'] as num?)?.toInt() ?? 0,
+        unresolvedLibraries: List<String>.from(
+            json['unresolvedLibraries'] as List? ?? const []),
+      );
 
   bool get isEmpty => components.isEmpty && hooks.isEmpty;
 }
@@ -101,22 +128,32 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
         final key = (args.first as StringLiteral).stringValue;
         if (key != null && key.isNotEmpty) {
           components.add(key);
+          final path = node.thisOrAncestorOfType<CompilationUnit>()
+                  ?.declaredElement
+                  ?.source
+                  .fullName ??
+              '';
+          if (path.isNotEmpty) {
+            rawComponentKeys.putIfAbsent(path, () => []).add(key);
+          }
         }
       }
     }
 
     // Hook bridge calls — resolve via element annotation if available.
+    // The namespace must come exclusively from generated metadata
+    // (`runtimeKey` on @ReactRuntimeSymbol), not from hard-coded uri checks.
     final element = node.methodName.element;
     final hookKey = _hookRuntimeKey(element);
     if (hookKey != null) {
       hooks.add(hookKey);
-    } else if (_isHookName(node.methodName.name)) {
-      // Fallback for generated shims that use @JS('globalThis.__reactDartBindings.ns.hook')
-      // — try to derive key from static element's library prefix.
-      final lib = element?.library?.uri.toString() ?? '';
-      final prefix = _namespaceFromLibrary(lib);
-      if (prefix != null) {
-        hooks.add('$prefix.${node.methodName.name}');
+      final path = node.thisOrAncestorOfType<CompilationUnit>()
+              ?.declaredElement
+              ?.source
+              .fullName ??
+          '';
+      if (path.isNotEmpty) {
+        rawHookKeys.putIfAbsent(path, () => []).add(hookKey);
       }
     }
 
@@ -129,7 +166,17 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
       final args = node.argumentList.arguments;
       if (args.isNotEmpty && args.first is StringLiteral) {
         final key = (args.first as StringLiteral).stringValue;
-        if (key != null) components.add(key);
+        if (key != null) {
+          components.add(key);
+          final path = node.thisOrAncestorOfType<CompilationUnit>()
+                  ?.declaredElement
+                  ?.source
+                  .fullName ??
+              '';
+          if (path.isNotEmpty) {
+            rawComponentKeys.putIfAbsent(path, () => []).add(key);
+          }
+        }
       }
     }
     super.visitInstanceCreationExpression(node);
@@ -141,34 +188,31 @@ final class _UsageVisitor extends RecursiveAstVisitor<void> {
       final e = ann.element;
       if (e == null) continue;
       final enclosing = e.enclosingElement?.name;
-      if (enclosing == 'ReactRuntimeSymbol' || e.displayName == 'ReactRuntimeSymbol') {
-        // Best-effort constant evaluation: look for runtimeKey in source.
-        // Full constant evaluation requires resolved constant value; we approximate
-        // via the annotation's string representation when needed.
-        final source = ann.toSource();
-        final match = RegExp(r"runtimeKey\s*:\s*['""]([^'""]+)['""]").firstMatch(source);
-        if (match != null) return match.group(1);
+      final isRuntimeSymbol =
+          enclosing == 'ReactRuntimeSymbol' || e.displayName == 'ReactRuntimeSymbol';
+      final isHook = enclosing == 'ReactHook' || e.displayName == 'ReactHook';
+      if (!isRuntimeSymbol && !isHook) continue;
+
+      // Resolved evaluation — do not regex toSource().
+      final constant = ann.computeConstantValue();
+      final runtimeKey = constant?.getField('runtimeKey')?.toStringValue();
+      if (runtimeKey != null && runtimeKey.isNotEmpty) {
+        // For @ReactRuntimeSymbol, only treat as hook when kind == hook.
+        if (isRuntimeSymbol) {
+          final kind = constant?.getField('kind')?.getField('index')?.toIntValue();
+          // kind index 2 == hook (see ReactRuntimeSymbolKind); if unavailable, trust runtimeKey.
+          if (kind != null && kind != 2) continue;
+        }
+        return runtimeKey;
       }
-      if (enclosing == 'ReactHook' || e.displayName == 'ReactHook') {
-        // Bare @ReactHook() — derive key from function name + library namespace.
-        final lib = element.library?.uri.toString() ?? '';
-        final prefix = _namespaceFromLibrary(lib);
+      // Bare @ReactHook without runtimeKey — no namespace inference; return element name
+      // only for custom hooks where the analyzer can later prove hook usage.
+      if (isHook) {
         final name = element.displayName;
-        if (prefix != null) return '$prefix.$name';
-        return name;
+        // Do not infer namespace from uri; caller must provide runtimeKey for generated hooks.
+        if (name != null && name.isNotEmpty) return name;
       }
     }
-    return null;
-  }
-
-  bool _isHookName(String name) => name.startsWith('use') && name.length > 3;
-
-  String? _namespaceFromLibrary(String uri) {
-    // Heuristic: packages/react_router → reactRouter, react_zustand → reactZustand, etc.
-    if (uri.contains('react_router')) return 'reactRouter';
-    if (uri.contains('react_zustand')) return 'reactZustand';
-    if (uri.contains('react_bloc')) return 'reactBloc';
-    if (uri.contains('react_riverpod')) return 'reactRiverpod';
     return null;
   }
 }

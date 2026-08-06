@@ -116,17 +116,18 @@ final class ReactBuilder {
       log('Skipping SSR build: ${ssr ?? '(not configured)'} not found.');
     }
 
-    // Semantic Dart usage manifests (authoritative, bundler-preferred).
-    // Written after compilation so builds work even when .dart_tool is clean.
+    // Semantic Dart usage manifests.
+    // The semantic pass is authoritative only when `complete == true`;
+    // otherwise the bundler unions it with the compiled-JS scan (fail-safe).
     final dotReactDir = Directory(p.join('.dart_tool', 'react'));
-    final browserUsage = writeUsageManifest(
+    final browserUsage = await writeUsageManifest(
       entryPath: config.clientEntrypoint != null
           ? p.join(config.root.path, config.clientEntrypoint!)
           : null,
       target: 'browser',
       dotDartToolReact: dotReactDir,
     );
-    final ssrUsage = writeUsageManifest(
+    final ssrUsage = await writeUsageManifest(
       entryPath: config.ssrEntrypoint != null
           ? p.join(config.root.path, config.ssrEntrypoint!)
           : null,
@@ -425,16 +426,24 @@ final class ReactBuilder {
 
       // Project-level foreign components: drop those the compiled Dart output
       // never references on this target.
+      // Fail-safe: semantic manifest is authoritative only when complete == true;
+      // otherwise union it with the compiled-JS scan so incomplete analysis
+      // never silently removes valid registrations.
       final componentKeys = [
         for (final component in config.foreignComponents) component.name,
       ];
-      // Prefer Dart semantic manifests when present; fall back to JS scan.
       final dartUsage = target == 'browser' ? dartBrowserUsage : dartSsrUsage;
-      final usedComponents = dartUsage != null
+      final jsComponents = dartJs == null
+          ? componentKeys.toSet()
+          : usedComponentsIn(dartJs, componentKeys).toSet();
+      final semanticComponents = dartUsage != null
           ? Set<String>.from(dartUsage.components as List)
-          : dartJs == null
-              ? componentKeys.toSet()
-              : usedComponentsIn(dartJs, componentKeys).toSet();
+          : <String>{};
+      final usedComponents = dartUsage == null
+          ? jsComponents
+          : dartUsage.complete == true
+              ? semanticComponents
+              : {...semanticComponents, ...jsComponents};
       for (final component in config.foreignComponents) {
         if (!usedComponents.contains(component.name)) continue;
         final path = await _resolveModulePath(component.module);
@@ -568,20 +577,34 @@ final class ReactBuilder {
 
     final shim = parseForeignShim(source);
     if (shim != null) {
-      final usedComponents = dartUsage != null
+      final jsComponents = dartJs == null
+          ? shim.componentKeys.toSet()
+          : usedComponentsIn(dartJs, shim.componentKeys).toSet();
+      final semanticComponents = dartUsage != null
           ? Set<String>.from(
               (dartUsage.components as List).where(shim.componentKeys.contains))
-          : dartJs == null
-              ? shim.componentKeys.toSet()
-              : usedComponentsIn(dartJs, shim.componentKeys).toSet();
-      final usedHooks = dartUsage != null
+          : <String>{};
+      final usedComponents = dartUsage == null
+          ? jsComponents
+          : (dartUsage.complete == true
+              ? semanticComponents
+              : ({...semanticComponents, ...jsComponents}
+                    .where(shim.componentKeys.contains)
+                    .toSet()));
+      final jsHooks = dartJs == null
+          ? _allHookKeys(shim)
+          : usedHooksIn(dartJs, [
+              if (shim.namespace != null) shim.namespace!,
+            ]).where(_allHookKeys(shim).contains).toSet();
+      final semanticHooks = dartUsage != null
           ? Set<String>.from(
               (dartUsage.hooks as List).where(_allHookKeys(shim).contains))
-          : dartJs == null
-              ? _allHookKeys(shim)
-              : usedHooksIn(dartJs, [
-                  if (shim.namespace != null) shim.namespace!,
-                ]).where(_allHookKeys(shim).contains).toSet();
+          : <String>{};
+      final usedHooks = dartUsage == null
+          ? jsHooks
+          : (dartUsage.complete == true
+              ? semanticHooks
+              : {...semanticHooks, ...jsHooks});
       await File(outPath).writeAsString(
         pruneShim(
           source,
