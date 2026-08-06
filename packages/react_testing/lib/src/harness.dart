@@ -43,21 +43,43 @@ final class ReactTestHarness {
     bool ssr = true,
   }) async {
     final config = ReactProjectConfig.load(projectRoot);
-    await ReactBuilder(config: config, release: release, log: (_) {}).build();
+    final buildLogs = <String>[];
+    try {
+      await ReactBuilder(
+        config: config,
+        release: release,
+        log: (m) => buildLogs.add(m),
+      ).build().timeout(
+        const Duration(seconds: 120),
+        onTimeout: () => throw ReactToolException(
+          'Timed out building ${projectRoot.path} after 120s.\n'
+          'Logs:\n${buildLogs.take(50).join('\n')}',
+        ),
+      );
+    } catch (e) {
+      throw ReactToolException(
+        'Failed to build ${projectRoot.path}: $e\n'
+        'Builder logs:\n${buildLogs.take(100).join('\n')}',
+      );
+    }
+    // Verify build output exists before launching SSR worker.
+    final outputDir = config.directory(config.outputDirectory);
+    if (!outputDir.existsSync()) {
+      throw ReactToolException('Build output missing at ${outputDir.path}');
+    }
 
     Process? worker;
     ReactSsrClient? ssrClient;
     try {
       if (ssr) {
-        final manifest = BundleManifest.load(
-          config.directory(config.outputDirectory),
-        );
+        final manifest = BundleManifest.load(outputDir);
         final workerFile = config.file(
           '${config.outputDirectory}/${manifest.ssrEntry ?? 'ssr.entry.mjs'}',
         );
         if (!workerFile.existsSync()) {
           throw ReactToolException(
-            'SSR output was not generated at ${workerFile.path}.',
+            'SSR output was not generated at ${workerFile.path}. '
+            'Build logs:\n${buildLogs.take(20).join('\n')}',
           );
         }
         final ssrPort = await _freePort();
@@ -65,10 +87,16 @@ final class ReactTestHarness {
           'node',
           [workerFile.path],
           workingDirectory: config.root.path,
-          mode: ProcessStartMode.inheritStdio,
+          // Capture stdio instead of inherit so we can report early exit.
+          mode: ProcessStartMode.normal,
           environment: {...Platform.environment, 'REACT_SSR_PORT': '$ssrPort'},
         );
-        await _waitForPort(ssrPort);
+        // Forward worker output to a buffer for diagnostics on failure.
+        final workerOutput = StringBuffer();
+        worker.stdout.transform(SystemEncoding().decoder).listen(workerOutput.write);
+        worker.stderr.transform(SystemEncoding().decoder).listen(workerOutput.write);
+        await _waitForPort(ssrPort, worker: worker, output: workerOutput);
+        await _waitForSsrHealth(ssrPort, worker: worker, output: workerOutput);
         ssrClient = ReactSsrClient(
           endpoint: Uri.parse('http://127.0.0.1:$ssrPort/'),
         );
@@ -135,15 +163,76 @@ Future<int> _freePort() async {
   return port;
 }
 
-Future<void> _waitForPort(int port) async {
-  for (var attempt = 0; attempt < 100; attempt++) {
+Future<void> _waitForPort(
+  int port, {
+  Process? worker,
+  StringBuffer? output,
+}) async {
+  for (var attempt = 0; attempt < 60; attempt++) {
+    // If worker exited early, surface its output immediately.
+    if (worker != null) {
+      final exit = await worker.exitCode.timeout(
+        Duration.zero,
+        onTimeout: () => -1,
+      );
+      if (exit != -1) {
+        throw ReactToolException(
+          'SSR worker exited early with code $exit while waiting for port $port.\n'
+          'Output:\n${output?.toString().substring(0, 2000)}',
+        );
+      }
+    }
     try {
       final socket = await Socket.connect('127.0.0.1', port);
       await socket.close();
       return;
     } on SocketException {
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+      // Exponential backoff: 100ms, 150ms, 225ms …
+      final delay = Duration(milliseconds: 100 + attempt * 20);
+      await Future<void>.delayed(delay);
     }
   }
-  throw ReactToolException('Timed out waiting for port $port.');
+  throw ReactToolException(
+    'Timed out waiting for SSR port $port after 60 attempts.\n'
+    'Worker output:\n${output?.toString().substring(0, 2000)}',
+  );
+}
+
+Future<void> _waitForSsrHealth(
+  int port, {
+  Process? worker,
+  StringBuffer? output,
+}) async {
+  final client = HttpClient()..connectionTimeout = const Duration(seconds: 2);
+  try {
+    for (var attempt = 0; attempt < 30; attempt++) {
+      if (worker != null) {
+        final exit = await worker.exitCode.timeout(
+          Duration.zero,
+          onTimeout: () => -1,
+        );
+        if (exit != -1) {
+          throw ReactToolException(
+            'SSR worker exited before health check (code $exit).\n'
+            'Output:\n${output?.toString().substring(0, 2000)}',
+          );
+        }
+      }
+      try {
+        final req = await client.getUrl(Uri.parse('http://127.0.0.1:$port/'));
+        final resp = await req.close().timeout(const Duration(seconds: 2));
+        // Worker is healthy if it responds (even 404) without hanging.
+        await resp.drain<void>();
+        return;
+      } catch (_) {
+        await Future<void>.delayed(Duration(milliseconds: 200 + attempt * 30));
+      }
+    }
+    throw ReactToolException(
+      'SSR health check failed for port $port after 30 attempts.\n'
+      'Worker output:\n${output?.toString().substring(0, 2000)}',
+    );
+  } finally {
+    client.close(force: true);
+  }
 }
