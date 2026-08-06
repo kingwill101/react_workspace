@@ -1,7 +1,7 @@
 /// Web host factories and utilities for React.
 library;
 
-export 'package:react/react.dart';
+export 'package:react/react.dart' hide div, button;
 
 export 'src/generated/react_events.dart';
 export 'src/generated/elements.dart'
