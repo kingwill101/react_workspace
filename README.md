@@ -98,11 +98,14 @@ dart pub get
 
 ### 2. Scaffold a New Project
 
-Use the `react_tool` CLI to scaffold an SSR or client-only project:
+Use the `react_tool` CLI to scaffold an SSR, Routed-hosted SSR, or client-only project:
 
 ```bash
 # SSR Project (Default)
 dart run react_tool:react init my_app
+
+# Routed Host Project (Shelf-free, SSR via `routed_io`)
+dart run react_tool:react init my_app --template routed
 
 # Client-Only Static Project
 dart run react_tool:react init my_app --template client
