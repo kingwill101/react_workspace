@@ -240,6 +240,8 @@ void main() {
       p.join(root.path, 'routed_app', 'README.md'),
     ).readAsString();
     expect(readme, contains('Routed'));
+    expect(readme, contains('Dockerfile'));
+    expect(readme, contains('docker build'));
 
     final vscodeSettings = await File(
       p.join(root.path, 'routed_app', '.vscode', 'settings.json'),
