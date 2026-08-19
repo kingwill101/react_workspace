@@ -20,8 +20,8 @@ final class ReactComponentHarness {
   ReactComponentHarness({
     TestReactBinding? binding,
     TestReactRenderer? renderer,
-  })  : binding = binding ?? TestReactBinding(),
-        renderer = renderer ?? TestReactRenderer() {
+  }) : binding = binding ?? TestReactBinding(),
+       renderer = renderer ?? TestReactRenderer() {
     runtime = ReactRuntime(
       target: ReactRenderTarget.test,
       capabilities: const ReactRuntimeCapabilities(
@@ -45,12 +45,12 @@ final class ReactComponentHarness {
   /// Helper to build and render a simple functional component.
   HostNode<Map<String, Object?>> renderDiv({
     Map<String, Object?> props = const {},
-    List<ReactNode> children = const [],
+    ReactChildren children = const [],
   }) {
     final node = HostNode<Map<String, Object?>>(
       const HostType('web', 'div'),
       props,
-      children: children,
+      children: normalizeChildren(children),
     );
     renderNode(node);
     // Return the node itself for assertion convenience
@@ -67,9 +67,7 @@ final class ReactComponentHarness {
       throw TestFailure('Expected HostNode but got ${node.runtimeType}');
     }
     if (node.type.namespace != namespace || node.type.name != name) {
-      throw TestFailure(
-        'Expected $namespace:$name but got ${node.type}',
-      );
+      throw TestFailure('Expected $namespace:$name but got ${node.type}');
     }
   }
 
@@ -150,8 +148,7 @@ class TestReactBinding extends ReactBinding {
     StoreSubscribe subscribe,
     Snapshot<T> getSnapshot,
     Snapshot<T>? getServerSnapshot,
-  ) =>
-      getSnapshot();
+  ) => getSnapshot();
 
   /// Returns all recorded effect cleanups.
   List<EffectCleanup> get cleanups => List.unmodifiable(_effectCleanups);
@@ -170,14 +167,14 @@ class TestReactRenderer implements ReactRenderer {
   }
 
   String _describe(ReactNode node) => switch (node) {
-        HostNode(:var type, :var children) =>
-          '<${type.name}>${children.length} children</${type.name}>',
-        Text(:var value) => 'Text($value)',
-        Fragment(:var children) => 'Fragment(${children.length})',
-        Empty() => 'Empty',
-        Component(:var id) => 'Component(${id.value})',
-        _ => node.runtimeType.toString(),
-      };
+    HostNode(:var type, :var children) =>
+      '<${type.name}>${children.length} children</${type.name}>',
+    Text(:var value) => 'Text($value)',
+    Fragment(:var children) => 'Fragment(${children.length})',
+    Empty() => 'Empty',
+    Component(:var id) => 'Component(${id.value})',
+    _ => node.runtimeType.toString(),
+  };
 
   void clear() {
     lastNode = null;

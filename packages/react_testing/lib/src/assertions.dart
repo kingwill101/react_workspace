@@ -24,7 +24,9 @@ extension ReactNodeAssertions on ReactNode {
       throw StateError('Expected Text but got $runtimeType');
     }
     if ((this as Text).value != value) {
-      throw StateError('Expected Text("$value") but got "${(this as Text).value}"');
+      throw StateError(
+        'Expected Text("$value") but got "${(this as Text).value}"',
+      );
     }
   }
 
@@ -41,7 +43,9 @@ extension ReactNodeAssertions on ReactNode {
       throw StateError('Expected Component but got $runtimeType');
     }
     if ((this as Component).id.value != id) {
-      throw StateError('Expected Component($id) but got ${(this as Component).id.value}');
+      throw StateError(
+        'Expected Component($id) but got ${(this as Component).id.value}',
+      );
     }
   }
 }
@@ -95,13 +99,11 @@ Component<String> testComponent(
   String id, {
   String props = '',
   List<ReactNode> children = const [],
-}) =>
-    Component(ComponentId(id), props, children: children);
+}) => Component(ComponentId(id), props, children: children);
 
 /// Creates a test host node.
 HostNode<Map<String, Object?>> testHostNode(
   String name, {
   Map<String, Object?> props = const {},
   List<ReactNode> children = const [],
-}) =>
-    HostNode(HostType('web', name), props, children: children);
+}) => HostNode(HostType('web', name), props, children: children);

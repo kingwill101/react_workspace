@@ -4,8 +4,6 @@ import 'dart:io';
 import 'package:react_actions/react_actions.dart';
 import 'package:react_server/react_server.dart';
 import 'package:server_testing/server_testing.dart';
-import 'package:server_testing_shelf/server_testing_shelf.dart';
-import 'package:shelf/shelf.dart';
 
 /// Lightweight harness for testing server functions in isolation.
 ///
@@ -23,8 +21,9 @@ import 'package:shelf/shelf.dart';
 /// // Direct dispatch (no HTTP)
 /// final result = await harness.dispatch(greetRef, (name: 'Ada'));
 ///
-/// // HTTP-level (validates protocol, headers, envelope)
-/// final client = harness.createClient();
+/// // HTTP-level: compose the registry into the real server application,
+/// // then supply that server's `server_testing` adapter.
+/// final client = harness.createClient(requestHandler);
 /// final response = await client.postJson('/__react/actions', {
 ///   'protocol': 1,
 ///   'id': greetRef.id.value,
@@ -35,29 +34,17 @@ import 'package:shelf/shelf.dart';
 final class ServerFunctionHarness {
   final ServerFunctionRegistry registry;
   final String actionPath;
-  final Object? Function(Request request)? authenticate;
 
   ServerFunctionHarness({
     ServerFunctionRegistry? registry,
     this.actionPath = '/__react/actions',
-    this.authenticate,
   }) : registry = registry ?? ServerFunctionRegistry();
 
-  /// Creates a `server_testing` handler for this harness.
-  ShelfRequestHandler createHandler() {
-    final handler = createServerActionHandler(
-      registry,
-      authenticate: authenticate ?? (_) => 'test-user',
-    );
-    return ShelfRequestHandler(const Pipeline().addHandler(handler));
-  }
-
-  /// Creates an in-memory test client bound to this harness.
-  TestClient createClient() => TestClient.inMemory(createHandler());
-
-  /// Creates an ephemeral-server test client (real HTTP) bound to this harness.
-  TestClient createEphemeralClient() =>
-      TestClient.ephemeralServer(createHandler());
+  /// Creates a client using the adapter chosen by the server under test.
+  TestClient createClient(
+    RequestHandler handler, {
+    TransportMode mode = TransportMode.inMemory,
+  }) => TestClient(handler, mode: mode);
 
   /// Directly dispatches a typed server function without HTTP.
   Future<TResult> dispatch<TArgs, TResult>(
@@ -65,7 +52,8 @@ final class ServerFunctionHarness {
     TArgs arguments, {
     ServerFunctionContext? context,
   }) async {
-    final ctx = context ??
+    final ctx =
+        context ??
         ServerFunctionContext(
           requestId: 'test-${DateTime.now().microsecondsSinceEpoch}',
           principal: 'test-user',
@@ -152,21 +140,29 @@ extension ServerFunctionResponseAssertions on TestResponse {
       assertServerFunctionError('contract_mismatch');
 
   /// Asserts the response indicates an unauthenticated request.
-  TestResponse assertUnauthenticated() =>
-      assertServerFunctionError('unauthenticated', status: HttpStatus.unauthorized);
+  TestResponse assertUnauthenticated() => assertServerFunctionError(
+    'unauthenticated',
+    status: HttpStatus.unauthorized,
+  );
 }
 
-/// Creates a mock HTTP client that always returns a fixed JSON envelope.
-class FixedResponseClient extends ShelfRequestHandler {
+/// A transport-neutral handler that returns a fixed JSON envelope.
+class FixedResponseClient extends RequestHandlerBase {
   final Map<String, dynamic> envelope;
   final int status;
+  final String contentType;
 
-  FixedResponseClient(this.envelope, {this.status = HttpStatus.ok})
-      : super((Request request) async {
-          return Response(
-            status,
-            body: jsonEncode(envelope),
-            headers: {'content-type': 'application/json'},
-          );
-        });
+  const FixedResponseClient(
+    this.envelope, {
+    this.status = HttpStatus.ok,
+    this.contentType = 'application/json',
+  });
+
+  @override
+  Future<void> handleRequest(HttpRequest request) async {
+    request.response.statusCode = status;
+    request.response.headers.set('content-type', contentType);
+    request.response.write(jsonEncode(envelope));
+    await request.response.close();
+  }
 }
