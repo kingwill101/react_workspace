@@ -452,10 +452,10 @@ abstract interface class MediaQueryList {
 }
 
 abstract interface class MediaQueryListEvent {
-  factory MediaQueryListEvent(Object type, [MediaQueryListEventInit? eventInitDict]) =>
+  factory MediaQueryListEvent(Object type_, [MediaQueryListEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<MediaQueryListEvent>(
         'MediaQueryListEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Object get media;
   bool get matches;
@@ -481,10 +481,10 @@ final class MediaQueryListEventInitValue implements MediaQueryListEventInit {
 }
 
 abstract interface class MouseEvent {
-  factory MouseEvent(String type, [MouseEventInit? eventInitDict]) =>
+  factory MouseEvent(String type_, [MouseEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<MouseEvent>(
         'MouseEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   double get pageX;
   double get pageY;
@@ -538,7 +538,7 @@ abstract interface class Range {
   bool isPointInRange(Node node, int offset);
   int comparePoint(Node node, int offset);
   bool intersectsNode(Node node);
-  DocumentFragment createContextualFragment(Object string);
+  DocumentFragment createContextualFragment(Object string_);
 }
 
 abstract interface class Screen {

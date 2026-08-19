@@ -55,10 +55,10 @@ abstract interface class AnimationEffect {
 }
 
 abstract interface class AnimationPlaybackEvent {
-  factory AnimationPlaybackEvent(String type, [AnimationPlaybackEventInit? eventInitDict]) =>
+  factory AnimationPlaybackEvent(String type_, [AnimationPlaybackEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<AnimationPlaybackEvent>(
         'AnimationPlaybackEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   CSSNumberish? get currentTime;
   CSSNumberish? get timelineTime;

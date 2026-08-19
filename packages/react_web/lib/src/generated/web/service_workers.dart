@@ -56,19 +56,19 @@ abstract interface class CacheStorage {
 abstract interface class ClientQueryOptions {
   bool? get includeUncontrolled;
   set includeUncontrolled(bool? value);
-  ClientType? get type;
-  set type(ClientType? value);
+  ClientType? get type_;
+  set type_(ClientType? value);
 }
 
 final class ClientQueryOptionsValue implements ClientQueryOptions {
   @override
   bool? includeUncontrolled;
   @override
-  ClientType? type;
+  ClientType? type_;
 
   ClientQueryOptionsValue({
     this.includeUncontrolled,
-    this.type,
+    this.type_,
   });
 }
 
@@ -82,10 +82,10 @@ abstract interface class Clients {
 }
 
 abstract interface class ExtendableEvent {
-  factory ExtendableEvent(String type, [ExtendableEventInit? eventInitDict]) =>
+  factory ExtendableEvent(String type_, [ExtendableEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<ExtendableEvent>(
         'ExtendableEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   void waitUntil(Future<Object> f);
 }
@@ -99,10 +99,10 @@ final class ExtendableEventInitValue implements ExtendableEventInit {
 }
 
 abstract interface class ExtendableMessageEvent {
-  factory ExtendableMessageEvent(String type, [ExtendableMessageEventInit? eventInitDict]) =>
+  factory ExtendableMessageEvent(String type_, [ExtendableMessageEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<ExtendableMessageEvent>(
         'ExtendableMessageEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Object get data;
   String get origin;
@@ -146,10 +146,10 @@ final class ExtendableMessageEventInitValue implements ExtendableMessageEventIni
 }
 
 abstract interface class FetchEvent {
-  factory FetchEvent(String type, FetchEventInit eventInitDict) =>
+  factory FetchEvent(String type_, FetchEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<FetchEvent>(
         'FetchEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Request get request;
   Future<Object> get preloadResponse;
@@ -247,8 +247,8 @@ final class NavigationPreloadStateValue implements NavigationPreloadState {
 abstract interface class RegistrationOptions {
   String? get scope;
   set scope(String? value);
-  WorkerType? get type;
-  set type(WorkerType? value);
+  WorkerType? get type_;
+  set type_(WorkerType? value);
   ServiceWorkerUpdateViaCache? get updateViaCache;
   set updateViaCache(ServiceWorkerUpdateViaCache? value);
 }
@@ -257,13 +257,13 @@ final class RegistrationOptionsValue implements RegistrationOptions {
   @override
   String? scope;
   @override
-  WorkerType? type;
+  WorkerType? type_;
   @override
   ServiceWorkerUpdateViaCache? updateViaCache;
 
   RegistrationOptionsValue({
     this.scope,
-    this.type,
+    this.type_,
     this.updateViaCache,
   });
 }

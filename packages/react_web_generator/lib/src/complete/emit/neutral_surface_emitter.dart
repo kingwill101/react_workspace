@@ -74,7 +74,8 @@ final class NeutralSurfaceEmitter {
           for (final m in flat) {
             if (m is IdlOperation) {
               final ex = ops[m.name];
-              if (ex == null || m.parameters.length > ex.parameters.length) ops[m.name] = m;
+              if (ex == null || m.parameters.length > ex.parameters.length)
+                ops[m.name] = m;
             }
           }
           final seen = <String>{};
@@ -102,13 +103,20 @@ final class NeutralSurfaceEmitter {
         case IdlMixin():
           for (final m in d.members) {
             switch (m) {
-              case IdlAttribute(): members.add('${d.name}.${m.name}:attribute');
-              case IdlOperation(): members.add('${d.name}.${m.name}:operation');
-              case IdlConstant(): members.add('${d.name}.${m.name}:const');
-              case IdlIterable(): members.add('${d.name}.iterable:iterable');
-              case IdlMaplike(): members.add('${d.name}.maplike:maplike');
-              case IdlSetlike(): members.add('${d.name}.setlike:setlike');
-              case _: break;
+              case IdlAttribute():
+                members.add('${d.name}.${m.name}:attribute');
+              case IdlOperation():
+                members.add('${d.name}.${m.name}:operation');
+              case IdlConstant():
+                members.add('${d.name}.${m.name}:const');
+              case IdlIterable():
+                members.add('${d.name}.iterable:iterable');
+              case IdlMaplike():
+                members.add('${d.name}.maplike:maplike');
+              case IdlSetlike():
+                members.add('${d.name}.setlike:setlike');
+              case _:
+                break;
             }
           }
         case IdlDictionary():
@@ -118,19 +126,27 @@ final class NeutralSurfaceEmitter {
         case IdlNamespace():
           for (final m in d.members) {
             switch (m) {
-              case IdlOperation(): members.add('${d.name}.${m.name}:operation');
-              case IdlAttribute(): members.add('${d.name}.${m.name}:attribute');
-              case IdlConstant(): members.add('${d.name}.${m.name}:const');
-              case _: break;
+              case IdlOperation():
+                members.add('${d.name}.${m.name}:operation');
+              case IdlAttribute():
+                members.add('${d.name}.${m.name}:attribute');
+              case IdlConstant():
+                members.add('${d.name}.${m.name}:const');
+              case _:
+                break;
             }
           }
         case IdlCallbackInterface():
           for (final m in d.members) {
             switch (m) {
-              case IdlAttribute(): members.add('${d.name}.${m.name}:attribute');
-              case IdlOperation(): members.add('${d.name}.${m.name}:operation');
-              case IdlConstant(): members.add('${d.name}.${m.name}:const');
-              case _: break;
+              case IdlAttribute():
+                members.add('${d.name}.${m.name}:attribute');
+              case IdlOperation():
+                members.add('${d.name}.${m.name}:operation');
+              case IdlConstant():
+                members.add('${d.name}.${m.name}:const');
+              case _:
+                break;
             }
           }
         case IdlEnum() || IdlTypedef() || IdlCallback() || IdlIncludes():
@@ -141,8 +157,9 @@ final class NeutralSurfaceEmitter {
       'definitions': (definitions.toList()..sort()),
       'members': (members.toList()..sort()),
     };
-    File('${Directory(outputDir).parent.path}/emitted_manifest.json')
-        .writeAsStringSync(const JsonEncoder.withIndent('  ').convert(manifest));
+    File(
+      '${Directory(outputDir).parent.path}/emitted_manifest.json',
+    ).writeAsStringSync(const JsonEncoder.withIndent('  ').convert(manifest));
   }
 
   /// Deterministic, sanitized module file name for a spec group.
@@ -195,7 +212,12 @@ final class NeutralSurfaceEmitter {
 
   String _fileName(String spec) => specFileName(spec);
 
-  void _emitSpec(Directory dir, String spec, List<WebIdlDefinition> defs, List<String> allSpecs) {
+  void _emitSpec(
+    Directory dir,
+    String spec,
+    List<WebIdlDefinition> defs,
+    List<String> allSpecs,
+  ) {
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
     buf.writeln('// Neutral Web surface for spec: $spec');
@@ -217,10 +239,15 @@ final class NeutralSurfaceEmitter {
       buf.writeln();
     }
 
-    File('${dir.path}/${_fileName(spec)}.dart').writeAsStringSync(buf.toString());
+    File(
+      '${dir.path}/${_fileName(spec)}.dart',
+    ).writeAsStringSync(buf.toString());
   }
 
-  Set<String> _requiredSpecs(List<WebIdlDefinition> defs, List<String> allSpecs) {
+  Set<String> _requiredSpecs(
+    List<WebIdlDefinition> defs,
+    List<String> allSpecs,
+  ) {
     final names = <String>{};
     for (final d in defs) {
       _collectRefs(d, names);
@@ -253,15 +280,17 @@ final class NeutralSurfaceEmitter {
 
     // Flatten inherited + mixin members so every referenced type's module is
     // imported (Dart imports are not transitive).
-    final members = switch (d) {
-      IdlInterface() => flattenMembers(model, d),
-      IdlMixin() => d.members,
-      IdlNamespace() => d.members,
-      IdlCallbackInterface() => d.members,
-      IdlDictionary() => d.fields,
-      IdlCallback() => d.parameters,
-      IdlEnum() || IdlIncludes() || IdlTypedef() => const <Object>[],
-    } as List;
+    final members =
+        switch (d) {
+              IdlInterface() => flattenMembers(model, d),
+              IdlMixin() => d.members,
+              IdlNamespace() => d.members,
+              IdlCallbackInterface() => d.members,
+              IdlDictionary() => d.fields,
+              IdlCallback() => d.parameters,
+              IdlEnum() || IdlIncludes() || IdlTypedef() => const <Object>[],
+            }
+            as List;
     for (final m in members) {
       _refMember(m, ref);
     }
@@ -271,7 +300,8 @@ final class NeutralSurfaceEmitter {
 
   void _refMember(Object m, void Function(TypeRef) ref) {
     switch (m) {
-      case IdlAttribute(): ref(m.type);
+      case IdlAttribute():
+        ref(m.type);
       case IdlOperation():
         ref(m.returnType);
         for (final p in m.parameters) {
@@ -281,7 +311,8 @@ final class NeutralSurfaceEmitter {
         for (final p in m.parameters) {
           ref(p.type);
         }
-      case IdlConstant(): ref(m.type);
+      case IdlConstant():
+        ref(m.type);
       case IdlIterable():
         for (final t in m.types) {
           ref(t);
@@ -289,23 +320,35 @@ final class NeutralSurfaceEmitter {
       case IdlMaplike():
         ref(m.keyType);
         ref(m.valueType);
-      case IdlSetlike(): ref(m.valueType);
-      case IdlField(): ref(m.type);
-      case IdlParameter(): ref(m.type);
+      case IdlSetlike():
+        ref(m.valueType);
+      case IdlField():
+        ref(m.type);
+      case IdlParameter():
+        ref(m.type);
     }
   }
 
   void _emitDefinition(StringBuffer buf, WebIdlDefinition d) {
     switch (d) {
-      case IdlInterface(): _emitInterface(buf, d);
-      case IdlMixin(): _emitMixin(buf, d);
-      case IdlDictionary(): _emitDictionary(buf, d);
-      case IdlNamespace(): _emitNamespace(buf, d);
-      case IdlEnum(): _emitEnum(buf, d);
-      case IdlTypedef(): _emitTypedef(buf, d);
-      case IdlCallback(): _emitCallback(buf, d);
-      case IdlCallbackInterface(): _emitCallbackInterface(buf, d);
-      case IdlIncludes(): break;
+      case IdlInterface():
+        _emitInterface(buf, d);
+      case IdlMixin():
+        _emitMixin(buf, d);
+      case IdlDictionary():
+        _emitDictionary(buf, d);
+      case IdlNamespace():
+        _emitNamespace(buf, d);
+      case IdlEnum():
+        _emitEnum(buf, d);
+      case IdlTypedef():
+        _emitTypedef(buf, d);
+      case IdlCallback():
+        _emitCallback(buf, d);
+      case IdlCallbackInterface():
+        _emitCallbackInterface(buf, d);
+      case IdlIncludes():
+        break;
     }
   }
 
@@ -343,7 +386,11 @@ final class NeutralSurfaceEmitter {
 
   void _emitMixin(StringBuffer buf, IdlMixin d) {
     buf.writeln('abstract interface class ${d.name} {');
-    _emitMembers(buf, d.members.where((m) => !m.staticMember).toList(), indent: '  ');
+    _emitMembers(
+      buf,
+      d.members.where((m) => !m.staticMember).toList(),
+      indent: '  ',
+    );
     buf.writeln('}');
   }
 
@@ -353,6 +400,7 @@ final class NeutralSurfaceEmitter {
       if (!f.required && !t.endsWith('?')) t = '$t?';
       return t;
     }
+
     buf.writeln('abstract interface class ${d.name} {');
     for (final f in d.fields) {
       final t = _dictType(f);
@@ -403,7 +451,9 @@ final class NeutralSurfaceEmitter {
     final parts = <String>[];
     for (var i = 0; i < d.parameters.length; i++) {
       final p = d.parameters[i];
-      parts.add('${_resolver.resolve(p.type)} ${escapeIdentifier(p.name.isEmpty ? 'arg$i' : p.name)}');
+      parts.add(
+        '${_resolver.resolve(p.type)} ${escapeIdentifier(p.name.isEmpty ? 'arg$i' : p.name)}',
+      );
     }
     if (parts.isNotEmpty) buf.write('${parts.join(', ')},');
     buf.writeln(');');
@@ -424,10 +474,12 @@ final class NeutralSurfaceEmitter {
       switch (m) {
         case IdlOperation():
           final existing = ops[m.name];
-          if (existing == null || m.parameters.length > existing.parameters.length) {
+          if (existing == null ||
+              m.parameters.length > existing.parameters.length) {
             ops[m.name] = m;
           }
-        default: break;
+        default:
+          break;
       }
     }
     for (final m in d.members) {
@@ -435,19 +487,30 @@ final class NeutralSurfaceEmitter {
         if (!emitted.add(m.name)) continue;
         final op = ops[m.name]!;
         final ret = _resolver.resolve(op.returnType);
-        final paramNames = [for (var i = 0; i < op.parameters.length; i++) escapeIdentifier(op.parameters[i].name.isEmpty ? 'arg$i' : op.parameters[i].name)];
+        final paramNames = [
+          for (var i = 0; i < op.parameters.length; i++)
+            escapeIdentifier(
+              op.parameters[i].name.isEmpty ? 'arg$i' : op.parameters[i].name,
+            ),
+        ];
         buf.write('  static $ret ${escapeIdentifier(op.name)}(');
         buf.write(_paramStrings(op.parameters));
         buf.writeln(') => WebRuntime.current.invokeNamespace(');
-        buf.writeln("      '${d.name}', '${op.name}', [${paramNames.join(', ')}]) as $ret;");
+        buf.writeln(
+          "      '${d.name}', '${op.name}', [${paramNames.join(', ')}]) as $ret;",
+        );
       } else if (m is IdlAttribute) {
         final t = _resolver.resolve((m as IdlAttribute).type);
         final name = escapeIdentifier(m.name);
         buf.writeln('  static $t get $name =>');
-        buf.writeln("      WebRuntime.current.getNamespaceProperty('${d.name}', '${m.name}') as $t;");
+        buf.writeln(
+          "      WebRuntime.current.getNamespaceProperty('${d.name}', '${m.name}') as $t;",
+        );
         if (!m.readonly) {
           buf.writeln('  static set $name($t value) =>');
-          buf.writeln("      WebRuntime.current.setNamespaceProperty('${d.name}', '${m.name}', value);");
+          buf.writeln(
+            "      WebRuntime.current.setNamespaceProperty('${d.name}', '${m.name}', value);",
+          );
         }
       } else if (m is IdlConstant) {
         _emitStaticConstant(buf, m);
@@ -459,7 +522,10 @@ final class NeutralSurfaceEmitter {
   void _emitStaticOperation(StringBuffer buf, IdlOperation m) {
     final ret = _resolver.resolve(m.returnType);
     final params = m.parameters;
-    final paramNames = [for (var i = 0; i < params.length; i++) escapeIdentifier(params[i].name.isEmpty ? 'arg$i' : params[i].name)];
+    final paramNames = [
+      for (var i = 0; i < params.length; i++)
+        escapeIdentifier(params[i].name.isEmpty ? 'arg$i' : params[i].name),
+    ];
     buf.write('  static $ret ${escapeIdentifier(m.name)}(');
     buf.write(_paramStrings(params));
     // Dispatch via WebRuntime when installed (browser), otherwise throw
@@ -469,21 +535,31 @@ final class NeutralSurfaceEmitter {
     // override with a throwing stub if needed.
     buf.writeln(') => WebRuntime.current.invokeNamespace(');
     // Placeholder — replaced by _emitNamespace with correct namespace.
-    buf.writeln("      '__ns__', '${m.name}', [${paramNames.join(', ')}]) as $ret;");
+    buf.writeln(
+      "      '__ns__', '${m.name}', [${paramNames.join(', ')}]) as $ret;",
+    );
   }
 
   void _emitStaticAttribute(StringBuffer buf, IdlAttribute m) {
     final t = _resolver.resolve(m.type);
     buf.writeln('  static $t get ${escapeIdentifier(m.name)} =>');
-    buf.writeln("      WebRuntime.current.getNamespaceProperty('__ns__', '${m.name}') as $t;");
+    buf.writeln(
+      "      WebRuntime.current.getNamespaceProperty('__ns__', '${m.name}') as $t;",
+    );
   }
 
   void _emitStaticConstant(StringBuffer buf, IdlConstant m) {
-    buf.writeln('  static const ${_resolver.resolve(m.type)} ${escapeIdentifier(m.name)} =');
+    buf.writeln(
+      '  static const ${_resolver.resolve(m.type)} ${escapeIdentifier(m.name)} =',
+    );
     buf.writeln("      ${m.value ?? 'null'};");
   }
 
-  void _emitMembers(StringBuffer buf, List<IdlMember> members, {required String indent}) {
+  void _emitMembers(
+    StringBuffer buf,
+    List<IdlMember> members, {
+    required String indent,
+  }) {
     final emitOrder = <IdlMember>[];
     for (final m in members) {
       if (m is IdlOperation) {
@@ -500,18 +576,41 @@ final class NeutralSurfaceEmitter {
     final ops = <String, IdlOperation>{};
     for (final m in members.whereType<IdlOperation>()) {
       final ex = ops[m.name];
-      if (ex == null || m.parameters.length > ex.parameters.length) ops[m.name] = m;
+      if (ex == null || m.parameters.length > ex.parameters.length)
+        ops[m.name] = m;
     }
+    final usedNames = <String>{
+      for (final m in emitOrder.where((m) => m is! IdlConstant))
+        if (m.name.isNotEmpty) escapeIdentifier(m.name),
+    };
     for (final m in emitOrder) {
       switch (m) {
-        case IdlOperation(): _emitMethod(buf, ops[m.name]!, indent);
-        case IdlAttribute(): _emitAttribute(buf, m, indent);
-        case IdlConstant(): _emitConst(buf, m, indent);
-        case IdlIterable(): _emitIterable(buf, m, indent);
-        case IdlMaplike(): _emitMaplike(buf, m, indent);
-        case IdlSetlike(): _emitSetlike(buf, m, indent);
-        case IdlConstructor(): break;
-        case IdlField(): break;
+        case IdlOperation():
+          _emitMethod(buf, ops[m.name]!, indent);
+        case IdlAttribute():
+          _emitAttribute(buf, m, indent);
+        case IdlConstant():
+          var name = escapeIdentifier(m.name);
+          if (!usedNames.add(name)) {
+            final base = '${name}Constant';
+            name = base;
+            var suffix = 2;
+            while (!usedNames.add(name)) {
+              name = '$base$suffix';
+              suffix++;
+            }
+          }
+          _emitConst(buf, m, indent, name: name);
+        case IdlIterable():
+          _emitIterable(buf, m, indent);
+        case IdlMaplike():
+          _emitMaplike(buf, m, indent);
+        case IdlSetlike():
+          _emitSetlike(buf, m, indent);
+        case IdlConstructor():
+          break;
+        case IdlField():
+          break;
       }
     }
   }
@@ -560,8 +659,13 @@ final class NeutralSurfaceEmitter {
     }
   }
 
-  void _emitConst(StringBuffer buf, IdlConstant m, String indent) {
-    buf.writeln('$indent static const ${_resolver.resolve(m.type)} ${escapeIdentifier(m.name)} =');
+  void _emitConst(
+    StringBuffer buf,
+    IdlConstant m,
+    String indent, {
+    required String name,
+  }) {
+    buf.writeln('$indent static const ${_resolver.resolve(m.type)} $name =');
     buf.writeln('$indent    ${m.value ?? 'null'};');
   }
 

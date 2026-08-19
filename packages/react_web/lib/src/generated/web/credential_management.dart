@@ -9,7 +9,7 @@ import 'html.dart';
 
 abstract interface class Credential {
   String get id;
-  String get type;
+  String get type_;
 }
 
 abstract interface class CredentialCreationOptions {

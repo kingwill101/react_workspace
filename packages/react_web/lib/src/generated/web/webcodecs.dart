@@ -198,8 +198,8 @@ typedef AudioSampleFormat = String;
 typedef CodecState = String;
 
 abstract interface class EncodedAudioChunkInit {
-  EncodedAudioChunkType get type;
-  set type(EncodedAudioChunkType value);
+  EncodedAudioChunkType get type_;
+  set type_(EncodedAudioChunkType value);
   int get timestamp;
   set timestamp(int value);
   int? get duration;
@@ -212,7 +212,7 @@ abstract interface class EncodedAudioChunkInit {
 
 final class EncodedAudioChunkInitValue implements EncodedAudioChunkInit {
   @override
-  EncodedAudioChunkType type;
+  EncodedAudioChunkType type_;
   @override
   int timestamp;
   @override
@@ -223,7 +223,7 @@ final class EncodedAudioChunkInitValue implements EncodedAudioChunkInit {
   List<Object>? transfer;
 
   EncodedAudioChunkInitValue({
-    required this.type,
+    required this.type_,
     required this.timestamp,
     this.duration,
     required this.data,
@@ -255,7 +255,7 @@ abstract interface class EncodedVideoChunk {
         'EncodedVideoChunk',
         [init],
       );
-  EncodedVideoChunkType get type;
+  EncodedVideoChunkType get type_;
   int get timestamp;
   int? get duration;
   int get byteLength;
@@ -263,8 +263,8 @@ abstract interface class EncodedVideoChunk {
 }
 
 abstract interface class EncodedVideoChunkInit {
-  EncodedVideoChunkType get type;
-  set type(EncodedVideoChunkType value);
+  EncodedVideoChunkType get type_;
+  set type_(EncodedVideoChunkType value);
   int get timestamp;
   set timestamp(int value);
   int? get duration;
@@ -277,7 +277,7 @@ abstract interface class EncodedVideoChunkInit {
 
 final class EncodedVideoChunkInitValue implements EncodedVideoChunkInit {
   @override
-  EncodedVideoChunkType type;
+  EncodedVideoChunkType type_;
   @override
   int timestamp;
   @override
@@ -288,7 +288,7 @@ final class EncodedVideoChunkInitValue implements EncodedVideoChunkInit {
   List<Object>? transfer;
 
   EncodedVideoChunkInitValue({
-    required this.type,
+    required this.type_,
     required this.timestamp,
     this.duration,
     required this.data,
@@ -367,8 +367,8 @@ final class ImageDecodeResultValue implements ImageDecodeResult {
 }
 
 abstract interface class ImageDecoderInit {
-  String get type;
-  set type(String value);
+  String get type_;
+  set type_(String value);
   ImageBufferSource get data;
   set data(ImageBufferSource value);
   ColorSpaceConversion? get colorSpaceConversion;
@@ -385,7 +385,7 @@ abstract interface class ImageDecoderInit {
 
 final class ImageDecoderInitValue implements ImageDecoderInit {
   @override
-  String type;
+  String type_;
   @override
   ImageBufferSource data;
   @override
@@ -400,7 +400,7 @@ final class ImageDecoderInitValue implements ImageDecoderInit {
   List<Object>? transfer;
 
   ImageDecoderInitValue({
-    required this.type,
+    required this.type_,
     required this.data,
     this.colorSpaceConversion,
     this.desiredWidth,

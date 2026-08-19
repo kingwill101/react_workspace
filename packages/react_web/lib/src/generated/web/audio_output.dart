@@ -45,7 +45,7 @@ abstract interface class HTMLMediaElement {
    set preload(String value);
   TimeRanges get buffered;
   void load();
-  CanPlayTypeResult canPlayType(String type);
+  CanPlayTypeResult canPlayType(String type_);
   int get readyState;
   bool get seeking;
   double get currentTime;

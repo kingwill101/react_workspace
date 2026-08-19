@@ -152,10 +152,10 @@ final class PaymentItemValue implements PaymentItem {
 }
 
 abstract interface class PaymentMethodChangeEvent {
-  factory PaymentMethodChangeEvent(String type, [PaymentMethodChangeEventInit? eventInitDict]) =>
+  factory PaymentMethodChangeEvent(String type_, [PaymentMethodChangeEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<PaymentMethodChangeEvent>(
         'PaymentMethodChangeEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   String get methodName;
   Object? get methodDetails;
@@ -214,10 +214,10 @@ abstract interface class PaymentRequest {
 }
 
 abstract interface class PaymentRequestUpdateEvent {
-  factory PaymentRequestUpdateEvent(String type, [PaymentRequestUpdateEventInit? eventInitDict]) =>
+  factory PaymentRequestUpdateEvent(String type_, [PaymentRequestUpdateEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<PaymentRequestUpdateEvent>(
         'PaymentRequestUpdateEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   void updateWith(Future<PaymentDetailsUpdate> detailsPromise);
 }

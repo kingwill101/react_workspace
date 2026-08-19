@@ -191,7 +191,7 @@ abstract interface class CSSNumericValue {
   bool equals([List<CSSNumberish>? value]);
   CSSUnitValue to(String unit);
   CSSMathSum toSum([List<String>? units]);
-  CSSNumericType type();
+  CSSNumericType type_();
 }
 
 abstract interface class CSSPerspective {

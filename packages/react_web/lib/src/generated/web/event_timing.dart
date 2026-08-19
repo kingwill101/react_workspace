@@ -20,8 +20,8 @@ abstract interface class Performance {
   PerformanceTiming get timing;
   PerformanceNavigation get navigation;
   PerformanceEntryList getEntries();
-  PerformanceEntryList getEntriesByType(String type);
-  PerformanceEntryList getEntriesByName(String name, [String? type]);
+  PerformanceEntryList getEntriesByType(String type_);
+  PerformanceEntryList getEntriesByName(String name, [String? type_]);
   void clearResourceTimings();
   void setResourceTimingBufferSize(int maxSize);
   EventHandler get onresourcetimingbufferfull;
@@ -44,8 +44,8 @@ abstract interface class PerformanceObserverInit {
   set durationThreshold(DOMHighResTimeStamp? value);
   List<String>? get entryTypes;
   set entryTypes(List<String>? value);
-  String? get type;
-  set type(String? value);
+  String? get type_;
+  set type_(String? value);
   bool? get buffered;
   set buffered(bool? value);
 }
@@ -56,14 +56,14 @@ final class PerformanceObserverInitValue implements PerformanceObserverInit {
   @override
   List<String>? entryTypes;
   @override
-  String? type;
+  String? type_;
   @override
   bool? buffered;
 
   PerformanceObserverInitValue({
     this.durationThreshold,
     this.entryTypes,
-    this.type,
+    this.type_,
     this.buffered,
   });
 }

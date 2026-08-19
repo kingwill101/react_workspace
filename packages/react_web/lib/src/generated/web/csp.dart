@@ -20,10 +20,10 @@ abstract interface class CSPViolationReportBody {
 }
 
 abstract interface class SecurityPolicyViolationEvent {
-  factory SecurityPolicyViolationEvent(String type, [SecurityPolicyViolationEventInit? eventInitDict]) =>
+  factory SecurityPolicyViolationEvent(String type_, [SecurityPolicyViolationEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<SecurityPolicyViolationEvent>(
         'SecurityPolicyViolationEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   String get documentURI;
   String get referrer;

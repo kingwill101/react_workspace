@@ -12,7 +12,7 @@ import 'package:react_web/src/web_runtime.dart';
 abstract interface class DataTransferItem {
   FileSystemEntry? webkitGetAsEntry();
   String get kind;
-  String get type;
+  String get type_;
   void getAsString(FunctionStringCallback? callback);
   File? getAsFile();
 }
@@ -118,7 +118,7 @@ abstract interface class HTMLInputElement {
    set height(int value);
   bool get indeterminate;
    set indeterminate(bool value);
-  HTMLDataListElement? get list;
+  HTMLDataListElement? get list_;
   String get max;
    set max(String value);
   int get maxLength;
@@ -145,8 +145,8 @@ abstract interface class HTMLInputElement {
    set src(String value);
   String get step;
    set step(String value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   String get defaultValue;
    set defaultValue(String value);
   String get value;

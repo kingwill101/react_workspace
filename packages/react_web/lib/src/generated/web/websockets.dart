@@ -11,10 +11,10 @@ import 'package:react_web/src/web_runtime.dart';
 typedef BinaryType = String;
 
 abstract interface class CloseEvent {
-  factory CloseEvent(String type, [CloseEventInit? eventInitDict]) =>
+  factory CloseEvent(String type_, [CloseEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<CloseEvent>(
         'CloseEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   bool get wasClean;
   int get code;

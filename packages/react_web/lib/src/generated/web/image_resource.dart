@@ -8,8 +8,8 @@ abstract interface class ImageResource {
   set src(String value);
   String? get sizes;
   set sizes(String? value);
-  String? get type;
-  set type(String? value);
+  String? get type_;
+  set type_(String? value);
   String? get label;
   set label(String? value);
 }
@@ -20,14 +20,14 @@ final class ImageResourceValue implements ImageResource {
   @override
   String? sizes;
   @override
-  String? type;
+  String? type_;
   @override
   String? label;
 
   ImageResourceValue({
     required this.src,
     this.sizes,
-    this.type,
+    this.type_,
     this.label,
   });
 }

@@ -102,7 +102,7 @@ abstract interface class Response {
   Future<FormData> formData();
   Future<Object> json();
   Future<String> text();
-  ResponseType get type;
+  ResponseType get type_;
   String get url;
   bool get redirected;
   int get status;

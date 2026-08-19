@@ -6,10 +6,10 @@ import 'service_workers.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class SyncEvent {
-  factory SyncEvent(String type, SyncEventInit init) =>
+  factory SyncEvent(String type_, SyncEventInit init) =>
       WebRuntime.current.createWebObject<SyncEvent>(
         'SyncEvent',
-        [type, init],
+        [type_, init],
       );
   String get tag;
   bool get lastChance;

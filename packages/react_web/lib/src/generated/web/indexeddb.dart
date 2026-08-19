@@ -219,10 +219,10 @@ final class IDBTransactionOptionsValue implements IDBTransactionOptions {
 }
 
 abstract interface class IDBVersionChangeEvent {
-  factory IDBVersionChangeEvent(String type, [IDBVersionChangeEventInit? eventInitDict]) =>
+  factory IDBVersionChangeEvent(String type_, [IDBVersionChangeEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<IDBVersionChangeEvent>(
         'IDBVersionChangeEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   int get oldVersion;
   int? get newVersion;

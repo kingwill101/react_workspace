@@ -57,7 +57,7 @@ abstract interface class WebGL2RenderingContext {
       0x0308;
    static const GLenum funcAdd =
       0x8006;
-   static const GLenum blendEquation =
+   static const GLenum blendEquationConstant =
       0x8009;
    static const GLenum blendEquationRgb =
       0x8009;
@@ -83,7 +83,7 @@ abstract interface class WebGL2RenderingContext {
       0x8003;
    static const GLenum oneMinusConstantAlpha =
       0x8004;
-   static const GLenum blendColor =
+   static const GLenum blendColorConstant =
       0x8005;
    static const GLenum arrayBuffer =
       0x8892;
@@ -111,7 +111,7 @@ abstract interface class WebGL2RenderingContext {
       0x0405;
    static const GLenum frontAndBack =
       0x0408;
-   static const GLenum cullFace =
+   static const GLenum cullFaceConstant =
       0x0B44;
    static const GLenum blend =
       0x0BE2;
@@ -127,7 +127,7 @@ abstract interface class WebGL2RenderingContext {
       0x8037;
    static const GLenum sampleAlphaToCoverage =
       0x809E;
-   static const GLenum sampleCoverage =
+   static const GLenum sampleCoverageConstant =
       0x80A0;
    static const GLenum noError =
       0;
@@ -143,7 +143,7 @@ abstract interface class WebGL2RenderingContext {
       0x0900;
    static const GLenum ccw =
       0x0901;
-   static const GLenum lineWidth =
+   static const GLenum lineWidthConstant =
       0x0B21;
    static const GLenum aliasedPointSizeRange =
       0x846D;
@@ -151,19 +151,19 @@ abstract interface class WebGL2RenderingContext {
       0x846E;
    static const GLenum cullFaceMode =
       0x0B45;
-   static const GLenum frontFace =
+   static const GLenum frontFaceConstant =
       0x0B46;
-   static const GLenum depthRange =
+   static const GLenum depthRangeConstant =
       0x0B70;
    static const GLenum depthWritemask =
       0x0B72;
    static const GLenum depthClearValue =
       0x0B73;
-   static const GLenum depthFunc =
+   static const GLenum depthFuncConstant =
       0x0B74;
    static const GLenum stencilClearValue =
       0x0B91;
-   static const GLenum stencilFunc =
+   static const GLenum stencilFuncConstant =
       0x0B92;
    static const GLenum stencilFail =
       0x0B94;
@@ -191,7 +191,7 @@ abstract interface class WebGL2RenderingContext {
       0x8CA4;
    static const GLenum stencilBackWritemask =
       0x8CA5;
-   static const GLenum viewport =
+   static const GLenum viewportConstant =
       0x0BA2;
    static const GLenum scissorBox =
       0x0C10;
@@ -253,7 +253,7 @@ abstract interface class WebGL2RenderingContext {
       0x1402;
    static const GLenum unsignedShort =
       0x1403;
-   static const GLenum int =
+   static const GLenum int_ =
       0x1404;
    static const GLenum unsignedInt =
       0x1405;
@@ -313,7 +313,7 @@ abstract interface class WebGL2RenderingContext {
       0x8B8C;
    static const GLenum currentProgram =
       0x8B8D;
-   static const GLenum never =
+   static const GLenum never_ =
       0x0200;
    static const GLenum less =
       0x0201;
@@ -455,7 +455,7 @@ abstract interface class WebGL2RenderingContext {
       0x84DE;
    static const GLenum texture31 =
       0x84DF;
-   static const GLenum activeTexture =
+   static const GLenum activeTextureConstant =
       0x84E0;
    static const GLenum repeat =
       0x2901;
@@ -475,7 +475,7 @@ abstract interface class WebGL2RenderingContext {
       0x8B54;
    static const GLenum intVec4 =
       0x8B55;
-   static const GLenum bool =
+   static const GLenum bool_ =
       0x8B56;
    static const GLenum boolVec2 =
       0x8B57;
@@ -645,7 +645,7 @@ abstract interface class WebGL2RenderingContext {
   WebGLFramebuffer? createFramebuffer();
   WebGLProgram? createProgram();
   WebGLRenderbuffer? createRenderbuffer();
-  WebGLShader? createShader(GLenum type);
+  WebGLShader? createShader(GLenum type_);
   WebGLTexture? createTexture();
   void cullFace(GLenum mode);
   void deleteBuffer(WebGLBuffer? buffer);
@@ -661,7 +661,7 @@ abstract interface class WebGL2RenderingContext {
   void disable(GLenum cap);
   void disableVertexAttribArray(GLuint index);
   void drawArrays(GLenum mode, GLint first, GLsizei count);
-  void drawElements(GLenum mode, GLsizei count, GLenum type, GLintptr offset);
+  void drawElements(GLenum mode, GLsizei count, GLenum type_, GLintptr offset);
   void enable(GLenum cap);
   void enableVertexAttribArray(GLuint index);
   void finish();
@@ -732,10 +732,10 @@ abstract interface class WebGL2RenderingContext {
   void vertexAttrib2fv(GLuint index, Float32List values);
   void vertexAttrib3fv(GLuint index, Float32List values);
   void vertexAttrib4fv(GLuint index, Float32List values);
-  void vertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLintptr offset);
+  void vertexAttribPointer(GLuint index, GLint size, GLenum type_, GLboolean normalized, GLsizei stride, GLintptr offset);
   void viewport(GLint x, GLint y, GLsizei width, GLsizei height);
   Future<void> makeXRCompatible();
-   static const GLenum readBuffer =
+   static const GLenum readBufferConstant =
       0x0C02;
    static const GLenum unpackRowLength =
       0x0CF2;
@@ -923,7 +923,7 @@ abstract interface class WebGL2RenderingContext {
       0x8C7F;
    static const GLenum maxTransformFeedbackSeparateComponents =
       0x8C80;
-   static const GLenum transformFeedbackVaryings =
+   static const GLenum transformFeedbackVaryingsConstant =
       0x8C83;
    static const GLenum transformFeedbackBufferStart =
       0x8C84;
@@ -1183,7 +1183,7 @@ abstract interface class WebGL2RenderingContext {
       0x8A3D;
    static const GLenum uniformIsRowMajor =
       0x8A3E;
-   static const GLenum uniformBlockBinding =
+   static const GLenum uniformBlockBindingConstant =
       0x8A3F;
    static const GLenum uniformBlockDataSize =
       0x8A40;
@@ -1270,8 +1270,8 @@ abstract interface class WebGL2RenderingContext {
   void renderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
   void texStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
   void texStorage3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
-  void texImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, ArrayBufferView srcData, int srcOffset);
-  void texSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, ArrayBufferView? srcData, [int? srcOffset]);
+  void texImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type_, ArrayBufferView srcData, int srcOffset);
+  void texSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type_, ArrayBufferView? srcData, [int? srcOffset]);
   void copyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height);
   void compressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, ArrayBufferView srcData, [int? srcOffset, GLuint? srcLengthOverride]);
   void compressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, ArrayBufferView srcData, [int? srcOffset, GLuint? srcLengthOverride]);
@@ -1294,11 +1294,11 @@ abstract interface class WebGL2RenderingContext {
   void vertexAttribI4iv(GLuint index, Int32List values);
   void vertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w);
   void vertexAttribI4uiv(GLuint index, Uint32List values);
-  void vertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, GLintptr offset);
+  void vertexAttribIPointer(GLuint index, GLint size, GLenum type_, GLsizei stride, GLintptr offset);
   void vertexAttribDivisor(GLuint index, GLuint divisor);
   void drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount);
-  void drawElementsInstanced(GLenum mode, GLsizei count, GLenum type, GLintptr offset, GLsizei instanceCount);
-  void drawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, GLintptr offset);
+  void drawElementsInstanced(GLenum mode, GLsizei count, GLenum type_, GLintptr offset, GLsizei instanceCount);
+  void drawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type_, GLintptr offset);
   void drawBuffers(List<GLenum> buffers);
   void clearBufferfv(GLenum buffer, GLint drawbuffer, Float32List values, [int? srcOffset]);
   void clearBufferiv(GLenum buffer, GLint drawbuffer, Int32List values, [int? srcOffset]);
@@ -1349,8 +1349,8 @@ abstract interface class WebGL2RenderingContext {
   void bindVertexArray(WebGLVertexArrayObject? array);
   void bufferData(GLenum target, ArrayBufferView srcData, GLenum usage, int srcOffset, [GLuint? length]);
   void bufferSubData(GLenum target, GLintptr dstByteOffset, ArrayBufferView srcData, int srcOffset, [GLuint? length]);
-  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView srcData, int srcOffset);
-  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView srcData, int srcOffset);
+  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type_, ArrayBufferView srcData, int srcOffset);
+  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView srcData, int srcOffset);
   void compressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, ArrayBufferView srcData, [int? srcOffset, GLuint? srcLengthOverride]);
   void compressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, ArrayBufferView srcData, [int? srcOffset, GLuint? srcLengthOverride]);
   void uniform1fv(WebGLUniformLocation? location, Float32List data, [int? srcOffset, GLuint? srcLength]);
@@ -1364,11 +1364,11 @@ abstract interface class WebGL2RenderingContext {
   void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, Float32List data, [int? srcOffset, GLuint? srcLength]);
   void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, Float32List data, [int? srcOffset, GLuint? srcLength]);
   void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, Float32List data, [int? srcOffset, GLuint? srcLength]);
-  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView dstData, int dstOffset);
+  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView dstData, int dstOffset);
 }
 
 abstract interface class WebGL2RenderingContextBase {
-   static const GLenum readBuffer =
+   static const GLenum readBufferConstant =
       0x0C02;
    static const GLenum unpackRowLength =
       0x0CF2;
@@ -1556,7 +1556,7 @@ abstract interface class WebGL2RenderingContextBase {
       0x8C7F;
    static const GLenum maxTransformFeedbackSeparateComponents =
       0x8C80;
-   static const GLenum transformFeedbackVaryings =
+   static const GLenum transformFeedbackVaryingsConstant =
       0x8C83;
    static const GLenum transformFeedbackBufferStart =
       0x8C84;
@@ -1816,7 +1816,7 @@ abstract interface class WebGL2RenderingContextBase {
       0x8A3D;
    static const GLenum uniformIsRowMajor =
       0x8A3E;
-   static const GLenum uniformBlockBinding =
+   static const GLenum uniformBlockBindingConstant =
       0x8A3F;
    static const GLenum uniformBlockDataSize =
       0x8A40;
@@ -1903,8 +1903,8 @@ abstract interface class WebGL2RenderingContextBase {
   void renderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
   void texStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
   void texStorage3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
-  void texImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, ArrayBufferView srcData, int srcOffset);
-  void texSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, ArrayBufferView? srcData, [int? srcOffset]);
+  void texImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type_, ArrayBufferView srcData, int srcOffset);
+  void texSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type_, ArrayBufferView? srcData, [int? srcOffset]);
   void copyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height);
   void compressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, ArrayBufferView srcData, [int? srcOffset, GLuint? srcLengthOverride]);
   void compressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, ArrayBufferView srcData, [int? srcOffset, GLuint? srcLengthOverride]);
@@ -1927,11 +1927,11 @@ abstract interface class WebGL2RenderingContextBase {
   void vertexAttribI4iv(GLuint index, Int32List values);
   void vertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w);
   void vertexAttribI4uiv(GLuint index, Uint32List values);
-  void vertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, GLintptr offset);
+  void vertexAttribIPointer(GLuint index, GLint size, GLenum type_, GLsizei stride, GLintptr offset);
   void vertexAttribDivisor(GLuint index, GLuint divisor);
   void drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount);
-  void drawElementsInstanced(GLenum mode, GLsizei count, GLenum type, GLintptr offset, GLsizei instanceCount);
-  void drawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, GLintptr offset);
+  void drawElementsInstanced(GLenum mode, GLsizei count, GLenum type_, GLintptr offset, GLsizei instanceCount);
+  void drawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type_, GLintptr offset);
   void drawBuffers(List<GLenum> buffers);
   void clearBufferfv(GLenum buffer, GLint drawbuffer, Float32List values, [int? srcOffset]);
   void clearBufferiv(GLenum buffer, GLint drawbuffer, Int32List values, [int? srcOffset]);
@@ -1985,8 +1985,8 @@ abstract interface class WebGL2RenderingContextBase {
 abstract interface class WebGL2RenderingContextOverloads {
   void bufferData(GLenum target, ArrayBufferView srcData, GLenum usage, int srcOffset, [GLuint? length]);
   void bufferSubData(GLenum target, GLintptr dstByteOffset, ArrayBufferView srcData, int srcOffset, [GLuint? length]);
-  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView srcData, int srcOffset);
-  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView srcData, int srcOffset);
+  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type_, ArrayBufferView srcData, int srcOffset);
+  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView srcData, int srcOffset);
   void compressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, ArrayBufferView srcData, [int? srcOffset, GLuint? srcLengthOverride]);
   void compressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, ArrayBufferView srcData, [int? srcOffset, GLuint? srcLengthOverride]);
   void uniform1fv(WebGLUniformLocation? location, Float32List data, [int? srcOffset, GLuint? srcLength]);
@@ -2000,7 +2000,7 @@ abstract interface class WebGL2RenderingContextOverloads {
   void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, Float32List data, [int? srcOffset, GLuint? srcLength]);
   void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, Float32List data, [int? srcOffset, GLuint? srcLength]);
   void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, Float32List data, [int? srcOffset, GLuint? srcLength]);
-  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView dstData, int dstOffset);
+  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView dstData, int dstOffset);
 }
 
 abstract interface class WebGLQuery {

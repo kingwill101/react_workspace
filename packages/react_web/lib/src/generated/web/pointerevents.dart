@@ -6,10 +6,10 @@ import 'pointerlock.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class PointerEvent {
-  factory PointerEvent(String type, [PointerEventInit? eventInitDict]) =>
+  factory PointerEvent(String type_, [PointerEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<PointerEvent>(
         'PointerEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   int get pointerId;
   double get width;

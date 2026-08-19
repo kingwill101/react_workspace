@@ -322,10 +322,10 @@ abstract interface class AudioParamMap {
 }
 
 abstract interface class AudioProcessingEvent {
-  factory AudioProcessingEvent(String type, AudioProcessingEventInit eventInitDict) =>
+  factory AudioProcessingEvent(String type_, AudioProcessingEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<AudioProcessingEvent>(
         'AudioProcessingEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   double get playbackTime;
   AudioBuffer get inputBuffer;
@@ -407,16 +407,16 @@ abstract interface class AudioScheduledSourceNode {
 }
 
 abstract interface class AudioSinkOptions {
-  AudioSinkType get type;
-  set type(AudioSinkType value);
+  AudioSinkType get type_;
+  set type_(AudioSinkType value);
 }
 
 final class AudioSinkOptionsValue implements AudioSinkOptions {
   @override
-  AudioSinkType type;
+  AudioSinkType type_;
 
   AudioSinkOptionsValue({
-    required this.type,
+    required this.type_,
   });
 }
 
@@ -548,8 +548,8 @@ abstract interface class BiquadFilterNode {
         'BiquadFilterNode',
         [context, options],
       );
-  BiquadFilterType get type;
-   set type(BiquadFilterType value);
+  BiquadFilterType get type_;
+   set type_(BiquadFilterType value);
   AudioParam get frequency;
   AudioParam get detune;
   AudioParam get q;
@@ -558,8 +558,8 @@ abstract interface class BiquadFilterNode {
 }
 
 abstract interface class BiquadFilterOptions {
-  BiquadFilterType? get type;
-  set type(BiquadFilterType? value);
+  BiquadFilterType? get type_;
+  set type_(BiquadFilterType? value);
   double? get q;
   set q(double? value);
   double? get detune;
@@ -572,7 +572,7 @@ abstract interface class BiquadFilterOptions {
 
 final class BiquadFilterOptionsValue implements BiquadFilterOptions {
   @override
-  BiquadFilterType? type;
+  BiquadFilterType? type_;
   @override
   double? q;
   @override
@@ -583,7 +583,7 @@ final class BiquadFilterOptionsValue implements BiquadFilterOptions {
   double? gain;
 
   BiquadFilterOptionsValue({
-    this.type,
+    this.type_,
     this.q,
     this.detune,
     this.frequency,
@@ -906,10 +906,10 @@ final class MediaStreamTrackAudioSourceOptionsValue implements MediaStreamTrackA
 }
 
 abstract interface class OfflineAudioCompletionEvent {
-  factory OfflineAudioCompletionEvent(String type, OfflineAudioCompletionEventInit eventInitDict) =>
+  factory OfflineAudioCompletionEvent(String type_, OfflineAudioCompletionEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<OfflineAudioCompletionEvent>(
         'OfflineAudioCompletionEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   AudioBuffer get renderedBuffer;
 }
@@ -982,16 +982,16 @@ abstract interface class OscillatorNode {
         'OscillatorNode',
         [context, options],
       );
-  OscillatorType get type;
-   set type(OscillatorType value);
+  OscillatorType get type_;
+   set type_(OscillatorType value);
   AudioParam get frequency;
   AudioParam get detune;
   void setPeriodicWave(PeriodicWave periodicWave);
 }
 
 abstract interface class OscillatorOptions {
-  OscillatorType? get type;
-  set type(OscillatorType? value);
+  OscillatorType? get type_;
+  set type_(OscillatorType? value);
   double? get frequency;
   set frequency(double? value);
   double? get detune;
@@ -1002,7 +1002,7 @@ abstract interface class OscillatorOptions {
 
 final class OscillatorOptionsValue implements OscillatorOptions {
   @override
-  OscillatorType? type;
+  OscillatorType? type_;
   @override
   double? frequency;
   @override
@@ -1011,7 +1011,7 @@ final class OscillatorOptionsValue implements OscillatorOptions {
   PeriodicWave? periodicWave;
 
   OscillatorOptionsValue({
-    this.type,
+    this.type_,
     this.frequency,
     this.detune,
     this.periodicWave,

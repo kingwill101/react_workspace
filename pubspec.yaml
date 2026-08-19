@@ -18,6 +18,7 @@ workspace:
   - packages/react_bloc
   - packages/react_analysis
   - packages/react_analyzer
+  - packages/routed_react
   - examples/ssr
   - examples/plugin_validation
   - examples/client

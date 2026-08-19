@@ -185,8 +185,8 @@ final class GPUBufferBindingValue implements GPUBufferBinding {
 }
 
 abstract interface class GPUBufferBindingLayout {
-  GPUBufferBindingType? get type;
-  set type(GPUBufferBindingType? value);
+  GPUBufferBindingType? get type_;
+  set type_(GPUBufferBindingType? value);
   bool? get hasDynamicOffset;
   set hasDynamicOffset(bool? value);
   GPUSize64? get minBindingSize;
@@ -195,14 +195,14 @@ abstract interface class GPUBufferBindingLayout {
 
 final class GPUBufferBindingLayoutValue implements GPUBufferBindingLayout {
   @override
-  GPUBufferBindingType? type;
+  GPUBufferBindingType? type_;
   @override
   bool? hasDynamicOffset;
   @override
   GPUSize64? minBindingSize;
 
   GPUBufferBindingLayoutValue({
-    this.type,
+    this.type_,
     this.hasDynamicOffset,
     this.minBindingSize,
   });
@@ -914,20 +914,20 @@ final class GPUProgrammableStageValue implements GPUProgrammableStage {
 }
 
 abstract interface class GPUQuerySetDescriptor {
-  GPUQueryType get type;
-  set type(GPUQueryType value);
+  GPUQueryType get type_;
+  set type_(GPUQueryType value);
   GPUSize32 get count;
   set count(GPUSize32 value);
 }
 
 final class GPUQuerySetDescriptorValue implements GPUQuerySetDescriptor {
   @override
-  GPUQueryType type;
+  GPUQueryType type_;
   @override
   GPUSize32 count;
 
   GPUQuerySetDescriptorValue({
-    required this.type,
+    required this.type_,
     required this.count,
   });
 }
@@ -1210,16 +1210,16 @@ final class GPURequestAdapterOptionsValue implements GPURequestAdapterOptions {
 typedef GPUSampleMask = int;
 
 abstract interface class GPUSamplerBindingLayout {
-  GPUSamplerBindingType? get type;
-  set type(GPUSamplerBindingType? value);
+  GPUSamplerBindingType? get type_;
+  set type_(GPUSamplerBindingType? value);
 }
 
 final class GPUSamplerBindingLayoutValue implements GPUSamplerBindingLayout {
   @override
-  GPUSamplerBindingType? type;
+  GPUSamplerBindingType? type_;
 
   GPUSamplerBindingLayoutValue({
-    this.type,
+    this.type_,
   });
 }
 

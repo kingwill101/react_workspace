@@ -11,10 +11,10 @@ import 'package:react_web/src/web_runtime.dart';
 typedef BitrateMode = String;
 
 abstract interface class BlobEvent {
-  factory BlobEvent(String type, BlobEventInit eventInitDict) =>
+  factory BlobEvent(String type_, BlobEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<BlobEvent>(
         'BlobEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Blob get data;
   DOMHighResTimeStamp get timecode;

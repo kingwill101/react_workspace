@@ -215,10 +215,10 @@ final class MediaStreamConstraintsValue implements MediaStreamConstraints {
 }
 
 abstract interface class MediaStreamTrackEvent {
-  factory MediaStreamTrackEvent(String type, MediaStreamTrackEventInit eventInitDict) =>
+  factory MediaStreamTrackEvent(String type_, MediaStreamTrackEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<MediaStreamTrackEvent>(
         'MediaStreamTrackEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   MediaStreamTrack get track;
 }

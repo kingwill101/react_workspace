@@ -16,10 +16,10 @@ abstract interface class Clipboard {
 }
 
 abstract interface class ClipboardEvent {
-  factory ClipboardEvent(String type, [ClipboardEventInit? eventInitDict]) =>
+  factory ClipboardEvent(String type_, [ClipboardEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<ClipboardEvent>(
         'ClipboardEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   DataTransfer? get clipboardData;
 }
@@ -46,7 +46,7 @@ abstract interface class ClipboardItem {
       );
   PresentationStyle get presentationStyle;
   List<String> get types;
-  Future<Blob> getType(String type);
+  Future<Blob> getType(String type_);
 }
 
 typedef ClipboardItemData = Future<Object>;

@@ -208,7 +208,7 @@ abstract interface class Element {
    set innerHTML(Object value);
   Object get outerHTML;
    set outerHTML(Object value);
-  void insertAdjacentHTML(String position, Object string);
+  void insertAdjacentHTML(String position, Object string_);
   void setPointerCapture(int pointerId);
   void releasePointerCapture(int pointerId);
   bool hasPointerCapture(int pointerId);

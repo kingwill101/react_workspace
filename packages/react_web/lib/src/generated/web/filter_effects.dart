@@ -5,7 +5,7 @@
 import 'svg.dart';
 
 abstract interface class SVGComponentTransferFunctionElement {
-  SVGAnimatedEnumeration get type;
+  SVGAnimatedEnumeration get type_;
   SVGAnimatedNumberList get tableValues;
   SVGAnimatedNumber get slope;
   SVGAnimatedNumber get intercept;
@@ -32,7 +32,7 @@ abstract interface class SVGFEColorMatrixElement {
   SVGAnimatedLength get height;
   SVGAnimatedString get result;
   SVGAnimatedString get in1;
-  SVGAnimatedEnumeration get type;
+  SVGAnimatedEnumeration get type_;
   SVGAnimatedNumberList get values;
 }
 
@@ -255,7 +255,7 @@ abstract interface class SVGFETurbulenceElement {
   SVGAnimatedInteger get numOctaves;
   SVGAnimatedNumber get seed;
   SVGAnimatedEnumeration get stitchTiles;
-  SVGAnimatedEnumeration get type;
+  SVGAnimatedEnumeration get type_;
 }
 
 abstract interface class SVGFilterElement {

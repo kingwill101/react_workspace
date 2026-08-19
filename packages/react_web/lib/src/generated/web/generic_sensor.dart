@@ -23,10 +23,10 @@ abstract interface class Sensor {
 }
 
 abstract interface class SensorErrorEvent {
-  factory SensorErrorEvent(String type, SensorErrorEventInit errorEventInitDict) =>
+  factory SensorErrorEvent(String type_, SensorErrorEventInit errorEventInitDict) =>
       WebRuntime.current.createWebObject<SensorErrorEvent>(
         'SensorErrorEvent',
-        [type, errorEventInitDict],
+        [type_, errorEventInitDict],
       );
   DOMException get error;
 }

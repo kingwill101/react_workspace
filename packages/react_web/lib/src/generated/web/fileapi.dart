@@ -15,7 +15,7 @@ abstract interface class Blob {
         [blobParts, options],
       );
   int get size;
-  String get type;
+  String get type_;
   Blob slice([int? start, int? end, String? contentType]);
   ReadableStream stream();
   Future<String> text();
@@ -25,20 +25,20 @@ abstract interface class Blob {
 typedef BlobPart = Object;
 
 abstract interface class BlobPropertyBag {
-  String? get type;
-  set type(String? value);
+  String? get type_;
+  set type_(String? value);
   EndingType? get endings;
   set endings(EndingType? value);
 }
 
 final class BlobPropertyBagValue implements BlobPropertyBag {
   @override
-  String? type;
+  String? type_;
   @override
   EndingType? endings;
 
   BlobPropertyBagValue({
-    this.type,
+    this.type_,
     this.endings,
   });
 }

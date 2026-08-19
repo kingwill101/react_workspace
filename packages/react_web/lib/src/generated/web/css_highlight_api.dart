@@ -13,8 +13,8 @@ abstract interface class Highlight {
       );
   int get priority;
    set priority(int value);
-  HighlightType get type;
-   set type(HighlightType value);
+  HighlightType get type_;
+   set type_(HighlightType value);
 }
 
 abstract interface class HighlightRegistry {

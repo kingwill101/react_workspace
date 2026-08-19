@@ -6,10 +6,10 @@ import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class DeviceMotionEvent {
-  factory DeviceMotionEvent(String type, [DeviceMotionEventInit? eventInitDict]) =>
+  factory DeviceMotionEvent(String type_, [DeviceMotionEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<DeviceMotionEvent>(
         'DeviceMotionEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   DeviceMotionEventAcceleration? get acceleration;
   DeviceMotionEventAcceleration? get accelerationIncludingGravity;
@@ -107,10 +107,10 @@ final class DeviceMotionEventRotationRateInitValue implements DeviceMotionEventR
 }
 
 abstract interface class DeviceOrientationEvent {
-  factory DeviceOrientationEvent(String type, [DeviceOrientationEventInit? eventInitDict]) =>
+  factory DeviceOrientationEvent(String type_, [DeviceOrientationEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<DeviceOrientationEvent>(
         'DeviceOrientationEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   double? get alpha;
   double? get beta;

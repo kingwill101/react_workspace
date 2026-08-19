@@ -9,10 +9,10 @@ import 'pointerlock.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CompositionEvent {
-  factory CompositionEvent(String type, [CompositionEventInit? eventInitDict]) =>
+  factory CompositionEvent(String type_, [CompositionEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<CompositionEvent>(
         'CompositionEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   String get data;
   void initCompositionEvent(String typeArg, [bool? bubblesArg, bool? cancelableArg, Object? viewArg, String? dataArg]);
@@ -112,10 +112,10 @@ final class EventModifierInitValue implements EventModifierInit {
 }
 
 abstract interface class FocusEvent {
-  factory FocusEvent(String type, [FocusEventInit? eventInitDict]) =>
+  factory FocusEvent(String type_, [FocusEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<FocusEvent>(
         'FocusEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   EventTarget? get relatedTarget;
 }
@@ -135,10 +135,10 @@ final class FocusEventInitValue implements FocusEventInit {
 }
 
 abstract interface class KeyboardEvent {
-  factory KeyboardEvent(String type, [KeyboardEventInit? eventInitDict]) =>
+  factory KeyboardEvent(String type_, [KeyboardEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<KeyboardEvent>(
         'KeyboardEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   String get key;
   String get code;
@@ -210,14 +210,14 @@ abstract interface class MutationEvent {
 
 abstract interface class TextEvent {
   String get data;
-  void initTextEvent(String type, [bool? bubbles, bool? cancelable, Window? view, String? data]);
+  void initTextEvent(String type_, [bool? bubbles, bool? cancelable, Window? view, String? data]);
 }
 
 abstract interface class WheelEvent {
-  factory WheelEvent(String type, [WheelEventInit? eventInitDict]) =>
+  factory WheelEvent(String type_, [WheelEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<WheelEvent>(
         'WheelEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   double get deltaX;
   double get deltaY;

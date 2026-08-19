@@ -12,10 +12,10 @@ import 'package:react_web/src/web_runtime.dart';
 typedef PushEncryptionKeyName = String;
 
 abstract interface class PushEvent {
-  factory PushEvent(String type, [PushEventInit? eventInitDict]) =>
+  factory PushEvent(String type_, [PushEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<PushEvent>(
         'PushEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   PushMessageData? get data;
 }
@@ -73,10 +73,10 @@ abstract interface class PushSubscription {
 }
 
 abstract interface class PushSubscriptionChangeEvent {
-  factory PushSubscriptionChangeEvent(String type, [PushSubscriptionChangeEventInit? eventInitDict]) =>
+  factory PushSubscriptionChangeEvent(String type_, [PushSubscriptionChangeEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<PushSubscriptionChangeEvent>(
         'PushSubscriptionChangeEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   PushSubscription? get newSubscription;
   PushSubscription? get oldSubscription;

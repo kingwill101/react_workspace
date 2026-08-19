@@ -19,16 +19,16 @@ final class XRDOMOverlayInitValue implements XRDOMOverlayInit {
 }
 
 abstract interface class XRDOMOverlayState {
-  XRDOMOverlayType? get type;
-  set type(XRDOMOverlayType? value);
+  XRDOMOverlayType? get type_;
+  set type_(XRDOMOverlayType? value);
 }
 
 final class XRDOMOverlayStateValue implements XRDOMOverlayState {
   @override
-  XRDOMOverlayType? type;
+  XRDOMOverlayType? type_;
 
   XRDOMOverlayStateValue({
-    this.type,
+    this.type_,
   });
 }
 

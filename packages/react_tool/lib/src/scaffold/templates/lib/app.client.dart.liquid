@@ -1,17 +1,29 @@
-import 'package:react/react.dart';
+import 'package:react_dom/react_dom.dart';
 
 /// Root component — client-only, no server functions.
-/// Uses `package:react` (VM-safe) so `dart test` passes without a browser.
+/// Uses the typed host elements from `package:react_dom` in the browser.
 @reactComponent
 ReactNode App(({String title}) props) {
   return div(
-    props: const {
-      'style': 'font-family:system-ui,sans-serif;max-width:640px;margin:0 auto;padding:48px 24px;text-align:center',
+    style: const {
+      'fontFamily': 'system-ui, sans-serif',
+      'maxWidth': '640px',
+      'margin': '0 auto',
+      'padding': '48px 24px',
+      'textAlign': 'center',
     },
     children: [
-      div(children: [Text(props.title)]),
-      div(children: [const Text('Hello from the client — edit lib/app.dart to get started.')]),
-      div(children: [const Text('Edit lib/app.dart and rebuild to see changes.')]),
+      div(key: 'title', children: [Text(props.title)]),
+      div(
+        key: 'welcome',
+        children: [
+          const Text('Hello from the client — edit lib/app.dart to get started.'),
+        ],
+      ),
+      div(
+        key: 'instructions',
+        children: [const Text('Edit lib/app.dart and rebuild to see changes.')],
+      ),
     ],
   );
 }

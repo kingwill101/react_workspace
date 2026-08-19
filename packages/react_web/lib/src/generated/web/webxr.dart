@@ -19,10 +19,10 @@ typedef XRFrameRequestCallback = void Function(DOMHighResTimeStamp time, Object 
 typedef XRHandedness = String;
 
 abstract interface class XRInputSourceEvent {
-  factory XRInputSourceEvent(String type, XRInputSourceEventInit eventInitDict) =>
+  factory XRInputSourceEvent(String type_, XRInputSourceEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<XRInputSourceEvent>(
         'XRInputSourceEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Object get frame;
   XRInputSource get inputSource;
@@ -48,10 +48,10 @@ final class XRInputSourceEventInitValue implements XRInputSourceEventInit {
 }
 
 abstract interface class XRInputSourcesChangeEvent {
-  factory XRInputSourcesChangeEvent(String type, XRInputSourcesChangeEventInit eventInitDict) =>
+  factory XRInputSourcesChangeEvent(String type_, XRInputSourcesChangeEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<XRInputSourcesChangeEvent>(
         'XRInputSourcesChangeEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Object get session;
   List<XRInputSource> get added;
@@ -120,10 +120,10 @@ abstract interface class XRReferenceSpace {
 }
 
 abstract interface class XRReferenceSpaceEvent {
-  factory XRReferenceSpaceEvent(String type, XRReferenceSpaceEventInit eventInitDict) =>
+  factory XRReferenceSpaceEvent(String type_, XRReferenceSpaceEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<XRReferenceSpaceEvent>(
         'XRReferenceSpaceEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   XRReferenceSpace get referenceSpace;
   XRRigidTransform? get transform;
@@ -197,10 +197,10 @@ abstract interface class XRRigidTransform {
 }
 
 abstract interface class XRSessionEvent {
-  factory XRSessionEvent(String type, XRSessionEventInit eventInitDict) =>
+  factory XRSessionEvent(String type_, XRSessionEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<XRSessionEvent>(
         'XRSessionEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Object get session;
 }

@@ -187,20 +187,20 @@ final class MediaConfigurationValue implements MediaConfiguration {
 }
 
 abstract interface class MediaDecodingConfiguration {
-  MediaDecodingType get type;
-  set type(MediaDecodingType value);
+  MediaDecodingType get type_;
+  set type_(MediaDecodingType value);
   MediaCapabilitiesKeySystemConfiguration? get keySystemConfiguration;
   set keySystemConfiguration(MediaCapabilitiesKeySystemConfiguration? value);
 }
 
 final class MediaDecodingConfigurationValue implements MediaDecodingConfiguration {
   @override
-  MediaDecodingType type;
+  MediaDecodingType type_;
   @override
   MediaCapabilitiesKeySystemConfiguration? keySystemConfiguration;
 
   MediaDecodingConfigurationValue({
-    required this.type,
+    required this.type_,
     this.keySystemConfiguration,
   });
 }
@@ -208,16 +208,16 @@ final class MediaDecodingConfigurationValue implements MediaDecodingConfiguratio
 typedef MediaDecodingType = String;
 
 abstract interface class MediaEncodingConfiguration {
-  MediaEncodingType get type;
-  set type(MediaEncodingType value);
+  MediaEncodingType get type_;
+  set type_(MediaEncodingType value);
 }
 
 final class MediaEncodingConfigurationValue implements MediaEncodingConfiguration {
   @override
-  MediaEncodingType type;
+  MediaEncodingType type_;
 
   MediaEncodingConfigurationValue({
-    required this.type,
+    required this.type_,
   });
 }
 

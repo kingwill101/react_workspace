@@ -45,7 +45,7 @@ final class PerformanceObserverCallbackOptionsValue implements PerformanceObserv
 
 abstract interface class PerformanceObserverEntryList {
   PerformanceEntryList getEntries();
-  PerformanceEntryList getEntriesByType(String type);
-  PerformanceEntryList getEntriesByName(String name, [String? type]);
+  PerformanceEntryList getEntriesByType(String type_);
+  PerformanceEntryList getEntriesByName(String name, [String? type_]);
 }
 

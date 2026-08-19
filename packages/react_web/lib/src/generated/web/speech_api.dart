@@ -57,10 +57,10 @@ abstract interface class SpeechRecognitionAlternative {
 typedef SpeechRecognitionErrorCode = String;
 
 abstract interface class SpeechRecognitionErrorEvent {
-  factory SpeechRecognitionErrorEvent(String type, SpeechRecognitionErrorEventInit eventInitDict) =>
+  factory SpeechRecognitionErrorEvent(String type_, SpeechRecognitionErrorEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<SpeechRecognitionErrorEvent>(
         'SpeechRecognitionErrorEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   SpeechRecognitionErrorCode get error;
   String get message;
@@ -86,10 +86,10 @@ final class SpeechRecognitionErrorEventInitValue implements SpeechRecognitionErr
 }
 
 abstract interface class SpeechRecognitionEvent {
-  factory SpeechRecognitionEvent(String type, SpeechRecognitionEventInit eventInitDict) =>
+  factory SpeechRecognitionEvent(String type_, SpeechRecognitionEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<SpeechRecognitionEvent>(
         'SpeechRecognitionEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   int get resultIndex;
   SpeechRecognitionResultList get results;
@@ -141,10 +141,10 @@ abstract interface class SpeechSynthesis {
 typedef SpeechSynthesisErrorCode = String;
 
 abstract interface class SpeechSynthesisErrorEvent {
-  factory SpeechSynthesisErrorEvent(String type, SpeechSynthesisErrorEventInit eventInitDict) =>
+  factory SpeechSynthesisErrorEvent(String type_, SpeechSynthesisErrorEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<SpeechSynthesisErrorEvent>(
         'SpeechSynthesisErrorEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   SpeechSynthesisErrorCode get error;
 }
@@ -164,10 +164,10 @@ final class SpeechSynthesisErrorEventInitValue implements SpeechSynthesisErrorEv
 }
 
 abstract interface class SpeechSynthesisEvent {
-  factory SpeechSynthesisEvent(String type, SpeechSynthesisEventInit eventInitDict) =>
+  factory SpeechSynthesisEvent(String type_, SpeechSynthesisEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<SpeechSynthesisEvent>(
         'SpeechSynthesisEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   SpeechSynthesisUtterance get utterance;
   int get charIndex;

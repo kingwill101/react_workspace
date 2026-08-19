@@ -53,10 +53,10 @@ final class GamepadEffectParametersValue implements GamepadEffectParameters {
 }
 
 abstract interface class GamepadEvent {
-  factory GamepadEvent(String type, GamepadEventInit eventInitDict) =>
+  factory GamepadEvent(String type_, GamepadEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<GamepadEvent>(
         'GamepadEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Gamepad get gamepad;
 }

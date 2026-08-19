@@ -12,7 +12,7 @@ abstract interface class Selection {
   int get focusOffset;
   bool get isCollapsed;
   int get rangeCount;
-  String get type;
+  String get type_;
   String get direction;
   Range getRangeAt(int index);
   void addRange(Range range);

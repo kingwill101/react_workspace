@@ -110,13 +110,13 @@ abstract interface class Comment {
 }
 
 abstract interface class CustomEvent {
-  factory CustomEvent(String type, [CustomEventInit? eventInitDict]) =>
+  factory CustomEvent(String type_, [CustomEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<CustomEvent>(
         'CustomEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Object get detail;
-  void initCustomEvent(String type, [bool? bubbles, bool? cancelable, Object? detail]);
+  void initCustomEvent(String type_, [bool? bubbles, bool? cancelable, Object? detail]);
 }
 
 abstract interface class CustomEventInit {
@@ -196,12 +196,12 @@ final class ElementCreationOptionsValue implements ElementCreationOptions {
 }
 
 abstract interface class Event {
-  factory Event(String type, [EventInit? eventInitDict]) =>
+  factory Event(String type_, [EventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<Event>(
         'Event',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
-  String get type;
+  String get type_;
   EventTarget? get target;
   EventTarget? get srcElement;
   EventTarget? get currentTarget;
@@ -220,7 +220,7 @@ abstract interface class Event {
   bool get composed;
   bool get isTrusted;
   DOMHighResTimeStamp get timeStamp;
-  void initEvent(String type, [bool? bubbles, bool? cancelable]);
+  void initEvent(String type_, [bool? bubbles, bool? cancelable]);
 }
 
 abstract interface class EventInit {
@@ -271,8 +271,8 @@ abstract interface class EventTarget {
         'EventTarget',
         [],
       );
-  void addEventListener(String type, EventListener? callback, [Object? options]);
-  void removeEventListener(String type, EventListener? callback, [Object? options]);
+  void addEventListener(String type_, EventListener? callback, [Object? options]);
+  void removeEventListener(String type_, EventListener? callback, [Object? options]);
   bool dispatchEvent(Event event);
 }
 
@@ -354,7 +354,7 @@ final class MutationObserverInitValue implements MutationObserverInit {
 }
 
 abstract interface class MutationRecord {
-  String get type;
+  String get type_;
   Node get target;
   NodeList get addedNodes;
   NodeList get removedNodes;
@@ -631,17 +631,17 @@ abstract interface class XPathEvaluator {
       );
   XPathExpression createExpression(String expression, [XPathNSResolver? resolver]);
   Node createNSResolver(Node nodeResolver);
-  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type, XPathResult? result]);
+  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type_, XPathResult? result]);
 }
 
 abstract interface class XPathEvaluatorBase {
   XPathExpression createExpression(String expression, [XPathNSResolver? resolver]);
   Node createNSResolver(Node nodeResolver);
-  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type, XPathResult? result]);
+  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type_, XPathResult? result]);
 }
 
 abstract interface class XPathExpression {
-  XPathResult evaluate(Node contextNode, [int? type, XPathResult? result]);
+  XPathResult evaluate(Node contextNode, [int? type_, XPathResult? result]);
 }
 
 abstract interface class XPathNSResolver {

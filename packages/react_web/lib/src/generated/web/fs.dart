@@ -119,8 +119,8 @@ abstract interface class StorageManager {
 typedef WriteCommandType = String;
 
 abstract interface class WriteParams {
-  WriteCommandType get type;
-  set type(WriteCommandType value);
+  WriteCommandType get type_;
+  set type_(WriteCommandType value);
   int? get size;
   set size(int? value);
   int? get position;
@@ -131,7 +131,7 @@ abstract interface class WriteParams {
 
 final class WriteParamsValue implements WriteParams {
   @override
-  WriteCommandType type;
+  WriteCommandType type_;
   @override
   int? size;
   @override
@@ -140,7 +140,7 @@ final class WriteParamsValue implements WriteParams {
   Object? data;
 
   WriteParamsValue({
-    required this.type,
+    required this.type_,
     this.size,
     this.position,
     this.data,

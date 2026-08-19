@@ -6,10 +6,10 @@ import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class ContentVisibilityAutoStateChangeEvent {
-  factory ContentVisibilityAutoStateChangeEvent(String type, [ContentVisibilityAutoStateChangeEventInit? eventInitDict]) =>
+  factory ContentVisibilityAutoStateChangeEvent(String type_, [ContentVisibilityAutoStateChangeEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<ContentVisibilityAutoStateChangeEvent>(
         'ContentVisibilityAutoStateChangeEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   bool get skipped;
 }

@@ -53,10 +53,10 @@ abstract interface class RTCDTMFSender {
 }
 
 abstract interface class RTCDTMFToneChangeEvent {
-  factory RTCDTMFToneChangeEvent(String type, [RTCDTMFToneChangeEventInit? eventInitDict]) =>
+  factory RTCDTMFToneChangeEvent(String type_, [RTCDTMFToneChangeEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<RTCDTMFToneChangeEvent>(
         'RTCDTMFToneChangeEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   String get tone;
 }
@@ -76,10 +76,10 @@ final class RTCDTMFToneChangeEventInitValue implements RTCDTMFToneChangeEventIni
 }
 
 abstract interface class RTCDataChannelEvent {
-  factory RTCDataChannelEvent(String type, RTCDataChannelEventInit eventInitDict) =>
+  factory RTCDataChannelEvent(String type_, RTCDataChannelEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<RTCDataChannelEvent>(
         'RTCDataChannelEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   RTCDataChannel get channel;
 }
@@ -134,10 +134,10 @@ typedef RTCDtlsTransportState = String;
 typedef RTCErrorDetailType = String;
 
 abstract interface class RTCErrorEvent {
-  factory RTCErrorEvent(String type, RTCErrorEventInit eventInitDict) =>
+  factory RTCErrorEvent(String type_, RTCErrorEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<RTCErrorEvent>(
         'RTCErrorEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   RTCError get error;
 }
@@ -171,7 +171,7 @@ abstract interface class RTCIceCandidate {
   String? get address;
   RTCIceProtocol? get protocol;
   int? get port;
-  RTCIceCandidateType? get type;
+  RTCIceCandidateType? get type_;
   RTCIceTcpCandidateType? get tcpType;
   String? get relatedAddress;
   int? get relatedPort;
@@ -255,20 +255,20 @@ typedef RTCIceTransportPolicy = String;
 typedef RTCIceTransportState = String;
 
 abstract interface class RTCLocalSessionDescriptionInit {
-  RTCSdpType? get type;
-  set type(RTCSdpType? value);
+  RTCSdpType? get type_;
+  set type_(RTCSdpType? value);
   String? get sdp;
   set sdp(String? value);
 }
 
 final class RTCLocalSessionDescriptionInitValue implements RTCLocalSessionDescriptionInit {
   @override
-  RTCSdpType? type;
+  RTCSdpType? type_;
   @override
   String? sdp;
 
   RTCLocalSessionDescriptionInitValue({
-    this.type,
+    this.type_,
     this.sdp,
   });
 }
@@ -308,10 +308,10 @@ final class RTCOfferOptionsValue implements RTCOfferOptions {
 typedef RTCPeerConnectionErrorCallback = void Function(DOMException error,);
 
 abstract interface class RTCPeerConnectionIceErrorEvent {
-  factory RTCPeerConnectionIceErrorEvent(String type, RTCPeerConnectionIceErrorEventInit eventInitDict) =>
+  factory RTCPeerConnectionIceErrorEvent(String type_, RTCPeerConnectionIceErrorEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<RTCPeerConnectionIceErrorEvent>(
         'RTCPeerConnectionIceErrorEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   String? get address;
   int? get port;
@@ -355,10 +355,10 @@ final class RTCPeerConnectionIceErrorEventInitValue implements RTCPeerConnection
 }
 
 abstract interface class RTCPeerConnectionIceEvent {
-  factory RTCPeerConnectionIceEvent(String type, [RTCPeerConnectionIceEventInit? eventInitDict]) =>
+  factory RTCPeerConnectionIceEvent(String type_, [RTCPeerConnectionIceEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<RTCPeerConnectionIceEvent>(
         'RTCPeerConnectionIceEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   RTCIceCandidate? get candidate;
   String? get url;
@@ -645,7 +645,7 @@ abstract interface class RTCSessionDescription {
         'RTCSessionDescription',
         [descriptionInitDict],
       );
-  RTCSdpType get type;
+  RTCSdpType get type_;
   String get sdp;
   RTCSessionDescriptionInit toJSON();
 }
@@ -653,20 +653,20 @@ abstract interface class RTCSessionDescription {
 typedef RTCSessionDescriptionCallback = void Function(RTCSessionDescriptionInit description,);
 
 abstract interface class RTCSessionDescriptionInit {
-  RTCSdpType get type;
-  set type(RTCSdpType value);
+  RTCSdpType get type_;
+  set type_(RTCSdpType value);
   String? get sdp;
   set sdp(String? value);
 }
 
 final class RTCSessionDescriptionInitValue implements RTCSessionDescriptionInit {
   @override
-  RTCSdpType type;
+  RTCSdpType type_;
   @override
   String? sdp;
 
   RTCSessionDescriptionInitValue({
-    required this.type,
+    required this.type_,
     this.sdp,
   });
 }
@@ -684,8 +684,8 @@ typedef RTCSignalingState = String;
 abstract interface class RTCStats {
   DOMHighResTimeStamp get timestamp;
   set timestamp(DOMHighResTimeStamp value);
-  RTCStatsType get type;
-  set type(RTCStatsType value);
+  RTCStatsType get type_;
+  set type_(RTCStatsType value);
   String get id;
   set id(String value);
 }
@@ -694,13 +694,13 @@ final class RTCStatsValue implements RTCStats {
   @override
   DOMHighResTimeStamp timestamp;
   @override
-  RTCStatsType type;
+  RTCStatsType type_;
   @override
   String id;
 
   RTCStatsValue({
     required this.timestamp,
-    required this.type,
+    required this.type_,
     required this.id,
   });
 }
@@ -709,10 +709,10 @@ abstract interface class RTCStatsReport {
 }
 
 abstract interface class RTCTrackEvent {
-  factory RTCTrackEvent(String type, RTCTrackEventInit eventInitDict) =>
+  factory RTCTrackEvent(String type_, RTCTrackEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<RTCTrackEvent>(
         'RTCTrackEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   RTCRtpReceiver get receiver;
   MediaStreamTrack get track;

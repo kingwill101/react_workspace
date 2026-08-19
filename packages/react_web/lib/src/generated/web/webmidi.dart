@@ -17,10 +17,10 @@ abstract interface class MIDIAccess {
 }
 
 abstract interface class MIDIConnectionEvent {
-  factory MIDIConnectionEvent(String type, [MIDIConnectionEventInit? eventInitDict]) =>
+  factory MIDIConnectionEvent(String type_, [MIDIConnectionEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<MIDIConnectionEvent>(
         'MIDIConnectionEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   MIDIPort? get port;
 }
@@ -48,10 +48,10 @@ abstract interface class MIDIInputMap {
 }
 
 abstract interface class MIDIMessageEvent {
-  factory MIDIMessageEvent(String type, [MIDIMessageEventInit? eventInitDict]) =>
+  factory MIDIMessageEvent(String type_, [MIDIMessageEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<MIDIMessageEvent>(
         'MIDIMessageEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Object get data;
 }
@@ -101,7 +101,7 @@ abstract interface class MIDIPort {
   String get id;
   String? get manufacturer;
   String? get name;
-  MIDIPortType get type;
+  MIDIPortType get type_;
   String? get version;
   MIDIPortDeviceState get state;
   MIDIPortConnectionState get connection;

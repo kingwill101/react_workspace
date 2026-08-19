@@ -48,7 +48,7 @@ abstract interface class MediaSource {
    set onsourceended(EventHandler value);
   EventHandler get onsourceclose;
    set onsourceclose(EventHandler value);
-  SourceBuffer addSourceBuffer(String type);
+  SourceBuffer addSourceBuffer(String type_);
   void removeSourceBuffer(SourceBuffer sourceBuffer);
   void endOfStream([EndOfStreamError? error]);
   void setLiveSeekableRange(double start, double end);
@@ -85,7 +85,7 @@ abstract interface class SourceBuffer {
    set onabort(EventHandler value);
   void appendBuffer(BufferSource data);
   void abort();
-  void changeType(String type);
+  void changeType(String type_);
   void remove(double start, double end);
 }
 

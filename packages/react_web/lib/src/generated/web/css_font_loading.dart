@@ -123,10 +123,10 @@ abstract interface class FontFaceSet {
 }
 
 abstract interface class FontFaceSetLoadEvent {
-  factory FontFaceSetLoadEvent(Object type, [FontFaceSetLoadEventInit? eventInitDict]) =>
+  factory FontFaceSetLoadEvent(Object type_, [FontFaceSetLoadEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<FontFaceSetLoadEvent>(
         'FontFaceSetLoadEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   List<FontFace> get fontfaces;
 }

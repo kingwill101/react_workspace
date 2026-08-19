@@ -85,10 +85,10 @@ final class TaskControllerInitValue implements TaskControllerInit {
 typedef TaskPriority = String;
 
 abstract interface class TaskPriorityChangeEvent {
-  factory TaskPriorityChangeEvent(String type, TaskPriorityChangeEventInit priorityChangeEventInitDict) =>
+  factory TaskPriorityChangeEvent(String type_, TaskPriorityChangeEventInit priorityChangeEventInitDict) =>
       WebRuntime.current.createWebObject<TaskPriorityChangeEvent>(
         'TaskPriorityChangeEvent',
-        [type, priorityChangeEventInitDict],
+        [type_, priorityChangeEventInitDict],
       );
   TaskPriority get previousPriority;
 }

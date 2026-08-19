@@ -11,8 +11,8 @@ abstract interface class ItemDetails {
   set title(String value);
   PaymentCurrencyAmount get price;
   set price(PaymentCurrencyAmount value);
-  ItemType? get type;
-  set type(ItemType? value);
+  ItemType? get type_;
+  set type_(ItemType? value);
   String? get description;
   set description(String? value);
   List<String>? get iconURLs;
@@ -37,7 +37,7 @@ final class ItemDetailsValue implements ItemDetails {
   @override
   PaymentCurrencyAmount price;
   @override
-  ItemType? type;
+  ItemType? type_;
   @override
   String? description;
   @override
@@ -57,7 +57,7 @@ final class ItemDetailsValue implements ItemDetails {
     required this.itemId,
     required this.title,
     required this.price,
-    this.type,
+    this.type_,
     this.description,
     this.iconURLs,
     this.subscriptionPeriod,

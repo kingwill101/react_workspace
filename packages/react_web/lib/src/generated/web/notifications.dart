@@ -76,10 +76,10 @@ final class NotificationActionValue implements NotificationAction {
 typedef NotificationDirection = String;
 
 abstract interface class NotificationEvent {
-  factory NotificationEvent(String type, NotificationEventInit eventInitDict) =>
+  factory NotificationEvent(String type_, NotificationEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<NotificationEvent>(
         'NotificationEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Notification get notification;
   String get action;

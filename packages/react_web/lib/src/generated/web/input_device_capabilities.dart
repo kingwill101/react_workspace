@@ -26,10 +26,10 @@ final class InputDeviceCapabilitiesInitValue implements InputDeviceCapabilitiesI
 }
 
 abstract interface class UIEvent {
-  factory UIEvent(String type, [UIEventInit? eventInitDict]) =>
+  factory UIEvent(String type_, [UIEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<UIEvent>(
         'UIEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Window? get view;
   int get detail;

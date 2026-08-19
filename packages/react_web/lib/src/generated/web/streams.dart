@@ -320,8 +320,8 @@ abstract interface class UnderlyingSink {
   set close(UnderlyingSinkCloseCallback? value);
   UnderlyingSinkAbortCallback? get abort;
   set abort(UnderlyingSinkAbortCallback? value);
-  Object? get type;
-  set type(Object? value);
+  Object? get type_;
+  set type_(Object? value);
 }
 
 final class UnderlyingSinkValue implements UnderlyingSink {
@@ -334,14 +334,14 @@ final class UnderlyingSinkValue implements UnderlyingSink {
   @override
   UnderlyingSinkAbortCallback? abort;
   @override
-  Object? type;
+  Object? type_;
 
   UnderlyingSinkValue({
     this.start,
     this.write,
     this.close,
     this.abort,
-    this.type,
+    this.type_,
   });
 }
 
@@ -360,8 +360,8 @@ abstract interface class UnderlyingSource {
   set pull(UnderlyingSourcePullCallback? value);
   UnderlyingSourceCancelCallback? get cancel;
   set cancel(UnderlyingSourceCancelCallback? value);
-  ReadableStreamType? get type;
-  set type(ReadableStreamType? value);
+  ReadableStreamType? get type_;
+  set type_(ReadableStreamType? value);
   int? get autoAllocateChunkSize;
   set autoAllocateChunkSize(int? value);
 }
@@ -374,7 +374,7 @@ final class UnderlyingSourceValue implements UnderlyingSource {
   @override
   UnderlyingSourceCancelCallback? cancel;
   @override
-  ReadableStreamType? type;
+  ReadableStreamType? type_;
   @override
   int? autoAllocateChunkSize;
 
@@ -382,7 +382,7 @@ final class UnderlyingSourceValue implements UnderlyingSource {
     this.start,
     this.pull,
     this.cancel,
-    this.type,
+    this.type_,
     this.autoAllocateChunkSize,
   });
 }

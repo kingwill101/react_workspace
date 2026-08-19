@@ -16,7 +16,7 @@ final class SsrAngleInstancedArrays implements ANGLE_instanced_arrays {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void drawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum type, GLintptr offset, GLsizei primcount) => throw UnsupportedWebApiError('ANGLE_instanced_arrays.drawElementsInstancedANGLE'
+  void drawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum type_, GLintptr offset, GLsizei primcount) => throw UnsupportedWebApiError('ANGLE_instanced_arrays.drawElementsInstancedANGLE'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -318,7 +318,7 @@ final class SsrAnimationeffect implements AnimationEffect {
 }
 
 final class SsrAnimationevent implements AnimationEvent {
-  factory SsrAnimationevent(Object type, [AnimationEventInit? animationEventInitDict]) {
+  factory SsrAnimationevent(Object type_, [AnimationEventInit? animationEventInitDict]) {
     throw UnsupportedWebApiError('AnimationEvent constructor'
       , exposed: 'Window'
     );
@@ -338,7 +338,7 @@ final class SsrAnimationevent implements AnimationEvent {
 }
 
 final class SsrAnimationplaybackevent implements AnimationPlaybackEvent {
-  factory SsrAnimationplaybackevent(String type, [AnimationPlaybackEventInit? eventInitDict]) {
+  factory SsrAnimationplaybackevent(String type_, [AnimationPlaybackEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('AnimationPlaybackEvent constructor'
       , exposed: 'Window'
     );
@@ -730,7 +730,7 @@ final class SsrAudioparammap implements AudioParamMap {
 }
 
 final class SsrAudioprocessingevent implements AudioProcessingEvent {
-  factory SsrAudioprocessingevent(String type, AudioProcessingEventInit eventInitDict) {
+  factory SsrAudioprocessingevent(String type_, AudioProcessingEventInit eventInitDict) {
     throw UnsupportedWebApiError('AudioProcessingEvent constructor'
       , exposed: 'Window'
     );
@@ -1184,11 +1184,11 @@ final class SsrBiquadfilternode implements BiquadFilterNode {
     );
   }
   @override
-  BiquadFilterType get type => throw UnsupportedWebApiError('BiquadFilterNode.type'
+  BiquadFilterType get type_ => throw UnsupportedWebApiError('BiquadFilterNode.type'
       , exposed: 'Window'
   );
   @override
-  set type(BiquadFilterType value) => throw UnsupportedWebApiError('BiquadFilterNode.type'
+  set type_(BiquadFilterType value) => throw UnsupportedWebApiError('BiquadFilterNode.type'
       , exposed: 'Window'
   );
   @override
@@ -1224,7 +1224,7 @@ final class SsrBlob implements Blob {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  String get type => throw UnsupportedWebApiError('Blob.type'
+  String get type_ => throw UnsupportedWebApiError('Blob.type'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -1246,7 +1246,7 @@ final class SsrBlob implements Blob {
 }
 
 final class SsrBlobevent implements BlobEvent {
-  factory SsrBlobevent(String type, BlobEventInit eventInitDict) {
+  factory SsrBlobevent(String type_, BlobEventInit eventInitDict) {
     throw UnsupportedWebApiError('BlobEvent constructor'
       , exposed: 'Window'
     );
@@ -1924,7 +1924,7 @@ final class SsrCssnumericvalue implements CSSNumericValue {
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
   );
   @override
-  CSSNumericType type() => throw UnsupportedWebApiError('CSSNumericValue.type'
+  CSSNumericType type_() => throw UnsupportedWebApiError('CSSNumericValue.type'
       , exposed: '[{value: Window}, {value: Worker}, {value: PaintWorklet}, {value: LayoutWorklet}]'
   );
 }
@@ -2057,7 +2057,7 @@ final class SsrCssrule implements CSSRule {
       , exposed: 'Window'
   );
   @override
-  int get type => throw UnsupportedWebApiError('CSSRule.type'
+  int get type_ => throw UnsupportedWebApiError('CSSRule.type'
       , exposed: 'Window'
   );
 }
@@ -3061,7 +3061,7 @@ final class SsrClient implements Client {
       , exposed: 'ServiceWorker'
   );
   @override
-  ClientType get type => throw UnsupportedWebApiError('Client.type'
+  ClientType get type_ => throw UnsupportedWebApiError('Client.type'
       , exposed: 'ServiceWorker'
   );
   @override
@@ -3119,7 +3119,7 @@ final class SsrClipboard implements Clipboard {
 }
 
 final class SsrClipboardevent implements ClipboardEvent {
-  factory SsrClipboardevent(String type, [ClipboardEventInit? eventInitDict]) {
+  factory SsrClipboardevent(String type_, [ClipboardEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ClipboardEvent constructor'
       , exposed: 'Window'
     );
@@ -3145,13 +3145,13 @@ final class SsrClipboarditem implements ClipboardItem {
       , exposed: 'Window'
   );
   @override
-  Future<Blob> getType(String type) => throw UnsupportedWebApiError('ClipboardItem.getType'
+  Future<Blob> getType(String type_) => throw UnsupportedWebApiError('ClipboardItem.getType'
       , exposed: 'Window'
   );
 }
 
 final class SsrCloseevent implements CloseEvent {
-  factory SsrCloseevent(String type, [CloseEventInit? eventInitDict]) {
+  factory SsrCloseevent(String type_, [CloseEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('CloseEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -3179,7 +3179,7 @@ final class SsrComment implements Comment {
 }
 
 final class SsrCompositionevent implements CompositionEvent {
-  factory SsrCompositionevent(String type, [CompositionEventInit? eventInitDict]) {
+  factory SsrCompositionevent(String type_, [CompositionEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('CompositionEvent constructor'
       , exposed: 'Window'
     );
@@ -3223,7 +3223,7 @@ final class SsrConstantsourcenode implements ConstantSourceNode {
 }
 
 final class SsrContentvisibilityautostatechangeevent implements ContentVisibilityAutoStateChangeEvent {
-  factory SsrContentvisibilityautostatechangeevent(String type, [ContentVisibilityAutoStateChangeEventInit? eventInitDict]) {
+  factory SsrContentvisibilityautostatechangeevent(String type_, [ContentVisibilityAutoStateChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ContentVisibilityAutoStateChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -3259,7 +3259,7 @@ final class SsrConvolvernode implements ConvolverNode {
 }
 
 final class SsrCookiechangeevent implements CookieChangeEvent {
-  factory SsrCookiechangeevent(String type, [CookieChangeEventInit? eventInitDict]) {
+  factory SsrCookiechangeevent(String type_, [CookieChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('CookieChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -3353,7 +3353,7 @@ final class SsrCredential implements Credential {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('Credential.type'
+  String get type_ => throw UnsupportedWebApiError('Credential.type'
       , exposed: 'Window'
   );
 }
@@ -3409,7 +3409,7 @@ final class SsrCryptokey implements CryptoKey {
     );
   }
   @override
-  KeyType get type => throw UnsupportedWebApiError('CryptoKey.type'
+  KeyType get type_ => throw UnsupportedWebApiError('CryptoKey.type'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -3455,7 +3455,7 @@ final class SsrCustomelementregistry implements CustomElementRegistry {
 }
 
 final class SsrCustomevent implements CustomEvent {
-  factory SsrCustomevent(String type, [CustomEventInit? eventInitDict]) {
+  factory SsrCustomevent(String type_, [CustomEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('CustomEvent constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -3465,7 +3465,7 @@ final class SsrCustomevent implements CustomEvent {
       , exposed: '{type: *, value: null}'
   );
   @override
-  void initCustomEvent(String type, [bool? bubbles, bool? cancelable, Object? detail]) => throw UnsupportedWebApiError('CustomEvent.initCustomEvent'
+  void initCustomEvent(String type_, [bool? bubbles, bool? cancelable, Object? detail]) => throw UnsupportedWebApiError('CustomEvent.initCustomEvent'
       , exposed: '{type: *, value: null}'
   );
 }
@@ -3933,7 +3933,7 @@ final class SsrDomparser implements DOMParser {
     );
   }
   @override
-  Document parseFromString(Object string, DOMParserSupportedType type) => throw UnsupportedWebApiError('DOMParser.parseFromString'
+  Document parseFromString(Object string_, DOMParserSupportedType type_) => throw UnsupportedWebApiError('DOMParser.parseFromString'
       , exposed: 'Window'
   );
 }
@@ -4157,7 +4157,7 @@ final class SsrDomstringlist implements DOMStringList {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  bool contains(String string) => throw UnsupportedWebApiError('DOMStringList.contains'
+  bool contains(String string_) => throw UnsupportedWebApiError('DOMStringList.contains'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
 }
@@ -4285,7 +4285,7 @@ final class SsrDatatransferitem implements DataTransferItem {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('DataTransferItem.type'
+  String get type_ => throw UnsupportedWebApiError('DataTransferItem.type'
       , exposed: 'Window'
   );
   @override
@@ -4309,7 +4309,7 @@ final class SsrDatatransferitemlist implements DataTransferItemList {
       , exposed: 'Window'
   );
   @override
-  DataTransferItem? add(String data, String type) => throw UnsupportedWebApiError('DataTransferItemList.add'
+  DataTransferItem? add(String data, String type_) => throw UnsupportedWebApiError('DataTransferItemList.add'
       , exposed: 'Window'
   );
   @override
@@ -4403,7 +4403,7 @@ final class SsrDelaynode implements DelayNode {
 }
 
 final class SsrDevicemotionevent implements DeviceMotionEvent {
-  factory SsrDevicemotionevent(String type, [DeviceMotionEventInit? eventInitDict]) {
+  factory SsrDevicemotionevent(String type_, [DeviceMotionEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('DeviceMotionEvent constructor'
       , exposed: 'Window'
     );
@@ -4467,7 +4467,7 @@ final class SsrDevicemotioneventrotationrate implements DeviceMotionEventRotatio
 }
 
 final class SsrDeviceorientationevent implements DeviceOrientationEvent {
-  factory SsrDeviceorientationevent(String type, [DeviceOrientationEventInit? eventInitDict]) {
+  factory SsrDeviceorientationevent(String type_, [DeviceOrientationEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('DeviceOrientationEvent constructor'
       , exposed: 'Window'
     );
@@ -4597,7 +4597,7 @@ final class SsrDocument implements Document {
       , exposed: 'Window'
   );
   @override
-  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type, XPathResult? result]) => throw UnsupportedWebApiError('Document.evaluate'
+  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type_, XPathResult? result]) => throw UnsupportedWebApiError('Document.evaluate'
       , exposed: 'Window'
   );
   @override
@@ -5955,7 +5955,7 @@ final class SsrDocumenttype implements DocumentType {
 }
 
 final class SsrDragevent implements DragEvent {
-  factory SsrDragevent(String type, [DragEventInit? eventInitDict]) {
+  factory SsrDragevent(String type_, [DragEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('DragEvent constructor'
       , exposed: 'Window'
     );
@@ -6917,7 +6917,7 @@ final class SsrElement implements Element {
       , exposed: 'Window'
   );
   @override
-  void insertAdjacentHTML(String position, Object string) => throw UnsupportedWebApiError('Element.insertAdjacentHTML'
+  void insertAdjacentHTML(String position, Object string_) => throw UnsupportedWebApiError('Element.insertAdjacentHTML'
       , exposed: 'Window'
   );
   @override
@@ -7405,7 +7405,7 @@ final class SsrEncodedvideochunk implements EncodedVideoChunk {
     );
   }
   @override
-  EncodedVideoChunkType get type => throw UnsupportedWebApiError('EncodedVideoChunk.type'
+  EncodedVideoChunkType get type_ => throw UnsupportedWebApiError('EncodedVideoChunk.type'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
   );
   @override
@@ -7427,7 +7427,7 @@ final class SsrEncodedvideochunk implements EncodedVideoChunk {
 }
 
 final class SsrErrorevent implements ErrorEvent {
-  factory SsrErrorevent(String type, [ErrorEventInit? eventInitDict]) {
+  factory SsrErrorevent(String type_, [ErrorEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ErrorEvent constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -7455,13 +7455,13 @@ final class SsrErrorevent implements ErrorEvent {
 }
 
 final class SsrEvent implements Event {
-  factory SsrEvent(String type, [EventInit? eventInitDict]) {
+  factory SsrEvent(String type_, [EventInit? eventInitDict]) {
     throw UnsupportedWebApiError('Event constructor'
       , exposed: '{type: *, value: null}'
     );
   }
   @override
-  String get type => throw UnsupportedWebApiError('Event.type'
+  String get type_ => throw UnsupportedWebApiError('Event.type'
       , exposed: '{type: *, value: null}'
   );
   @override
@@ -7537,7 +7537,7 @@ final class SsrEvent implements Event {
       , exposed: '{type: *, value: null}'
   );
   @override
-  void initEvent(String type, [bool? bubbles, bool? cancelable]) => throw UnsupportedWebApiError('Event.initEvent'
+  void initEvent(String type_, [bool? bubbles, bool? cancelable]) => throw UnsupportedWebApiError('Event.initEvent'
       , exposed: '{type: *, value: null}'
   );
 }
@@ -7605,11 +7605,11 @@ final class SsrEventtarget implements EventTarget {
     );
   }
   @override
-  void addEventListener(String type, EventListener? callback, [Object? options]) => throw UnsupportedWebApiError('EventTarget.addEventListener'
+  void addEventListener(String type_, EventListener? callback, [Object? options]) => throw UnsupportedWebApiError('EventTarget.addEventListener'
       , exposed: '{type: *, value: null}'
   );
   @override
-  void removeEventListener(String type, EventListener? callback, [Object? options]) => throw UnsupportedWebApiError('EventTarget.removeEventListener'
+  void removeEventListener(String type_, EventListener? callback, [Object? options]) => throw UnsupportedWebApiError('EventTarget.removeEventListener'
       , exposed: '{type: *, value: null}'
   );
   @override
@@ -7619,7 +7619,7 @@ final class SsrEventtarget implements EventTarget {
 }
 
 final class SsrExtendablecookiechangeevent implements ExtendableCookieChangeEvent {
-  factory SsrExtendablecookiechangeevent(String type, [ExtendableCookieChangeEventInit? eventInitDict]) {
+  factory SsrExtendablecookiechangeevent(String type_, [ExtendableCookieChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ExtendableCookieChangeEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -7635,7 +7635,7 @@ final class SsrExtendablecookiechangeevent implements ExtendableCookieChangeEven
 }
 
 final class SsrExtendableevent implements ExtendableEvent {
-  factory SsrExtendableevent(String type, [ExtendableEventInit? eventInitDict]) {
+  factory SsrExtendableevent(String type_, [ExtendableEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ExtendableEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -7647,7 +7647,7 @@ final class SsrExtendableevent implements ExtendableEvent {
 }
 
 final class SsrExtendablemessageevent implements ExtendableMessageEvent {
-  factory SsrExtendablemessageevent(String type, [ExtendableMessageEventInit? eventInitDict]) {
+  factory SsrExtendablemessageevent(String type_, [ExtendableMessageEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ExtendableMessageEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -7691,7 +7691,7 @@ final class SsrExternal implements External {
 }
 
 final class SsrFetchevent implements FetchEvent {
-  factory SsrFetchevent(String type, FetchEventInit eventInitDict) {
+  factory SsrFetchevent(String type_, FetchEventInit eventInitDict) {
     throw UnsupportedWebApiError('FetchEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -8083,7 +8083,7 @@ final class SsrFilesystemwritablefilestream implements FileSystemWritableFileStr
 }
 
 final class SsrFocusevent implements FocusEvent {
-  factory SsrFocusevent(String type, [FocusEventInit? eventInitDict]) {
+  factory SsrFocusevent(String type_, [FocusEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('FocusEvent constructor'
       , exposed: 'Window'
     );
@@ -8255,7 +8255,7 @@ final class SsrFontfaceset implements FontFaceSet {
 }
 
 final class SsrFontfacesetloadevent implements FontFaceSetLoadEvent {
-  factory SsrFontfacesetloadevent(Object type, [FontFaceSetLoadEventInit? eventInitDict]) {
+  factory SsrFontfacesetloadevent(Object type_, [FontFaceSetLoadEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('FontFaceSetLoadEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -8299,7 +8299,7 @@ final class SsrFormdata implements FormData {
 }
 
 final class SsrFormdataevent implements FormDataEvent {
-  factory SsrFormdataevent(String type, FormDataEventInit eventInitDict) {
+  factory SsrFormdataevent(String type_, FormDataEventInit eventInitDict) {
     throw UnsupportedWebApiError('FormDataEvent constructor'
       , exposed: 'Window'
     );
@@ -8379,7 +8379,7 @@ final class SsrGamepadbutton implements GamepadButton {
 }
 
 final class SsrGamepadevent implements GamepadEvent {
-  factory SsrGamepadevent(String type, GamepadEventInit eventInitDict) {
+  factory SsrGamepadevent(String type_, GamepadEventInit eventInitDict) {
     throw UnsupportedWebApiError('GamepadEvent constructor'
       , exposed: 'Window'
     );
@@ -8401,7 +8401,7 @@ final class SsrGamepadhapticactuator implements GamepadHapticActuator {
       , exposed: 'Window'
   );
   @override
-  Future<GamepadHapticsResult> playEffect(GamepadHapticEffectType type, [GamepadEffectParameters? params]) => throw UnsupportedWebApiError('GamepadHapticActuator.playEffect'
+  Future<GamepadHapticsResult> playEffect(GamepadHapticEffectType type_, [GamepadEffectParameters? params]) => throw UnsupportedWebApiError('GamepadHapticActuator.playEffect'
       , exposed: 'Window'
   );
   @override
@@ -8697,11 +8697,11 @@ final class SsrHtmlanchorelement implements HTMLAnchorElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLAnchorElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLAnchorElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLAnchorElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLAnchorElement.type'
       , exposed: 'Window'
   );
   @override
@@ -9293,11 +9293,11 @@ final class SsrHtmlbuttonelement implements HTMLButtonElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLButtonElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLButtonElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLButtonElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLButtonElement.type'
       , exposed: 'Window'
   );
   @override
@@ -9365,11 +9365,11 @@ final class SsrHtmlcanvaselement implements HTMLCanvasElement {
       , exposed: 'Window'
   );
   @override
-  String toDataURL([String? type, Object? quality]) => throw UnsupportedWebApiError('HTMLCanvasElement.toDataURL'
+  String toDataURL([String? type_, Object? quality]) => throw UnsupportedWebApiError('HTMLCanvasElement.toDataURL'
       , exposed: 'Window'
   );
   @override
-  void toBlob(BlobCallback callback, [String? type, Object? quality]) => throw UnsupportedWebApiError('HTMLCanvasElement.toBlob'
+  void toBlob(BlobCallback callback, [String? type_, Object? quality]) => throw UnsupportedWebApiError('HTMLCanvasElement.toBlob'
       , exposed: 'Window'
   );
   @override
@@ -10613,11 +10613,11 @@ final class SsrHtmlembedelement implements HTMLEmbedElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLEmbedElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLEmbedElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLEmbedElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLEmbedElement.type'
       , exposed: 'Window'
   );
   @override
@@ -10685,7 +10685,7 @@ final class SsrHtmlfieldsetelement implements HTMLFieldSetElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLFieldSetElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLFieldSetElement.type'
       , exposed: 'Window'
   );
   @override
@@ -11773,7 +11773,7 @@ final class SsrHtmlinputelement implements HTMLInputElement {
       , exposed: 'Window'
   );
   @override
-  HTMLDataListElement? get list => throw UnsupportedWebApiError('HTMLInputElement.list'
+  HTMLDataListElement? get list_ => throw UnsupportedWebApiError('HTMLInputElement.list'
       , exposed: 'Window'
   );
   @override
@@ -11881,11 +11881,11 @@ final class SsrHtmlinputelement implements HTMLInputElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLInputElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLInputElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLInputElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLInputElement.type'
       , exposed: 'Window'
   );
   @override
@@ -12037,11 +12037,11 @@ final class SsrHtmllielement implements HTMLLIElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLLIElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLLIElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLLIElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLLIElement.type'
       , exposed: 'Window'
   );
 }
@@ -12161,11 +12161,11 @@ final class SsrHtmllinkelement implements HTMLLinkElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLLinkElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLLinkElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLLinkElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLLinkElement.type'
       , exposed: 'Window'
   );
   @override
@@ -12453,7 +12453,7 @@ final class SsrHtmlmediaelement implements HTMLMediaElement {
       , exposed: 'Window'
   );
   @override
-  CanPlayTypeResult canPlayType(String type) => throw UnsupportedWebApiError('HTMLMediaElement.canPlayType'
+  CanPlayTypeResult canPlayType(String type_) => throw UnsupportedWebApiError('HTMLMediaElement.canPlayType'
       , exposed: 'Window'
   );
   @override
@@ -12785,11 +12785,11 @@ final class SsrHtmlolistelement implements HTMLOListElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLOListElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLOListElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLOListElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLOListElement.type'
       , exposed: 'Window'
   );
   @override
@@ -12817,11 +12817,11 @@ final class SsrHtmlobjectelement implements HTMLObjectElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLObjectElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLObjectElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLObjectElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLObjectElement.type'
       , exposed: 'Window'
   );
   @override
@@ -13121,7 +13121,7 @@ final class SsrHtmloutputelement implements HTMLOutputElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLOutputElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLOutputElement.type'
       , exposed: 'Window'
   );
   @override
@@ -13209,11 +13209,11 @@ final class SsrHtmlparamelement implements HTMLParamElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLParamElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLParamElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLParamElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLParamElement.type'
       , exposed: 'Window'
   );
   @override
@@ -13321,11 +13321,11 @@ final class SsrHtmlscriptelement implements HTMLScriptElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLScriptElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLScriptElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLScriptElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLScriptElement.type'
       , exposed: 'Window'
   );
   @override
@@ -13477,7 +13477,7 @@ final class SsrHtmlselectelement implements HTMLSelectElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLSelectElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLSelectElement.type'
       , exposed: 'Window'
   );
   @override
@@ -13605,11 +13605,11 @@ final class SsrHtmlsourceelement implements HTMLSourceElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLSourceElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLSourceElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLSourceElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLSourceElement.type'
       , exposed: 'Window'
   );
   @override
@@ -13689,11 +13689,11 @@ final class SsrHtmlstyleelement implements HTMLStyleElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLStyleElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLStyleElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLStyleElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLStyleElement.type'
       , exposed: 'Window'
   );
 }
@@ -14313,7 +14313,7 @@ final class SsrHtmltextareaelement implements HTMLTextAreaElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLTextAreaElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLTextAreaElement.type'
       , exposed: 'Window'
   );
   @override
@@ -14505,11 +14505,11 @@ final class SsrHtmlulistelement implements HTMLUListElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('HTMLUListElement.type'
+  String get type_ => throw UnsupportedWebApiError('HTMLUListElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('HTMLUListElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('HTMLUListElement.type'
       , exposed: 'Window'
   );
 }
@@ -14611,7 +14611,7 @@ final class SsrHtmlvideoelement implements HTMLVideoElement {
 }
 
 final class SsrHashchangeevent implements HashChangeEvent {
-  factory SsrHashchangeevent(String type, [HashChangeEventInit? eventInitDict]) {
+  factory SsrHashchangeevent(String type_, [HashChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('HashChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -14673,11 +14673,11 @@ final class SsrHighlight implements Highlight {
       , exposed: 'Window'
   );
   @override
-  HighlightType get type => throw UnsupportedWebApiError('Highlight.type'
+  HighlightType get type_ => throw UnsupportedWebApiError('Highlight.type'
       , exposed: 'Window'
   );
   @override
-  set type(HighlightType value) => throw UnsupportedWebApiError('Highlight.type'
+  set type_(HighlightType value) => throw UnsupportedWebApiError('Highlight.type'
       , exposed: 'Window'
   );
 }
@@ -15195,7 +15195,7 @@ final class SsrIdbtransaction implements IDBTransaction {
 }
 
 final class SsrIdbversionchangeevent implements IDBVersionChangeEvent {
-  factory SsrIdbversionchangeevent(String type, [IDBVersionChangeEventInit? eventInitDict]) {
+  factory SsrIdbversionchangeevent(String type_, [IDBVersionChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('IDBVersionChangeEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -15316,7 +15316,7 @@ final class SsrInputdeviceinfo implements InputDeviceInfo {
 }
 
 final class SsrInputevent implements InputEvent {
-  factory SsrInputevent(String type, [InputEventInit? eventInitDict]) {
+  factory SsrInputevent(String type_, [InputEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('InputEvent constructor'
       , exposed: 'Window'
     );
@@ -15432,7 +15432,7 @@ final class SsrKhrParallelShaderCompile implements KHR_parallel_shader_compile {
 }
 
 final class SsrKeyboardevent implements KeyboardEvent {
-  factory SsrKeyboardevent(String type, [KeyboardEventInit? eventInitDict]) {
+  factory SsrKeyboardevent(String type_, [KeyboardEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('KeyboardEvent constructor'
       , exposed: 'Window'
     );
@@ -15737,7 +15737,7 @@ final class SsrMidiaccess implements MIDIAccess {
 }
 
 final class SsrMidiconnectionevent implements MIDIConnectionEvent {
-  factory SsrMidiconnectionevent(String type, [MIDIConnectionEventInit? eventInitDict]) {
+  factory SsrMidiconnectionevent(String type_, [MIDIConnectionEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MIDIConnectionEvent constructor'
       , exposed: 'Window'
     );
@@ -15773,7 +15773,7 @@ final class SsrMidiinputmap implements MIDIInputMap {
 }
 
 final class SsrMidimessageevent implements MIDIMessageEvent {
-  factory SsrMidimessageevent(String type, [MIDIMessageEventInit? eventInitDict]) {
+  factory SsrMidimessageevent(String type_, [MIDIMessageEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MIDIMessageEvent constructor'
       , exposed: 'Window'
     );
@@ -15827,7 +15827,7 @@ final class SsrMidiport implements MIDIPort {
       , exposed: 'Window'
   );
   @override
-  MIDIPortType get type => throw UnsupportedWebApiError('MIDIPort.type'
+  MIDIPortType get type_ => throw UnsupportedWebApiError('MIDIPort.type'
       , exposed: 'Window'
   );
   @override
@@ -16825,7 +16825,7 @@ final class SsrMediaelementaudiosourcenode implements MediaElementAudioSourceNod
 }
 
 final class SsrMediaencryptedevent implements MediaEncryptedEvent {
-  factory SsrMediaencryptedevent(String type, [MediaEncryptedEventInit? eventInitDict]) {
+  factory SsrMediaencryptedevent(String type_, [MediaEncryptedEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MediaEncryptedEvent constructor'
       , exposed: 'Window'
     );
@@ -16857,7 +16857,7 @@ final class SsrMediaerror implements MediaError {
 }
 
 final class SsrMediakeymessageevent implements MediaKeyMessageEvent {
-  factory SsrMediakeymessageevent(String type, MediaKeyMessageEventInit eventInitDict) {
+  factory SsrMediakeymessageevent(String type_, MediaKeyMessageEventInit eventInitDict) {
     throw UnsupportedWebApiError('MediaKeyMessageEvent constructor'
       , exposed: 'Window'
     );
@@ -17097,7 +17097,7 @@ final class SsrMediaquerylist implements MediaQueryList {
 }
 
 final class SsrMediaquerylistevent implements MediaQueryListEvent {
-  factory SsrMediaquerylistevent(Object type, [MediaQueryListEventInit? eventInitDict]) {
+  factory SsrMediaquerylistevent(Object type_, [MediaQueryListEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MediaQueryListEvent constructor'
       , exposed: 'Window'
     );
@@ -17295,7 +17295,7 @@ final class SsrMediasource implements MediaSource {
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
   );
   @override
-  SourceBuffer addSourceBuffer(String type) => throw UnsupportedWebApiError('MediaSource.addSourceBuffer'
+  SourceBuffer addSourceBuffer(String type_) => throw UnsupportedWebApiError('MediaSource.addSourceBuffer'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
   );
   @override
@@ -17519,7 +17519,7 @@ final class SsrMediastreamtrackaudiosourcenode implements MediaStreamTrackAudioS
 }
 
 final class SsrMediastreamtrackevent implements MediaStreamTrackEvent {
-  factory SsrMediastreamtrackevent(String type, MediaStreamTrackEventInit eventInitDict) {
+  factory SsrMediastreamtrackevent(String type_, MediaStreamTrackEventInit eventInitDict) {
     throw UnsupportedWebApiError('MediaStreamTrackEvent constructor'
       , exposed: 'Window'
     );
@@ -17559,7 +17559,7 @@ final class SsrMessagechannel implements MessageChannel {
 }
 
 final class SsrMessageevent implements MessageEvent {
-  factory SsrMessageevent(String type, [MessageEventInit? eventInitDict]) {
+  factory SsrMessageevent(String type_, [MessageEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MessageEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}, {value: AudioWorklet}]'
     );
@@ -17585,7 +17585,7 @@ final class SsrMessageevent implements MessageEvent {
       , exposed: '[{value: Window}, {value: Worker}, {value: AudioWorklet}]'
   );
   @override
-  void initMessageEvent(String type, [bool? bubbles, bool? cancelable, Object? data, String? origin, String? lastEventId, MessageEventSource? source, List<MessagePort>? ports]) => throw UnsupportedWebApiError('MessageEvent.initMessageEvent'
+  void initMessageEvent(String type_, [bool? bubbles, bool? cancelable, Object? data, String? origin, String? lastEventId, MessageEventSource? source, List<MessagePort>? ports]) => throw UnsupportedWebApiError('MessageEvent.initMessageEvent'
       , exposed: '[{value: Window}, {value: Worker}, {value: AudioWorklet}]'
   );
 }
@@ -17641,7 +17641,7 @@ final class SsrMimetype implements MimeType {
     );
   }
   @override
-  String get type => throw UnsupportedWebApiError('MimeType.type'
+  String get type_ => throw UnsupportedWebApiError('MimeType.type'
       , exposed: 'Window'
   );
   @override
@@ -17679,7 +17679,7 @@ final class SsrMimetypearray implements MimeTypeArray {
 }
 
 final class SsrMouseevent implements MouseEvent {
-  factory SsrMouseevent(String type, [MouseEventInit? eventInitDict]) {
+  factory SsrMouseevent(String type_, [MouseEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('MouseEvent constructor'
       , exposed: 'Window'
     );
@@ -17829,7 +17829,7 @@ final class SsrMutationrecord implements MutationRecord {
     );
   }
   @override
-  String get type => throw UnsupportedWebApiError('MutationRecord.type'
+  String get type_ => throw UnsupportedWebApiError('MutationRecord.type'
       , exposed: 'Window'
   );
   @override
@@ -18463,7 +18463,7 @@ final class SsrNotification implements Notification {
 }
 
 final class SsrNotificationevent implements NotificationEvent {
-  factory SsrNotificationevent(String type, NotificationEventInit eventInitDict) {
+  factory SsrNotificationevent(String type_, NotificationEventInit eventInitDict) {
     throw UnsupportedWebApiError('NotificationEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -18607,7 +18607,7 @@ final class SsrOvrMultiview2 implements OVR_multiview2 {
 }
 
 final class SsrOfflineaudiocompletionevent implements OfflineAudioCompletionEvent {
-  factory SsrOfflineaudiocompletionevent(String type, OfflineAudioCompletionEventInit eventInitDict) {
+  factory SsrOfflineaudiocompletionevent(String type_, OfflineAudioCompletionEventInit eventInitDict) {
     throw UnsupportedWebApiError('OfflineAudioCompletionEvent constructor'
       , exposed: 'Window'
     );
@@ -19122,11 +19122,11 @@ final class SsrOscillatornode implements OscillatorNode {
     );
   }
   @override
-  OscillatorType get type => throw UnsupportedWebApiError('OscillatorNode.type'
+  OscillatorType get type_ => throw UnsupportedWebApiError('OscillatorNode.type'
       , exposed: 'Window'
   );
   @override
-  set type(OscillatorType value) => throw UnsupportedWebApiError('OscillatorNode.type'
+  set type_(OscillatorType value) => throw UnsupportedWebApiError('OscillatorNode.type'
       , exposed: 'Window'
   );
   @override
@@ -19156,7 +19156,7 @@ final class SsrOverconstrainederror implements OverconstrainedError {
 }
 
 final class SsrPagetransitionevent implements PageTransitionEvent {
-  factory SsrPagetransitionevent(String type, [PageTransitionEventInit? eventInitDict]) {
+  factory SsrPagetransitionevent(String type_, [PageTransitionEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PageTransitionEvent constructor'
       , exposed: 'Window'
     );
@@ -19616,7 +19616,7 @@ final class SsrPath2d implements Path2D {
 }
 
 final class SsrPaymentmethodchangeevent implements PaymentMethodChangeEvent {
-  factory SsrPaymentmethodchangeevent(String type, [PaymentMethodChangeEventInit? eventInitDict]) {
+  factory SsrPaymentmethodchangeevent(String type_, [PaymentMethodChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PaymentMethodChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -19664,7 +19664,7 @@ final class SsrPaymentrequest implements PaymentRequest {
 }
 
 final class SsrPaymentrequestupdateevent implements PaymentRequestUpdateEvent {
-  factory SsrPaymentrequestupdateevent(String type, [PaymentRequestUpdateEventInit? eventInitDict]) {
+  factory SsrPaymentrequestupdateevent(String type_, [PaymentRequestUpdateEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PaymentRequestUpdateEvent constructor'
       , exposed: 'Window'
     );
@@ -19742,11 +19742,11 @@ final class SsrPerformance implements Performance {
       , exposed: 'Window'
   );
   @override
-  PerformanceEntryList getEntriesByType(String type) => throw UnsupportedWebApiError('Performance.getEntriesByType'
+  PerformanceEntryList getEntriesByType(String type_) => throw UnsupportedWebApiError('Performance.getEntriesByType'
       , exposed: 'Window'
   );
   @override
-  PerformanceEntryList getEntriesByName(String name, [String? type]) => throw UnsupportedWebApiError('Performance.getEntriesByName'
+  PerformanceEntryList getEntriesByName(String name, [String? type_]) => throw UnsupportedWebApiError('Performance.getEntriesByName'
       , exposed: 'Window'
   );
   @override
@@ -19866,7 +19866,7 @@ final class SsrPerformancenavigation implements PerformanceNavigation {
     );
   }
   @override
-  int get type => throw UnsupportedWebApiError('PerformanceNavigation.type'
+  int get type_ => throw UnsupportedWebApiError('PerformanceNavigation.type'
       , exposed: 'Window'
   );
   @override
@@ -19918,7 +19918,7 @@ final class SsrPerformancenavigationtiming implements PerformanceNavigationTimin
       , exposed: 'Window'
   );
   @override
-  NavigationTimingType get type => throw UnsupportedWebApiError('PerformanceNavigationTiming.type'
+  NavigationTimingType get type_ => throw UnsupportedWebApiError('PerformanceNavigationTiming.type'
       , exposed: 'Window'
   );
   @override
@@ -19958,11 +19958,11 @@ final class SsrPerformanceobserverentrylist implements PerformanceObserverEntryL
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  PerformanceEntryList getEntriesByType(String type) => throw UnsupportedWebApiError('PerformanceObserverEntryList.getEntriesByType'
+  PerformanceEntryList getEntriesByType(String type_) => throw UnsupportedWebApiError('PerformanceObserverEntryList.getEntriesByType'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  PerformanceEntryList getEntriesByName(String name, [String? type]) => throw UnsupportedWebApiError('PerformanceObserverEntryList.getEntriesByName'
+  PerformanceEntryList getEntriesByName(String name, [String? type_]) => throw UnsupportedWebApiError('PerformanceObserverEntryList.getEntriesByName'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
 }
@@ -20228,7 +20228,7 @@ final class SsrPermissions implements Permissions {
 }
 
 final class SsrPictureinpictureevent implements PictureInPictureEvent {
-  factory SsrPictureinpictureevent(String type, PictureInPictureEventInit eventInitDict) {
+  factory SsrPictureinpictureevent(String type_, PictureInPictureEventInit eventInitDict) {
     throw UnsupportedWebApiError('PictureInPictureEvent constructor'
       , exposed: 'Window'
     );
@@ -20320,7 +20320,7 @@ final class SsrPluginarray implements PluginArray {
 }
 
 final class SsrPointerevent implements PointerEvent {
-  factory SsrPointerevent(String type, [PointerEventInit? eventInitDict]) {
+  factory SsrPointerevent(String type_, [PointerEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PointerEvent constructor'
       , exposed: 'Window'
     );
@@ -20376,7 +20376,7 @@ final class SsrPointerevent implements PointerEvent {
 }
 
 final class SsrPopstateevent implements PopStateEvent {
-  factory SsrPopstateevent(String type, [PopStateEventInit? eventInitDict]) {
+  factory SsrPopstateevent(String type_, [PopStateEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PopStateEvent constructor'
       , exposed: 'Window'
     );
@@ -20408,7 +20408,7 @@ final class SsrProcessinginstruction implements ProcessingInstruction {
 }
 
 final class SsrProgressevent implements ProgressEvent {
-  factory SsrProgressevent(String type, [ProgressEventInit? eventInitDict]) {
+  factory SsrProgressevent(String type_, [ProgressEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ProgressEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -20428,7 +20428,7 @@ final class SsrProgressevent implements ProgressEvent {
 }
 
 final class SsrPromiserejectionevent implements PromiseRejectionEvent {
-  factory SsrPromiserejectionevent(String type, PromiseRejectionEventInit eventInitDict) {
+  factory SsrPromiserejectionevent(String type_, PromiseRejectionEventInit eventInitDict) {
     throw UnsupportedWebApiError('PromiseRejectionEvent constructor'
       , exposed: '{type: *, value: null}'
     );
@@ -20468,7 +20468,7 @@ final class SsrPublickeycredential implements PublicKeyCredential {
 }
 
 final class SsrPushevent implements PushEvent {
-  factory SsrPushevent(String type, [PushEventInit? eventInitDict]) {
+  factory SsrPushevent(String type_, [PushEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PushEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -20556,7 +20556,7 @@ final class SsrPushsubscription implements PushSubscription {
 }
 
 final class SsrPushsubscriptionchangeevent implements PushSubscriptionChangeEvent {
-  factory SsrPushsubscriptionchangeevent(String type, [PushSubscriptionChangeEventInit? eventInitDict]) {
+  factory SsrPushsubscriptionchangeevent(String type_, [PushSubscriptionChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('PushSubscriptionChangeEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -20632,7 +20632,7 @@ final class SsrRtcdtmfsender implements RTCDTMFSender {
 }
 
 final class SsrRtcdtmftonechangeevent implements RTCDTMFToneChangeEvent {
-  factory SsrRtcdtmftonechangeevent(String type, [RTCDTMFToneChangeEventInit? eventInitDict]) {
+  factory SsrRtcdtmftonechangeevent(String type_, [RTCDTMFToneChangeEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('RTCDTMFToneChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -20760,7 +20760,7 @@ final class SsrRtcdatachannel implements RTCDataChannel {
 }
 
 final class SsrRtcdatachannelevent implements RTCDataChannelEvent {
-  factory SsrRtcdatachannelevent(String type, RTCDataChannelEventInit eventInitDict) {
+  factory SsrRtcdatachannelevent(String type_, RTCDataChannelEventInit eventInitDict) {
     throw UnsupportedWebApiError('RTCDataChannelEvent constructor'
       , exposed: 'Window'
     );
@@ -20834,7 +20834,7 @@ final class SsrRtcencodedvideoframe implements RTCEncodedVideoFrame {
     );
   }
   @override
-  RTCEncodedVideoFrameType get type => throw UnsupportedWebApiError('RTCEncodedVideoFrame.type'
+  RTCEncodedVideoFrameType get type_ => throw UnsupportedWebApiError('RTCEncodedVideoFrame.type'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
   );
   @override
@@ -20884,7 +20884,7 @@ final class SsrRtcerror implements RTCError {
 }
 
 final class SsrRtcerrorevent implements RTCErrorEvent {
-  factory SsrRtcerrorevent(String type, RTCErrorEventInit eventInitDict) {
+  factory SsrRtcerrorevent(String type_, RTCErrorEventInit eventInitDict) {
     throw UnsupportedWebApiError('RTCErrorEvent constructor'
       , exposed: 'Window'
     );
@@ -20938,7 +20938,7 @@ final class SsrRtcicecandidate implements RTCIceCandidate {
       , exposed: 'Window'
   );
   @override
-  RTCIceCandidateType? get type => throw UnsupportedWebApiError('RTCIceCandidate.type'
+  RTCIceCandidateType? get type_ => throw UnsupportedWebApiError('RTCIceCandidate.type'
       , exposed: 'Window'
   );
   @override
@@ -21256,7 +21256,7 @@ final class SsrRtcpeerconnection implements RTCPeerConnection {
 }
 
 final class SsrRtcpeerconnectioniceerrorevent implements RTCPeerConnectionIceErrorEvent {
-  factory SsrRtcpeerconnectioniceerrorevent(String type, RTCPeerConnectionIceErrorEventInit eventInitDict) {
+  factory SsrRtcpeerconnectioniceerrorevent(String type_, RTCPeerConnectionIceErrorEventInit eventInitDict) {
     throw UnsupportedWebApiError('RTCPeerConnectionIceErrorEvent constructor'
       , exposed: 'Window'
     );
@@ -21284,7 +21284,7 @@ final class SsrRtcpeerconnectioniceerrorevent implements RTCPeerConnectionIceErr
 }
 
 final class SsrRtcpeerconnectioniceevent implements RTCPeerConnectionIceEvent {
-  factory SsrRtcpeerconnectioniceevent(String type, [RTCPeerConnectionIceEventInit? eventInitDict]) {
+  factory SsrRtcpeerconnectioniceevent(String type_, [RTCPeerConnectionIceEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('RTCPeerConnectionIceEvent constructor'
       , exposed: 'Window'
     );
@@ -21510,7 +21510,7 @@ final class SsrRtcsessiondescription implements RTCSessionDescription {
     );
   }
   @override
-  RTCSdpType get type => throw UnsupportedWebApiError('RTCSessionDescription.type'
+  RTCSdpType get type_ => throw UnsupportedWebApiError('RTCSessionDescription.type'
       , exposed: 'Window'
   );
   @override
@@ -21532,7 +21532,7 @@ final class SsrRtcstatsreport implements RTCStatsReport {
 }
 
 final class SsrRtctrackevent implements RTCTrackEvent {
-  factory SsrRtctrackevent(String type, RTCTrackEventInit eventInitDict) {
+  factory SsrRtctrackevent(String type_, RTCTrackEventInit eventInitDict) {
     throw UnsupportedWebApiError('RTCTrackEvent constructor'
       , exposed: 'Window'
     );
@@ -21682,7 +21682,7 @@ final class SsrRange implements Range {
       , exposed: 'Window'
   );
   @override
-  DocumentFragment createContextualFragment(Object string) => throw UnsupportedWebApiError('Range.createContextualFragment'
+  DocumentFragment createContextualFragment(Object string_) => throw UnsupportedWebApiError('Range.createContextualFragment'
       , exposed: 'Window'
   );
 }
@@ -21906,7 +21906,7 @@ final class SsrReport implements Report {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  String get type => throw UnsupportedWebApiError('Report.type'
+  String get type_ => throw UnsupportedWebApiError('Report.type'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -22154,7 +22154,7 @@ final class SsrResponse implements Response {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  ResponseType get type => throw UnsupportedWebApiError('Response.type'
+  ResponseType get type_ => throw UnsupportedWebApiError('Response.type'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -22238,11 +22238,11 @@ final class SsrSvgaelement implements SVGAElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('SVGAElement.type'
+  String get type_ => throw UnsupportedWebApiError('SVGAElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('SVGAElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('SVGAElement.type'
       , exposed: 'Window'
   );
   @override
@@ -22642,7 +22642,7 @@ final class SsrSvgcomponenttransferfunctionelement implements SVGComponentTransf
     );
   }
   @override
-  SVGAnimatedEnumeration get type => throw UnsupportedWebApiError('SVGComponentTransferFunctionElement.type'
+  SVGAnimatedEnumeration get type_ => throw UnsupportedWebApiError('SVGComponentTransferFunctionElement.type'
       , exposed: 'Window'
   );
   @override
@@ -23678,7 +23678,7 @@ final class SsrSvgfecolormatrixelement implements SVGFEColorMatrixElement {
       , exposed: 'Window'
   );
   @override
-  SVGAnimatedEnumeration get type => throw UnsupportedWebApiError('SVGFEColorMatrixElement.type'
+  SVGAnimatedEnumeration get type_ => throw UnsupportedWebApiError('SVGFEColorMatrixElement.type'
       , exposed: 'Window'
   );
   @override
@@ -24478,7 +24478,7 @@ final class SsrSvgfeturbulenceelement implements SVGFETurbulenceElement {
       , exposed: 'Window'
   );
   @override
-  SVGAnimatedEnumeration get type => throw UnsupportedWebApiError('SVGFETurbulenceElement.type'
+  SVGAnimatedEnumeration get type_ => throw UnsupportedWebApiError('SVGFETurbulenceElement.type'
       , exposed: 'Window'
   );
 }
@@ -25518,11 +25518,11 @@ final class SsrSvgscriptelement implements SVGScriptElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('SVGScriptElement.type'
+  String get type_ => throw UnsupportedWebApiError('SVGScriptElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('SVGScriptElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('SVGScriptElement.type'
       , exposed: 'Window'
   );
   @override
@@ -25606,11 +25606,11 @@ final class SsrSvgstyleelement implements SVGStyleElement {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('SVGStyleElement.type'
+  String get type_ => throw UnsupportedWebApiError('SVGStyleElement.type'
       , exposed: 'Window'
   );
   @override
-  set type(String value) => throw UnsupportedWebApiError('SVGStyleElement.type'
+  set type_(String value) => throw UnsupportedWebApiError('SVGStyleElement.type'
       , exposed: 'Window'
   );
   @override
@@ -25790,7 +25790,7 @@ final class SsrSvgtransform implements SVGTransform {
     );
   }
   @override
-  int get type => throw UnsupportedWebApiError('SVGTransform.type'
+  int get type_ => throw UnsupportedWebApiError('SVGTransform.type'
       , exposed: 'Window'
   );
   @override
@@ -26006,7 +26006,7 @@ final class SsrScreenorientation implements ScreenOrientation {
       , exposed: 'Window'
   );
   @override
-  OrientationType get type => throw UnsupportedWebApiError('ScreenOrientation.type'
+  OrientationType get type_ => throw UnsupportedWebApiError('ScreenOrientation.type'
       , exposed: 'Window'
   );
   @override
@@ -26044,7 +26044,7 @@ final class SsrScriptprocessornode implements ScriptProcessorNode {
 }
 
 final class SsrSecuritypolicyviolationevent implements SecurityPolicyViolationEvent {
-  factory SsrSecuritypolicyviolationevent(String type, [SecurityPolicyViolationEventInit? eventInitDict]) {
+  factory SsrSecuritypolicyviolationevent(String type_, [SecurityPolicyViolationEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('SecurityPolicyViolationEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -26130,7 +26130,7 @@ final class SsrSelection implements Selection {
       , exposed: 'Window'
   );
   @override
-  String get type => throw UnsupportedWebApiError('Selection.type'
+  String get type_ => throw UnsupportedWebApiError('Selection.type'
       , exposed: 'Window'
   );
   @override
@@ -26252,7 +26252,7 @@ final class SsrSensor implements Sensor {
 }
 
 final class SsrSensorerrorevent implements SensorErrorEvent {
-  factory SsrSensorerrorevent(String type, SensorErrorEventInit errorEventInitDict) {
+  factory SsrSensorerrorevent(String type_, SensorErrorEventInit errorEventInitDict) {
     throw UnsupportedWebApiError('SensorErrorEvent constructor'
       , exposed: '[{value: DedicatedWorker}, {value: Window}]'
     );
@@ -26758,7 +26758,7 @@ final class SsrSourcebuffer implements SourceBuffer {
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
   );
   @override
-  void changeType(String type) => throw UnsupportedWebApiError('SourceBuffer.changeType'
+  void changeType(String type_) => throw UnsupportedWebApiError('SourceBuffer.changeType'
       , exposed: '[{value: Window}, {value: DedicatedWorker}]'
   );
   @override
@@ -26960,7 +26960,7 @@ final class SsrSpeechrecognitionalternative implements SpeechRecognitionAlternat
 }
 
 final class SsrSpeechrecognitionerrorevent implements SpeechRecognitionErrorEvent {
-  factory SsrSpeechrecognitionerrorevent(String type, SpeechRecognitionErrorEventInit eventInitDict) {
+  factory SsrSpeechrecognitionerrorevent(String type_, SpeechRecognitionErrorEventInit eventInitDict) {
     throw UnsupportedWebApiError('SpeechRecognitionErrorEvent constructor'
       , exposed: 'Window'
     );
@@ -26976,7 +26976,7 @@ final class SsrSpeechrecognitionerrorevent implements SpeechRecognitionErrorEven
 }
 
 final class SsrSpeechrecognitionevent implements SpeechRecognitionEvent {
-  factory SsrSpeechrecognitionevent(String type, SpeechRecognitionEventInit eventInitDict) {
+  factory SsrSpeechrecognitionevent(String type_, SpeechRecognitionEventInit eventInitDict) {
     throw UnsupportedWebApiError('SpeechRecognitionEvent constructor'
       , exposed: 'Window'
     );
@@ -27076,7 +27076,7 @@ final class SsrSpeechsynthesis implements SpeechSynthesis {
 }
 
 final class SsrSpeechsynthesiserrorevent implements SpeechSynthesisErrorEvent {
-  factory SsrSpeechsynthesiserrorevent(String type, SpeechSynthesisErrorEventInit eventInitDict) {
+  factory SsrSpeechsynthesiserrorevent(String type_, SpeechSynthesisErrorEventInit eventInitDict) {
     throw UnsupportedWebApiError('SpeechSynthesisErrorEvent constructor'
       , exposed: 'Window'
     );
@@ -27088,7 +27088,7 @@ final class SsrSpeechsynthesiserrorevent implements SpeechSynthesisErrorEvent {
 }
 
 final class SsrSpeechsynthesisevent implements SpeechSynthesisEvent {
-  factory SsrSpeechsynthesisevent(String type, SpeechSynthesisEventInit eventInitDict) {
+  factory SsrSpeechsynthesisevent(String type_, SpeechSynthesisEventInit eventInitDict) {
     throw UnsupportedWebApiError('SpeechSynthesisEvent constructor'
       , exposed: 'Window'
     );
@@ -27352,7 +27352,7 @@ final class SsrStorageaccesshandle implements StorageAccessHandle {
 }
 
 final class SsrStorageevent implements StorageEvent {
-  factory SsrStorageevent(String type, [StorageEventInit? eventInitDict]) {
+  factory SsrStorageevent(String type_, [StorageEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('StorageEvent constructor'
       , exposed: 'Window'
     );
@@ -27378,7 +27378,7 @@ final class SsrStorageevent implements StorageEvent {
       , exposed: 'Window'
   );
   @override
-  void initStorageEvent(String type, [bool? bubbles, bool? cancelable, String? key, String? oldValue, String? newValue, String? url, Storage? storageArea]) => throw UnsupportedWebApiError('StorageEvent.initStorageEvent'
+  void initStorageEvent(String type_, [bool? bubbles, bool? cancelable, String? key, String? oldValue, String? newValue, String? url, Storage? storageArea]) => throw UnsupportedWebApiError('StorageEvent.initStorageEvent'
       , exposed: 'Window'
   );
 }
@@ -27462,7 +27462,7 @@ final class SsrStylesheet implements StyleSheet {
     );
   }
   @override
-  Object get type => throw UnsupportedWebApiError('StyleSheet.type'
+  Object get type_ => throw UnsupportedWebApiError('StyleSheet.type'
       , exposed: 'Window'
   );
   @override
@@ -27512,7 +27512,7 @@ final class SsrStylesheetlist implements StyleSheetList {
 }
 
 final class SsrSubmitevent implements SubmitEvent {
-  factory SsrSubmitevent(String type, [SubmitEventInit? eventInitDict]) {
+  factory SsrSubmitevent(String type_, [SubmitEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('SubmitEvent constructor'
       , exposed: 'Window'
     );
@@ -27580,7 +27580,7 @@ final class SsrSubtlecrypto implements SubtleCrypto {
 }
 
 final class SsrSyncevent implements SyncEvent {
-  factory SsrSyncevent(String type, SyncEventInit init) {
+  factory SsrSyncevent(String type_, SyncEventInit init) {
     throw UnsupportedWebApiError('SyncEvent constructor'
       , exposed: 'ServiceWorker'
     );
@@ -27624,7 +27624,7 @@ final class SsrTaskcontroller implements TaskController {
 }
 
 final class SsrTaskprioritychangeevent implements TaskPriorityChangeEvent {
-  factory SsrTaskprioritychangeevent(String type, TaskPriorityChangeEventInit priorityChangeEventInitDict) {
+  factory SsrTaskprioritychangeevent(String type_, TaskPriorityChangeEventInit priorityChangeEventInitDict) {
     throw UnsupportedWebApiError('TaskPriorityChangeEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -27794,7 +27794,7 @@ final class SsrTextevent implements TextEvent {
       , exposed: 'Window'
   );
   @override
-  void initTextEvent(String type, [bool? bubbles, bool? cancelable, Window? view, String? data]) => throw UnsupportedWebApiError('TextEvent.initTextEvent'
+  void initTextEvent(String type_, [bool? bubbles, bool? cancelable, Window? view, String? data]) => throw UnsupportedWebApiError('TextEvent.initTextEvent'
       , exposed: 'Window'
   );
 }
@@ -28076,7 +28076,7 @@ final class SsrTimeranges implements TimeRanges {
 }
 
 final class SsrToggleevent implements ToggleEvent {
-  factory SsrToggleevent(String type, [ToggleEventInit? eventInitDict]) {
+  factory SsrToggleevent(String type_, [ToggleEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('ToggleEvent constructor'
       , exposed: 'Window'
     );
@@ -28160,7 +28160,7 @@ final class SsrTouch implements Touch {
 }
 
 final class SsrTouchevent implements TouchEvent {
-  factory SsrTouchevent(String type, [TouchEventInit? eventInitDict]) {
+  factory SsrTouchevent(String type_, [TouchEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('TouchEvent constructor'
       , exposed: 'Window'
     );
@@ -28212,7 +28212,7 @@ final class SsrTouchlist implements TouchList {
 }
 
 final class SsrTrackevent implements TrackEvent {
-  factory SsrTrackevent(String type, [TrackEventInit? eventInitDict]) {
+  factory SsrTrackevent(String type_, [TrackEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('TrackEvent constructor'
       , exposed: 'Window'
     );
@@ -28264,7 +28264,7 @@ final class SsrTransformstreamdefaultcontroller implements TransformStreamDefaul
 }
 
 final class SsrTransitionevent implements TransitionEvent {
-  factory SsrTransitionevent(Object type, [TransitionEventInit? transitionEventInitDict]) {
+  factory SsrTransitionevent(Object type_, [TransitionEventInit? transitionEventInitDict]) {
     throw UnsupportedWebApiError('TransitionEvent constructor'
       , exposed: 'Window'
     );
@@ -28444,7 +28444,7 @@ final class SsrTrustedtypepolicyfactory implements TrustedTypePolicyFactory {
 }
 
 final class SsrUievent implements UIEvent {
-  factory SsrUievent(String type, [UIEventInit? eventInitDict]) {
+  factory SsrUievent(String type_, [UIEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('UIEvent constructor'
       , exposed: 'Window'
     );
@@ -29339,7 +29339,7 @@ final class SsrWebglMultiDraw implements WEBGL_multi_draw {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void multiDrawElementsWEBGL(GLenum mode, Object countsList, int countsOffset, GLenum type, Object offsetsList, int offsetsOffset, GLsizei drawcount) => throw UnsupportedWebApiError('WEBGL_multi_draw.multiDrawElementsWEBGL'
+  void multiDrawElementsWEBGL(GLenum mode, Object countsList, int countsOffset, GLenum type_, Object offsetsList, int offsetsOffset, GLsizei drawcount) => throw UnsupportedWebApiError('WEBGL_multi_draw.multiDrawElementsWEBGL'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -29347,7 +29347,7 @@ final class SsrWebglMultiDraw implements WEBGL_multi_draw {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void multiDrawElementsInstancedWEBGL(GLenum mode, Object countsList, int countsOffset, GLenum type, Object offsetsList, int offsetsOffset, Object instanceCountsList, int instanceCountsOffset, GLsizei drawcount) => throw UnsupportedWebApiError('WEBGL_multi_draw.multiDrawElementsInstancedWEBGL'
+  void multiDrawElementsInstancedWEBGL(GLenum mode, Object countsList, int countsOffset, GLenum type_, Object offsetsList, int offsetsOffset, Object instanceCountsList, int instanceCountsOffset, GLsizei drawcount) => throw UnsupportedWebApiError('WEBGL_multi_draw.multiDrawElementsInstancedWEBGL'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
 }
@@ -29359,7 +29359,7 @@ final class SsrWakelock implements WakeLock {
     );
   }
   @override
-  Future<WakeLockSentinel> request([WakeLockType? type]) => throw UnsupportedWebApiError('WakeLock.request'
+  Future<WakeLockSentinel> request([WakeLockType? type_]) => throw UnsupportedWebApiError('WakeLock.request'
       , exposed: '[{value: Window}]'
   );
 }
@@ -29375,7 +29375,7 @@ final class SsrWakelocksentinel implements WakeLockSentinel {
       , exposed: '[{value: Window}]'
   );
   @override
-  WakeLockType get type => throw UnsupportedWebApiError('WakeLockSentinel.type'
+  WakeLockType get type_ => throw UnsupportedWebApiError('WakeLockSentinel.type'
       , exposed: '[{value: Window}]'
   );
   @override
@@ -29575,7 +29575,7 @@ final class SsrWebgl2renderingcontext implements WebGL2RenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  WebGLShader? createShader(GLenum type) => throw UnsupportedWebApiError('WebGL2RenderingContext.createShader'
+  WebGLShader? createShader(GLenum type_) => throw UnsupportedWebApiError('WebGL2RenderingContext.createShader'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -29639,7 +29639,7 @@ final class SsrWebgl2renderingcontext implements WebGL2RenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void drawElements(GLenum mode, GLsizei count, GLenum type, GLintptr offset) => throw UnsupportedWebApiError('WebGL2RenderingContext.drawElements'
+  void drawElements(GLenum mode, GLsizei count, GLenum type_, GLintptr offset) => throw UnsupportedWebApiError('WebGL2RenderingContext.drawElements'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -29923,7 +29923,7 @@ final class SsrWebgl2renderingcontext implements WebGL2RenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void vertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLintptr offset) => throw UnsupportedWebApiError('WebGL2RenderingContext.vertexAttribPointer'
+  void vertexAttribPointer(GLuint index, GLint size, GLenum type_, GLboolean normalized, GLsizei stride, GLintptr offset) => throw UnsupportedWebApiError('WebGL2RenderingContext.vertexAttribPointer'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -29979,11 +29979,11 @@ final class SsrWebgl2renderingcontext implements WebGL2RenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void texImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, ArrayBufferView srcData, int srcOffset) => throw UnsupportedWebApiError('WebGL2RenderingContext.texImage3D'
+  void texImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type_, ArrayBufferView srcData, int srcOffset) => throw UnsupportedWebApiError('WebGL2RenderingContext.texImage3D'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void texSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, ArrayBufferView? srcData, [int? srcOffset]) => throw UnsupportedWebApiError('WebGL2RenderingContext.texSubImage3D'
+  void texSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type_, ArrayBufferView? srcData, [int? srcOffset]) => throw UnsupportedWebApiError('WebGL2RenderingContext.texSubImage3D'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -30075,7 +30075,7 @@ final class SsrWebgl2renderingcontext implements WebGL2RenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void vertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, GLintptr offset) => throw UnsupportedWebApiError('WebGL2RenderingContext.vertexAttribIPointer'
+  void vertexAttribIPointer(GLuint index, GLint size, GLenum type_, GLsizei stride, GLintptr offset) => throw UnsupportedWebApiError('WebGL2RenderingContext.vertexAttribIPointer'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -30087,11 +30087,11 @@ final class SsrWebgl2renderingcontext implements WebGL2RenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void drawElementsInstanced(GLenum mode, GLsizei count, GLenum type, GLintptr offset, GLsizei instanceCount) => throw UnsupportedWebApiError('WebGL2RenderingContext.drawElementsInstanced'
+  void drawElementsInstanced(GLenum mode, GLsizei count, GLenum type_, GLintptr offset, GLsizei instanceCount) => throw UnsupportedWebApiError('WebGL2RenderingContext.drawElementsInstanced'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void drawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, GLintptr offset) => throw UnsupportedWebApiError('WebGL2RenderingContext.drawRangeElements'
+  void drawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type_, GLintptr offset) => throw UnsupportedWebApiError('WebGL2RenderingContext.drawRangeElements'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -30295,11 +30295,11 @@ final class SsrWebgl2renderingcontext implements WebGL2RenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView srcData, int srcOffset) => throw UnsupportedWebApiError('WebGL2RenderingContext.texImage2D'
+  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type_, ArrayBufferView srcData, int srcOffset) => throw UnsupportedWebApiError('WebGL2RenderingContext.texImage2D'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView srcData, int srcOffset) => throw UnsupportedWebApiError('WebGL2RenderingContext.texSubImage2D'
+  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView srcData, int srcOffset) => throw UnsupportedWebApiError('WebGL2RenderingContext.texSubImage2D'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -30355,7 +30355,7 @@ final class SsrWebgl2renderingcontext implements WebGL2RenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView dstData, int dstOffset) => throw UnsupportedWebApiError('WebGL2RenderingContext.readPixels'
+  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView dstData, int dstOffset) => throw UnsupportedWebApiError('WebGL2RenderingContext.readPixels'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
 }
@@ -30371,7 +30371,7 @@ final class SsrWebglactiveinfo implements WebGLActiveInfo {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  GLenum get type => throw UnsupportedWebApiError('WebGLActiveInfo.type'
+  GLenum get type_ => throw UnsupportedWebApiError('WebGLActiveInfo.type'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -30389,7 +30389,7 @@ final class SsrWebglbuffer implements WebGLBuffer {
 }
 
 final class SsrWebglcontextevent implements WebGLContextEvent {
-  factory SsrWebglcontextevent(String type, [WebGLContextEventInit? eventInit]) {
+  factory SsrWebglcontextevent(String type_, [WebGLContextEventInit? eventInit]) {
     throw UnsupportedWebApiError('WebGLContextEvent constructor'
       , exposed: '[{value: Window}, {value: Worker}]'
     );
@@ -30591,7 +30591,7 @@ final class SsrWebglrenderingcontext implements WebGLRenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  WebGLShader? createShader(GLenum type) => throw UnsupportedWebApiError('WebGLRenderingContext.createShader'
+  WebGLShader? createShader(GLenum type_) => throw UnsupportedWebApiError('WebGLRenderingContext.createShader'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -30655,7 +30655,7 @@ final class SsrWebglrenderingcontext implements WebGLRenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void drawElements(GLenum mode, GLsizei count, GLenum type, GLintptr offset) => throw UnsupportedWebApiError('WebGLRenderingContext.drawElements'
+  void drawElements(GLenum mode, GLsizei count, GLenum type_, GLintptr offset) => throw UnsupportedWebApiError('WebGLRenderingContext.drawElements'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -30939,7 +30939,7 @@ final class SsrWebglrenderingcontext implements WebGLRenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void vertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLintptr offset) => throw UnsupportedWebApiError('WebGLRenderingContext.vertexAttribPointer'
+  void vertexAttribPointer(GLuint index, GLint size, GLenum type_, GLboolean normalized, GLsizei stride, GLintptr offset) => throw UnsupportedWebApiError('WebGLRenderingContext.vertexAttribPointer'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -30967,15 +30967,15 @@ final class SsrWebglrenderingcontext implements WebGLRenderingContext {
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView? pixels) => throw UnsupportedWebApiError('WebGLRenderingContext.readPixels'
+  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView? pixels) => throw UnsupportedWebApiError('WebGLRenderingContext.readPixels'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView? pixels) => throw UnsupportedWebApiError('WebGLRenderingContext.texImage2D'
+  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type_, ArrayBufferView? pixels) => throw UnsupportedWebApiError('WebGLRenderingContext.texImage2D'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
-  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView? pixels) => throw UnsupportedWebApiError('WebGLRenderingContext.texSubImage2D'
+  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView? pixels) => throw UnsupportedWebApiError('WebGLRenderingContext.texSubImage2D'
       , exposed: '[{value: Window}, {value: Worker}]'
   );
   @override
@@ -31317,7 +31317,7 @@ final class SsrWebtransporterror implements WebTransportError {
 }
 
 final class SsrWheelevent implements WheelEvent {
-  factory SsrWheelevent(String type, [WheelEventInit? eventInitDict]) {
+  factory SsrWheelevent(String type_, [WheelEventInit? eventInitDict]) {
     throw UnsupportedWebApiError('WheelEvent constructor'
       , exposed: 'Window'
     );
@@ -33439,7 +33439,7 @@ final class SsrXpathevaluator implements XPathEvaluator {
       , exposed: 'Window'
   );
   @override
-  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type, XPathResult? result]) => throw UnsupportedWebApiError('XPathEvaluator.evaluate'
+  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type_, XPathResult? result]) => throw UnsupportedWebApiError('XPathEvaluator.evaluate'
       , exposed: 'Window'
   );
 }
@@ -33451,7 +33451,7 @@ final class SsrXpathexpression implements XPathExpression {
     );
   }
   @override
-  XPathResult evaluate(Node contextNode, [int? type, XPathResult? result]) => throw UnsupportedWebApiError('XPathExpression.evaluate'
+  XPathResult evaluate(Node contextNode, [int? type_, XPathResult? result]) => throw UnsupportedWebApiError('XPathExpression.evaluate'
       , exposed: 'Window'
   );
 }
@@ -33545,7 +33545,7 @@ final class SsrXrinputsource implements XRInputSource {
 }
 
 final class SsrXrinputsourceevent implements XRInputSourceEvent {
-  factory SsrXrinputsourceevent(String type, XRInputSourceEventInit eventInitDict) {
+  factory SsrXrinputsourceevent(String type_, XRInputSourceEventInit eventInitDict) {
     throw UnsupportedWebApiError('XRInputSourceEvent constructor'
       , exposed: 'Window'
     );
@@ -33561,7 +33561,7 @@ final class SsrXrinputsourceevent implements XRInputSourceEvent {
 }
 
 final class SsrXrinputsourceschangeevent implements XRInputSourcesChangeEvent {
-  factory SsrXrinputsourceschangeevent(String type, XRInputSourcesChangeEventInit eventInitDict) {
+  factory SsrXrinputsourceschangeevent(String type_, XRInputSourcesChangeEventInit eventInitDict) {
     throw UnsupportedWebApiError('XRInputSourcesChangeEvent constructor'
       , exposed: 'Window'
     );
@@ -33649,7 +33649,7 @@ final class SsrXrreferencespace implements XRReferenceSpace {
 }
 
 final class SsrXrreferencespaceevent implements XRReferenceSpaceEvent {
-  factory SsrXrreferencespaceevent(String type, XRReferenceSpaceEventInit eventInitDict) {
+  factory SsrXrreferencespaceevent(String type_, XRReferenceSpaceEventInit eventInitDict) {
     throw UnsupportedWebApiError('XRReferenceSpaceEvent constructor'
       , exposed: 'Window'
     );
@@ -33689,7 +33689,7 @@ final class SsrXrrigidtransform implements XRRigidTransform {
 }
 
 final class SsrXrsessionevent implements XRSessionEvent {
-  factory SsrXrsessionevent(String type, XRSessionEventInit eventInitDict) {
+  factory SsrXrsessionevent(String type_, XRSessionEventInit eventInitDict) {
     throw UnsupportedWebApiError('XRSessionEvent constructor'
       , exposed: 'Window'
     );

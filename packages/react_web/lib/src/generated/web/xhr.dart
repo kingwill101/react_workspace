@@ -25,10 +25,10 @@ abstract interface class FormData {
 typedef FormDataEntryValue = Object;
 
 abstract interface class ProgressEvent {
-  factory ProgressEvent(String type, [ProgressEventInit? eventInitDict]) =>
+  factory ProgressEvent(String type_, [ProgressEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<ProgressEvent>(
         'ProgressEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   bool get lengthComputable;
   int get loaded;

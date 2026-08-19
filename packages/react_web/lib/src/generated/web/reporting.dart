@@ -25,7 +25,7 @@ final class GenerateTestReportParametersValue implements GenerateTestReportParam
 
 abstract interface class Report {
   Object toJSON();
-  String get type;
+  String get type_;
   String get url;
   ReportBody? get body;
 }

@@ -49,7 +49,7 @@ abstract interface class Document {
   NodeList querySelectorAll(String selectors);
   XPathExpression createExpression(String expression, [XPathNSResolver? resolver]);
   Node createNSResolver(Node nodeResolver);
-  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type, XPathResult? result]);
+  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type_, XPathResult? result]);
   EventHandler get onanimationstart;
    set onanimationstart(EventHandler value);
   EventHandler get onanimationiteration;
@@ -383,8 +383,8 @@ abstract interface class SVGAElement {
   DOMTokenList get relList;
   String get hreflang;
    set hreflang(String value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   String get text;
    set text(String value);
   String get referrerPolicy;
@@ -1017,8 +1017,8 @@ abstract interface class SVGSVGElement {
 
 abstract interface class SVGScriptElement {
   SVGAnimatedString get href;
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   String? get crossOrigin;
    set crossOrigin(String? value);
 }
@@ -1040,8 +1040,8 @@ abstract interface class SVGStringList {
 
 abstract interface class SVGStyleElement {
   CSSStyleSheet? get sheet;
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   String get media;
    set media(String value);
   String get title;
@@ -1100,7 +1100,7 @@ abstract interface class SVGTitleElement {
 }
 
 abstract interface class SVGTransform {
-  int get type;
+  int get type_;
   DOMMatrix get matrix;
   double get angle;
   void setMatrix([DOMMatrix2DInit? matrix]);

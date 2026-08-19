@@ -177,8 +177,8 @@ abstract interface class AuthenticationResponseJSON {
   set authenticatorAttachment(String? value);
   AuthenticationExtensionsClientOutputsJSON get clientExtensionResults;
   set clientExtensionResults(AuthenticationExtensionsClientOutputsJSON value);
-  String get type;
-  set type(String value);
+  String get type_;
+  set type_(String value);
 }
 
 final class AuthenticationResponseJSONValue implements AuthenticationResponseJSON {
@@ -193,7 +193,7 @@ final class AuthenticationResponseJSONValue implements AuthenticationResponseJSO
   @override
   AuthenticationExtensionsClientOutputsJSON clientExtensionResults;
   @override
-  String type;
+  String type_;
 
   AuthenticationResponseJSONValue({
     required this.id,
@@ -201,7 +201,7 @@ final class AuthenticationResponseJSONValue implements AuthenticationResponseJSO
     required this.response,
     this.authenticatorAttachment,
     required this.clientExtensionResults,
-    required this.type,
+    required this.type_,
   });
 }
 
@@ -331,8 +331,8 @@ typedef COSEAlgorithmIdentifier = int;
 typedef ClientCapability = String;
 
 abstract interface class CollectedClientData {
-  String get type;
-  set type(String value);
+  String get type_;
+  set type_(String value);
   String get challenge;
   set challenge(String value);
   String get origin;
@@ -345,7 +345,7 @@ abstract interface class CollectedClientData {
 
 final class CollectedClientDataValue implements CollectedClientData {
   @override
-  String type;
+  String type_;
   @override
   String challenge;
   @override
@@ -356,7 +356,7 @@ final class CollectedClientDataValue implements CollectedClientData {
   bool? crossOrigin;
 
   CollectedClientDataValue({
-    required this.type,
+    required this.type_,
     required this.challenge,
     required this.origin,
     this.topOrigin,
@@ -523,8 +523,8 @@ final class PublicKeyCredentialCreationOptionsJSONValue implements PublicKeyCred
 }
 
 abstract interface class PublicKeyCredentialDescriptor {
-  String get type;
-  set type(String value);
+  String get type_;
+  set type_(String value);
   BufferSource get id;
   set id(BufferSource value);
   List<String>? get transports;
@@ -533,14 +533,14 @@ abstract interface class PublicKeyCredentialDescriptor {
 
 final class PublicKeyCredentialDescriptorValue implements PublicKeyCredentialDescriptor {
   @override
-  String type;
+  String type_;
   @override
   BufferSource id;
   @override
   List<String>? transports;
 
   PublicKeyCredentialDescriptorValue({
-    required this.type,
+    required this.type_,
     required this.id,
     this.transports,
   });
@@ -549,8 +549,8 @@ final class PublicKeyCredentialDescriptorValue implements PublicKeyCredentialDes
 abstract interface class PublicKeyCredentialDescriptorJSON {
   Base64URLString get id;
   set id(Base64URLString value);
-  String get type;
-  set type(String value);
+  String get type_;
+  set type_(String value);
   List<String>? get transports;
   set transports(List<String>? value);
 }
@@ -559,13 +559,13 @@ final class PublicKeyCredentialDescriptorJSONValue implements PublicKeyCredentia
   @override
   Base64URLString id;
   @override
-  String type;
+  String type_;
   @override
   List<String>? transports;
 
   PublicKeyCredentialDescriptorJSONValue({
     required this.id,
-    required this.type,
+    required this.type_,
     this.transports,
   });
 }
@@ -589,20 +589,20 @@ typedef PublicKeyCredentialHints = String;
 typedef PublicKeyCredentialJSON = Object;
 
 abstract interface class PublicKeyCredentialParameters {
-  String get type;
-  set type(String value);
+  String get type_;
+  set type_(String value);
   COSEAlgorithmIdentifier get alg;
   set alg(COSEAlgorithmIdentifier value);
 }
 
 final class PublicKeyCredentialParametersValue implements PublicKeyCredentialParameters {
   @override
-  String type;
+  String type_;
   @override
   COSEAlgorithmIdentifier alg;
 
   PublicKeyCredentialParametersValue({
-    required this.type,
+    required this.type_,
     required this.alg,
   });
 }
@@ -765,8 +765,8 @@ abstract interface class RegistrationResponseJSON {
   set authenticatorAttachment(String? value);
   AuthenticationExtensionsClientOutputsJSON get clientExtensionResults;
   set clientExtensionResults(AuthenticationExtensionsClientOutputsJSON value);
-  String get type;
-  set type(String value);
+  String get type_;
+  set type_(String value);
 }
 
 final class RegistrationResponseJSONValue implements RegistrationResponseJSON {
@@ -781,7 +781,7 @@ final class RegistrationResponseJSONValue implements RegistrationResponseJSON {
   @override
   AuthenticationExtensionsClientOutputsJSON clientExtensionResults;
   @override
-  String type;
+  String type_;
 
   RegistrationResponseJSONValue({
     required this.id,
@@ -789,7 +789,7 @@ final class RegistrationResponseJSONValue implements RegistrationResponseJSON {
     required this.response,
     this.authenticatorAttachment,
     required this.clientExtensionResults,
-    required this.type,
+    required this.type_,
   });
 }
 

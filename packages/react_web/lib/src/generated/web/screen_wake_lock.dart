@@ -5,12 +5,12 @@
 import 'html.dart';
 
 abstract interface class WakeLock {
-  Future<WakeLockSentinel> request([WakeLockType? type]);
+  Future<WakeLockSentinel> request([WakeLockType? type_]);
 }
 
 abstract interface class WakeLockSentinel {
   bool get released;
-  WakeLockType get type;
+  WakeLockType get type_;
   Future<void> release();
   EventHandler get onrelease;
    set onrelease(EventHandler value);

@@ -45,7 +45,7 @@ typedef TexImageSource = Object;
 
 abstract interface class WebGLActiveInfo {
   GLint get size;
-  GLenum get type;
+  GLenum get type_;
   String get name;
 }
 
@@ -112,10 +112,10 @@ final class WebGLContextAttributesValue implements WebGLContextAttributes {
 }
 
 abstract interface class WebGLContextEvent {
-  factory WebGLContextEvent(String type, [WebGLContextEventInit? eventInit]) =>
+  factory WebGLContextEvent(String type_, [WebGLContextEventInit? eventInit]) =>
       WebRuntime.current.createWebObject<WebGLContextEvent>(
         'WebGLContextEvent',
-        [type, eventInit],
+        [type_, eventInit],
       );
   String get statusMessage;
 }
@@ -190,7 +190,7 @@ abstract interface class WebGLRenderingContext {
       0x0308;
    static const GLenum funcAdd =
       0x8006;
-   static const GLenum blendEquation =
+   static const GLenum blendEquationConstant =
       0x8009;
    static const GLenum blendEquationRgb =
       0x8009;
@@ -216,7 +216,7 @@ abstract interface class WebGLRenderingContext {
       0x8003;
    static const GLenum oneMinusConstantAlpha =
       0x8004;
-   static const GLenum blendColor =
+   static const GLenum blendColorConstant =
       0x8005;
    static const GLenum arrayBuffer =
       0x8892;
@@ -244,7 +244,7 @@ abstract interface class WebGLRenderingContext {
       0x0405;
    static const GLenum frontAndBack =
       0x0408;
-   static const GLenum cullFace =
+   static const GLenum cullFaceConstant =
       0x0B44;
    static const GLenum blend =
       0x0BE2;
@@ -260,7 +260,7 @@ abstract interface class WebGLRenderingContext {
       0x8037;
    static const GLenum sampleAlphaToCoverage =
       0x809E;
-   static const GLenum sampleCoverage =
+   static const GLenum sampleCoverageConstant =
       0x80A0;
    static const GLenum noError =
       0;
@@ -276,7 +276,7 @@ abstract interface class WebGLRenderingContext {
       0x0900;
    static const GLenum ccw =
       0x0901;
-   static const GLenum lineWidth =
+   static const GLenum lineWidthConstant =
       0x0B21;
    static const GLenum aliasedPointSizeRange =
       0x846D;
@@ -284,19 +284,19 @@ abstract interface class WebGLRenderingContext {
       0x846E;
    static const GLenum cullFaceMode =
       0x0B45;
-   static const GLenum frontFace =
+   static const GLenum frontFaceConstant =
       0x0B46;
-   static const GLenum depthRange =
+   static const GLenum depthRangeConstant =
       0x0B70;
    static const GLenum depthWritemask =
       0x0B72;
    static const GLenum depthClearValue =
       0x0B73;
-   static const GLenum depthFunc =
+   static const GLenum depthFuncConstant =
       0x0B74;
    static const GLenum stencilClearValue =
       0x0B91;
-   static const GLenum stencilFunc =
+   static const GLenum stencilFuncConstant =
       0x0B92;
    static const GLenum stencilFail =
       0x0B94;
@@ -324,7 +324,7 @@ abstract interface class WebGLRenderingContext {
       0x8CA4;
    static const GLenum stencilBackWritemask =
       0x8CA5;
-   static const GLenum viewport =
+   static const GLenum viewportConstant =
       0x0BA2;
    static const GLenum scissorBox =
       0x0C10;
@@ -386,7 +386,7 @@ abstract interface class WebGLRenderingContext {
       0x1402;
    static const GLenum unsignedShort =
       0x1403;
-   static const GLenum int =
+   static const GLenum int_ =
       0x1404;
    static const GLenum unsignedInt =
       0x1405;
@@ -446,7 +446,7 @@ abstract interface class WebGLRenderingContext {
       0x8B8C;
    static const GLenum currentProgram =
       0x8B8D;
-   static const GLenum never =
+   static const GLenum never_ =
       0x0200;
    static const GLenum less =
       0x0201;
@@ -588,7 +588,7 @@ abstract interface class WebGLRenderingContext {
       0x84DE;
    static const GLenum texture31 =
       0x84DF;
-   static const GLenum activeTexture =
+   static const GLenum activeTextureConstant =
       0x84E0;
    static const GLenum repeat =
       0x2901;
@@ -608,7 +608,7 @@ abstract interface class WebGLRenderingContext {
       0x8B54;
    static const GLenum intVec4 =
       0x8B55;
-   static const GLenum bool =
+   static const GLenum bool_ =
       0x8B56;
    static const GLenum boolVec2 =
       0x8B57;
@@ -778,7 +778,7 @@ abstract interface class WebGLRenderingContext {
   WebGLFramebuffer? createFramebuffer();
   WebGLProgram? createProgram();
   WebGLRenderbuffer? createRenderbuffer();
-  WebGLShader? createShader(GLenum type);
+  WebGLShader? createShader(GLenum type_);
   WebGLTexture? createTexture();
   void cullFace(GLenum mode);
   void deleteBuffer(WebGLBuffer? buffer);
@@ -794,7 +794,7 @@ abstract interface class WebGLRenderingContext {
   void disable(GLenum cap);
   void disableVertexAttribArray(GLuint index);
   void drawArrays(GLenum mode, GLint first, GLsizei count);
-  void drawElements(GLenum mode, GLsizei count, GLenum type, GLintptr offset);
+  void drawElements(GLenum mode, GLsizei count, GLenum type_, GLintptr offset);
   void enable(GLenum cap);
   void enableVertexAttribArray(GLuint index);
   void finish();
@@ -865,16 +865,16 @@ abstract interface class WebGLRenderingContext {
   void vertexAttrib2fv(GLuint index, Float32List values);
   void vertexAttrib3fv(GLuint index, Float32List values);
   void vertexAttrib4fv(GLuint index, Float32List values);
-  void vertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLintptr offset);
+  void vertexAttribPointer(GLuint index, GLint size, GLenum type_, GLboolean normalized, GLsizei stride, GLintptr offset);
   void viewport(GLint x, GLint y, GLsizei width, GLsizei height);
   Future<void> makeXRCompatible();
   void bufferData(GLenum target, GLsizeiptr size, GLenum usage);
   void bufferSubData(GLenum target, GLintptr offset, AllowSharedBufferSource data);
   void compressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, ArrayBufferView data);
   void compressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, ArrayBufferView data);
-  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView? pixels);
-  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView? pixels);
-  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView? pixels);
+  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView? pixels);
+  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type_, ArrayBufferView? pixels);
+  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView? pixels);
   void uniform1fv(WebGLUniformLocation? location, Float32List v);
   void uniform2fv(WebGLUniformLocation? location, Float32List v);
   void uniform3fv(WebGLUniformLocation? location, Float32List v);
@@ -933,7 +933,7 @@ abstract interface class WebGLRenderingContextBase {
       0x0308;
    static const GLenum funcAdd =
       0x8006;
-   static const GLenum blendEquation =
+   static const GLenum blendEquationConstant =
       0x8009;
    static const GLenum blendEquationRgb =
       0x8009;
@@ -959,7 +959,7 @@ abstract interface class WebGLRenderingContextBase {
       0x8003;
    static const GLenum oneMinusConstantAlpha =
       0x8004;
-   static const GLenum blendColor =
+   static const GLenum blendColorConstant =
       0x8005;
    static const GLenum arrayBuffer =
       0x8892;
@@ -987,7 +987,7 @@ abstract interface class WebGLRenderingContextBase {
       0x0405;
    static const GLenum frontAndBack =
       0x0408;
-   static const GLenum cullFace =
+   static const GLenum cullFaceConstant =
       0x0B44;
    static const GLenum blend =
       0x0BE2;
@@ -1003,7 +1003,7 @@ abstract interface class WebGLRenderingContextBase {
       0x8037;
    static const GLenum sampleAlphaToCoverage =
       0x809E;
-   static const GLenum sampleCoverage =
+   static const GLenum sampleCoverageConstant =
       0x80A0;
    static const GLenum noError =
       0;
@@ -1019,7 +1019,7 @@ abstract interface class WebGLRenderingContextBase {
       0x0900;
    static const GLenum ccw =
       0x0901;
-   static const GLenum lineWidth =
+   static const GLenum lineWidthConstant =
       0x0B21;
    static const GLenum aliasedPointSizeRange =
       0x846D;
@@ -1027,19 +1027,19 @@ abstract interface class WebGLRenderingContextBase {
       0x846E;
    static const GLenum cullFaceMode =
       0x0B45;
-   static const GLenum frontFace =
+   static const GLenum frontFaceConstant =
       0x0B46;
-   static const GLenum depthRange =
+   static const GLenum depthRangeConstant =
       0x0B70;
    static const GLenum depthWritemask =
       0x0B72;
    static const GLenum depthClearValue =
       0x0B73;
-   static const GLenum depthFunc =
+   static const GLenum depthFuncConstant =
       0x0B74;
    static const GLenum stencilClearValue =
       0x0B91;
-   static const GLenum stencilFunc =
+   static const GLenum stencilFuncConstant =
       0x0B92;
    static const GLenum stencilFail =
       0x0B94;
@@ -1067,7 +1067,7 @@ abstract interface class WebGLRenderingContextBase {
       0x8CA4;
    static const GLenum stencilBackWritemask =
       0x8CA5;
-   static const GLenum viewport =
+   static const GLenum viewportConstant =
       0x0BA2;
    static const GLenum scissorBox =
       0x0C10;
@@ -1129,7 +1129,7 @@ abstract interface class WebGLRenderingContextBase {
       0x1402;
    static const GLenum unsignedShort =
       0x1403;
-   static const GLenum int =
+   static const GLenum int_ =
       0x1404;
    static const GLenum unsignedInt =
       0x1405;
@@ -1189,7 +1189,7 @@ abstract interface class WebGLRenderingContextBase {
       0x8B8C;
    static const GLenum currentProgram =
       0x8B8D;
-   static const GLenum never =
+   static const GLenum never_ =
       0x0200;
    static const GLenum less =
       0x0201;
@@ -1331,7 +1331,7 @@ abstract interface class WebGLRenderingContextBase {
       0x84DE;
    static const GLenum texture31 =
       0x84DF;
-   static const GLenum activeTexture =
+   static const GLenum activeTextureConstant =
       0x84E0;
    static const GLenum repeat =
       0x2901;
@@ -1351,7 +1351,7 @@ abstract interface class WebGLRenderingContextBase {
       0x8B54;
    static const GLenum intVec4 =
       0x8B55;
-   static const GLenum bool =
+   static const GLenum bool_ =
       0x8B56;
    static const GLenum boolVec2 =
       0x8B57;
@@ -1521,7 +1521,7 @@ abstract interface class WebGLRenderingContextBase {
   WebGLFramebuffer? createFramebuffer();
   WebGLProgram? createProgram();
   WebGLRenderbuffer? createRenderbuffer();
-  WebGLShader? createShader(GLenum type);
+  WebGLShader? createShader(GLenum type_);
   WebGLTexture? createTexture();
   void cullFace(GLenum mode);
   void deleteBuffer(WebGLBuffer? buffer);
@@ -1537,7 +1537,7 @@ abstract interface class WebGLRenderingContextBase {
   void disable(GLenum cap);
   void disableVertexAttribArray(GLuint index);
   void drawArrays(GLenum mode, GLint first, GLsizei count);
-  void drawElements(GLenum mode, GLsizei count, GLenum type, GLintptr offset);
+  void drawElements(GLenum mode, GLsizei count, GLenum type_, GLintptr offset);
   void enable(GLenum cap);
   void enableVertexAttribArray(GLuint index);
   void finish();
@@ -1608,7 +1608,7 @@ abstract interface class WebGLRenderingContextBase {
   void vertexAttrib2fv(GLuint index, Float32List values);
   void vertexAttrib3fv(GLuint index, Float32List values);
   void vertexAttrib4fv(GLuint index, Float32List values);
-  void vertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLintptr offset);
+  void vertexAttribPointer(GLuint index, GLint size, GLenum type_, GLboolean normalized, GLsizei stride, GLintptr offset);
   void viewport(GLint x, GLint y, GLsizei width, GLsizei height);
   Future<void> makeXRCompatible();
 }
@@ -1618,9 +1618,9 @@ abstract interface class WebGLRenderingContextOverloads {
   void bufferSubData(GLenum target, GLintptr offset, AllowSharedBufferSource data);
   void compressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, ArrayBufferView data);
   void compressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, ArrayBufferView data);
-  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView? pixels);
-  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView? pixels);
-  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, ArrayBufferView? pixels);
+  void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView? pixels);
+  void texImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type_, ArrayBufferView? pixels);
+  void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type_, ArrayBufferView? pixels);
   void uniform1fv(WebGLUniformLocation? location, Float32List v);
   void uniform2fv(WebGLUniformLocation? location, Float32List v);
   void uniform3fv(WebGLUniformLocation? location, Float32List v);

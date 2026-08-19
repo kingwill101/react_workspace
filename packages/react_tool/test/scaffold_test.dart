@@ -115,7 +115,10 @@ void main() {
     final pubspec = read('pubspec.yaml');
     expect(pubspec, contains('name: my_app'));
     expect(pubspec, contains('react: {path: ../packages/react}'));
-    expect(pubspec, contains('react_codegen: {path: ../packages/react_codegen}'));
+    expect(
+      pubspec,
+      contains('react_codegen: {path: ../packages/react_codegen}'),
+    );
     expect(pubspec, contains('react_tool: {path: ../packages/react_tool}'));
     expect(pubspec, contains('build_runner: ^2.15.3'));
 
@@ -125,6 +128,11 @@ void main() {
     expect(html, contains('{{PROPS}}'));
 
     final client = read('web/client.dart');
+    expect(client, contains("import 'package:react_dom/react_dom.dart';"));
+    expect(
+      client,
+      isNot(contains("import 'package:react_web/react_web.dart'")),
+    );
     expect(client, contains('package:my_app/app.react.dart'));
     expect(client, contains('package:my_app/react_components.g.dart'));
 
@@ -134,6 +142,9 @@ void main() {
     expect(server, contains("'title': 'Hello from SSR'"));
 
     final app = read('lib/app.dart');
+    expect(app, contains("import 'package:react_dom/react_dom.dart';"));
+    expect(app, isNot(contains("import 'package:react/react.dart';")));
+    expect(app, contains("'fontFamily': 'system-ui, sans-serif'"));
     expect(app, contains('@reactComponent'));
     expect(app, contains("greetAction(name: 'world')"));
 
@@ -199,36 +210,54 @@ void main() {
     expect(pubspec, contains('name: widgets_app'));
   });
 
-  test('init command with --template client scaffolds a client-only project',
-      () async {
-    final runner = CommandRunner<void>('react', '')
-      ..addCommand(InitCommand(workingDirectory: root));
-    await runner.run(['init', '--template', 'client', 'client_app']);
+  test(
+    'init command with --template client scaffolds a client-only project',
+    () async {
+      final runner = CommandRunner<void>('react', '')
+        ..addCommand(InitCommand(workingDirectory: root));
+      await runner.run(['init', '--template', 'client', 'client_app']);
 
-    expect(
-      File(p.join(root.path, 'client_app', 'pubspec.yaml')).existsSync(),
-      isTrue,
-    );
-    expect(
-      File(p.join(root.path, 'client_app', 'Dockerfile')).existsSync(),
-      isFalse,
-    );
-    expect(
-      File(p.join(root.path, 'client_app', 'lib', 'ssr.dart')).existsSync(),
-      isFalse,
-    );
-    final pubspec = await File(
-      p.join(root.path, 'client_app', 'pubspec.yaml'),
-    ).readAsString();
-    expect(pubspec, contains('name: client_app'));
-    expect(pubspec, isNot(contains('react_server')));
-    expect(pubspec, isNot(contains('\n  shelf:')));
-    final reactYaml = await File(
-      p.join(root.path, 'client_app', 'react.yaml'),
-    ).readAsString();
-    expect(reactYaml, isNot(contains('ssr:')));
-    expect(reactYaml, isNot(contains('server:')));
-  });
+      expect(
+        File(p.join(root.path, 'client_app', 'pubspec.yaml')).existsSync(),
+        isTrue,
+      );
+      expect(
+        File(p.join(root.path, 'client_app', 'Dockerfile')).existsSync(),
+        isFalse,
+      );
+      expect(
+        File(p.join(root.path, 'client_app', 'lib', 'ssr.dart')).existsSync(),
+        isFalse,
+      );
+      final pubspec = await File(
+        p.join(root.path, 'client_app', 'pubspec.yaml'),
+      ).readAsString();
+      expect(pubspec, contains('name: client_app'));
+      expect(pubspec, isNot(contains('react_server')));
+      expect(pubspec, isNot(contains('\n  shelf:')));
+      final clientSource = await File(
+        p.join(root.path, 'client_app', 'web', 'client.dart'),
+      ).readAsString();
+      expect(
+        clientSource,
+        contains("import 'package:react_dom/react_dom.dart';"),
+      );
+      expect(
+        clientSource,
+        isNot(contains("import 'package:react_web/react_web.dart'")),
+      );
+      final appSource = await File(
+        p.join(root.path, 'client_app', 'lib', 'app.dart'),
+      ).readAsString();
+      expect(appSource, contains("import 'package:react_dom/react_dom.dart';"));
+      expect(appSource, isNot(contains("import 'package:react/react.dart';")));
+      final reactYaml = await File(
+        p.join(root.path, 'client_app', 'react.yaml'),
+      ).readAsString();
+      expect(reactYaml, isNot(contains('ssr:')));
+      expect(reactYaml, isNot(contains('server:')));
+    },
+  );
 
   test('init command rejects an invalid project name', () async {
     final runner = CommandRunner<void>('react', '')

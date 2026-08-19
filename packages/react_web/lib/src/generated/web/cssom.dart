@@ -116,7 +116,7 @@ abstract interface class MediaList {
 }
 
 abstract interface class StyleSheet {
-  Object get type;
+  Object get type_;
   String? get href;
   Object get ownerNode;
   CSSStyleSheet? get parentStyleSheet;

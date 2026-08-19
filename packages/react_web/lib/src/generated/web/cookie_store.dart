@@ -9,10 +9,10 @@ import 'service_workers.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CookieChangeEvent {
-  factory CookieChangeEvent(String type, [CookieChangeEventInit? eventInitDict]) =>
+  factory CookieChangeEvent(String type_, [CookieChangeEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<CookieChangeEvent>(
         'CookieChangeEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   List<CookieListItem> get changed;
   List<CookieListItem> get deleted;
@@ -198,10 +198,10 @@ abstract interface class CookieStoreManager {
 }
 
 abstract interface class ExtendableCookieChangeEvent {
-  factory ExtendableCookieChangeEvent(String type, [ExtendableCookieChangeEventInit? eventInitDict]) =>
+  factory ExtendableCookieChangeEvent(String type_, [ExtendableCookieChangeEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<ExtendableCookieChangeEvent>(
         'ExtendableCookieChangeEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   List<CookieListItem> get changed;
   List<CookieListItem> get deleted;

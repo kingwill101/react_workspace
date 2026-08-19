@@ -7,7 +7,7 @@ import 'hr_time.dart';
 typedef NavigationTimingType = String;
 
 abstract interface class PerformanceNavigation {
-  int get type;
+  int get type_;
   int get redirectCount;
   Object toJSON();
 }
@@ -21,7 +21,7 @@ abstract interface class PerformanceNavigationTiming {
   DOMHighResTimeStamp get domComplete;
   DOMHighResTimeStamp get loadEventStart;
   DOMHighResTimeStamp get loadEventEnd;
-  NavigationTimingType get type;
+  NavigationTimingType get type_;
   int get redirectCount;
 }
 

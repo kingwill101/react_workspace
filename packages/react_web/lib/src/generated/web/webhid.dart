@@ -9,8 +9,8 @@ abstract interface class HIDCollectionInfo {
   set usagePage(int? value);
   int? get usage;
   set usage(int? value);
-  Object? get type;
-  set type(Object? value);
+  Object? get type_;
+  set type_(Object? value);
   List<HIDCollectionInfo>? get children;
   set children(List<HIDCollectionInfo>? value);
   List<HIDReportInfo>? get inputReports;
@@ -27,7 +27,7 @@ final class HIDCollectionInfoValue implements HIDCollectionInfo {
   @override
   int? usage;
   @override
-  Object? type;
+  Object? type_;
   @override
   List<HIDCollectionInfo>? children;
   @override
@@ -40,7 +40,7 @@ final class HIDCollectionInfoValue implements HIDCollectionInfo {
   HIDCollectionInfoValue({
     this.usagePage,
     this.usage,
-    this.type,
+    this.type_,
     this.children,
     this.inputReports,
     this.outputReports,

@@ -8,10 +8,10 @@ import 'html.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AnimationEvent {
-  factory AnimationEvent(Object type, [AnimationEventInit? animationEventInitDict]) =>
+  factory AnimationEvent(Object type_, [AnimationEventInit? animationEventInitDict]) =>
       WebRuntime.current.createWebObject<AnimationEvent>(
         'AnimationEvent',
-        [type, animationEventInitDict],
+        [type_, animationEventInitDict],
       );
   Object get animationName;
   double get elapsedTime;
@@ -63,7 +63,7 @@ abstract interface class CSSRule {
    set cssText(Object value);
   CSSRule? get parentRule;
   CSSStyleSheet? get parentStyleSheet;
-  int get type;
+  int get type_;
 }
 
 abstract interface class GlobalEventHandlers {

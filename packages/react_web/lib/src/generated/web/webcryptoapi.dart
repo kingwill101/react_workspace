@@ -128,7 +128,7 @@ abstract interface class Crypto {
 }
 
 abstract interface class CryptoKey {
-  KeyType get type;
+  KeyType get type_;
   bool get extractable;
   Object get algorithm;
   Object get usages;

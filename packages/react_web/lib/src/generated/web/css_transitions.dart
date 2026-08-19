@@ -6,10 +6,10 @@ import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class TransitionEvent {
-  factory TransitionEvent(Object type, [TransitionEventInit? transitionEventInitDict]) =>
+  factory TransitionEvent(Object type_, [TransitionEventInit? transitionEventInitDict]) =>
       WebRuntime.current.createWebObject<TransitionEvent>(
         'TransitionEvent',
-        [type, transitionEventInitDict],
+        [type_, transitionEventInitDict],
       );
   Object get propertyName;
   double get elapsedTime;

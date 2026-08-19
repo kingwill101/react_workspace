@@ -453,7 +453,7 @@ abstract interface class DOMParser {
         'DOMParser',
         [],
       );
-  Document parseFromString(Object string, DOMParserSupportedType type);
+  Document parseFromString(Object string_, DOMParserSupportedType type_);
 }
 
 typedef DOMParserSupportedType = String;
@@ -461,7 +461,7 @@ typedef DOMParserSupportedType = String;
 abstract interface class DOMStringList {
   int get length;
   String? item(int index);
-  bool contains(String string);
+  bool contains(String string_);
 }
 
 abstract interface class DOMStringMap {
@@ -488,7 +488,7 @@ abstract interface class DataTransfer {
 
 abstract interface class DataTransferItemList {
   int get length;
-  DataTransferItem? add(String data, String type);
+  DataTransferItem? add(String data, String type_);
   void remove(int index);
   void clear();
 }
@@ -512,10 +512,10 @@ typedef DocumentReadyState = String;
 typedef DocumentVisibilityState = String;
 
 abstract interface class DragEvent {
-  factory DragEvent(String type, [DragEventInit? eventInitDict]) =>
+  factory DragEvent(String type_, [DragEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<DragEvent>(
         'DragEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   DataTransfer? get dataTransfer;
 }
@@ -677,10 +677,10 @@ abstract interface class ElementInternals {
 }
 
 abstract interface class ErrorEvent {
-  factory ErrorEvent(String type, [ErrorEventInit? eventInitDict]) =>
+  factory ErrorEvent(String type_, [ErrorEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<ErrorEvent>(
         'ErrorEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   String get message;
   String get filename;
@@ -784,10 +784,10 @@ final class FocusOptionsValue implements FocusOptions {
 }
 
 abstract interface class FormDataEvent {
-  factory FormDataEvent(String type, FormDataEventInit eventInitDict) =>
+  factory FormDataEvent(String type_, FormDataEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<FormDataEvent>(
         'FormDataEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   FormData get formData;
 }
@@ -875,8 +875,8 @@ abstract interface class HTMLAnchorElement {
   DOMTokenList get relList;
   String get hreflang;
    set hreflang(String value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   String get text;
    set text(String value);
   String get referrerPolicy;
@@ -996,8 +996,8 @@ abstract interface class HTMLButtonElement {
    set formTarget(String value);
   String get name;
    set name(String value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   String get value;
    set value(String value);
   bool get willValidate;
@@ -1020,8 +1020,8 @@ abstract interface class HTMLCanvasElement {
   int get height;
    set height(int value);
   RenderingContext? getContext(String contextId, [Object? options]);
-  String toDataURL([String? type, Object? quality]);
-  void toBlob(BlobCallback callback, [String? type, Object? quality]);
+  String toDataURL([String? type_, Object? quality]);
+  void toBlob(BlobCallback callback, [String? type_, Object? quality]);
   OffscreenCanvas transferControlToOffscreen();
   MediaStream captureStream([double? frameRequestRate]);
 }
@@ -1110,8 +1110,8 @@ abstract interface class HTMLEmbedElement {
       );
   String get src;
    set src(String value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   String get width;
    set width(String value);
   String get height;
@@ -1134,7 +1134,7 @@ abstract interface class HTMLFieldSetElement {
   HTMLFormElement? get form;
   String get name;
    set name(String value);
-  String get type;
+  String get type_;
   HTMLCollection get elements;
   bool get willValidate;
   ValidityState get validity;
@@ -1356,8 +1356,8 @@ abstract interface class HTMLLIElement {
       );
   int get value;
    set value(int value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
 }
 
 abstract interface class HTMLLabelElement {
@@ -1405,8 +1405,8 @@ abstract interface class HTMLLinkElement {
    set integrity(String value);
   String get hreflang;
    set hreflang(String value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   DOMTokenList get sizes;
   String get imageSrcset;
    set imageSrcset(String value);
@@ -1540,8 +1540,8 @@ abstract interface class HTMLOListElement {
    set reversed(bool value);
   int get start;
    set start(int value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   bool get compact;
    set compact(bool value);
 }
@@ -1554,8 +1554,8 @@ abstract interface class HTMLObjectElement {
       );
   String get data;
    set data(String value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   String get name;
    set name(String value);
   HTMLFormElement? get form;
@@ -1665,7 +1665,7 @@ abstract interface class HTMLOutputElement {
   HTMLFormElement? get form;
   String get name;
    set name(String value);
-  String get type;
+  String get type_;
   String get defaultValue;
    set defaultValue(String value);
   String get value;
@@ -1699,8 +1699,8 @@ abstract interface class HTMLParamElement {
    set name(String value);
   String get value;
    set value(String value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   String get valueType;
    set valueType(String value);
 }
@@ -1757,8 +1757,8 @@ abstract interface class HTMLScriptElement {
    set attributionSrc(String value);
   String get src;
    set src(String value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   bool get noModule;
    set noModule(bool value);
   bool get async_;
@@ -1802,7 +1802,7 @@ abstract interface class HTMLSelectElement {
    set required_(bool value);
   int get size;
    set size(int value);
-  String get type;
+  String get type_;
   HTMLOptionsCollection get options;
   int get length;
    set length(int value);
@@ -1846,8 +1846,8 @@ abstract interface class HTMLSourceElement {
       );
   String get src;
    set src(String value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
   String get srcset;
    set srcset(String value);
   String get sizes;
@@ -1879,8 +1879,8 @@ abstract interface class HTMLStyleElement {
    set disabled(bool value);
   String get media;
    set media(String value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
 }
 
 abstract interface class HTMLTableCaptionElement {
@@ -2083,7 +2083,7 @@ abstract interface class HTMLTextAreaElement {
    set rows(int value);
   String get wrap;
    set wrap(String value);
-  String get type;
+  String get type_;
   String get defaultValue;
    set defaultValue(String value);
   String get value;
@@ -2155,8 +2155,8 @@ abstract interface class HTMLUListElement {
       );
   bool get compact;
    set compact(bool value);
-  String get type;
-   set type(String value);
+  String get type_;
+   set type_(String value);
 }
 
 abstract interface class HTMLUnknownElement {
@@ -2191,10 +2191,10 @@ abstract interface class HTMLVideoElement {
 }
 
 abstract interface class HashChangeEvent {
-  factory HashChangeEvent(String type, [HashChangeEventInit? eventInitDict]) =>
+  factory HashChangeEvent(String type_, [HashChangeEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<HashChangeEvent>(
         'HashChangeEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   String get oldURL;
   String get newURL;
@@ -2329,20 +2329,20 @@ final class ImageDataSettingsValue implements ImageDataSettings {
 }
 
 abstract interface class ImageEncodeOptions {
-  String? get type;
-  set type(String? value);
+  String? get type_;
+  set type_(String? value);
   double? get quality;
   set quality(double? value);
 }
 
 final class ImageEncodeOptionsValue implements ImageEncodeOptions {
   @override
-  String? type;
+  String? type_;
   @override
   double? quality;
 
   ImageEncodeOptionsValue({
-    this.type,
+    this.type_,
     this.quality,
   });
 }
@@ -2393,17 +2393,17 @@ abstract interface class MessageChannel {
 }
 
 abstract interface class MessageEvent {
-  factory MessageEvent(String type, [MessageEventInit? eventInitDict]) =>
+  factory MessageEvent(String type_, [MessageEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<MessageEvent>(
         'MessageEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Object get data;
   String get origin;
   String get lastEventId;
   MessageEventSource? get source;
   List<MessagePort> get ports;
-  void initMessageEvent(String type, [bool? bubbles, bool? cancelable, Object? data, String? origin, String? lastEventId, MessageEventSource? source, List<MessagePort>? ports]);
+  void initMessageEvent(String type_, [bool? bubbles, bool? cancelable, Object? data, String? origin, String? lastEventId, MessageEventSource? source, List<MessagePort>? ports]);
 }
 
 abstract interface class MessageEventInit {
@@ -2455,7 +2455,7 @@ abstract interface class MessagePort {
 }
 
 abstract interface class MimeType {
-  String get type;
+  String get type_;
   String get description;
   String get suffixes;
   Plugin get enabledPlugin;
@@ -2866,10 +2866,10 @@ final class PageSwapEventInitValue implements PageSwapEventInit {
 }
 
 abstract interface class PageTransitionEvent {
-  factory PageTransitionEvent(String type, [PageTransitionEventInit? eventInitDict]) =>
+  factory PageTransitionEvent(String type_, [PageTransitionEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<PageTransitionEvent>(
         'PageTransitionEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   bool get persisted;
 }
@@ -2924,10 +2924,10 @@ abstract interface class PluginArray {
 }
 
 abstract interface class PopStateEvent {
-  factory PopStateEvent(String type, [PopStateEventInit? eventInitDict]) =>
+  factory PopStateEvent(String type_, [PopStateEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<PopStateEvent>(
         'PopStateEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Object get state;
   bool get hasUAVisualTransition;
@@ -2964,10 +2964,10 @@ typedef PredefinedColorSpace = String;
 typedef PremultiplyAlpha = String;
 
 abstract interface class PromiseRejectionEvent {
-  factory PromiseRejectionEvent(String type, PromiseRejectionEventInit eventInitDict) =>
+  factory PromiseRejectionEvent(String type_, PromiseRejectionEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<PromiseRejectionEvent>(
         'PromiseRejectionEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Object get promise;
   Object get reason;
@@ -3033,17 +3033,17 @@ abstract interface class Storage {
 }
 
 abstract interface class StorageEvent {
-  factory StorageEvent(String type, [StorageEventInit? eventInitDict]) =>
+  factory StorageEvent(String type_, [StorageEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<StorageEvent>(
         'StorageEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   String? get key;
   String? get oldValue;
   String? get newValue;
   String get url;
   Storage? get storageArea;
-  void initStorageEvent(String type, [bool? bubbles, bool? cancelable, String? key, String? oldValue, String? newValue, String? url, Storage? storageArea]);
+  void initStorageEvent(String type_, [bool? bubbles, bool? cancelable, String? key, String? oldValue, String? newValue, String? url, Storage? storageArea]);
 }
 
 abstract interface class StorageEventInit {
@@ -3095,10 +3095,10 @@ final class StructuredSerializeOptionsValue implements StructuredSerializeOption
 }
 
 abstract interface class SubmitEvent {
-  factory SubmitEvent(String type, [SubmitEventInit? eventInitDict]) =>
+  factory SubmitEvent(String type_, [SubmitEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<SubmitEvent>(
         'SubmitEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   HTMLElement? get submitter;
 }
@@ -3194,10 +3194,10 @@ abstract interface class TimeRanges {
 typedef TimerHandler = Object;
 
 abstract interface class ToggleEvent {
-  factory ToggleEvent(String type, [ToggleEventInit? eventInitDict]) =>
+  factory ToggleEvent(String type_, [ToggleEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<ToggleEvent>(
         'ToggleEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   String get oldState;
   String get newState;
@@ -3223,10 +3223,10 @@ final class ToggleEventInitValue implements ToggleEventInit {
 }
 
 abstract interface class TrackEvent {
-  factory TrackEvent(String type, [TrackEventInit? eventInitDict]) =>
+  factory TrackEvent(String type_, [TrackEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<TrackEvent>(
         'TrackEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   Object get track;
 }
@@ -3468,8 +3468,8 @@ abstract interface class WorkerNavigator {
 }
 
 abstract interface class WorkerOptions {
-  WorkerType? get type;
-  set type(WorkerType? value);
+  WorkerType? get type_;
+  set type_(WorkerType? value);
   RequestCredentials? get credentials;
   set credentials(RequestCredentials? value);
   String? get name;
@@ -3478,14 +3478,14 @@ abstract interface class WorkerOptions {
 
 final class WorkerOptionsValue implements WorkerOptions {
   @override
-  WorkerType? type;
+  WorkerType? type_;
   @override
   RequestCredentials? credentials;
   @override
   String? name;
 
   WorkerOptionsValue({
-    this.type,
+    this.type_,
     this.credentials,
     this.name,
   });

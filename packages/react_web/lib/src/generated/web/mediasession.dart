@@ -33,8 +33,8 @@ abstract interface class MediaImage {
   set src(String value);
   String? get sizes;
   set sizes(String? value);
-  String? get type;
-  set type(String? value);
+  String? get type_;
+  set type_(String? value);
 }
 
 final class MediaImageValue implements MediaImage {
@@ -43,12 +43,12 @@ final class MediaImageValue implements MediaImage {
   @override
   String? sizes;
   @override
-  String? type;
+  String? type_;
 
   MediaImageValue({
     required this.src,
     this.sizes,
-    this.type,
+    this.type_,
   });
 }
 

@@ -91,19 +91,19 @@ final class FaceDetectorOptionsValue implements FaceDetectorOptions {
 abstract interface class Landmark {
   List<Point2D> get locations;
   set locations(List<Point2D> value);
-  LandmarkType? get type;
-  set type(LandmarkType? value);
+  LandmarkType? get type_;
+  set type_(LandmarkType? value);
 }
 
 final class LandmarkValue implements Landmark {
   @override
   List<Point2D> locations;
   @override
-  LandmarkType? type;
+  LandmarkType? type_;
 
   LandmarkValue({
     required this.locations,
-    this.type,
+    this.type_,
   });
 }
 

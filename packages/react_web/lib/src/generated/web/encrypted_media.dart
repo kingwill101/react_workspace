@@ -8,10 +8,10 @@ import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class MediaEncryptedEvent {
-  factory MediaEncryptedEvent(String type, [MediaEncryptedEventInit? eventInitDict]) =>
+  factory MediaEncryptedEvent(String type_, [MediaEncryptedEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<MediaEncryptedEvent>(
         'MediaEncryptedEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   String get initDataType;
   Object get initData;
@@ -37,10 +37,10 @@ final class MediaEncryptedEventInitValue implements MediaEncryptedEventInit {
 }
 
 abstract interface class MediaKeyMessageEvent {
-  factory MediaKeyMessageEvent(String type, MediaKeyMessageEventInit eventInitDict) =>
+  factory MediaKeyMessageEvent(String type_, MediaKeyMessageEventInit eventInitDict) =>
       WebRuntime.current.createWebObject<MediaKeyMessageEvent>(
         'MediaKeyMessageEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   MediaKeyMessageType get messageType;
   Object get message;

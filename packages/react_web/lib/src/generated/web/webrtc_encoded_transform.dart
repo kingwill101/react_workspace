@@ -84,7 +84,7 @@ abstract interface class RTCEncodedVideoFrame {
         'RTCEncodedVideoFrame',
         [originalFrame, options],
       );
-  RTCEncodedVideoFrameType get type;
+  RTCEncodedVideoFrameType get type_;
   Object get data;
    set data(Object value);
   RTCEncodedVideoFrameMetadata getMetadata();

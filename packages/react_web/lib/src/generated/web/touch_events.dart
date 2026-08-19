@@ -30,10 +30,10 @@ abstract interface class Touch {
 }
 
 abstract interface class TouchEvent {
-  factory TouchEvent(String type, [TouchEventInit? eventInitDict]) =>
+  factory TouchEvent(String type_, [TouchEventInit? eventInitDict]) =>
       WebRuntime.current.createWebObject<TouchEvent>(
         'TouchEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   TouchList get touches;
   TouchList get targetTouches;
