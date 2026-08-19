@@ -249,6 +249,15 @@ void main() {
     expect(vscodeSettings, contains('"files.exclude"'));
     expect(vscodeSettings, contains('.generated'));
     expect(vscodeSettings, contains('build'));
+
+    expect(
+      File(p.join(root.path, 'routed_app', 'Dockerfile')).existsSync(),
+      isTrue,
+    );
+    expect(
+      File(p.join(root.path, 'routed_app', '.dockerignore')).existsSync(),
+      isTrue,
+    );
   });
 
   test(
