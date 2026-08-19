@@ -21,9 +21,5 @@ final class StorageEstimateValue implements StorageEstimate {
   @override
   int? quota;
 
-  StorageEstimateValue({
-    this.usage,
-    this.quota,
-  });
+  StorageEstimateValue({this.usage, this.quota});
 }
-

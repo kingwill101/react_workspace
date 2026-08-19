@@ -6,15 +6,13 @@ import '../model/type_ref.dart';
 /// A preserved Web IDL extended attribute.
 final class ExtAttr {
   final String name;
+
   /// Raw right-hand-side text (e.g. `Window`, `*`, `8,14`) or null.
   final String? rhs;
 
   const ExtAttr({required this.name, this.rhs});
 
-  Map<String, Object?> toJson() => {
-    'name': name,
-    if (rhs != null) 'rhs': rhs,
-  };
+  Map<String, Object?> toJson() => {'name': name, if (rhs != null) 'rhs': rhs};
 }
 
 /// An IDL argument / parameter.
@@ -22,6 +20,7 @@ final class IdlParameter {
   final String name;
   final TypeRef type;
   final bool required;
+
   /// Raw default expression text, if any (e.g. `0`, `""`, `true`).
   final String? defaultValue;
   final bool variadic;
@@ -63,6 +62,7 @@ sealed class IdlMember {
 final class IdlAttribute extends IdlMember {
   final TypeRef type;
   final bool readonly;
+
   /// Web IDL `special` field: `static`, `stringifier`, `inherit`, or empty.
   final String special;
 
@@ -90,6 +90,7 @@ final class IdlAttribute extends IdlMember {
 final class IdlOperation extends IdlMember {
   final TypeRef returnType;
   final List<IdlParameter> parameters;
+
   /// `getter`, `setter`, `deleter`, `stringifier`, `static`, or empty.
   final String special;
 
@@ -129,6 +130,7 @@ final class IdlConstructor extends IdlMember {
 
 final class IdlConstant extends IdlMember {
   final TypeRef type;
+
   /// Raw value text from the snapshot (e.g. `0`, `""`, `1.5`, `true`).
   final String? value;
 

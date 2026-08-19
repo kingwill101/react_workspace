@@ -133,17 +133,13 @@ abstract interface class SVGFEFloodElement {
   SVGAnimatedString get result;
 }
 
-abstract interface class SVGFEFuncAElement {
-}
+abstract interface class SVGFEFuncAElement {}
 
-abstract interface class SVGFEFuncBElement {
-}
+abstract interface class SVGFEFuncBElement {}
 
-abstract interface class SVGFEFuncGElement {
-}
+abstract interface class SVGFEFuncGElement {}
 
-abstract interface class SVGFEFuncRElement {
-}
+abstract interface class SVGFEFuncRElement {}
 
 abstract interface class SVGFEGaussianBlurElement {
   SVGAnimatedLength get x;
@@ -275,4 +271,3 @@ abstract interface class SVGFilterPrimitiveStandardAttributes {
   SVGAnimatedLength get height;
   SVGAnimatedString get result;
 }
-

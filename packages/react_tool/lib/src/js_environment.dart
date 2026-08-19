@@ -61,7 +61,9 @@ final class JsWrapperDescriptor {
   });
 
   bool get isEmpty =>
-      entries.isEmpty && dependencies.isEmpty && peers.isEmpty &&
+      entries.isEmpty &&
+      dependencies.isEmpty &&
+      peers.isEmpty &&
       prebuilt.isEmpty;
 
   /// Targets this wrapper contributes to.
@@ -119,8 +121,9 @@ final class JsWrapperDescriptor {
       final legacyNpm = _stringMap(react['npm']);
       for (final shim in legacyShims) {
         // Legacy `react.shims` entries are relative to the package lib/.
-        entries['shared_${entries.length}'] =
-            shim.startsWith('lib/') ? shim : 'lib/$shim';
+        entries['shared_${entries.length}'] = shim.startsWith('lib/')
+            ? shim
+            : 'lib/$shim';
       }
       dependencies.addAll(legacyNpm);
       externals.addAll(['react', 'react-dom']);
@@ -169,8 +172,10 @@ final class JsDependencyConflict implements Exception {
       ..writeln('Conflicting JavaScript requirements for "$name":')
       ..writeln();
     for (final requirement in requirements) {
-      buffer.writeln('  ${requirement.declaredBy} requires '
-          '${requirement.range}');
+      buffer.writeln(
+        '  ${requirement.declaredBy} requires '
+        '${requirement.range}',
+      );
     }
     buffer
       ..writeln()
@@ -337,7 +342,9 @@ class JsEnvironmentBuilder {
   /// already-bundled artifacts — its npm `dependencies` are inlined and must
   /// not force installations; only its `peers` (react/react-dom validation)
   /// still apply.
-  List<NpmRequirement> _collectRequirements(List<JsWrapperDescriptor> wrappers) {
+  List<NpmRequirement> _collectRequirements(
+    List<JsWrapperDescriptor> wrappers,
+  ) {
     final merged = <String, List<NpmRequirement>>{};
     for (final wrapper in wrappers) {
       if (wrapper.entries.isNotEmpty) {
@@ -353,9 +360,7 @@ class JsEnvironmentBuilder {
             .add(NpmRequirement(entry.key, entry.value, wrapper.packageName));
       }
     }
-    return [
-      for (final entry in merged.entries) ...entry.value,
-    ];
+    return [for (final entry in merged.entries) ...entry.value];
   }
 
   Future<JsEnvironment> _managed(
@@ -400,11 +405,12 @@ class JsEnvironmentBuilder {
 
     if (!File(p.join(root.path, '.installed')).existsSync()) {
       log('Installing JS environment into ${p.relative(root.path)}');
-      final result = await Process.run(
-        npmCommand,
-        ['install', '--no-audit', '--no-fund', '--legacy-peer-deps'],
-        workingDirectory: root.path,
-      );
+      final result = await Process.run(npmCommand, [
+        'install',
+        '--no-audit',
+        '--no-fund',
+        '--legacy-peer-deps',
+      ], workingDirectory: root.path);
       if (result.exitCode != 0) {
         throw JsEnvironmentException(
           'npm install failed in ${root.path} '
@@ -490,10 +496,7 @@ class JsEnvironmentBuilder {
       'private': true,
       'type': 'module',
       'dependencies': dependencies,
-      'devDependencies': {
-        'esbuild': esbuild,
-        'rolldown': ?rolldown,
-      },
+      'devDependencies': {'esbuild': esbuild, 'rolldown': ?rolldown},
     });
   }
 
@@ -508,10 +511,12 @@ class JsEnvironmentBuilder {
             .split(RegExp(r'\s+'))
             .where((c) => c.trim().isNotEmpty),
     ];
-    final result = Process.runSync(
-      npmCommand,
-      ['view', name, 'versions', '--json'],
-    );
+    final result = Process.runSync(npmCommand, [
+      'view',
+      name,
+      'versions',
+      '--json',
+    ]);
     if (result.exitCode != 0) {
       throw JsEnvironmentException(
         'Could not query versions for "$name" '
@@ -522,10 +527,11 @@ class JsEnvironmentBuilder {
     final versions = decoded is List
         ? decoded.whereType<String>().toList()
         : <String>[];
-    final satisfying = versions
-        .where((version) => _satisfiesAll(version, constraints))
-        .toList()
-      ..sort((a, b) => _compareVersions(a, b));
+    final satisfying =
+        versions
+            .where((version) => _satisfiesAll(version, constraints))
+            .toList()
+          ..sort((a, b) => _compareVersions(a, b));
     if (satisfying.isEmpty) {
       throw JsDependencyConflict(name, requirements);
     }
@@ -556,8 +562,9 @@ class JsEnvironmentBuilder {
   bool _rangeSatisfied(String range, String version) {
     final normalized = range.trim();
     if (normalized == '*') return true;
-    final match = RegExp(r'^([\^~=<>]|>=|<=)?\s*([0-9]+(?:\.[0-9]+){0,2})')
-        .firstMatch(normalized);
+    final match = RegExp(
+      r'^([\^~=<>]|>=|<=)?\s*([0-9]+(?:\.[0-9]+){0,2})',
+    ).firstMatch(normalized);
     if (match == null) return false;
     final op = match.group(1) ?? '';
     final required = match.group(2)!;
@@ -573,7 +580,8 @@ class JsEnvironmentBuilder {
       case '<=':
         return _compareVersions(version, required) <= 0;
       case '^':
-        return versionMajor == major && _compareVersions(version, required) >= 0;
+        return versionMajor == major &&
+            _compareVersions(version, required) >= 0;
       case '~':
         return _sameMinor(version, required) &&
             _compareVersions(version, required) >= 0;

@@ -12,7 +12,8 @@ abstract interface class WindowControlsOverlayGeometryChangeEventInit {
   set visible(bool? value);
 }
 
-final class WindowControlsOverlayGeometryChangeEventInitValue implements WindowControlsOverlayGeometryChangeEventInit {
+final class WindowControlsOverlayGeometryChangeEventInitValue
+    implements WindowControlsOverlayGeometryChangeEventInit {
   @override
   DOMRect titlebarAreaRect;
   @override
@@ -23,4 +24,3 @@ final class WindowControlsOverlayGeometryChangeEventInitValue implements WindowC
     this.visible,
   });
 }
-

@@ -13,7 +13,8 @@ abstract interface class InputDeviceCapabilitiesInit {
   set pointerMovementScrolls(bool? value);
 }
 
-final class InputDeviceCapabilitiesInitValue implements InputDeviceCapabilitiesInit {
+final class InputDeviceCapabilitiesInitValue
+    implements InputDeviceCapabilitiesInit {
   @override
   bool? firesTouchEvents;
   @override
@@ -26,14 +27,18 @@ final class InputDeviceCapabilitiesInitValue implements InputDeviceCapabilitiesI
 }
 
 abstract interface class UIEvent {
-  factory UIEvent(String type_, [UIEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<UIEvent>(
-        'UIEvent',
-        [type_, eventInitDict],
-      );
+  factory UIEvent(String type_, [UIEventInit? eventInitDict]) => WebRuntime
+      .current
+      .createWebObject<UIEvent>('UIEvent', [type_, eventInitDict]);
   Window? get view;
   int get detail;
-  void initUIEvent(String typeArg, [bool? bubblesArg, bool? cancelableArg, Window? viewArg, int? detailArg]);
+  void initUIEvent(
+    String typeArg, [
+    bool? bubblesArg,
+    bool? cancelableArg,
+    Window? viewArg,
+    int? detailArg,
+  ]);
   int get which;
 }
 
@@ -65,4 +70,3 @@ final class UIEventInitValue implements UIEventInit {
     this.which,
   });
 }
-

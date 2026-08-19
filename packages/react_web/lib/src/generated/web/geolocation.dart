@@ -5,8 +5,16 @@
 import 'hr_time.dart';
 
 abstract interface class Geolocation {
-  void getCurrentPosition(PositionCallback successCallback, [PositionErrorCallback? errorCallback, PositionOptions? options]);
-  int watchPosition(PositionCallback successCallback, [PositionErrorCallback? errorCallback, PositionOptions? options]);
+  void getCurrentPosition(
+    PositionCallback successCallback, [
+    PositionErrorCallback? errorCallback,
+    PositionOptions? options,
+  ]);
+  int watchPosition(
+    PositionCallback successCallback, [
+    PositionErrorCallback? errorCallback,
+    PositionOptions? options,
+  ]);
   void clearWatch(int watchId);
 }
 
@@ -32,9 +40,10 @@ abstract interface class GeolocationPositionError {
   String get message;
 }
 
-typedef PositionCallback = void Function(GeolocationPosition position,);
+typedef PositionCallback = void Function(GeolocationPosition position);
 
-typedef PositionErrorCallback = void Function(GeolocationPositionError positionError,);
+typedef PositionErrorCallback =
+    void Function(GeolocationPositionError positionError);
 
 abstract interface class PositionOptions {
   bool? get enableHighAccuracy;
@@ -59,4 +68,3 @@ final class PositionOptionsValue implements PositionOptions {
     this.maximumAge,
   });
 }
-

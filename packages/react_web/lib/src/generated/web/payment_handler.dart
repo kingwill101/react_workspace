@@ -223,7 +223,8 @@ abstract interface class PaymentRequestDetailsUpdate {
   set shippingAddressErrors(AddressErrors? value);
 }
 
-final class PaymentRequestDetailsUpdateValue implements PaymentRequestDetailsUpdate {
+final class PaymentRequestDetailsUpdateValue
+    implements PaymentRequestDetailsUpdate {
   @override
   String? error;
   @override
@@ -326,4 +327,3 @@ final class PaymentShippingOptionValue implements PaymentShippingOption {
 }
 
 typedef PaymentShippingType = String;
-

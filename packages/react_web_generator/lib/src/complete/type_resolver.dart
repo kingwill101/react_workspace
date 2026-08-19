@@ -52,9 +52,7 @@ final class NeutralTypeResolver {
   final CompleteWebModel model;
 
   NeutralTypeResolver(this.model)
-    : _knownNames = {
-        for (final d in model.allDefinitions) d.name,
-      };
+    : _knownNames = {for (final d in model.allDefinitions) d.name};
 
   final Set<String> _knownNames;
 
@@ -125,7 +123,10 @@ final class NeutralTypeResolver {
 
   /// Render an argument list for a method/factory, with optional/variadic
   /// handling, for declarations in abstract interfaces (no defaults used).
-  String renderParameters(List<Object> params, {bool positionalOptional = true}) {
+  String renderParameters(
+    List<Object> params, {
+    bool positionalOptional = true,
+  }) {
     return '';
   }
 }

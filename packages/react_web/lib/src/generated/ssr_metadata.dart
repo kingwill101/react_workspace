@@ -4,7 +4,11 @@
 import 'package:react/react.dart';
 import 'package:react_web/src/ssr_metadata.dart';
 
-@WebApiRuntimeInfo(id: "html", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "html",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const HtmlSsrDefinition = WebElementSsrDefinition(
   tagName: 'html',
   voidElement: false,
@@ -80,7 +84,11 @@ const HtmlSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "head", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "head",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const HeadSsrDefinition = WebElementSsrDefinition(
   tagName: 'head',
   voidElement: false,
@@ -156,7 +164,11 @@ const HeadSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "title", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "title",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TitleSsrDefinition = WebElementSsrDefinition(
   tagName: 'title',
   voidElement: false,
@@ -233,7 +245,11 @@ const TitleSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "base", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "base",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const BaseSsrDefinition = WebElementSsrDefinition(
   tagName: 'base',
   voidElement: true,
@@ -311,7 +327,11 @@ const BaseSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "link", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "link",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const LinkSsrDefinition = WebElementSsrDefinition(
   tagName: 'link',
   voidElement: true,
@@ -400,7 +420,11 @@ const LinkSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "meta", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "meta",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const MetaSsrDefinition = WebElementSsrDefinition(
   tagName: 'meta',
   voidElement: true,
@@ -480,7 +504,11 @@ const MetaSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "style", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "style",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const StyleSsrDefinition = WebElementSsrDefinition(
   tagName: 'style',
   voidElement: false,
@@ -558,7 +586,11 @@ const StyleSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "body", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "body",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const BodySsrDefinition = WebElementSsrDefinition(
   tagName: 'body',
   voidElement: false,
@@ -634,7 +666,11 @@ const BodySsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "article", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "article",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ArticleSsrDefinition = WebElementSsrDefinition(
   tagName: 'article',
   voidElement: false,
@@ -710,7 +746,11 @@ const ArticleSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "section", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "section",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SectionSsrDefinition = WebElementSsrDefinition(
   tagName: 'section',
   voidElement: false,
@@ -786,7 +826,11 @@ const SectionSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "nav", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "nav",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const NavSsrDefinition = WebElementSsrDefinition(
   tagName: 'nav',
   voidElement: false,
@@ -862,7 +906,11 @@ const NavSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "aside", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "aside",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const AsideSsrDefinition = WebElementSsrDefinition(
   tagName: 'aside',
   voidElement: false,
@@ -938,7 +986,11 @@ const AsideSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "h1", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "h1",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const H1SsrDefinition = WebElementSsrDefinition(
   tagName: 'h1',
   voidElement: false,
@@ -1014,7 +1066,11 @@ const H1SsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "h2", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "h2",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const H2SsrDefinition = WebElementSsrDefinition(
   tagName: 'h2',
   voidElement: false,
@@ -1090,7 +1146,11 @@ const H2SsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "h3", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "h3",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const H3SsrDefinition = WebElementSsrDefinition(
   tagName: 'h3',
   voidElement: false,
@@ -1166,7 +1226,11 @@ const H3SsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "h4", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "h4",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const H4SsrDefinition = WebElementSsrDefinition(
   tagName: 'h4',
   voidElement: false,
@@ -1242,7 +1306,11 @@ const H4SsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "h5", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "h5",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const H5SsrDefinition = WebElementSsrDefinition(
   tagName: 'h5',
   voidElement: false,
@@ -1318,7 +1386,11 @@ const H5SsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "h6", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "h6",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const H6SsrDefinition = WebElementSsrDefinition(
   tagName: 'h6',
   voidElement: false,
@@ -1394,7 +1466,11 @@ const H6SsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "hgroup", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "hgroup",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const HgroupSsrDefinition = WebElementSsrDefinition(
   tagName: 'hgroup',
   voidElement: false,
@@ -1470,7 +1546,11 @@ const HgroupSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "header", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "header",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const HeaderSsrDefinition = WebElementSsrDefinition(
   tagName: 'header',
   voidElement: false,
@@ -1546,7 +1626,11 @@ const HeaderSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "footer", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "footer",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const FooterSsrDefinition = WebElementSsrDefinition(
   tagName: 'footer',
   voidElement: false,
@@ -1622,7 +1706,11 @@ const FooterSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "address", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "address",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const AddressSsrDefinition = WebElementSsrDefinition(
   tagName: 'address',
   voidElement: false,
@@ -1698,7 +1786,11 @@ const AddressSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "p", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "p",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const PSsrDefinition = WebElementSsrDefinition(
   tagName: 'p',
   voidElement: false,
@@ -1774,7 +1866,11 @@ const PSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "hr", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "hr",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const HrSsrDefinition = WebElementSsrDefinition(
   tagName: 'hr',
   voidElement: true,
@@ -1850,7 +1946,11 @@ const HrSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "pre", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "pre",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const PreSsrDefinition = WebElementSsrDefinition(
   tagName: 'pre',
   voidElement: false,
@@ -1926,7 +2026,11 @@ const PreSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "blockquote", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "blockquote",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const BlockquoteSsrDefinition = WebElementSsrDefinition(
   tagName: 'blockquote',
   voidElement: false,
@@ -2003,7 +2107,11 @@ const BlockquoteSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "ol", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "ol",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const OlSsrDefinition = WebElementSsrDefinition(
   tagName: 'ol',
   voidElement: false,
@@ -2082,7 +2190,11 @@ const OlSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "ul", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "ul",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const UlSsrDefinition = WebElementSsrDefinition(
   tagName: 'ul',
   voidElement: false,
@@ -2158,7 +2270,11 @@ const UlSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "menu", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "menu",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const MenuSsrDefinition = WebElementSsrDefinition(
   tagName: 'menu',
   voidElement: false,
@@ -2234,7 +2350,11 @@ const MenuSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "li", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "li",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const LiSsrDefinition = WebElementSsrDefinition(
   tagName: 'li',
   voidElement: false,
@@ -2311,7 +2431,11 @@ const LiSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "dl", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "dl",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const DlSsrDefinition = WebElementSsrDefinition(
   tagName: 'dl',
   voidElement: false,
@@ -2387,7 +2511,11 @@ const DlSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "dt", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "dt",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const DtSsrDefinition = WebElementSsrDefinition(
   tagName: 'dt',
   voidElement: false,
@@ -2463,7 +2591,11 @@ const DtSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "dd", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "dd",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const DdSsrDefinition = WebElementSsrDefinition(
   tagName: 'dd',
   voidElement: false,
@@ -2539,7 +2671,11 @@ const DdSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "figure", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "figure",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const FigureSsrDefinition = WebElementSsrDefinition(
   tagName: 'figure',
   voidElement: false,
@@ -2615,7 +2751,11 @@ const FigureSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "figcaption", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "figcaption",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const FigcaptionSsrDefinition = WebElementSsrDefinition(
   tagName: 'figcaption',
   voidElement: false,
@@ -2691,7 +2831,11 @@ const FigcaptionSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "main", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "main",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const MainSsrDefinition = WebElementSsrDefinition(
   tagName: 'main',
   voidElement: false,
@@ -2767,7 +2911,11 @@ const MainSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "search", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "search",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SearchSsrDefinition = WebElementSsrDefinition(
   tagName: 'search',
   voidElement: false,
@@ -2843,7 +2991,11 @@ const SearchSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "div", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "div",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const DivSsrDefinition = WebElementSsrDefinition(
   tagName: 'div',
   voidElement: false,
@@ -2919,7 +3071,11 @@ const DivSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "a", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "a",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ASsrDefinition = WebElementSsrDefinition(
   tagName: 'a',
   voidElement: false,
@@ -3003,7 +3159,11 @@ const ASsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "em", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "em",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const EmSsrDefinition = WebElementSsrDefinition(
   tagName: 'em',
   voidElement: false,
@@ -3079,7 +3239,11 @@ const EmSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "strong", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "strong",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const StrongSsrDefinition = WebElementSsrDefinition(
   tagName: 'strong',
   voidElement: false,
@@ -3155,7 +3319,11 @@ const StrongSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "small", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "small",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SmallSsrDefinition = WebElementSsrDefinition(
   tagName: 'small',
   voidElement: false,
@@ -3231,7 +3399,11 @@ const SmallSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "s", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "s",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SSsrDefinition = WebElementSsrDefinition(
   tagName: 's',
   voidElement: false,
@@ -3307,7 +3479,11 @@ const SSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "cite", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "cite",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const CiteSsrDefinition = WebElementSsrDefinition(
   tagName: 'cite',
   voidElement: false,
@@ -3383,7 +3559,11 @@ const CiteSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "q", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "q",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const QSsrDefinition = WebElementSsrDefinition(
   tagName: 'q',
   voidElement: false,
@@ -3460,7 +3640,11 @@ const QSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "dfn", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "dfn",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const DfnSsrDefinition = WebElementSsrDefinition(
   tagName: 'dfn',
   voidElement: false,
@@ -3536,7 +3720,11 @@ const DfnSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "abbr", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "abbr",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const AbbrSsrDefinition = WebElementSsrDefinition(
   tagName: 'abbr',
   voidElement: false,
@@ -3612,7 +3800,11 @@ const AbbrSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "ruby", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "ruby",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const RubySsrDefinition = WebElementSsrDefinition(
   tagName: 'ruby',
   voidElement: false,
@@ -3688,7 +3880,11 @@ const RubySsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "rt", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "rt",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const RtSsrDefinition = WebElementSsrDefinition(
   tagName: 'rt',
   voidElement: false,
@@ -3764,7 +3960,11 @@ const RtSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "rp", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "rp",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const RpSsrDefinition = WebElementSsrDefinition(
   tagName: 'rp',
   voidElement: false,
@@ -3840,7 +4040,11 @@ const RpSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "data", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "data",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const DataSsrDefinition = WebElementSsrDefinition(
   tagName: 'data',
   voidElement: false,
@@ -3917,7 +4121,11 @@ const DataSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "time", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "time",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TimeSsrDefinition = WebElementSsrDefinition(
   tagName: 'time',
   voidElement: false,
@@ -3994,7 +4202,11 @@ const TimeSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "code", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "code",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const CodeSsrDefinition = WebElementSsrDefinition(
   tagName: 'code',
   voidElement: false,
@@ -4070,7 +4282,11 @@ const CodeSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "var", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "var",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const VarSsrDefinition = WebElementSsrDefinition(
   tagName: 'var',
   voidElement: false,
@@ -4146,7 +4362,11 @@ const VarSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "samp", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "samp",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SampSsrDefinition = WebElementSsrDefinition(
   tagName: 'samp',
   voidElement: false,
@@ -4222,7 +4442,11 @@ const SampSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "kbd", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "kbd",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const KbdSsrDefinition = WebElementSsrDefinition(
   tagName: 'kbd',
   voidElement: false,
@@ -4298,7 +4522,11 @@ const KbdSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "sub", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "sub",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SubSsrDefinition = WebElementSsrDefinition(
   tagName: 'sub',
   voidElement: false,
@@ -4374,7 +4602,11 @@ const SubSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "sup", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "sup",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SupSsrDefinition = WebElementSsrDefinition(
   tagName: 'sup',
   voidElement: false,
@@ -4450,7 +4682,11 @@ const SupSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "i", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "i",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ISsrDefinition = WebElementSsrDefinition(
   tagName: 'i',
   voidElement: false,
@@ -4526,7 +4762,11 @@ const ISsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "b", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "b",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const BSsrDefinition = WebElementSsrDefinition(
   tagName: 'b',
   voidElement: false,
@@ -4602,7 +4842,11 @@ const BSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "u", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "u",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const USsrDefinition = WebElementSsrDefinition(
   tagName: 'u',
   voidElement: false,
@@ -4678,7 +4922,11 @@ const USsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "mark", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "mark",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const MarkSsrDefinition = WebElementSsrDefinition(
   tagName: 'mark',
   voidElement: false,
@@ -4754,7 +5002,11 @@ const MarkSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "bdi", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "bdi",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const BdiSsrDefinition = WebElementSsrDefinition(
   tagName: 'bdi',
   voidElement: false,
@@ -4830,7 +5082,11 @@ const BdiSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "bdo", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "bdo",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const BdoSsrDefinition = WebElementSsrDefinition(
   tagName: 'bdo',
   voidElement: false,
@@ -4906,7 +5162,11 @@ const BdoSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "span", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "span",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SpanSsrDefinition = WebElementSsrDefinition(
   tagName: 'span',
   voidElement: false,
@@ -4982,7 +5242,11 @@ const SpanSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "br", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "br",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const BrSsrDefinition = WebElementSsrDefinition(
   tagName: 'br',
   voidElement: true,
@@ -5058,7 +5322,11 @@ const BrSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "wbr", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "wbr",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const WbrSsrDefinition = WebElementSsrDefinition(
   tagName: 'wbr',
   voidElement: true,
@@ -5134,7 +5402,11 @@ const WbrSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "ins", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "ins",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const InsSsrDefinition = WebElementSsrDefinition(
   tagName: 'ins',
   voidElement: false,
@@ -5212,7 +5484,11 @@ const InsSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "del", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "del",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const DelSsrDefinition = WebElementSsrDefinition(
   tagName: 'del',
   voidElement: false,
@@ -5290,7 +5566,11 @@ const DelSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "picture", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "picture",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const PictureSsrDefinition = WebElementSsrDefinition(
   tagName: 'picture',
   voidElement: false,
@@ -5366,7 +5646,11 @@ const PictureSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "source", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "source",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SourceSsrDefinition = WebElementSsrDefinition(
   tagName: 'source',
   voidElement: true,
@@ -5449,7 +5733,11 @@ const SourceSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "img", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "img",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ImgSsrDefinition = WebElementSsrDefinition(
   tagName: 'img',
   voidElement: true,
@@ -5538,7 +5826,11 @@ const ImgSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "iframe", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "iframe",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const IframeSsrDefinition = WebElementSsrDefinition(
   tagName: 'iframe',
   voidElement: false,
@@ -5623,7 +5915,11 @@ const IframeSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "embed", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "embed",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const EmbedSsrDefinition = WebElementSsrDefinition(
   tagName: 'embed',
   voidElement: true,
@@ -5703,7 +5999,11 @@ const EmbedSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "object", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "object",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ObjectSsrDefinition = WebElementSsrDefinition(
   tagName: 'object',
   voidElement: false,
@@ -5784,7 +6084,11 @@ const ObjectSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "video", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "video",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const VideoSsrDefinition = WebElementSsrDefinition(
   tagName: 'video',
   voidElement: false,
@@ -5878,7 +6182,11 @@ const VideoSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "audio", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "audio",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const AudioSsrDefinition = WebElementSsrDefinition(
   tagName: 'audio',
   voidElement: false,
@@ -5968,7 +6276,11 @@ const AudioSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "track", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "track",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TrackSsrDefinition = WebElementSsrDefinition(
   tagName: 'track',
   voidElement: true,
@@ -6049,7 +6361,11 @@ const TrackSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "map", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "map",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const MapSsrDefinition = WebElementSsrDefinition(
   tagName: 'map',
   voidElement: false,
@@ -6126,7 +6442,11 @@ const MapSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "area", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "area",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const AreaSsrDefinition = WebElementSsrDefinition(
   tagName: 'area',
   voidElement: true,
@@ -6210,7 +6530,11 @@ const AreaSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "table", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "table",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TableSsrDefinition = WebElementSsrDefinition(
   tagName: 'table',
   voidElement: false,
@@ -6289,7 +6613,11 @@ const TableSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "caption", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "caption",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const CaptionSsrDefinition = WebElementSsrDefinition(
   tagName: 'caption',
   voidElement: false,
@@ -6365,7 +6693,11 @@ const CaptionSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "colgroup", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "colgroup",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ColgroupSsrDefinition = WebElementSsrDefinition(
   tagName: 'colgroup',
   voidElement: false,
@@ -6442,7 +6774,11 @@ const ColgroupSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "col", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "col",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ColSsrDefinition = WebElementSsrDefinition(
   tagName: 'col',
   voidElement: true,
@@ -6519,7 +6855,11 @@ const ColSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "tbody", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "tbody",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TbodySsrDefinition = WebElementSsrDefinition(
   tagName: 'tbody',
   voidElement: false,
@@ -6595,7 +6935,11 @@ const TbodySsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "thead", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "thead",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TheadSsrDefinition = WebElementSsrDefinition(
   tagName: 'thead',
   voidElement: false,
@@ -6671,7 +7015,11 @@ const TheadSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "tfoot", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "tfoot",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TfootSsrDefinition = WebElementSsrDefinition(
   tagName: 'tfoot',
   voidElement: false,
@@ -6747,7 +7095,11 @@ const TfootSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "tr", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "tr",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TrSsrDefinition = WebElementSsrDefinition(
   tagName: 'tr',
   voidElement: false,
@@ -6823,7 +7175,11 @@ const TrSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "td", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "td",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TdSsrDefinition = WebElementSsrDefinition(
   tagName: 'td',
   voidElement: false,
@@ -6904,7 +7260,11 @@ const TdSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "th", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "th",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ThSsrDefinition = WebElementSsrDefinition(
   tagName: 'th',
   voidElement: false,
@@ -6985,7 +7345,11 @@ const ThSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "form", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "form",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const FormSsrDefinition = WebElementSsrDefinition(
   tagName: 'form',
   voidElement: false,
@@ -7071,7 +7435,11 @@ const FormSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "label", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "label",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const LabelSsrDefinition = WebElementSsrDefinition(
   tagName: 'label',
   voidElement: false,
@@ -7148,7 +7516,11 @@ const LabelSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "input", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "input",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const InputSsrDefinition = WebElementSsrDefinition(
   tagName: 'input',
   voidElement: true,
@@ -7261,7 +7633,11 @@ const InputSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "button", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "button",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ButtonSsrDefinition = WebElementSsrDefinition(
   tagName: 'button',
   voidElement: false,
@@ -7346,7 +7722,11 @@ const ButtonSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "select", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "select",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SelectSsrDefinition = WebElementSsrDefinition(
   tagName: 'select',
   voidElement: false,
@@ -7431,7 +7811,11 @@ const SelectSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "datalist", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "datalist",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const DatalistSsrDefinition = WebElementSsrDefinition(
   tagName: 'datalist',
   voidElement: false,
@@ -7507,7 +7891,11 @@ const DatalistSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "optgroup", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "optgroup",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const OptgroupSsrDefinition = WebElementSsrDefinition(
   tagName: 'optgroup',
   voidElement: false,
@@ -7585,7 +7973,11 @@ const OptgroupSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "option", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "option",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const OptionSsrDefinition = WebElementSsrDefinition(
   tagName: 'option',
   voidElement: false,
@@ -7667,7 +8059,11 @@ const OptionSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "textarea", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "textarea",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TextareaSsrDefinition = WebElementSsrDefinition(
   tagName: 'textarea',
   voidElement: false,
@@ -7760,7 +8156,11 @@ const TextareaSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "output", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "output",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const OutputSsrDefinition = WebElementSsrDefinition(
   tagName: 'output',
   voidElement: false,
@@ -7839,7 +8239,11 @@ const OutputSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "progress", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "progress",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ProgressSsrDefinition = WebElementSsrDefinition(
   tagName: 'progress',
   voidElement: false,
@@ -7917,7 +8321,11 @@ const ProgressSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "meter", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "meter",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const MeterSsrDefinition = WebElementSsrDefinition(
   tagName: 'meter',
   voidElement: false,
@@ -7999,7 +8407,11 @@ const MeterSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "fieldset", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "fieldset",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const FieldsetSsrDefinition = WebElementSsrDefinition(
   tagName: 'fieldset',
   voidElement: false,
@@ -8077,7 +8489,11 @@ const FieldsetSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "legend", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "legend",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const LegendSsrDefinition = WebElementSsrDefinition(
   tagName: 'legend',
   voidElement: false,
@@ -8153,7 +8569,11 @@ const LegendSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "details", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "details",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const DetailsSsrDefinition = WebElementSsrDefinition(
   tagName: 'details',
   voidElement: false,
@@ -8231,7 +8651,11 @@ const DetailsSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "summary", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "summary",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SummarySsrDefinition = WebElementSsrDefinition(
   tagName: 'summary',
   voidElement: false,
@@ -8307,7 +8731,11 @@ const SummarySsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "dialog", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "dialog",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const DialogSsrDefinition = WebElementSsrDefinition(
   tagName: 'dialog',
   voidElement: false,
@@ -8385,7 +8813,11 @@ const DialogSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "script", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "script",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ScriptSsrDefinition = WebElementSsrDefinition(
   tagName: 'script',
   voidElement: false,
@@ -8471,7 +8903,11 @@ const ScriptSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "noscript", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "noscript",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const NoscriptSsrDefinition = WebElementSsrDefinition(
   tagName: 'noscript',
   voidElement: false,
@@ -8547,7 +8983,11 @@ const NoscriptSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "template", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "template",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TemplateSsrDefinition = WebElementSsrDefinition(
   tagName: 'template',
   voidElement: false,
@@ -8627,7 +9067,11 @@ const TemplateSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "slot", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "slot",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SlotSsrDefinition = WebElementSsrDefinition(
   tagName: 'slot',
   voidElement: false,
@@ -8704,7 +9148,11 @@ const SlotSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "canvas", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "canvas",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const CanvasSsrDefinition = WebElementSsrDefinition(
   tagName: 'canvas',
   voidElement: false,
@@ -8782,7 +9230,11 @@ const CanvasSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "applet", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "applet",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const AppletSsrDefinition = WebElementSsrDefinition(
   tagName: 'applet',
   voidElement: false,
@@ -8858,7 +9310,11 @@ const AppletSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "acronym", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "acronym",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const AcronymSsrDefinition = WebElementSsrDefinition(
   tagName: 'acronym',
   voidElement: false,
@@ -8934,7 +9390,11 @@ const AcronymSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "bgsound", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "bgsound",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const BgsoundSsrDefinition = WebElementSsrDefinition(
   tagName: 'bgsound',
   voidElement: false,
@@ -9010,7 +9470,11 @@ const BgsoundSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "dir", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "dir",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const DirSsrDefinition = WebElementSsrDefinition(
   tagName: 'dir',
   voidElement: false,
@@ -9087,7 +9551,11 @@ const DirSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "frame", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "frame",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const FrameSsrDefinition = WebElementSsrDefinition(
   tagName: 'frame',
   voidElement: false,
@@ -9171,7 +9639,11 @@ const FrameSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "frameset", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "frameset",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const FramesetSsrDefinition = WebElementSsrDefinition(
   tagName: 'frameset',
   voidElement: false,
@@ -9249,7 +9721,11 @@ const FramesetSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "noframes", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "noframes",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const NoframesSsrDefinition = WebElementSsrDefinition(
   tagName: 'noframes',
   voidElement: false,
@@ -9325,7 +9801,11 @@ const NoframesSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "isindex", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "isindex",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const IsindexSsrDefinition = WebElementSsrDefinition(
   tagName: 'isindex',
   voidElement: false,
@@ -9401,7 +9881,11 @@ const IsindexSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "keygen", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "keygen",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const KeygenSsrDefinition = WebElementSsrDefinition(
   tagName: 'keygen',
   voidElement: false,
@@ -9477,7 +9961,11 @@ const KeygenSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "listing", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "listing",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ListingSsrDefinition = WebElementSsrDefinition(
   tagName: 'listing',
   voidElement: false,
@@ -9553,7 +10041,11 @@ const ListingSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "menuitem", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "menuitem",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const MenuitemSsrDefinition = WebElementSsrDefinition(
   tagName: 'menuitem',
   voidElement: false,
@@ -9629,7 +10121,11 @@ const MenuitemSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "nextid", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "nextid",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const NextidSsrDefinition = WebElementSsrDefinition(
   tagName: 'nextid',
   voidElement: false,
@@ -9705,7 +10201,11 @@ const NextidSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "noembed", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "noembed",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const NoembedSsrDefinition = WebElementSsrDefinition(
   tagName: 'noembed',
   voidElement: false,
@@ -9781,7 +10281,11 @@ const NoembedSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "param", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "param",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const ParamSsrDefinition = WebElementSsrDefinition(
   tagName: 'param',
   voidElement: true,
@@ -9861,7 +10365,11 @@ const ParamSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "plaintext", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "plaintext",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const PlaintextSsrDefinition = WebElementSsrDefinition(
   tagName: 'plaintext',
   voidElement: false,
@@ -9937,7 +10445,11 @@ const PlaintextSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "rb", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "rb",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const RbSsrDefinition = WebElementSsrDefinition(
   tagName: 'rb',
   voidElement: false,
@@ -10013,7 +10525,11 @@ const RbSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "rtc", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "rtc",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const RtcSsrDefinition = WebElementSsrDefinition(
   tagName: 'rtc',
   voidElement: false,
@@ -10089,7 +10605,11 @@ const RtcSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "strike", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "strike",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const StrikeSsrDefinition = WebElementSsrDefinition(
   tagName: 'strike',
   voidElement: false,
@@ -10165,7 +10685,11 @@ const StrikeSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "xmp", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "xmp",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const XmpSsrDefinition = WebElementSsrDefinition(
   tagName: 'xmp',
   voidElement: false,
@@ -10241,7 +10765,11 @@ const XmpSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "basefont", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "basefont",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const BasefontSsrDefinition = WebElementSsrDefinition(
   tagName: 'basefont',
   voidElement: false,
@@ -10317,7 +10845,11 @@ const BasefontSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "big", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "big",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const BigSsrDefinition = WebElementSsrDefinition(
   tagName: 'big',
   voidElement: false,
@@ -10393,7 +10925,11 @@ const BigSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "blink", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "blink",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const BlinkSsrDefinition = WebElementSsrDefinition(
   tagName: 'blink',
   voidElement: false,
@@ -10469,7 +11005,11 @@ const BlinkSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "center", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "center",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const CenterSsrDefinition = WebElementSsrDefinition(
   tagName: 'center',
   voidElement: false,
@@ -10545,7 +11085,11 @@ const CenterSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "font", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "font",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const FontSsrDefinition = WebElementSsrDefinition(
   tagName: 'font',
   voidElement: false,
@@ -10624,7 +11168,11 @@ const FontSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "marquee", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "marquee",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const MarqueeSsrDefinition = WebElementSsrDefinition(
   tagName: 'marquee',
   voidElement: false,
@@ -10711,7 +11259,11 @@ const MarqueeSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "multicol", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "multicol",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const MulticolSsrDefinition = WebElementSsrDefinition(
   tagName: 'multicol',
   voidElement: false,
@@ -10787,7 +11339,11 @@ const MulticolSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "nobr", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "nobr",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const NobrSsrDefinition = WebElementSsrDefinition(
   tagName: 'nobr',
   voidElement: false,
@@ -10863,7 +11419,11 @@ const NobrSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "spacer", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "spacer",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const SpacerSsrDefinition = WebElementSsrDefinition(
   tagName: 'spacer',
   voidElement: false,
@@ -10939,7 +11499,11 @@ const SpacerSsrDefinition = WebElementSsrDefinition(
   },
 );
 
-@WebApiRuntimeInfo(id: "tt", exposed: {WebRealm.window}, ssr: WebSsrSupport.available)
+@WebApiRuntimeInfo(
+  id: "tt",
+  exposed: {WebRealm.window},
+  ssr: WebSsrSupport.available,
+)
 const TtSsrDefinition = WebElementSsrDefinition(
   tagName: 'tt',
   voidElement: false,
@@ -11158,4 +11722,3 @@ const Map<String, WebElementSsrDefinition> ssrDefinitions = {
   'spacer': SpacerSsrDefinition,
   'tt': TtSsrDefinition,
 };
-

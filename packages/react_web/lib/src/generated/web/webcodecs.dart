@@ -86,7 +86,7 @@ final class AudioDataInitValue implements AudioDataInit {
   });
 }
 
-typedef AudioDataOutputCallback = void Function(Object output,);
+typedef AudioDataOutputCallback = void Function(Object output);
 
 abstract interface class AudioDecoderConfig {
   String get codec;
@@ -130,10 +130,7 @@ final class AudioDecoderInitValue implements AudioDecoderInit {
   @override
   WebCodecsErrorCallback error;
 
-  AudioDecoderInitValue({
-    required this.output,
-    required this.error,
-  });
+  AudioDecoderInitValue({required this.output, required this.error});
 }
 
 abstract interface class AudioDecoderSupport {
@@ -149,10 +146,7 @@ final class AudioDecoderSupportValue implements AudioDecoderSupport {
   @override
   AudioDecoderConfig? config;
 
-  AudioDecoderSupportValue({
-    this.supported,
-    this.config,
-  });
+  AudioDecoderSupportValue({this.supported, this.config});
 }
 
 abstract interface class AudioEncoderInit {
@@ -168,10 +162,7 @@ final class AudioEncoderInitValue implements AudioEncoderInit {
   @override
   WebCodecsErrorCallback error;
 
-  AudioEncoderInitValue({
-    required this.output,
-    required this.error,
-  });
+  AudioEncoderInitValue({required this.output, required this.error});
 }
 
 abstract interface class AudioEncoderSupport {
@@ -187,10 +178,7 @@ final class AudioEncoderSupportValue implements AudioEncoderSupport {
   @override
   AudioEncoderConfig? config;
 
-  AudioEncoderSupportValue({
-    this.supported,
-    this.config,
-  });
+  AudioEncoderSupportValue({this.supported, this.config});
 }
 
 typedef AudioSampleFormat = String;
@@ -236,25 +224,22 @@ abstract interface class EncodedAudioChunkMetadata {
   set decoderConfig(AudioDecoderConfig? value);
 }
 
-final class EncodedAudioChunkMetadataValue implements EncodedAudioChunkMetadata {
+final class EncodedAudioChunkMetadataValue
+    implements EncodedAudioChunkMetadata {
   @override
   AudioDecoderConfig? decoderConfig;
 
-  EncodedAudioChunkMetadataValue({
-    this.decoderConfig,
-  });
+  EncodedAudioChunkMetadataValue({this.decoderConfig});
 }
 
-typedef EncodedAudioChunkOutputCallback = void Function(Object output, EncodedAudioChunkMetadata metadata,);
+typedef EncodedAudioChunkOutputCallback =
+    void Function(Object output, EncodedAudioChunkMetadata metadata);
 
 typedef EncodedAudioChunkType = String;
 
 abstract interface class EncodedVideoChunk {
-  factory EncodedVideoChunk(EncodedVideoChunkInit init) =>
-      WebRuntime.current.createWebObject<EncodedVideoChunk>(
-        'EncodedVideoChunk',
-        [init],
-      );
+  factory EncodedVideoChunk(EncodedVideoChunkInit init) => WebRuntime.current
+      .createWebObject<EncodedVideoChunk>('EncodedVideoChunk', [init]);
   EncodedVideoChunkType get type_;
   int get timestamp;
   int? get duration;
@@ -305,7 +290,8 @@ abstract interface class EncodedVideoChunkMetadata {
   set alphaSideData(BufferSource? value);
 }
 
-final class EncodedVideoChunkMetadataValue implements EncodedVideoChunkMetadata {
+final class EncodedVideoChunkMetadataValue
+    implements EncodedVideoChunkMetadata {
   @override
   VideoDecoderConfig? decoderConfig;
   @override
@@ -320,7 +306,8 @@ final class EncodedVideoChunkMetadataValue implements EncodedVideoChunkMetadata 
   });
 }
 
-typedef EncodedVideoChunkOutputCallback = void Function(EncodedVideoChunk chunk, EncodedVideoChunkMetadata metadata,);
+typedef EncodedVideoChunkOutputCallback =
+    void Function(EncodedVideoChunk chunk, EncodedVideoChunkMetadata metadata);
 
 typedef EncodedVideoChunkType = String;
 
@@ -341,10 +328,7 @@ final class ImageDecodeOptionsValue implements ImageDecodeOptions {
   @override
   bool? completeFramesOnly;
 
-  ImageDecodeOptionsValue({
-    this.frameIndex,
-    this.completeFramesOnly,
-  });
+  ImageDecodeOptionsValue({this.frameIndex, this.completeFramesOnly});
 }
 
 abstract interface class ImageDecodeResult {
@@ -360,10 +344,7 @@ final class ImageDecodeResultValue implements ImageDecodeResult {
   @override
   bool complete;
 
-  ImageDecodeResultValue({
-    required this.image,
-    required this.complete,
-  });
+  ImageDecodeResultValue({required this.image, required this.complete});
 }
 
 abstract interface class ImageDecoderInit {
@@ -425,10 +406,7 @@ final class PlaneLayoutValue implements PlaneLayout {
   @override
   int stride;
 
-  PlaneLayoutValue({
-    required this.offset,
-    required this.stride,
-  });
+  PlaneLayoutValue({required this.offset, required this.stride});
 }
 
 abstract interface class SvcOutputMetadata {
@@ -440,19 +418,14 @@ final class SvcOutputMetadataValue implements SvcOutputMetadata {
   @override
   int? temporalLayerId;
 
-  SvcOutputMetadataValue({
-    this.temporalLayerId,
-  });
+  SvcOutputMetadataValue({this.temporalLayerId});
 }
 
 typedef VideoColorPrimaries = String;
 
 abstract interface class VideoColorSpace {
-  factory VideoColorSpace([VideoColorSpaceInit? init]) =>
-      WebRuntime.current.createWebObject<VideoColorSpace>(
-        'VideoColorSpace',
-        [init],
-      );
+  factory VideoColorSpace([VideoColorSpaceInit? init]) => WebRuntime.current
+      .createWebObject<VideoColorSpace>('VideoColorSpace', [init]);
   VideoColorPrimaries? get primaries;
   VideoTransferCharacteristics? get transfer;
   VideoMatrixCoefficients? get matrix;
@@ -491,14 +464,11 @@ final class VideoColorSpaceInitValue implements VideoColorSpaceInit {
 
 abstract interface class VideoDecoder {
   factory VideoDecoder(VideoDecoderInit init) =>
-      WebRuntime.current.createWebObject<VideoDecoder>(
-        'VideoDecoder',
-        [init],
-      );
+      WebRuntime.current.createWebObject<VideoDecoder>('VideoDecoder', [init]);
   CodecState get state;
   int get decodeQueueSize;
   EventHandler get ondequeue;
-   set ondequeue(EventHandler value);
+  set ondequeue(EventHandler value);
   void configure(VideoDecoderConfig config);
   void decode(EncodedVideoChunk chunk);
   Future<void> flush();
@@ -573,10 +543,7 @@ final class VideoDecoderInitValue implements VideoDecoderInit {
   @override
   WebCodecsErrorCallback error;
 
-  VideoDecoderInitValue({
-    required this.output,
-    required this.error,
-  });
+  VideoDecoderInitValue({required this.output, required this.error});
 }
 
 abstract interface class VideoDecoderSupport {
@@ -592,22 +559,16 @@ final class VideoDecoderSupportValue implements VideoDecoderSupport {
   @override
   VideoDecoderConfig? config;
 
-  VideoDecoderSupportValue({
-    this.supported,
-    this.config,
-  });
+  VideoDecoderSupportValue({this.supported, this.config});
 }
 
 abstract interface class VideoEncoder {
   factory VideoEncoder(VideoEncoderInit init) =>
-      WebRuntime.current.createWebObject<VideoEncoder>(
-        'VideoEncoder',
-        [init],
-      );
+      WebRuntime.current.createWebObject<VideoEncoder>('VideoEncoder', [init]);
   CodecState get state;
   int get encodeQueueSize;
   EventHandler get ondequeue;
-   set ondequeue(EventHandler value);
+  set ondequeue(EventHandler value);
   void configure(VideoEncoderConfig config);
   void encode(VideoFrame frame, [VideoEncoderEncodeOptions? options]);
   Future<void> flush();
@@ -630,10 +591,7 @@ final class VideoEncoderInitValue implements VideoEncoderInit {
   @override
   WebCodecsErrorCallback error;
 
-  VideoEncoderInitValue({
-    required this.output,
-    required this.error,
-  });
+  VideoEncoderInitValue({required this.output, required this.error});
 }
 
 abstract interface class VideoEncoderSupport {
@@ -649,23 +607,22 @@ final class VideoEncoderSupportValue implements VideoEncoderSupport {
   @override
   VideoEncoderConfig? config;
 
-  VideoEncoderSupportValue({
-    this.supported,
-    this.config,
-  });
+  VideoEncoderSupportValue({this.supported, this.config});
 }
 
 abstract interface class VideoFrame {
   factory VideoFrame(CanvasImageSource image, [VideoFrameInit? init]) =>
-      WebRuntime.current.createWebObject<VideoFrame>(
-        'VideoFrame',
-        [image, init],
-      );
-  factory VideoFrame.named1(AllowSharedBufferSource data, VideoFrameBufferInit init) =>
-      WebRuntime.current.createWebObject<VideoFrame>(
-        'VideoFrame',
-        [data, init],
-      );
+      WebRuntime.current.createWebObject<VideoFrame>('VideoFrame', [
+        image,
+        init,
+      ]);
+  factory VideoFrame.named1(
+    AllowSharedBufferSource data,
+    VideoFrameBufferInit init,
+  ) => WebRuntime.current.createWebObject<VideoFrame>('VideoFrame', [
+    data,
+    init,
+  ]);
   VideoPixelFormat? get format;
   int get codedWidth;
   int get codedHeight;
@@ -677,7 +634,10 @@ abstract interface class VideoFrame {
   int get timestamp;
   VideoColorSpace get colorSpace;
   int allocationSize([VideoFrameCopyToOptions? options]);
-  Future<List<PlaneLayout>> copyTo(AllowSharedBufferSource destination, [VideoFrameCopyToOptions? options]);
+  Future<List<PlaneLayout>> copyTo(
+    AllowSharedBufferSource destination, [
+    VideoFrameCopyToOptions? options,
+  ]);
   VideoFrame clone();
   void close();
 }
@@ -824,15 +784,13 @@ final class VideoFrameInitValue implements VideoFrameInit {
   });
 }
 
-abstract interface class VideoFrameMetadata {
-}
+abstract interface class VideoFrameMetadata {}
 
 final class VideoFrameMetadataValue implements VideoFrameMetadata {
-
   VideoFrameMetadataValue();
 }
 
-typedef VideoFrameOutputCallback = void Function(VideoFrame output,);
+typedef VideoFrameOutputCallback = void Function(VideoFrame output);
 
 typedef VideoMatrixCoefficients = String;
 
@@ -840,5 +798,4 @@ typedef VideoPixelFormat = String;
 
 typedef VideoTransferCharacteristics = String;
 
-typedef WebCodecsErrorCallback = void Function(DOMException error,);
-
+typedef WebCodecsErrorCallback = void Function(DOMException error);

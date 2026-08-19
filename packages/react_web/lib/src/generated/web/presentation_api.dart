@@ -9,13 +9,12 @@ abstract interface class PresentationConnectionAvailableEventInit {
   set connection(Object value);
 }
 
-final class PresentationConnectionAvailableEventInitValue implements PresentationConnectionAvailableEventInit {
+final class PresentationConnectionAvailableEventInitValue
+    implements PresentationConnectionAvailableEventInit {
   @override
   Object connection;
 
-  PresentationConnectionAvailableEventInitValue({
-    required this.connection,
-  });
+  PresentationConnectionAvailableEventInitValue({required this.connection});
 }
 
 abstract interface class PresentationConnectionCloseEventInit {
@@ -25,7 +24,8 @@ abstract interface class PresentationConnectionCloseEventInit {
   set message(String? value);
 }
 
-final class PresentationConnectionCloseEventInitValue implements PresentationConnectionCloseEventInit {
+final class PresentationConnectionCloseEventInitValue
+    implements PresentationConnectionCloseEventInit {
   @override
   PresentationConnectionCloseReason reason;
   @override
@@ -40,4 +40,3 @@ final class PresentationConnectionCloseEventInitValue implements PresentationCon
 typedef PresentationConnectionCloseReason = String;
 
 typedef PresentationConnectionState = String;
-

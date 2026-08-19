@@ -7,4 +7,3 @@ import 'package:react_web/src/web_runtime.dart';
 abstract final class console {
   console._();
 }
-

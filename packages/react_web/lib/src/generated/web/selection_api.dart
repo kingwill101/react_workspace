@@ -24,10 +24,14 @@ abstract interface class Selection {
   void collapseToStart();
   void collapseToEnd();
   void extend(Node node, [int? offset]);
-  void setBaseAndExtent(Node anchorNode, int anchorOffset, Node focusNode, int focusOffset);
+  void setBaseAndExtent(
+    Node anchorNode,
+    int anchorOffset,
+    Node focusNode,
+    int focusOffset,
+  );
   void selectAllChildren(Node node);
   void modify([String? alter, String? direction, String? granularity]);
   void deleteFromDocument();
   bool containsNode(Node node, [bool? allowPartialContainment]);
 }
-

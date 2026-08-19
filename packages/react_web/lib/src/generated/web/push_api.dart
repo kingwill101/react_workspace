@@ -12,11 +12,9 @@ import 'package:react_web/src/web_runtime.dart';
 typedef PushEncryptionKeyName = String;
 
 abstract interface class PushEvent {
-  factory PushEvent(String type_, [PushEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<PushEvent>(
-        'PushEvent',
-        [type_, eventInitDict],
-      );
+  factory PushEvent(String type_, [PushEventInit? eventInitDict]) => WebRuntime
+      .current
+      .createWebObject<PushEvent>('PushEvent', [type_, eventInitDict]);
   PushMessageData? get data;
 }
 
@@ -29,15 +27,15 @@ final class PushEventInitValue implements PushEventInit {
   @override
   PushMessageDataInit? data;
 
-  PushEventInitValue({
-    this.data,
-  });
+  PushEventInitValue({this.data});
 }
 
 abstract interface class PushManager {
   Future<PushSubscription> subscribe([PushSubscriptionOptionsInit? options]);
   Future<PushSubscription?> getSubscription();
-  Future<PermissionState> permissionState([PushSubscriptionOptionsInit? options]);
+  Future<PermissionState> permissionState([
+    PushSubscriptionOptionsInit? options,
+  ]);
 }
 
 abstract interface class PushMessageData {
@@ -58,9 +56,7 @@ final class PushPermissionDescriptorValue implements PushPermissionDescriptor {
   @override
   bool? userVisibleOnly;
 
-  PushPermissionDescriptorValue({
-    this.userVisibleOnly,
-  });
+  PushPermissionDescriptorValue({this.userVisibleOnly});
 }
 
 abstract interface class PushSubscription {
@@ -73,11 +69,13 @@ abstract interface class PushSubscription {
 }
 
 abstract interface class PushSubscriptionChangeEvent {
-  factory PushSubscriptionChangeEvent(String type_, [PushSubscriptionChangeEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<PushSubscriptionChangeEvent>(
-        'PushSubscriptionChangeEvent',
-        [type_, eventInitDict],
-      );
+  factory PushSubscriptionChangeEvent(
+    String type_, [
+    PushSubscriptionChangeEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<PushSubscriptionChangeEvent>(
+    'PushSubscriptionChangeEvent',
+    [type_, eventInitDict],
+  );
   PushSubscription? get newSubscription;
   PushSubscription? get oldSubscription;
 }
@@ -89,7 +87,8 @@ abstract interface class PushSubscriptionChangeEventInit {
   set oldSubscription(PushSubscription? value);
 }
 
-final class PushSubscriptionChangeEventInitValue implements PushSubscriptionChangeEventInit {
+final class PushSubscriptionChangeEventInitValue
+    implements PushSubscriptionChangeEventInit {
   @override
   PushSubscription? newSubscription;
   @override
@@ -118,11 +117,7 @@ final class PushSubscriptionJSONValue implements PushSubscriptionJSON {
   @override
   Map<String, String>? keys;
 
-  PushSubscriptionJSONValue({
-    this.endpoint,
-    this.expirationTime,
-    this.keys,
-  });
+  PushSubscriptionJSONValue({this.endpoint, this.expirationTime, this.keys});
 }
 
 abstract interface class PushSubscriptionOptions {
@@ -137,7 +132,8 @@ abstract interface class PushSubscriptionOptionsInit {
   set applicationServerKey(Object? value);
 }
 
-final class PushSubscriptionOptionsInitValue implements PushSubscriptionOptionsInit {
+final class PushSubscriptionOptionsInitValue
+    implements PushSubscriptionOptionsInit {
   @override
   bool? userVisibleOnly;
   @override
@@ -148,4 +144,3 @@ final class PushSubscriptionOptionsInitValue implements PushSubscriptionOptionsI
     this.applicationServerKey,
   });
 }
-

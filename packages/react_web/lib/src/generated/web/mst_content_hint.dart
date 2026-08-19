@@ -30,4 +30,3 @@ final class RTCRtpSendParametersValue implements RTCRtpSendParameters {
     required this.encodings,
   });
 }
-

@@ -2,13 +2,13 @@
 // Neutral Web surface for spec: shared-storage
 // ignore_for_file: type=lint
 
-
 abstract interface class HTMLSharedStorageWritableElementUtils {
   bool get sharedStorageWritable;
-   set sharedStorageWritable(bool value);
+  set sharedStorageWritable(bool value);
 }
 
-typedef RunFunctionForSharedStorageSelectURLOperation = Future<int> Function(List<String> urls, Object data,);
+typedef RunFunctionForSharedStorageSelectURLOperation =
+    Future<int> Function(List<String> urls, Object data);
 
 typedef SharedStorageResponse = Object;
 
@@ -21,7 +21,8 @@ abstract interface class SharedStorageRunOperationMethodOptions {
   set keepAlive(bool? value);
 }
 
-final class SharedStorageRunOperationMethodOptionsValue implements SharedStorageRunOperationMethodOptions {
+final class SharedStorageRunOperationMethodOptionsValue
+    implements SharedStorageRunOperationMethodOptions {
   @override
   Object? data;
   @override
@@ -41,13 +42,12 @@ abstract interface class SharedStorageSetMethodOptions {
   set ignoreIfPresent(bool? value);
 }
 
-final class SharedStorageSetMethodOptionsValue implements SharedStorageSetMethodOptions {
+final class SharedStorageSetMethodOptionsValue
+    implements SharedStorageSetMethodOptions {
   @override
   bool? ignoreIfPresent;
 
-  SharedStorageSetMethodOptionsValue({
-    this.ignoreIfPresent,
-  });
+  SharedStorageSetMethodOptionsValue({this.ignoreIfPresent});
 }
 
 abstract interface class SharedStorageUrlWithMetadata {
@@ -57,7 +57,8 @@ abstract interface class SharedStorageUrlWithMetadata {
   set reportingMetadata(Object? value);
 }
 
-final class SharedStorageUrlWithMetadataValue implements SharedStorageUrlWithMetadata {
+final class SharedStorageUrlWithMetadataValue
+    implements SharedStorageUrlWithMetadata {
   @override
   String url;
   @override
@@ -68,4 +69,3 @@ final class SharedStorageUrlWithMetadataValue implements SharedStorageUrlWithMet
     this.reportingMetadata,
   });
 }
-

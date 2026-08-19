@@ -92,9 +92,7 @@ final class BundleReport {
         usedComponents: List<String>.from(
           map['usedComponents'] as List? ?? const [],
         ),
-        usedHooks: List<String>.from(
-          map['usedHooks'] as List? ?? const [],
-        ),
+        usedHooks: List<String>.from(map['usedHooks'] as List? ?? const []),
       );
     }
 

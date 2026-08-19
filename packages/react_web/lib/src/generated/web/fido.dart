@@ -35,10 +35,13 @@ abstract interface class AuthenticationExtensionsClientInputs {
   bool? get uvm;
   set uvm(bool? value);
   AuthenticationExtensionsSupplementalPubKeysInputs? get supplementalPubKeys;
-  set supplementalPubKeys(AuthenticationExtensionsSupplementalPubKeysInputs? value);
+  set supplementalPubKeys(
+    AuthenticationExtensionsSupplementalPubKeysInputs? value,
+  );
 }
 
-final class AuthenticationExtensionsClientInputsValue implements AuthenticationExtensionsClientInputs {
+final class AuthenticationExtensionsClientInputsValue
+    implements AuthenticationExtensionsClientInputs {
   @override
   String? credentialProtectionPolicy;
   @override
@@ -107,10 +110,13 @@ abstract interface class AuthenticationExtensionsClientOutputs {
   UvmEntries? get uvm;
   set uvm(UvmEntries? value);
   AuthenticationExtensionsSupplementalPubKeysOutputs? get supplementalPubKeys;
-  set supplementalPubKeys(AuthenticationExtensionsSupplementalPubKeysOutputs? value);
+  set supplementalPubKeys(
+    AuthenticationExtensionsSupplementalPubKeysOutputs? value,
+  );
 }
 
-final class AuthenticationExtensionsClientOutputsValue implements AuthenticationExtensionsClientOutputs {
+final class AuthenticationExtensionsClientOutputsValue
+    implements AuthenticationExtensionsClientOutputs {
   @override
   bool? hmacCreateSecret;
   @override
@@ -156,10 +162,7 @@ final class HMACGetSecretInputValue implements HMACGetSecretInput {
   @override
   Object? salt2;
 
-  HMACGetSecretInputValue({
-    required this.salt1,
-    this.salt2,
-  });
+  HMACGetSecretInputValue({required this.salt1, this.salt2});
 }
 
 abstract interface class HMACGetSecretOutput {
@@ -175,9 +178,5 @@ final class HMACGetSecretOutputValue implements HMACGetSecretOutput {
   @override
   Object? output2;
 
-  HMACGetSecretOutputValue({
-    required this.output1,
-    this.output2,
-  });
+  HMACGetSecretOutputValue({required this.output1, this.output2});
 }
-

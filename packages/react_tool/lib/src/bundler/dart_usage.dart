@@ -22,7 +22,8 @@ import 'package:react_analysis/react_analysis.dart';
 /// semantic manifest as authoritative only when `complete == true`; otherwise
 /// it unions with the compiled-JS scan.
 final class DartUsageCollector {
-  final ReactRuntimeUsageCollector _collector = const ReactRuntimeUsageCollector();
+  final ReactRuntimeUsageCollector _collector =
+      const ReactRuntimeUsageCollector();
 
   /// Collect usage for a single Dart file (no import walk).
   /// Returns incomplete result (complete == false) — for isolated plugin use.
@@ -160,7 +161,8 @@ final class DartUsageCollector {
           if (directive is ImportDirective) {
             final imported = directive.libraryImport?.importedLibrary;
             final path = imported?.firstFragment.source.fullName;
-            if (path == null || path.isEmpty || path.startsWith('dart:')) continue;
+            if (path == null || path.isEmpty || path.startsWith('dart:'))
+              continue;
             if (!path.startsWith(root)) {
               if (!isFrameworkSkippable(path)) skipped.add(path);
               continue;
@@ -169,7 +171,8 @@ final class DartUsageCollector {
           } else if (directive is ExportDirective) {
             final exported = directive.libraryExport?.exportedLibrary;
             final path = exported?.firstFragment.source.fullName;
-            if (path == null || path.isEmpty || path.startsWith('dart:')) continue;
+            if (path == null || path.isEmpty || path.startsWith('dart:'))
+              continue;
             if (!path.startsWith(root)) {
               if (!isFrameworkSkippable(path)) skipped.add(path);
               continue;
@@ -196,7 +199,8 @@ final class DartUsageCollector {
     // Once the shim exposes functionKeys/valueKeys and _bundleForeignTargets
     // handles them, this can be removed and completeness can be purely
     // unresolved/skipped based. For now, force union with JS scan.
-    final hasFunctionOrValue = collected.functions.isNotEmpty || collected.values.isNotEmpty;
+    final hasFunctionOrValue =
+        collected.functions.isNotEmpty || collected.values.isNotEmpty;
     final baseComplete = unresolved.isEmpty && skipped.isEmpty;
     final complete = baseComplete && !hasFunctionOrValue;
     return ReactUsageResult(
@@ -249,8 +253,10 @@ Future<ReactUsageResult?> writeUsageManifest({
   final collector = DartUsageCollector();
   ReactUsageResult result;
   try {
-    result = await collector.collectEntrypointResolved(entryPath,
-        projectRoot: projectRoot);
+    result = await collector.collectEntrypointResolved(
+      entryPath,
+      projectRoot: projectRoot,
+    );
   } catch (_) {
     result = collector.collectEntrypoint(entryPath);
   }

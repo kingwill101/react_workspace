@@ -6,11 +6,9 @@ import 'generic_sensor.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Gyroscope {
-  factory Gyroscope([GyroscopeSensorOptions? sensorOptions]) =>
-      WebRuntime.current.createWebObject<Gyroscope>(
-        'Gyroscope',
-        [sensorOptions],
-      );
+  factory Gyroscope([GyroscopeSensorOptions? sensorOptions]) => WebRuntime
+      .current
+      .createWebObject<Gyroscope>('Gyroscope', [sensorOptions]);
   double? get x;
   double? get y;
   double? get z;
@@ -27,8 +25,5 @@ final class GyroscopeSensorOptionsValue implements GyroscopeSensorOptions {
   @override
   GyroscopeLocalCoordinateSystem? referenceFrame;
 
-  GyroscopeSensorOptionsValue({
-    this.referenceFrame,
-  });
+  GyroscopeSensorOptionsValue({this.referenceFrame});
 }
-

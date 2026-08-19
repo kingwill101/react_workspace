@@ -8,7 +8,9 @@ void main() {
     bcdFilter: bcd,
   ).loadRaw();
   final model = mergeRawModel(raw);
-  print('callback defs: ${model.callbacks.keys.where((k) => k.contains('EventHandler') || k.contains('Callback')).toList().take(10)}');
+  print(
+    'callback defs: ${model.callbacks.keys.where((k) => k.contains('EventHandler') || k.contains('Callback')).toList().take(10)}',
+  );
   print('EventHandler typedef: ${model.typedefs['EventHandler']?.type}');
   final bc = model.interfaces['BroadcastChannel']!;
   final onm = bc.members.firstWhere((m) => m.name == 'onmessage');

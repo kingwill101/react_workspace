@@ -24,15 +24,18 @@ final class SsrSurfaceEmitter {
   void emitTo(String outputDir) {
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
-    buf.writeln('// SSR throwing surface: every live Web API throws at runtime.');
+    buf.writeln(
+      '// SSR throwing surface: every live Web API throws at runtime.',
+    );
     buf.writeln('// ignore_for_file: type=lint');
     buf.writeln();
     buf.writeln("import 'package:react_web/src/web_runtime.dart';");
-    buf.writeln("import 'package:react_web/src/generated/web/web.dart';", );
+    buf.writeln("import 'package:react_web/src/generated/web/web.dart';");
     buf.writeln();
 
-    for (final iface in model.interfaces.values.toList()
-      ..sort((a, b) => a.name.compareTo(b.name))) {
+    for (final iface
+        in model.interfaces.values.toList()
+          ..sort((a, b) => a.name.compareTo(b.name))) {
       _emitSsrClass(buf, iface);
     }
     _emitRuntime(buf);
@@ -123,7 +126,9 @@ final class SsrSurfaceEmitter {
           buf.writeln('  );');
           if (!m.readonly) {
             buf.writeln('  @override');
-            buf.writeln("  set $n($t value) => throw UnsupportedWebApiError('$api'");
+            buf.writeln(
+              "  set $n($t value) => throw UnsupportedWebApiError('$api'",
+            );
             if (exposed != null) {
               buf.writeln("      , exposed: '$exposed'");
             }
@@ -136,7 +141,9 @@ final class SsrSurfaceEmitter {
           final t = _resolver.resolve(m.returnType);
           final n = escapeIdentifier(m.name);
           buf.writeln('  @override');
-          buf.writeln("  $t $n(${_paramStr(m.parameters)}) => throw UnsupportedWebApiError('$api'");
+          buf.writeln(
+            "  $t $n(${_paramStr(m.parameters)}) => throw UnsupportedWebApiError('$api'",
+          );
           if (exposed != null) {
             buf.writeln("      , exposed: '$exposed'");
           }
@@ -146,40 +153,64 @@ final class SsrSurfaceEmitter {
           final names = m.types.map(_resolver.resolve).toList();
           if (m.types.length >= 2) {
             buf.writeln('  @override');
-            buf.writeln("  Iterable<(${names[0]}, ${names[1]})> get entries => throw UnsupportedWebApiError('$api.entries');");
+            buf.writeln(
+              "  Iterable<(${names[0]}, ${names[1]})> get entries => throw UnsupportedWebApiError('$api.entries');",
+            );
             buf.writeln('  @override');
-            buf.writeln("  Iterable<${names[0]}> get keys => throw UnsupportedWebApiError('$api.keys');");
+            buf.writeln(
+              "  Iterable<${names[0]}> get keys => throw UnsupportedWebApiError('$api.keys');",
+            );
             buf.writeln('  @override');
-            buf.writeln("  Iterable<${names[1]}> get values => throw UnsupportedWebApiError('$api.values');");
+            buf.writeln(
+              "  Iterable<${names[1]}> get values => throw UnsupportedWebApiError('$api.values');",
+            );
           } else {
             buf.writeln('  @override');
-            buf.writeln("  Iterable<${names.first}> get values => throw UnsupportedWebApiError('$api.values');");
+            buf.writeln(
+              "  Iterable<${names.first}> get values => throw UnsupportedWebApiError('$api.values');",
+            );
           }
           continue;
         case IdlMaplike():
           final k = _resolver.resolve(m.keyType);
           final v = _resolver.resolve(m.valueType);
           buf.writeln('  @override');
-          buf.writeln("  Iterable<$k> get keys => throw UnsupportedWebApiError('$api.keys');");
+          buf.writeln(
+            "  Iterable<$k> get keys => throw UnsupportedWebApiError('$api.keys');",
+          );
           buf.writeln('  @override');
-          buf.writeln("  Iterable<$v> get values => throw UnsupportedWebApiError('$api.values');");
+          buf.writeln(
+            "  Iterable<$v> get values => throw UnsupportedWebApiError('$api.values');",
+          );
           buf.writeln('  @override');
-          buf.writeln("  Iterable<MapEntry<$k, $v>> get entries => throw UnsupportedWebApiError('$api.entries');");
+          buf.writeln(
+            "  Iterable<MapEntry<$k, $v>> get entries => throw UnsupportedWebApiError('$api.entries');",
+          );
           buf.writeln('  @override');
-          buf.writeln("  $v? operator [](Object key) => throw UnsupportedWebApiError('$api.[]');");
+          buf.writeln(
+            "  $v? operator [](Object key) => throw UnsupportedWebApiError('$api.[]');",
+          );
           buf.writeln('  @override');
-          buf.writeln("  bool has(Object key) => throw UnsupportedWebApiError('$api.has');");
+          buf.writeln(
+            "  bool has(Object key) => throw UnsupportedWebApiError('$api.has');",
+          );
           continue;
         case IdlSetlike():
           final v = _resolver.resolve(m.valueType);
           buf.writeln('  @override');
-          buf.writeln("  Iterable<$v> get values => throw UnsupportedWebApiError('$api.values');");
+          buf.writeln(
+            "  Iterable<$v> get values => throw UnsupportedWebApiError('$api.values');",
+          );
           buf.writeln('  @override');
-          buf.writeln("  bool has(Object value) => throw UnsupportedWebApiError('$api.has');");
+          buf.writeln(
+            "  bool has(Object value) => throw UnsupportedWebApiError('$api.has');",
+          );
           continue;
         case IdlConstant():
           buf.writeln('  @override');
-          buf.writeln("  ${_resolver.resolve(m.type)} get ${escapeIdentifier(m.name)} => throw UnsupportedWebApiError('$api');");
+          buf.writeln(
+            "  ${_resolver.resolve(m.type)} get ${escapeIdentifier(m.name)} => throw UnsupportedWebApiError('$api');",
+          );
           continue;
         case IdlField():
         case IdlConstructor():
@@ -196,7 +227,9 @@ final class SsrSurfaceEmitter {
     final required = <String>[];
     final optional = <String>[];
     for (final p in parameters) {
-      final name = escapeIdentifier((p as IdlParameter).name.isEmpty ? 'arg' : p.name);
+      final name = escapeIdentifier(
+        (p as IdlParameter).name.isEmpty ? 'arg' : p.name,
+      );
       var t = _resolver.resolve((p).type);
       if (!p.required) {
         if (!t.endsWith('?')) t = '$t?';
@@ -233,31 +266,53 @@ final class SsrSurfaceEmitter {
   }
 
   void _emitRuntime(StringBuffer buf) {
-    buf.writeln('/// SSR runtime: most live Web APIs throw; host elements are handled');
+    buf.writeln(
+      '/// SSR runtime: most live Web APIs throw; host elements are handled',
+    );
     buf.writeln('/// by the virtual host-node pipeline.');
     buf.writeln('final class SsrWebRuntime implements WebRuntime {');
     buf.writeln('  const SsrWebRuntime();');
     buf.writeln('  @override');
-    buf.writeln("  Window get window => throw UnsupportedWebApiError('Window', exposed: 'Window');");
+    buf.writeln(
+      "  Window get window => throw UnsupportedWebApiError('Window', exposed: 'Window');",
+    );
     buf.writeln('  @override');
-    buf.writeln("  Document get document => throw UnsupportedWebApiError('Document', exposed: 'Window');");
+    buf.writeln(
+      "  Document get document => throw UnsupportedWebApiError('Document', exposed: 'Window');",
+    );
     buf.writeln('  @override');
-    buf.writeln("  Navigator get navigator => throw UnsupportedWebApiError('Navigator', exposed: 'Window');");
+    buf.writeln(
+      "  Navigator get navigator => throw UnsupportedWebApiError('Navigator', exposed: 'Window');",
+    );
     buf.writeln('  @override');
-    buf.writeln('  T createWebObject<T extends Object>(String name, List<Object?> arguments) =>');
+    buf.writeln(
+      '  T createWebObject<T extends Object>(String name, List<Object?> arguments) =>',
+    );
     buf.writeln("      throw UnsupportedWebApiError('\$name constructor');");
     buf.writeln('  @override');
-    buf.writeln('  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments) =>');
+    buf.writeln(
+      '  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments) =>',
+    );
     buf.writeln("      throw UnsupportedWebApiError('\$namespace.\$member');");
     buf.writeln('  @override');
-    buf.writeln('  dynamic getNamespaceProperty(String namespace, String property) =>');
-    buf.writeln("      throw UnsupportedWebApiError('\$namespace.\$property');");
+    buf.writeln(
+      '  dynamic getNamespaceProperty(String namespace, String property) =>',
+    );
+    buf.writeln(
+      "      throw UnsupportedWebApiError('\$namespace.\$property');",
+    );
     buf.writeln('  @override');
-    buf.writeln('  void setNamespaceProperty(String namespace, String property, Object? value) =>');
-    buf.writeln("      throw UnsupportedWebApiError('\$namespace.\$property');");
+    buf.writeln(
+      '  void setNamespaceProperty(String namespace, String property, Object? value) =>',
+    );
+    buf.writeln(
+      "      throw UnsupportedWebApiError('\$namespace.\$property');",
+    );
     buf.writeln('}');
     buf.writeln();
     buf.writeln('/// Installs the SSR [WebRuntime]. Safe to call repeatedly.');
-    buf.writeln('void installSsrWebRuntime() => WebRuntime.install(const SsrWebRuntime());');
+    buf.writeln(
+      'void installSsrWebRuntime() => WebRuntime.install(const SsrWebRuntime());',
+    );
   }
 }

@@ -28,4 +28,3 @@ final class DetectedTextValue implements DetectedText {
     required this.cornerPoints,
   });
 }
-

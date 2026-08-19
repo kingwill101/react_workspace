@@ -49,21 +49,23 @@ abstract interface class KeySystemTrackConfiguration {
   set encryptionScheme(String? value);
 }
 
-final class KeySystemTrackConfigurationValue implements KeySystemTrackConfiguration {
+final class KeySystemTrackConfigurationValue
+    implements KeySystemTrackConfiguration {
   @override
   String? robustness;
   @override
   String? encryptionScheme;
 
-  KeySystemTrackConfigurationValue({
-    this.robustness,
-    this.encryptionScheme,
-  });
+  KeySystemTrackConfigurationValue({this.robustness, this.encryptionScheme});
 }
 
 abstract interface class MediaCapabilities {
-  Future<MediaCapabilitiesDecodingInfo> decodingInfo(MediaDecodingConfiguration configuration);
-  Future<MediaCapabilitiesEncodingInfo> encodingInfo(MediaEncodingConfiguration configuration);
+  Future<MediaCapabilitiesDecodingInfo> decodingInfo(
+    MediaDecodingConfiguration configuration,
+  );
+  Future<MediaCapabilitiesEncodingInfo> encodingInfo(
+    MediaEncodingConfiguration configuration,
+  );
 }
 
 abstract interface class MediaCapabilitiesDecodingInfo {
@@ -73,7 +75,8 @@ abstract interface class MediaCapabilitiesDecodingInfo {
   set configuration(MediaDecodingConfiguration? value);
 }
 
-final class MediaCapabilitiesDecodingInfoValue implements MediaCapabilitiesDecodingInfo {
+final class MediaCapabilitiesDecodingInfoValue
+    implements MediaCapabilitiesDecodingInfo {
   @override
   MediaKeySystemAccess keySystemAccess;
   @override
@@ -90,13 +93,12 @@ abstract interface class MediaCapabilitiesEncodingInfo {
   set configuration(MediaEncodingConfiguration? value);
 }
 
-final class MediaCapabilitiesEncodingInfoValue implements MediaCapabilitiesEncodingInfo {
+final class MediaCapabilitiesEncodingInfoValue
+    implements MediaCapabilitiesEncodingInfo {
   @override
   MediaEncodingConfiguration? configuration;
 
-  MediaCapabilitiesEncodingInfoValue({
-    this.configuration,
-  });
+  MediaCapabilitiesEncodingInfoValue({this.configuration});
 }
 
 abstract interface class MediaCapabilitiesInfo {
@@ -140,7 +142,8 @@ abstract interface class MediaCapabilitiesKeySystemConfiguration {
   set video(KeySystemTrackConfiguration? value);
 }
 
-final class MediaCapabilitiesKeySystemConfigurationValue implements MediaCapabilitiesKeySystemConfiguration {
+final class MediaCapabilitiesKeySystemConfigurationValue
+    implements MediaCapabilitiesKeySystemConfiguration {
   @override
   String keySystem;
   @override
@@ -180,10 +183,7 @@ final class MediaConfigurationValue implements MediaConfiguration {
   @override
   AudioConfiguration? audio;
 
-  MediaConfigurationValue({
-    this.video,
-    this.audio,
-  });
+  MediaConfigurationValue({this.video, this.audio});
 }
 
 abstract interface class MediaDecodingConfiguration {
@@ -193,7 +193,8 @@ abstract interface class MediaDecodingConfiguration {
   set keySystemConfiguration(MediaCapabilitiesKeySystemConfiguration? value);
 }
 
-final class MediaDecodingConfigurationValue implements MediaDecodingConfiguration {
+final class MediaDecodingConfigurationValue
+    implements MediaDecodingConfiguration {
   @override
   MediaDecodingType type_;
   @override
@@ -212,13 +213,12 @@ abstract interface class MediaEncodingConfiguration {
   set type_(MediaEncodingType value);
 }
 
-final class MediaEncodingConfigurationValue implements MediaEncodingConfiguration {
+final class MediaEncodingConfigurationValue
+    implements MediaEncodingConfiguration {
   @override
   MediaEncodingType type_;
 
-  MediaEncodingConfigurationValue({
-    required this.type_,
-  });
+  MediaEncodingConfigurationValue({required this.type_});
 }
 
 typedef MediaEncodingType = String;
@@ -288,4 +288,3 @@ final class VideoConfigurationValue implements VideoConfiguration {
     this.spatialScalability,
   });
 }
-

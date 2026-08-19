@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: ua-client-hints
 // ignore_for_file: type=lint
 
-
 abstract interface class NavigatorUA {
   Object get userAgentData;
 }
@@ -20,10 +19,7 @@ final class NavigatorUABrandVersionValue implements NavigatorUABrandVersion {
   @override
   String? version;
 
-  NavigatorUABrandVersionValue({
-    this.brand,
-    this.version,
-  });
+  NavigatorUABrandVersionValue({this.brand, this.version});
 }
 
 abstract interface class UADataValues {
@@ -107,10 +103,5 @@ final class UALowEntropyJSONValue implements UALowEntropyJSON {
   @override
   String? platform;
 
-  UALowEntropyJSONValue({
-    this.brands,
-    this.mobile,
-    this.platform,
-  });
+  UALowEntropyJSONValue({this.brands, this.mobile, this.platform});
 }
-

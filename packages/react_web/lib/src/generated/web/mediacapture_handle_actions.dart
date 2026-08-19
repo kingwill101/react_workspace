@@ -15,8 +15,5 @@ final class CaptureActionEventInitValue implements CaptureActionEventInit {
   @override
   String? action;
 
-  CaptureActionEventInitValue({
-    this.action,
-  });
+  CaptureActionEventInitValue({this.action});
 }
-

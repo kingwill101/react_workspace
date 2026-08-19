@@ -1,6 +1,8 @@
 import 'package:react/react.dart';
 
-const idBuilderPage = ComponentId('package:superdesk/lib/pages/builder.dart#BuilderPage');
+const idBuilderPage = ComponentId(
+  'package:superdesk/lib/pages/builder.dart#BuilderPage',
+);
 
 ReactNode BuilderPage({
   required String lessonName,
@@ -11,9 +13,16 @@ ReactNode BuilderPage({
   required List<Map<String, dynamic>> resources,
   required List<Map<String, dynamic>> templates,
   String? key,
-  List<ReactNode> children = const []
+  List<ReactNode> children = const [],
 }) {
-  final props = (lessonName: lessonName, onLessonName: onLessonName, onPhases: onPhases, onToast: onToast, phases: phases, resources: resources, templates: templates);
+  final props = (
+    lessonName: lessonName,
+    onLessonName: onLessonName,
+    onPhases: onPhases,
+    onToast: onToast,
+    phases: phases,
+    resources: resources,
+    templates: templates,
+  );
   return Component(idBuilderPage, props, key: key, children: children);
 }
-

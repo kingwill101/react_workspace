@@ -49,4 +49,3 @@ abstract interface class PerformanceTiming {
   int get loadEventEnd;
   Object toJSON();
 }
-

@@ -14,9 +14,7 @@ final class NDEFMakeReadOnlyOptionsValue implements NDEFMakeReadOnlyOptions {
   @override
   AbortSignal? signal;
 
-  NDEFMakeReadOnlyOptionsValue({
-    this.signal,
-  });
+  NDEFMakeReadOnlyOptionsValue({this.signal});
 }
 
 abstract interface class NDEFMessageInit {
@@ -28,9 +26,7 @@ final class NDEFMessageInitValue implements NDEFMessageInit {
   @override
   List<NDEFRecordInit> records;
 
-  NDEFMessageInitValue({
-    required this.records,
-  });
+  NDEFMessageInitValue({required this.records});
 }
 
 typedef NDEFMessageSource = Object;
@@ -48,10 +44,7 @@ final class NDEFReadingEventInitValue implements NDEFReadingEventInit {
   @override
   NDEFMessageInit message;
 
-  NDEFReadingEventInitValue({
-    this.serialNumber,
-    required this.message,
-  });
+  NDEFReadingEventInitValue({this.serialNumber, required this.message});
 }
 
 abstract interface class NDEFRecordInit {
@@ -102,9 +95,7 @@ final class NDEFScanOptionsValue implements NDEFScanOptions {
   @override
   AbortSignal? signal;
 
-  NDEFScanOptionsValue({
-    this.signal,
-  });
+  NDEFScanOptionsValue({this.signal});
 }
 
 abstract interface class NDEFWriteOptions {
@@ -120,9 +111,5 @@ final class NDEFWriteOptionsValue implements NDEFWriteOptions {
   @override
   AbortSignal? signal;
 
-  NDEFWriteOptionsValue({
-    this.overwrite,
-    this.signal,
-  });
+  NDEFWriteOptionsValue({this.overwrite, this.signal});
 }
-

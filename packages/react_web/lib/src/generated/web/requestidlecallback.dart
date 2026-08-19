@@ -9,7 +9,7 @@ abstract interface class IdleDeadline {
   bool get didTimeout;
 }
 
-typedef IdleRequestCallback = void Function(IdleDeadline deadline,);
+typedef IdleRequestCallback = void Function(IdleDeadline deadline);
 
 abstract interface class IdleRequestOptions {
   int? get timeout;
@@ -20,8 +20,5 @@ final class IdleRequestOptionsValue implements IdleRequestOptions {
   @override
   int? timeout;
 
-  IdleRequestOptionsValue({
-    this.timeout,
-  });
+  IdleRequestOptionsValue({this.timeout});
 }
-

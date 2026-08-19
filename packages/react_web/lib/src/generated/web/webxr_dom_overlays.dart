@@ -13,9 +13,7 @@ final class XRDOMOverlayInitValue implements XRDOMOverlayInit {
   @override
   Element root;
 
-  XRDOMOverlayInitValue({
-    required this.root,
-  });
+  XRDOMOverlayInitValue({required this.root});
 }
 
 abstract interface class XRDOMOverlayState {
@@ -27,10 +25,7 @@ final class XRDOMOverlayStateValue implements XRDOMOverlayState {
   @override
   XRDOMOverlayType? type_;
 
-  XRDOMOverlayStateValue({
-    this.type_,
-  });
+  XRDOMOverlayStateValue({this.type_});
 }
 
 typedef XRDOMOverlayType = String;
-

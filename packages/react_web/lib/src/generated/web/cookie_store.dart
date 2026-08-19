@@ -9,11 +9,13 @@ import 'service_workers.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CookieChangeEvent {
-  factory CookieChangeEvent(String type_, [CookieChangeEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<CookieChangeEvent>(
-        'CookieChangeEvent',
-        [type_, eventInitDict],
-      );
+  factory CookieChangeEvent(
+    String type_, [
+    CookieChangeEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<CookieChangeEvent>(
+    'CookieChangeEvent',
+    [type_, eventInitDict],
+  );
   List<CookieListItem> get changed;
   List<CookieListItem> get deleted;
 }
@@ -31,10 +33,7 @@ final class CookieChangeEventInitValue implements CookieChangeEventInit {
   @override
   CookieList? deleted;
 
-  CookieChangeEventInitValue({
-    this.changed,
-    this.deleted,
-  });
+  CookieChangeEventInitValue({this.changed, this.deleted});
 }
 
 abstract interface class CookieInit {
@@ -140,7 +139,7 @@ abstract interface class CookieStore {
   Future<void> set_(String name, String value);
   Future<void> delete(String name);
   EventHandler get onchange;
-   set onchange(EventHandler value);
+  set onchange(EventHandler value);
 }
 
 abstract interface class CookieStoreDeleteOptions {
@@ -185,10 +184,7 @@ final class CookieStoreGetOptionsValue implements CookieStoreGetOptions {
   @override
   String? url;
 
-  CookieStoreGetOptionsValue({
-    this.name,
-    this.url,
-  });
+  CookieStoreGetOptionsValue({this.name, this.url});
 }
 
 abstract interface class CookieStoreManager {
@@ -198,11 +194,13 @@ abstract interface class CookieStoreManager {
 }
 
 abstract interface class ExtendableCookieChangeEvent {
-  factory ExtendableCookieChangeEvent(String type_, [ExtendableCookieChangeEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<ExtendableCookieChangeEvent>(
-        'ExtendableCookieChangeEvent',
-        [type_, eventInitDict],
-      );
+  factory ExtendableCookieChangeEvent(
+    String type_, [
+    ExtendableCookieChangeEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<ExtendableCookieChangeEvent>(
+    'ExtendableCookieChangeEvent',
+    [type_, eventInitDict],
+  );
   List<CookieListItem> get changed;
   List<CookieListItem> get deleted;
 }
@@ -214,15 +212,12 @@ abstract interface class ExtendableCookieChangeEventInit {
   set deleted(CookieList? value);
 }
 
-final class ExtendableCookieChangeEventInitValue implements ExtendableCookieChangeEventInit {
+final class ExtendableCookieChangeEventInitValue
+    implements ExtendableCookieChangeEventInit {
   @override
   CookieList? changed;
   @override
   CookieList? deleted;
 
-  ExtendableCookieChangeEventInitValue({
-    this.changed,
-    this.deleted,
-  });
+  ExtendableCookieChangeEventInitValue({this.changed, this.deleted});
 }
-

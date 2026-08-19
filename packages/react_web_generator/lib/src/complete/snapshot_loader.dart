@@ -47,7 +47,8 @@ final class CompleteWebModelBuilder {
         final members = parseMembers(e['members']);
         switch (type) {
           case 'interface':
-            if (bcdFilter != null && !bcdFilter!.shouldGenerateInterface(name)) {
+            if (bcdFilter != null &&
+                !bcdFilter!.shouldGenerateInterface(name)) {
               break;
             }
             _addInterface(interfaces, specOf, name, spec, e, members, extAttrs);
@@ -71,45 +72,56 @@ final class CompleteWebModelBuilder {
           case 'interface mixin':
             mixins.update(
               name,
-              (l) => l..add(IdlMixin(
-                name: name,
-                spec: spec,
-                members: members,
-                partial: e['partial'] as bool? ?? false,
-                extAttrs: extAttrs,
-              )),
-              ifAbsent: () => [IdlMixin(
-                name: name,
-                spec: spec,
-                members: members,
-                partial: e['partial'] as bool? ?? false,
-                extAttrs: extAttrs,
-              )],
+              (l) => l
+                ..add(
+                  IdlMixin(
+                    name: name,
+                    spec: spec,
+                    members: members,
+                    partial: e['partial'] as bool? ?? false,
+                    extAttrs: extAttrs,
+                  ),
+                ),
+              ifAbsent: () => [
+                IdlMixin(
+                  name: name,
+                  spec: spec,
+                  members: members,
+                  partial: e['partial'] as bool? ?? false,
+                  extAttrs: extAttrs,
+                ),
+              ],
             );
             specOf.putIfAbsent(name, () => spec);
           case 'dictionary':
             dictionaries.update(
               name,
-              (l) => l..add(IdlDictionary(
-                name: name,
-                spec: spec,
-                inheritance: e['inheritance'] as String?,
-                fields: members.whereType<IdlField>().toList(),
-                partial: e['partial'] as bool? ?? false,
-                extAttrs: extAttrs,
-              )),
-              ifAbsent: () => [IdlDictionary(
-                name: name,
-                spec: spec,
-                inheritance: e['inheritance'] as String?,
-                fields: members.whereType<IdlField>().toList(),
-                partial: e['partial'] as bool? ?? false,
-                extAttrs: extAttrs,
-              )],
+              (l) => l
+                ..add(
+                  IdlDictionary(
+                    name: name,
+                    spec: spec,
+                    inheritance: e['inheritance'] as String?,
+                    fields: members.whereType<IdlField>().toList(),
+                    partial: e['partial'] as bool? ?? false,
+                    extAttrs: extAttrs,
+                  ),
+                ),
+              ifAbsent: () => [
+                IdlDictionary(
+                  name: name,
+                  spec: spec,
+                  inheritance: e['inheritance'] as String?,
+                  fields: members.whereType<IdlField>().toList(),
+                  partial: e['partial'] as bool? ?? false,
+                  extAttrs: extAttrs,
+                ),
+              ],
             );
             specOf.putIfAbsent(name, () => spec);
           case 'namespace':
-            if (bcdFilter != null && !bcdFilter!.shouldGenerateInterface(name)) {
+            if (bcdFilter != null &&
+                !bcdFilter!.shouldGenerateInterface(name)) {
               break;
             }
             _addNamespace(namespaces, specOf, name, spec, e, members, extAttrs);
@@ -145,12 +157,14 @@ final class CompleteWebModelBuilder {
           case 'includes':
             final target = e['target'] as String? ?? '';
             final incl = e['includes'] as String? ?? '';
-            includes.add(IdlIncludes(
-              name: '$target|$incl',
-              spec: spec,
-              target: target,
-              includes: incl,
-            ));
+            includes.add(
+              IdlIncludes(
+                name: '$target|$incl',
+                spec: spec,
+                target: target,
+                includes: incl,
+              ),
+            );
         }
       }
     }
@@ -178,15 +192,10 @@ final class CompleteWebModelBuilder {
       if (type.typeId.startsWith('web.')) {
         final name = type.typeId.substring(5);
         if (bcdFilter!.isFilteredOutInterface(name)) {
-          return const NamedTypeRef(
-            typeId: 'core.Object',
-            nullable: true,
-          );
+          return const NamedTypeRef(typeId: 'core.Object', nullable: true);
         }
       }
-      final lowerArgs = type.arguments
-          .map(_lowerFilteredOutTypes)
-          .toList();
+      final lowerArgs = type.arguments.map(_lowerFilteredOutTypes).toList();
       if (lowerArgs.length == type.arguments.length &&
           identical(lowerArgs, type.arguments)) {
         return type;
@@ -198,24 +207,26 @@ final class CompleteWebModelBuilder {
       );
     }
     if (type is UnionTypeRef) {
-      final lowerOptions = type.options
-          .map(_lowerFilteredOutTypes)
-          .toList();
+      final lowerOptions = type.options.map(_lowerFilteredOutTypes).toList();
       if (lowerOptions.length == type.options.length &&
           identical(lowerOptions, type.options)) {
         return type;
       }
-      return UnionTypeRef(
-        nullable: type.nullable,
-        options: lowerOptions,
-      );
+      return UnionTypeRef(nullable: type.nullable, options: lowerOptions);
     }
     return type;
   }
 
   IdlMember _lowerMemberTypes(IdlMember member) {
     return switch (member) {
-      IdlAttribute(:final type, :final name, :final readonly, :final special, :final staticMember, :final extAttrs) =>
+      IdlAttribute(
+        :final type,
+        :final name,
+        :final readonly,
+        :final special,
+        :final staticMember,
+        :final extAttrs,
+      ) =>
         IdlAttribute(
           name: name,
           type: _lowerFilteredOutTypes(type),
@@ -224,38 +235,48 @@ final class CompleteWebModelBuilder {
           staticMember: staticMember,
           extAttrs: extAttrs,
         ),
-      IdlOperation(:final returnType, :final parameters, :final name, :final special, :final staticMember, :final extAttrs) =>
+      IdlOperation(
+        :final returnType,
+        :final parameters,
+        :final name,
+        :final special,
+        :final staticMember,
+        :final extAttrs,
+      ) =>
         IdlOperation(
           name: name,
           returnType: _lowerFilteredOutTypes(returnType),
           parameters: parameters
-              .map((p) => IdlParameter(
-                    name: p.name,
-                    type: _lowerFilteredOutTypes(p.type),
-                    required: p.required,
-                    defaultValue: p.defaultValue,
-                    variadic: p.variadic,
-                    extAttrs: p.extAttrs,
-                  ))
+              .map(
+                (p) => IdlParameter(
+                  name: p.name,
+                  type: _lowerFilteredOutTypes(p.type),
+                  required: p.required,
+                  defaultValue: p.defaultValue,
+                  variadic: p.variadic,
+                  extAttrs: p.extAttrs,
+                ),
+              )
               .toList(),
           special: special,
           staticMember: staticMember,
           extAttrs: extAttrs,
         ),
-      IdlConstructor(:final parameters, :final extAttrs) =>
-        IdlConstructor(
-          parameters: parameters
-              .map((p) => IdlParameter(
-                    name: p.name,
-                    type: _lowerFilteredOutTypes(p.type),
-                    required: p.required,
-                    defaultValue: p.defaultValue,
-                    variadic: p.variadic,
-                    extAttrs: p.extAttrs,
-                  ))
-              .toList(),
-          extAttrs: extAttrs,
-        ),
+      IdlConstructor(:final parameters, :final extAttrs) => IdlConstructor(
+        parameters: parameters
+            .map(
+              (p) => IdlParameter(
+                name: p.name,
+                type: _lowerFilteredOutTypes(p.type),
+                required: p.required,
+                defaultValue: p.defaultValue,
+                variadic: p.variadic,
+                extAttrs: p.extAttrs,
+              ),
+            )
+            .toList(),
+        extAttrs: extAttrs,
+      ),
       IdlConstant(:final type, :final name, :final value, :final extAttrs) =>
         IdlConstant(
           name: name,
@@ -263,13 +284,17 @@ final class CompleteWebModelBuilder {
           value: value,
           extAttrs: extAttrs,
         ),
-      IdlIterable(:final types, :final async, :final extAttrs) =>
-        IdlIterable(
-          types: types.map(_lowerFilteredOutTypes).toList(),
-          async: async,
-          extAttrs: extAttrs,
-        ),
-      IdlMaplike(:final keyType, :final valueType, :final readonly, :final extAttrs) =>
+      IdlIterable(:final types, :final async, :final extAttrs) => IdlIterable(
+        types: types.map(_lowerFilteredOutTypes).toList(),
+        async: async,
+        extAttrs: extAttrs,
+      ),
+      IdlMaplike(
+        :final keyType,
+        :final valueType,
+        :final readonly,
+        :final extAttrs,
+      ) =>
         IdlMaplike(
           keyType: _lowerFilteredOutTypes(keyType),
           valueType: _lowerFilteredOutTypes(valueType),
@@ -282,7 +307,13 @@ final class CompleteWebModelBuilder {
           readonly: readonly,
           extAttrs: extAttrs,
         ),
-      IdlField(:final type, :final name, :final required, :final defaultValue, :final extAttrs) =>
+      IdlField(
+        :final type,
+        :final name,
+        :final required,
+        :final defaultValue,
+        :final extAttrs,
+      ) =>
         IdlField(
           name: name,
           type: _lowerFilteredOutTypes(type),
@@ -303,33 +334,40 @@ final class CompleteWebModelBuilder {
     List<ExtAttr> extAttrs,
   ) {
     final filteredMembers = bcdFilter != null
-        ? members.where((m) {
-            // Constructors are structural interface info, not member
-            // coverage; the BCD filter keys on member names and would drop
-            // them.
-            if (m is IdlConstructor) return true;
-            return bcdFilter!.shouldGenerateMember(name, m.name);
-          }).map(_lowerMemberTypes)
-          .toList()
+        ? members
+              .where((m) {
+                // Constructors are structural interface info, not member
+                // coverage; the BCD filter keys on member names and would drop
+                // them.
+                if (m is IdlConstructor) return true;
+                return bcdFilter!.shouldGenerateMember(name, m.name);
+              })
+              .map(_lowerMemberTypes)
+              .toList()
         : members;
     interfaces.update(
       name,
-      (l) => l..add(IdlInterface(
-        name: name,
-        spec: spec,
-        inheritance: e['inheritance'] as String?,
-        members: filteredMembers,
-        partial: e['partial'] as bool? ?? false,
-        extAttrs: extAttrs,
-      )),
-      ifAbsent: () => [IdlInterface(
-        name: name,
-        spec: spec,
-        inheritance: e['inheritance'] as String?,
-        members: filteredMembers,
-        partial: e['partial'] as bool? ?? false,
-        extAttrs: extAttrs,
-      )],
+      (l) => l
+        ..add(
+          IdlInterface(
+            name: name,
+            spec: spec,
+            inheritance: e['inheritance'] as String?,
+            members: filteredMembers,
+            partial: e['partial'] as bool? ?? false,
+            extAttrs: extAttrs,
+          ),
+        ),
+      ifAbsent: () => [
+        IdlInterface(
+          name: name,
+          spec: spec,
+          inheritance: e['inheritance'] as String?,
+          members: filteredMembers,
+          partial: e['partial'] as bool? ?? false,
+          extAttrs: extAttrs,
+        ),
+      ],
     );
     specOf.putIfAbsent(name, () => spec);
   }
@@ -344,27 +382,34 @@ final class CompleteWebModelBuilder {
     List<ExtAttr> extAttrs,
   ) {
     final filteredMembers = bcdFilter != null
-        ? members.where((m) {
-            return bcdFilter!.shouldGenerateMember(name, m.name);
-          }).map(_lowerMemberTypes)
-          .toList()
+        ? members
+              .where((m) {
+                return bcdFilter!.shouldGenerateMember(name, m.name);
+              })
+              .map(_lowerMemberTypes)
+              .toList()
         : members;
     namespaces.update(
       name,
-      (l) => l..add(IdlNamespace(
-        name: name,
-        spec: spec,
-        members: filteredMembers,
-        partial: e['partial'] as bool? ?? false,
-        extAttrs: extAttrs,
-      )),
-      ifAbsent: () => [IdlNamespace(
-        name: name,
-        spec: spec,
-        members: filteredMembers,
-        partial: e['partial'] as bool? ?? false,
-        extAttrs: extAttrs,
-      )],
+      (l) => l
+        ..add(
+          IdlNamespace(
+            name: name,
+            spec: spec,
+            members: filteredMembers,
+            partial: e['partial'] as bool? ?? false,
+            extAttrs: extAttrs,
+          ),
+        ),
+      ifAbsent: () => [
+        IdlNamespace(
+          name: name,
+          spec: spec,
+          members: filteredMembers,
+          partial: e['partial'] as bool? ?? false,
+          extAttrs: extAttrs,
+        ),
+      ],
     );
     specOf.putIfAbsent(name, () => spec);
   }

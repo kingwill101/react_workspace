@@ -17,9 +17,5 @@ final class SnapEventInitValue implements SnapEventInit {
   @override
   Node? snapTargetInline;
 
-  SnapEventInitValue({
-    this.snapTargetBlock,
-    this.snapTargetInline,
-  });
+  SnapEventInitValue({this.snapTargetBlock, this.snapTargetInline});
 }
-

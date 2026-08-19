@@ -78,8 +78,7 @@ JSAny? _toJs(Object? value) {
   if (value is bool) return value.toJS;
   if (value is int) return value.toJS;
   if (value is double) return value.toJS;
-  if (value is List)
-    return [for (final e in value) _toJs(e)].toJS;
+  if (value is List) return [for (final e in value) _toJs(e)].toJS;
   if (value is Function) return _handlerToJs(value);
   throw ArgumentError('Unsupported JS argument type: ${value.runtimeType}.');
 }
@@ -123,8 +122,7 @@ JSAny? _dispatchDartHandler(
   return _toJs(result);
 }
 
-final JSExportedDartFunction _dispatchDartHandlerJS =
-    _dispatchDartHandler.toJS;
+final JSExportedDartFunction _dispatchDartHandlerJS = _dispatchDartHandler.toJS;
 
 /// Bridges a Dart callback (e.g. an `onmessage` handler) into a
 /// JS function. The callback travels to JS as an opaque
@@ -144,7 +142,9 @@ dynamic _convert(JSAny? value, String kind) {
     return (value as JSPromise<JSAny?>).toDart;
   }
   if (kind == "list" && value is JSArray) {
-    return (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, "wrap")).toList();
+    return (value as JSArray<JSAny?>).toDart
+        .map((e) => _convert(e, "wrap"))
+        .toList();
   }
   if (kind == "map" && value is JSObject) {
     // record<K,V> → JS object with string keys; best-effort map view.
@@ -157,16 +157,25 @@ dynamic _convert(JSAny? value, String kind) {
     'string' => (value as JSString).toDart,
     'void' => null,
     'jsfunction' => value,
-    'promise' => (value is JSPromise ? (value as JSPromise<JSAny?>).toDart : _wrapObject(value as JSObject)),
-    'list' => (value is JSArray ? (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, 'wrap')).toList() : _wrapObject(value as JSObject)),
+    'promise' =>
+      (value is JSPromise
+          ? (value as JSPromise<JSAny?>).toDart
+          : _wrapObject(value as JSObject)),
+    'list' =>
+      (value is JSArray
+          ? (value as JSArray<JSAny?>).toDart
+                .map((e) => _convert(e, 'wrap'))
+                .toList()
+          : _wrapObject(value as JSObject)),
     'typedArray' => value,
-    _ => value is JSString
-        ? (value as JSString).toDart
-        : value is JSBoolean
-            ? (value as JSBoolean).toDart
-            : value is JSNumber
-                ? (value as JSNumber).toDartDouble
-                : _wrapObject(value as JSObject),
+    _ =>
+      value is JSString
+          ? (value as JSString).toDart
+          : value is JSBoolean
+          ? (value as JSBoolean).toDart
+          : value is JSNumber
+          ? (value as JSNumber).toDartDouble
+          : _wrapObject(value as JSObject),
   };
 }
 
@@ -4417,10 +4426,15 @@ final class BrowserAbortSignal extends BrowserObjectAdapter
 }
 
 final class BrowserAbsoluteOrientationSensor extends BrowserObjectAdapter
-    implements AbsoluteOrientationSensor, OrientationSensor, Sensor, EventTarget {
+    implements
+        AbsoluteOrientationSensor,
+        OrientationSensor,
+        Sensor,
+        EventTarget {
   BrowserAbsoluteOrientationSensor(super.element);
 
-  web.AbsoluteOrientationSensor get inner => _element as web.AbsoluteOrientationSensor;
+  web.AbsoluteOrientationSensor get inner =>
+      _element as web.AbsoluteOrientationSensor;
 }
 
 final class BrowserAnalyserNode extends BrowserObjectAdapter
@@ -4455,7 +4469,8 @@ final class BrowserAnimationPlaybackEvent extends BrowserObjectAdapter
     implements AnimationPlaybackEvent, Event {
   BrowserAnimationPlaybackEvent(super.element);
 
-  web.AnimationPlaybackEvent get inner => _element as web.AnimationPlaybackEvent;
+  web.AnimationPlaybackEvent get inner =>
+      _element as web.AnimationPlaybackEvent;
 }
 
 final class BrowserAnimationTimeline extends BrowserObjectAdapter
@@ -4542,8 +4557,7 @@ final class BrowserAudioWorkletProcessor extends BrowserObjectAdapter
   web.AudioWorkletProcessor get inner => _element as web.AudioWorkletProcessor;
 }
 
-final class BrowserBarProp extends BrowserObjectAdapter
-    implements BarProp {
+final class BrowserBarProp extends BrowserObjectAdapter implements BarProp {
   BrowserBarProp(super.element);
 
   web.BarProp get inner => _element as web.BarProp;
@@ -4556,8 +4570,7 @@ final class BrowserBiquadFilterNode extends BrowserObjectAdapter
   web.BiquadFilterNode get inner => _element as web.BiquadFilterNode;
 }
 
-final class BrowserBlob extends BrowserObjectAdapter
-    implements Blob {
+final class BrowserBlob extends BrowserObjectAdapter implements Blob {
   BrowserBlob(super.element);
 
   web.Blob get inner => _element as web.Blob;
@@ -4581,7 +4594,8 @@ final class BrowserByteLengthQueuingStrategy extends BrowserObjectAdapter
     implements ByteLengthQueuingStrategy {
   BrowserByteLengthQueuingStrategy(super.element);
 
-  web.ByteLengthQueuingStrategy get inner => _element as web.ByteLengthQueuingStrategy;
+  web.ByteLengthQueuingStrategy get inner =>
+      _element as web.ByteLengthQueuingStrategy;
 }
 
 final class BrowserCDATASection extends BrowserObjectAdapter
@@ -4682,8 +4696,7 @@ final class BrowserCSSRotate extends BrowserObjectAdapter
   web.CSSRotate get inner => _element as web.CSSRotate;
 }
 
-final class BrowserCSSRule extends BrowserObjectAdapter
-    implements CSSRule {
+final class BrowserCSSRule extends BrowserObjectAdapter implements CSSRule {
   BrowserCSSRule(super.element);
 
   web.CSSRule get inner => _element as web.CSSRule;
@@ -4777,7 +4790,8 @@ final class BrowserCSSVariableReferenceValue extends BrowserObjectAdapter
     implements CSSVariableReferenceValue {
   BrowserCSSVariableReferenceValue(super.element);
 
-  web.CSSVariableReferenceValue get inner => _element as web.CSSVariableReferenceValue;
+  web.CSSVariableReferenceValue get inner =>
+      _element as web.CSSVariableReferenceValue;
 }
 
 final class BrowserCacheStorage extends BrowserObjectAdapter
@@ -4801,8 +4815,7 @@ final class BrowserChannelSplitterNode extends BrowserObjectAdapter
   web.ChannelSplitterNode get inner => _element as web.ChannelSplitterNode;
 }
 
-final class BrowserClient extends BrowserObjectAdapter
-    implements Client {
+final class BrowserClient extends BrowserObjectAdapter implements Client {
   BrowserClient(super.element);
 
   web.Client get inner => _element as web.Client;
@@ -4858,17 +4871,23 @@ final class BrowserCompressionStream extends BrowserObjectAdapter
 }
 
 final class BrowserConstantSourceNode extends BrowserObjectAdapter
-    implements ConstantSourceNode, AudioScheduledSourceNode, AudioNode, EventTarget {
+    implements
+        ConstantSourceNode,
+        AudioScheduledSourceNode,
+        AudioNode,
+        EventTarget {
   BrowserConstantSourceNode(super.element);
 
   web.ConstantSourceNode get inner => _element as web.ConstantSourceNode;
 }
 
-final class BrowserContentVisibilityAutoStateChangeEvent extends BrowserObjectAdapter
+final class BrowserContentVisibilityAutoStateChangeEvent
+    extends BrowserObjectAdapter
     implements ContentVisibilityAutoStateChangeEvent, Event {
   BrowserContentVisibilityAutoStateChangeEvent(super.element);
 
-  web.ContentVisibilityAutoStateChangeEvent get inner => _element as web.ContentVisibilityAutoStateChangeEvent;
+  web.ContentVisibilityAutoStateChangeEvent get inner =>
+      _element as web.ContentVisibilityAutoStateChangeEvent;
 }
 
 final class BrowserConvolverNode extends BrowserObjectAdapter
@@ -4906,15 +4925,13 @@ final class BrowserCredentialsContainer extends BrowserObjectAdapter
   web.CredentialsContainer get inner => _element as web.CredentialsContainer;
 }
 
-final class BrowserCrypto extends BrowserObjectAdapter
-    implements Crypto {
+final class BrowserCrypto extends BrowserObjectAdapter implements Crypto {
   BrowserCrypto(super.element);
 
   web.Crypto get inner => _element as web.Crypto;
 }
 
-final class BrowserCryptoKey extends BrowserObjectAdapter
-    implements CryptoKey {
+final class BrowserCryptoKey extends BrowserObjectAdapter implements CryptoKey {
   BrowserCryptoKey(super.element);
 
   web.CryptoKey get inner => _element as web.CryptoKey;
@@ -4955,8 +4972,7 @@ final class BrowserDOMImplementation extends BrowserObjectAdapter
   web.DOMImplementation get inner => _element as web.DOMImplementation;
 }
 
-final class BrowserDOMMatrix extends BrowserObjectAdapter
-    implements DOMMatrix {
+final class BrowserDOMMatrix extends BrowserObjectAdapter implements DOMMatrix {
   BrowserDOMMatrix(super.element);
 
   web.DOMMatrix get inner => _element as web.DOMMatrix;
@@ -4969,15 +4985,13 @@ final class BrowserDOMMatrixReadOnly extends BrowserObjectAdapter
   web.DOMMatrixReadOnly get inner => _element as web.DOMMatrixReadOnly;
 }
 
-final class BrowserDOMParser extends BrowserObjectAdapter
-    implements DOMParser {
+final class BrowserDOMParser extends BrowserObjectAdapter implements DOMParser {
   BrowserDOMParser(super.element);
 
   web.DOMParser get inner => _element as web.DOMParser;
 }
 
-final class BrowserDOMPoint extends BrowserObjectAdapter
-    implements DOMPoint {
+final class BrowserDOMPoint extends BrowserObjectAdapter implements DOMPoint {
   BrowserDOMPoint(super.element);
 
   web.DOMPoint get inner => _element as web.DOMPoint;
@@ -4990,15 +5004,13 @@ final class BrowserDOMPointReadOnly extends BrowserObjectAdapter
   web.DOMPointReadOnly get inner => _element as web.DOMPointReadOnly;
 }
 
-final class BrowserDOMQuad extends BrowserObjectAdapter
-    implements DOMQuad {
+final class BrowserDOMQuad extends BrowserObjectAdapter implements DOMQuad {
   BrowserDOMQuad(super.element);
 
   web.DOMQuad get inner => _element as web.DOMQuad;
 }
 
-final class BrowserDOMRect extends BrowserObjectAdapter
-    implements DOMRect {
+final class BrowserDOMRect extends BrowserObjectAdapter implements DOMRect {
   BrowserDOMRect(super.element);
 
   web.DOMRect get inner => _element as web.DOMRect;
@@ -5085,21 +5097,24 @@ final class BrowserDeviceMotionEventAcceleration extends BrowserObjectAdapter
     implements DeviceMotionEventAcceleration {
   BrowserDeviceMotionEventAcceleration(super.element);
 
-  web.DeviceMotionEventAcceleration get inner => _element as web.DeviceMotionEventAcceleration;
+  web.DeviceMotionEventAcceleration get inner =>
+      _element as web.DeviceMotionEventAcceleration;
 }
 
 final class BrowserDeviceMotionEventRotationRate extends BrowserObjectAdapter
     implements DeviceMotionEventRotationRate {
   BrowserDeviceMotionEventRotationRate(super.element);
 
-  web.DeviceMotionEventRotationRate get inner => _element as web.DeviceMotionEventRotationRate;
+  web.DeviceMotionEventRotationRate get inner =>
+      _element as web.DeviceMotionEventRotationRate;
 }
 
 final class BrowserDeviceOrientationEvent extends BrowserObjectAdapter
     implements DeviceOrientationEvent, Event {
   BrowserDeviceOrientationEvent(super.element);
 
-  web.DeviceOrientationEvent get inner => _element as web.DeviceOrientationEvent;
+  web.DeviceOrientationEvent get inner =>
+      _element as web.DeviceOrientationEvent;
 }
 
 final class BrowserDocument extends BrowserObjectAdapter
@@ -5141,7 +5156,8 @@ final class BrowserDynamicsCompressorNode extends BrowserObjectAdapter
     implements DynamicsCompressorNode, AudioNode, EventTarget {
   BrowserDynamicsCompressorNode(super.element);
 
-  web.DynamicsCompressorNode get inner => _element as web.DynamicsCompressorNode;
+  web.DynamicsCompressorNode get inner =>
+      _element as web.DynamicsCompressorNode;
 }
 
 final class BrowserElement extends BrowserObjectAdapter
@@ -5172,8 +5188,7 @@ final class BrowserErrorEvent extends BrowserObjectAdapter
   web.ErrorEvent get inner => _element as web.ErrorEvent;
 }
 
-final class BrowserEvent extends BrowserObjectAdapter
-    implements Event {
+final class BrowserEvent extends BrowserObjectAdapter implements Event {
   BrowserEvent(super.element);
 
   web.Event get inner => _element as web.Event;
@@ -5204,7 +5219,8 @@ final class BrowserExtendableCookieChangeEvent extends BrowserObjectAdapter
     implements ExtendableCookieChangeEvent, ExtendableEvent, Event {
   BrowserExtendableCookieChangeEvent(super.element);
 
-  web.ExtendableCookieChangeEvent get inner => _element as web.ExtendableCookieChangeEvent;
+  web.ExtendableCookieChangeEvent get inner =>
+      _element as web.ExtendableCookieChangeEvent;
 }
 
 final class BrowserExtendableEvent extends BrowserObjectAdapter
@@ -5218,11 +5234,11 @@ final class BrowserExtendableMessageEvent extends BrowserObjectAdapter
     implements ExtendableMessageEvent, ExtendableEvent, Event {
   BrowserExtendableMessageEvent(super.element);
 
-  web.ExtendableMessageEvent get inner => _element as web.ExtendableMessageEvent;
+  web.ExtendableMessageEvent get inner =>
+      _element as web.ExtendableMessageEvent;
 }
 
-final class BrowserExternal extends BrowserObjectAdapter
-    implements External {
+final class BrowserExternal extends BrowserObjectAdapter implements External {
   BrowserExternal(super.element);
 
   web.External get inner => _element as web.External;
@@ -5235,15 +5251,13 @@ final class BrowserFetchEvent extends BrowserObjectAdapter
   web.FetchEvent get inner => _element as web.FetchEvent;
 }
 
-final class BrowserFile extends BrowserObjectAdapter
-    implements File, Blob {
+final class BrowserFile extends BrowserObjectAdapter implements File, Blob {
   BrowserFile(super.element);
 
   web.File get inner => _element as web.File;
 }
 
-final class BrowserFileList extends BrowserObjectAdapter
-    implements FileList {
+final class BrowserFileList extends BrowserObjectAdapter implements FileList {
   BrowserFileList(super.element);
 
   web.FileList get inner => _element as web.FileList;
@@ -5274,14 +5288,16 @@ final class BrowserFileSystemDirectoryEntry extends BrowserObjectAdapter
     implements FileSystemDirectoryEntry, FileSystemEntry {
   BrowserFileSystemDirectoryEntry(super.element);
 
-  web.FileSystemDirectoryEntry get inner => _element as web.FileSystemDirectoryEntry;
+  web.FileSystemDirectoryEntry get inner =>
+      _element as web.FileSystemDirectoryEntry;
 }
 
 final class BrowserFileSystemDirectoryReader extends BrowserObjectAdapter
     implements FileSystemDirectoryReader {
   BrowserFileSystemDirectoryReader(super.element);
 
-  web.FileSystemDirectoryReader get inner => _element as web.FileSystemDirectoryReader;
+  web.FileSystemDirectoryReader get inner =>
+      _element as web.FileSystemDirectoryReader;
 }
 
 final class BrowserFileSystemEntry extends BrowserObjectAdapter
@@ -5298,8 +5314,7 @@ final class BrowserFocusEvent extends BrowserObjectAdapter
   web.FocusEvent get inner => _element as web.FocusEvent;
 }
 
-final class BrowserFontFace extends BrowserObjectAdapter
-    implements FontFace {
+final class BrowserFontFace extends BrowserObjectAdapter implements FontFace {
   BrowserFontFace(super.element);
 
   web.FontFace get inner => _element as web.FontFace;
@@ -5319,8 +5334,7 @@ final class BrowserFontFaceSetLoadEvent extends BrowserObjectAdapter
   web.FontFaceSetLoadEvent get inner => _element as web.FontFaceSetLoadEvent;
 }
 
-final class BrowserFormData extends BrowserObjectAdapter
-    implements FormData {
+final class BrowserFormData extends BrowserObjectAdapter implements FormData {
   BrowserFormData(super.element);
 
   web.FormData get inner => _element as web.FormData;
@@ -5340,8 +5354,7 @@ final class BrowserGainNode extends BrowserObjectAdapter
   web.GainNode get inner => _element as web.GainNode;
 }
 
-final class BrowserGamepad extends BrowserObjectAdapter
-    implements Gamepad {
+final class BrowserGamepad extends BrowserObjectAdapter implements Gamepad {
   BrowserGamepad(super.element);
 
   web.Gamepad get inner => _element as web.Gamepad;
@@ -5397,7 +5410,13 @@ final class BrowserHTMLAreaElement extends BrowserObjectAdapter
 }
 
 final class BrowserHTMLAudioElement extends BrowserObjectAdapter
-    implements HTMLAudioElement, HTMLMediaElement, HTMLElement, Element, Node, EventTarget {
+    implements
+        HTMLAudioElement,
+        HTMLMediaElement,
+        HTMLElement,
+        Element,
+        Node,
+        EventTarget {
   BrowserHTMLAudioElement(super.element);
 
   web.HTMLAudioElement get inner => _element as web.HTMLAudioElement;
@@ -5526,7 +5545,8 @@ final class BrowserHTMLFormControlsCollection extends BrowserObjectAdapter
     implements HTMLFormControlsCollection {
   BrowserHTMLFormControlsCollection(super.element);
 
-  web.HTMLFormControlsCollection get inner => _element as web.HTMLFormControlsCollection;
+  web.HTMLFormControlsCollection get inner =>
+      _element as web.HTMLFormControlsCollection;
 }
 
 final class BrowserHTMLFormElement extends BrowserObjectAdapter
@@ -5803,10 +5823,16 @@ final class BrowserHTMLStyleElement extends BrowserObjectAdapter
 }
 
 final class BrowserHTMLTableCaptionElement extends BrowserObjectAdapter
-    implements HTMLTableCaptionElement, HTMLElement, Element, Node, EventTarget {
+    implements
+        HTMLTableCaptionElement,
+        HTMLElement,
+        Element,
+        Node,
+        EventTarget {
   BrowserHTMLTableCaptionElement(super.element);
 
-  web.HTMLTableCaptionElement get inner => _element as web.HTMLTableCaptionElement;
+  web.HTMLTableCaptionElement get inner =>
+      _element as web.HTMLTableCaptionElement;
 }
 
 final class BrowserHTMLTableCellElement extends BrowserObjectAdapter
@@ -5838,10 +5864,16 @@ final class BrowserHTMLTableRowElement extends BrowserObjectAdapter
 }
 
 final class BrowserHTMLTableSectionElement extends BrowserObjectAdapter
-    implements HTMLTableSectionElement, HTMLElement, Element, Node, EventTarget {
+    implements
+        HTMLTableSectionElement,
+        HTMLElement,
+        Element,
+        Node,
+        EventTarget {
   BrowserHTMLTableSectionElement(super.element);
 
-  web.HTMLTableSectionElement get inner => _element as web.HTMLTableSectionElement;
+  web.HTMLTableSectionElement get inner =>
+      _element as web.HTMLTableSectionElement;
 }
 
 final class BrowserHTMLTemplateElement extends BrowserObjectAdapter
@@ -5894,7 +5926,13 @@ final class BrowserHTMLUnknownElement extends BrowserObjectAdapter
 }
 
 final class BrowserHTMLVideoElement extends BrowserObjectAdapter
-    implements HTMLVideoElement, HTMLMediaElement, HTMLElement, Element, Node, EventTarget {
+    implements
+        HTMLVideoElement,
+        HTMLMediaElement,
+        HTMLElement,
+        Element,
+        Node,
+        EventTarget {
   BrowserHTMLVideoElement(super.element);
 
   web.HTMLVideoElement get inner => _element as web.HTMLVideoElement;
@@ -5907,22 +5945,19 @@ final class BrowserHashChangeEvent extends BrowserObjectAdapter
   web.HashChangeEvent get inner => _element as web.HashChangeEvent;
 }
 
-final class BrowserHeaders extends BrowserObjectAdapter
-    implements Headers {
+final class BrowserHeaders extends BrowserObjectAdapter implements Headers {
   BrowserHeaders(super.element);
 
   web.Headers get inner => _element as web.Headers;
 }
 
-final class BrowserHighlight extends BrowserObjectAdapter
-    implements Highlight {
+final class BrowserHighlight extends BrowserObjectAdapter implements Highlight {
   BrowserHighlight(super.element);
 
   web.Highlight get inner => _element as web.Highlight;
 }
 
-final class BrowserHistory extends BrowserObjectAdapter
-    implements History {
+final class BrowserHistory extends BrowserObjectAdapter implements History {
   BrowserHistory(super.element);
 
   web.History get inner => _element as web.History;
@@ -5963,8 +5998,7 @@ final class BrowserImageBitmap extends BrowserObjectAdapter
   web.ImageBitmap get inner => _element as web.ImageBitmap;
 }
 
-final class BrowserImageData extends BrowserObjectAdapter
-    implements ImageData {
+final class BrowserImageData extends BrowserObjectAdapter implements ImageData {
   BrowserImageData(super.element);
 
   web.ImageData get inner => _element as web.ImageData;
@@ -5988,7 +6022,8 @@ final class BrowserIntersectionObserverEntry extends BrowserObjectAdapter
     implements IntersectionObserverEntry {
   BrowserIntersectionObserverEntry(super.element);
 
-  web.IntersectionObserverEntry get inner => _element as web.IntersectionObserverEntry;
+  web.IntersectionObserverEntry get inner =>
+      _element as web.IntersectionObserverEntry;
 }
 
 final class BrowserKeyboardEvent extends BrowserObjectAdapter
@@ -6009,11 +6044,11 @@ final class BrowserLinearAccelerationSensor extends BrowserObjectAdapter
     implements LinearAccelerationSensor {
   BrowserLinearAccelerationSensor(super.element);
 
-  web.LinearAccelerationSensor get inner => _element as web.LinearAccelerationSensor;
+  web.LinearAccelerationSensor get inner =>
+      _element as web.LinearAccelerationSensor;
 }
 
-final class BrowserLocation extends BrowserObjectAdapter
-    implements Location {
+final class BrowserLocation extends BrowserObjectAdapter implements Location {
   BrowserLocation(super.element);
 
   web.Location get inner => _element as web.Location;
@@ -6072,7 +6107,8 @@ final class BrowserMediaElementAudioSourceNode extends BrowserObjectAdapter
     implements MediaElementAudioSourceNode, AudioNode, EventTarget {
   BrowserMediaElementAudioSourceNode(super.element);
 
-  web.MediaElementAudioSourceNode get inner => _element as web.MediaElementAudioSourceNode;
+  web.MediaElementAudioSourceNode get inner =>
+      _element as web.MediaElementAudioSourceNode;
 }
 
 final class BrowserMediaEncryptedEvent extends BrowserObjectAdapter
@@ -6110,8 +6146,7 @@ final class BrowserMediaKeyStatusMap extends BrowserObjectAdapter
   web.MediaKeyStatusMap get inner => _element as web.MediaKeyStatusMap;
 }
 
-final class BrowserMediaKeys extends BrowserObjectAdapter
-    implements MediaKeys {
+final class BrowserMediaKeys extends BrowserObjectAdapter implements MediaKeys {
   BrowserMediaKeys(super.element);
 
   web.MediaKeys get inner => _element as web.MediaKeys;
@@ -6177,14 +6212,16 @@ final class BrowserMediaStreamAudioDestinationNode extends BrowserObjectAdapter
     implements MediaStreamAudioDestinationNode, AudioNode, EventTarget {
   BrowserMediaStreamAudioDestinationNode(super.element);
 
-  web.MediaStreamAudioDestinationNode get inner => _element as web.MediaStreamAudioDestinationNode;
+  web.MediaStreamAudioDestinationNode get inner =>
+      _element as web.MediaStreamAudioDestinationNode;
 }
 
 final class BrowserMediaStreamAudioSourceNode extends BrowserObjectAdapter
     implements MediaStreamAudioSourceNode, AudioNode, EventTarget {
   BrowserMediaStreamAudioSourceNode(super.element);
 
-  web.MediaStreamAudioSourceNode get inner => _element as web.MediaStreamAudioSourceNode;
+  web.MediaStreamAudioSourceNode get inner =>
+      _element as web.MediaStreamAudioSourceNode;
 }
 
 final class BrowserMediaStreamTrack extends BrowserObjectAdapter
@@ -6198,7 +6235,8 @@ final class BrowserMediaStreamTrackAudioSourceNode extends BrowserObjectAdapter
     implements MediaStreamTrackAudioSourceNode, AudioNode, EventTarget {
   BrowserMediaStreamTrackAudioSourceNode(super.element);
 
-  web.MediaStreamTrackAudioSourceNode get inner => _element as web.MediaStreamTrackAudioSourceNode;
+  web.MediaStreamTrackAudioSourceNode get inner =>
+      _element as web.MediaStreamTrackAudioSourceNode;
 }
 
 final class BrowserMediaStreamTrackEvent extends BrowserObjectAdapter
@@ -6212,7 +6250,8 @@ final class BrowserMediaStreamTrackProcessor extends BrowserObjectAdapter
     implements MediaStreamTrackProcessor {
   BrowserMediaStreamTrackProcessor(super.element);
 
-  web.MediaStreamTrackProcessor get inner => _element as web.MediaStreamTrackProcessor;
+  web.MediaStreamTrackProcessor get inner =>
+      _element as web.MediaStreamTrackProcessor;
 }
 
 final class BrowserMessageChannel extends BrowserObjectAdapter
@@ -6236,8 +6275,7 @@ final class BrowserMessagePort extends BrowserObjectAdapter
   web.MessagePort get inner => _element as web.MessagePort;
 }
 
-final class BrowserMimeType extends BrowserObjectAdapter
-    implements MimeType {
+final class BrowserMimeType extends BrowserObjectAdapter implements MimeType {
   BrowserMimeType(super.element);
 
   web.MimeType get inner => _element as web.MimeType;
@@ -6271,8 +6309,7 @@ final class BrowserNamedNodeMap extends BrowserObjectAdapter
   web.NamedNodeMap get inner => _element as web.NamedNodeMap;
 }
 
-final class BrowserNavigator extends BrowserObjectAdapter
-    implements Navigator {
+final class BrowserNavigator extends BrowserObjectAdapter implements Navigator {
   BrowserNavigator(super.element);
 
   web.Navigator get inner => _element as web.Navigator;
@@ -6299,8 +6336,7 @@ final class BrowserNodeIterator extends BrowserObjectAdapter
   web.NodeIterator get inner => _element as web.NodeIterator;
 }
 
-final class BrowserNodeList extends BrowserObjectAdapter
-    implements NodeList {
+final class BrowserNodeList extends BrowserObjectAdapter implements NodeList {
   BrowserNodeList(super.element);
 
   web.NodeList get inner => _element as web.NodeList;
@@ -6324,7 +6360,8 @@ final class BrowserOfflineAudioCompletionEvent extends BrowserObjectAdapter
     implements OfflineAudioCompletionEvent, Event {
   BrowserOfflineAudioCompletionEvent(super.element);
 
-  web.OfflineAudioCompletionEvent get inner => _element as web.OfflineAudioCompletionEvent;
+  web.OfflineAudioCompletionEvent get inner =>
+      _element as web.OfflineAudioCompletionEvent;
 }
 
 final class BrowserOfflineAudioContext extends BrowserObjectAdapter
@@ -6342,7 +6379,11 @@ final class BrowserOffscreenCanvas extends BrowserObjectAdapter
 }
 
 final class BrowserOscillatorNode extends BrowserObjectAdapter
-    implements OscillatorNode, AudioScheduledSourceNode, AudioNode, EventTarget {
+    implements
+        OscillatorNode,
+        AudioScheduledSourceNode,
+        AudioNode,
+        EventTarget {
   BrowserOscillatorNode(super.element);
 
   web.OscillatorNode get inner => _element as web.OscillatorNode;
@@ -6369,8 +6410,7 @@ final class BrowserPannerNode extends BrowserObjectAdapter
   web.PannerNode get inner => _element as web.PannerNode;
 }
 
-final class BrowserPath2D extends BrowserObjectAdapter
-    implements Path2D {
+final class BrowserPath2D extends BrowserObjectAdapter implements Path2D {
   BrowserPath2D(super.element);
 
   web.Path2D get inner => _element as web.Path2D;
@@ -6380,7 +6420,8 @@ final class BrowserPaymentMethodChangeEvent extends BrowserObjectAdapter
     implements PaymentMethodChangeEvent, PaymentRequestUpdateEvent, Event {
   BrowserPaymentMethodChangeEvent(super.element);
 
-  web.PaymentMethodChangeEvent get inner => _element as web.PaymentMethodChangeEvent;
+  web.PaymentMethodChangeEvent get inner =>
+      _element as web.PaymentMethodChangeEvent;
 }
 
 final class BrowserPaymentRequest extends BrowserObjectAdapter
@@ -6394,7 +6435,8 @@ final class BrowserPaymentRequestUpdateEvent extends BrowserObjectAdapter
     implements PaymentRequestUpdateEvent, Event {
   BrowserPaymentRequestUpdateEvent(super.element);
 
-  web.PaymentRequestUpdateEvent get inner => _element as web.PaymentRequestUpdateEvent;
+  web.PaymentRequestUpdateEvent get inner =>
+      _element as web.PaymentRequestUpdateEvent;
 }
 
 final class BrowserPerformance extends BrowserObjectAdapter
@@ -6464,11 +6506,11 @@ final class BrowserPictureInPictureWindow extends BrowserObjectAdapter
     implements PictureInPictureWindow, EventTarget {
   BrowserPictureInPictureWindow(super.element);
 
-  web.PictureInPictureWindow get inner => _element as web.PictureInPictureWindow;
+  web.PictureInPictureWindow get inner =>
+      _element as web.PictureInPictureWindow;
 }
 
-final class BrowserPlugin extends BrowserObjectAdapter
-    implements Plugin {
+final class BrowserPlugin extends BrowserObjectAdapter implements Plugin {
   BrowserPlugin(super.element);
 
   web.Plugin get inner => _element as web.Plugin;
@@ -6541,14 +6583,16 @@ final class BrowserPushSubscriptionChangeEvent extends BrowserObjectAdapter
     implements PushSubscriptionChangeEvent, ExtendableEvent, Event {
   BrowserPushSubscriptionChangeEvent(super.element);
 
-  web.PushSubscriptionChangeEvent get inner => _element as web.PushSubscriptionChangeEvent;
+  web.PushSubscriptionChangeEvent get inner =>
+      _element as web.PushSubscriptionChangeEvent;
 }
 
 final class BrowserPushSubscriptionOptions extends BrowserObjectAdapter
     implements PushSubscriptionOptions {
   BrowserPushSubscriptionOptions(super.element);
 
-  web.PushSubscriptionOptions get inner => _element as web.PushSubscriptionOptions;
+  web.PushSubscriptionOptions get inner =>
+      _element as web.PushSubscriptionOptions;
 }
 
 final class BrowserRTCDTMFSender extends BrowserObjectAdapter
@@ -6562,7 +6606,8 @@ final class BrowserRTCDTMFToneChangeEvent extends BrowserObjectAdapter
     implements RTCDTMFToneChangeEvent, Event {
   BrowserRTCDTMFToneChangeEvent(super.element);
 
-  web.RTCDTMFToneChangeEvent get inner => _element as web.RTCDTMFToneChangeEvent;
+  web.RTCDTMFToneChangeEvent get inner =>
+      _element as web.RTCDTMFToneChangeEvent;
 }
 
 final class BrowserRTCDataChannel extends BrowserObjectAdapter
@@ -6639,14 +6684,16 @@ final class BrowserRTCPeerConnectionIceErrorEvent extends BrowserObjectAdapter
     implements RTCPeerConnectionIceErrorEvent, Event {
   BrowserRTCPeerConnectionIceErrorEvent(super.element);
 
-  web.RTCPeerConnectionIceErrorEvent get inner => _element as web.RTCPeerConnectionIceErrorEvent;
+  web.RTCPeerConnectionIceErrorEvent get inner =>
+      _element as web.RTCPeerConnectionIceErrorEvent;
 }
 
 final class BrowserRTCPeerConnectionIceEvent extends BrowserObjectAdapter
     implements RTCPeerConnectionIceEvent, Event {
   BrowserRTCPeerConnectionIceEvent(super.element);
 
-  web.RTCPeerConnectionIceEvent get inner => _element as web.RTCPeerConnectionIceEvent;
+  web.RTCPeerConnectionIceEvent get inner =>
+      _element as web.RTCPeerConnectionIceEvent;
 }
 
 final class BrowserRTCRtpReceiver extends BrowserObjectAdapter
@@ -6723,21 +6770,28 @@ final class BrowserReadableStreamBYOBReader extends BrowserObjectAdapter
     implements ReadableStreamBYOBReader {
   BrowserReadableStreamBYOBReader(super.element);
 
-  web.ReadableStreamBYOBReader get inner => _element as web.ReadableStreamBYOBReader;
+  web.ReadableStreamBYOBReader get inner =>
+      _element as web.ReadableStreamBYOBReader;
 }
 
 final class BrowserReadableStreamDefaultReader extends BrowserObjectAdapter
     implements ReadableStreamDefaultReader {
   BrowserReadableStreamDefaultReader(super.element);
 
-  web.ReadableStreamDefaultReader get inner => _element as web.ReadableStreamDefaultReader;
+  web.ReadableStreamDefaultReader get inner =>
+      _element as web.ReadableStreamDefaultReader;
 }
 
 final class BrowserRelativeOrientationSensor extends BrowserObjectAdapter
-    implements RelativeOrientationSensor, OrientationSensor, Sensor, EventTarget {
+    implements
+        RelativeOrientationSensor,
+        OrientationSensor,
+        Sensor,
+        EventTarget {
   BrowserRelativeOrientationSensor(super.element);
 
-  web.RelativeOrientationSensor get inner => _element as web.RelativeOrientationSensor;
+  web.RelativeOrientationSensor get inner =>
+      _element as web.RelativeOrientationSensor;
 }
 
 final class BrowserRemotePlayback extends BrowserObjectAdapter
@@ -6754,8 +6808,7 @@ final class BrowserReportingObserver extends BrowserObjectAdapter
   web.ReportingObserver get inner => _element as web.ReportingObserver;
 }
 
-final class BrowserRequest extends BrowserObjectAdapter
-    implements Request {
+final class BrowserRequest extends BrowserObjectAdapter implements Request {
   BrowserRequest(super.element);
 
   web.Request get inner => _element as web.Request;
@@ -6768,8 +6821,7 @@ final class BrowserResizeObserver extends BrowserObjectAdapter
   web.ResizeObserver get inner => _element as web.ResizeObserver;
 }
 
-final class BrowserResponse extends BrowserObjectAdapter
-    implements Response {
+final class BrowserResponse extends BrowserObjectAdapter implements Response {
   BrowserResponse(super.element);
 
   web.Response get inner => _element as web.Response;
@@ -6782,32 +6834,48 @@ final class BrowserSVGAElement extends BrowserObjectAdapter
   web.SVGAElement get inner => _element as web.SVGAElement;
 }
 
-final class BrowserSVGAngle extends BrowserObjectAdapter
-    implements SVGAngle {
+final class BrowserSVGAngle extends BrowserObjectAdapter implements SVGAngle {
   BrowserSVGAngle(super.element);
 
   web.SVGAngle get inner => _element as web.SVGAngle;
 }
 
 final class BrowserSVGAnimateElement extends BrowserObjectAdapter
-    implements SVGAnimateElement, SVGAnimationElement, SVGElement, Node, EventTarget {
+    implements
+        SVGAnimateElement,
+        SVGAnimationElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGAnimateElement(super.element);
 
   web.SVGAnimateElement get inner => _element as web.SVGAnimateElement;
 }
 
 final class BrowserSVGAnimateMotionElement extends BrowserObjectAdapter
-    implements SVGAnimateMotionElement, SVGAnimationElement, SVGElement, Node, EventTarget {
+    implements
+        SVGAnimateMotionElement,
+        SVGAnimationElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGAnimateMotionElement(super.element);
 
-  web.SVGAnimateMotionElement get inner => _element as web.SVGAnimateMotionElement;
+  web.SVGAnimateMotionElement get inner =>
+      _element as web.SVGAnimateMotionElement;
 }
 
 final class BrowserSVGAnimateTransformElement extends BrowserObjectAdapter
-    implements SVGAnimateTransformElement, SVGAnimationElement, SVGElement, Node, EventTarget {
+    implements
+        SVGAnimateTransformElement,
+        SVGAnimationElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGAnimateTransformElement(super.element);
 
-  web.SVGAnimateTransformElement get inner => _element as web.SVGAnimateTransformElement;
+  web.SVGAnimateTransformElement get inner =>
+      _element as web.SVGAnimateTransformElement;
 }
 
 final class BrowserSVGAnimatedAngle extends BrowserObjectAdapter
@@ -6828,7 +6896,8 @@ final class BrowserSVGAnimatedEnumeration extends BrowserObjectAdapter
     implements SVGAnimatedEnumeration {
   BrowserSVGAnimatedEnumeration(super.element);
 
-  web.SVGAnimatedEnumeration get inner => _element as web.SVGAnimatedEnumeration;
+  web.SVGAnimatedEnumeration get inner =>
+      _element as web.SVGAnimatedEnumeration;
 }
 
 final class BrowserSVGAnimatedInteger extends BrowserObjectAdapter
@@ -6870,7 +6939,8 @@ final class BrowserSVGAnimatedPreserveAspectRatio extends BrowserObjectAdapter
     implements SVGAnimatedPreserveAspectRatio {
   BrowserSVGAnimatedPreserveAspectRatio(super.element);
 
-  web.SVGAnimatedPreserveAspectRatio get inner => _element as web.SVGAnimatedPreserveAspectRatio;
+  web.SVGAnimatedPreserveAspectRatio get inner =>
+      _element as web.SVGAnimatedPreserveAspectRatio;
 }
 
 final class BrowserSVGAnimatedRect extends BrowserObjectAdapter
@@ -6891,7 +6961,8 @@ final class BrowserSVGAnimatedTransformList extends BrowserObjectAdapter
     implements SVGAnimatedTransformList {
   BrowserSVGAnimatedTransformList(super.element);
 
-  web.SVGAnimatedTransformList get inner => _element as web.SVGAnimatedTransformList;
+  web.SVGAnimatedTransformList get inner =>
+      _element as web.SVGAnimatedTransformList;
 }
 
 final class BrowserSVGAnimationElement extends BrowserObjectAdapter
@@ -6902,7 +6973,13 @@ final class BrowserSVGAnimationElement extends BrowserObjectAdapter
 }
 
 final class BrowserSVGCircleElement extends BrowserObjectAdapter
-    implements SVGCircleElement, SVGGeometryElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGCircleElement,
+        SVGGeometryElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGCircleElement(super.element);
 
   web.SVGCircleElement get inner => _element as web.SVGCircleElement;
@@ -6915,15 +6992,26 @@ final class BrowserSVGClipPathElement extends BrowserObjectAdapter
   web.SVGClipPathElement get inner => _element as web.SVGClipPathElement;
 }
 
-final class BrowserSVGComponentTransferFunctionElement extends BrowserObjectAdapter
-    implements SVGComponentTransferFunctionElement, SVGElement, Node, EventTarget {
+final class BrowserSVGComponentTransferFunctionElement
+    extends BrowserObjectAdapter
+    implements
+        SVGComponentTransferFunctionElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGComponentTransferFunctionElement(super.element);
 
-  web.SVGComponentTransferFunctionElement get inner => _element as web.SVGComponentTransferFunctionElement;
+  web.SVGComponentTransferFunctionElement get inner =>
+      _element as web.SVGComponentTransferFunctionElement;
 }
 
 final class BrowserSVGDefsElement extends BrowserObjectAdapter
-    implements SVGDefsElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGDefsElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGDefsElement(super.element);
 
   web.SVGDefsElement get inner => _element as web.SVGDefsElement;
@@ -6944,7 +7032,13 @@ final class BrowserSVGElement extends BrowserObjectAdapter
 }
 
 final class BrowserSVGEllipseElement extends BrowserObjectAdapter
-    implements SVGEllipseElement, SVGGeometryElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGEllipseElement,
+        SVGGeometryElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGEllipseElement(super.element);
 
   web.SVGEllipseElement get inner => _element as web.SVGEllipseElement;
@@ -6961,14 +7055,16 @@ final class BrowserSVGFEColorMatrixElement extends BrowserObjectAdapter
     implements SVGFEColorMatrixElement, SVGElement, Node, EventTarget {
   BrowserSVGFEColorMatrixElement(super.element);
 
-  web.SVGFEColorMatrixElement get inner => _element as web.SVGFEColorMatrixElement;
+  web.SVGFEColorMatrixElement get inner =>
+      _element as web.SVGFEColorMatrixElement;
 }
 
 final class BrowserSVGFEComponentTransferElement extends BrowserObjectAdapter
     implements SVGFEComponentTransferElement, SVGElement, Node, EventTarget {
   BrowserSVGFEComponentTransferElement(super.element);
 
-  web.SVGFEComponentTransferElement get inner => _element as web.SVGFEComponentTransferElement;
+  web.SVGFEComponentTransferElement get inner =>
+      _element as web.SVGFEComponentTransferElement;
 }
 
 final class BrowserSVGFECompositeElement extends BrowserObjectAdapter
@@ -6982,35 +7078,40 @@ final class BrowserSVGFEConvolveMatrixElement extends BrowserObjectAdapter
     implements SVGFEConvolveMatrixElement, SVGElement, Node, EventTarget {
   BrowserSVGFEConvolveMatrixElement(super.element);
 
-  web.SVGFEConvolveMatrixElement get inner => _element as web.SVGFEConvolveMatrixElement;
+  web.SVGFEConvolveMatrixElement get inner =>
+      _element as web.SVGFEConvolveMatrixElement;
 }
 
 final class BrowserSVGFEDiffuseLightingElement extends BrowserObjectAdapter
     implements SVGFEDiffuseLightingElement, SVGElement, Node, EventTarget {
   BrowserSVGFEDiffuseLightingElement(super.element);
 
-  web.SVGFEDiffuseLightingElement get inner => _element as web.SVGFEDiffuseLightingElement;
+  web.SVGFEDiffuseLightingElement get inner =>
+      _element as web.SVGFEDiffuseLightingElement;
 }
 
 final class BrowserSVGFEDisplacementMapElement extends BrowserObjectAdapter
     implements SVGFEDisplacementMapElement, SVGElement, Node, EventTarget {
   BrowserSVGFEDisplacementMapElement(super.element);
 
-  web.SVGFEDisplacementMapElement get inner => _element as web.SVGFEDisplacementMapElement;
+  web.SVGFEDisplacementMapElement get inner =>
+      _element as web.SVGFEDisplacementMapElement;
 }
 
 final class BrowserSVGFEDistantLightElement extends BrowserObjectAdapter
     implements SVGFEDistantLightElement, SVGElement, Node, EventTarget {
   BrowserSVGFEDistantLightElement(super.element);
 
-  web.SVGFEDistantLightElement get inner => _element as web.SVGFEDistantLightElement;
+  web.SVGFEDistantLightElement get inner =>
+      _element as web.SVGFEDistantLightElement;
 }
 
 final class BrowserSVGFEDropShadowElement extends BrowserObjectAdapter
     implements SVGFEDropShadowElement, SVGElement, Node, EventTarget {
   BrowserSVGFEDropShadowElement(super.element);
 
-  web.SVGFEDropShadowElement get inner => _element as web.SVGFEDropShadowElement;
+  web.SVGFEDropShadowElement get inner =>
+      _element as web.SVGFEDropShadowElement;
 }
 
 final class BrowserSVGFEFloodElement extends BrowserObjectAdapter
@@ -7021,28 +7122,48 @@ final class BrowserSVGFEFloodElement extends BrowserObjectAdapter
 }
 
 final class BrowserSVGFEFuncAElement extends BrowserObjectAdapter
-    implements SVGFEFuncAElement, SVGComponentTransferFunctionElement, SVGElement, Node, EventTarget {
+    implements
+        SVGFEFuncAElement,
+        SVGComponentTransferFunctionElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGFEFuncAElement(super.element);
 
   web.SVGFEFuncAElement get inner => _element as web.SVGFEFuncAElement;
 }
 
 final class BrowserSVGFEFuncBElement extends BrowserObjectAdapter
-    implements SVGFEFuncBElement, SVGComponentTransferFunctionElement, SVGElement, Node, EventTarget {
+    implements
+        SVGFEFuncBElement,
+        SVGComponentTransferFunctionElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGFEFuncBElement(super.element);
 
   web.SVGFEFuncBElement get inner => _element as web.SVGFEFuncBElement;
 }
 
 final class BrowserSVGFEFuncGElement extends BrowserObjectAdapter
-    implements SVGFEFuncGElement, SVGComponentTransferFunctionElement, SVGElement, Node, EventTarget {
+    implements
+        SVGFEFuncGElement,
+        SVGComponentTransferFunctionElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGFEFuncGElement(super.element);
 
   web.SVGFEFuncGElement get inner => _element as web.SVGFEFuncGElement;
 }
 
 final class BrowserSVGFEFuncRElement extends BrowserObjectAdapter
-    implements SVGFEFuncRElement, SVGComponentTransferFunctionElement, SVGElement, Node, EventTarget {
+    implements
+        SVGFEFuncRElement,
+        SVGComponentTransferFunctionElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGFEFuncRElement(super.element);
 
   web.SVGFEFuncRElement get inner => _element as web.SVGFEFuncRElement;
@@ -7052,7 +7173,8 @@ final class BrowserSVGFEGaussianBlurElement extends BrowserObjectAdapter
     implements SVGFEGaussianBlurElement, SVGElement, Node, EventTarget {
   BrowserSVGFEGaussianBlurElement(super.element);
 
-  web.SVGFEGaussianBlurElement get inner => _element as web.SVGFEGaussianBlurElement;
+  web.SVGFEGaussianBlurElement get inner =>
+      _element as web.SVGFEGaussianBlurElement;
 }
 
 final class BrowserSVGFEImageElement extends BrowserObjectAdapter
@@ -7080,7 +7202,8 @@ final class BrowserSVGFEMorphologyElement extends BrowserObjectAdapter
     implements SVGFEMorphologyElement, SVGElement, Node, EventTarget {
   BrowserSVGFEMorphologyElement(super.element);
 
-  web.SVGFEMorphologyElement get inner => _element as web.SVGFEMorphologyElement;
+  web.SVGFEMorphologyElement get inner =>
+      _element as web.SVGFEMorphologyElement;
 }
 
 final class BrowserSVGFEOffsetElement extends BrowserObjectAdapter
@@ -7094,14 +7217,16 @@ final class BrowserSVGFEPointLightElement extends BrowserObjectAdapter
     implements SVGFEPointLightElement, SVGElement, Node, EventTarget {
   BrowserSVGFEPointLightElement(super.element);
 
-  web.SVGFEPointLightElement get inner => _element as web.SVGFEPointLightElement;
+  web.SVGFEPointLightElement get inner =>
+      _element as web.SVGFEPointLightElement;
 }
 
 final class BrowserSVGFESpecularLightingElement extends BrowserObjectAdapter
     implements SVGFESpecularLightingElement, SVGElement, Node, EventTarget {
   BrowserSVGFESpecularLightingElement(super.element);
 
-  web.SVGFESpecularLightingElement get inner => _element as web.SVGFESpecularLightingElement;
+  web.SVGFESpecularLightingElement get inner =>
+      _element as web.SVGFESpecularLightingElement;
 }
 
 final class BrowserSVGFESpotLightElement extends BrowserObjectAdapter
@@ -7122,7 +7247,8 @@ final class BrowserSVGFETurbulenceElement extends BrowserObjectAdapter
     implements SVGFETurbulenceElement, SVGElement, Node, EventTarget {
   BrowserSVGFETurbulenceElement(super.element);
 
-  web.SVGFETurbulenceElement get inner => _element as web.SVGFETurbulenceElement;
+  web.SVGFETurbulenceElement get inner =>
+      _element as web.SVGFETurbulenceElement;
 }
 
 final class BrowserSVGFilterElement extends BrowserObjectAdapter
@@ -7133,10 +7259,16 @@ final class BrowserSVGFilterElement extends BrowserObjectAdapter
 }
 
 final class BrowserSVGForeignObjectElement extends BrowserObjectAdapter
-    implements SVGForeignObjectElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGForeignObjectElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGForeignObjectElement(super.element);
 
-  web.SVGForeignObjectElement get inner => _element as web.SVGForeignObjectElement;
+  web.SVGForeignObjectElement get inner =>
+      _element as web.SVGForeignObjectElement;
 }
 
 final class BrowserSVGGElement extends BrowserObjectAdapter
@@ -7147,7 +7279,12 @@ final class BrowserSVGGElement extends BrowserObjectAdapter
 }
 
 final class BrowserSVGGeometryElement extends BrowserObjectAdapter
-    implements SVGGeometryElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGGeometryElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGGeometryElement(super.element);
 
   web.SVGGeometryElement get inner => _element as web.SVGGeometryElement;
@@ -7168,14 +7305,18 @@ final class BrowserSVGGraphicsElement extends BrowserObjectAdapter
 }
 
 final class BrowserSVGImageElement extends BrowserObjectAdapter
-    implements SVGImageElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGImageElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGImageElement(super.element);
 
   web.SVGImageElement get inner => _element as web.SVGImageElement;
 }
 
-final class BrowserSVGLength extends BrowserObjectAdapter
-    implements SVGLength {
+final class BrowserSVGLength extends BrowserObjectAdapter implements SVGLength {
   BrowserSVGLength(super.element);
 
   web.SVGLength get inner => _element as web.SVGLength;
@@ -7189,17 +7330,29 @@ final class BrowserSVGLengthList extends BrowserObjectAdapter
 }
 
 final class BrowserSVGLineElement extends BrowserObjectAdapter
-    implements SVGLineElement, SVGGeometryElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGLineElement,
+        SVGGeometryElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGLineElement(super.element);
 
   web.SVGLineElement get inner => _element as web.SVGLineElement;
 }
 
 final class BrowserSVGLinearGradientElement extends BrowserObjectAdapter
-    implements SVGLinearGradientElement, SVGGradientElement, SVGElement, Node, EventTarget {
+    implements
+        SVGLinearGradientElement,
+        SVGGradientElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGLinearGradientElement(super.element);
 
-  web.SVGLinearGradientElement get inner => _element as web.SVGLinearGradientElement;
+  web.SVGLinearGradientElement get inner =>
+      _element as web.SVGLinearGradientElement;
 }
 
 final class BrowserSVGMPathElement extends BrowserObjectAdapter
@@ -7230,8 +7383,7 @@ final class BrowserSVGMetadataElement extends BrowserObjectAdapter
   web.SVGMetadataElement get inner => _element as web.SVGMetadataElement;
 }
 
-final class BrowserSVGNumber extends BrowserObjectAdapter
-    implements SVGNumber {
+final class BrowserSVGNumber extends BrowserObjectAdapter implements SVGNumber {
   BrowserSVGNumber(super.element);
 
   web.SVGNumber get inner => _element as web.SVGNumber;
@@ -7245,7 +7397,13 @@ final class BrowserSVGNumberList extends BrowserObjectAdapter
 }
 
 final class BrowserSVGPathElement extends BrowserObjectAdapter
-    implements SVGPathElement, SVGGeometryElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGPathElement,
+        SVGGeometryElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGPathElement(super.element);
 
   web.SVGPathElement get inner => _element as web.SVGPathElement;
@@ -7266,14 +7424,26 @@ final class BrowserSVGPointList extends BrowserObjectAdapter
 }
 
 final class BrowserSVGPolygonElement extends BrowserObjectAdapter
-    implements SVGPolygonElement, SVGGeometryElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGPolygonElement,
+        SVGGeometryElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGPolygonElement(super.element);
 
   web.SVGPolygonElement get inner => _element as web.SVGPolygonElement;
 }
 
 final class BrowserSVGPolylineElement extends BrowserObjectAdapter
-    implements SVGPolylineElement, SVGGeometryElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGPolylineElement,
+        SVGGeometryElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGPolylineElement(super.element);
 
   web.SVGPolylineElement get inner => _element as web.SVGPolylineElement;
@@ -7283,25 +7453,43 @@ final class BrowserSVGPreserveAspectRatio extends BrowserObjectAdapter
     implements SVGPreserveAspectRatio {
   BrowserSVGPreserveAspectRatio(super.element);
 
-  web.SVGPreserveAspectRatio get inner => _element as web.SVGPreserveAspectRatio;
+  web.SVGPreserveAspectRatio get inner =>
+      _element as web.SVGPreserveAspectRatio;
 }
 
 final class BrowserSVGRadialGradientElement extends BrowserObjectAdapter
-    implements SVGRadialGradientElement, SVGGradientElement, SVGElement, Node, EventTarget {
+    implements
+        SVGRadialGradientElement,
+        SVGGradientElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGRadialGradientElement(super.element);
 
-  web.SVGRadialGradientElement get inner => _element as web.SVGRadialGradientElement;
+  web.SVGRadialGradientElement get inner =>
+      _element as web.SVGRadialGradientElement;
 }
 
 final class BrowserSVGRectElement extends BrowserObjectAdapter
-    implements SVGRectElement, SVGGeometryElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGRectElement,
+        SVGGeometryElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGRectElement(super.element);
 
   web.SVGRectElement get inner => _element as web.SVGRectElement;
 }
 
 final class BrowserSVGSVGElement extends BrowserObjectAdapter
-    implements SVGSVGElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGSVGElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGSVGElement(super.element);
 
   web.SVGSVGElement get inner => _element as web.SVGSVGElement;
@@ -7315,7 +7503,12 @@ final class BrowserSVGScriptElement extends BrowserObjectAdapter
 }
 
 final class BrowserSVGSetElement extends BrowserObjectAdapter
-    implements SVGSetElement, SVGAnimationElement, SVGElement, Node, EventTarget {
+    implements
+        SVGSetElement,
+        SVGAnimationElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGSetElement(super.element);
 
   web.SVGSetElement get inner => _element as web.SVGSetElement;
@@ -7343,52 +7536,94 @@ final class BrowserSVGStyleElement extends BrowserObjectAdapter
 }
 
 final class BrowserSVGSwitchElement extends BrowserObjectAdapter
-    implements SVGSwitchElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGSwitchElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGSwitchElement(super.element);
 
   web.SVGSwitchElement get inner => _element as web.SVGSwitchElement;
 }
 
 final class BrowserSVGSymbolElement extends BrowserObjectAdapter
-    implements SVGSymbolElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGSymbolElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGSymbolElement(super.element);
 
   web.SVGSymbolElement get inner => _element as web.SVGSymbolElement;
 }
 
 final class BrowserSVGTSpanElement extends BrowserObjectAdapter
-    implements SVGTSpanElement, SVGTextPositioningElement, SVGTextContentElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGTSpanElement,
+        SVGTextPositioningElement,
+        SVGTextContentElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGTSpanElement(super.element);
 
   web.SVGTSpanElement get inner => _element as web.SVGTSpanElement;
 }
 
 final class BrowserSVGTextContentElement extends BrowserObjectAdapter
-    implements SVGTextContentElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGTextContentElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGTextContentElement(super.element);
 
   web.SVGTextContentElement get inner => _element as web.SVGTextContentElement;
 }
 
 final class BrowserSVGTextElement extends BrowserObjectAdapter
-    implements SVGTextElement, SVGTextPositioningElement, SVGTextContentElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGTextElement,
+        SVGTextPositioningElement,
+        SVGTextContentElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGTextElement(super.element);
 
   web.SVGTextElement get inner => _element as web.SVGTextElement;
 }
 
 final class BrowserSVGTextPathElement extends BrowserObjectAdapter
-    implements SVGTextPathElement, SVGTextContentElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGTextPathElement,
+        SVGTextContentElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGTextPathElement(super.element);
 
   web.SVGTextPathElement get inner => _element as web.SVGTextPathElement;
 }
 
 final class BrowserSVGTextPositioningElement extends BrowserObjectAdapter
-    implements SVGTextPositioningElement, SVGTextContentElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGTextPositioningElement,
+        SVGTextContentElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGTextPositioningElement(super.element);
 
-  web.SVGTextPositioningElement get inner => _element as web.SVGTextPositioningElement;
+  web.SVGTextPositioningElement get inner =>
+      _element as web.SVGTextPositioningElement;
 }
 
 final class BrowserSVGTitleElement extends BrowserObjectAdapter
@@ -7420,7 +7655,12 @@ final class BrowserSVGUnitTypes extends BrowserObjectAdapter
 }
 
 final class BrowserSVGUseElement extends BrowserObjectAdapter
-    implements SVGUseElement, SVGGraphicsElement, SVGElement, Node, EventTarget {
+    implements
+        SVGUseElement,
+        SVGGraphicsElement,
+        SVGElement,
+        Node,
+        EventTarget {
   BrowserSVGUseElement(super.element);
 
   web.SVGUseElement get inner => _element as web.SVGUseElement;
@@ -7433,22 +7673,19 @@ final class BrowserSVGViewElement extends BrowserObjectAdapter
   web.SVGViewElement get inner => _element as web.SVGViewElement;
 }
 
-final class BrowserSanitizer extends BrowserObjectAdapter
-    implements Sanitizer {
+final class BrowserSanitizer extends BrowserObjectAdapter implements Sanitizer {
   BrowserSanitizer(super.element);
 
   web.Sanitizer get inner => _element as web.Sanitizer;
 }
 
-final class BrowserScheduler extends BrowserObjectAdapter
-    implements Scheduler {
+final class BrowserScheduler extends BrowserObjectAdapter implements Scheduler {
   BrowserScheduler(super.element);
 
   web.Scheduler get inner => _element as web.Scheduler;
 }
 
-final class BrowserScreen extends BrowserObjectAdapter
-    implements Screen {
+final class BrowserScreen extends BrowserObjectAdapter implements Screen {
   BrowserScreen(super.element);
 
   web.Screen get inner => _element as web.Screen;
@@ -7465,11 +7702,11 @@ final class BrowserSecurityPolicyViolationEvent extends BrowserObjectAdapter
     implements SecurityPolicyViolationEvent, Event {
   BrowserSecurityPolicyViolationEvent(super.element);
 
-  web.SecurityPolicyViolationEvent get inner => _element as web.SecurityPolicyViolationEvent;
+  web.SecurityPolicyViolationEvent get inner =>
+      _element as web.SecurityPolicyViolationEvent;
 }
 
-final class BrowserSelection extends BrowserObjectAdapter
-    implements Selection {
+final class BrowserSelection extends BrowserObjectAdapter implements Selection {
   BrowserSelection(super.element);
 
   web.Selection get inner => _element as web.Selection;
@@ -7493,7 +7730,8 @@ final class BrowserServiceWorkerContainer extends BrowserObjectAdapter
     implements ServiceWorkerContainer, EventTarget {
   BrowserServiceWorkerContainer(super.element);
 
-  web.ServiceWorkerContainer get inner => _element as web.ServiceWorkerContainer;
+  web.ServiceWorkerContainer get inner =>
+      _element as web.ServiceWorkerContainer;
 }
 
 final class BrowserShadowRoot extends BrowserObjectAdapter
@@ -7535,35 +7773,40 @@ final class BrowserSpeechRecognitionAlternative extends BrowserObjectAdapter
     implements SpeechRecognitionAlternative {
   BrowserSpeechRecognitionAlternative(super.element);
 
-  web.SpeechRecognitionAlternative get inner => _element as web.SpeechRecognitionAlternative;
+  web.SpeechRecognitionAlternative get inner =>
+      _element as web.SpeechRecognitionAlternative;
 }
 
 final class BrowserSpeechRecognitionErrorEvent extends BrowserObjectAdapter
     implements SpeechRecognitionErrorEvent, Event {
   BrowserSpeechRecognitionErrorEvent(super.element);
 
-  web.SpeechRecognitionErrorEvent get inner => _element as web.SpeechRecognitionErrorEvent;
+  web.SpeechRecognitionErrorEvent get inner =>
+      _element as web.SpeechRecognitionErrorEvent;
 }
 
 final class BrowserSpeechRecognitionEvent extends BrowserObjectAdapter
     implements SpeechRecognitionEvent, Event {
   BrowserSpeechRecognitionEvent(super.element);
 
-  web.SpeechRecognitionEvent get inner => _element as web.SpeechRecognitionEvent;
+  web.SpeechRecognitionEvent get inner =>
+      _element as web.SpeechRecognitionEvent;
 }
 
 final class BrowserSpeechRecognitionResult extends BrowserObjectAdapter
     implements SpeechRecognitionResult {
   BrowserSpeechRecognitionResult(super.element);
 
-  web.SpeechRecognitionResult get inner => _element as web.SpeechRecognitionResult;
+  web.SpeechRecognitionResult get inner =>
+      _element as web.SpeechRecognitionResult;
 }
 
 final class BrowserSpeechRecognitionResultList extends BrowserObjectAdapter
     implements SpeechRecognitionResultList {
   BrowserSpeechRecognitionResultList(super.element);
 
-  web.SpeechRecognitionResultList get inner => _element as web.SpeechRecognitionResultList;
+  web.SpeechRecognitionResultList get inner =>
+      _element as web.SpeechRecognitionResultList;
 }
 
 final class BrowserSpeechSynthesis extends BrowserObjectAdapter
@@ -7577,7 +7820,8 @@ final class BrowserSpeechSynthesisErrorEvent extends BrowserObjectAdapter
     implements SpeechSynthesisErrorEvent, SpeechSynthesisEvent, Event {
   BrowserSpeechSynthesisErrorEvent(super.element);
 
-  web.SpeechSynthesisErrorEvent get inner => _element as web.SpeechSynthesisErrorEvent;
+  web.SpeechSynthesisErrorEvent get inner =>
+      _element as web.SpeechSynthesisErrorEvent;
 }
 
 final class BrowserSpeechSynthesisEvent extends BrowserObjectAdapter
@@ -7591,7 +7835,8 @@ final class BrowserSpeechSynthesisUtterance extends BrowserObjectAdapter
     implements SpeechSynthesisUtterance, EventTarget {
   BrowserSpeechSynthesisUtterance(super.element);
 
-  web.SpeechSynthesisUtterance get inner => _element as web.SpeechSynthesisUtterance;
+  web.SpeechSynthesisUtterance get inner =>
+      _element as web.SpeechSynthesisUtterance;
 }
 
 final class BrowserSpeechSynthesisVoice extends BrowserObjectAdapter
@@ -7615,8 +7860,7 @@ final class BrowserStereoPannerNode extends BrowserObjectAdapter
   web.StereoPannerNode get inner => _element as web.StereoPannerNode;
 }
 
-final class BrowserStorage extends BrowserObjectAdapter
-    implements Storage {
+final class BrowserStorage extends BrowserObjectAdapter implements Storage {
   BrowserStorage(super.element);
 
   web.Storage get inner => _element as web.Storage;
@@ -7647,7 +7891,8 @@ final class BrowserStylePropertyMapReadOnly extends BrowserObjectAdapter
     implements StylePropertyMapReadOnly {
   BrowserStylePropertyMapReadOnly(super.element);
 
-  web.StylePropertyMapReadOnly get inner => _element as web.StylePropertyMapReadOnly;
+  web.StylePropertyMapReadOnly get inner =>
+      _element as web.StylePropertyMapReadOnly;
 }
 
 final class BrowserStyleSheetList extends BrowserObjectAdapter
@@ -7689,7 +7934,8 @@ final class BrowserTaskPriorityChangeEvent extends BrowserObjectAdapter
     implements TaskPriorityChangeEvent, Event {
   BrowserTaskPriorityChangeEvent(super.element);
 
-  web.TaskPriorityChangeEvent get inner => _element as web.TaskPriorityChangeEvent;
+  web.TaskPriorityChangeEvent get inner =>
+      _element as web.TaskPriorityChangeEvent;
 }
 
 final class BrowserText extends BrowserObjectAdapter
@@ -7769,8 +8015,7 @@ final class BrowserToggleEvent extends BrowserObjectAdapter
   web.ToggleEvent get inner => _element as web.ToggleEvent;
 }
 
-final class BrowserTouch extends BrowserObjectAdapter
-    implements Touch {
+final class BrowserTouch extends BrowserObjectAdapter implements Touch {
   BrowserTouch(super.element);
 
   web.Touch get inner => _element as web.Touch;
@@ -7783,8 +8028,7 @@ final class BrowserTouchEvent extends BrowserObjectAdapter
   web.TouchEvent get inner => _element as web.TouchEvent;
 }
 
-final class BrowserTouchList extends BrowserObjectAdapter
-    implements TouchList {
+final class BrowserTouchList extends BrowserObjectAdapter implements TouchList {
   BrowserTouchList(super.element);
 
   web.TouchList get inner => _element as web.TouchList;
@@ -7850,7 +8094,8 @@ final class BrowserTrustedTypePolicyFactory extends BrowserObjectAdapter
     implements TrustedTypePolicyFactory {
   BrowserTrustedTypePolicyFactory(super.element);
 
-  web.TrustedTypePolicyFactory get inner => _element as web.TrustedTypePolicyFactory;
+  web.TrustedTypePolicyFactory get inner =>
+      _element as web.TrustedTypePolicyFactory;
 }
 
 final class BrowserUIEvent extends BrowserObjectAdapter
@@ -7860,8 +8105,7 @@ final class BrowserUIEvent extends BrowserObjectAdapter
   web.UIEvent get inner => _element as web.UIEvent;
 }
 
-final class BrowserURL extends BrowserObjectAdapter
-    implements URL {
+final class BrowserURL extends BrowserObjectAdapter implements URL {
   BrowserURL(super.element);
 
   web.URL get inner => _element as web.URL;
@@ -7888,8 +8132,7 @@ final class BrowserVTTCue extends BrowserObjectAdapter
   web.VTTCue get inner => _element as web.VTTCue;
 }
 
-final class BrowserVTTRegion extends BrowserObjectAdapter
-    implements VTTRegion {
+final class BrowserVTTRegion extends BrowserObjectAdapter implements VTTRegion {
   BrowserVTTRegion(super.element);
 
   web.VTTRegion get inner => _element as web.VTTRegion;
@@ -7965,8 +8208,7 @@ final class BrowserVisualViewport extends BrowserObjectAdapter
   web.VisualViewport get inner => _element as web.VisualViewport;
 }
 
-final class BrowserWakeLock extends BrowserObjectAdapter
-    implements WakeLock {
+final class BrowserWakeLock extends BrowserObjectAdapter implements WakeLock {
   BrowserWakeLock(super.element);
 
   web.WakeLock get inner => _element as web.WakeLock;
@@ -8004,7 +8246,8 @@ final class BrowserWebTransportDatagramDuplexStream extends BrowserObjectAdapter
     implements WebTransportDatagramDuplexStream {
   BrowserWebTransportDatagramDuplexStream(super.element);
 
-  web.WebTransportDatagramDuplexStream get inner => _element as web.WebTransportDatagramDuplexStream;
+  web.WebTransportDatagramDuplexStream get inner =>
+      _element as web.WebTransportDatagramDuplexStream;
 }
 
 final class BrowserWebTransportError extends BrowserObjectAdapter
@@ -8046,7 +8289,8 @@ final class BrowserWritableStreamDefaultWriter extends BrowserObjectAdapter
     implements WritableStreamDefaultWriter {
   BrowserWritableStreamDefaultWriter(super.element);
 
-  web.WritableStreamDefaultWriter get inner => _element as web.WritableStreamDefaultWriter;
+  web.WritableStreamDefaultWriter get inner =>
+      _element as web.WritableStreamDefaultWriter;
 }
 
 final class BrowserXMLDocument extends BrowserObjectAdapter
@@ -8098,8 +8342,7 @@ final class BrowserXPathResult extends BrowserObjectAdapter
   web.XPathResult get inner => _element as web.XPathResult;
 }
 
-final class BrowserXRHand extends BrowserObjectAdapter
-    implements XRHand {
+final class BrowserXRHand extends BrowserObjectAdapter implements XRHand {
   BrowserXRHand(super.element);
 
   web.XRHand get inner => _element as web.XRHand;
@@ -8123,7 +8366,8 @@ final class BrowserXRInputSourcesChangeEvent extends BrowserObjectAdapter
     implements XRInputSourcesChangeEvent, Event {
   BrowserXRInputSourcesChangeEvent(super.element);
 
-  web.XRInputSourcesChangeEvent get inner => _element as web.XRInputSourcesChangeEvent;
+  web.XRInputSourcesChangeEvent get inner =>
+      _element as web.XRInputSourcesChangeEvent;
 }
 
 final class BrowserXRReferenceSpace extends BrowserObjectAdapter
@@ -8168,8 +8412,7 @@ final class BrowserXSLTProcessor extends BrowserObjectAdapter
   web.XSLTProcessor get inner => _element as web.XSLTProcessor;
 }
 
-final Map<String, BrowserObjectAdapter Function(JSObject)>
-    _wrapFactories = {
+final Map<String, BrowserObjectAdapter Function(JSObject)> _wrapFactories = {
   'AbortController': (o) => BrowserAbortController(o),
   'AbortSignal': (o) => BrowserAbortSignal(o),
   'AbsoluteOrientationSensor': (o) => BrowserAbsoluteOrientationSensor(o),
@@ -8236,7 +8479,8 @@ final Map<String, BrowserObjectAdapter Function(JSObject)>
   'CompositionEvent': (o) => BrowserCompositionEvent(o),
   'CompressionStream': (o) => BrowserCompressionStream(o),
   'ConstantSourceNode': (o) => BrowserConstantSourceNode(o),
-  'ContentVisibilityAutoStateChangeEvent': (o) => BrowserContentVisibilityAutoStateChangeEvent(o),
+  'ContentVisibilityAutoStateChangeEvent': (o) =>
+      BrowserContentVisibilityAutoStateChangeEvent(o),
   'ConvolverNode': (o) => BrowserConvolverNode(o),
   'CookieChangeEvent': (o) => BrowserCookieChangeEvent(o),
   'CountQueuingStrategy': (o) => BrowserCountQueuingStrategy(o),
@@ -8267,8 +8511,10 @@ final Map<String, BrowserObjectAdapter Function(JSObject)>
   'DecompressionStream': (o) => BrowserDecompressionStream(o),
   'DelayNode': (o) => BrowserDelayNode(o),
   'DeviceMotionEvent': (o) => BrowserDeviceMotionEvent(o),
-  'DeviceMotionEventAcceleration': (o) => BrowserDeviceMotionEventAcceleration(o),
-  'DeviceMotionEventRotationRate': (o) => BrowserDeviceMotionEventRotationRate(o),
+  'DeviceMotionEventAcceleration': (o) =>
+      BrowserDeviceMotionEventAcceleration(o),
+  'DeviceMotionEventRotationRate': (o) =>
+      BrowserDeviceMotionEventRotationRate(o),
   'DeviceOrientationEvent': (o) => BrowserDeviceOrientationEvent(o),
   'Document': (o) => BrowserDocument(o),
   'DocumentFragment': (o) => BrowserDocumentFragment(o),
@@ -8423,10 +8669,12 @@ final Map<String, BrowserObjectAdapter Function(JSObject)>
   'MediaSource': (o) => BrowserMediaSource(o),
   'MediaSourceHandle': (o) => BrowserMediaSourceHandle(o),
   'MediaStream': (o) => BrowserMediaStream(o),
-  'MediaStreamAudioDestinationNode': (o) => BrowserMediaStreamAudioDestinationNode(o),
+  'MediaStreamAudioDestinationNode': (o) =>
+      BrowserMediaStreamAudioDestinationNode(o),
   'MediaStreamAudioSourceNode': (o) => BrowserMediaStreamAudioSourceNode(o),
   'MediaStreamTrack': (o) => BrowserMediaStreamTrack(o),
-  'MediaStreamTrackAudioSourceNode': (o) => BrowserMediaStreamTrackAudioSourceNode(o),
+  'MediaStreamTrackAudioSourceNode': (o) =>
+      BrowserMediaStreamTrackAudioSourceNode(o),
   'MediaStreamTrackEvent': (o) => BrowserMediaStreamTrackEvent(o),
   'MediaStreamTrackProcessor': (o) => BrowserMediaStreamTrackProcessor(o),
   'MessageChannel': (o) => BrowserMessageChannel(o),
@@ -8489,7 +8737,8 @@ final Map<String, BrowserObjectAdapter Function(JSObject)>
   'RTCIceCandidate': (o) => BrowserRTCIceCandidate(o),
   'RTCIceTransport': (o) => BrowserRTCIceTransport(o),
   'RTCPeerConnection': (o) => BrowserRTCPeerConnection(o),
-  'RTCPeerConnectionIceErrorEvent': (o) => BrowserRTCPeerConnectionIceErrorEvent(o),
+  'RTCPeerConnectionIceErrorEvent': (o) =>
+      BrowserRTCPeerConnectionIceErrorEvent(o),
   'RTCPeerConnectionIceEvent': (o) => BrowserRTCPeerConnectionIceEvent(o),
   'RTCRtpReceiver': (o) => BrowserRTCRtpReceiver(o),
   'RTCRtpScriptTransform': (o) => BrowserRTCRtpScriptTransform(o),
@@ -8522,21 +8771,24 @@ final Map<String, BrowserObjectAdapter Function(JSObject)>
   'SVGAnimatedLengthList': (o) => BrowserSVGAnimatedLengthList(o),
   'SVGAnimatedNumber': (o) => BrowserSVGAnimatedNumber(o),
   'SVGAnimatedNumberList': (o) => BrowserSVGAnimatedNumberList(o),
-  'SVGAnimatedPreserveAspectRatio': (o) => BrowserSVGAnimatedPreserveAspectRatio(o),
+  'SVGAnimatedPreserveAspectRatio': (o) =>
+      BrowserSVGAnimatedPreserveAspectRatio(o),
   'SVGAnimatedRect': (o) => BrowserSVGAnimatedRect(o),
   'SVGAnimatedString': (o) => BrowserSVGAnimatedString(o),
   'SVGAnimatedTransformList': (o) => BrowserSVGAnimatedTransformList(o),
   'SVGAnimationElement': (o) => BrowserSVGAnimationElement(o),
   'SVGCircleElement': (o) => BrowserSVGCircleElement(o),
   'SVGClipPathElement': (o) => BrowserSVGClipPathElement(o),
-  'SVGComponentTransferFunctionElement': (o) => BrowserSVGComponentTransferFunctionElement(o),
+  'SVGComponentTransferFunctionElement': (o) =>
+      BrowserSVGComponentTransferFunctionElement(o),
   'SVGDefsElement': (o) => BrowserSVGDefsElement(o),
   'SVGDescElement': (o) => BrowserSVGDescElement(o),
   'SVGElement': (o) => BrowserSVGElement(o),
   'SVGEllipseElement': (o) => BrowserSVGEllipseElement(o),
   'SVGFEBlendElement': (o) => BrowserSVGFEBlendElement(o),
   'SVGFEColorMatrixElement': (o) => BrowserSVGFEColorMatrixElement(o),
-  'SVGFEComponentTransferElement': (o) => BrowserSVGFEComponentTransferElement(o),
+  'SVGFEComponentTransferElement': (o) =>
+      BrowserSVGFEComponentTransferElement(o),
   'SVGFECompositeElement': (o) => BrowserSVGFECompositeElement(o),
   'SVGFEConvolveMatrixElement': (o) => BrowserSVGFEConvolveMatrixElement(o),
   'SVGFEDiffuseLightingElement': (o) => BrowserSVGFEDiffuseLightingElement(o),
@@ -8684,7 +8936,8 @@ final Map<String, BrowserObjectAdapter Function(JSObject)>
   'WebGLContextEvent': (o) => BrowserWebGLContextEvent(o),
   'WebSocket': (o) => BrowserWebSocket(o),
   'WebTransport': (o) => BrowserWebTransport(o),
-  'WebTransportDatagramDuplexStream': (o) => BrowserWebTransportDatagramDuplexStream(o),
+  'WebTransportDatagramDuplexStream': (o) =>
+      BrowserWebTransportDatagramDuplexStream(o),
   'WebTransportError': (o) => BrowserWebTransportError(o),
   'WheelEvent': (o) => BrowserWheelEvent(o),
   'Window': (o) => BrowserWindow(o),
@@ -8715,1552 +8968,1665 @@ final Map<String, BrowserObjectAdapter Function(JSObject)>
 /// constructor with the IDL arguments converted to JS and
 /// returns the wrapped `Browser*` proxy.
 final Map<String, BrowserObjectAdapter Function(List<Object?>)>
-    _webConstructors = {
-  'AbortController': (arguments) => BrowserAbortController((globalContext
-      .getProperty('AbortController'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'AbsoluteOrientationSensor': (arguments) => BrowserAbsoluteOrientationSensor((globalContext
-      .getProperty('AbsoluteOrientationSensor'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'AnalyserNode': (arguments) => BrowserAnalyserNode((globalContext
-      .getProperty('AnalyserNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Animation': (arguments) => BrowserAnimation((globalContext
-      .getProperty('Animation'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'AnimationEvent': (arguments) => BrowserAnimationEvent((globalContext
-      .getProperty('AnimationEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'AnimationPlaybackEvent': (arguments) => BrowserAnimationPlaybackEvent((globalContext
-      .getProperty('AnimationPlaybackEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'AudioBuffer': (arguments) => BrowserAudioBuffer((globalContext
-      .getProperty('AudioBuffer'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'AudioBufferSourceNode': (arguments) => BrowserAudioBufferSourceNode((globalContext
-      .getProperty('AudioBufferSourceNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'AudioContext': (arguments) => BrowserAudioContext((globalContext
-      .getProperty('AudioContext'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'AudioProcessingEvent': (arguments) => BrowserAudioProcessingEvent((globalContext
-      .getProperty('AudioProcessingEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'AudioWorkletNode': (arguments) => BrowserAudioWorkletNode((globalContext
-      .getProperty('AudioWorkletNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-      ])),
-  'AudioWorkletProcessor': (arguments) => BrowserAudioWorkletProcessor((globalContext
-      .getProperty('AudioWorkletProcessor'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'BiquadFilterNode': (arguments) => BrowserBiquadFilterNode((globalContext
-      .getProperty('BiquadFilterNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Blob': (arguments) => BrowserBlob((globalContext
-      .getProperty('Blob'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'BlobEvent': (arguments) => BrowserBlobEvent((globalContext
-      .getProperty('BlobEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'BroadcastChannel': (arguments) => BrowserBroadcastChannel((globalContext
-      .getProperty('BroadcastChannel'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'ByteLengthQueuingStrategy': (arguments) => BrowserByteLengthQueuingStrategy((globalContext
-      .getProperty('ByteLengthQueuingStrategy'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSKeywordValue': (arguments) => BrowserCSSKeywordValue((globalContext
-      .getProperty('CSSKeywordValue'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSMathClamp': (arguments) => BrowserCSSMathClamp((globalContext
-      .getProperty('CSSMathClamp'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-      ])),
-  'CSSMathInvert': (arguments) => BrowserCSSMathInvert((globalContext
-      .getProperty('CSSMathInvert'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSMathMax': (arguments) => BrowserCSSMathMax((globalContext
-      .getProperty('CSSMathMax'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSMathMin': (arguments) => BrowserCSSMathMin((globalContext
-      .getProperty('CSSMathMin'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSMathNegate': (arguments) => BrowserCSSMathNegate((globalContext
-      .getProperty('CSSMathNegate'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSMathProduct': (arguments) => BrowserCSSMathProduct((globalContext
-      .getProperty('CSSMathProduct'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSMathSum': (arguments) => BrowserCSSMathSum((globalContext
-      .getProperty('CSSMathSum'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSMatrixComponent': (arguments) => BrowserCSSMatrixComponent((globalContext
-      .getProperty('CSSMatrixComponent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'CSSPerspective': (arguments) => BrowserCSSPerspective((globalContext
-      .getProperty('CSSPerspective'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSRotate': (arguments) => BrowserCSSRotate((globalContext
-      .getProperty('CSSRotate'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSScale': (arguments) => BrowserCSSScale((globalContext
-      .getProperty('CSSScale'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-      ])),
-  'CSSSkew': (arguments) => BrowserCSSSkew((globalContext
-      .getProperty('CSSSkew'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'CSSSkewX': (arguments) => BrowserCSSSkewX((globalContext
-      .getProperty('CSSSkewX'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSSkewY': (arguments) => BrowserCSSSkewY((globalContext
-      .getProperty('CSSSkewY'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSStyleSheet': (arguments) => BrowserCSSStyleSheet((globalContext
-      .getProperty('CSSStyleSheet'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSTransformValue': (arguments) => BrowserCSSTransformValue((globalContext
-      .getProperty('CSSTransformValue'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSTranslate': (arguments) => BrowserCSSTranslate((globalContext
-      .getProperty('CSSTranslate'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-      ])),
-  'CSSUnitValue': (arguments) => BrowserCSSUnitValue((globalContext
-      .getProperty('CSSUnitValue'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'CSSUnparsedValue': (arguments) => BrowserCSSUnparsedValue((globalContext
-      .getProperty('CSSUnparsedValue'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CSSVariableReferenceValue': (arguments) => BrowserCSSVariableReferenceValue((globalContext
-      .getProperty('CSSVariableReferenceValue'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ChannelMergerNode': (arguments) => BrowserChannelMergerNode((globalContext
-      .getProperty('ChannelMergerNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ChannelSplitterNode': (arguments) => BrowserChannelSplitterNode((globalContext
-      .getProperty('ChannelSplitterNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ClipboardEvent': (arguments) => BrowserClipboardEvent((globalContext
-      .getProperty('ClipboardEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ClipboardItem': (arguments) => BrowserClipboardItem((globalContext
-      .getProperty('ClipboardItem'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'CloseEvent': (arguments) => BrowserCloseEvent((globalContext
-      .getProperty('CloseEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Comment': (arguments) => BrowserComment((globalContext
-      .getProperty('Comment'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CompositionEvent': (arguments) => BrowserCompositionEvent((globalContext
-      .getProperty('CompositionEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'CompressionStream': (arguments) => BrowserCompressionStream((globalContext
-      .getProperty('CompressionStream'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'ConstantSourceNode': (arguments) => BrowserConstantSourceNode((globalContext
-      .getProperty('ConstantSourceNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ContentVisibilityAutoStateChangeEvent': (arguments) => BrowserContentVisibilityAutoStateChangeEvent((globalContext
-      .getProperty('ContentVisibilityAutoStateChangeEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ConvolverNode': (arguments) => BrowserConvolverNode((globalContext
-      .getProperty('ConvolverNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'CookieChangeEvent': (arguments) => BrowserCookieChangeEvent((globalContext
-      .getProperty('CookieChangeEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'CountQueuingStrategy': (arguments) => BrowserCountQueuingStrategy((globalContext
-      .getProperty('CountQueuingStrategy'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'CustomEvent': (arguments) => BrowserCustomEvent((globalContext
-      .getProperty('CustomEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'DOMException': (arguments) => BrowserDOMException((globalContext
-      .getProperty('DOMException'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'DOMMatrix': (arguments) => BrowserDOMMatrix((globalContext
-      .getProperty('DOMMatrix'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'DOMMatrixReadOnly': (arguments) => BrowserDOMMatrixReadOnly((globalContext
-      .getProperty('DOMMatrixReadOnly'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'DOMParser': (arguments) => BrowserDOMParser((globalContext
-      .getProperty('DOMParser'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'DOMPoint': (arguments) => BrowserDOMPoint((globalContext
-      .getProperty('DOMPoint'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-        _toJs(arguments[3]),
-      ])),
-  'DOMPointReadOnly': (arguments) => BrowserDOMPointReadOnly((globalContext
-      .getProperty('DOMPointReadOnly'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-        _toJs(arguments[3]),
-      ])),
-  'DOMQuad': (arguments) => BrowserDOMQuad((globalContext
-      .getProperty('DOMQuad'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-        _toJs(arguments[3]),
-      ])),
-  'DOMRect': (arguments) => BrowserDOMRect((globalContext
-      .getProperty('DOMRect'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-        _toJs(arguments[3]),
-      ])),
-  'DOMRectReadOnly': (arguments) => BrowserDOMRectReadOnly((globalContext
-      .getProperty('DOMRectReadOnly'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-        _toJs(arguments[3]),
-      ])),
-  'DataTransfer': (arguments) => BrowserDataTransfer((globalContext
-      .getProperty('DataTransfer'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'DecompressionStream': (arguments) => BrowserDecompressionStream((globalContext
-      .getProperty('DecompressionStream'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'DelayNode': (arguments) => BrowserDelayNode((globalContext
-      .getProperty('DelayNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'DeviceMotionEvent': (arguments) => BrowserDeviceMotionEvent((globalContext
-      .getProperty('DeviceMotionEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'DeviceOrientationEvent': (arguments) => BrowserDeviceOrientationEvent((globalContext
-      .getProperty('DeviceOrientationEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Document': (arguments) => BrowserDocument((globalContext
-      .getProperty('Document'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'DocumentFragment': (arguments) => BrowserDocumentFragment((globalContext
-      .getProperty('DocumentFragment'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'DocumentTimeline': (arguments) => BrowserDocumentTimeline((globalContext
-      .getProperty('DocumentTimeline'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'DragEvent': (arguments) => BrowserDragEvent((globalContext
-      .getProperty('DragEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'DynamicsCompressorNode': (arguments) => BrowserDynamicsCompressorNode((globalContext
-      .getProperty('DynamicsCompressorNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'EncodedVideoChunk': (arguments) => BrowserEncodedVideoChunk((globalContext
-      .getProperty('EncodedVideoChunk'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'ErrorEvent': (arguments) => BrowserErrorEvent((globalContext
-      .getProperty('ErrorEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Event': (arguments) => BrowserEvent((globalContext
-      .getProperty('Event'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'EventSource': (arguments) => BrowserEventSource((globalContext
-      .getProperty('EventSource'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'EventTarget': (arguments) => BrowserEventTarget((globalContext
-      .getProperty('EventTarget'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'ExtendableCookieChangeEvent': (arguments) => BrowserExtendableCookieChangeEvent((globalContext
-      .getProperty('ExtendableCookieChangeEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ExtendableEvent': (arguments) => BrowserExtendableEvent((globalContext
-      .getProperty('ExtendableEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ExtendableMessageEvent': (arguments) => BrowserExtendableMessageEvent((globalContext
-      .getProperty('ExtendableMessageEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'FetchEvent': (arguments) => BrowserFetchEvent((globalContext
-      .getProperty('FetchEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'File': (arguments) => BrowserFile((globalContext
-      .getProperty('File'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-      ])),
-  'FileReader': (arguments) => BrowserFileReader((globalContext
-      .getProperty('FileReader'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'FileReaderSync': (arguments) => BrowserFileReaderSync((globalContext
-      .getProperty('FileReaderSync'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'FocusEvent': (arguments) => BrowserFocusEvent((globalContext
-      .getProperty('FocusEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'FontFace': (arguments) => BrowserFontFace((globalContext
-      .getProperty('FontFace'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-      ])),
-  'FontFaceSet': (arguments) => BrowserFontFaceSet((globalContext
-      .getProperty('FontFaceSet'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'FontFaceSetLoadEvent': (arguments) => BrowserFontFaceSetLoadEvent((globalContext
-      .getProperty('FontFaceSetLoadEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'FormData': (arguments) => BrowserFormData((globalContext
-      .getProperty('FormData'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'FormDataEvent': (arguments) => BrowserFormDataEvent((globalContext
-      .getProperty('FormDataEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'GainNode': (arguments) => BrowserGainNode((globalContext
-      .getProperty('GainNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'GamepadEvent': (arguments) => BrowserGamepadEvent((globalContext
-      .getProperty('GamepadEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'GravitySensor': (arguments) => BrowserGravitySensor((globalContext
-      .getProperty('GravitySensor'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'Gyroscope': (arguments) => BrowserGyroscope((globalContext
-      .getProperty('Gyroscope'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'HTMLAnchorElement': (arguments) => BrowserHTMLAnchorElement((globalContext
-      .getProperty('HTMLAnchorElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLAreaElement': (arguments) => BrowserHTMLAreaElement((globalContext
-      .getProperty('HTMLAreaElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLAudioElement': (arguments) => BrowserHTMLAudioElement((globalContext
-      .getProperty('HTMLAudioElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLBRElement': (arguments) => BrowserHTMLBRElement((globalContext
-      .getProperty('HTMLBRElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLBaseElement': (arguments) => BrowserHTMLBaseElement((globalContext
-      .getProperty('HTMLBaseElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLBodyElement': (arguments) => BrowserHTMLBodyElement((globalContext
-      .getProperty('HTMLBodyElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLButtonElement': (arguments) => BrowserHTMLButtonElement((globalContext
-      .getProperty('HTMLButtonElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLCanvasElement': (arguments) => BrowserHTMLCanvasElement((globalContext
-      .getProperty('HTMLCanvasElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLDListElement': (arguments) => BrowserHTMLDListElement((globalContext
-      .getProperty('HTMLDListElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLDataElement': (arguments) => BrowserHTMLDataElement((globalContext
-      .getProperty('HTMLDataElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLDataListElement': (arguments) => BrowserHTMLDataListElement((globalContext
-      .getProperty('HTMLDataListElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLDetailsElement': (arguments) => BrowserHTMLDetailsElement((globalContext
-      .getProperty('HTMLDetailsElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLDialogElement': (arguments) => BrowserHTMLDialogElement((globalContext
-      .getProperty('HTMLDialogElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLDirectoryElement': (arguments) => BrowserHTMLDirectoryElement((globalContext
-      .getProperty('HTMLDirectoryElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLDivElement': (arguments) => BrowserHTMLDivElement((globalContext
-      .getProperty('HTMLDivElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLElement': (arguments) => BrowserHTMLElement((globalContext
-      .getProperty('HTMLElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLEmbedElement': (arguments) => BrowserHTMLEmbedElement((globalContext
-      .getProperty('HTMLEmbedElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLFieldSetElement': (arguments) => BrowserHTMLFieldSetElement((globalContext
-      .getProperty('HTMLFieldSetElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLFontElement': (arguments) => BrowserHTMLFontElement((globalContext
-      .getProperty('HTMLFontElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLFormElement': (arguments) => BrowserHTMLFormElement((globalContext
-      .getProperty('HTMLFormElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLFrameElement': (arguments) => BrowserHTMLFrameElement((globalContext
-      .getProperty('HTMLFrameElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLFrameSetElement': (arguments) => BrowserHTMLFrameSetElement((globalContext
-      .getProperty('HTMLFrameSetElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLHRElement': (arguments) => BrowserHTMLHRElement((globalContext
-      .getProperty('HTMLHRElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLHeadElement': (arguments) => BrowserHTMLHeadElement((globalContext
-      .getProperty('HTMLHeadElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLHeadingElement': (arguments) => BrowserHTMLHeadingElement((globalContext
-      .getProperty('HTMLHeadingElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLHtmlElement': (arguments) => BrowserHTMLHtmlElement((globalContext
-      .getProperty('HTMLHtmlElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLIFrameElement': (arguments) => BrowserHTMLIFrameElement((globalContext
-      .getProperty('HTMLIFrameElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLImageElement': (arguments) => BrowserHTMLImageElement((globalContext
-      .getProperty('HTMLImageElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLInputElement': (arguments) => BrowserHTMLInputElement((globalContext
-      .getProperty('HTMLInputElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLLIElement': (arguments) => BrowserHTMLLIElement((globalContext
-      .getProperty('HTMLLIElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLLabelElement': (arguments) => BrowserHTMLLabelElement((globalContext
-      .getProperty('HTMLLabelElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLLegendElement': (arguments) => BrowserHTMLLegendElement((globalContext
-      .getProperty('HTMLLegendElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLLinkElement': (arguments) => BrowserHTMLLinkElement((globalContext
-      .getProperty('HTMLLinkElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLMapElement': (arguments) => BrowserHTMLMapElement((globalContext
-      .getProperty('HTMLMapElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLMarqueeElement': (arguments) => BrowserHTMLMarqueeElement((globalContext
-      .getProperty('HTMLMarqueeElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLMenuElement': (arguments) => BrowserHTMLMenuElement((globalContext
-      .getProperty('HTMLMenuElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLMetaElement': (arguments) => BrowserHTMLMetaElement((globalContext
-      .getProperty('HTMLMetaElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLMeterElement': (arguments) => BrowserHTMLMeterElement((globalContext
-      .getProperty('HTMLMeterElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLModElement': (arguments) => BrowserHTMLModElement((globalContext
-      .getProperty('HTMLModElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLOListElement': (arguments) => BrowserHTMLOListElement((globalContext
-      .getProperty('HTMLOListElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLObjectElement': (arguments) => BrowserHTMLObjectElement((globalContext
-      .getProperty('HTMLObjectElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLOptGroupElement': (arguments) => BrowserHTMLOptGroupElement((globalContext
-      .getProperty('HTMLOptGroupElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLOptionElement': (arguments) => BrowserHTMLOptionElement((globalContext
-      .getProperty('HTMLOptionElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLOutputElement': (arguments) => BrowserHTMLOutputElement((globalContext
-      .getProperty('HTMLOutputElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLParagraphElement': (arguments) => BrowserHTMLParagraphElement((globalContext
-      .getProperty('HTMLParagraphElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLParamElement': (arguments) => BrowserHTMLParamElement((globalContext
-      .getProperty('HTMLParamElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLPictureElement': (arguments) => BrowserHTMLPictureElement((globalContext
-      .getProperty('HTMLPictureElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLPreElement': (arguments) => BrowserHTMLPreElement((globalContext
-      .getProperty('HTMLPreElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLProgressElement': (arguments) => BrowserHTMLProgressElement((globalContext
-      .getProperty('HTMLProgressElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLQuoteElement': (arguments) => BrowserHTMLQuoteElement((globalContext
-      .getProperty('HTMLQuoteElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLScriptElement': (arguments) => BrowserHTMLScriptElement((globalContext
-      .getProperty('HTMLScriptElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLSelectElement': (arguments) => BrowserHTMLSelectElement((globalContext
-      .getProperty('HTMLSelectElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLSlotElement': (arguments) => BrowserHTMLSlotElement((globalContext
-      .getProperty('HTMLSlotElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLSourceElement': (arguments) => BrowserHTMLSourceElement((globalContext
-      .getProperty('HTMLSourceElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLSpanElement': (arguments) => BrowserHTMLSpanElement((globalContext
-      .getProperty('HTMLSpanElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLStyleElement': (arguments) => BrowserHTMLStyleElement((globalContext
-      .getProperty('HTMLStyleElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLTableCaptionElement': (arguments) => BrowserHTMLTableCaptionElement((globalContext
-      .getProperty('HTMLTableCaptionElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLTableCellElement': (arguments) => BrowserHTMLTableCellElement((globalContext
-      .getProperty('HTMLTableCellElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLTableColElement': (arguments) => BrowserHTMLTableColElement((globalContext
-      .getProperty('HTMLTableColElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLTableElement': (arguments) => BrowserHTMLTableElement((globalContext
-      .getProperty('HTMLTableElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLTableRowElement': (arguments) => BrowserHTMLTableRowElement((globalContext
-      .getProperty('HTMLTableRowElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLTableSectionElement': (arguments) => BrowserHTMLTableSectionElement((globalContext
-      .getProperty('HTMLTableSectionElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLTemplateElement': (arguments) => BrowserHTMLTemplateElement((globalContext
-      .getProperty('HTMLTemplateElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLTextAreaElement': (arguments) => BrowserHTMLTextAreaElement((globalContext
-      .getProperty('HTMLTextAreaElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLTimeElement': (arguments) => BrowserHTMLTimeElement((globalContext
-      .getProperty('HTMLTimeElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLTitleElement': (arguments) => BrowserHTMLTitleElement((globalContext
-      .getProperty('HTMLTitleElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLTrackElement': (arguments) => BrowserHTMLTrackElement((globalContext
-      .getProperty('HTMLTrackElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLUListElement': (arguments) => BrowserHTMLUListElement((globalContext
-      .getProperty('HTMLUListElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HTMLVideoElement': (arguments) => BrowserHTMLVideoElement((globalContext
-      .getProperty('HTMLVideoElement'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'HashChangeEvent': (arguments) => BrowserHashChangeEvent((globalContext
-      .getProperty('HashChangeEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Headers': (arguments) => BrowserHeaders((globalContext
-      .getProperty('Headers'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'Highlight': (arguments) => BrowserHighlight((globalContext
-      .getProperty('Highlight'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'IDBVersionChangeEvent': (arguments) => BrowserIDBVersionChangeEvent((globalContext
-      .getProperty('IDBVersionChangeEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'IIRFilterNode': (arguments) => BrowserIIRFilterNode((globalContext
-      .getProperty('IIRFilterNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ImageData': (arguments) => BrowserImageData((globalContext
-      .getProperty('ImageData'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-      ])),
-  'InputEvent': (arguments) => BrowserInputEvent((globalContext
-      .getProperty('InputEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'IntersectionObserver': (arguments) => BrowserIntersectionObserver((globalContext
-      .getProperty('IntersectionObserver'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'IntersectionObserverEntry': (arguments) => BrowserIntersectionObserverEntry((globalContext
-      .getProperty('IntersectionObserverEntry'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'KeyboardEvent': (arguments) => BrowserKeyboardEvent((globalContext
-      .getProperty('KeyboardEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'KeyframeEffect': (arguments) => BrowserKeyframeEffect((globalContext
-      .getProperty('KeyframeEffect'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-      ])),
-  'LinearAccelerationSensor': (arguments) => BrowserLinearAccelerationSensor((globalContext
-      .getProperty('LinearAccelerationSensor'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'MIDIConnectionEvent': (arguments) => BrowserMIDIConnectionEvent((globalContext
-      .getProperty('MIDIConnectionEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MIDIMessageEvent': (arguments) => BrowserMIDIMessageEvent((globalContext
-      .getProperty('MIDIMessageEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MediaElementAudioSourceNode': (arguments) => BrowserMediaElementAudioSourceNode((globalContext
-      .getProperty('MediaElementAudioSourceNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MediaEncryptedEvent': (arguments) => BrowserMediaEncryptedEvent((globalContext
-      .getProperty('MediaEncryptedEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MediaKeyMessageEvent': (arguments) => BrowserMediaKeyMessageEvent((globalContext
-      .getProperty('MediaKeyMessageEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MediaMetadata': (arguments) => BrowserMediaMetadata((globalContext
-      .getProperty('MediaMetadata'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'MediaQueryListEvent': (arguments) => BrowserMediaQueryListEvent((globalContext
-      .getProperty('MediaQueryListEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MediaRecorder': (arguments) => BrowserMediaRecorder((globalContext
-      .getProperty('MediaRecorder'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MediaSource': (arguments) => BrowserMediaSource((globalContext
-      .getProperty('MediaSource'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'MediaStream': (arguments) => BrowserMediaStream((globalContext
-      .getProperty('MediaStream'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'MediaStreamAudioDestinationNode': (arguments) => BrowserMediaStreamAudioDestinationNode((globalContext
-      .getProperty('MediaStreamAudioDestinationNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MediaStreamAudioSourceNode': (arguments) => BrowserMediaStreamAudioSourceNode((globalContext
-      .getProperty('MediaStreamAudioSourceNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MediaStreamTrackAudioSourceNode': (arguments) => BrowserMediaStreamTrackAudioSourceNode((globalContext
-      .getProperty('MediaStreamTrackAudioSourceNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MediaStreamTrackEvent': (arguments) => BrowserMediaStreamTrackEvent((globalContext
-      .getProperty('MediaStreamTrackEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MediaStreamTrackProcessor': (arguments) => BrowserMediaStreamTrackProcessor((globalContext
-      .getProperty('MediaStreamTrackProcessor'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'MessageChannel': (arguments) => BrowserMessageChannel((globalContext
-      .getProperty('MessageChannel'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'MessageEvent': (arguments) => BrowserMessageEvent((globalContext
-      .getProperty('MessageEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MouseEvent': (arguments) => BrowserMouseEvent((globalContext
-      .getProperty('MouseEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'MutationObserver': (arguments) => BrowserMutationObserver((globalContext
-      .getProperty('MutationObserver'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'Notification': (arguments) => BrowserNotification((globalContext
-      .getProperty('Notification'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'NotificationEvent': (arguments) => BrowserNotificationEvent((globalContext
-      .getProperty('NotificationEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'OfflineAudioCompletionEvent': (arguments) => BrowserOfflineAudioCompletionEvent((globalContext
-      .getProperty('OfflineAudioCompletionEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'OfflineAudioContext': (arguments) => BrowserOfflineAudioContext((globalContext
-      .getProperty('OfflineAudioContext'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'OffscreenCanvas': (arguments) => BrowserOffscreenCanvas((globalContext
-      .getProperty('OffscreenCanvas'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'OscillatorNode': (arguments) => BrowserOscillatorNode((globalContext
-      .getProperty('OscillatorNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'OverconstrainedError': (arguments) => BrowserOverconstrainedError((globalContext
-      .getProperty('OverconstrainedError'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PageTransitionEvent': (arguments) => BrowserPageTransitionEvent((globalContext
-      .getProperty('PageTransitionEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PannerNode': (arguments) => BrowserPannerNode((globalContext
-      .getProperty('PannerNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Path2D': (arguments) => BrowserPath2D((globalContext
-      .getProperty('Path2D'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'PaymentMethodChangeEvent': (arguments) => BrowserPaymentMethodChangeEvent((globalContext
-      .getProperty('PaymentMethodChangeEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PaymentRequest': (arguments) => BrowserPaymentRequest((globalContext
-      .getProperty('PaymentRequest'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PaymentRequestUpdateEvent': (arguments) => BrowserPaymentRequestUpdateEvent((globalContext
-      .getProperty('PaymentRequestUpdateEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PerformanceMark': (arguments) => BrowserPerformanceMark((globalContext
-      .getProperty('PerformanceMark'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PerformanceObserver': (arguments) => BrowserPerformanceObserver((globalContext
-      .getProperty('PerformanceObserver'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'PeriodicWave': (arguments) => BrowserPeriodicWave((globalContext
-      .getProperty('PeriodicWave'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PictureInPictureEvent': (arguments) => BrowserPictureInPictureEvent((globalContext
-      .getProperty('PictureInPictureEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PointerEvent': (arguments) => BrowserPointerEvent((globalContext
-      .getProperty('PointerEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PopStateEvent': (arguments) => BrowserPopStateEvent((globalContext
-      .getProperty('PopStateEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ProgressEvent': (arguments) => BrowserProgressEvent((globalContext
-      .getProperty('ProgressEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PromiseRejectionEvent': (arguments) => BrowserPromiseRejectionEvent((globalContext
-      .getProperty('PromiseRejectionEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PushEvent': (arguments) => BrowserPushEvent((globalContext
-      .getProperty('PushEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'PushSubscriptionChangeEvent': (arguments) => BrowserPushSubscriptionChangeEvent((globalContext
-      .getProperty('PushSubscriptionChangeEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'RTCDTMFToneChangeEvent': (arguments) => BrowserRTCDTMFToneChangeEvent((globalContext
-      .getProperty('RTCDTMFToneChangeEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'RTCDataChannelEvent': (arguments) => BrowserRTCDataChannelEvent((globalContext
-      .getProperty('RTCDataChannelEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'RTCEncodedAudioFrame': (arguments) => BrowserRTCEncodedAudioFrame((globalContext
-      .getProperty('RTCEncodedAudioFrame'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'RTCEncodedVideoFrame': (arguments) => BrowserRTCEncodedVideoFrame((globalContext
-      .getProperty('RTCEncodedVideoFrame'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'RTCError': (arguments) => BrowserRTCError((globalContext
-      .getProperty('RTCError'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'RTCErrorEvent': (arguments) => BrowserRTCErrorEvent((globalContext
-      .getProperty('RTCErrorEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'RTCIceCandidate': (arguments) => BrowserRTCIceCandidate((globalContext
-      .getProperty('RTCIceCandidate'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'RTCIceTransport': (arguments) => BrowserRTCIceTransport((globalContext
-      .getProperty('RTCIceTransport'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'RTCPeerConnection': (arguments) => BrowserRTCPeerConnection((globalContext
-      .getProperty('RTCPeerConnection'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'RTCPeerConnectionIceErrorEvent': (arguments) => BrowserRTCPeerConnectionIceErrorEvent((globalContext
-      .getProperty('RTCPeerConnectionIceErrorEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'RTCPeerConnectionIceEvent': (arguments) => BrowserRTCPeerConnectionIceEvent((globalContext
-      .getProperty('RTCPeerConnectionIceEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'RTCRtpScriptTransform': (arguments) => BrowserRTCRtpScriptTransform((globalContext
-      .getProperty('RTCRtpScriptTransform'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-      ])),
-  'RTCSessionDescription': (arguments) => BrowserRTCSessionDescription((globalContext
-      .getProperty('RTCSessionDescription'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'RTCTrackEvent': (arguments) => BrowserRTCTrackEvent((globalContext
-      .getProperty('RTCTrackEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Range': (arguments) => BrowserRange((globalContext
-      .getProperty('Range'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'ReadableStream': (arguments) => BrowserReadableStream((globalContext
-      .getProperty('ReadableStream'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ReadableStreamBYOBReader': (arguments) => BrowserReadableStreamBYOBReader((globalContext
-      .getProperty('ReadableStreamBYOBReader'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'ReadableStreamDefaultReader': (arguments) => BrowserReadableStreamDefaultReader((globalContext
-      .getProperty('ReadableStreamDefaultReader'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'RelativeOrientationSensor': (arguments) => BrowserRelativeOrientationSensor((globalContext
-      .getProperty('RelativeOrientationSensor'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'ReportingObserver': (arguments) => BrowserReportingObserver((globalContext
-      .getProperty('ReportingObserver'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Request': (arguments) => BrowserRequest((globalContext
-      .getProperty('Request'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'ResizeObserver': (arguments) => BrowserResizeObserver((globalContext
-      .getProperty('ResizeObserver'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'Response': (arguments) => BrowserResponse((globalContext
-      .getProperty('Response'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Sanitizer': (arguments) => BrowserSanitizer((globalContext
-      .getProperty('Sanitizer'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'SecurityPolicyViolationEvent': (arguments) => BrowserSecurityPolicyViolationEvent((globalContext
-      .getProperty('SecurityPolicyViolationEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'SensorErrorEvent': (arguments) => BrowserSensorErrorEvent((globalContext
-      .getProperty('SensorErrorEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'SharedWorker': (arguments) => BrowserSharedWorker((globalContext
-      .getProperty('SharedWorker'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'SpeechRecognition': (arguments) => BrowserSpeechRecognition((globalContext
-      .getProperty('SpeechRecognition'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'SpeechRecognitionErrorEvent': (arguments) => BrowserSpeechRecognitionErrorEvent((globalContext
-      .getProperty('SpeechRecognitionErrorEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'SpeechRecognitionEvent': (arguments) => BrowserSpeechRecognitionEvent((globalContext
-      .getProperty('SpeechRecognitionEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'SpeechSynthesisErrorEvent': (arguments) => BrowserSpeechSynthesisErrorEvent((globalContext
-      .getProperty('SpeechSynthesisErrorEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'SpeechSynthesisEvent': (arguments) => BrowserSpeechSynthesisEvent((globalContext
-      .getProperty('SpeechSynthesisEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'SpeechSynthesisUtterance': (arguments) => BrowserSpeechSynthesisUtterance((globalContext
-      .getProperty('SpeechSynthesisUtterance'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'StaticRange': (arguments) => BrowserStaticRange((globalContext
-      .getProperty('StaticRange'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'StereoPannerNode': (arguments) => BrowserStereoPannerNode((globalContext
-      .getProperty('StereoPannerNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'StorageEvent': (arguments) => BrowserStorageEvent((globalContext
-      .getProperty('StorageEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'SubmitEvent': (arguments) => BrowserSubmitEvent((globalContext
-      .getProperty('SubmitEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'SyncEvent': (arguments) => BrowserSyncEvent((globalContext
-      .getProperty('SyncEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'TaskController': (arguments) => BrowserTaskController((globalContext
-      .getProperty('TaskController'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'TaskPriorityChangeEvent': (arguments) => BrowserTaskPriorityChangeEvent((globalContext
-      .getProperty('TaskPriorityChangeEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Text': (arguments) => BrowserText((globalContext
-      .getProperty('Text'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'TextDecoder': (arguments) => BrowserTextDecoder((globalContext
-      .getProperty('TextDecoder'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'TextDecoderStream': (arguments) => BrowserTextDecoderStream((globalContext
-      .getProperty('TextDecoderStream'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'TextEncoder': (arguments) => BrowserTextEncoder((globalContext
-      .getProperty('TextEncoder'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'TextEncoderStream': (arguments) => BrowserTextEncoderStream((globalContext
-      .getProperty('TextEncoderStream'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'ToggleEvent': (arguments) => BrowserToggleEvent((globalContext
-      .getProperty('ToggleEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Touch': (arguments) => BrowserTouch((globalContext
-      .getProperty('Touch'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'TouchEvent': (arguments) => BrowserTouchEvent((globalContext
-      .getProperty('TouchEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'TrackEvent': (arguments) => BrowserTrackEvent((globalContext
-      .getProperty('TrackEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'TransformStream': (arguments) => BrowserTransformStream((globalContext
-      .getProperty('TransformStream'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-      ])),
-  'TransitionEvent': (arguments) => BrowserTransitionEvent((globalContext
-      .getProperty('TransitionEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'UIEvent': (arguments) => BrowserUIEvent((globalContext
-      .getProperty('UIEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'URL': (arguments) => BrowserURL((globalContext
-      .getProperty('URL'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'URLSearchParams': (arguments) => BrowserURLSearchParams((globalContext
-      .getProperty('URLSearchParams'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'VTTCue': (arguments) => BrowserVTTCue((globalContext
-      .getProperty('VTTCue'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-        _toJs(arguments[2]),
-      ])),
-  'VTTRegion': (arguments) => BrowserVTTRegion((globalContext
-      .getProperty('VTTRegion'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'VideoColorSpace': (arguments) => BrowserVideoColorSpace((globalContext
-      .getProperty('VideoColorSpace'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'VideoDecoder': (arguments) => BrowserVideoDecoder((globalContext
-      .getProperty('VideoDecoder'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'VideoEncoder': (arguments) => BrowserVideoEncoder((globalContext
-      .getProperty('VideoEncoder'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'VideoFrame': (arguments) => BrowserVideoFrame((globalContext
-      .getProperty('VideoFrame'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'WaveShaperNode': (arguments) => BrowserWaveShaperNode((globalContext
-      .getProperty('WaveShaperNode'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'WebGLContextEvent': (arguments) => BrowserWebGLContextEvent((globalContext
-      .getProperty('WebGLContextEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'WebSocket': (arguments) => BrowserWebSocket((globalContext
-      .getProperty('WebSocket'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'WebTransport': (arguments) => BrowserWebTransport((globalContext
-      .getProperty('WebTransport'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'WebTransportError': (arguments) => BrowserWebTransportError((globalContext
-      .getProperty('WebTransportError'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'WheelEvent': (arguments) => BrowserWheelEvent((globalContext
-      .getProperty('WheelEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'Worker': (arguments) => BrowserWorker((globalContext
-      .getProperty('Worker'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'WritableStream': (arguments) => BrowserWritableStream((globalContext
-      .getProperty('WritableStream'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'WritableStreamDefaultWriter': (arguments) => BrowserWritableStreamDefaultWriter((globalContext
-      .getProperty('WritableStreamDefaultWriter'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-      ])),
-  'XMLHttpRequest': (arguments) => BrowserXMLHttpRequest((globalContext
-      .getProperty('XMLHttpRequest'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'XMLSerializer': (arguments) => BrowserXMLSerializer((globalContext
-      .getProperty('XMLSerializer'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'XPathEvaluator': (arguments) => BrowserXPathEvaluator((globalContext
-      .getProperty('XPathEvaluator'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
-  'XRInputSourceEvent': (arguments) => BrowserXRInputSourceEvent((globalContext
-      .getProperty('XRInputSourceEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'XRInputSourcesChangeEvent': (arguments) => BrowserXRInputSourcesChangeEvent((globalContext
-      .getProperty('XRInputSourcesChangeEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'XRReferenceSpaceEvent': (arguments) => BrowserXRReferenceSpaceEvent((globalContext
-      .getProperty('XRReferenceSpaceEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'XRRigidTransform': (arguments) => BrowserXRRigidTransform((globalContext
-      .getProperty('XRRigidTransform'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'XRSessionEvent': (arguments) => BrowserXRSessionEvent((globalContext
-      .getProperty('XRSessionEvent'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-        _toJs(arguments[0]),
-        _toJs(arguments[1]),
-      ])),
-  'XSLTProcessor': (arguments) => BrowserXSLTProcessor((globalContext
-      .getProperty('XSLTProcessor'.toJS) as JSFunction)
-      .callAsConstructorVarArgs<JSObject>([
-      ])),
+_webConstructors = {
+  'AbortController': (arguments) => BrowserAbortController(
+    (globalContext.getProperty('AbortController'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'AbsoluteOrientationSensor': (arguments) => BrowserAbsoluteOrientationSensor(
+    (globalContext.getProperty('AbsoluteOrientationSensor'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'AnalyserNode': (arguments) => BrowserAnalyserNode(
+    (globalContext.getProperty('AnalyserNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Animation': (arguments) => BrowserAnimation(
+    (globalContext.getProperty('Animation'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'AnimationEvent': (arguments) => BrowserAnimationEvent(
+    (globalContext.getProperty('AnimationEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'AnimationPlaybackEvent': (arguments) => BrowserAnimationPlaybackEvent(
+    (globalContext.getProperty('AnimationPlaybackEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'AudioBuffer': (arguments) => BrowserAudioBuffer(
+    (globalContext.getProperty('AudioBuffer'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'AudioBufferSourceNode': (arguments) => BrowserAudioBufferSourceNode(
+    (globalContext.getProperty('AudioBufferSourceNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'AudioContext': (arguments) => BrowserAudioContext(
+    (globalContext.getProperty('AudioContext'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'AudioProcessingEvent': (arguments) => BrowserAudioProcessingEvent(
+    (globalContext.getProperty('AudioProcessingEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'AudioWorkletNode': (arguments) => BrowserAudioWorkletNode(
+    (globalContext.getProperty('AudioWorkletNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+        ]),
+  ),
+  'AudioWorkletProcessor': (arguments) => BrowserAudioWorkletProcessor(
+    (globalContext.getProperty('AudioWorkletProcessor'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'BiquadFilterNode': (arguments) => BrowserBiquadFilterNode(
+    (globalContext.getProperty('BiquadFilterNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Blob': (arguments) => BrowserBlob(
+    (globalContext.getProperty('Blob'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'BlobEvent': (arguments) => BrowserBlobEvent(
+    (globalContext.getProperty('BlobEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'BroadcastChannel': (arguments) => BrowserBroadcastChannel(
+    (globalContext.getProperty('BroadcastChannel'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'ByteLengthQueuingStrategy': (arguments) => BrowserByteLengthQueuingStrategy(
+    (globalContext.getProperty('ByteLengthQueuingStrategy'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSKeywordValue': (arguments) => BrowserCSSKeywordValue(
+    (globalContext.getProperty('CSSKeywordValue'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSMathClamp': (arguments) => BrowserCSSMathClamp(
+    (globalContext.getProperty('CSSMathClamp'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+        ]),
+  ),
+  'CSSMathInvert': (arguments) => BrowserCSSMathInvert(
+    (globalContext.getProperty('CSSMathInvert'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSMathMax': (arguments) => BrowserCSSMathMax(
+    (globalContext.getProperty('CSSMathMax'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSMathMin': (arguments) => BrowserCSSMathMin(
+    (globalContext.getProperty('CSSMathMin'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSMathNegate': (arguments) => BrowserCSSMathNegate(
+    (globalContext.getProperty('CSSMathNegate'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSMathProduct': (arguments) => BrowserCSSMathProduct(
+    (globalContext.getProperty('CSSMathProduct'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSMathSum': (arguments) => BrowserCSSMathSum(
+    (globalContext.getProperty('CSSMathSum'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSMatrixComponent': (arguments) => BrowserCSSMatrixComponent(
+    (globalContext.getProperty('CSSMatrixComponent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'CSSPerspective': (arguments) => BrowserCSSPerspective(
+    (globalContext.getProperty('CSSPerspective'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSRotate': (arguments) => BrowserCSSRotate(
+    (globalContext.getProperty('CSSRotate'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSScale': (arguments) => BrowserCSSScale(
+    (globalContext.getProperty('CSSScale'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+        ]),
+  ),
+  'CSSSkew': (arguments) => BrowserCSSSkew(
+    (globalContext.getProperty('CSSSkew'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'CSSSkewX': (arguments) => BrowserCSSSkewX(
+    (globalContext.getProperty('CSSSkewX'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSSkewY': (arguments) => BrowserCSSSkewY(
+    (globalContext.getProperty('CSSSkewY'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSStyleSheet': (arguments) => BrowserCSSStyleSheet(
+    (globalContext.getProperty('CSSStyleSheet'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSTransformValue': (arguments) => BrowserCSSTransformValue(
+    (globalContext.getProperty('CSSTransformValue'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSTranslate': (arguments) => BrowserCSSTranslate(
+    (globalContext.getProperty('CSSTranslate'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+        ]),
+  ),
+  'CSSUnitValue': (arguments) => BrowserCSSUnitValue(
+    (globalContext.getProperty('CSSUnitValue'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'CSSUnparsedValue': (arguments) => BrowserCSSUnparsedValue(
+    (globalContext.getProperty('CSSUnparsedValue'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CSSVariableReferenceValue': (arguments) => BrowserCSSVariableReferenceValue(
+    (globalContext.getProperty('CSSVariableReferenceValue'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'ChannelMergerNode': (arguments) => BrowserChannelMergerNode(
+    (globalContext.getProperty('ChannelMergerNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'ChannelSplitterNode': (arguments) => BrowserChannelSplitterNode(
+    (globalContext.getProperty('ChannelSplitterNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'ClipboardEvent': (arguments) => BrowserClipboardEvent(
+    (globalContext.getProperty('ClipboardEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'ClipboardItem': (arguments) => BrowserClipboardItem(
+    (globalContext.getProperty('ClipboardItem'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'CloseEvent': (arguments) => BrowserCloseEvent(
+    (globalContext.getProperty('CloseEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Comment': (arguments) => BrowserComment(
+    (globalContext.getProperty('Comment'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CompositionEvent': (arguments) => BrowserCompositionEvent(
+    (globalContext.getProperty('CompositionEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'CompressionStream': (arguments) => BrowserCompressionStream(
+    (globalContext.getProperty('CompressionStream'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'ConstantSourceNode': (arguments) => BrowserConstantSourceNode(
+    (globalContext.getProperty('ConstantSourceNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'ContentVisibilityAutoStateChangeEvent': (arguments) =>
+      BrowserContentVisibilityAutoStateChangeEvent(
+        (globalContext.getProperty('ContentVisibilityAutoStateChangeEvent'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([
+              _toJs(arguments[0]),
+              _toJs(arguments[1]),
+            ]),
+      ),
+  'ConvolverNode': (arguments) => BrowserConvolverNode(
+    (globalContext.getProperty('ConvolverNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'CookieChangeEvent': (arguments) => BrowserCookieChangeEvent(
+    (globalContext.getProperty('CookieChangeEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'CountQueuingStrategy': (arguments) => BrowserCountQueuingStrategy(
+    (globalContext.getProperty('CountQueuingStrategy'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'CustomEvent': (arguments) => BrowserCustomEvent(
+    (globalContext.getProperty('CustomEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'DOMException': (arguments) => BrowserDOMException(
+    (globalContext.getProperty('DOMException'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'DOMMatrix': (arguments) => BrowserDOMMatrix(
+    (globalContext.getProperty('DOMMatrix'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'DOMMatrixReadOnly': (arguments) => BrowserDOMMatrixReadOnly(
+    (globalContext.getProperty('DOMMatrixReadOnly'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'DOMParser': (arguments) => BrowserDOMParser(
+    (globalContext.getProperty('DOMParser'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'DOMPoint': (arguments) => BrowserDOMPoint(
+    (globalContext.getProperty('DOMPoint'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+          _toJs(arguments[3]),
+        ]),
+  ),
+  'DOMPointReadOnly': (arguments) => BrowserDOMPointReadOnly(
+    (globalContext.getProperty('DOMPointReadOnly'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+          _toJs(arguments[3]),
+        ]),
+  ),
+  'DOMQuad': (arguments) => BrowserDOMQuad(
+    (globalContext.getProperty('DOMQuad'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+          _toJs(arguments[3]),
+        ]),
+  ),
+  'DOMRect': (arguments) => BrowserDOMRect(
+    (globalContext.getProperty('DOMRect'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+          _toJs(arguments[3]),
+        ]),
+  ),
+  'DOMRectReadOnly': (arguments) => BrowserDOMRectReadOnly(
+    (globalContext.getProperty('DOMRectReadOnly'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+          _toJs(arguments[3]),
+        ]),
+  ),
+  'DataTransfer': (arguments) => BrowserDataTransfer(
+    (globalContext.getProperty('DataTransfer'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'DecompressionStream': (arguments) => BrowserDecompressionStream(
+    (globalContext.getProperty('DecompressionStream'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'DelayNode': (arguments) => BrowserDelayNode(
+    (globalContext.getProperty('DelayNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'DeviceMotionEvent': (arguments) => BrowserDeviceMotionEvent(
+    (globalContext.getProperty('DeviceMotionEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'DeviceOrientationEvent': (arguments) => BrowserDeviceOrientationEvent(
+    (globalContext.getProperty('DeviceOrientationEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Document': (arguments) => BrowserDocument(
+    (globalContext.getProperty('Document'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'DocumentFragment': (arguments) => BrowserDocumentFragment(
+    (globalContext.getProperty('DocumentFragment'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'DocumentTimeline': (arguments) => BrowserDocumentTimeline(
+    (globalContext.getProperty('DocumentTimeline'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'DragEvent': (arguments) => BrowserDragEvent(
+    (globalContext.getProperty('DragEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'DynamicsCompressorNode': (arguments) => BrowserDynamicsCompressorNode(
+    (globalContext.getProperty('DynamicsCompressorNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'EncodedVideoChunk': (arguments) => BrowserEncodedVideoChunk(
+    (globalContext.getProperty('EncodedVideoChunk'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'ErrorEvent': (arguments) => BrowserErrorEvent(
+    (globalContext.getProperty('ErrorEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Event': (arguments) => BrowserEvent(
+    (globalContext.getProperty('Event'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'EventSource': (arguments) => BrowserEventSource(
+    (globalContext.getProperty('EventSource'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'EventTarget': (arguments) => BrowserEventTarget(
+    (globalContext.getProperty('EventTarget'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'ExtendableCookieChangeEvent': (arguments) =>
+      BrowserExtendableCookieChangeEvent(
+        (globalContext.getProperty('ExtendableCookieChangeEvent'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([
+              _toJs(arguments[0]),
+              _toJs(arguments[1]),
+            ]),
+      ),
+  'ExtendableEvent': (arguments) => BrowserExtendableEvent(
+    (globalContext.getProperty('ExtendableEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'ExtendableMessageEvent': (arguments) => BrowserExtendableMessageEvent(
+    (globalContext.getProperty('ExtendableMessageEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'FetchEvent': (arguments) => BrowserFetchEvent(
+    (globalContext.getProperty('FetchEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'File': (arguments) => BrowserFile(
+    (globalContext.getProperty('File'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+        ]),
+  ),
+  'FileReader': (arguments) => BrowserFileReader(
+    (globalContext.getProperty('FileReader'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'FileReaderSync': (arguments) => BrowserFileReaderSync(
+    (globalContext.getProperty('FileReaderSync'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'FocusEvent': (arguments) => BrowserFocusEvent(
+    (globalContext.getProperty('FocusEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'FontFace': (arguments) => BrowserFontFace(
+    (globalContext.getProperty('FontFace'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+        ]),
+  ),
+  'FontFaceSet': (arguments) => BrowserFontFaceSet(
+    (globalContext.getProperty('FontFaceSet'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'FontFaceSetLoadEvent': (arguments) => BrowserFontFaceSetLoadEvent(
+    (globalContext.getProperty('FontFaceSetLoadEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'FormData': (arguments) => BrowserFormData(
+    (globalContext.getProperty('FormData'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'FormDataEvent': (arguments) => BrowserFormDataEvent(
+    (globalContext.getProperty('FormDataEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'GainNode': (arguments) => BrowserGainNode(
+    (globalContext.getProperty('GainNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'GamepadEvent': (arguments) => BrowserGamepadEvent(
+    (globalContext.getProperty('GamepadEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'GravitySensor': (arguments) => BrowserGravitySensor(
+    (globalContext.getProperty('GravitySensor'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'Gyroscope': (arguments) => BrowserGyroscope(
+    (globalContext.getProperty('Gyroscope'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'HTMLAnchorElement': (arguments) => BrowserHTMLAnchorElement(
+    (globalContext.getProperty('HTMLAnchorElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLAreaElement': (arguments) => BrowserHTMLAreaElement(
+    (globalContext.getProperty('HTMLAreaElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLAudioElement': (arguments) => BrowserHTMLAudioElement(
+    (globalContext.getProperty('HTMLAudioElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLBRElement': (arguments) => BrowserHTMLBRElement(
+    (globalContext.getProperty('HTMLBRElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLBaseElement': (arguments) => BrowserHTMLBaseElement(
+    (globalContext.getProperty('HTMLBaseElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLBodyElement': (arguments) => BrowserHTMLBodyElement(
+    (globalContext.getProperty('HTMLBodyElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLButtonElement': (arguments) => BrowserHTMLButtonElement(
+    (globalContext.getProperty('HTMLButtonElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLCanvasElement': (arguments) => BrowserHTMLCanvasElement(
+    (globalContext.getProperty('HTMLCanvasElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLDListElement': (arguments) => BrowserHTMLDListElement(
+    (globalContext.getProperty('HTMLDListElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLDataElement': (arguments) => BrowserHTMLDataElement(
+    (globalContext.getProperty('HTMLDataElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLDataListElement': (arguments) => BrowserHTMLDataListElement(
+    (globalContext.getProperty('HTMLDataListElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLDetailsElement': (arguments) => BrowserHTMLDetailsElement(
+    (globalContext.getProperty('HTMLDetailsElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLDialogElement': (arguments) => BrowserHTMLDialogElement(
+    (globalContext.getProperty('HTMLDialogElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLDirectoryElement': (arguments) => BrowserHTMLDirectoryElement(
+    (globalContext.getProperty('HTMLDirectoryElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLDivElement': (arguments) => BrowserHTMLDivElement(
+    (globalContext.getProperty('HTMLDivElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLElement': (arguments) => BrowserHTMLElement(
+    (globalContext.getProperty('HTMLElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLEmbedElement': (arguments) => BrowserHTMLEmbedElement(
+    (globalContext.getProperty('HTMLEmbedElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLFieldSetElement': (arguments) => BrowserHTMLFieldSetElement(
+    (globalContext.getProperty('HTMLFieldSetElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLFontElement': (arguments) => BrowserHTMLFontElement(
+    (globalContext.getProperty('HTMLFontElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLFormElement': (arguments) => BrowserHTMLFormElement(
+    (globalContext.getProperty('HTMLFormElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLFrameElement': (arguments) => BrowserHTMLFrameElement(
+    (globalContext.getProperty('HTMLFrameElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLFrameSetElement': (arguments) => BrowserHTMLFrameSetElement(
+    (globalContext.getProperty('HTMLFrameSetElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLHRElement': (arguments) => BrowserHTMLHRElement(
+    (globalContext.getProperty('HTMLHRElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLHeadElement': (arguments) => BrowserHTMLHeadElement(
+    (globalContext.getProperty('HTMLHeadElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLHeadingElement': (arguments) => BrowserHTMLHeadingElement(
+    (globalContext.getProperty('HTMLHeadingElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLHtmlElement': (arguments) => BrowserHTMLHtmlElement(
+    (globalContext.getProperty('HTMLHtmlElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLIFrameElement': (arguments) => BrowserHTMLIFrameElement(
+    (globalContext.getProperty('HTMLIFrameElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLImageElement': (arguments) => BrowserHTMLImageElement(
+    (globalContext.getProperty('HTMLImageElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLInputElement': (arguments) => BrowserHTMLInputElement(
+    (globalContext.getProperty('HTMLInputElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLLIElement': (arguments) => BrowserHTMLLIElement(
+    (globalContext.getProperty('HTMLLIElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLLabelElement': (arguments) => BrowserHTMLLabelElement(
+    (globalContext.getProperty('HTMLLabelElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLLegendElement': (arguments) => BrowserHTMLLegendElement(
+    (globalContext.getProperty('HTMLLegendElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLLinkElement': (arguments) => BrowserHTMLLinkElement(
+    (globalContext.getProperty('HTMLLinkElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLMapElement': (arguments) => BrowserHTMLMapElement(
+    (globalContext.getProperty('HTMLMapElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLMarqueeElement': (arguments) => BrowserHTMLMarqueeElement(
+    (globalContext.getProperty('HTMLMarqueeElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLMenuElement': (arguments) => BrowserHTMLMenuElement(
+    (globalContext.getProperty('HTMLMenuElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLMetaElement': (arguments) => BrowserHTMLMetaElement(
+    (globalContext.getProperty('HTMLMetaElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLMeterElement': (arguments) => BrowserHTMLMeterElement(
+    (globalContext.getProperty('HTMLMeterElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLModElement': (arguments) => BrowserHTMLModElement(
+    (globalContext.getProperty('HTMLModElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLOListElement': (arguments) => BrowserHTMLOListElement(
+    (globalContext.getProperty('HTMLOListElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLObjectElement': (arguments) => BrowserHTMLObjectElement(
+    (globalContext.getProperty('HTMLObjectElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLOptGroupElement': (arguments) => BrowserHTMLOptGroupElement(
+    (globalContext.getProperty('HTMLOptGroupElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLOptionElement': (arguments) => BrowserHTMLOptionElement(
+    (globalContext.getProperty('HTMLOptionElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLOutputElement': (arguments) => BrowserHTMLOutputElement(
+    (globalContext.getProperty('HTMLOutputElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLParagraphElement': (arguments) => BrowserHTMLParagraphElement(
+    (globalContext.getProperty('HTMLParagraphElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLParamElement': (arguments) => BrowserHTMLParamElement(
+    (globalContext.getProperty('HTMLParamElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLPictureElement': (arguments) => BrowserHTMLPictureElement(
+    (globalContext.getProperty('HTMLPictureElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLPreElement': (arguments) => BrowserHTMLPreElement(
+    (globalContext.getProperty('HTMLPreElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLProgressElement': (arguments) => BrowserHTMLProgressElement(
+    (globalContext.getProperty('HTMLProgressElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLQuoteElement': (arguments) => BrowserHTMLQuoteElement(
+    (globalContext.getProperty('HTMLQuoteElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLScriptElement': (arguments) => BrowserHTMLScriptElement(
+    (globalContext.getProperty('HTMLScriptElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLSelectElement': (arguments) => BrowserHTMLSelectElement(
+    (globalContext.getProperty('HTMLSelectElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLSlotElement': (arguments) => BrowserHTMLSlotElement(
+    (globalContext.getProperty('HTMLSlotElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLSourceElement': (arguments) => BrowserHTMLSourceElement(
+    (globalContext.getProperty('HTMLSourceElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLSpanElement': (arguments) => BrowserHTMLSpanElement(
+    (globalContext.getProperty('HTMLSpanElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLStyleElement': (arguments) => BrowserHTMLStyleElement(
+    (globalContext.getProperty('HTMLStyleElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLTableCaptionElement': (arguments) => BrowserHTMLTableCaptionElement(
+    (globalContext.getProperty('HTMLTableCaptionElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLTableCellElement': (arguments) => BrowserHTMLTableCellElement(
+    (globalContext.getProperty('HTMLTableCellElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLTableColElement': (arguments) => BrowserHTMLTableColElement(
+    (globalContext.getProperty('HTMLTableColElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLTableElement': (arguments) => BrowserHTMLTableElement(
+    (globalContext.getProperty('HTMLTableElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLTableRowElement': (arguments) => BrowserHTMLTableRowElement(
+    (globalContext.getProperty('HTMLTableRowElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLTableSectionElement': (arguments) => BrowserHTMLTableSectionElement(
+    (globalContext.getProperty('HTMLTableSectionElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLTemplateElement': (arguments) => BrowserHTMLTemplateElement(
+    (globalContext.getProperty('HTMLTemplateElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLTextAreaElement': (arguments) => BrowserHTMLTextAreaElement(
+    (globalContext.getProperty('HTMLTextAreaElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLTimeElement': (arguments) => BrowserHTMLTimeElement(
+    (globalContext.getProperty('HTMLTimeElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLTitleElement': (arguments) => BrowserHTMLTitleElement(
+    (globalContext.getProperty('HTMLTitleElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLTrackElement': (arguments) => BrowserHTMLTrackElement(
+    (globalContext.getProperty('HTMLTrackElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLUListElement': (arguments) => BrowserHTMLUListElement(
+    (globalContext.getProperty('HTMLUListElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HTMLVideoElement': (arguments) => BrowserHTMLVideoElement(
+    (globalContext.getProperty('HTMLVideoElement'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'HashChangeEvent': (arguments) => BrowserHashChangeEvent(
+    (globalContext.getProperty('HashChangeEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Headers': (arguments) => BrowserHeaders(
+    (globalContext.getProperty('Headers'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'Highlight': (arguments) => BrowserHighlight(
+    (globalContext.getProperty('Highlight'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'IDBVersionChangeEvent': (arguments) => BrowserIDBVersionChangeEvent(
+    (globalContext.getProperty('IDBVersionChangeEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'IIRFilterNode': (arguments) => BrowserIIRFilterNode(
+    (globalContext.getProperty('IIRFilterNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'ImageData': (arguments) => BrowserImageData(
+    (globalContext.getProperty('ImageData'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+        ]),
+  ),
+  'InputEvent': (arguments) => BrowserInputEvent(
+    (globalContext.getProperty('InputEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'IntersectionObserver': (arguments) => BrowserIntersectionObserver(
+    (globalContext.getProperty('IntersectionObserver'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'IntersectionObserverEntry': (arguments) => BrowserIntersectionObserverEntry(
+    (globalContext.getProperty('IntersectionObserverEntry'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'KeyboardEvent': (arguments) => BrowserKeyboardEvent(
+    (globalContext.getProperty('KeyboardEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'KeyframeEffect': (arguments) => BrowserKeyframeEffect(
+    (globalContext.getProperty('KeyframeEffect'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+        ]),
+  ),
+  'LinearAccelerationSensor': (arguments) => BrowserLinearAccelerationSensor(
+    (globalContext.getProperty('LinearAccelerationSensor'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'MIDIConnectionEvent': (arguments) => BrowserMIDIConnectionEvent(
+    (globalContext.getProperty('MIDIConnectionEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'MIDIMessageEvent': (arguments) => BrowserMIDIMessageEvent(
+    (globalContext.getProperty('MIDIMessageEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'MediaElementAudioSourceNode': (arguments) =>
+      BrowserMediaElementAudioSourceNode(
+        (globalContext.getProperty('MediaElementAudioSourceNode'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([
+              _toJs(arguments[0]),
+              _toJs(arguments[1]),
+            ]),
+      ),
+  'MediaEncryptedEvent': (arguments) => BrowserMediaEncryptedEvent(
+    (globalContext.getProperty('MediaEncryptedEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'MediaKeyMessageEvent': (arguments) => BrowserMediaKeyMessageEvent(
+    (globalContext.getProperty('MediaKeyMessageEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'MediaMetadata': (arguments) => BrowserMediaMetadata(
+    (globalContext.getProperty('MediaMetadata'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'MediaQueryListEvent': (arguments) => BrowserMediaQueryListEvent(
+    (globalContext.getProperty('MediaQueryListEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'MediaRecorder': (arguments) => BrowserMediaRecorder(
+    (globalContext.getProperty('MediaRecorder'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'MediaSource': (arguments) => BrowserMediaSource(
+    (globalContext.getProperty('MediaSource'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'MediaStream': (arguments) => BrowserMediaStream(
+    (globalContext.getProperty('MediaStream'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'MediaStreamAudioDestinationNode': (arguments) =>
+      BrowserMediaStreamAudioDestinationNode(
+        (globalContext.getProperty('MediaStreamAudioDestinationNode'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([
+              _toJs(arguments[0]),
+              _toJs(arguments[1]),
+            ]),
+      ),
+  'MediaStreamAudioSourceNode': (arguments) =>
+      BrowserMediaStreamAudioSourceNode(
+        (globalContext.getProperty('MediaStreamAudioSourceNode'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([
+              _toJs(arguments[0]),
+              _toJs(arguments[1]),
+            ]),
+      ),
+  'MediaStreamTrackAudioSourceNode': (arguments) =>
+      BrowserMediaStreamTrackAudioSourceNode(
+        (globalContext.getProperty('MediaStreamTrackAudioSourceNode'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([
+              _toJs(arguments[0]),
+              _toJs(arguments[1]),
+            ]),
+      ),
+  'MediaStreamTrackEvent': (arguments) => BrowserMediaStreamTrackEvent(
+    (globalContext.getProperty('MediaStreamTrackEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'MediaStreamTrackProcessor': (arguments) => BrowserMediaStreamTrackProcessor(
+    (globalContext.getProperty('MediaStreamTrackProcessor'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'MessageChannel': (arguments) => BrowserMessageChannel(
+    (globalContext.getProperty('MessageChannel'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'MessageEvent': (arguments) => BrowserMessageEvent(
+    (globalContext.getProperty('MessageEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'MouseEvent': (arguments) => BrowserMouseEvent(
+    (globalContext.getProperty('MouseEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'MutationObserver': (arguments) => BrowserMutationObserver(
+    (globalContext.getProperty('MutationObserver'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'Notification': (arguments) => BrowserNotification(
+    (globalContext.getProperty('Notification'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'NotificationEvent': (arguments) => BrowserNotificationEvent(
+    (globalContext.getProperty('NotificationEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'OfflineAudioCompletionEvent': (arguments) =>
+      BrowserOfflineAudioCompletionEvent(
+        (globalContext.getProperty('OfflineAudioCompletionEvent'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([
+              _toJs(arguments[0]),
+              _toJs(arguments[1]),
+            ]),
+      ),
+  'OfflineAudioContext': (arguments) => BrowserOfflineAudioContext(
+    (globalContext.getProperty('OfflineAudioContext'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'OffscreenCanvas': (arguments) => BrowserOffscreenCanvas(
+    (globalContext.getProperty('OffscreenCanvas'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'OscillatorNode': (arguments) => BrowserOscillatorNode(
+    (globalContext.getProperty('OscillatorNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'OverconstrainedError': (arguments) => BrowserOverconstrainedError(
+    (globalContext.getProperty('OverconstrainedError'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PageTransitionEvent': (arguments) => BrowserPageTransitionEvent(
+    (globalContext.getProperty('PageTransitionEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PannerNode': (arguments) => BrowserPannerNode(
+    (globalContext.getProperty('PannerNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Path2D': (arguments) => BrowserPath2D(
+    (globalContext.getProperty('Path2D'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'PaymentMethodChangeEvent': (arguments) => BrowserPaymentMethodChangeEvent(
+    (globalContext.getProperty('PaymentMethodChangeEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PaymentRequest': (arguments) => BrowserPaymentRequest(
+    (globalContext.getProperty('PaymentRequest'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PaymentRequestUpdateEvent': (arguments) => BrowserPaymentRequestUpdateEvent(
+    (globalContext.getProperty('PaymentRequestUpdateEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PerformanceMark': (arguments) => BrowserPerformanceMark(
+    (globalContext.getProperty('PerformanceMark'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PerformanceObserver': (arguments) => BrowserPerformanceObserver(
+    (globalContext.getProperty('PerformanceObserver'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'PeriodicWave': (arguments) => BrowserPeriodicWave(
+    (globalContext.getProperty('PeriodicWave'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PictureInPictureEvent': (arguments) => BrowserPictureInPictureEvent(
+    (globalContext.getProperty('PictureInPictureEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PointerEvent': (arguments) => BrowserPointerEvent(
+    (globalContext.getProperty('PointerEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PopStateEvent': (arguments) => BrowserPopStateEvent(
+    (globalContext.getProperty('PopStateEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'ProgressEvent': (arguments) => BrowserProgressEvent(
+    (globalContext.getProperty('ProgressEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PromiseRejectionEvent': (arguments) => BrowserPromiseRejectionEvent(
+    (globalContext.getProperty('PromiseRejectionEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PushEvent': (arguments) => BrowserPushEvent(
+    (globalContext.getProperty('PushEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'PushSubscriptionChangeEvent': (arguments) =>
+      BrowserPushSubscriptionChangeEvent(
+        (globalContext.getProperty('PushSubscriptionChangeEvent'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([
+              _toJs(arguments[0]),
+              _toJs(arguments[1]),
+            ]),
+      ),
+  'RTCDTMFToneChangeEvent': (arguments) => BrowserRTCDTMFToneChangeEvent(
+    (globalContext.getProperty('RTCDTMFToneChangeEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'RTCDataChannelEvent': (arguments) => BrowserRTCDataChannelEvent(
+    (globalContext.getProperty('RTCDataChannelEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'RTCEncodedAudioFrame': (arguments) => BrowserRTCEncodedAudioFrame(
+    (globalContext.getProperty('RTCEncodedAudioFrame'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'RTCEncodedVideoFrame': (arguments) => BrowserRTCEncodedVideoFrame(
+    (globalContext.getProperty('RTCEncodedVideoFrame'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'RTCError': (arguments) => BrowserRTCError(
+    (globalContext.getProperty('RTCError'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'RTCErrorEvent': (arguments) => BrowserRTCErrorEvent(
+    (globalContext.getProperty('RTCErrorEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'RTCIceCandidate': (arguments) => BrowserRTCIceCandidate(
+    (globalContext.getProperty('RTCIceCandidate'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'RTCIceTransport': (arguments) => BrowserRTCIceTransport(
+    (globalContext.getProperty('RTCIceTransport'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'RTCPeerConnection': (arguments) => BrowserRTCPeerConnection(
+    (globalContext.getProperty('RTCPeerConnection'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'RTCPeerConnectionIceErrorEvent': (arguments) =>
+      BrowserRTCPeerConnectionIceErrorEvent(
+        (globalContext.getProperty('RTCPeerConnectionIceErrorEvent'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([
+              _toJs(arguments[0]),
+              _toJs(arguments[1]),
+            ]),
+      ),
+  'RTCPeerConnectionIceEvent': (arguments) => BrowserRTCPeerConnectionIceEvent(
+    (globalContext.getProperty('RTCPeerConnectionIceEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'RTCRtpScriptTransform': (arguments) => BrowserRTCRtpScriptTransform(
+    (globalContext.getProperty('RTCRtpScriptTransform'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+        ]),
+  ),
+  'RTCSessionDescription': (arguments) => BrowserRTCSessionDescription(
+    (globalContext.getProperty('RTCSessionDescription'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'RTCTrackEvent': (arguments) => BrowserRTCTrackEvent(
+    (globalContext.getProperty('RTCTrackEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Range': (arguments) => BrowserRange(
+    (globalContext.getProperty('Range'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'ReadableStream': (arguments) => BrowserReadableStream(
+    (globalContext.getProperty('ReadableStream'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'ReadableStreamBYOBReader': (arguments) => BrowserReadableStreamBYOBReader(
+    (globalContext.getProperty('ReadableStreamBYOBReader'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'ReadableStreamDefaultReader': (arguments) =>
+      BrowserReadableStreamDefaultReader(
+        (globalContext.getProperty('ReadableStreamDefaultReader'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+      ),
+  'RelativeOrientationSensor': (arguments) => BrowserRelativeOrientationSensor(
+    (globalContext.getProperty('RelativeOrientationSensor'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'ReportingObserver': (arguments) => BrowserReportingObserver(
+    (globalContext.getProperty('ReportingObserver'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Request': (arguments) => BrowserRequest(
+    (globalContext.getProperty('Request'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'ResizeObserver': (arguments) => BrowserResizeObserver(
+    (globalContext.getProperty('ResizeObserver'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'Response': (arguments) => BrowserResponse(
+    (globalContext.getProperty('Response'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Sanitizer': (arguments) => BrowserSanitizer(
+    (globalContext.getProperty('Sanitizer'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'SecurityPolicyViolationEvent': (arguments) =>
+      BrowserSecurityPolicyViolationEvent(
+        (globalContext.getProperty('SecurityPolicyViolationEvent'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([
+              _toJs(arguments[0]),
+              _toJs(arguments[1]),
+            ]),
+      ),
+  'SensorErrorEvent': (arguments) => BrowserSensorErrorEvent(
+    (globalContext.getProperty('SensorErrorEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'SharedWorker': (arguments) => BrowserSharedWorker(
+    (globalContext.getProperty('SharedWorker'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'SpeechRecognition': (arguments) => BrowserSpeechRecognition(
+    (globalContext.getProperty('SpeechRecognition'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'SpeechRecognitionErrorEvent': (arguments) =>
+      BrowserSpeechRecognitionErrorEvent(
+        (globalContext.getProperty('SpeechRecognitionErrorEvent'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([
+              _toJs(arguments[0]),
+              _toJs(arguments[1]),
+            ]),
+      ),
+  'SpeechRecognitionEvent': (arguments) => BrowserSpeechRecognitionEvent(
+    (globalContext.getProperty('SpeechRecognitionEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'SpeechSynthesisErrorEvent': (arguments) => BrowserSpeechSynthesisErrorEvent(
+    (globalContext.getProperty('SpeechSynthesisErrorEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'SpeechSynthesisEvent': (arguments) => BrowserSpeechSynthesisEvent(
+    (globalContext.getProperty('SpeechSynthesisEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'SpeechSynthesisUtterance': (arguments) => BrowserSpeechSynthesisUtterance(
+    (globalContext.getProperty('SpeechSynthesisUtterance'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'StaticRange': (arguments) => BrowserStaticRange(
+    (globalContext.getProperty('StaticRange'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'StereoPannerNode': (arguments) => BrowserStereoPannerNode(
+    (globalContext.getProperty('StereoPannerNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'StorageEvent': (arguments) => BrowserStorageEvent(
+    (globalContext.getProperty('StorageEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'SubmitEvent': (arguments) => BrowserSubmitEvent(
+    (globalContext.getProperty('SubmitEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'SyncEvent': (arguments) => BrowserSyncEvent(
+    (globalContext.getProperty('SyncEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'TaskController': (arguments) => BrowserTaskController(
+    (globalContext.getProperty('TaskController'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'TaskPriorityChangeEvent': (arguments) => BrowserTaskPriorityChangeEvent(
+    (globalContext.getProperty('TaskPriorityChangeEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Text': (arguments) => BrowserText(
+    (globalContext.getProperty('Text'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'TextDecoder': (arguments) => BrowserTextDecoder(
+    (globalContext.getProperty('TextDecoder'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'TextDecoderStream': (arguments) => BrowserTextDecoderStream(
+    (globalContext.getProperty('TextDecoderStream'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'TextEncoder': (arguments) => BrowserTextEncoder(
+    (globalContext.getProperty('TextEncoder'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'TextEncoderStream': (arguments) => BrowserTextEncoderStream(
+    (globalContext.getProperty('TextEncoderStream'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'ToggleEvent': (arguments) => BrowserToggleEvent(
+    (globalContext.getProperty('ToggleEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Touch': (arguments) => BrowserTouch(
+    (globalContext.getProperty('Touch'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'TouchEvent': (arguments) => BrowserTouchEvent(
+    (globalContext.getProperty('TouchEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'TrackEvent': (arguments) => BrowserTrackEvent(
+    (globalContext.getProperty('TrackEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'TransformStream': (arguments) => BrowserTransformStream(
+    (globalContext.getProperty('TransformStream'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+        ]),
+  ),
+  'TransitionEvent': (arguments) => BrowserTransitionEvent(
+    (globalContext.getProperty('TransitionEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'UIEvent': (arguments) => BrowserUIEvent(
+    (globalContext.getProperty('UIEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'URL': (arguments) => BrowserURL(
+    (globalContext.getProperty('URL'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'URLSearchParams': (arguments) => BrowserURLSearchParams(
+    (globalContext.getProperty('URLSearchParams'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'VTTCue': (arguments) => BrowserVTTCue(
+    (globalContext.getProperty('VTTCue'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+          _toJs(arguments[2]),
+        ]),
+  ),
+  'VTTRegion': (arguments) => BrowserVTTRegion(
+    (globalContext.getProperty('VTTRegion'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'VideoColorSpace': (arguments) => BrowserVideoColorSpace(
+    (globalContext.getProperty('VideoColorSpace'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'VideoDecoder': (arguments) => BrowserVideoDecoder(
+    (globalContext.getProperty('VideoDecoder'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'VideoEncoder': (arguments) => BrowserVideoEncoder(
+    (globalContext.getProperty('VideoEncoder'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+  ),
+  'VideoFrame': (arguments) => BrowserVideoFrame(
+    (globalContext.getProperty('VideoFrame'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'WaveShaperNode': (arguments) => BrowserWaveShaperNode(
+    (globalContext.getProperty('WaveShaperNode'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'WebGLContextEvent': (arguments) => BrowserWebGLContextEvent(
+    (globalContext.getProperty('WebGLContextEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'WebSocket': (arguments) => BrowserWebSocket(
+    (globalContext.getProperty('WebSocket'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'WebTransport': (arguments) => BrowserWebTransport(
+    (globalContext.getProperty('WebTransport'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'WebTransportError': (arguments) => BrowserWebTransportError(
+    (globalContext.getProperty('WebTransportError'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'WheelEvent': (arguments) => BrowserWheelEvent(
+    (globalContext.getProperty('WheelEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'Worker': (arguments) => BrowserWorker(
+    (globalContext.getProperty('Worker'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'WritableStream': (arguments) => BrowserWritableStream(
+    (globalContext.getProperty('WritableStream'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'WritableStreamDefaultWriter': (arguments) =>
+      BrowserWritableStreamDefaultWriter(
+        (globalContext.getProperty('WritableStreamDefaultWriter'.toJS)
+                as JSFunction)
+            .callAsConstructorVarArgs<JSObject>([_toJs(arguments[0])]),
+      ),
+  'XMLHttpRequest': (arguments) => BrowserXMLHttpRequest(
+    (globalContext.getProperty('XMLHttpRequest'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'XMLSerializer': (arguments) => BrowserXMLSerializer(
+    (globalContext.getProperty('XMLSerializer'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'XPathEvaluator': (arguments) => BrowserXPathEvaluator(
+    (globalContext.getProperty('XPathEvaluator'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
+  'XRInputSourceEvent': (arguments) => BrowserXRInputSourceEvent(
+    (globalContext.getProperty('XRInputSourceEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'XRInputSourcesChangeEvent': (arguments) => BrowserXRInputSourcesChangeEvent(
+    (globalContext.getProperty('XRInputSourcesChangeEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'XRReferenceSpaceEvent': (arguments) => BrowserXRReferenceSpaceEvent(
+    (globalContext.getProperty('XRReferenceSpaceEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'XRRigidTransform': (arguments) => BrowserXRRigidTransform(
+    (globalContext.getProperty('XRRigidTransform'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'XRSessionEvent': (arguments) => BrowserXRSessionEvent(
+    (globalContext.getProperty('XRSessionEvent'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([
+          _toJs(arguments[0]),
+          _toJs(arguments[1]),
+        ]),
+  ),
+  'XSLTProcessor': (arguments) => BrowserXSLTProcessor(
+    (globalContext.getProperty('XSLTProcessor'.toJS) as JSFunction)
+        .callAsConstructorVarArgs<JSObject>([]),
+  ),
 };
 
 final class BrowserReactSyntheticEvent<T extends EventTarget>
@@ -10367,8 +10733,7 @@ final class BrowserWebRuntime implements WebRuntime {
   @override
   Document get document => BrowserDocument(web.document);
   @override
-  Navigator get navigator =>
-      BrowserNavigator(web.window.navigator);
+  Navigator get navigator => BrowserNavigator(web.window.navigator);
   @override
   T createWebObject<T extends Object>(String name, List<Object?> arguments) {
     final ctor = _webConstructors[name];
@@ -10377,963 +10742,1208 @@ final class BrowserWebRuntime implements WebRuntime {
     }
     return ctor(arguments) as T;
   }
+
   @override
-  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments) {
+  dynamic invokeNamespace(
+    String namespace,
+    String member,
+    List<Object?> arguments,
+  ) {
     final ns = globalContext.getProperty(namespace.toJS);
-    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("$namespace.$member");
+    if (ns == null || ns.isNull || ns.isUndefined)
+      throw UnsupportedWebApiError("$namespace.$member");
     final jsArgs = [for (final a in arguments) _toJs(a)];
     final result = (ns as JSObject).callMethodVarArgs(member.toJS, jsArgs);
     return _convert(result, "wrap");
   }
+
   @override
   dynamic getNamespaceProperty(String namespace, String property) {
     final ns = globalContext.getProperty(namespace.toJS);
-    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("$namespace.$property");
+    if (ns == null || ns.isNull || ns.isUndefined)
+      throw UnsupportedWebApiError("$namespace.$property");
     final value = (ns as JSObject).getProperty(property.toJS);
     return _convert(value, "wrap");
   }
+
   @override
   void setNamespaceProperty(String namespace, String property, Object? value) {
     final ns = globalContext.getProperty(namespace.toJS);
-    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("$namespace.$property");
+    if (ns == null || ns.isNull || ns.isUndefined)
+      throw UnsupportedWebApiError("$namespace.$property");
     (ns as JSObject).setProperty(property.toJS, _toJs(value));
   }
 }
 
 /// Installs the browser [WebRuntime]. Safe to call repeatedly.
-void installBrowserWebRuntime() =>
-    WebRuntime.install(BrowserWebRuntime());
+void installBrowserWebRuntime() => WebRuntime.install(BrowserWebRuntime());
 
 /// Registers browser host-value codecs for elements and React
 /// synthetic events. Safe to call repeatedly.
 void registerBrowserAdapters() {
   ReactCodecRegistry.registerHostValue(
-    'web', 'Document',
+    'web',
+    'Document',
     decoder: (value) => BrowserDocument(value as JSObject),
     encoder: (value) => (value as BrowserDocument)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'Element',
+    'web',
+    'Element',
     decoder: (value) => BrowserElement(value as JSObject),
     encoder: (value) => (value as BrowserElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'EventTarget',
+    'web',
+    'EventTarget',
     decoder: (value) => BrowserEventTarget(value as JSObject),
     encoder: (value) => (value as BrowserEventTarget)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLAllCollection',
+    'web',
+    'HTMLAllCollection',
     decoder: (value) => BrowserHTMLAllCollection(value as JSObject),
     encoder: (value) => (value as BrowserHTMLAllCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLAnchorElement',
+    'web',
+    'HTMLAnchorElement',
     decoder: (value) => BrowserHTMLAnchorElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLAnchorElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLAreaElement',
+    'web',
+    'HTMLAreaElement',
     decoder: (value) => BrowserHTMLAreaElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLAreaElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLAudioElement',
+    'web',
+    'HTMLAudioElement',
     decoder: (value) => BrowserHTMLAudioElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLAudioElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLBRElement',
+    'web',
+    'HTMLBRElement',
     decoder: (value) => BrowserHTMLBRElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLBRElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLBaseElement',
+    'web',
+    'HTMLBaseElement',
     decoder: (value) => BrowserHTMLBaseElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLBaseElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLBodyElement',
+    'web',
+    'HTMLBodyElement',
     decoder: (value) => BrowserHTMLBodyElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLBodyElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLButtonElement',
+    'web',
+    'HTMLButtonElement',
     decoder: (value) => BrowserHTMLButtonElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLButtonElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLCanvasElement',
+    'web',
+    'HTMLCanvasElement',
     decoder: (value) => BrowserHTMLCanvasElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLCanvasElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLCollection',
+    'web',
+    'HTMLCollection',
     decoder: (value) => BrowserHTMLCollection(value as JSObject),
     encoder: (value) => (value as BrowserHTMLCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLDListElement',
+    'web',
+    'HTMLDListElement',
     decoder: (value) => BrowserHTMLDListElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLDListElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLDataElement',
+    'web',
+    'HTMLDataElement',
     decoder: (value) => BrowserHTMLDataElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLDataElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLDataListElement',
+    'web',
+    'HTMLDataListElement',
     decoder: (value) => BrowserHTMLDataListElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLDataListElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLDataListElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLDetailsElement',
+    'web',
+    'HTMLDetailsElement',
     decoder: (value) => BrowserHTMLDetailsElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLDetailsElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLDialogElement',
+    'web',
+    'HTMLDialogElement',
     decoder: (value) => BrowserHTMLDialogElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLDialogElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLDirectoryElement',
+    'web',
+    'HTMLDirectoryElement',
     decoder: (value) => BrowserHTMLDirectoryElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLDirectoryElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLDirectoryElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLDivElement',
+    'web',
+    'HTMLDivElement',
     decoder: (value) => BrowserHTMLDivElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLDivElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLElement',
+    'web',
+    'HTMLElement',
     decoder: (value) => BrowserHTMLElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLEmbedElement',
+    'web',
+    'HTMLEmbedElement',
     decoder: (value) => BrowserHTMLEmbedElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLEmbedElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLFieldSetElement',
+    'web',
+    'HTMLFieldSetElement',
     decoder: (value) => BrowserHTMLFieldSetElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLFieldSetElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLFieldSetElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLFontElement',
+    'web',
+    'HTMLFontElement',
     decoder: (value) => BrowserHTMLFontElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLFontElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLFormControlsCollection',
+    'web',
+    'HTMLFormControlsCollection',
     decoder: (value) => BrowserHTMLFormControlsCollection(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLFormControlsCollection)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLFormControlsCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLFormElement',
+    'web',
+    'HTMLFormElement',
     decoder: (value) => BrowserHTMLFormElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLFormElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLFrameElement',
+    'web',
+    'HTMLFrameElement',
     decoder: (value) => BrowserHTMLFrameElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLFrameElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLFrameSetElement',
+    'web',
+    'HTMLFrameSetElement',
     decoder: (value) => BrowserHTMLFrameSetElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLFrameSetElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLFrameSetElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLHRElement',
+    'web',
+    'HTMLHRElement',
     decoder: (value) => BrowserHTMLHRElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLHRElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLHeadElement',
+    'web',
+    'HTMLHeadElement',
     decoder: (value) => BrowserHTMLHeadElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLHeadElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLHeadingElement',
+    'web',
+    'HTMLHeadingElement',
     decoder: (value) => BrowserHTMLHeadingElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLHeadingElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLHtmlElement',
+    'web',
+    'HTMLHtmlElement',
     decoder: (value) => BrowserHTMLHtmlElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLHtmlElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLIFrameElement',
+    'web',
+    'HTMLIFrameElement',
     decoder: (value) => BrowserHTMLIFrameElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLIFrameElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLImageElement',
+    'web',
+    'HTMLImageElement',
     decoder: (value) => BrowserHTMLImageElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLImageElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLInputElement',
+    'web',
+    'HTMLInputElement',
     decoder: (value) => BrowserHTMLInputElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLInputElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLLIElement',
+    'web',
+    'HTMLLIElement',
     decoder: (value) => BrowserHTMLLIElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLLIElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLLabelElement',
+    'web',
+    'HTMLLabelElement',
     decoder: (value) => BrowserHTMLLabelElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLLabelElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLLegendElement',
+    'web',
+    'HTMLLegendElement',
     decoder: (value) => BrowserHTMLLegendElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLLegendElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLLinkElement',
+    'web',
+    'HTMLLinkElement',
     decoder: (value) => BrowserHTMLLinkElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLLinkElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLMapElement',
+    'web',
+    'HTMLMapElement',
     decoder: (value) => BrowserHTMLMapElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLMapElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLMarqueeElement',
+    'web',
+    'HTMLMarqueeElement',
     decoder: (value) => BrowserHTMLMarqueeElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLMarqueeElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLMediaElement',
+    'web',
+    'HTMLMediaElement',
     decoder: (value) => BrowserHTMLMediaElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLMediaElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLMenuElement',
+    'web',
+    'HTMLMenuElement',
     decoder: (value) => BrowserHTMLMenuElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLMenuElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLMetaElement',
+    'web',
+    'HTMLMetaElement',
     decoder: (value) => BrowserHTMLMetaElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLMetaElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLMeterElement',
+    'web',
+    'HTMLMeterElement',
     decoder: (value) => BrowserHTMLMeterElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLMeterElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLModElement',
+    'web',
+    'HTMLModElement',
     decoder: (value) => BrowserHTMLModElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLModElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLOListElement',
+    'web',
+    'HTMLOListElement',
     decoder: (value) => BrowserHTMLOListElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLOListElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLObjectElement',
+    'web',
+    'HTMLObjectElement',
     decoder: (value) => BrowserHTMLObjectElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLObjectElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLOptGroupElement',
+    'web',
+    'HTMLOptGroupElement',
     decoder: (value) => BrowserHTMLOptGroupElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLOptGroupElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLOptGroupElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLOptionElement',
+    'web',
+    'HTMLOptionElement',
     decoder: (value) => BrowserHTMLOptionElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLOptionElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLOptionsCollection',
+    'web',
+    'HTMLOptionsCollection',
     decoder: (value) => BrowserHTMLOptionsCollection(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLOptionsCollection)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLOptionsCollection)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLOutputElement',
+    'web',
+    'HTMLOutputElement',
     decoder: (value) => BrowserHTMLOutputElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLOutputElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLParagraphElement',
+    'web',
+    'HTMLParagraphElement',
     decoder: (value) => BrowserHTMLParagraphElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLParagraphElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLParagraphElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLParamElement',
+    'web',
+    'HTMLParamElement',
     decoder: (value) => BrowserHTMLParamElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLParamElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLPictureElement',
+    'web',
+    'HTMLPictureElement',
     decoder: (value) => BrowserHTMLPictureElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLPictureElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLPreElement',
+    'web',
+    'HTMLPreElement',
     decoder: (value) => BrowserHTMLPreElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLPreElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLProgressElement',
+    'web',
+    'HTMLProgressElement',
     decoder: (value) => BrowserHTMLProgressElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLProgressElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLProgressElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLQuoteElement',
+    'web',
+    'HTMLQuoteElement',
     decoder: (value) => BrowserHTMLQuoteElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLQuoteElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLScriptElement',
+    'web',
+    'HTMLScriptElement',
     decoder: (value) => BrowserHTMLScriptElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLScriptElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLSelectElement',
+    'web',
+    'HTMLSelectElement',
     decoder: (value) => BrowserHTMLSelectElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLSelectElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLSlotElement',
+    'web',
+    'HTMLSlotElement',
     decoder: (value) => BrowserHTMLSlotElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLSlotElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLSourceElement',
+    'web',
+    'HTMLSourceElement',
     decoder: (value) => BrowserHTMLSourceElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLSourceElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLSpanElement',
+    'web',
+    'HTMLSpanElement',
     decoder: (value) => BrowserHTMLSpanElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLSpanElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLStyleElement',
+    'web',
+    'HTMLStyleElement',
     decoder: (value) => BrowserHTMLStyleElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLStyleElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTableCaptionElement',
+    'web',
+    'HTMLTableCaptionElement',
     decoder: (value) => BrowserHTMLTableCaptionElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLTableCaptionElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLTableCaptionElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTableCellElement',
+    'web',
+    'HTMLTableCellElement',
     decoder: (value) => BrowserHTMLTableCellElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLTableCellElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLTableCellElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTableColElement',
+    'web',
+    'HTMLTableColElement',
     decoder: (value) => BrowserHTMLTableColElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLTableColElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLTableColElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTableElement',
+    'web',
+    'HTMLTableElement',
     decoder: (value) => BrowserHTMLTableElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLTableElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTableRowElement',
+    'web',
+    'HTMLTableRowElement',
     decoder: (value) => BrowserHTMLTableRowElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLTableRowElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLTableRowElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTableSectionElement',
+    'web',
+    'HTMLTableSectionElement',
     decoder: (value) => BrowserHTMLTableSectionElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLTableSectionElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLTableSectionElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTemplateElement',
+    'web',
+    'HTMLTemplateElement',
     decoder: (value) => BrowserHTMLTemplateElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLTemplateElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLTemplateElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTextAreaElement',
+    'web',
+    'HTMLTextAreaElement',
     decoder: (value) => BrowserHTMLTextAreaElement(value as JSObject),
-    encoder: (value) => (value as BrowserHTMLTextAreaElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserHTMLTextAreaElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTimeElement',
+    'web',
+    'HTMLTimeElement',
     decoder: (value) => BrowserHTMLTimeElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLTimeElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTitleElement',
+    'web',
+    'HTMLTitleElement',
     decoder: (value) => BrowserHTMLTitleElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLTitleElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLTrackElement',
+    'web',
+    'HTMLTrackElement',
     decoder: (value) => BrowserHTMLTrackElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLTrackElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLUListElement',
+    'web',
+    'HTMLUListElement',
     decoder: (value) => BrowserHTMLUListElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLUListElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLUnknownElement',
+    'web',
+    'HTMLUnknownElement',
     decoder: (value) => BrowserHTMLUnknownElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLUnknownElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'HTMLVideoElement',
+    'web',
+    'HTMLVideoElement',
     decoder: (value) => BrowserHTMLVideoElement(value as JSObject),
     encoder: (value) => (value as BrowserHTMLVideoElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'MathMLElement',
+    'web',
+    'MathMLElement',
     decoder: (value) => BrowserMathMLElement(value as JSObject),
     encoder: (value) => (value as BrowserMathMLElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'Navigator',
+    'web',
+    'Navigator',
     decoder: (value) => BrowserNavigator(value as JSObject),
     encoder: (value) => (value as BrowserNavigator)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'Node',
+    'web',
+    'Node',
     decoder: (value) => BrowserNode(value as JSObject),
     encoder: (value) => (value as BrowserNode)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAElement',
+    'web',
+    'SVGAElement',
     decoder: (value) => BrowserSVGAElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGAElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAngle',
+    'web',
+    'SVGAngle',
     decoder: (value) => BrowserSVGAngle(value as JSObject),
     encoder: (value) => (value as BrowserSVGAngle)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimateElement',
+    'web',
+    'SVGAnimateElement',
     decoder: (value) => BrowserSVGAnimateElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGAnimateElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimateMotionElement',
+    'web',
+    'SVGAnimateMotionElement',
     decoder: (value) => BrowserSVGAnimateMotionElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGAnimateMotionElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGAnimateMotionElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimateTransformElement',
+    'web',
+    'SVGAnimateTransformElement',
     decoder: (value) => BrowserSVGAnimateTransformElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGAnimateTransformElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGAnimateTransformElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedAngle',
+    'web',
+    'SVGAnimatedAngle',
     decoder: (value) => BrowserSVGAnimatedAngle(value as JSObject),
     encoder: (value) => (value as BrowserSVGAnimatedAngle)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedBoolean',
+    'web',
+    'SVGAnimatedBoolean',
     decoder: (value) => BrowserSVGAnimatedBoolean(value as JSObject),
     encoder: (value) => (value as BrowserSVGAnimatedBoolean)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedEnumeration',
+    'web',
+    'SVGAnimatedEnumeration',
     decoder: (value) => BrowserSVGAnimatedEnumeration(value as JSObject),
-    encoder: (value) => (value as BrowserSVGAnimatedEnumeration)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGAnimatedEnumeration)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedInteger',
+    'web',
+    'SVGAnimatedInteger',
     decoder: (value) => BrowserSVGAnimatedInteger(value as JSObject),
     encoder: (value) => (value as BrowserSVGAnimatedInteger)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedLength',
+    'web',
+    'SVGAnimatedLength',
     decoder: (value) => BrowserSVGAnimatedLength(value as JSObject),
     encoder: (value) => (value as BrowserSVGAnimatedLength)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedLengthList',
+    'web',
+    'SVGAnimatedLengthList',
     decoder: (value) => BrowserSVGAnimatedLengthList(value as JSObject),
-    encoder: (value) => (value as BrowserSVGAnimatedLengthList)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGAnimatedLengthList)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedNumber',
+    'web',
+    'SVGAnimatedNumber',
     decoder: (value) => BrowserSVGAnimatedNumber(value as JSObject),
     encoder: (value) => (value as BrowserSVGAnimatedNumber)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedNumberList',
+    'web',
+    'SVGAnimatedNumberList',
     decoder: (value) => BrowserSVGAnimatedNumberList(value as JSObject),
-    encoder: (value) => (value as BrowserSVGAnimatedNumberList)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGAnimatedNumberList)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedPreserveAspectRatio',
-    decoder: (value) => BrowserSVGAnimatedPreserveAspectRatio(value as JSObject),
-    encoder: (value) => (value as BrowserSVGAnimatedPreserveAspectRatio)._element as JSAny?,
+    'web',
+    'SVGAnimatedPreserveAspectRatio',
+    decoder: (value) =>
+        BrowserSVGAnimatedPreserveAspectRatio(value as JSObject),
+    encoder: (value) =>
+        (value as BrowserSVGAnimatedPreserveAspectRatio)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedRect',
+    'web',
+    'SVGAnimatedRect',
     decoder: (value) => BrowserSVGAnimatedRect(value as JSObject),
     encoder: (value) => (value as BrowserSVGAnimatedRect)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedString',
+    'web',
+    'SVGAnimatedString',
     decoder: (value) => BrowserSVGAnimatedString(value as JSObject),
     encoder: (value) => (value as BrowserSVGAnimatedString)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimatedTransformList',
+    'web',
+    'SVGAnimatedTransformList',
     decoder: (value) => BrowserSVGAnimatedTransformList(value as JSObject),
-    encoder: (value) => (value as BrowserSVGAnimatedTransformList)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGAnimatedTransformList)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGAnimationElement',
+    'web',
+    'SVGAnimationElement',
     decoder: (value) => BrowserSVGAnimationElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGAnimationElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGAnimationElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGCircleElement',
+    'web',
+    'SVGCircleElement',
     decoder: (value) => BrowserSVGCircleElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGCircleElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGClipPathElement',
+    'web',
+    'SVGClipPathElement',
     decoder: (value) => BrowserSVGClipPathElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGClipPathElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGComponentTransferFunctionElement',
-    decoder: (value) => BrowserSVGComponentTransferFunctionElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGComponentTransferFunctionElement)._element as JSAny?,
+    'web',
+    'SVGComponentTransferFunctionElement',
+    decoder: (value) =>
+        BrowserSVGComponentTransferFunctionElement(value as JSObject),
+    encoder: (value) =>
+        (value as BrowserSVGComponentTransferFunctionElement)._element
+            as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGDefsElement',
+    'web',
+    'SVGDefsElement',
     decoder: (value) => BrowserSVGDefsElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGDefsElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGDescElement',
+    'web',
+    'SVGDescElement',
     decoder: (value) => BrowserSVGDescElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGDescElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGElement',
+    'web',
+    'SVGElement',
     decoder: (value) => BrowserSVGElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGEllipseElement',
+    'web',
+    'SVGEllipseElement',
     decoder: (value) => BrowserSVGEllipseElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGEllipseElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEBlendElement',
+    'web',
+    'SVGFEBlendElement',
     decoder: (value) => BrowserSVGFEBlendElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGFEBlendElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEColorMatrixElement',
+    'web',
+    'SVGFEColorMatrixElement',
     decoder: (value) => BrowserSVGFEColorMatrixElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFEColorMatrixElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFEColorMatrixElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEComponentTransferElement',
+    'web',
+    'SVGFEComponentTransferElement',
     decoder: (value) => BrowserSVGFEComponentTransferElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFEComponentTransferElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFEComponentTransferElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFECompositeElement',
+    'web',
+    'SVGFECompositeElement',
     decoder: (value) => BrowserSVGFECompositeElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFECompositeElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFECompositeElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEConvolveMatrixElement',
+    'web',
+    'SVGFEConvolveMatrixElement',
     decoder: (value) => BrowserSVGFEConvolveMatrixElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFEConvolveMatrixElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFEConvolveMatrixElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEDiffuseLightingElement',
+    'web',
+    'SVGFEDiffuseLightingElement',
     decoder: (value) => BrowserSVGFEDiffuseLightingElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFEDiffuseLightingElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFEDiffuseLightingElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEDisplacementMapElement',
+    'web',
+    'SVGFEDisplacementMapElement',
     decoder: (value) => BrowserSVGFEDisplacementMapElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFEDisplacementMapElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFEDisplacementMapElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEDistantLightElement',
+    'web',
+    'SVGFEDistantLightElement',
     decoder: (value) => BrowserSVGFEDistantLightElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFEDistantLightElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFEDistantLightElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEDropShadowElement',
+    'web',
+    'SVGFEDropShadowElement',
     decoder: (value) => BrowserSVGFEDropShadowElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFEDropShadowElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFEDropShadowElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEFloodElement',
+    'web',
+    'SVGFEFloodElement',
     decoder: (value) => BrowserSVGFEFloodElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGFEFloodElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEFuncAElement',
+    'web',
+    'SVGFEFuncAElement',
     decoder: (value) => BrowserSVGFEFuncAElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGFEFuncAElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEFuncBElement',
+    'web',
+    'SVGFEFuncBElement',
     decoder: (value) => BrowserSVGFEFuncBElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGFEFuncBElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEFuncGElement',
+    'web',
+    'SVGFEFuncGElement',
     decoder: (value) => BrowserSVGFEFuncGElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGFEFuncGElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEFuncRElement',
+    'web',
+    'SVGFEFuncRElement',
     decoder: (value) => BrowserSVGFEFuncRElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGFEFuncRElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEGaussianBlurElement',
+    'web',
+    'SVGFEGaussianBlurElement',
     decoder: (value) => BrowserSVGFEGaussianBlurElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFEGaussianBlurElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFEGaussianBlurElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEImageElement',
+    'web',
+    'SVGFEImageElement',
     decoder: (value) => BrowserSVGFEImageElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGFEImageElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEMergeElement',
+    'web',
+    'SVGFEMergeElement',
     decoder: (value) => BrowserSVGFEMergeElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGFEMergeElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEMergeNodeElement',
+    'web',
+    'SVGFEMergeNodeElement',
     decoder: (value) => BrowserSVGFEMergeNodeElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFEMergeNodeElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFEMergeNodeElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEMorphologyElement',
+    'web',
+    'SVGFEMorphologyElement',
     decoder: (value) => BrowserSVGFEMorphologyElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFEMorphologyElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFEMorphologyElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEOffsetElement',
+    'web',
+    'SVGFEOffsetElement',
     decoder: (value) => BrowserSVGFEOffsetElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGFEOffsetElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFEPointLightElement',
+    'web',
+    'SVGFEPointLightElement',
     decoder: (value) => BrowserSVGFEPointLightElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFEPointLightElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFEPointLightElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFESpecularLightingElement',
+    'web',
+    'SVGFESpecularLightingElement',
     decoder: (value) => BrowserSVGFESpecularLightingElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFESpecularLightingElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFESpecularLightingElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFESpotLightElement',
+    'web',
+    'SVGFESpotLightElement',
     decoder: (value) => BrowserSVGFESpotLightElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFESpotLightElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFESpotLightElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFETileElement',
+    'web',
+    'SVGFETileElement',
     decoder: (value) => BrowserSVGFETileElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGFETileElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFETurbulenceElement',
+    'web',
+    'SVGFETurbulenceElement',
     decoder: (value) => BrowserSVGFETurbulenceElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGFETurbulenceElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGFETurbulenceElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGFilterElement',
+    'web',
+    'SVGFilterElement',
     decoder: (value) => BrowserSVGFilterElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGFilterElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGForeignObjectElement',
+    'web',
+    'SVGForeignObjectElement',
     decoder: (value) => BrowserSVGForeignObjectElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGForeignObjectElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGForeignObjectElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGGElement',
+    'web',
+    'SVGGElement',
     decoder: (value) => BrowserSVGGElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGGElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGGeometryElement',
+    'web',
+    'SVGGeometryElement',
     decoder: (value) => BrowserSVGGeometryElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGGeometryElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGGradientElement',
+    'web',
+    'SVGGradientElement',
     decoder: (value) => BrowserSVGGradientElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGGradientElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGGraphicsElement',
+    'web',
+    'SVGGraphicsElement',
     decoder: (value) => BrowserSVGGraphicsElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGGraphicsElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGImageElement',
+    'web',
+    'SVGImageElement',
     decoder: (value) => BrowserSVGImageElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGImageElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGLength',
+    'web',
+    'SVGLength',
     decoder: (value) => BrowserSVGLength(value as JSObject),
     encoder: (value) => (value as BrowserSVGLength)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGLengthList',
+    'web',
+    'SVGLengthList',
     decoder: (value) => BrowserSVGLengthList(value as JSObject),
     encoder: (value) => (value as BrowserSVGLengthList)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGLineElement',
+    'web',
+    'SVGLineElement',
     decoder: (value) => BrowserSVGLineElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGLineElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGLinearGradientElement',
+    'web',
+    'SVGLinearGradientElement',
     decoder: (value) => BrowserSVGLinearGradientElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGLinearGradientElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGLinearGradientElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGMPathElement',
+    'web',
+    'SVGMPathElement',
     decoder: (value) => BrowserSVGMPathElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGMPathElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGMarkerElement',
+    'web',
+    'SVGMarkerElement',
     decoder: (value) => BrowserSVGMarkerElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGMarkerElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGMaskElement',
+    'web',
+    'SVGMaskElement',
     decoder: (value) => BrowserSVGMaskElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGMaskElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGMetadataElement',
+    'web',
+    'SVGMetadataElement',
     decoder: (value) => BrowserSVGMetadataElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGMetadataElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGNumber',
+    'web',
+    'SVGNumber',
     decoder: (value) => BrowserSVGNumber(value as JSObject),
     encoder: (value) => (value as BrowserSVGNumber)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGNumberList',
+    'web',
+    'SVGNumberList',
     decoder: (value) => BrowserSVGNumberList(value as JSObject),
     encoder: (value) => (value as BrowserSVGNumberList)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGPathElement',
+    'web',
+    'SVGPathElement',
     decoder: (value) => BrowserSVGPathElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGPathElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGPatternElement',
+    'web',
+    'SVGPatternElement',
     decoder: (value) => BrowserSVGPatternElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGPatternElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGPointList',
+    'web',
+    'SVGPointList',
     decoder: (value) => BrowserSVGPointList(value as JSObject),
     encoder: (value) => (value as BrowserSVGPointList)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGPolygonElement',
+    'web',
+    'SVGPolygonElement',
     decoder: (value) => BrowserSVGPolygonElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGPolygonElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGPolylineElement',
+    'web',
+    'SVGPolylineElement',
     decoder: (value) => BrowserSVGPolylineElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGPolylineElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGPreserveAspectRatio',
+    'web',
+    'SVGPreserveAspectRatio',
     decoder: (value) => BrowserSVGPreserveAspectRatio(value as JSObject),
-    encoder: (value) => (value as BrowserSVGPreserveAspectRatio)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGPreserveAspectRatio)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGRadialGradientElement',
+    'web',
+    'SVGRadialGradientElement',
     decoder: (value) => BrowserSVGRadialGradientElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGRadialGradientElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGRadialGradientElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGRectElement',
+    'web',
+    'SVGRectElement',
     decoder: (value) => BrowserSVGRectElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGRectElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGSVGElement',
+    'web',
+    'SVGSVGElement',
     decoder: (value) => BrowserSVGSVGElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGSVGElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGScriptElement',
+    'web',
+    'SVGScriptElement',
     decoder: (value) => BrowserSVGScriptElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGScriptElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGSetElement',
+    'web',
+    'SVGSetElement',
     decoder: (value) => BrowserSVGSetElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGSetElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGStopElement',
+    'web',
+    'SVGStopElement',
     decoder: (value) => BrowserSVGStopElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGStopElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGStringList',
+    'web',
+    'SVGStringList',
     decoder: (value) => BrowserSVGStringList(value as JSObject),
     encoder: (value) => (value as BrowserSVGStringList)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGStyleElement',
+    'web',
+    'SVGStyleElement',
     decoder: (value) => BrowserSVGStyleElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGStyleElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGSwitchElement',
+    'web',
+    'SVGSwitchElement',
     decoder: (value) => BrowserSVGSwitchElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGSwitchElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGSymbolElement',
+    'web',
+    'SVGSymbolElement',
     decoder: (value) => BrowserSVGSymbolElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGSymbolElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGTSpanElement',
+    'web',
+    'SVGTSpanElement',
     decoder: (value) => BrowserSVGTSpanElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGTSpanElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGTextContentElement',
+    'web',
+    'SVGTextContentElement',
     decoder: (value) => BrowserSVGTextContentElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGTextContentElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGTextContentElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGTextElement',
+    'web',
+    'SVGTextElement',
     decoder: (value) => BrowserSVGTextElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGTextElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGTextPathElement',
+    'web',
+    'SVGTextPathElement',
     decoder: (value) => BrowserSVGTextPathElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGTextPathElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGTextPositioningElement',
+    'web',
+    'SVGTextPositioningElement',
     decoder: (value) => BrowserSVGTextPositioningElement(value as JSObject),
-    encoder: (value) => (value as BrowserSVGTextPositioningElement)._element as JSAny?,
+    encoder: (value) =>
+        (value as BrowserSVGTextPositioningElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGTitleElement',
+    'web',
+    'SVGTitleElement',
     decoder: (value) => BrowserSVGTitleElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGTitleElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGTransform',
+    'web',
+    'SVGTransform',
     decoder: (value) => BrowserSVGTransform(value as JSObject),
     encoder: (value) => (value as BrowserSVGTransform)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGTransformList',
+    'web',
+    'SVGTransformList',
     decoder: (value) => BrowserSVGTransformList(value as JSObject),
     encoder: (value) => (value as BrowserSVGTransformList)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGUnitTypes',
+    'web',
+    'SVGUnitTypes',
     decoder: (value) => BrowserSVGUnitTypes(value as JSObject),
     encoder: (value) => (value as BrowserSVGUnitTypes)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGUseElement',
+    'web',
+    'SVGUseElement',
     decoder: (value) => BrowserSVGUseElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGUseElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'SVGViewElement',
+    'web',
+    'SVGViewElement',
     decoder: (value) => BrowserSVGViewElement(value as JSObject),
     encoder: (value) => (value as BrowserSVGViewElement)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'Window',
+    'web',
+    'Window',
     decoder: (value) => BrowserWindow(value as JSObject),
     encoder: (value) => (value as BrowserWindow)._element as JSAny?,
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactSyntheticEvent',
+    'web',
+    'ReactSyntheticEvent',
     decoder: (value) => BrowserReactSyntheticEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactCompositionEvent',
+    'web',
+    'ReactCompositionEvent',
     decoder: (value) => BrowserReactCompositionEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactTouchEvent',
+    'web',
+    'ReactTouchEvent',
     decoder: (value) => BrowserReactTouchEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactPointerEvent',
+    'web',
+    'ReactPointerEvent',
     decoder: (value) => BrowserReactPointerEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactWheelEvent',
+    'web',
+    'ReactWheelEvent',
     decoder: (value) => BrowserReactWheelEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactDragEvent',
+    'web',
+    'ReactDragEvent',
     decoder: (value) => BrowserReactDragEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactFocusEvent',
+    'web',
+    'ReactFocusEvent',
     decoder: (value) => BrowserReactFocusEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactKeyboardEvent',
+    'web',
+    'ReactKeyboardEvent',
     decoder: (value) => BrowserReactKeyboardEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactFormEvent',
+    'web',
+    'ReactFormEvent',
     decoder: (value) => BrowserReactFormEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactChangeEvent',
+    'web',
+    'ReactChangeEvent',
     decoder: (value) => BrowserReactChangeEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactInputEvent',
+    'web',
+    'ReactInputEvent',
     decoder: (value) => BrowserReactInputEvent(value as JSObject),
   );
   ReactCodecRegistry.registerHostValue(
-    'web', 'ReactMouseEvent',
+    'web',
+    'ReactMouseEvent',
     decoder: (value) => BrowserReactMouseEvent(value as JSObject),
   );
 }
-

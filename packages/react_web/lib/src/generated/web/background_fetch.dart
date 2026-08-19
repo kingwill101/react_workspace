@@ -18,9 +18,7 @@ final class BackgroundFetchEventInitValue implements BackgroundFetchEventInit {
   @override
   Object registration;
 
-  BackgroundFetchEventInitValue({
-    required this.registration,
-  });
+  BackgroundFetchEventInitValue({required this.registration});
 }
 
 typedef BackgroundFetchFailureReason = String;
@@ -34,9 +32,7 @@ final class BackgroundFetchOptionsValue implements BackgroundFetchOptions {
   @override
   int? downloadTotal;
 
-  BackgroundFetchOptionsValue({
-    this.downloadTotal,
-  });
+  BackgroundFetchOptionsValue({this.downloadTotal});
 }
 
 typedef BackgroundFetchResult = String;
@@ -54,37 +50,34 @@ final class BackgroundFetchUIOptionsValue implements BackgroundFetchUIOptions {
   @override
   String? title;
 
-  BackgroundFetchUIOptionsValue({
-    this.icons,
-    this.title,
-  });
+  BackgroundFetchUIOptionsValue({this.icons, this.title});
 }
 
 abstract interface class ServiceWorkerGlobalScope {
   EventHandler get onsync;
-   set onsync(EventHandler value);
+  set onsync(EventHandler value);
   EventHandler get onnotificationclick;
-   set onnotificationclick(EventHandler value);
+  set onnotificationclick(EventHandler value);
   EventHandler get onnotificationclose;
-   set onnotificationclose(EventHandler value);
+  set onnotificationclose(EventHandler value);
   EventHandler get onpush;
-   set onpush(EventHandler value);
+  set onpush(EventHandler value);
   EventHandler get onpushsubscriptionchange;
-   set onpushsubscriptionchange(EventHandler value);
+  set onpushsubscriptionchange(EventHandler value);
   Clients get clients;
   ServiceWorkerRegistration get registration;
   ServiceWorker get serviceWorker;
   Future<void> skipWaiting();
   EventHandler get oninstall;
-   set oninstall(EventHandler value);
+  set oninstall(EventHandler value);
   EventHandler get onactivate;
-   set onactivate(EventHandler value);
+  set onactivate(EventHandler value);
   EventHandler get onfetch;
-   set onfetch(EventHandler value);
+  set onfetch(EventHandler value);
   EventHandler get onmessage;
-   set onmessage(EventHandler value);
+  set onmessage(EventHandler value);
   EventHandler get onmessageerror;
-   set onmessageerror(EventHandler value);
+  set onmessageerror(EventHandler value);
 }
 
 abstract interface class ServiceWorkerRegistration {
@@ -101,6 +94,5 @@ abstract interface class ServiceWorkerRegistration {
   Future<void> update();
   Future<bool> unregister();
   EventHandler get onupdatefound;
-   set onupdatefound(EventHandler value);
+  set onupdatefound(EventHandler value);
 }
-

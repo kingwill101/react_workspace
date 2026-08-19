@@ -24,10 +24,7 @@ final class GPUBindGroupDescriptorValue implements GPUBindGroupDescriptor {
   @override
   List<GPUBindGroupEntry> entries;
 
-  GPUBindGroupDescriptorValue({
-    required this.layout,
-    required this.entries,
-  });
+  GPUBindGroupDescriptorValue({required this.layout, required this.entries});
 }
 
 abstract interface class GPUBindGroupEntry {
@@ -43,10 +40,7 @@ final class GPUBindGroupEntryValue implements GPUBindGroupEntry {
   @override
   GPUBindingResource resource;
 
-  GPUBindGroupEntryValue({
-    required this.binding,
-    required this.resource,
-  });
+  GPUBindGroupEntryValue({required this.binding, required this.resource});
 }
 
 abstract interface class GPUBindGroupLayoutDescriptor {
@@ -54,13 +48,12 @@ abstract interface class GPUBindGroupLayoutDescriptor {
   set entries(List<GPUBindGroupLayoutEntry> value);
 }
 
-final class GPUBindGroupLayoutDescriptorValue implements GPUBindGroupLayoutDescriptor {
+final class GPUBindGroupLayoutDescriptorValue
+    implements GPUBindGroupLayoutDescriptor {
   @override
   List<GPUBindGroupLayoutEntry> entries;
 
-  GPUBindGroupLayoutDescriptorValue({
-    required this.entries,
-  });
+  GPUBindGroupLayoutDescriptorValue({required this.entries});
 }
 
 abstract interface class GPUBindGroupLayoutEntry {
@@ -108,7 +101,13 @@ final class GPUBindGroupLayoutEntryValue implements GPUBindGroupLayoutEntry {
 }
 
 abstract interface class GPUBindingCommandsMixin {
-  void setBindGroup(GPUIndex32 index, Object bindGroup, Object dynamicOffsetsData, GPUSize64 dynamicOffsetsDataStart, GPUSize32 dynamicOffsetsDataLength);
+  void setBindGroup(
+    GPUIndex32 index,
+    Object bindGroup,
+    Object dynamicOffsetsData,
+    GPUSize64 dynamicOffsetsDataStart,
+    GPUSize32 dynamicOffsetsDataLength,
+  );
 }
 
 typedef GPUBindingResource = Object;
@@ -130,11 +129,7 @@ final class GPUBlendComponentValue implements GPUBlendComponent {
   @override
   GPUBlendFactor? dstFactor;
 
-  GPUBlendComponentValue({
-    this.operation,
-    this.srcFactor,
-    this.dstFactor,
-  });
+  GPUBlendComponentValue({this.operation, this.srcFactor, this.dstFactor});
 }
 
 typedef GPUBlendFactor = String;
@@ -154,10 +149,7 @@ final class GPUBlendStateValue implements GPUBlendState {
   @override
   GPUBlendComponent alpha;
 
-  GPUBlendStateValue({
-    required this.color,
-    required this.alpha,
-  });
+  GPUBlendStateValue({required this.color, required this.alpha});
 }
 
 abstract interface class GPUBufferBinding {
@@ -177,11 +169,7 @@ final class GPUBufferBindingValue implements GPUBufferBinding {
   @override
   GPUSize64? size;
 
-  GPUBufferBindingValue({
-    required this.buffer,
-    this.offset,
-    this.size,
-  });
+  GPUBufferBindingValue({required this.buffer, this.offset, this.size});
 }
 
 abstract interface class GPUBufferBindingLayout {
@@ -329,33 +317,26 @@ final class GPUColorTargetStateValue implements GPUColorTargetState {
   @override
   GPUColorWriteFlags? writeMask;
 
-  GPUColorTargetStateValue({
-    required this.format,
-    this.blend,
-    this.writeMask,
-  });
+  GPUColorTargetStateValue({required this.format, this.blend, this.writeMask});
 }
 
 typedef GPUColorWriteFlags = int;
 
-abstract interface class GPUCommandBufferDescriptor {
-}
+abstract interface class GPUCommandBufferDescriptor {}
 
-final class GPUCommandBufferDescriptorValue implements GPUCommandBufferDescriptor {
-
+final class GPUCommandBufferDescriptorValue
+    implements GPUCommandBufferDescriptor {
   GPUCommandBufferDescriptorValue();
 }
 
-abstract interface class GPUCommandEncoderDescriptor {
-}
+abstract interface class GPUCommandEncoderDescriptor {}
 
-final class GPUCommandEncoderDescriptorValue implements GPUCommandEncoderDescriptor {
-
+final class GPUCommandEncoderDescriptorValue
+    implements GPUCommandEncoderDescriptor {
   GPUCommandEncoderDescriptorValue();
 }
 
-abstract interface class GPUCommandsMixin {
-}
+abstract interface class GPUCommandsMixin {}
 
 typedef GPUCompareFunction = String;
 
@@ -370,9 +351,7 @@ final class GPUComputePassDescriptorValue implements GPUComputePassDescriptor {
   @override
   GPUComputePassTimestampWrites? timestampWrites;
 
-  GPUComputePassDescriptorValue({
-    this.timestampWrites,
-  });
+  GPUComputePassDescriptorValue({this.timestampWrites});
 }
 
 abstract interface class GPUComputePassTimestampWrites {
@@ -384,7 +363,8 @@ abstract interface class GPUComputePassTimestampWrites {
   set endOfPassWriteIndex(GPUSize32? value);
 }
 
-final class GPUComputePassTimestampWritesValue implements GPUComputePassTimestampWrites {
+final class GPUComputePassTimestampWritesValue
+    implements GPUComputePassTimestampWrites {
   @override
   Object querySet;
   @override
@@ -404,13 +384,12 @@ abstract interface class GPUComputePipelineDescriptor {
   set compute(GPUProgrammableStage value);
 }
 
-final class GPUComputePipelineDescriptorValue implements GPUComputePipelineDescriptor {
+final class GPUComputePipelineDescriptorValue
+    implements GPUComputePipelineDescriptor {
   @override
   GPUProgrammableStage compute;
 
-  GPUComputePipelineDescriptorValue({
-    required this.compute,
-  });
+  GPUComputePipelineDescriptorValue({required this.compute});
 }
 
 typedef GPUCullMode = String;
@@ -536,11 +515,10 @@ final class GPUExtent3DDictValue implements GPUExtent3DDict {
   });
 }
 
-abstract interface class GPUExternalTextureBindingLayout {
-}
+abstract interface class GPUExternalTextureBindingLayout {}
 
-final class GPUExternalTextureBindingLayoutValue implements GPUExternalTextureBindingLayout {
-
+final class GPUExternalTextureBindingLayoutValue
+    implements GPUExternalTextureBindingLayout {
   GPUExternalTextureBindingLayoutValue();
 }
 
@@ -551,16 +529,14 @@ abstract interface class GPUExternalTextureDescriptor {
   set colorSpace(PredefinedColorSpace? value);
 }
 
-final class GPUExternalTextureDescriptorValue implements GPUExternalTextureDescriptor {
+final class GPUExternalTextureDescriptorValue
+    implements GPUExternalTextureDescriptor {
   @override
   Object source;
   @override
   PredefinedColorSpace? colorSpace;
 
-  GPUExternalTextureDescriptorValue({
-    required this.source,
-    this.colorSpace,
-  });
+  GPUExternalTextureDescriptorValue({required this.source, this.colorSpace});
 }
 
 typedef GPUFeatureName = String;
@@ -578,9 +554,7 @@ final class GPUFragmentStateValue implements GPUFragmentState {
   @override
   List<GPUColorTargetState?> targets;
 
-  GPUFragmentStateValue({
-    required this.targets,
-  });
+  GPUFragmentStateValue({required this.targets});
 }
 
 typedef GPUFrontFace = String;
@@ -594,9 +568,7 @@ final class GPUImageCopyBufferValue implements GPUImageCopyBuffer {
   @override
   Object buffer;
 
-  GPUImageCopyBufferValue({
-    required this.buffer,
-  });
+  GPUImageCopyBufferValue({required this.buffer});
 }
 
 abstract interface class GPUImageCopyExternalImage {
@@ -608,7 +580,8 @@ abstract interface class GPUImageCopyExternalImage {
   set flipY(bool? value);
 }
 
-final class GPUImageCopyExternalImageValue implements GPUImageCopyExternalImage {
+final class GPUImageCopyExternalImageValue
+    implements GPUImageCopyExternalImage {
   @override
   GPUImageCopyExternalImageSource source;
   @override
@@ -661,16 +634,14 @@ abstract interface class GPUImageCopyTextureTagged {
   set premultipliedAlpha(bool? value);
 }
 
-final class GPUImageCopyTextureTaggedValue implements GPUImageCopyTextureTagged {
+final class GPUImageCopyTextureTaggedValue
+    implements GPUImageCopyTextureTagged {
   @override
   PredefinedColorSpace? colorSpace;
   @override
   bool? premultipliedAlpha;
 
-  GPUImageCopyTextureTaggedValue({
-    this.colorSpace,
-    this.premultipliedAlpha,
-  });
+  GPUImageCopyTextureTaggedValue({this.colorSpace, this.premultipliedAlpha});
 }
 
 abstract interface class GPUImageDataLayout {
@@ -690,11 +661,7 @@ final class GPUImageDataLayoutValue implements GPUImageDataLayout {
   @override
   GPUSize32? rowsPerImage;
 
-  GPUImageDataLayoutValue({
-    this.offset,
-    this.bytesPerRow,
-    this.rowsPerImage,
-  });
+  GPUImageDataLayoutValue({this.offset, this.bytesPerRow, this.rowsPerImage});
 }
 
 typedef GPUIndex32 = int;
@@ -737,7 +704,7 @@ final class GPUMultisampleStateValue implements GPUMultisampleState {
 
 abstract interface class GPUObjectBase {
   String get label;
-   set label(String value);
+  set label(String value);
 }
 
 abstract interface class GPUObjectDescriptorBase {
@@ -749,9 +716,7 @@ final class GPUObjectDescriptorBaseValue implements GPUObjectDescriptorBase {
   @override
   String? label;
 
-  GPUObjectDescriptorBaseValue({
-    this.label,
-  });
+  GPUObjectDescriptorBaseValue({this.label});
 }
 
 typedef GPUOrigin2D = Object;
@@ -769,10 +734,7 @@ final class GPUOrigin2DDictValue implements GPUOrigin2DDict {
   @override
   GPUIntegerCoordinate? y;
 
-  GPUOrigin2DDictValue({
-    this.x,
-    this.y,
-  });
+  GPUOrigin2DDictValue({this.x, this.y});
 }
 
 typedef GPUOrigin3D = Object;
@@ -794,11 +756,7 @@ final class GPUOrigin3DDictValue implements GPUOrigin3DDict {
   @override
   GPUIntegerCoordinate? z;
 
-  GPUOrigin3DDictValue({
-    this.x,
-    this.y,
-    this.z,
-  });
+  GPUOrigin3DDictValue({this.x, this.y, this.z});
 }
 
 abstract interface class GPUPipelineBase {
@@ -812,13 +770,12 @@ abstract interface class GPUPipelineDescriptorBase {
   set layout(Object value);
 }
 
-final class GPUPipelineDescriptorBaseValue implements GPUPipelineDescriptorBase {
+final class GPUPipelineDescriptorBaseValue
+    implements GPUPipelineDescriptorBase {
   @override
   Object layout;
 
-  GPUPipelineDescriptorBaseValue({
-    required this.layout,
-  });
+  GPUPipelineDescriptorBaseValue({required this.layout});
 }
 
 abstract interface class GPUPipelineErrorInit {
@@ -830,9 +787,7 @@ final class GPUPipelineErrorInitValue implements GPUPipelineErrorInit {
   @override
   GPUPipelineErrorReason reason;
 
-  GPUPipelineErrorInitValue({
-    required this.reason,
-  });
+  GPUPipelineErrorInitValue({required this.reason});
 }
 
 typedef GPUPipelineErrorReason = String;
@@ -842,13 +797,12 @@ abstract interface class GPUPipelineLayoutDescriptor {
   set bindGroupLayouts(List<Object> value);
 }
 
-final class GPUPipelineLayoutDescriptorValue implements GPUPipelineLayoutDescriptor {
+final class GPUPipelineLayoutDescriptorValue
+    implements GPUPipelineLayoutDescriptor {
   @override
   List<Object> bindGroupLayouts;
 
-  GPUPipelineLayoutDescriptorValue({
-    required this.bindGroupLayouts,
-  });
+  GPUPipelineLayoutDescriptorValue({required this.bindGroupLayouts});
 }
 
 typedef GPUPowerPreference = String;
@@ -926,27 +880,21 @@ final class GPUQuerySetDescriptorValue implements GPUQuerySetDescriptor {
   @override
   GPUSize32 count;
 
-  GPUQuerySetDescriptorValue({
-    required this.type_,
-    required this.count,
-  });
+  GPUQuerySetDescriptorValue({required this.type_, required this.count});
 }
 
 typedef GPUQueryType = String;
 
-abstract interface class GPUQueueDescriptor {
-}
+abstract interface class GPUQueueDescriptor {}
 
 final class GPUQueueDescriptorValue implements GPUQueueDescriptor {
-
   GPUQueueDescriptorValue();
 }
 
-abstract interface class GPURenderBundleDescriptor {
-}
+abstract interface class GPURenderBundleDescriptor {}
 
-final class GPURenderBundleDescriptorValue implements GPURenderBundleDescriptor {
-
+final class GPURenderBundleDescriptorValue
+    implements GPURenderBundleDescriptor {
   GPURenderBundleDescriptorValue();
 }
 
@@ -957,7 +905,8 @@ abstract interface class GPURenderBundleEncoderDescriptor {
   set stencilReadOnly(bool? value);
 }
 
-final class GPURenderBundleEncoderDescriptorValue implements GPURenderBundleEncoderDescriptor {
+final class GPURenderBundleEncoderDescriptorValue
+    implements GPURenderBundleEncoderDescriptor {
   @override
   bool? depthReadOnly;
   @override
@@ -971,10 +920,31 @@ final class GPURenderBundleEncoderDescriptorValue implements GPURenderBundleEnco
 
 abstract interface class GPURenderCommandsMixin {
   void setPipeline(Object pipeline);
-  void setIndexBuffer(Object buffer, GPUIndexFormat indexFormat, [GPUSize64? offset, GPUSize64? size]);
-  void setVertexBuffer(GPUIndex32 slot, Object buffer, [GPUSize64? offset, GPUSize64? size]);
-  void draw(GPUSize32 vertexCount, [GPUSize32? instanceCount, GPUSize32? firstVertex, GPUSize32? firstInstance]);
-  void drawIndexed(GPUSize32 indexCount, [GPUSize32? instanceCount, GPUSize32? firstIndex, GPUSignedOffset32? baseVertex, GPUSize32? firstInstance]);
+  void setIndexBuffer(
+    Object buffer,
+    GPUIndexFormat indexFormat, [
+    GPUSize64? offset,
+    GPUSize64? size,
+  ]);
+  void setVertexBuffer(
+    GPUIndex32 slot,
+    Object buffer, [
+    GPUSize64? offset,
+    GPUSize64? size,
+  ]);
+  void draw(
+    GPUSize32 vertexCount, [
+    GPUSize32? instanceCount,
+    GPUSize32? firstVertex,
+    GPUSize32? firstInstance,
+  ]);
+  void drawIndexed(
+    GPUSize32 indexCount, [
+    GPUSize32? instanceCount,
+    GPUSize32? firstIndex,
+    GPUSignedOffset32? baseVertex,
+    GPUSize32? firstInstance,
+  ]);
   void drawIndirect(Object indirectBuffer, GPUSize64 indirectOffset);
   void drawIndexedIndirect(Object indirectBuffer, GPUSize64 indirectOffset);
 }
@@ -994,7 +964,8 @@ abstract interface class GPURenderPassColorAttachment {
   set storeOp(GPUStoreOp value);
 }
 
-final class GPURenderPassColorAttachmentValue implements GPURenderPassColorAttachment {
+final class GPURenderPassColorAttachmentValue
+    implements GPURenderPassColorAttachment {
   @override
   Object view;
   @override
@@ -1039,7 +1010,8 @@ abstract interface class GPURenderPassDepthStencilAttachment {
   set stencilReadOnly(bool? value);
 }
 
-final class GPURenderPassDepthStencilAttachmentValue implements GPURenderPassDepthStencilAttachment {
+final class GPURenderPassDepthStencilAttachmentValue
+    implements GPURenderPassDepthStencilAttachment {
   @override
   Object view;
   @override
@@ -1139,7 +1111,8 @@ abstract interface class GPURenderPassTimestampWrites {
   set endOfPassWriteIndex(GPUSize32? value);
 }
 
-final class GPURenderPassTimestampWritesValue implements GPURenderPassTimestampWrites {
+final class GPURenderPassTimestampWritesValue
+    implements GPURenderPassTimestampWrites {
   @override
   Object querySet;
   @override
@@ -1167,7 +1140,8 @@ abstract interface class GPURenderPipelineDescriptor {
   set fragment(GPUFragmentState? value);
 }
 
-final class GPURenderPipelineDescriptorValue implements GPURenderPipelineDescriptor {
+final class GPURenderPipelineDescriptorValue
+    implements GPURenderPipelineDescriptor {
   @override
   GPUVertexState vertex;
   @override
@@ -1218,9 +1192,7 @@ final class GPUSamplerBindingLayoutValue implements GPUSamplerBindingLayout {
   @override
   GPUSamplerBindingType? type_;
 
-  GPUSamplerBindingLayoutValue({
-    this.type_,
-  });
+  GPUSamplerBindingLayoutValue({this.type_});
 }
 
 typedef GPUSamplerBindingType = String;
@@ -1291,16 +1263,14 @@ abstract interface class GPUShaderModuleCompilationHint {
   set layout(Object? value);
 }
 
-final class GPUShaderModuleCompilationHintValue implements GPUShaderModuleCompilationHint {
+final class GPUShaderModuleCompilationHintValue
+    implements GPUShaderModuleCompilationHint {
   @override
   String entryPoint;
   @override
   Object? layout;
 
-  GPUShaderModuleCompilationHintValue({
-    required this.entryPoint,
-    this.layout,
-  });
+  GPUShaderModuleCompilationHintValue({required this.entryPoint, this.layout});
 }
 
 abstract interface class GPUShaderModuleDescriptor {
@@ -1312,7 +1282,8 @@ abstract interface class GPUShaderModuleDescriptor {
   set compilationHints(List<GPUShaderModuleCompilationHint>? value);
 }
 
-final class GPUShaderModuleDescriptorValue implements GPUShaderModuleDescriptor {
+final class GPUShaderModuleDescriptorValue
+    implements GPUShaderModuleDescriptor {
   @override
   String code;
   @override
@@ -1383,7 +1354,8 @@ abstract interface class GPUStorageTextureBindingLayout {
   set viewDimension(GPUTextureViewDimension? value);
 }
 
-final class GPUStorageTextureBindingLayoutValue implements GPUStorageTextureBindingLayout {
+final class GPUStorageTextureBindingLayoutValue
+    implements GPUStorageTextureBindingLayout {
   @override
   GPUStorageTextureAccess? access;
   @override
@@ -1529,13 +1501,12 @@ abstract interface class GPUUncapturedErrorEventInit {
   set error(Object value);
 }
 
-final class GPUUncapturedErrorEventInitValue implements GPUUncapturedErrorEventInit {
+final class GPUUncapturedErrorEventInitValue
+    implements GPUUncapturedErrorEventInit {
   @override
   Object error;
 
-  GPUUncapturedErrorEventInitValue({
-    required this.error,
-  });
+  GPUUncapturedErrorEventInitValue({required this.error});
 }
 
 abstract interface class GPUVertexAttribute {
@@ -1597,9 +1568,7 @@ final class GPUVertexStateValue implements GPUVertexState {
   @override
   List<GPUVertexBufferLayout?>? buffers;
 
-  GPUVertexStateValue({
-    this.buffers,
-  });
+  GPUVertexStateValue({this.buffers});
 }
 
 typedef GPUVertexStepMode = String;
@@ -1607,4 +1576,3 @@ typedef GPUVertexStepMode = String;
 abstract interface class NavigatorGPU {
   Object get gpu;
 }
-

@@ -25,7 +25,8 @@ abstract interface class CredentialCreationOptions {
   set publicKey(PublicKeyCredentialCreationOptions? value);
 }
 
-final class CredentialCreationOptionsValue implements CredentialCreationOptions {
+final class CredentialCreationOptionsValue
+    implements CredentialCreationOptions {
   @override
   CredentialMediationRequirement? mediation;
   @override
@@ -55,9 +56,7 @@ final class CredentialDataValue implements CredentialData {
   @override
   String id;
 
-  CredentialDataValue({
-    required this.id,
-  });
+  CredentialDataValue({required this.id});
 }
 
 typedef CredentialMediationRequirement = String;
@@ -115,16 +114,14 @@ abstract interface class FederatedCredentialRequestOptions {
   set protocols(List<String>? value);
 }
 
-final class FederatedCredentialRequestOptionsValue implements FederatedCredentialRequestOptions {
+final class FederatedCredentialRequestOptionsValue
+    implements FederatedCredentialRequestOptions {
   @override
   List<String>? providers;
   @override
   List<String>? protocols;
 
-  FederatedCredentialRequestOptionsValue({
-    this.providers,
-    this.protocols,
-  });
+  FederatedCredentialRequestOptionsValue({this.providers, this.protocols});
 }
 
 abstract interface class PasswordCredentialData {
@@ -157,4 +154,3 @@ final class PasswordCredentialDataValue implements PasswordCredentialData {
 }
 
 typedef PasswordCredentialInit = Object;
-

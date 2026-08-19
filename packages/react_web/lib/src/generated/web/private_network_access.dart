@@ -11,12 +11,10 @@ abstract interface class PrivateNetworkAccessPermissionDescriptor {
   set id(String? value);
 }
 
-final class PrivateNetworkAccessPermissionDescriptorValue implements PrivateNetworkAccessPermissionDescriptor {
+final class PrivateNetworkAccessPermissionDescriptorValue
+    implements PrivateNetworkAccessPermissionDescriptor {
   @override
   String? id;
 
-  PrivateNetworkAccessPermissionDescriptorValue({
-    this.id,
-  });
+  PrivateNetworkAccessPermissionDescriptorValue({this.id});
 }
-

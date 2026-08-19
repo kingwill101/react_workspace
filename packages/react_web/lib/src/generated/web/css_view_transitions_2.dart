@@ -11,16 +11,14 @@ abstract interface class StartViewTransitionOptions {
   set types(List<String>? value);
 }
 
-final class StartViewTransitionOptionsValue implements StartViewTransitionOptions {
+final class StartViewTransitionOptionsValue
+    implements StartViewTransitionOptions {
   @override
   UpdateCallback? update;
   @override
   List<String>? types;
 
-  StartViewTransitionOptionsValue({
-    this.update,
-    this.types,
-  });
+  StartViewTransitionOptionsValue({this.update, this.types});
 }
 
 abstract interface class ViewTransition {
@@ -31,4 +29,3 @@ abstract interface class ViewTransition {
 }
 
 typedef ViewTransitionNavigation = String;
-

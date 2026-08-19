@@ -55,4 +55,3 @@ final class XRSessionInitValue implements XRSessionInit {
     this.optionalFeatures,
   });
 }
-

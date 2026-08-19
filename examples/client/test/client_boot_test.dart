@@ -39,7 +39,10 @@ void main() {
     expect(response.body, contains('esm.sh/react-dom'));
   }, handler: handler);
 
-  serverTest('SPA fallback serves index.html for unknown paths', (client, _) async {
+  serverTest('SPA fallback serves index.html for unknown paths', (
+    client,
+    _,
+  ) async {
     final response = await client.get('/any/route');
     response.assertStatus(200);
     expect(response.body, contains('<div id="app"></div>'));

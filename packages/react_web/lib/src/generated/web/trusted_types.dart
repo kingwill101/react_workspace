@@ -2,12 +2,12 @@
 // Neutral Web surface for spec: trusted-types
 // ignore_for_file: type=lint
 
+typedef CreateHTMLCallback = String? Function(String input, Object arguments);
 
-typedef CreateHTMLCallback = String? Function(String input, Object arguments,);
+typedef CreateScriptCallback = String? Function(String input, Object arguments);
 
-typedef CreateScriptCallback = String? Function(String input, Object arguments,);
-
-typedef CreateScriptURLCallback = String? Function(String input, Object arguments,);
+typedef CreateScriptURLCallback =
+    String? Function(String input, Object arguments);
 
 abstract interface class TrustedHTML {
   String toJSON();
@@ -31,13 +31,21 @@ abstract interface class TrustedTypePolicy {
 }
 
 abstract interface class TrustedTypePolicyFactory {
-  TrustedTypePolicy createPolicy(String policyName, [TrustedTypePolicyOptions? policyOptions]);
+  TrustedTypePolicy createPolicy(
+    String policyName, [
+    TrustedTypePolicyOptions? policyOptions,
+  ]);
   bool isHTML(Object value);
   bool isScript(Object value);
   bool isScriptURL(Object value);
   TrustedHTML get emptyHTML;
   TrustedScript get emptyScript;
-  String? getAttributeType(String tagName, String attribute, [String? elementNs, String? attrNs]);
+  String? getAttributeType(
+    String tagName,
+    String attribute, [
+    String? elementNs,
+    String? attrNs,
+  ]);
   String? getPropertyType(String tagName, String property, [String? elementNs]);
   TrustedTypePolicy? get defaultPolicy;
 }
@@ -65,4 +73,3 @@ final class TrustedTypePolicyOptionsValue implements TrustedTypePolicyOptions {
     this.createScriptURL,
   });
 }
-

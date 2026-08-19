@@ -130,7 +130,9 @@ final class _SsrVisitor extends RecursiveAstVisitor<void> {
       if (info == null && _isBrowserPropertyAccess(node)) {
         // Only flag if target is window/document/navigator.
         final target = node.target.toString();
-        if (target == 'window' || target == 'document' || target == 'navigator') {
+        if (target == 'window' ||
+            target == 'document' ||
+            target == 'navigator') {
           diagnostics.add(
             ReactDiagnostic(
               code: ReactDiagnosticCode.browserApiDuringSsr,
@@ -174,7 +176,10 @@ final class _SsrVisitor extends RecursiveAstVisitor<void> {
       if (e.displayName == 'WebApiRuntimeInfo' ||
           e.enclosingElement?.name == 'WebApiRuntimeInfo') {
         final constant = ann.computeConstantValue();
-        final id = constant?.getField('id')?.toStringValue() ?? element.displayName ?? 'unknown';
+        final id =
+            constant?.getField('id')?.toStringValue() ??
+            element.displayName ??
+            'unknown';
         final ssrField = constant?.getField('ssr');
         final ssrIndex = ssrField?.getField('index')?.toIntValue();
         final ssr = switch (ssrIndex) {

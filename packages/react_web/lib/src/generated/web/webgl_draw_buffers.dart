@@ -7,4 +7,3 @@ import 'webgl1.dart';
 abstract interface class WEBGL_draw_buffers {
   void drawBuffersWEBGL(List<GLenum> buffers);
 }
-

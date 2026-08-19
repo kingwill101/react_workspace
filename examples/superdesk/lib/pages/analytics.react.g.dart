@@ -12,20 +12,25 @@ JSObject _AnalyticsPage_toJS(({String? title}) props) {
 }
 
 ({String? title}) _AnalyticsPage_fromJS(JSObject js) {
-final title = nullableJSString(js, "title");
+  final title = nullableJSString(js, "title");
   return (title: title);
 }
 
-final JSFunction $AnalyticsPage = (() {
-  JSAny? wrapper(JSObject props) {
-    final dartProps = _AnalyticsPage_fromJS(props);
-    return toReactJS(impl.AnalyticsPage(dartProps));
-  }
-  return wrapper.toJS;
-})() as JSFunction;
-void registerAnalyticsPage(){
-  ReactRegistry.register(idAnalyticsPage.value, $AnalyticsPage,
-      toJS: (p) => _AnalyticsPage_toJS(p as ({String? title})),
-      fromJS: (js) => _AnalyticsPage_fromJS(js));
-}
+final JSFunction $AnalyticsPage =
+    (() {
+          JSAny? wrapper(JSObject props) {
+            final dartProps = _AnalyticsPage_fromJS(props);
+            return toReactJS(impl.AnalyticsPage(dartProps));
+          }
 
+          return wrapper.toJS;
+        })()
+        as JSFunction;
+void registerAnalyticsPage() {
+  ReactRegistry.register(
+    idAnalyticsPage.value,
+    $AnalyticsPage,
+    toJS: (p) => _AnalyticsPage_toJS(p as ({String? title})),
+    fromJS: (js) => _AnalyticsPage_fromJS(js),
+  );
+}

@@ -29,12 +29,15 @@ final class EmittedManifest {
   );
 
   static EmittedManifest fromFile(String path) {
-    final data = jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
+    final data =
+        jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
     return EmittedManifest.fromJson(data.cast<String, Object?>());
   }
 
   void writeToFile(String path) {
-    File(path).writeAsStringSync(const JsonEncoder.withIndent('  ').convert(toJson()));
+    File(
+      path,
+    ).writeAsStringSync(const JsonEncoder.withIndent('  ').convert(toJson()));
   }
 }
 
@@ -51,16 +54,35 @@ final class CompletenessVerifier {
     }
   }
 
-  CompletenessVerifier.withManifest({required this.model, required EmittedManifest manifest})
-    : emittedModel = _modelFromManifest(manifest, model);
+  CompletenessVerifier.withManifest({
+    required this.model,
+    required EmittedManifest manifest,
+  }) : emittedModel = _modelFromManifest(manifest, model);
 
-  static CompleteWebModel _modelFromManifest(EmittedManifest manifest, CompleteWebModel fallback) => fallback;
+  static CompleteWebModel _modelFromManifest(
+    EmittedManifest manifest,
+    CompleteWebModel fallback,
+  ) => fallback;
 
   /// Verify against an on-disk emitted manifest (preferred — never
   static const _reservedNames = {
-    'Function', 'Object', 'String', 'int', 'double', 'bool', 'dynamic',
-    'void', 'num', 'Null', 'Never', 'Future', 'List', 'Map', 'Set',
-    'Iterable', 'Type',
+    'Function',
+    'Object',
+    'String',
+    'int',
+    'double',
+    'bool',
+    'dynamic',
+    'void',
+    'num',
+    'Null',
+    'Never',
+    'Future',
+    'List',
+    'Map',
+    'Set',
+    'Iterable',
+    'Type',
   };
 
   /// compare the source model to itself).
@@ -94,7 +116,8 @@ final class CompletenessVerifier {
         'emitted': emittedMems.length,
         'opaque': 0,
         'dropped': missingMems.length,
-        if (missingMems.isNotEmpty) 'missing': (missingMems.toList()..sort()).take(50).toList(),
+        if (missingMems.isNotEmpty)
+          'missing': (missingMems.toList()..sort()).take(50).toList(),
       },
       'kinds': {
         for (final e in sourceKinds.entries)
@@ -106,17 +129,28 @@ final class CompletenessVerifier {
     };
   }
 
-  static Set<String> _definitionIds(CompleteWebModel m, {bool includeReserved = false}) {
+  static Set<String> _definitionIds(
+    CompleteWebModel m, {
+    bool includeReserved = false,
+  }) {
     bool keep(String name) => includeReserved || !_reservedNames.contains(name);
     return {
-      for (final d in m.interfaces.values) if (keep(d.name)) 'interface:${d.name}',
-      for (final d in m.mixins.values) if (keep(d.name)) 'mixin:${d.name}',
-      for (final d in m.dictionaries.values) if (keep(d.name)) 'dictionary:${d.name}',
-      for (final d in m.namespaces.values) if (keep(d.name)) 'namespace:${d.name}',
-      for (final d in m.enums.values) if (keep(d.name)) 'enum:${d.name}',
-      for (final d in m.typedefs.values) if (keep(d.name)) 'typedef:${d.name}',
-      for (final d in m.callbacks.values) if (keep(d.name)) 'callback:${d.name}',
-      for (final d in m.callbackInterfaces.values) if (keep(d.name)) 'callbackInterface:${d.name}',
+      for (final d in m.interfaces.values)
+        if (keep(d.name)) 'interface:${d.name}',
+      for (final d in m.mixins.values)
+        if (keep(d.name)) 'mixin:${d.name}',
+      for (final d in m.dictionaries.values)
+        if (keep(d.name)) 'dictionary:${d.name}',
+      for (final d in m.namespaces.values)
+        if (keep(d.name)) 'namespace:${d.name}',
+      for (final d in m.enums.values)
+        if (keep(d.name)) 'enum:${d.name}',
+      for (final d in m.typedefs.values)
+        if (keep(d.name)) 'typedef:${d.name}',
+      for (final d in m.callbacks.values)
+        if (keep(d.name)) 'callback:${d.name}',
+      for (final d in m.callbackInterfaces.values)
+        if (keep(d.name)) 'callbackInterface:${d.name}',
     };
   }
 
@@ -128,7 +162,8 @@ final class CompletenessVerifier {
       for (final mem in members) {
         if (mem is IdlOperation) {
           final ex = ops[mem.name];
-          if (ex == null || mem.parameters.length > ex.parameters.length) ops[mem.name] = mem;
+          if (ex == null || mem.parameters.length > ex.parameters.length)
+            ops[mem.name] = mem;
         }
       }
       final seen = <String>{};
@@ -158,13 +193,20 @@ final class CompletenessVerifier {
     for (final d in m.mixins.values) {
       for (final mem in d.members) {
         switch (mem) {
-          case IdlAttribute(): out.add('${d.name}.${mem.name}:attribute');
-          case IdlOperation(): out.add('${d.name}.${mem.name}:operation');
-          case IdlConstant(): out.add('${d.name}.${mem.name}:const');
-          case IdlIterable(): out.add('${d.name}.iterable:iterable');
-          case IdlMaplike(): out.add('${d.name}.maplike:maplike');
-          case IdlSetlike(): out.add('${d.name}.setlike:setlike');
-          default: break;
+          case IdlAttribute():
+            out.add('${d.name}.${mem.name}:attribute');
+          case IdlOperation():
+            out.add('${d.name}.${mem.name}:operation');
+          case IdlConstant():
+            out.add('${d.name}.${mem.name}:const');
+          case IdlIterable():
+            out.add('${d.name}.iterable:iterable');
+          case IdlMaplike():
+            out.add('${d.name}.maplike:maplike');
+          case IdlSetlike():
+            out.add('${d.name}.setlike:setlike');
+          default:
+            break;
         }
       }
     }
@@ -176,20 +218,28 @@ final class CompletenessVerifier {
     for (final d in m.callbackInterfaces.values) {
       for (final mem in d.members) {
         switch (mem) {
-          case IdlAttribute(): out.add('${d.name}.${mem.name}:attribute');
-          case IdlOperation(): out.add('${d.name}.${mem.name}:operation');
-          case IdlConstant(): out.add('${d.name}.${mem.name}:const');
-          default: break;
+          case IdlAttribute():
+            out.add('${d.name}.${mem.name}:attribute');
+          case IdlOperation():
+            out.add('${d.name}.${mem.name}:operation');
+          case IdlConstant():
+            out.add('${d.name}.${mem.name}:const');
+          default:
+            break;
         }
       }
     }
     for (final d in m.namespaces.values) {
       for (final mem in d.members) {
         switch (mem) {
-          case IdlOperation(): out.add('${d.name}.${mem.name}:operation');
-          case IdlAttribute(): out.add('${d.name}.${mem.name}:attribute');
-          case IdlConstant(): out.add('${d.name}.${mem.name}:const');
-          default: break;
+          case IdlOperation():
+            out.add('${d.name}.${mem.name}:operation');
+          case IdlAttribute():
+            out.add('${d.name}.${mem.name}:attribute');
+          case IdlConstant():
+            out.add('${d.name}.${mem.name}:const');
+          default:
+            break;
         }
       }
     }
@@ -216,17 +266,23 @@ final class CompletenessVerifier {
         }
       }
       for (final d in m.mixins.values) {
-        n += d.members.where((x) => x is IdlAttribute || x is IdlOperation).length;
+        n += d.members
+            .where((x) => x is IdlAttribute || x is IdlOperation)
+            .length;
       }
       for (final d in m.dictionaries.values) {
         n += d.fields.length;
       }
       for (final d in m.callbackInterfaces.values) {
-        n += d.members.where((x) => x is IdlAttribute || x is IdlOperation).length;
+        n += d.members
+            .where((x) => x is IdlAttribute || x is IdlOperation)
+            .length;
       }
       for (final d in m.namespaces.values) {
         n += d.members
-            .where((x) => x is IdlOperation || x is IdlAttribute || x is IdlConstant)
+            .where(
+              (x) => x is IdlOperation || x is IdlAttribute || x is IdlConstant,
+            )
             .length;
       }
       return n;

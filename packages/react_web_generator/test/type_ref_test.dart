@@ -31,7 +31,10 @@ void main() {
     });
 
     test('toJson round-trip', () {
-      const ref = NamedTypeRef(typeId: 'Promise', arguments: [NamedTypeRef(typeId: 'String')]);
+      const ref = NamedTypeRef(
+        typeId: 'Promise',
+        arguments: [NamedTypeRef(typeId: 'String')],
+      );
       final json = ref.toJson();
       expect(json['kind'], 'named');
       final decoded = typeRefFromJson(json);
@@ -41,17 +44,30 @@ void main() {
 
   group('UnionTypeRef', () {
     test('stores options', () {
-      const u = UnionTypeRef(options: [NamedTypeRef(typeId: 'String'), NamedTypeRef(typeId: 'int')]);
+      const u = UnionTypeRef(
+        options: [
+          NamedTypeRef(typeId: 'String'),
+          NamedTypeRef(typeId: 'int'),
+        ],
+      );
       expect(u.options, hasLength(2));
     });
 
     test('nullable union', () {
-      const u = UnionTypeRef(nullable: true, options: [NamedTypeRef(typeId: 'String')]);
+      const u = UnionTypeRef(
+        nullable: true,
+        options: [NamedTypeRef(typeId: 'String')],
+      );
       expect(u.nullable, isTrue);
     });
 
     test('toJson round-trip', () {
-      const u = UnionTypeRef(options: [NamedTypeRef(typeId: 'String'), NamedTypeRef(typeId: 'int')]);
+      const u = UnionTypeRef(
+        options: [
+          NamedTypeRef(typeId: 'String'),
+          NamedTypeRef(typeId: 'int'),
+        ],
+      );
       final json = u.toJson();
       final decoded = typeRefFromJson(json) as UnionTypeRef;
       expect(decoded.options, hasLength(2));

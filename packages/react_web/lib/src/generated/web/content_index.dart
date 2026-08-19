@@ -55,8 +55,5 @@ final class ContentIndexEventInitValue implements ContentIndexEventInit {
   @override
   String id;
 
-  ContentIndexEventInitValue({
-    required this.id,
-  });
+  ContentIndexEventInitValue({required this.id});
 }
-

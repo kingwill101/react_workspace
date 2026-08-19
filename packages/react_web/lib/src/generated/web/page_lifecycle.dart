@@ -14,4 +14,3 @@ abstract interface class Client {
 }
 
 typedef ClientLifecycleState = String;
-

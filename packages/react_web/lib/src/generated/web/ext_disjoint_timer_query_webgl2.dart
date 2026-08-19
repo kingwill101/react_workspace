@@ -8,4 +8,3 @@ import 'webgl1.dart';
 abstract interface class EXT_disjoint_timer_query_webgl2 {
   void queryCounterEXT(WebGLQuery query, GLenum target);
 }
-

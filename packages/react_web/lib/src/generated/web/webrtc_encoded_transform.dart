@@ -15,13 +15,15 @@ import 'package:react_web/src/web_runtime.dart';
 typedef CryptoKeyID = Object;
 
 abstract interface class RTCEncodedAudioFrame {
-  factory RTCEncodedAudioFrame(RTCEncodedAudioFrame originalFrame, [RTCEncodedAudioFrameOptions? options]) =>
-      WebRuntime.current.createWebObject<RTCEncodedAudioFrame>(
-        'RTCEncodedAudioFrame',
-        [originalFrame, options],
-      );
+  factory RTCEncodedAudioFrame(
+    RTCEncodedAudioFrame originalFrame, [
+    RTCEncodedAudioFrameOptions? options,
+  ]) => WebRuntime.current.createWebObject<RTCEncodedAudioFrame>(
+    'RTCEncodedAudioFrame',
+    [originalFrame, options],
+  );
   Object get data;
-   set data(Object value);
+  set data(Object value);
   RTCEncodedAudioFrameMetadata getMetadata();
 }
 
@@ -40,7 +42,8 @@ abstract interface class RTCEncodedAudioFrameMetadata {
   set mimeType(String? value);
 }
 
-final class RTCEncodedAudioFrameMetadataValue implements RTCEncodedAudioFrameMetadata {
+final class RTCEncodedAudioFrameMetadataValue
+    implements RTCEncodedAudioFrameMetadata {
   @override
   int? synchronizationSource;
   @override
@@ -69,24 +72,25 @@ abstract interface class RTCEncodedAudioFrameOptions {
   set metadata(RTCEncodedAudioFrameMetadata? value);
 }
 
-final class RTCEncodedAudioFrameOptionsValue implements RTCEncodedAudioFrameOptions {
+final class RTCEncodedAudioFrameOptionsValue
+    implements RTCEncodedAudioFrameOptions {
   @override
   RTCEncodedAudioFrameMetadata? metadata;
 
-  RTCEncodedAudioFrameOptionsValue({
-    this.metadata,
-  });
+  RTCEncodedAudioFrameOptionsValue({this.metadata});
 }
 
 abstract interface class RTCEncodedVideoFrame {
-  factory RTCEncodedVideoFrame(RTCEncodedVideoFrame originalFrame, [RTCEncodedVideoFrameOptions? options]) =>
-      WebRuntime.current.createWebObject<RTCEncodedVideoFrame>(
-        'RTCEncodedVideoFrame',
-        [originalFrame, options],
-      );
+  factory RTCEncodedVideoFrame(
+    RTCEncodedVideoFrame originalFrame, [
+    RTCEncodedVideoFrameOptions? options,
+  ]) => WebRuntime.current.createWebObject<RTCEncodedVideoFrame>(
+    'RTCEncodedVideoFrame',
+    [originalFrame, options],
+  );
   RTCEncodedVideoFrameType get type_;
   Object get data;
-   set data(Object value);
+  set data(Object value);
   RTCEncodedVideoFrameMetadata getMetadata();
 }
 
@@ -117,7 +121,8 @@ abstract interface class RTCEncodedVideoFrameMetadata {
   set mimeType(String? value);
 }
 
-final class RTCEncodedVideoFrameMetadataValue implements RTCEncodedVideoFrameMetadata {
+final class RTCEncodedVideoFrameMetadataValue
+    implements RTCEncodedVideoFrameMetadata {
   @override
   int? frameId;
   @override
@@ -164,20 +169,19 @@ abstract interface class RTCEncodedVideoFrameOptions {
   set metadata(RTCEncodedVideoFrameMetadata? value);
 }
 
-final class RTCEncodedVideoFrameOptionsValue implements RTCEncodedVideoFrameOptions {
+final class RTCEncodedVideoFrameOptionsValue
+    implements RTCEncodedVideoFrameOptions {
   @override
   RTCEncodedVideoFrameMetadata? metadata;
 
-  RTCEncodedVideoFrameOptionsValue({
-    this.metadata,
-  });
+  RTCEncodedVideoFrameOptionsValue({this.metadata});
 }
 
 typedef RTCEncodedVideoFrameType = String;
 
 abstract interface class RTCRtpReceiver {
   RTCRtpTransform? get transform;
-   set transform(RTCRtpTransform? value);
+  set transform(RTCRtpTransform? value);
   MediaStreamTrack get track;
   RTCDtlsTransport? get transport;
   RTCRtpReceiveParameters getParameters();
@@ -185,15 +189,18 @@ abstract interface class RTCRtpReceiver {
   List<RTCRtpSynchronizationSource> getSynchronizationSources();
   Future<RTCStatsReport> getStats();
   DOMHighResTimeStamp? get jitterBufferTarget;
-   set jitterBufferTarget(DOMHighResTimeStamp? value);
+  set jitterBufferTarget(DOMHighResTimeStamp? value);
 }
 
 abstract interface class RTCRtpScriptTransform {
-  factory RTCRtpScriptTransform(Worker worker, [Object? options, List<Object>? transfer]) =>
-      WebRuntime.current.createWebObject<RTCRtpScriptTransform>(
-        'RTCRtpScriptTransform',
-        [worker, options, transfer],
-      );
+  factory RTCRtpScriptTransform(
+    Worker worker, [
+    Object? options,
+    List<Object>? transfer,
+  ]) => WebRuntime.current.createWebObject<RTCRtpScriptTransform>(
+    'RTCRtpScriptTransform',
+    [worker, options, transfer],
+  );
 }
 
 abstract interface class RTCRtpScriptTransformer {
@@ -206,10 +213,13 @@ abstract interface class RTCRtpScriptTransformer {
 
 abstract interface class RTCRtpSender {
   RTCRtpTransform? get transform;
-   set transform(RTCRtpTransform? value);
+  set transform(RTCRtpTransform? value);
   MediaStreamTrack? get track;
   RTCDtlsTransport? get transport;
-  Future<void> setParameters(RTCRtpSendParameters parameters, [RTCSetParameterOptions? setParameterOptions]);
+  Future<void> setParameters(
+    RTCRtpSendParameters parameters, [
+    RTCSetParameterOptions? setParameterOptions,
+  ]);
   RTCRtpSendParameters getParameters();
   Future<void> replaceTrack(MediaStreamTrack? withTrack);
   void setStreams([List<MediaStream>? streams]);
@@ -232,7 +242,8 @@ abstract interface class SFrameTransformErrorEventInit {
   set keyID(CryptoKeyID? value);
 }
 
-final class SFrameTransformErrorEventInitValue implements SFrameTransformErrorEventInit {
+final class SFrameTransformErrorEventInitValue
+    implements SFrameTransformErrorEventInit {
   @override
   SFrameTransformErrorEventType errorType;
   @override
@@ -258,12 +269,9 @@ final class SFrameTransformOptionsValue implements SFrameTransformOptions {
   @override
   SFrameTransformRole? role;
 
-  SFrameTransformOptionsValue({
-    this.role,
-  });
+  SFrameTransformOptionsValue({this.role});
 }
 
 typedef SFrameTransformRole = String;
 
 typedef SmallCryptoKeyID = int;
-

@@ -9,7 +9,10 @@ final class SsrComponentRegistry {
 
   static final _builders = <String, ReactNode Function(Map<String, dynamic>)>{};
 
-  static void register(String id, ReactNode Function(Map<String, dynamic>) builder) {
+  static void register(
+    String id,
+    ReactNode Function(Map<String, dynamic>) builder,
+  ) {
     _builders[id] = builder;
   }
 
@@ -23,5 +26,5 @@ final class SsrComponentRegistry {
 }
 
 void registerKnownSsComponentIds() {
-  SsrComponentRegistry.register(    idApp.value, (_) => const Empty());
+  SsrComponentRegistry.register(idApp.value, (_) => const Empty());
 }

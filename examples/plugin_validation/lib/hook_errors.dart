@@ -26,7 +26,9 @@ ReactNode HookInLoop(({int count}) props) {
 @ReactComponent()
 ReactNode HookAfterReturn(({bool early}) props) {
   if (props.early) return Text('early');
-  final s = useState(0); // expect: invalid_hook_call — after early return (if early return counted)
+  final s = useState(
+    0,
+  ); // expect: invalid_hook_call — after early return (if early return counted)
   return Text('hi');
 }
 

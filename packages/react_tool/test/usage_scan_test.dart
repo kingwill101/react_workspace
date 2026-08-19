@@ -39,19 +39,20 @@ return new A.aZ("reactRouter.Link", r, o, p)
 globalThis.__reactDartBindings.reactRouter.useLocation()
 v.G.globalThis.__reactDartBindings.reactRouter.useParams()
 ''';
-      expect(
-        usedHooksIn(dartJs, const ['reactRouter']),
-        ['reactRouter.useLocation', 'reactRouter.useParams'],
-      );
+      expect(usedHooksIn(dartJs, const ['reactRouter']), [
+        'reactRouter.useLocation',
+        'reactRouter.useParams',
+      ]);
     });
 
     test('matches bracket-access compiled output', () {
-      const dartJs = r'__reactDartBindings["reactRouter"]["useMatches"]()'
+      const dartJs =
+          r'__reactDartBindings["reactRouter"]["useMatches"]()'
           r"__reactDartBindings['reactRouter']['useNavigate']()";
-      expect(
-        usedHooksIn(dartJs, const ['reactRouter']),
-        ['reactRouter.useMatches', 'reactRouter.useNavigate'],
-      );
+      expect(usedHooksIn(dartJs, const ['reactRouter']), [
+        'reactRouter.useMatches',
+        'reactRouter.useNavigate',
+      ]);
     });
 
     test('matches unoptimized _getPropertyTrustType chains', () {
@@ -67,10 +68,10 @@ A._callMethodUnchecked1(A._getPropertyTrustType(A._getPropertyTrustType(
     "reactRouter", t1),
     "useSearchParams", A.NullableObjectUtilExtension_jsify(null), t2);
 ''';
-      expect(
-        usedHooksIn(dartJs, const ['reactRouter']),
-        ['reactRouter.useLocation', 'reactRouter.useSearchParams'],
-      );
+      expect(usedHooksIn(dartJs, const ['reactRouter']), [
+        'reactRouter.useLocation',
+        'reactRouter.useSearchParams',
+      ]);
     });
 
     test('matches the legacy __reactDartHooks bridge', () {

@@ -10,31 +10,35 @@ import 'package:react_web/src/web_runtime.dart';
 typedef BinaryData = Object;
 
 abstract interface class FontFace {
-  factory FontFace(Object family, Object source, [FontFaceDescriptors? descriptors]) =>
-      WebRuntime.current.createWebObject<FontFace>(
-        'FontFace',
-        [family, source, descriptors],
-      );
+  factory FontFace(
+    Object family,
+    Object source, [
+    FontFaceDescriptors? descriptors,
+  ]) => WebRuntime.current.createWebObject<FontFace>('FontFace', [
+    family,
+    source,
+    descriptors,
+  ]);
   Object get family;
-   set family(Object value);
+  set family(Object value);
   Object get style;
-   set style(Object value);
+  set style(Object value);
   Object get weight;
-   set weight(Object value);
+  set weight(Object value);
   Object get stretch;
-   set stretch(Object value);
+  set stretch(Object value);
   Object get unicodeRange;
-   set unicodeRange(Object value);
+  set unicodeRange(Object value);
   Object get featureSettings;
-   set featureSettings(Object value);
+  set featureSettings(Object value);
   Object get display;
-   set display(Object value);
+  set display(Object value);
   Object get ascentOverride;
-   set ascentOverride(Object value);
+  set ascentOverride(Object value);
   Object get descentOverride;
-   set descentOverride(Object value);
+  set descentOverride(Object value);
   Object get lineGapOverride;
-   set lineGapOverride(Object value);
+  set lineGapOverride(Object value);
   FontFaceLoadStatus get status;
   Future<FontFace> load();
   Future<FontFace> get loaded;
@@ -102,20 +106,17 @@ final class FontFaceDescriptorsValue implements FontFaceDescriptors {
 typedef FontFaceLoadStatus = String;
 
 abstract interface class FontFaceSet {
-  factory FontFaceSet(List<FontFace> initialFaces) =>
-      WebRuntime.current.createWebObject<FontFaceSet>(
-        'FontFaceSet',
-        [initialFaces],
-      );
+  factory FontFaceSet(List<FontFace> initialFaces) => WebRuntime.current
+      .createWebObject<FontFaceSet>('FontFaceSet', [initialFaces]);
   FontFaceSet add(FontFace font);
   bool delete(FontFace font);
   void clear();
   EventHandler get onloading;
-   set onloading(EventHandler value);
+  set onloading(EventHandler value);
   EventHandler get onloadingdone;
-   set onloadingdone(EventHandler value);
+  set onloadingdone(EventHandler value);
   EventHandler get onloadingerror;
-   set onloadingerror(EventHandler value);
+  set onloadingerror(EventHandler value);
   Future<List<FontFace>> load(Object font, [Object? text]);
   bool check(Object font, [Object? text]);
   Future<FontFaceSet> get ready;
@@ -123,11 +124,13 @@ abstract interface class FontFaceSet {
 }
 
 abstract interface class FontFaceSetLoadEvent {
-  factory FontFaceSetLoadEvent(Object type_, [FontFaceSetLoadEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<FontFaceSetLoadEvent>(
-        'FontFaceSetLoadEvent',
-        [type_, eventInitDict],
-      );
+  factory FontFaceSetLoadEvent(
+    Object type_, [
+    FontFaceSetLoadEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<FontFaceSetLoadEvent>(
+    'FontFaceSetLoadEvent',
+    [type_, eventInitDict],
+  );
   List<FontFace> get fontfaces;
 }
 
@@ -140,9 +143,7 @@ final class FontFaceSetLoadEventInitValue implements FontFaceSetLoadEventInit {
   @override
   List<FontFace>? fontfaces;
 
-  FontFaceSetLoadEventInitValue({
-    this.fontfaces,
-  });
+  FontFaceSetLoadEventInitValue({this.fontfaces});
 }
 
 typedef FontFaceSetLoadStatus = String;
@@ -150,4 +151,3 @@ typedef FontFaceSetLoadStatus = String;
 abstract interface class FontFaceSource {
   FontFaceSet get fonts;
 }
-

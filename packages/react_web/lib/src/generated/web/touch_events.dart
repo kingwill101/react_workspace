@@ -8,10 +8,7 @@ import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Touch {
   factory Touch(TouchInit touchInitDict) =>
-      WebRuntime.current.createWebObject<Touch>(
-        'Touch',
-        [touchInitDict],
-      );
+      WebRuntime.current.createWebObject<Touch>('Touch', [touchInitDict]);
   int get identifier;
   EventTarget get target;
   double get screenX;
@@ -31,10 +28,10 @@ abstract interface class Touch {
 
 abstract interface class TouchEvent {
   factory TouchEvent(String type_, [TouchEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<TouchEvent>(
-        'TouchEvent',
-        [type_, eventInitDict],
-      );
+      WebRuntime.current.createWebObject<TouchEvent>('TouchEvent', [
+        type_,
+        eventInitDict,
+      ]);
   TouchList get touches;
   TouchList get targetTouches;
   TouchList get changedTouches;
@@ -61,11 +58,7 @@ final class TouchEventInitValue implements TouchEventInit {
   @override
   List<Touch>? changedTouches;
 
-  TouchEventInitValue({
-    this.touches,
-    this.targetTouches,
-    this.changedTouches,
-  });
+  TouchEventInitValue({this.touches, this.targetTouches, this.changedTouches});
 }
 
 abstract interface class TouchInit {
@@ -158,4 +151,3 @@ abstract interface class TouchList {
 }
 
 typedef TouchType = String;
-

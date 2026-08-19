@@ -11,7 +11,8 @@ ReactNode SyllabusPage(
     List<Map<String, dynamic>> syllabuses,
     List<Map<String, dynamic>> classes,
     Function(String) onToast,
-  }) props,
+  })
+  props,
 ) {
   return div(
     className: 'space-y-5',
@@ -29,7 +30,8 @@ ReactNode SyllabusPage(
             ),
           button(
             onClick: (_) => props.onToast('New syllabus ✨'),
-            className: 'h-[40px] px-4 bg-cream border-3 border-dashed border-dark rounded-full font-black text-[13px]',
+            className:
+                'h-[40px] px-4 bg-cream border-3 border-dashed border-dark rounded-full font-black text-[13px]',
             children: [Text('+ New')],
           ),
         ],
@@ -119,13 +121,15 @@ ReactNode SyllabusPage(
                     props.onToast('Unit added ✨');
                   }
                 },
-                className: 'h-[36px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
+                className:
+                    'h-[36px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
                 children: [Text('+ Add Unit')],
               ),
             ],
           ),
           textarea(
-            className: 'w-full h-[80px] bg-white border-2 border-dark rounded-[12px] p-2 font-bold text-[12px] outline-none',
+            className:
+                'w-full h-[80px] bg-white border-2 border-dark rounded-[12px] p-2 font-bold text-[12px] outline-none',
             placeholder: 'Learning objectives...',
           ),
           div(
@@ -133,12 +137,14 @@ ReactNode SyllabusPage(
             children: [
               button(
                 onClick: (_) => props.onToast('Linked ✨'),
-                className: 'h-[36px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
+                className:
+                    'h-[36px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
                 children: [Text('Link Existing')],
               ),
               button(
                 onClick: (_) => props.onToast('Created ✨'),
-                className: 'h-[36px] px-4 bg-white border-2 border-dark rounded-full font-black text-[12px]',
+                className:
+                    'h-[36px] px-4 bg-white border-2 border-dark rounded-full font-black text-[12px]',
                 children: [Text('Create New')],
               ),
             ],

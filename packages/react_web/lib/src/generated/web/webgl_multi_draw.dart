@@ -5,9 +5,42 @@
 import 'webgl1.dart';
 
 abstract interface class WEBGL_multi_draw {
-  void multiDrawArraysWEBGL(GLenum mode, Object firstsList, int firstsOffset, Object countsList, int countsOffset, GLsizei drawcount);
-  void multiDrawElementsWEBGL(GLenum mode, Object countsList, int countsOffset, GLenum type_, Object offsetsList, int offsetsOffset, GLsizei drawcount);
-  void multiDrawArraysInstancedWEBGL(GLenum mode, Object firstsList, int firstsOffset, Object countsList, int countsOffset, Object instanceCountsList, int instanceCountsOffset, GLsizei drawcount);
-  void multiDrawElementsInstancedWEBGL(GLenum mode, Object countsList, int countsOffset, GLenum type_, Object offsetsList, int offsetsOffset, Object instanceCountsList, int instanceCountsOffset, GLsizei drawcount);
+  void multiDrawArraysWEBGL(
+    GLenum mode,
+    Object firstsList,
+    int firstsOffset,
+    Object countsList,
+    int countsOffset,
+    GLsizei drawcount,
+  );
+  void multiDrawElementsWEBGL(
+    GLenum mode,
+    Object countsList,
+    int countsOffset,
+    GLenum type_,
+    Object offsetsList,
+    int offsetsOffset,
+    GLsizei drawcount,
+  );
+  void multiDrawArraysInstancedWEBGL(
+    GLenum mode,
+    Object firstsList,
+    int firstsOffset,
+    Object countsList,
+    int countsOffset,
+    Object instanceCountsList,
+    int instanceCountsOffset,
+    GLsizei drawcount,
+  );
+  void multiDrawElementsInstancedWEBGL(
+    GLenum mode,
+    Object countsList,
+    int countsOffset,
+    GLenum type_,
+    Object offsetsList,
+    int offsetsOffset,
+    Object instanceCountsList,
+    int instanceCountsOffset,
+    GLsizei drawcount,
+  );
 }
-

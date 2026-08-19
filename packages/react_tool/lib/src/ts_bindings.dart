@@ -750,14 +750,15 @@ void _emitDeclaration(
         buffer.writeln('  if (raw == null) return null as $publicReturn;');
         if (funcReturns.kind == 'string') {
           buffer.writeln('  return (raw as JSString).toDart as $publicReturn;');
-        } else if (funcReturns.kind == 'number')
+        } else if (funcReturns.kind == 'number') {
           buffer.writeln(
             '  return (raw as JSNumber).toDartDouble as $publicReturn;',
           );
-        else
+        } else {
           buffer.writeln(
             '  return (raw as JSBoolean).toDart as $publicReturn;',
           );
+        }
       } else if (funcReturns.kind == 'array') {
         final inner = funcReturns.element ?? const TsIrType(kind: 'any');
         final innerDart = _hookDartType(inner, registry);
@@ -766,12 +767,13 @@ void _emitDeclaration(
           buffer.writeln(
             '  return (raw as JSArray).toDart.map((e) => (e as JSString).toDart).toList() as $publicReturn;',
           );
-        } else if (inner.kind == 'object')
+        } else if (inner.kind == 'object') {
           buffer.writeln(
             '  return _decodeList<$innerDart>(raw as JSArray, (e) => $innerDart.fromJs(e as JSObject)) as $publicReturn;',
           );
-        else
+        } else {
           buffer.writeln('  return (raw as JSArray).toDart as $publicReturn;');
+        }
       } else if (funcReturns.kind == 'object') {
         buffer.writeln('  if (raw == null) return null as $publicReturn;');
         buffer.writeln(
@@ -781,8 +783,9 @@ void _emitDeclaration(
         buffer.writeln(
           '  if (raw == null) return ${funcReturns.kind == 'void' ? '' : 'null as $publicReturn;'}',
         );
-        if (funcReturns.kind != 'void')
+        if (funcReturns.kind != 'void') {
           buffer.writeln('  return raw as $publicReturn;');
+        }
       }
       buffer.writeln('}');
       return;

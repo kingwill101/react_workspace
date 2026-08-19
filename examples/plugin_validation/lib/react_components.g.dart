@@ -1,6 +1,7 @@
 // GENERATED CODE — DO NOT EDIT
 
-import 'package:plugin_validation/hook_errors.react.g.dart' as hookInConditional;
+import 'package:plugin_validation/hook_errors.react.g.dart'
+    as hookInConditional;
 import 'package:plugin_validation/hook_errors.react.g.dart' as hookInLoop;
 import 'package:plugin_validation/hook_errors.react.g.dart' as hookAfterReturn;
 import 'package:plugin_validation/hook_errors.react.g.dart' as hookCorrect;

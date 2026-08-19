@@ -1,6 +1,8 @@
 import 'package:react/react.dart';
 
-const idDashboardPage = ComponentId('package:superdesk/lib/pages/dashboard.dart#DashboardPage');
+const idDashboardPage = ComponentId(
+  'package:superdesk/lib/pages/dashboard.dart#DashboardPage',
+);
 
 ReactNode DashboardPage({
   required List<Map<String, dynamic>> classes,
@@ -12,9 +14,17 @@ ReactNode DashboardPage({
   required List<Map<String, dynamic>> units,
   Map<String, dynamic>? user,
   String? key,
-  List<ReactNode> children = const []
+  List<ReactNode> children = const [],
 }) {
-  final props = (classes: classes, lessons: lessons, onNavigate: onNavigate, onToast: onToast, syllabuses: syllabuses, templates: templates, units: units, user: user);
+  final props = (
+    classes: classes,
+    lessons: lessons,
+    onNavigate: onNavigate,
+    onToast: onToast,
+    syllabuses: syllabuses,
+    templates: templates,
+    units: units,
+    user: user,
+  );
   return Component(idDashboardPage, props, key: key, children: children);
 }
-

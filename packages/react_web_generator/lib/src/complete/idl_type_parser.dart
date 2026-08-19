@@ -22,8 +22,10 @@ String? idlPrimitiveToCore(String idlType) => switch (idlType) {
   'unsigned long long' ||
   'unsigned short' ||
   'unsigned byte' => 'core.int',
-  'double' || 'float' || 'unrestricted double' || 'unrestricted float' =>
-    'core.double',
+  'double' ||
+  'float' ||
+  'unrestricted double' ||
+  'unrestricted float' => 'core.double',
   'undefined' || 'void' => 'core.void',
   'object' => 'core.Object',
   'any' => 'core.dynamic',
@@ -47,9 +49,7 @@ TypeRef parseIdlType(Object? raw) {
 
   // Unions: idlType is a list of member types.
   if (isUnion && rawInner is List) {
-    final options = rawInner
-        .map((o) => parseIdlType(o))
-        .toList();
+    final options = rawInner.map((o) => parseIdlType(o)).toList();
     // Normalize single-option unions and drop 'undefined' variants since Dart
     // models them via optionality. Undefined variants are represented as the
     // surrounding optionality, mirroring how package:web lowers them.
@@ -78,18 +78,19 @@ TypeRef parseIdlType(Object? raw) {
     case 'FrozenArray':
     case 'ObservableArray':
       final inner = parseIdlType(_firstInner(rawInner));
-      final id =
-          generic == 'ObservableArray' ? 'core.ObservableArray' : 'core.List';
-      return NamedTypeRef(
-        typeId: id,
-        nullable: nullable,
-        arguments: [inner],
-      );
+      final id = generic == 'ObservableArray'
+          ? 'core.ObservableArray'
+          : 'core.List';
+      return NamedTypeRef(typeId: id, nullable: nullable, arguments: [inner]);
     case 'record':
       // idlType is a two-element list: [keyType, valueType].
       final list = rawInner as List;
-      final key = parseIdlType(list.isNotEmpty ? list[0] : _firstInner(rawInner));
-      final value = parseIdlType(list.length > 1 ? list[1] : _firstInner(rawInner));
+      final key = parseIdlType(
+        list.isNotEmpty ? list[0] : _firstInner(rawInner),
+      );
+      final value = parseIdlType(
+        list.length > 1 ? list[1] : _firstInner(rawInner),
+      );
       return NamedTypeRef(
         typeId: 'core.Map',
         nullable: nullable,

@@ -8,4 +8,3 @@ abstract interface class CanvasCaptureMediaStreamTrack {
   HTMLCanvasElement get canvas;
   void requestFrame();
 }
-

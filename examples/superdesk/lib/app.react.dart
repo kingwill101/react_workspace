@@ -5,9 +5,8 @@ const idApp = ComponentId('package:superdesk/lib/app.dart#App');
 ReactNode App({
   required String title,
   String? key,
-  List<ReactNode> children = const []
+  List<ReactNode> children = const [],
 }) {
   final props = (title: title);
   return Component(idApp, props, key: key, children: children);
 }
-

@@ -2,20 +2,25 @@ import 'package:react_web/react_web.dart';
 import 'package:react_web/web.dart' show HTMLInputElement, HTMLSelectElement;
 
 @reactComponent
-ReactNode ResourcesPage(({
-  List<Map<String, dynamic>> resources,
-  String search,
-  String filter,
-  Function(String) onFilter,
-  Function(String) onSearch,
-  Function() onAdd,
-  Function(Map<String, dynamic>) onEdit,
-  Function(Map<String, dynamic>) onDelete,
-  Function(Map<String, dynamic>) onDuplicate,
-  Function(String) onToast,
-}) props) {
+ReactNode ResourcesPage(
+  ({
+    List<Map<String, dynamic>> resources,
+    String search,
+    String filter,
+    Function(String) onFilter,
+    Function(String) onSearch,
+    Function() onAdd,
+    Function(Map<String, dynamic>) onEdit,
+    Function(Map<String, dynamic>) onDelete,
+    Function(Map<String, dynamic>) onDuplicate,
+    Function(String) onToast,
+  })
+  props,
+) {
   final filtered = props.resources.where((r) {
-    final matchesSearch = (r['name'] as String).toLowerCase().contains(props.search.toLowerCase());
+    final matchesSearch = (r['name'] as String).toLowerCase().contains(
+      props.search.toLowerCase(),
+    );
     final matchesFilter = props.filter == 'all' || r['badge'] == props.filter;
     return matchesSearch && matchesFilter;
   }).toList();
@@ -36,14 +41,18 @@ ReactNode ResourcesPage(({
             children: [
               input(
                 value: props.search,
-                onChange: (e) => props.onSearch((e.target as HTMLInputElement).value),
+                onChange: (e) =>
+                    props.onSearch((e.target as HTMLInputElement).value),
                 placeholder: 'Search...',
-                className: 'h-[36px] px-3 bg-white border-2 border-dark rounded-full font-bold text-[13px] w-[160px]',
+                className:
+                    'h-[36px] px-3 bg-white border-2 border-dark rounded-full font-bold text-[13px] w-[160px]',
               ),
               select(
                 value: props.filter,
-                onChange: (e) => props.onFilter((e.target as HTMLSelectElement).value),
-                className: 'h-[36px] bg-white border-2 border-dark rounded-full px-3 font-bold text-[13px]',
+                onChange: (e) =>
+                    props.onFilter((e.target as HTMLSelectElement).value),
+                className:
+                    'h-[36px] bg-white border-2 border-dark rounded-full px-3 font-bold text-[13px]',
                 children: [
                   option(value: 'all', children: [Text('All')]),
                   option(value: 'Popular', children: [Text('Popular')]),
@@ -55,7 +64,8 @@ ReactNode ResourcesPage(({
               ),
               button(
                 onClick: (_) => props.onAdd(),
-                className: 'h-[36px] px-4 bg-dark text-white rounded-full font-black text-[13px] flex items-center gap-1',
+                className:
+                    'h-[36px] px-4 bg-dark text-white rounded-full font-black text-[13px] flex items-center gap-1',
                 children: [Text('+ New')],
               ),
             ],
@@ -68,7 +78,8 @@ ReactNode ResourcesPage(({
           for (final r in filtered)
             div(
               key: r['id'] as String,
-              className: 'bg-white border-3 border-dark rounded-[20px] shadow-chunky p-4 flex flex-col gap-2',
+              className:
+                  'bg-white border-3 border-dark rounded-[20px] shadow-chunky p-4 flex flex-col gap-2',
               children: [
                 div(
                   className: 'flex items-center justify-between',
@@ -79,7 +90,8 @@ ReactNode ResourcesPage(({
                     ),
                     if (r['badge'] != null)
                       span(
-                        className: 'text-[10px] font-black bg-dark text-white rounded-full px-2 py-0.5',
+                        className:
+                            'text-[10px] font-black bg-dark text-white rounded-full px-2 py-0.5',
                         children: [Text(r['badge'] as String)],
                       ),
                   ],
@@ -89,7 +101,8 @@ ReactNode ResourcesPage(({
                   children: [Text(r['desc'] as String)],
                 ),
                 div(
-                  className: 'flex items-center justify-between mt-auto pt-2 border-t-2 border-dark',
+                  className:
+                      'flex items-center justify-between mt-auto pt-2 border-t-2 border-dark',
                   children: [
                     span(
                       className: 'text-[11px] font-bold text-gray-400',
@@ -100,17 +113,20 @@ ReactNode ResourcesPage(({
                       children: [
                         button(
                           onClick: (_) => props.onEdit(r),
-                          className: 'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full font-black text-[12px]',
+                          className:
+                              'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full font-black text-[12px]',
                           children: [Text('✏️')],
                         ),
                         button(
                           onClick: (_) => props.onDuplicate(r),
-                          className: 'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full font-black text-[12px]',
+                          className:
+                              'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full font-black text-[12px]',
                           children: [Text('📋')],
                         ),
                         button(
                           onClick: (_) => props.onDelete(r),
-                          className: 'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full font-black text-[12px]',
+                          className:
+                              'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full font-black text-[12px]',
                           children: [Text('🗑️')],
                         ),
                       ],

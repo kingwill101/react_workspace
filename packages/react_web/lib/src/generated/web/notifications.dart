@@ -17,25 +17,23 @@ final class GetNotificationOptionsValue implements GetNotificationOptions {
   @override
   String? tag;
 
-  GetNotificationOptionsValue({
-    this.tag,
-  });
+  GetNotificationOptionsValue({this.tag});
 }
 
 abstract interface class Notification {
   factory Notification(String title, [NotificationOptions? options]) =>
-      WebRuntime.current.createWebObject<Notification>(
-        'Notification',
-        [title, options],
-      );
+      WebRuntime.current.createWebObject<Notification>('Notification', [
+        title,
+        options,
+      ]);
   EventHandler get onclick;
-   set onclick(EventHandler value);
+  set onclick(EventHandler value);
   EventHandler get onshow;
-   set onshow(EventHandler value);
+  set onshow(EventHandler value);
   EventHandler get onerror;
-   set onerror(EventHandler value);
+  set onerror(EventHandler value);
   EventHandler get onclose;
-   set onclose(EventHandler value);
+  set onclose(EventHandler value);
   String get title;
   NotificationDirection get dir;
   String get lang;
@@ -76,11 +74,13 @@ final class NotificationActionValue implements NotificationAction {
 typedef NotificationDirection = String;
 
 abstract interface class NotificationEvent {
-  factory NotificationEvent(String type_, NotificationEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<NotificationEvent>(
-        'NotificationEvent',
-        [type_, eventInitDict],
-      );
+  factory NotificationEvent(
+    String type_,
+    NotificationEventInit eventInitDict,
+  ) => WebRuntime.current.createWebObject<NotificationEvent>(
+    'NotificationEvent',
+    [type_, eventInitDict],
+  );
   Notification get notification;
   String get action;
 }
@@ -98,10 +98,7 @@ final class NotificationEventInitValue implements NotificationEventInit {
   @override
   String? action;
 
-  NotificationEventInitValue({
-    required this.notification,
-    this.action,
-  });
+  NotificationEventInitValue({required this.notification, this.action});
 }
 
 abstract interface class NotificationOptions {
@@ -185,5 +182,5 @@ final class NotificationOptionsValue implements NotificationOptions {
 
 typedef NotificationPermission = String;
 
-typedef NotificationPermissionCallback = void Function(NotificationPermission permission,);
-
+typedef NotificationPermissionCallback =
+    void Function(NotificationPermission permission);

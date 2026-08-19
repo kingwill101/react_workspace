@@ -9,7 +9,7 @@ abstract interface class Lock {
   LockMode get mode;
 }
 
-typedef LockGrantedCallback = Future<Object> Function(Lock? lock,);
+typedef LockGrantedCallback = Future<Object> Function(Lock? lock);
 
 abstract interface class LockInfo {
   String? get name;
@@ -28,15 +28,15 @@ final class LockInfoValue implements LockInfo {
   @override
   String? clientId;
 
-  LockInfoValue({
-    this.name,
-    this.mode,
-    this.clientId,
-  });
+  LockInfoValue({this.name, this.mode, this.clientId});
 }
 
 abstract interface class LockManager {
-  Future<Object> request(String name, LockOptions options, LockGrantedCallback callback);
+  Future<Object> request(
+    String name,
+    LockOptions options,
+    LockGrantedCallback callback,
+  );
   Future<LockManagerSnapshot> query();
 }
 
@@ -53,10 +53,7 @@ final class LockManagerSnapshotValue implements LockManagerSnapshot {
   @override
   List<LockInfo>? pending;
 
-  LockManagerSnapshotValue({
-    this.held,
-    this.pending,
-  });
+  LockManagerSnapshotValue({this.held, this.pending});
 }
 
 typedef LockMode = String;
@@ -82,15 +79,9 @@ final class LockOptionsValue implements LockOptions {
   @override
   AbortSignal? signal;
 
-  LockOptionsValue({
-    this.mode,
-    this.ifAvailable,
-    this.steal,
-    this.signal,
-  });
+  LockOptionsValue({this.mode, this.ifAvailable, this.steal, this.signal});
 }
 
 abstract interface class NavigatorLocks {
   LockManager get locks;
 }
-

@@ -8,18 +8,20 @@ import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class WebTransport {
-  factory WebTransport(String url, [WebTransportOptions? options]) =>
-      WebRuntime.current.createWebObject<WebTransport>(
-        'WebTransport',
-        [url, options],
-      );
+  factory WebTransport(String url, [WebTransportOptions? options]) => WebRuntime
+      .current
+      .createWebObject<WebTransport>('WebTransport', [url, options]);
   Future<void> get ready;
   Future<WebTransportCloseInfo> get closed;
   void close([WebTransportCloseInfo? closeInfo]);
   WebTransportDatagramDuplexStream get datagrams;
-  Future<WebTransportBidirectionalStream> createBidirectionalStream([WebTransportSendStreamOptions? options]);
+  Future<WebTransportBidirectionalStream> createBidirectionalStream([
+    WebTransportSendStreamOptions? options,
+  ]);
   ReadableStream get incomingBidirectionalStreams;
-  Future<Object> createUnidirectionalStream([WebTransportSendStreamOptions? options]);
+  Future<Object> createUnidirectionalStream([
+    WebTransportSendStreamOptions? options,
+  ]);
   ReadableStream get incomingUnidirectionalStreams;
 }
 
@@ -41,10 +43,7 @@ final class WebTransportCloseInfoValue implements WebTransportCloseInfo {
   @override
   String? reason;
 
-  WebTransportCloseInfoValue({
-    this.closeCode,
-    this.reason,
-  });
+  WebTransportCloseInfoValue({this.closeCode, this.reason});
 }
 
 typedef WebTransportCongestionControl = String;
@@ -74,7 +73,8 @@ abstract interface class WebTransportConnectionStats {
   set estimatedSendRate(int? value);
 }
 
-final class WebTransportConnectionStatsValue implements WebTransportConnectionStats {
+final class WebTransportConnectionStatsValue
+    implements WebTransportConnectionStats {
   @override
   int? bytesSent;
   @override
@@ -118,13 +118,13 @@ abstract interface class WebTransportDatagramDuplexStream {
   WritableStream get writable;
   int get maxDatagramSize;
   double? get incomingMaxAge;
-   set incomingMaxAge(double? value);
+  set incomingMaxAge(double? value);
   double? get outgoingMaxAge;
-   set outgoingMaxAge(double? value);
+  set outgoingMaxAge(double? value);
   double get incomingHighWaterMark;
-   set incomingHighWaterMark(double value);
+  set incomingHighWaterMark(double value);
   double get outgoingHighWaterMark;
-   set outgoingHighWaterMark(double value);
+  set outgoingHighWaterMark(double value);
 }
 
 abstract interface class WebTransportDatagramStats {
@@ -138,7 +138,8 @@ abstract interface class WebTransportDatagramStats {
   set lostOutgoing(int? value);
 }
 
-final class WebTransportDatagramStatsValue implements WebTransportDatagramStats {
+final class WebTransportDatagramStatsValue
+    implements WebTransportDatagramStats {
   @override
   int? droppedIncoming;
   @override
@@ -157,11 +158,13 @@ final class WebTransportDatagramStatsValue implements WebTransportDatagramStats 
 }
 
 abstract interface class WebTransportError {
-  factory WebTransportError([String? message, WebTransportErrorOptions? options]) =>
-      WebRuntime.current.createWebObject<WebTransportError>(
-        'WebTransportError',
-        [message, options],
-      );
+  factory WebTransportError([
+    String? message,
+    WebTransportErrorOptions? options,
+  ]) => WebRuntime.current.createWebObject<WebTransportError>(
+    'WebTransportError',
+    [message, options],
+  );
   WebTransportErrorSource get source;
   int? get streamErrorCode;
 }
@@ -179,10 +182,7 @@ final class WebTransportErrorOptionsValue implements WebTransportErrorOptions {
   @override
   int? streamErrorCode;
 
-  WebTransportErrorOptionsValue({
-    this.source,
-    this.streamErrorCode,
-  });
+  WebTransportErrorOptionsValue({this.source, this.streamErrorCode});
 }
 
 typedef WebTransportErrorSource = String;
@@ -200,10 +200,7 @@ final class WebTransportHashValue implements WebTransportHash {
   @override
   BufferSource? value;
 
-  WebTransportHashValue({
-    this.algorithm,
-    this.value,
-  });
+  WebTransportHashValue({this.algorithm, this.value});
 }
 
 abstract interface class WebTransportOptions {
@@ -252,16 +249,14 @@ abstract interface class WebTransportReceiveStreamStats {
   set bytesRead(int? value);
 }
 
-final class WebTransportReceiveStreamStatsValue implements WebTransportReceiveStreamStats {
+final class WebTransportReceiveStreamStatsValue
+    implements WebTransportReceiveStreamStats {
   @override
   int? bytesReceived;
   @override
   int? bytesRead;
 
-  WebTransportReceiveStreamStatsValue({
-    this.bytesReceived,
-    this.bytesRead,
-  });
+  WebTransportReceiveStreamStatsValue({this.bytesReceived, this.bytesRead});
 }
 
 typedef WebTransportReliabilityMode = String;
@@ -275,7 +270,8 @@ abstract interface class WebTransportSendStreamOptions {
   set waitUntilAvailable(bool? value);
 }
 
-final class WebTransportSendStreamOptionsValue implements WebTransportSendStreamOptions {
+final class WebTransportSendStreamOptionsValue
+    implements WebTransportSendStreamOptions {
   @override
   Object? sendGroup;
   @override
@@ -299,7 +295,8 @@ abstract interface class WebTransportSendStreamStats {
   set bytesAcknowledged(int? value);
 }
 
-final class WebTransportSendStreamStatsValue implements WebTransportSendStreamStats {
+final class WebTransportSendStreamStatsValue
+    implements WebTransportSendStreamStats {
   @override
   int? bytesWritten;
   @override
@@ -313,4 +310,3 @@ final class WebTransportSendStreamStatsValue implements WebTransportSendStreamSt
     this.bytesAcknowledged,
   });
 }
-

@@ -19,7 +19,8 @@ abstract interface class AttributionReportingRequestOptions {
   set triggerEligible(bool value);
 }
 
-final class AttributionReportingRequestOptionsValue implements AttributionReportingRequestOptions {
+final class AttributionReportingRequestOptionsValue
+    implements AttributionReportingRequestOptions {
   @override
   bool eventSourceEligible;
   @override
@@ -33,7 +34,7 @@ final class AttributionReportingRequestOptionsValue implements AttributionReport
 
 abstract interface class HTMLAttributionSrcElementUtils {
   String get attributionSrc;
-   set attributionSrc(String value);
+  set attributionSrc(String value);
 }
 
 abstract interface class RequestInit {
@@ -147,19 +148,22 @@ final class RequestInitValue implements RequestInit {
 
 abstract interface class XMLHttpRequest {
   factory XMLHttpRequest() =>
-      WebRuntime.current.createWebObject<XMLHttpRequest>(
-        'XMLHttpRequest',
-        [],
-      );
+      WebRuntime.current.createWebObject<XMLHttpRequest>('XMLHttpRequest', []);
   EventHandler get onreadystatechange;
-   set onreadystatechange(EventHandler value);
+  set onreadystatechange(EventHandler value);
   int get readyState;
-  void open(String method, String url, bool async_, [String? username, String? password]);
+  void open(
+    String method,
+    String url,
+    bool async_, [
+    String? username,
+    String? password,
+  ]);
   void setRequestHeader(String name, String value);
   int get timeout;
-   set timeout(int value);
+  set timeout(int value);
   bool get withCredentials;
-   set withCredentials(bool value);
+  set withCredentials(bool value);
   XMLHttpRequestUpload get upload;
   void send([Object? body]);
   void abort();
@@ -170,9 +174,8 @@ abstract interface class XMLHttpRequest {
   String getAllResponseHeaders();
   void overrideMimeType(String mime);
   XMLHttpRequestResponseType get responseType;
-   set responseType(XMLHttpRequestResponseType value);
+  set responseType(XMLHttpRequestResponseType value);
   Object get response;
   String get responseText;
   Document? get responseXML;
 }
-

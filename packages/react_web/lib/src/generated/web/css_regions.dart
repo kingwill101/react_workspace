@@ -8,4 +8,3 @@ abstract interface class Region {
   Object get regionOverset;
   List<Range>? getRegionFlowRanges();
 }
-

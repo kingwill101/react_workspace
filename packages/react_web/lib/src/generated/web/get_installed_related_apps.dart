@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: get-installed-related-apps
 // ignore_for_file: type=lint
 
-
 abstract interface class RelatedApplication {
   String get platform;
   set platform(String value);
@@ -31,4 +30,3 @@ final class RelatedApplicationValue implements RelatedApplication {
     this.version,
   });
 }
-

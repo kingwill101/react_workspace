@@ -13,9 +13,7 @@ final class InkPresenterParamValue implements InkPresenterParam {
   @override
   Element? presentationArea;
 
-  InkPresenterParamValue({
-    this.presentationArea,
-  });
+  InkPresenterParamValue({this.presentationArea});
 }
 
 abstract interface class InkTrailStyle {
@@ -31,9 +29,5 @@ final class InkTrailStyleValue implements InkTrailStyle {
   @override
   double diameter;
 
-  InkTrailStyleValue({
-    required this.color,
-    required this.diameter,
-  });
+  InkTrailStyleValue({required this.color, required this.diameter});
 }
-

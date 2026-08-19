@@ -39,7 +39,8 @@ abstract interface class MLBatchNormalizationOptions {
   set epsilon(double? value);
 }
 
-final class MLBatchNormalizationOptionsValue implements MLBatchNormalizationOptions {
+final class MLBatchNormalizationOptionsValue
+    implements MLBatchNormalizationOptions {
   @override
   Object? scale;
   @override
@@ -70,10 +71,7 @@ final class MLClampOptionsValue implements MLClampOptions {
   @override
   double? maxValue;
 
-  MLClampOptionsValue({
-    this.minValue,
-    this.maxValue,
-  });
+  MLClampOptionsValue({this.minValue, this.maxValue});
 }
 
 abstract interface class MLComputeResult {
@@ -89,10 +87,7 @@ final class MLComputeResultValue implements MLComputeResult {
   @override
   MLNamedArrayBufferViews? outputs;
 
-  MLComputeResultValue({
-    this.inputs,
-    this.outputs,
-  });
+  MLComputeResultValue({this.inputs, this.outputs});
 }
 
 abstract interface class MLContextOptions {
@@ -108,10 +103,7 @@ final class MLContextOptionsValue implements MLContextOptions {
   @override
   MLPowerPreference? powerPreference;
 
-  MLContextOptionsValue({
-    this.deviceType,
-    this.powerPreference,
-  });
+  MLContextOptionsValue({this.deviceType, this.powerPreference});
 }
 
 typedef MLConv2dFilterOperandLayout = String;
@@ -227,9 +219,7 @@ final class MLEluOptionsValue implements MLEluOptions {
   @override
   double? alpha;
 
-  MLEluOptionsValue({
-    this.alpha,
-  });
+  MLEluOptionsValue({this.alpha});
 }
 
 abstract interface class MLGatherOptions {
@@ -241,9 +231,7 @@ final class MLGatherOptionsValue implements MLGatherOptions {
   @override
   int? axis;
 
-  MLGatherOptionsValue({
-    this.axis,
-  });
+  MLGatherOptionsValue({this.axis});
 }
 
 abstract interface class MLGemmOptions {
@@ -378,10 +366,7 @@ final class MLHardSigmoidOptionsValue implements MLHardSigmoidOptions {
   @override
   double? beta;
 
-  MLHardSigmoidOptionsValue({
-    this.alpha,
-    this.beta,
-  });
+  MLHardSigmoidOptionsValue({this.alpha, this.beta});
 }
 
 typedef MLInputOperandLayout = String;
@@ -397,7 +382,8 @@ abstract interface class MLInstanceNormalizationOptions {
   set layout(MLInputOperandLayout? value);
 }
 
-final class MLInstanceNormalizationOptionsValue implements MLInstanceNormalizationOptions {
+final class MLInstanceNormalizationOptionsValue
+    implements MLInstanceNormalizationOptions {
   @override
   Object? scale;
   @override
@@ -428,7 +414,8 @@ abstract interface class MLLayerNormalizationOptions {
   set epsilon(double? value);
 }
 
-final class MLLayerNormalizationOptionsValue implements MLLayerNormalizationOptions {
+final class MLLayerNormalizationOptionsValue
+    implements MLLayerNormalizationOptions {
   @override
   Object? scale;
   @override
@@ -455,9 +442,7 @@ final class MLLeakyReluOptionsValue implements MLLeakyReluOptions {
   @override
   double? alpha;
 
-  MLLeakyReluOptionsValue({
-    this.alpha,
-  });
+  MLLeakyReluOptionsValue({this.alpha});
 }
 
 abstract interface class MLLinearOptions {
@@ -473,10 +458,7 @@ final class MLLinearOptionsValue implements MLLinearOptions {
   @override
   double? beta;
 
-  MLLinearOptionsValue({
-    this.alpha,
-    this.beta,
-  });
+  MLLinearOptionsValue({this.alpha, this.beta});
 }
 
 abstract interface class MLLstmCellOptions {
@@ -588,10 +570,7 @@ final class MLOperandDescriptorValue implements MLOperandDescriptor {
   @override
   List<int>? dimensions;
 
-  MLOperandDescriptorValue({
-    required this.dataType,
-    this.dimensions,
-  });
+  MLOperandDescriptorValue({required this.dataType, this.dimensions});
 }
 
 abstract interface class MLPadOptions {
@@ -607,10 +586,7 @@ final class MLPadOptionsValue implements MLPadOptions {
   @override
   double? value;
 
-  MLPadOptionsValue({
-    this.mode,
-    this.value,
-  });
+  MLPadOptionsValue({this.mode, this.value});
 }
 
 typedef MLPaddingMode = String;
@@ -676,10 +652,7 @@ final class MLReduceOptionsValue implements MLReduceOptions {
   @override
   bool? keepDimensions;
 
-  MLReduceOptionsValue({
-    this.axes,
-    this.keepDimensions,
-  });
+  MLReduceOptionsValue({this.axes, this.keepDimensions});
 }
 
 abstract interface class MLResample2dOptions {
@@ -703,12 +676,7 @@ final class MLResample2dOptionsValue implements MLResample2dOptions {
   @override
   List<int>? axes;
 
-  MLResample2dOptionsValue({
-    this.mode,
-    this.scales,
-    this.sizes,
-    this.axes,
-  });
+  MLResample2dOptionsValue({this.mode, this.scales, this.sizes, this.axes});
 }
 
 typedef MLRoundingType = String;
@@ -722,9 +690,7 @@ final class MLSplitOptionsValue implements MLSplitOptions {
   @override
   int? axis;
 
-  MLSplitOptionsValue({
-    this.axis,
-  });
+  MLSplitOptionsValue({this.axis});
 }
 
 abstract interface class MLTransposeOptions {
@@ -736,9 +702,7 @@ final class MLTransposeOptionsValue implements MLTransposeOptions {
   @override
   List<int>? permutation;
 
-  MLTransposeOptionsValue({
-    this.permutation,
-  });
+  MLTransposeOptionsValue({this.permutation});
 }
 
 abstract interface class MLTriangularOptions {
@@ -754,13 +718,9 @@ final class MLTriangularOptionsValue implements MLTriangularOptions {
   @override
   int? diagonal;
 
-  MLTriangularOptionsValue({
-    this.upper,
-    this.diagonal,
-  });
+  MLTriangularOptionsValue({this.upper, this.diagonal});
 }
 
 abstract interface class NavigatorML {
   Object get ml;
 }
-

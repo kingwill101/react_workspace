@@ -4,7 +4,8 @@ import 'package:routed_core/routed_core.dart';
 import 'package:routed_testing/routed_testing.dart';
 import 'package:server_testing/server_testing.dart';
 
-import 'package:react_server_routed_example/.generated/greeting.action.g.dart' show greetRef;
+import 'package:react_server_routed_example/.generated/greeting.action.g.dart'
+    show greetRef;
 import 'package:react_server_routed_example/greeting.dart';
 
 void main() {

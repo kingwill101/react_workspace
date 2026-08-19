@@ -55,7 +55,8 @@ abstract interface class BluetoothAdvertisingEventInit {
   set serviceData(Object? value);
 }
 
-final class BluetoothAdvertisingEventInitValue implements BluetoothAdvertisingEventInit {
+final class BluetoothAdvertisingEventInitValue
+    implements BluetoothAdvertisingEventInit {
   @override
   Object device;
   @override
@@ -100,19 +101,16 @@ final class BluetoothDataFilterInitValue implements BluetoothDataFilterInit {
   @override
   BufferSource? mask;
 
-  BluetoothDataFilterInitValue({
-    this.dataPrefix,
-    this.mask,
-  });
+  BluetoothDataFilterInitValue({this.dataPrefix, this.mask});
 }
 
 typedef BluetoothDescriptorUUID = Object;
 
 abstract interface class BluetoothDeviceEventHandlers {
   EventHandler get onadvertisementreceived;
-   set onadvertisementreceived(EventHandler value);
+  set onadvertisementreceived(EventHandler value);
   EventHandler get ongattserverdisconnected;
-   set ongattserverdisconnected(EventHandler value);
+  set ongattserverdisconnected(EventHandler value);
 }
 
 abstract interface class BluetoothLEScanFilterInit {
@@ -128,7 +126,8 @@ abstract interface class BluetoothLEScanFilterInit {
   set serviceData(List<BluetoothServiceDataFilterInit>? value);
 }
 
-final class BluetoothLEScanFilterInitValue implements BluetoothLEScanFilterInit {
+final class BluetoothLEScanFilterInitValue
+    implements BluetoothLEScanFilterInit {
   @override
   List<BluetoothServiceUUID>? services;
   @override
@@ -154,13 +153,12 @@ abstract interface class BluetoothManufacturerDataFilterInit {
   set companyIdentifier(int value);
 }
 
-final class BluetoothManufacturerDataFilterInitValue implements BluetoothManufacturerDataFilterInit {
+final class BluetoothManufacturerDataFilterInitValue
+    implements BluetoothManufacturerDataFilterInit {
   @override
   int companyIdentifier;
 
-  BluetoothManufacturerDataFilterInitValue({
-    required this.companyIdentifier,
-  });
+  BluetoothManufacturerDataFilterInitValue({required this.companyIdentifier});
 }
 
 abstract interface class BluetoothPermissionDescriptor {
@@ -176,7 +174,8 @@ abstract interface class BluetoothPermissionDescriptor {
   set acceptAllDevices(bool? value);
 }
 
-final class BluetoothPermissionDescriptorValue implements BluetoothPermissionDescriptor {
+final class BluetoothPermissionDescriptorValue
+    implements BluetoothPermissionDescriptor {
   @override
   String? deviceId;
   @override
@@ -202,13 +201,12 @@ abstract interface class BluetoothPermissionStorage {
   set allowedDevices(List<AllowedBluetoothDevice> value);
 }
 
-final class BluetoothPermissionStorageValue implements BluetoothPermissionStorage {
+final class BluetoothPermissionStorageValue
+    implements BluetoothPermissionStorage {
   @override
   List<AllowedBluetoothDevice> allowedDevices;
 
-  BluetoothPermissionStorageValue({
-    required this.allowedDevices,
-  });
+  BluetoothPermissionStorageValue({required this.allowedDevices});
 }
 
 abstract interface class BluetoothServiceDataFilterInit {
@@ -216,23 +214,21 @@ abstract interface class BluetoothServiceDataFilterInit {
   set service(BluetoothServiceUUID value);
 }
 
-final class BluetoothServiceDataFilterInitValue implements BluetoothServiceDataFilterInit {
+final class BluetoothServiceDataFilterInitValue
+    implements BluetoothServiceDataFilterInit {
   @override
   BluetoothServiceUUID service;
 
-  BluetoothServiceDataFilterInitValue({
-    required this.service,
-  });
+  BluetoothServiceDataFilterInitValue({required this.service});
 }
 
 typedef BluetoothServiceUUID = Object;
 
-abstract interface class BluetoothUUID {
-}
+abstract interface class BluetoothUUID {}
 
 abstract interface class CharacteristicEventHandlers {
   EventHandler get oncharacteristicvaluechanged;
-   set oncharacteristicvaluechanged(EventHandler value);
+  set oncharacteristicvaluechanged(EventHandler value);
 }
 
 abstract interface class RequestDeviceOptions {
@@ -271,11 +267,11 @@ final class RequestDeviceOptionsValue implements RequestDeviceOptions {
 
 abstract interface class ServiceEventHandlers {
   EventHandler get onserviceadded;
-   set onserviceadded(EventHandler value);
+  set onserviceadded(EventHandler value);
   EventHandler get onservicechanged;
-   set onservicechanged(EventHandler value);
+  set onservicechanged(EventHandler value);
   EventHandler get onserviceremoved;
-   set onserviceremoved(EventHandler value);
+  set onserviceremoved(EventHandler value);
 }
 
 typedef UUID = String;
@@ -289,9 +285,7 @@ final class ValueEventInitValue implements ValueEventInit {
   @override
   Object? value;
 
-  ValueEventInitValue({
-    this.value,
-  });
+  ValueEventInitValue({this.value});
 }
 
 abstract interface class WatchAdvertisementsOptions {
@@ -299,12 +293,10 @@ abstract interface class WatchAdvertisementsOptions {
   set signal(AbortSignal? value);
 }
 
-final class WatchAdvertisementsOptionsValue implements WatchAdvertisementsOptions {
+final class WatchAdvertisementsOptionsValue
+    implements WatchAdvertisementsOptions {
   @override
   AbortSignal? signal;
 
-  WatchAdvertisementsOptionsValue({
-    this.signal,
-  });
+  WatchAdvertisementsOptionsValue({this.signal});
 }
-

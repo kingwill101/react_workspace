@@ -10,12 +10,11 @@ abstract interface class BatteryManager {
   double get dischargingTime;
   double get level;
   EventHandler get onchargingchange;
-   set onchargingchange(EventHandler value);
+  set onchargingchange(EventHandler value);
   EventHandler get onchargingtimechange;
-   set onchargingtimechange(EventHandler value);
+  set onchargingtimechange(EventHandler value);
   EventHandler get ondischargingtimechange;
-   set ondischargingtimechange(EventHandler value);
+  set ondischargingtimechange(EventHandler value);
   EventHandler get onlevelchange;
-   set onlevelchange(EventHandler value);
+  set onlevelchange(EventHandler value);
 }
-

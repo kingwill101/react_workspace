@@ -10,4 +10,3 @@ abstract interface class VideoPlaybackQuality {
   int get totalVideoFrames;
   int get corruptedVideoFrames;
 }
-

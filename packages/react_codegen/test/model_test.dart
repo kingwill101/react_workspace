@@ -18,8 +18,18 @@ void main() {
 
     test('RecordTypeRef stores fields', () {
       const ref = RecordTypeRef(
-        positional: [RecordFieldRef(name: '\$0', type: NamedTypeRef(symbol: 'String'))],
-        named: [RecordFieldRef(name: 'count', type: NamedTypeRef(symbol: 'int'))],
+        positional: [
+          RecordFieldRef(
+            name: '\$0',
+            type: NamedTypeRef(symbol: 'String'),
+          ),
+        ],
+        named: [
+          RecordFieldRef(
+            name: 'count',
+            type: NamedTypeRef(symbol: 'int'),
+          ),
+        ],
       );
       expect(ref.positional, hasLength(1));
       expect(ref.named, hasLength(1));
@@ -28,7 +38,12 @@ void main() {
 
     test('FunctionTypeRef stores params and result', () {
       const ref = FunctionTypeRef(
-        positional: [FunctionParameterRef(name: 'value', type: NamedTypeRef(symbol: 'int'))],
+        positional: [
+          FunctionParameterRef(
+            name: 'value',
+            type: NamedTypeRef(symbol: 'int'),
+          ),
+        ],
         result: NamedTypeRef(symbol: 'void'),
         asynchronous: true,
       );
@@ -48,21 +63,42 @@ void main() {
 
     test('webHostTypes contains synthetic events', () {
       expect(ReactTypes.webHostTypes.containsKey('ReactMouseEvent'), isTrue);
-      expect(ReactTypes.webHostTypes['ReactMouseEvent'], ('web', 'ReactMouseEvent'));
+      expect(ReactTypes.webHostTypes['ReactMouseEvent'], (
+        'web',
+        'ReactMouseEvent',
+      ));
     });
 
     test('webHostTypes contains Web platform interfaces', () {
-      for (final name in ['Storage', 'BroadcastChannel', 'FileReader', 'Blob', 'MessageEvent', 'Window']) {
-        expect(ReactTypes.webHostTypes.containsKey(name), isTrue, reason: 'Missing $name');
+      for (final name in [
+        'Storage',
+        'BroadcastChannel',
+        'FileReader',
+        'Blob',
+        'MessageEvent',
+        'Window',
+      ]) {
+        expect(
+          ReactTypes.webHostTypes.containsKey(name),
+          isTrue,
+          reason: 'Missing $name',
+        );
       }
     });
 
-    test('webHostTypes values are (namespace, typeId) tuples with namespace web', () {
-      for (final entry in ReactTypes.webHostTypes.entries) {
-        expect(entry.value.$1, 'web', reason: 'Wrong namespace for ${entry.key}');
-        expect(entry.value.$2, isNotEmpty);
-      }
-    });
+    test(
+      'webHostTypes values are (namespace, typeId) tuples with namespace web',
+      () {
+        for (final entry in ReactTypes.webHostTypes.entries) {
+          expect(
+            entry.value.$1,
+            'web',
+            reason: 'Wrong namespace for ${entry.key}',
+          );
+          expect(entry.value.$2, isNotEmpty);
+        }
+      },
+    );
   });
 
   group('ReactCallbackModel', () {
@@ -72,11 +108,17 @@ void main() {
           ReactCallbackParameter(
             name: 'value',
             type: NamedTypeRef(symbol: 'int', nullable: false),
-            valueSpec: ReactValueSpecModel(kind: ReactValueKind.integer, nullable: false),
+            valueSpec: ReactValueSpecModel(
+              kind: ReactValueKind.integer,
+              nullable: false,
+            ),
           ),
         ],
         resultType: NamedTypeRef(symbol: 'void'),
-        result: ReactValueSpecModel(kind: ReactValueKind.void_, nullable: false),
+        result: ReactValueSpecModel(
+          kind: ReactValueKind.void_,
+          nullable: false,
+        ),
         nullable: false,
         asynchronous: false,
       );
@@ -92,9 +134,14 @@ void main() {
         name: 'Foo',
         componentId: 'package:app/lib/foo.dart#Foo',
         returnType: NamedTypeRef(symbol: 'ReactNode'),
-        propsRecord: RecordTypeRef(named: [
-          RecordFieldRef(name: 'title', type: NamedTypeRef(symbol: 'String')),
-        ]),
+        propsRecord: RecordTypeRef(
+          named: [
+            RecordFieldRef(
+              name: 'title',
+              type: NamedTypeRef(symbol: 'String'),
+            ),
+          ],
+        ),
         props: [
           ReactPropModel(
             name: 'title',

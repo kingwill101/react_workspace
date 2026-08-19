@@ -9,7 +9,10 @@ import 'package:react_web/src/web_runtime.dart';
 typedef ContinuationPriority = String;
 
 abstract interface class Scheduler {
-  Future<Object> postTask(SchedulerPostTaskCallback callback, [SchedulerPostTaskOptions? options]);
+  Future<Object> postTask(
+    SchedulerPostTaskCallback callback, [
+    SchedulerPostTaskOptions? options,
+  ]);
 }
 
 typedef SchedulerPostTaskCallback = Object Function();
@@ -31,11 +34,7 @@ final class SchedulerPostTaskOptionsValue implements SchedulerPostTaskOptions {
   @override
   int? delay;
 
-  SchedulerPostTaskOptionsValue({
-    this.signal,
-    this.priority,
-    this.delay,
-  });
+  SchedulerPostTaskOptionsValue({this.signal, this.priority, this.delay});
 }
 
 typedef SchedulerSignalInherit = String;
@@ -53,18 +52,12 @@ final class SchedulerYieldOptionsValue implements SchedulerYieldOptions {
   @override
   ContinuationPriority? priority;
 
-  SchedulerYieldOptionsValue({
-    this.signal,
-    this.priority,
-  });
+  SchedulerYieldOptionsValue({this.signal, this.priority});
 }
 
 abstract interface class TaskController {
-  factory TaskController([TaskControllerInit? init]) =>
-      WebRuntime.current.createWebObject<TaskController>(
-        'TaskController',
-        [init],
-      );
+  factory TaskController([TaskControllerInit? init]) => WebRuntime.current
+      .createWebObject<TaskController>('TaskController', [init]);
   void setPriority(TaskPriority priority);
 }
 
@@ -77,19 +70,19 @@ final class TaskControllerInitValue implements TaskControllerInit {
   @override
   TaskPriority? priority;
 
-  TaskControllerInitValue({
-    this.priority,
-  });
+  TaskControllerInitValue({this.priority});
 }
 
 typedef TaskPriority = String;
 
 abstract interface class TaskPriorityChangeEvent {
-  factory TaskPriorityChangeEvent(String type_, TaskPriorityChangeEventInit priorityChangeEventInitDict) =>
-      WebRuntime.current.createWebObject<TaskPriorityChangeEvent>(
-        'TaskPriorityChangeEvent',
-        [type_, priorityChangeEventInitDict],
-      );
+  factory TaskPriorityChangeEvent(
+    String type_,
+    TaskPriorityChangeEventInit priorityChangeEventInitDict,
+  ) => WebRuntime.current.createWebObject<TaskPriorityChangeEvent>(
+    'TaskPriorityChangeEvent',
+    [type_, priorityChangeEventInitDict],
+  );
   TaskPriority get previousPriority;
 }
 
@@ -98,19 +91,18 @@ abstract interface class TaskPriorityChangeEventInit {
   set previousPriority(TaskPriority value);
 }
 
-final class TaskPriorityChangeEventInitValue implements TaskPriorityChangeEventInit {
+final class TaskPriorityChangeEventInitValue
+    implements TaskPriorityChangeEventInit {
   @override
   TaskPriority previousPriority;
 
-  TaskPriorityChangeEventInitValue({
-    required this.previousPriority,
-  });
+  TaskPriorityChangeEventInitValue({required this.previousPriority});
 }
 
 abstract interface class TaskSignal {
   TaskPriority get priority;
   EventHandler get onprioritychange;
-   set onprioritychange(EventHandler value);
+  set onprioritychange(EventHandler value);
 }
 
 abstract interface class TaskSignalAnyInit {
@@ -122,8 +114,5 @@ final class TaskSignalAnyInitValue implements TaskSignalAnyInit {
   @override
   Object? priority;
 
-  TaskSignalAnyInitValue({
-    this.priority,
-  });
+  TaskSignalAnyInitValue({this.priority});
 }
-

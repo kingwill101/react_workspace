@@ -18,7 +18,10 @@ import 'package:react/react.dart';
 )
 @JS('globalThis.__reactDartBindings.reactRouter.createBrowserRouter')
 external JSAny? _createBrowserRouterRaw(JSAny? routes, JSAny? opts);
-Object? createBrowserRouter(List<CreateBrowserRouterRoutes> routes, [DOMRouterOpts? opts]) {
+Object? createBrowserRouter(
+  List<CreateBrowserRouterRoutes> routes, [
+  DOMRouterOpts? opts,
+]) {
   final raw = _createBrowserRouterRaw(routes.jsify(), opts.jsify());
   if (raw == null) return null;
   return raw as Object?;
@@ -34,7 +37,10 @@ Object? createBrowserRouter(List<CreateBrowserRouterRoutes> routes, [DOMRouterOp
 )
 @JS('globalThis.__reactDartBindings.reactRouter.createHashRouter')
 external JSAny? _createHashRouterRaw(JSAny? routes, JSAny? opts);
-Object? createHashRouter(List<CreateBrowserRouterRoutes> routes, [DOMRouterOpts? opts]) {
+Object? createHashRouter(
+  List<CreateBrowserRouterRoutes> routes, [
+  DOMRouterOpts? opts,
+]) {
   final raw = _createHashRouterRaw(routes.jsify(), opts.jsify());
   if (raw == null) return null;
   return raw as Object?;
@@ -53,9 +59,9 @@ Object? createHashRouter(List<CreateBrowserRouterRoutes> routes, [DOMRouterOpts?
 )
 ReactNode routerProvider({
   String? key,
-    ReactNode? fallbackElement,
-    required Object router,
-    Pick? future,
+  ReactNode? fallbackElement,
+  required Object router,
+  Pick? future,
 }) => foreignComponent(
   'reactRouter.RouterProvider',
   key: key,
@@ -81,9 +87,9 @@ ReactNode routerProvider({
 ReactNode browserRouter({
   String? key,
   List<ReactNode> children = const [],
-    String? basename,
-    FutureConfig? future,
-    Object? window,
+  String? basename,
+  FutureConfig? future,
+  Object? window,
 }) => foreignComponent(
   'reactRouter.BrowserRouter',
   key: key,
@@ -110,9 +116,9 @@ ReactNode browserRouter({
 ReactNode hashRouter({
   String? key,
   List<ReactNode> children = const [],
-    String? basename,
-    FutureConfig? future,
-    Object? window,
+  String? basename,
+  FutureConfig? future,
+  Object? window,
 }) => foreignComponent(
   'reactRouter.HashRouter',
   key: key,
@@ -143,26 +149,26 @@ ReactNode hashRouter({
 ReactNode link({
   String? key,
   List<ReactNode> children = const [],
-    String? className,
-    Object? style,
-    String? id,
-    String? title,
-    String? lang,
-    String? dir,
-    bool? hidden,
-    num? tabIndex,
-    String? role,
-    String? target,
-    String? rel,
-    bool? download,
-    Object? onClick,
-    bool? reloadDocument,
-    bool? replace,
-    Object? state,
-    bool? preventScrollReset,
-    RelativeRoutingType? relative,
-    required Object to,
-    bool? unstable_viewTransition,
+  String? className,
+  Object? style,
+  String? id,
+  String? title,
+  String? lang,
+  String? dir,
+  bool? hidden,
+  num? tabIndex,
+  String? role,
+  String? target,
+  String? rel,
+  bool? download,
+  Object? onClick,
+  bool? reloadDocument,
+  bool? replace,
+  Object? state,
+  bool? preventScrollReset,
+  RelativeRoutingType? relative,
+  required Object to,
+  bool? unstable_viewTransition,
 }) => foreignComponent(
   'reactRouter.Link',
   key: key,
@@ -186,7 +192,8 @@ ReactNode link({
     if (preventScrollReset != null) 'preventScrollReset': preventScrollReset,
     if (relative != null) 'relative': relative.value,
     'to': to,
-    if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition,
+    if (unstable_viewTransition != null)
+      'unstable_viewTransition': unstable_viewTransition,
   },
   children: children,
 );
@@ -210,28 +217,28 @@ ReactNode link({
 ReactNode navLink({
   String? key,
   List<ReactNode> children = const [],
-    String? className,
-    Object? style,
-    String? id,
-    String? title,
-    String? lang,
-    String? dir,
-    bool? hidden,
-    num? tabIndex,
-    String? role,
-    String? target,
-    String? rel,
-    bool? download,
-    Object? onClick,
-    bool? reloadDocument,
-    bool? replace,
-    Object? state,
-    bool? preventScrollReset,
-    RelativeRoutingType? relative,
-    required Object to,
-    bool? unstable_viewTransition,
-    bool? caseSensitive,
-    bool? end,
+  String? className,
+  Object? style,
+  String? id,
+  String? title,
+  String? lang,
+  String? dir,
+  bool? hidden,
+  num? tabIndex,
+  String? role,
+  String? target,
+  String? rel,
+  bool? download,
+  Object? onClick,
+  bool? reloadDocument,
+  bool? replace,
+  Object? state,
+  bool? preventScrollReset,
+  RelativeRoutingType? relative,
+  required Object to,
+  bool? unstable_viewTransition,
+  bool? caseSensitive,
+  bool? end,
 }) => foreignComponent(
   'reactRouter.NavLink',
   key: key,
@@ -255,7 +262,8 @@ ReactNode navLink({
     if (preventScrollReset != null) 'preventScrollReset': preventScrollReset,
     if (relative != null) 'relative': relative.value,
     'to': to,
-    if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition,
+    if (unstable_viewTransition != null)
+      'unstable_viewTransition': unstable_viewTransition,
     if (caseSensitive != null) 'caseSensitive': caseSensitive,
     if (end != null) 'end': end,
   },
@@ -279,18 +287,18 @@ ReactNode navLink({
 )
 ReactNode form({
   String? key,
-    Object? method,
-    FormEncType? encType,
-    String? action,
-    RelativeRoutingType? relative,
-    bool? preventScrollReset,
-    Object? onSubmit,
-    String? fetcherKey,
-    bool? navigate,
-    bool? reloadDocument,
-    bool? replace,
-    Object? state,
-    bool? unstable_viewTransition,
+  Object? method,
+  FormEncType? encType,
+  String? action,
+  RelativeRoutingType? relative,
+  bool? preventScrollReset,
+  Object? onSubmit,
+  String? fetcherKey,
+  bool? navigate,
+  bool? reloadDocument,
+  bool? replace,
+  Object? state,
+  bool? unstable_viewTransition,
 }) => foreignComponent(
   'reactRouter.Form',
   key: key,
@@ -306,7 +314,8 @@ ReactNode form({
     if (reloadDocument != null) 'reloadDocument': reloadDocument,
     if (replace != null) 'replace': replace,
     if (state != null) 'state': state,
-    if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition,
+    if (unstable_viewTransition != null)
+      'unstable_viewTransition': unstable_viewTransition,
   },
 );
 
@@ -323,9 +332,10 @@ ReactNode form({
 )
 ReactNode scrollRestoration({
   String? key,
-    /// TS: (location: { pathname: string; search: string; hash: string; state: any; key: string }, matches: { id: string; pathname: string; params: unknown; data: any; handle: any }[]) => string
-    ScrollRestorationGetKeyCallback? getKey,
-    String? storageKey,
+
+  /// TS: (location: { pathname: string; search: string; hash: string; state: any; key: string }, matches: { id: string; pathname: string; params: unknown; data: any; handle: any }[]) => string
+  ScrollRestorationGetKeyCallback? getKey,
+  String? storageKey,
 }) => foreignComponent(
   'reactRouter.ScrollRestoration',
   key: key,
@@ -334,13 +344,6 @@ ReactNode scrollRestoration({
     if (storageKey != null) 'storageKey': storageKey,
   },
 );
-
-
-
-
-
-
-
 
 /// Typed helper for the `reactRouter.createMemoryRouter` function.
 ///
@@ -352,7 +355,10 @@ ReactNode scrollRestoration({
 )
 @JS('globalThis.__reactDartBindings.reactRouter.createMemoryRouter')
 external JSAny? _createMemoryRouterRaw(JSAny? routes, JSAny? opts);
-Object? createMemoryRouter(List<CreateBrowserRouterRoutes> routes, [CreateMemoryRouterOpts? opts]) {
+Object? createMemoryRouter(
+  List<CreateBrowserRouterRoutes> routes, [
+  CreateMemoryRouterOpts? opts,
+]) {
   final raw = _createMemoryRouterRaw(routes.jsify(), opts.jsify());
   if (raw == null) return null;
   return raw as Object?;
@@ -389,10 +395,10 @@ Object? createSearchParams([Object? init]) {
 ReactNode memoryRouter({
   String? key,
   List<ReactNode> children = const [],
-    String? basename,
-    List<Object?>? initialEntries,
-    num? initialIndex,
-    FutureConfig? future,
+  String? basename,
+  List<Object?>? initialEntries,
+  num? initialIndex,
+  FutureConfig? future,
 }) => foreignComponent(
   'reactRouter.MemoryRouter',
   key: key,
@@ -417,10 +423,10 @@ ReactNode memoryRouter({
 )
 ReactNode navigate({
   String? key,
-    required Object to,
-    bool? replace,
-    Object? state,
-    RelativeRoutingType? relative,
+  required Object to,
+  bool? replace,
+  Object? state,
+  RelativeRoutingType? relative,
 }) => foreignComponent(
   'reactRouter.Navigate',
   key: key,
@@ -442,15 +448,10 @@ ReactNode navigate({
   runtimeKey: 'reactRouter.Outlet',
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
-ReactNode outlet({
-  String? key,
-    Object? context,
-}) => foreignComponent(
+ReactNode outlet({String? key, Object? context}) => foreignComponent(
   'reactRouter.Outlet',
   key: key,
-  props: {
-    if (context != null) 'context': context,
-  },
+  props: {if (context != null) 'context': context},
 );
 
 /// Typed helper for the `reactRouter.Route` foreign component.
@@ -471,23 +472,24 @@ ReactNode outlet({
 ReactNode route({
   String? key,
   List<ReactNode> children = const [],
-    Object? caseSensitive,
-    Object? path,
-    Object? id,
-    /// TS: () => any
-    CreateBrowserRouterRoutesLazyCallback? lazy,
-    Object? loader,
-    Object? action,
-    Object? hasErrorBoundary,
-    Object? shouldRevalidate,
-    Object? handle,
-    bool? index,
-    ReactNode? element,
-    ReactNode? hydrateFallbackElement,
-    ReactNode? errorElement,
-    Object? Component,
-    Object? HydrateFallback,
-    Object? ErrorBoundary,
+  Object? caseSensitive,
+  Object? path,
+  Object? id,
+
+  /// TS: () => any
+  CreateBrowserRouterRoutesLazyCallback? lazy,
+  Object? loader,
+  Object? action,
+  Object? hasErrorBoundary,
+  Object? shouldRevalidate,
+  Object? handle,
+  bool? index,
+  ReactNode? element,
+  ReactNode? hydrateFallbackElement,
+  ReactNode? errorElement,
+  Object? Component,
+  Object? HydrateFallback,
+  Object? ErrorBoundary,
 }) => foreignComponent(
   'reactRouter.Route',
   key: key,
@@ -503,7 +505,8 @@ ReactNode route({
     if (handle != null) 'handle': handle,
     if (index != null) 'index': index,
     if (element != null) 'element': element,
-    if (hydrateFallbackElement != null) 'hydrateFallbackElement': hydrateFallbackElement,
+    if (hydrateFallbackElement != null)
+      'hydrateFallbackElement': hydrateFallbackElement,
     if (errorElement != null) 'errorElement': errorElement,
     if (Component != null) 'Component': Component,
     if (HydrateFallback != null) 'HydrateFallback': HydrateFallback,
@@ -528,12 +531,12 @@ ReactNode route({
 ReactNode router({
   String? key,
   List<ReactNode> children = const [],
-    String? basename,
-    required Object location,
-    NavigationType? navigationType,
-    required Navigator navigator,
-    bool? static,
-    Pick? future,
+  String? basename,
+  required Object location,
+  NavigationType? navigationType,
+  required Navigator navigator,
+  bool? static,
+  Pick? future,
 }) => foreignComponent(
   'reactRouter.Router',
   key: key,
@@ -561,13 +564,11 @@ ReactNode router({
 ReactNode routes({
   String? key,
   List<ReactNode> children = const [],
-    Object? location,
+  Object? location,
 }) => foreignComponent(
   'reactRouter.Routes',
   key: key,
-  props: {
-    if (location != null) 'location': location,
-  },
+  props: {if (location != null) 'location': location},
   children: children,
 );
 
@@ -584,8 +585,8 @@ ReactNode routes({
 ReactNode await({
   String? key,
   required List<ReactNode> children,
-    ReactNode? errorElement,
-    required Object resolve,
+  ReactNode? errorElement,
+  required Object resolve,
 }) => foreignComponent(
   'reactRouter.Await',
   key: key,
@@ -605,9 +606,18 @@ ReactNode await({
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
 @JS('globalThis.__reactDartBindings.reactRouter.createRoutesFromChildren')
-external JSAny? _createRoutesFromChildrenRaw(JSAny? children, JSAny? parentPath);
-List<CreateBrowserRouterRoutes>? createRoutesFromChildren(ReactNode children, [List<num>? parentPath]) {
-  final raw = _createRoutesFromChildrenRaw(children.jsify(), parentPath.jsify());
+external JSAny? _createRoutesFromChildrenRaw(
+  JSAny? children,
+  JSAny? parentPath,
+);
+List<CreateBrowserRouterRoutes>? createRoutesFromChildren(
+  ReactNode children, [
+  List<num>? parentPath,
+]) {
+  final raw = _createRoutesFromChildrenRaw(
+    children.jsify(),
+    parentPath.jsify(),
+  );
   if (raw == null) return null;
   return raw as List<CreateBrowserRouterRoutes>?;
 }
@@ -628,27 +638,6 @@ Object? renderMatches(List<RouteMatch> matches) {
   return raw as Object?;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /// Typed helper for the `reactRouter.matchRoutes` function.
 ///
 /// See https://reactrouter.com/api/matchRoutes.
@@ -658,9 +647,21 @@ Object? renderMatches(List<RouteMatch> matches) {
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
 @JS('globalThis.__reactDartBindings.reactRouter.matchRoutes')
-external JSAny? _matchRoutesRaw(JSAny? routes, JSAny? locationArg, JSAny? basename);
-List<AgnosticRouteMatch>? matchRoutes(List<Object?> routes, Object locationArg, [String? basename]) {
-  final raw = _matchRoutesRaw(routes.jsify(), locationArg.jsify(), basename.jsify());
+external JSAny? _matchRoutesRaw(
+  JSAny? routes,
+  JSAny? locationArg,
+  JSAny? basename,
+);
+List<AgnosticRouteMatch>? matchRoutes(
+  List<Object?> routes,
+  Object locationArg, [
+  String? basename,
+]) {
+  final raw = _matchRoutesRaw(
+    routes.jsify(),
+    locationArg.jsify(),
+    basename.jsify(),
+  );
   if (raw == null) return null;
   return raw as List<AgnosticRouteMatch>?;
 }
@@ -765,13 +766,11 @@ Path? parsePath(String path) {
 typedef CreateBrowserRouterRoutesLazyCallback = Object? Function();
 
 /// Wraps a [CreateBrowserRouterRoutesLazyCallback] into a [ReactCallback] for prop encoding.
-ReactCallback createBrowserRouterRoutesLazyCallback(CreateBrowserRouterRoutesLazyCallback fn) => ReactCallback(
+ReactCallback createBrowserRouterRoutesLazyCallback(
+  CreateBrowserRouterRoutesLazyCallback fn,
+) => ReactCallback(
   debugName: 'CreateBrowserRouterRoutesLazyCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
@@ -781,7 +780,9 @@ ReactCallback createBrowserRouterRoutesLazyCallback(CreateBrowserRouterRoutesLaz
 typedef RouterNavigatorCreateHrefCallback = String Function(Object? to);
 
 /// Wraps a [RouterNavigatorCreateHrefCallback] into a [ReactCallback] for prop encoding.
-ReactCallback routerNavigatorCreateHrefCallback(RouterNavigatorCreateHrefCallback fn) => ReactCallback(
+ReactCallback routerNavigatorCreateHrefCallback(
+  RouterNavigatorCreateHrefCallback fn,
+) => ReactCallback(
   debugName: 'RouterNavigatorCreateHrefCallback',
   signature: const (
     positional: [reactAny],
@@ -797,7 +798,9 @@ ReactCallback routerNavigatorCreateHrefCallback(RouterNavigatorCreateHrefCallbac
 typedef RouterNavigatorEncodeLocationCallback = Object? Function(Object? to);
 
 /// Wraps a [RouterNavigatorEncodeLocationCallback] into a [ReactCallback] for prop encoding.
-ReactCallback routerNavigatorEncodeLocationCallback(RouterNavigatorEncodeLocationCallback fn) => ReactCallback(
+ReactCallback routerNavigatorEncodeLocationCallback(
+  RouterNavigatorEncodeLocationCallback fn,
+) => ReactCallback(
   debugName: 'RouterNavigatorEncodeLocationCallback',
   signature: const (
     positional: [reactAny],
@@ -813,41 +816,47 @@ ReactCallback routerNavigatorEncodeLocationCallback(RouterNavigatorEncodeLocatio
 typedef RouterNavigatorGoCallback = void Function(num delta);
 
 /// Wraps a [RouterNavigatorGoCallback] into a [ReactCallback] for prop encoding.
-ReactCallback routerNavigatorGoCallback(RouterNavigatorGoCallback fn) => ReactCallback(
-  debugName: 'RouterNavigatorGoCallback',
-  signature: const (
-    positional: [reactAny],
-    result: reactVoid,
-    asynchronous: false,
-  ),
-  invoke: (arguments) {
-    fn(arguments[0] as num);
-    return null;
-  },
-);
+ReactCallback routerNavigatorGoCallback(RouterNavigatorGoCallback fn) =>
+    ReactCallback(
+      debugName: 'RouterNavigatorGoCallback',
+      signature: const (
+        positional: [reactAny],
+        result: reactVoid,
+        asynchronous: false,
+      ),
+      invoke: (arguments) {
+        fn(arguments[0] as num);
+        return null;
+      },
+    );
 
 /// TS: (to: any, state: any, opts: { replace?: boolean; state?: any; preventScrollReset?: boolean; relative?: "route" | "path"; unstable_flushSync?: boolean; unstable_viewTransition?: boolean }) => void
-typedef RouterNavigatorPushCallback = void Function(Object? to, Object? state, Object? opts);
+typedef RouterNavigatorPushCallback =
+    void Function(Object? to, Object? state, Object? opts);
 
 /// Wraps a [RouterNavigatorPushCallback] into a [ReactCallback] for prop encoding.
-ReactCallback routerNavigatorPushCallback(RouterNavigatorPushCallback fn) => ReactCallback(
-  debugName: 'RouterNavigatorPushCallback',
-  signature: const (
-    positional: [reactAny, reactAny, reactAny],
-    result: reactVoid,
-    asynchronous: false,
-  ),
-  invoke: (arguments) {
-    fn(arguments[0], arguments[1], arguments[2]);
-    return null;
-  },
-);
+ReactCallback routerNavigatorPushCallback(RouterNavigatorPushCallback fn) =>
+    ReactCallback(
+      debugName: 'RouterNavigatorPushCallback',
+      signature: const (
+        positional: [reactAny, reactAny, reactAny],
+        result: reactVoid,
+        asynchronous: false,
+      ),
+      invoke: (arguments) {
+        fn(arguments[0], arguments[1], arguments[2]);
+        return null;
+      },
+    );
 
 /// TS: (location: { pathname: string; search: string; hash: string; state: any; key: string }, matches: { id: string; pathname: string; params: unknown; data: any; handle: any }[]) => string
-typedef ScrollRestorationGetKeyCallback = String Function(Object? location, Object? matches);
+typedef ScrollRestorationGetKeyCallback =
+    String Function(Object? location, Object? matches);
 
 /// Wraps a [ScrollRestorationGetKeyCallback] into a [ReactCallback] for prop encoding.
-ReactCallback scrollRestorationGetKeyCallback(ScrollRestorationGetKeyCallback fn) => ReactCallback(
+ReactCallback scrollRestorationGetKeyCallback(
+  ScrollRestorationGetKeyCallback fn,
+) => ReactCallback(
   debugName: 'ScrollRestorationGetKeyCallback',
   signature: const (
     positional: [reactAny, reactAny],
@@ -864,13 +873,15 @@ enum FormEncType {
   applicationXWwwFormUrlencoded('application/x-www-form-urlencoded'),
   multipartFormData('multipart/form-data'),
   textPlain('text/plain');
+
   const FormEncType(this.value);
   final String value;
 
   /// Decodes a JS string value into this enum.
   static FormEncType fromValue(String value) => values.firstWhere(
     (e) => e.value == value,
-    orElse: () => throw ArgumentError.value(value, 'value', 'Unknown FormEncType'),
+    orElse: () =>
+        throw ArgumentError.value(value, 'value', 'Unknown FormEncType'),
   );
 }
 
@@ -879,13 +890,15 @@ enum NavigationType {
   pop('POP'),
   push('PUSH'),
   replace('REPLACE');
+
   const NavigationType(this.value);
   final String value;
 
   /// Decodes a JS string value into this enum.
   static NavigationType fromValue(String value) => values.firstWhere(
     (e) => e.value == value,
-    orElse: () => throw ArgumentError.value(value, 'value', 'Unknown NavigationType'),
+    orElse: () =>
+        throw ArgumentError.value(value, 'value', 'Unknown NavigationType'),
   );
 }
 
@@ -893,13 +906,18 @@ enum NavigationType {
 enum RelativeRoutingType {
   route('route'),
   path('path');
+
   const RelativeRoutingType(this.value);
   final String value;
 
   /// Decodes a JS string value into this enum.
   static RelativeRoutingType fromValue(String value) => values.firstWhere(
     (e) => e.value == value,
-    orElse: () => throw ArgumentError.value(value, 'value', 'Unknown RelativeRoutingType'),
+    orElse: () => throw ArgumentError.value(
+      value,
+      'value',
+      'Unknown RelativeRoutingType',
+    ),
   );
 }
 
@@ -1028,7 +1046,8 @@ class CreateBrowserRouterRoutes {
     'index': index,
     if (children != null) 'children': children,
     if (element != null) 'element': element,
-    if (hydrateFallbackElement != null) 'hydrateFallbackElement': hydrateFallbackElement,
+    if (hydrateFallbackElement != null)
+      'hydrateFallbackElement': hydrateFallbackElement,
     if (errorElement != null) 'errorElement': errorElement,
     if (Component != null) 'Component': Component,
     if (HydrateFallback != null) 'HydrateFallback': HydrateFallback,
@@ -1081,8 +1100,10 @@ class CreateMemoryRouterOpts {
     if (hydrationData != null) 'hydrationData': hydrationData!.toJson(),
     if (initialEntries != null) 'initialEntries': initialEntries,
     if (initialIndex != null) 'initialIndex': initialIndex,
-    if (unstable_dataStrategy != null) 'unstable_dataStrategy': unstable_dataStrategy,
-    if (unstable_patchRoutesOnNavigation != null) 'unstable_patchRoutesOnNavigation': unstable_patchRoutesOnNavigation,
+    if (unstable_dataStrategy != null)
+      'unstable_dataStrategy': unstable_dataStrategy,
+    if (unstable_patchRoutesOnNavigation != null)
+      'unstable_patchRoutesOnNavigation': unstable_patchRoutesOnNavigation,
   };
 }
 
@@ -1124,8 +1145,10 @@ class DOMRouterOpts {
     if (basename != null) 'basename': basename,
     if (future != null) 'future': future!.toJson(),
     if (hydrationData != null) 'hydrationData': hydrationData!.toJson(),
-    if (unstable_dataStrategy != null) 'unstable_dataStrategy': unstable_dataStrategy,
-    if (unstable_patchRoutesOnNavigation != null) 'unstable_patchRoutesOnNavigation': unstable_patchRoutesOnNavigation,
+    if (unstable_dataStrategy != null)
+      'unstable_dataStrategy': unstable_dataStrategy,
+    if (unstable_patchRoutesOnNavigation != null)
+      'unstable_patchRoutesOnNavigation': unstable_patchRoutesOnNavigation,
     if (window != null) 'window': window,
   };
 }
@@ -1147,7 +1170,8 @@ class FutureConfig {
 
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
-    if (v7_relativeSplatPath != null) 'v7_relativeSplatPath': v7_relativeSplatPath,
+    if (v7_relativeSplatPath != null)
+      'v7_relativeSplatPath': v7_relativeSplatPath,
     if (v7_startTransition != null) 'v7_startTransition': v7_startTransition,
   };
 }
@@ -1241,17 +1265,13 @@ class Navigator {
 ///
 /// value?: any
 class Omit {
-  const Omit({
-    Object? this.value,
-  });
+  const Omit({Object? this.value});
 
   /// TS: any
   final Object? value;
 
   /// JSON-safe map for prop encoding through the JS bridge.
-  Map<String, Object?> toJson() => {
-    if (value != null) 'value': value,
-  };
+  Map<String, Object?> toJson() => {if (value != null) 'value': value};
 }
 
 /// Typed props for `Path`.
@@ -1396,17 +1416,13 @@ extension type _PathPatternJs(JSObject _) implements JSObject {
 ///
 /// value?: any
 class Pick {
-  const Pick({
-    Object? this.value,
-  });
+  const Pick({Object? this.value});
 
   /// TS: any
   final Object? value;
 
   /// JSON-safe map for prop encoding through the JS bridge.
-  Map<String, Object?> toJson() => {
-    if (value != null) 'value': value,
-  };
+  Map<String, Object?> toJson() => {if (value != null) 'value': value};
 }
 
 /// Typed props for `RouteMatch`.

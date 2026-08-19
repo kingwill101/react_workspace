@@ -44,4 +44,3 @@ export 'react_router_bindings.g.dart';
 /// Typed helpers for the `react-router-dom/server` components
 /// (`staticRouter` is the SSR counterpart of `browserRouter`).
 export 'react_router_server_bindings.g.dart';
-

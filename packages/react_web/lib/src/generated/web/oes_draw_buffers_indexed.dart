@@ -10,7 +10,18 @@ abstract interface class OES_draw_buffers_indexed {
   void blendEquationiOES(GLuint buf, GLenum mode);
   void blendEquationSeparateiOES(GLuint buf, GLenum modeRGB, GLenum modeAlpha);
   void blendFunciOES(GLuint buf, GLenum src, GLenum dst);
-  void blendFuncSeparateiOES(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha);
-  void colorMaskiOES(GLuint buf, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
+  void blendFuncSeparateiOES(
+    GLuint buf,
+    GLenum srcRGB,
+    GLenum dstRGB,
+    GLenum srcAlpha,
+    GLenum dstAlpha,
+  );
+  void colorMaskiOES(
+    GLuint buf,
+    GLboolean r,
+    GLboolean g,
+    GLboolean b,
+    GLboolean a,
+  );
 }
-

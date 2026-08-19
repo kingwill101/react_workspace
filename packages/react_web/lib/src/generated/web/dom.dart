@@ -14,11 +14,8 @@ import 'cssom_view.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AbortController {
-  factory AbortController() =>
-      WebRuntime.current.createWebObject<AbortController>(
-        'AbortController',
-        [],
-      );
+  factory AbortController() => WebRuntime.current
+      .createWebObject<AbortController>('AbortController', []);
   AbortSignal get signal;
   void abort([Object? reason]);
 }
@@ -28,7 +25,7 @@ abstract interface class AbortSignal {
   Object get reason;
   void throwIfAborted();
   EventHandler get onabort;
-   set onabort(EventHandler value);
+  set onabort(EventHandler value);
 }
 
 abstract interface class AbstractRange {
@@ -56,11 +53,7 @@ final class AddEventListenerOptionsValue implements AddEventListenerOptions {
   @override
   AbortSignal? signal;
 
-  AddEventListenerOptionsValue({
-    this.passive,
-    this.once,
-    this.signal,
-  });
+  AddEventListenerOptionsValue({this.passive, this.once, this.signal});
 }
 
 abstract interface class Attr {
@@ -69,13 +62,12 @@ abstract interface class Attr {
   String get localName;
   String get name;
   String get value;
-   set value(String value);
+  set value(String value);
   Element? get ownerElement;
   bool get specified;
 }
 
-abstract interface class CDATASection {
-}
+abstract interface class CDATASection {}
 
 abstract interface class CharacterData {
   Element? get previousElementSibling;
@@ -85,7 +77,7 @@ abstract interface class CharacterData {
   void replaceWith([List<Object>? nodes]);
   void remove();
   String get data;
-   set data(String value);
+  set data(String value);
   int get length;
   String substringData(int offset, int count);
   void appendData(String data);
@@ -103,20 +95,22 @@ abstract interface class ChildNode {
 
 abstract interface class Comment {
   factory Comment([String? data]) =>
-      WebRuntime.current.createWebObject<Comment>(
-        'Comment',
-        [data],
-      );
+      WebRuntime.current.createWebObject<Comment>('Comment', [data]);
 }
 
 abstract interface class CustomEvent {
   factory CustomEvent(String type_, [CustomEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<CustomEvent>(
-        'CustomEvent',
-        [type_, eventInitDict],
-      );
+      WebRuntime.current.createWebObject<CustomEvent>('CustomEvent', [
+        type_,
+        eventInitDict,
+      ]);
   Object get detail;
-  void initCustomEvent(String type_, [bool? bubbles, bool? cancelable, Object? detail]);
+  void initCustomEvent(
+    String type_, [
+    bool? bubbles,
+    bool? cancelable,
+    Object? detail,
+  ]);
 }
 
 abstract interface class CustomEventInit {
@@ -128,14 +122,20 @@ final class CustomEventInitValue implements CustomEventInit {
   @override
   Object? detail;
 
-  CustomEventInitValue({
-    this.detail,
-  });
+  CustomEventInitValue({this.detail});
 }
 
 abstract interface class DOMImplementation {
-  DocumentType createDocumentType(String qualifiedName, String publicId, String systemId);
-  XMLDocument createDocument(String? namespace, String qualifiedName, [DocumentType? doctype]);
+  DocumentType createDocumentType(
+    String qualifiedName,
+    String publicId,
+    String systemId,
+  );
+  XMLDocument createDocument(
+    String? namespace,
+    String qualifiedName, [
+    DocumentType? doctype,
+  ]);
   Document createHTMLDocument([String? title]);
   bool hasFeature();
 }
@@ -150,15 +150,12 @@ abstract interface class DOMTokenList {
   bool replace(String token, String newToken);
   bool supports(String token);
   String get value;
-   set value(String value);
+  set value(String value);
 }
 
 abstract interface class DocumentFragment {
-  factory DocumentFragment() =>
-      WebRuntime.current.createWebObject<DocumentFragment>(
-        'DocumentFragment',
-        [],
-      );
+  factory DocumentFragment() => WebRuntime.current
+      .createWebObject<DocumentFragment>('DocumentFragment', []);
   Element? getElementById(String elementId);
   HTMLCollection get children;
   Element? get firstElementChild;
@@ -190,17 +187,12 @@ final class ElementCreationOptionsValue implements ElementCreationOptions {
   @override
   String? is_;
 
-  ElementCreationOptionsValue({
-    this.is_,
-  });
+  ElementCreationOptionsValue({this.is_});
 }
 
 abstract interface class Event {
-  factory Event(String type_, [EventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<Event>(
-        'Event',
-        [type_, eventInitDict],
-      );
+  factory Event(String type_, [EventInit? eventInitDict]) => WebRuntime.current
+      .createWebObject<Event>('Event', [type_, eventInitDict]);
   String get type_;
   EventTarget? get target;
   EventTarget? get srcElement;
@@ -209,12 +201,12 @@ abstract interface class Event {
   int get eventPhase;
   void stopPropagation();
   bool get cancelBubble;
-   set cancelBubble(bool value);
+  set cancelBubble(bool value);
   void stopImmediatePropagation();
   bool get bubbles;
   bool get cancelable;
   bool get returnValue;
-   set returnValue(bool value);
+  set returnValue(bool value);
   void preventDefault();
   bool get defaultPrevented;
   bool get composed;
@@ -240,11 +232,7 @@ final class EventInitValue implements EventInit {
   @override
   bool? composed;
 
-  EventInitValue({
-    this.bubbles,
-    this.cancelable,
-    this.composed,
-  });
+  EventInitValue({this.bubbles, this.cancelable, this.composed});
 }
 
 abstract interface class EventListener {
@@ -260,19 +248,22 @@ final class EventListenerOptionsValue implements EventListenerOptions {
   @override
   bool? capture;
 
-  EventListenerOptionsValue({
-    this.capture,
-  });
+  EventListenerOptionsValue({this.capture});
 }
 
 abstract interface class EventTarget {
   factory EventTarget() =>
-      WebRuntime.current.createWebObject<EventTarget>(
-        'EventTarget',
-        [],
-      );
-  void addEventListener(String type_, EventListener? callback, [Object? options]);
-  void removeEventListener(String type_, EventListener? callback, [Object? options]);
+      WebRuntime.current.createWebObject<EventTarget>('EventTarget', []);
+  void addEventListener(
+    String type_,
+    EventListener? callback, [
+    Object? options,
+  ]);
+  void removeEventListener(
+    String type_,
+    EventListener? callback, [
+    Object? options,
+  ]);
   bool dispatchEvent(Event event);
 }
 
@@ -285,9 +276,7 @@ final class GetRootNodeOptionsValue implements GetRootNodeOptions {
   @override
   bool? composed;
 
-  GetRootNodeOptionsValue({
-    this.composed,
-  });
+  GetRootNodeOptionsValue({this.composed});
 }
 
 abstract interface class HTMLCollection {
@@ -296,14 +285,12 @@ abstract interface class HTMLCollection {
   Element? namedItem(String name);
 }
 
-typedef MutationCallback = void Function(List<MutationRecord> mutations, MutationObserver observer,);
+typedef MutationCallback =
+    void Function(List<MutationRecord> mutations, MutationObserver observer);
 
 abstract interface class MutationObserver {
-  factory MutationObserver(MutationCallback callback) =>
-      WebRuntime.current.createWebObject<MutationObserver>(
-        'MutationObserver',
-        [callback],
-      );
+  factory MutationObserver(MutationCallback callback) => WebRuntime.current
+      .createWebObject<MutationObserver>('MutationObserver', [callback]);
   void observe(Node target, [MutationObserverInit? options]);
   void disconnect();
   List<MutationRecord> takeRecords();
@@ -392,9 +379,9 @@ abstract interface class Node {
   Node? get previousSibling;
   Node? get nextSibling;
   String? get nodeValue;
-   set nodeValue(String? value);
+  set nodeValue(String? value);
   String? get textContent;
-   set textContent(String? value);
+  set textContent(String? value);
   void normalize();
   Node cloneNode([bool? deep]);
   bool isEqualNode(Node? otherNode);
@@ -411,38 +398,22 @@ abstract interface class Node {
 }
 
 abstract interface class NodeFilter {
-   static const int filterAccept =
-      1;
-   static const int filterReject =
-      2;
-   static const int filterSkip =
-      3;
-   static const int showAll =
-      0xFFFFFFFF;
-   static const int showElement =
-      0x1;
-   static const int showAttribute =
-      0x2;
-   static const int showText =
-      0x4;
-   static const int showCdataSection =
-      0x8;
-   static const int showEntityReference =
-      0x10;
-   static const int showEntity =
-      0x20;
-   static const int showProcessingInstruction =
-      0x40;
-   static const int showComment =
-      0x80;
-   static const int showDocument =
-      0x100;
-   static const int showDocumentType =
-      0x200;
-   static const int showDocumentFragment =
-      0x400;
-   static const int showNotation =
-      0x800;
+  static const int filterAccept = 1;
+  static const int filterReject = 2;
+  static const int filterSkip = 3;
+  static const int showAll = 0xFFFFFFFF;
+  static const int showElement = 0x1;
+  static const int showAttribute = 0x2;
+  static const int showText = 0x4;
+  static const int showCdataSection = 0x8;
+  static const int showEntityReference = 0x10;
+  static const int showEntity = 0x20;
+  static const int showProcessingInstruction = 0x40;
+  static const int showComment = 0x80;
+  static const int showDocument = 0x100;
+  static const int showDocumentType = 0x200;
+  static const int showDocumentFragment = 0x400;
+  static const int showNotation = 0x800;
   int acceptNode(Node node);
 }
 
@@ -491,7 +462,7 @@ abstract interface class ProcessingInstruction {
 abstract interface class ShadowRoot {
   StyleSheetList get styleSheets;
   List<CSSStyleSheet> get adoptedStyleSheets;
-   set adoptedStyleSheets(List<CSSStyleSheet> value);
+  set adoptedStyleSheets(List<CSSStyleSheet> value);
   Element? get fullscreenElement;
   Element? get activeElement;
   Element? get pictureInPictureElement;
@@ -504,11 +475,11 @@ abstract interface class ShadowRoot {
   bool get serializable;
   Element get host;
   EventHandler get onslotchange;
-   set onslotchange(EventHandler value);
+  set onslotchange(EventHandler value);
   void setHTMLUnsafe(Object html);
   String getHTML([GetHTMLOptions? options]);
   Object get innerHTML;
-   set innerHTML(Object value);
+  set innerHTML(Object value);
 }
 
 abstract interface class ShadowRootInit {
@@ -555,10 +526,7 @@ abstract interface class Slottable {
 
 abstract interface class StaticRange {
   factory StaticRange(StaticRangeInit init) =>
-      WebRuntime.current.createWebObject<StaticRange>(
-        'StaticRange',
-        [init],
-      );
+      WebRuntime.current.createWebObject<StaticRange>('StaticRange', [init]);
 }
 
 abstract interface class StaticRangeInit {
@@ -592,14 +560,23 @@ final class StaticRangeInitValue implements StaticRangeInit {
 
 abstract interface class Text {
   factory Text([String? data]) =>
-      WebRuntime.current.createWebObject<Text>(
-        'Text',
-        [data],
-      );
+      WebRuntime.current.createWebObject<Text>('Text', [data]);
   List<DOMQuad> getBoxQuads([BoxQuadOptions? options]);
-  DOMQuad convertQuadFromNode(DOMQuadInit quad, GeometryNode from, [ConvertCoordinateOptions? options]);
-  DOMQuad convertRectFromNode(DOMRectReadOnly rect, GeometryNode from, [ConvertCoordinateOptions? options]);
-  DOMPoint convertPointFromNode(DOMPointInit point, GeometryNode from, [ConvertCoordinateOptions? options]);
+  DOMQuad convertQuadFromNode(
+    DOMQuadInit quad,
+    GeometryNode from, [
+    ConvertCoordinateOptions? options,
+  ]);
+  DOMQuad convertRectFromNode(
+    DOMRectReadOnly rect,
+    GeometryNode from, [
+    ConvertCoordinateOptions? options,
+  ]);
+  DOMPoint convertPointFromNode(
+    DOMPointInit point,
+    GeometryNode from, [
+    ConvertCoordinateOptions? options,
+  ]);
   HTMLSlotElement? get assignedSlot;
   Text splitText(int offset);
   String get wholeText;
@@ -610,7 +587,7 @@ abstract interface class TreeWalker {
   int get whatToShow;
   NodeFilter? get filter;
   Node get currentNode;
-   set currentNode(Node value);
+  set currentNode(Node value);
   Node? parentNode();
   Node? firstChild();
   Node? lastChild();
@@ -620,24 +597,38 @@ abstract interface class TreeWalker {
   Node? nextNode();
 }
 
-abstract interface class XMLDocument {
-}
+abstract interface class XMLDocument {}
 
 abstract interface class XPathEvaluator {
   factory XPathEvaluator() =>
-      WebRuntime.current.createWebObject<XPathEvaluator>(
-        'XPathEvaluator',
-        [],
-      );
-  XPathExpression createExpression(String expression, [XPathNSResolver? resolver]);
+      WebRuntime.current.createWebObject<XPathEvaluator>('XPathEvaluator', []);
+  XPathExpression createExpression(
+    String expression, [
+    XPathNSResolver? resolver,
+  ]);
   Node createNSResolver(Node nodeResolver);
-  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type_, XPathResult? result]);
+  XPathResult evaluate(
+    String expression,
+    Node contextNode, [
+    XPathNSResolver? resolver,
+    int? type_,
+    XPathResult? result,
+  ]);
 }
 
 abstract interface class XPathEvaluatorBase {
-  XPathExpression createExpression(String expression, [XPathNSResolver? resolver]);
+  XPathExpression createExpression(
+    String expression, [
+    XPathNSResolver? resolver,
+  ]);
   Node createNSResolver(Node nodeResolver);
-  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type_, XPathResult? result]);
+  XPathResult evaluate(
+    String expression,
+    Node contextNode, [
+    XPathNSResolver? resolver,
+    int? type_,
+    XPathResult? result,
+  ]);
 }
 
 abstract interface class XPathExpression {
@@ -662,10 +653,7 @@ abstract interface class XPathResult {
 
 abstract interface class XSLTProcessor {
   factory XSLTProcessor() =>
-      WebRuntime.current.createWebObject<XSLTProcessor>(
-        'XSLTProcessor',
-        [],
-      );
+      WebRuntime.current.createWebObject<XSLTProcessor>('XSLTProcessor', []);
   void importStylesheet(Node style);
   DocumentFragment transformToFragment(Node source, Document output);
   Document transformToDocument(Node source);
@@ -675,4 +663,3 @@ abstract interface class XSLTProcessor {
   void clearParameters();
   void reset();
 }
-

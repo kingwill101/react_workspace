@@ -11,6 +11,4 @@ abstract interface class OES_vertex_array_object {
   void bindVertexArrayOES(WebGLVertexArrayObjectOES? arrayObject);
 }
 
-abstract interface class WebGLVertexArrayObjectOES {
-}
-
+abstract interface class WebGLVertexArrayObjectOES {}

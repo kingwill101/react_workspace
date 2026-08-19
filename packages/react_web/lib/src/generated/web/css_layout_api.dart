@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: css-layout-api
 // ignore_for_file: type=lint
 
-
 typedef BlockFragmentationType = String;
 
 abstract interface class BreakTokenOptions {
@@ -18,10 +17,7 @@ final class BreakTokenOptionsValue implements BreakTokenOptions {
   @override
   Object? data;
 
-  BreakTokenOptionsValue({
-    this.childBreakTokens,
-    this.data,
-  });
+  BreakTokenOptionsValue({this.childBreakTokens, this.data});
 }
 
 typedef BreakType = String;
@@ -74,16 +70,14 @@ abstract interface class IntrinsicSizesResultOptions {
   set minContentSize(double? value);
 }
 
-final class IntrinsicSizesResultOptionsValue implements IntrinsicSizesResultOptions {
+final class IntrinsicSizesResultOptionsValue
+    implements IntrinsicSizesResultOptions {
   @override
   double? maxContentSize;
   @override
   double? minContentSize;
 
-  IntrinsicSizesResultOptionsValue({
-    this.maxContentSize,
-    this.minContentSize,
-  });
+  IntrinsicSizesResultOptionsValue({this.maxContentSize, this.minContentSize});
 }
 
 abstract interface class LayoutConstraintsOptions {
@@ -153,11 +147,7 @@ final class LayoutOptionsValue implements LayoutOptions {
   @override
   LayoutSizingMode? sizing;
 
-  LayoutOptionsValue({
-    this.childDisplay,
-    this.sizing,
-  });
+  LayoutOptionsValue({this.childDisplay, this.sizing});
 }
 
 typedef LayoutSizingMode = String;
-

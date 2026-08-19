@@ -19,7 +19,10 @@ final class SsrComponentRegistry {
 
   static final _builders = <String, ReactNode Function(Map<String, dynamic>)>{};
 
-  static void register(String id, ReactNode Function(Map<String, dynamic>) builder) {
+  static void register(
+    String id,
+    ReactNode Function(Map<String, dynamic>) builder,
+  ) {
     _builders[id] = builder;
   }
 
@@ -33,15 +36,15 @@ final class SsrComponentRegistry {
 }
 
 void registerKnownSsComponentIds() {
-  SsrComponentRegistry.register(    idApp.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idAnalyticsPage.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idArcadePage.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idBuilderPage.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idClassesPage.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idDashboardPage.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idLiveBoardPage.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idMarketplacePage.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idResourcesPage.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idSettingsPage.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idSyllabusPage.value, (_) => const Empty());
+  SsrComponentRegistry.register(idApp.value, (_) => const Empty());
+  SsrComponentRegistry.register(idAnalyticsPage.value, (_) => const Empty());
+  SsrComponentRegistry.register(idArcadePage.value, (_) => const Empty());
+  SsrComponentRegistry.register(idBuilderPage.value, (_) => const Empty());
+  SsrComponentRegistry.register(idClassesPage.value, (_) => const Empty());
+  SsrComponentRegistry.register(idDashboardPage.value, (_) => const Empty());
+  SsrComponentRegistry.register(idLiveBoardPage.value, (_) => const Empty());
+  SsrComponentRegistry.register(idMarketplacePage.value, (_) => const Empty());
+  SsrComponentRegistry.register(idResourcesPage.value, (_) => const Empty());
+  SsrComponentRegistry.register(idSettingsPage.value, (_) => const Empty());
+  SsrComponentRegistry.register(idSyllabusPage.value, (_) => const Empty());
 }

@@ -14,9 +14,7 @@ final class BarcodeDetectorOptionsValue implements BarcodeDetectorOptions {
   @override
   List<BarcodeFormat>? formats;
 
-  BarcodeDetectorOptionsValue({
-    this.formats,
-  });
+  BarcodeDetectorOptionsValue({this.formats});
 }
 
 typedef BarcodeFormat = String;
@@ -63,10 +61,7 @@ final class DetectedFaceValue implements DetectedFace {
   @override
   List<Landmark>? landmarks;
 
-  DetectedFaceValue({
-    required this.boundingBox,
-    required this.landmarks,
-  });
+  DetectedFaceValue({required this.boundingBox, required this.landmarks});
 }
 
 abstract interface class FaceDetectorOptions {
@@ -82,10 +77,7 @@ final class FaceDetectorOptionsValue implements FaceDetectorOptions {
   @override
   bool? fastMode;
 
-  FaceDetectorOptionsValue({
-    this.maxDetectedFaces,
-    this.fastMode,
-  });
+  FaceDetectorOptionsValue({this.maxDetectedFaces, this.fastMode});
 }
 
 abstract interface class Landmark {
@@ -101,11 +93,7 @@ final class LandmarkValue implements Landmark {
   @override
   LandmarkType? type_;
 
-  LandmarkValue({
-    required this.locations,
-    this.type_,
-  });
+  LandmarkValue({required this.locations, this.type_});
 }
 
 typedef LandmarkType = String;
-

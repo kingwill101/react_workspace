@@ -13,9 +13,7 @@ final class AesCbcParamsValue implements AesCbcParams {
   @override
   BufferSource iv;
 
-  AesCbcParamsValue({
-    required this.iv,
-  });
+  AesCbcParamsValue({required this.iv});
 }
 
 abstract interface class AesCtrParams {
@@ -31,10 +29,7 @@ final class AesCtrParamsValue implements AesCtrParams {
   @override
   Object length;
 
-  AesCtrParamsValue({
-    required this.counter,
-    required this.length,
-  });
+  AesCtrParamsValue({required this.counter, required this.length});
 }
 
 abstract interface class AesDerivedKeyParams {
@@ -46,9 +41,7 @@ final class AesDerivedKeyParamsValue implements AesDerivedKeyParams {
   @override
   int length;
 
-  AesDerivedKeyParamsValue({
-    required this.length,
-  });
+  AesDerivedKeyParamsValue({required this.length});
 }
 
 abstract interface class AesGcmParams {
@@ -68,11 +61,7 @@ final class AesGcmParamsValue implements AesGcmParams {
   @override
   Object? tagLength;
 
-  AesGcmParamsValue({
-    required this.iv,
-    this.additionalData,
-    this.tagLength,
-  });
+  AesGcmParamsValue({required this.iv, this.additionalData, this.tagLength});
 }
 
 abstract interface class AesKeyAlgorithm {
@@ -84,9 +73,7 @@ final class AesKeyAlgorithmValue implements AesKeyAlgorithm {
   @override
   int length;
 
-  AesKeyAlgorithmValue({
-    required this.length,
-  });
+  AesKeyAlgorithmValue({required this.length});
 }
 
 abstract interface class AesKeyGenParams {
@@ -98,9 +85,7 @@ final class AesKeyGenParamsValue implements AesKeyGenParams {
   @override
   int length;
 
-  AesKeyGenParamsValue({
-    required this.length,
-  });
+  AesKeyGenParamsValue({required this.length});
 }
 
 abstract interface class Algorithm {
@@ -112,9 +97,7 @@ final class AlgorithmValue implements Algorithm {
   @override
   String name;
 
-  AlgorithmValue({
-    required this.name,
-  });
+  AlgorithmValue({required this.name});
 }
 
 typedef AlgorithmIdentifier = Object;
@@ -147,10 +130,7 @@ final class CryptoKeyPairValue implements CryptoKeyPair {
   @override
   CryptoKey? privateKey;
 
-  CryptoKeyPairValue({
-    this.publicKey,
-    this.privateKey,
-  });
+  CryptoKeyPairValue({this.publicKey, this.privateKey});
 }
 
 abstract interface class EcKeyAlgorithm {
@@ -162,9 +142,7 @@ final class EcKeyAlgorithmValue implements EcKeyAlgorithm {
   @override
   NamedCurve namedCurve;
 
-  EcKeyAlgorithmValue({
-    required this.namedCurve,
-  });
+  EcKeyAlgorithmValue({required this.namedCurve});
 }
 
 abstract interface class EcKeyGenParams {
@@ -176,9 +154,7 @@ final class EcKeyGenParamsValue implements EcKeyGenParams {
   @override
   NamedCurve namedCurve;
 
-  EcKeyGenParamsValue({
-    required this.namedCurve,
-  });
+  EcKeyGenParamsValue({required this.namedCurve});
 }
 
 abstract interface class EcKeyImportParams {
@@ -190,9 +166,7 @@ final class EcKeyImportParamsValue implements EcKeyImportParams {
   @override
   NamedCurve namedCurve;
 
-  EcKeyImportParamsValue({
-    required this.namedCurve,
-  });
+  EcKeyImportParamsValue({required this.namedCurve});
 }
 
 abstract interface class EcdhKeyDeriveParams {
@@ -204,9 +178,7 @@ final class EcdhKeyDeriveParamsValue implements EcdhKeyDeriveParams {
   @override
   CryptoKey public;
 
-  EcdhKeyDeriveParamsValue({
-    required this.public,
-  });
+  EcdhKeyDeriveParamsValue({required this.public});
 }
 
 abstract interface class EcdsaParams {
@@ -218,9 +190,7 @@ final class EcdsaParamsValue implements EcdsaParams {
   @override
   HashAlgorithmIdentifier hash;
 
-  EcdsaParamsValue({
-    required this.hash,
-  });
+  EcdsaParamsValue({required this.hash});
 }
 
 typedef HashAlgorithmIdentifier = AlgorithmIdentifier;
@@ -242,11 +212,7 @@ final class HkdfParamsValue implements HkdfParams {
   @override
   BufferSource info;
 
-  HkdfParamsValue({
-    required this.hash,
-    required this.salt,
-    required this.info,
-  });
+  HkdfParamsValue({required this.hash, required this.salt, required this.info});
 }
 
 abstract interface class HmacImportParams {
@@ -262,10 +228,7 @@ final class HmacImportParamsValue implements HmacImportParams {
   @override
   int? length;
 
-  HmacImportParamsValue({
-    required this.hash,
-    this.length,
-  });
+  HmacImportParamsValue({required this.hash, this.length});
 }
 
 abstract interface class HmacKeyAlgorithm {
@@ -281,10 +244,7 @@ final class HmacKeyAlgorithmValue implements HmacKeyAlgorithm {
   @override
   int length;
 
-  HmacKeyAlgorithmValue({
-    required this.hash,
-    required this.length,
-  });
+  HmacKeyAlgorithmValue({required this.hash, required this.length});
 }
 
 abstract interface class HmacKeyGenParams {
@@ -300,10 +260,7 @@ final class HmacKeyGenParamsValue implements HmacKeyGenParams {
   @override
   int? length;
 
-  HmacKeyGenParamsValue({
-    required this.hash,
-    this.length,
-  });
+  HmacKeyGenParamsValue({required this.hash, this.length});
 }
 
 abstract interface class JsonWebKey {
@@ -414,9 +371,7 @@ final class KeyAlgorithmValue implements KeyAlgorithm {
   @override
   String name;
 
-  KeyAlgorithmValue({
-    required this.name,
-  });
+  KeyAlgorithmValue({required this.name});
 }
 
 typedef KeyFormat = String;
@@ -460,9 +415,7 @@ final class RsaHashedImportParamsValue implements RsaHashedImportParams {
   @override
   HashAlgorithmIdentifier hash;
 
-  RsaHashedImportParamsValue({
-    required this.hash,
-  });
+  RsaHashedImportParamsValue({required this.hash});
 }
 
 abstract interface class RsaHashedKeyAlgorithm {
@@ -474,9 +427,7 @@ final class RsaHashedKeyAlgorithmValue implements RsaHashedKeyAlgorithm {
   @override
   KeyAlgorithm hash;
 
-  RsaHashedKeyAlgorithmValue({
-    required this.hash,
-  });
+  RsaHashedKeyAlgorithmValue({required this.hash});
 }
 
 abstract interface class RsaHashedKeyGenParams {
@@ -488,9 +439,7 @@ final class RsaHashedKeyGenParamsValue implements RsaHashedKeyGenParams {
   @override
   HashAlgorithmIdentifier hash;
 
-  RsaHashedKeyGenParamsValue({
-    required this.hash,
-  });
+  RsaHashedKeyGenParamsValue({required this.hash});
 }
 
 abstract interface class RsaKeyAlgorithm {
@@ -540,9 +489,7 @@ final class RsaOaepParamsValue implements RsaOaepParams {
   @override
   BufferSource? label;
 
-  RsaOaepParamsValue({
-    this.label,
-  });
+  RsaOaepParamsValue({this.label});
 }
 
 abstract interface class RsaOtherPrimesInfo {
@@ -562,11 +509,7 @@ final class RsaOtherPrimesInfoValue implements RsaOtherPrimesInfo {
   @override
   String? t;
 
-  RsaOtherPrimesInfoValue({
-    this.r,
-    this.d,
-    this.t,
-  });
+  RsaOtherPrimesInfoValue({this.r, this.d, this.t});
 }
 
 abstract interface class RsaPssParams {
@@ -578,23 +521,70 @@ final class RsaPssParamsValue implements RsaPssParams {
   @override
   int saltLength;
 
-  RsaPssParamsValue({
-    required this.saltLength,
-  });
+  RsaPssParamsValue({required this.saltLength});
 }
 
 abstract interface class SubtleCrypto {
-  Future<Object> encrypt(AlgorithmIdentifier algorithm, CryptoKey key, BufferSource data);
-  Future<Object> decrypt(AlgorithmIdentifier algorithm, CryptoKey key, BufferSource data);
-  Future<Object> sign(AlgorithmIdentifier algorithm, CryptoKey key, BufferSource data);
-  Future<Object> verify(AlgorithmIdentifier algorithm, CryptoKey key, BufferSource signature, BufferSource data);
+  Future<Object> encrypt(
+    AlgorithmIdentifier algorithm,
+    CryptoKey key,
+    BufferSource data,
+  );
+  Future<Object> decrypt(
+    AlgorithmIdentifier algorithm,
+    CryptoKey key,
+    BufferSource data,
+  );
+  Future<Object> sign(
+    AlgorithmIdentifier algorithm,
+    CryptoKey key,
+    BufferSource data,
+  );
+  Future<Object> verify(
+    AlgorithmIdentifier algorithm,
+    CryptoKey key,
+    BufferSource signature,
+    BufferSource data,
+  );
   Future<Object> digest(AlgorithmIdentifier algorithm, BufferSource data);
-  Future<Object> generateKey(AlgorithmIdentifier algorithm, bool extractable, List<KeyUsage> keyUsages);
-  Future<Object> deriveKey(AlgorithmIdentifier algorithm, CryptoKey baseKey, AlgorithmIdentifier derivedKeyType, bool extractable, List<KeyUsage> keyUsages);
-  Future<Object> deriveBits(AlgorithmIdentifier algorithm, CryptoKey baseKey, int length);
-  Future<CryptoKey> importKey(KeyFormat format, Object keyData, AlgorithmIdentifier algorithm, bool extractable, List<KeyUsage> keyUsages);
+  Future<Object> generateKey(
+    AlgorithmIdentifier algorithm,
+    bool extractable,
+    List<KeyUsage> keyUsages,
+  );
+  Future<Object> deriveKey(
+    AlgorithmIdentifier algorithm,
+    CryptoKey baseKey,
+    AlgorithmIdentifier derivedKeyType,
+    bool extractable,
+    List<KeyUsage> keyUsages,
+  );
+  Future<Object> deriveBits(
+    AlgorithmIdentifier algorithm,
+    CryptoKey baseKey,
+    int length,
+  );
+  Future<CryptoKey> importKey(
+    KeyFormat format,
+    Object keyData,
+    AlgorithmIdentifier algorithm,
+    bool extractable,
+    List<KeyUsage> keyUsages,
+  );
   Future<Object> exportKey(KeyFormat format, CryptoKey key);
-  Future<Object> wrapKey(KeyFormat format, CryptoKey key, CryptoKey wrappingKey, AlgorithmIdentifier wrapAlgorithm);
-  Future<CryptoKey> unwrapKey(KeyFormat format, BufferSource wrappedKey, CryptoKey unwrappingKey, AlgorithmIdentifier unwrapAlgorithm, AlgorithmIdentifier unwrappedKeyAlgorithm, bool extractable, List<KeyUsage> keyUsages);
+  Future<Object> wrapKey(
+    KeyFormat format,
+    CryptoKey key,
+    CryptoKey wrappingKey,
+    AlgorithmIdentifier wrapAlgorithm,
+  );
+  Future<CryptoKey> unwrapKey(
+    KeyFormat format,
+    BufferSource wrappedKey,
+    CryptoKey unwrappingKey,
+    AlgorithmIdentifier unwrapAlgorithm,
+    AlgorithmIdentifier unwrappedKeyAlgorithm,
+    bool extractable,
+    List<KeyUsage> keyUsages,
+  );
 }
-

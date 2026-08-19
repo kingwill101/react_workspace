@@ -11,15 +11,12 @@ abstract interface class ViewportMediaStreamConstraints {
   set audio(Object? value);
 }
 
-final class ViewportMediaStreamConstraintsValue implements ViewportMediaStreamConstraints {
+final class ViewportMediaStreamConstraintsValue
+    implements ViewportMediaStreamConstraints {
   @override
   Object? video;
   @override
   Object? audio;
 
-  ViewportMediaStreamConstraintsValue({
-    this.video,
-    this.audio,
-  });
+  ViewportMediaStreamConstraintsValue({this.video, this.audio});
 }
-

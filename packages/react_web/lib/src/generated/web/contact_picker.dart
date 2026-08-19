@@ -29,13 +29,7 @@ final class ContactInfoValue implements ContactInfo {
   @override
   List<String>? tel;
 
-  ContactInfoValue({
-    this.address,
-    this.email,
-    this.icon,
-    this.name,
-    this.tel,
-  });
+  ContactInfoValue({this.address, this.email, this.icon, this.name, this.tel});
 }
 
 typedef ContactProperty = String;
@@ -49,8 +43,5 @@ final class ContactsSelectOptionsValue implements ContactsSelectOptions {
   @override
   bool? multiple;
 
-  ContactsSelectOptionsValue({
-    this.multiple,
-  });
+  ContactsSelectOptionsValue({this.multiple});
 }
-

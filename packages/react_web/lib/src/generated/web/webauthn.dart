@@ -7,19 +7,17 @@ import 'fido.dart';
 
 typedef AttestationConveyancePreference = String;
 
-abstract interface class AuthenticationExtensionsClientInputsJSON {
-}
+abstract interface class AuthenticationExtensionsClientInputsJSON {}
 
-final class AuthenticationExtensionsClientInputsJSONValue implements AuthenticationExtensionsClientInputsJSON {
-
+final class AuthenticationExtensionsClientInputsJSONValue
+    implements AuthenticationExtensionsClientInputsJSON {
   AuthenticationExtensionsClientInputsJSONValue();
 }
 
-abstract interface class AuthenticationExtensionsClientOutputsJSON {
-}
+abstract interface class AuthenticationExtensionsClientOutputsJSON {}
 
-final class AuthenticationExtensionsClientOutputsJSONValue implements AuthenticationExtensionsClientOutputsJSON {
-
+final class AuthenticationExtensionsClientOutputsJSONValue
+    implements AuthenticationExtensionsClientOutputsJSON {
   AuthenticationExtensionsClientOutputsJSONValue();
 }
 
@@ -32,7 +30,8 @@ abstract interface class AuthenticationExtensionsLargeBlobInputs {
   set write(BufferSource? value);
 }
 
-final class AuthenticationExtensionsLargeBlobInputsValue implements AuthenticationExtensionsLargeBlobInputs {
+final class AuthenticationExtensionsLargeBlobInputsValue
+    implements AuthenticationExtensionsLargeBlobInputs {
   @override
   String? support;
   @override
@@ -56,7 +55,8 @@ abstract interface class AuthenticationExtensionsLargeBlobOutputs {
   set written(bool? value);
 }
 
-final class AuthenticationExtensionsLargeBlobOutputsValue implements AuthenticationExtensionsLargeBlobOutputs {
+final class AuthenticationExtensionsLargeBlobOutputsValue
+    implements AuthenticationExtensionsLargeBlobOutputs {
   @override
   bool? supported;
   @override
@@ -78,16 +78,14 @@ abstract interface class AuthenticationExtensionsPRFInputs {
   set evalByCredential(Map<String, AuthenticationExtensionsPRFValues>? value);
 }
 
-final class AuthenticationExtensionsPRFInputsValue implements AuthenticationExtensionsPRFInputs {
+final class AuthenticationExtensionsPRFInputsValue
+    implements AuthenticationExtensionsPRFInputs {
   @override
   AuthenticationExtensionsPRFValues? eval;
   @override
   Map<String, AuthenticationExtensionsPRFValues>? evalByCredential;
 
-  AuthenticationExtensionsPRFInputsValue({
-    this.eval,
-    this.evalByCredential,
-  });
+  AuthenticationExtensionsPRFInputsValue({this.eval, this.evalByCredential});
 }
 
 abstract interface class AuthenticationExtensionsPRFOutputs {
@@ -97,16 +95,14 @@ abstract interface class AuthenticationExtensionsPRFOutputs {
   set results(AuthenticationExtensionsPRFValues? value);
 }
 
-final class AuthenticationExtensionsPRFOutputsValue implements AuthenticationExtensionsPRFOutputs {
+final class AuthenticationExtensionsPRFOutputsValue
+    implements AuthenticationExtensionsPRFOutputs {
   @override
   bool? enabled;
   @override
   AuthenticationExtensionsPRFValues? results;
 
-  AuthenticationExtensionsPRFOutputsValue({
-    this.enabled,
-    this.results,
-  });
+  AuthenticationExtensionsPRFOutputsValue({this.enabled, this.results});
 }
 
 abstract interface class AuthenticationExtensionsPRFValues {
@@ -116,16 +112,14 @@ abstract interface class AuthenticationExtensionsPRFValues {
   set second(BufferSource? value);
 }
 
-final class AuthenticationExtensionsPRFValuesValue implements AuthenticationExtensionsPRFValues {
+final class AuthenticationExtensionsPRFValuesValue
+    implements AuthenticationExtensionsPRFValues {
   @override
   BufferSource first;
   @override
   BufferSource? second;
 
-  AuthenticationExtensionsPRFValuesValue({
-    required this.first,
-    this.second,
-  });
+  AuthenticationExtensionsPRFValuesValue({required this.first, this.second});
 }
 
 abstract interface class AuthenticationExtensionsSupplementalPubKeysInputs {
@@ -137,7 +131,8 @@ abstract interface class AuthenticationExtensionsSupplementalPubKeysInputs {
   set attestationFormats(List<String>? value);
 }
 
-final class AuthenticationExtensionsSupplementalPubKeysInputsValue implements AuthenticationExtensionsSupplementalPubKeysInputs {
+final class AuthenticationExtensionsSupplementalPubKeysInputsValue
+    implements AuthenticationExtensionsSupplementalPubKeysInputs {
   @override
   List<String> scopes;
   @override
@@ -157,7 +152,8 @@ abstract interface class AuthenticationExtensionsSupplementalPubKeysOutputs {
   set signatures(List<Object> value);
 }
 
-final class AuthenticationExtensionsSupplementalPubKeysOutputsValue implements AuthenticationExtensionsSupplementalPubKeysOutputs {
+final class AuthenticationExtensionsSupplementalPubKeysOutputsValue
+    implements AuthenticationExtensionsSupplementalPubKeysOutputs {
   @override
   List<Object> signatures;
 
@@ -181,7 +177,8 @@ abstract interface class AuthenticationResponseJSON {
   set type_(String value);
 }
 
-final class AuthenticationResponseJSONValue implements AuthenticationResponseJSON {
+final class AuthenticationResponseJSONValue
+    implements AuthenticationResponseJSON {
   @override
   Base64URLString id;
   @override
@@ -222,7 +219,8 @@ abstract interface class AuthenticatorAssertionResponseJSON {
   set userHandle(Base64URLString? value);
 }
 
-final class AuthenticatorAssertionResponseJSONValue implements AuthenticatorAssertionResponseJSON {
+final class AuthenticatorAssertionResponseJSONValue
+    implements AuthenticatorAssertionResponseJSON {
   @override
   Base64URLString clientDataJSON;
   @override
@@ -265,7 +263,8 @@ abstract interface class AuthenticatorAttestationResponseJSON {
   set attestationObject(Base64URLString value);
 }
 
-final class AuthenticatorAttestationResponseJSONValue implements AuthenticatorAttestationResponseJSON {
+final class AuthenticatorAttestationResponseJSONValue
+    implements AuthenticatorAttestationResponseJSON {
   @override
   Base64URLString clientDataJSON;
   @override
@@ -304,7 +303,8 @@ abstract interface class AuthenticatorSelectionCriteria {
   set userVerification(String? value);
 }
 
-final class AuthenticatorSelectionCriteriaValue implements AuthenticatorSelectionCriteria {
+final class AuthenticatorSelectionCriteriaValue
+    implements AuthenticatorSelectionCriteria {
   @override
   String? authenticatorAttachment;
   @override
@@ -371,16 +371,14 @@ abstract interface class CredentialPropertiesOutput {
   set authenticatorDisplayName(String? value);
 }
 
-final class CredentialPropertiesOutputValue implements CredentialPropertiesOutput {
+final class CredentialPropertiesOutputValue
+    implements CredentialPropertiesOutput {
   @override
   bool? rk;
   @override
   String? authenticatorDisplayName;
 
-  CredentialPropertiesOutputValue({
-    this.rk,
-    this.authenticatorDisplayName,
-  });
+  CredentialPropertiesOutputValue({this.rk, this.authenticatorDisplayName});
 }
 
 typedef LargeBlobSupport = String;
@@ -419,7 +417,8 @@ abstract interface class PublicKeyCredentialCreationOptions {
   set extensions(AuthenticationExtensionsClientInputs? value);
 }
 
-final class PublicKeyCredentialCreationOptionsValue implements PublicKeyCredentialCreationOptions {
+final class PublicKeyCredentialCreationOptionsValue
+    implements PublicKeyCredentialCreationOptions {
   @override
   PublicKeyCredentialRpEntity rp;
   @override
@@ -483,7 +482,8 @@ abstract interface class PublicKeyCredentialCreationOptionsJSON {
   set extensions(AuthenticationExtensionsClientInputsJSON? value);
 }
 
-final class PublicKeyCredentialCreationOptionsJSONValue implements PublicKeyCredentialCreationOptionsJSON {
+final class PublicKeyCredentialCreationOptionsJSONValue
+    implements PublicKeyCredentialCreationOptionsJSON {
   @override
   PublicKeyCredentialRpEntity rp;
   @override
@@ -531,7 +531,8 @@ abstract interface class PublicKeyCredentialDescriptor {
   set transports(List<String>? value);
 }
 
-final class PublicKeyCredentialDescriptorValue implements PublicKeyCredentialDescriptor {
+final class PublicKeyCredentialDescriptorValue
+    implements PublicKeyCredentialDescriptor {
   @override
   String type_;
   @override
@@ -555,7 +556,8 @@ abstract interface class PublicKeyCredentialDescriptorJSON {
   set transports(List<String>? value);
 }
 
-final class PublicKeyCredentialDescriptorJSONValue implements PublicKeyCredentialDescriptorJSON {
+final class PublicKeyCredentialDescriptorJSONValue
+    implements PublicKeyCredentialDescriptorJSON {
   @override
   Base64URLString id;
   @override
@@ -575,13 +577,12 @@ abstract interface class PublicKeyCredentialEntity {
   set name(String value);
 }
 
-final class PublicKeyCredentialEntityValue implements PublicKeyCredentialEntity {
+final class PublicKeyCredentialEntityValue
+    implements PublicKeyCredentialEntity {
   @override
   String name;
 
-  PublicKeyCredentialEntityValue({
-    required this.name,
-  });
+  PublicKeyCredentialEntityValue({required this.name});
 }
 
 typedef PublicKeyCredentialHints = String;
@@ -595,16 +596,14 @@ abstract interface class PublicKeyCredentialParameters {
   set alg(COSEAlgorithmIdentifier value);
 }
 
-final class PublicKeyCredentialParametersValue implements PublicKeyCredentialParameters {
+final class PublicKeyCredentialParametersValue
+    implements PublicKeyCredentialParameters {
   @override
   String type_;
   @override
   COSEAlgorithmIdentifier alg;
 
-  PublicKeyCredentialParametersValue({
-    required this.type_,
-    required this.alg,
-  });
+  PublicKeyCredentialParametersValue({required this.type_, required this.alg});
 }
 
 abstract interface class PublicKeyCredentialRequestOptions {
@@ -624,7 +623,8 @@ abstract interface class PublicKeyCredentialRequestOptions {
   set extensions(AuthenticationExtensionsClientInputs? value);
 }
 
-final class PublicKeyCredentialRequestOptionsValue implements PublicKeyCredentialRequestOptions {
+final class PublicKeyCredentialRequestOptionsValue
+    implements PublicKeyCredentialRequestOptions {
   @override
   BufferSource challenge;
   @override
@@ -668,7 +668,8 @@ abstract interface class PublicKeyCredentialRequestOptionsJSON {
   set extensions(AuthenticationExtensionsClientInputsJSON? value);
 }
 
-final class PublicKeyCredentialRequestOptionsJSONValue implements PublicKeyCredentialRequestOptionsJSON {
+final class PublicKeyCredentialRequestOptionsJSONValue
+    implements PublicKeyCredentialRequestOptionsJSON {
   @override
   Base64URLString challenge;
   @override
@@ -700,13 +701,12 @@ abstract interface class PublicKeyCredentialRpEntity {
   set id(String? value);
 }
 
-final class PublicKeyCredentialRpEntityValue implements PublicKeyCredentialRpEntity {
+final class PublicKeyCredentialRpEntityValue
+    implements PublicKeyCredentialRpEntity {
   @override
   String? id;
 
-  PublicKeyCredentialRpEntityValue({
-    this.id,
-  });
+  PublicKeyCredentialRpEntityValue({this.id});
 }
 
 typedef PublicKeyCredentialType = String;
@@ -718,7 +718,8 @@ abstract interface class PublicKeyCredentialUserEntity {
   set displayName(String value);
 }
 
-final class PublicKeyCredentialUserEntityValue implements PublicKeyCredentialUserEntity {
+final class PublicKeyCredentialUserEntityValue
+    implements PublicKeyCredentialUserEntity {
   @override
   BufferSource id;
   @override
@@ -739,7 +740,8 @@ abstract interface class PublicKeyCredentialUserEntityJSON {
   set displayName(String value);
 }
 
-final class PublicKeyCredentialUserEntityJSONValue implements PublicKeyCredentialUserEntityJSON {
+final class PublicKeyCredentialUserEntityJSONValue
+    implements PublicKeyCredentialUserEntityJSON {
   @override
   Base64URLString id;
   @override
@@ -808,10 +810,7 @@ final class TokenBindingValue implements TokenBinding {
   @override
   String? id;
 
-  TokenBindingValue({
-    required this.status,
-    this.id,
-  });
+  TokenBindingValue({required this.status, this.id});
 }
 
 typedef TokenBindingStatus = String;
@@ -821,4 +820,3 @@ typedef UserVerificationRequirement = String;
 typedef UvmEntries = List<UvmEntry>;
 
 typedef UvmEntry = List<int>;
-

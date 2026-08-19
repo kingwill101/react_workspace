@@ -27,10 +27,7 @@ typedef BodyInit = Object;
 
 abstract interface class Headers {
   factory Headers([HeadersInit? init]) =>
-      WebRuntime.current.createWebObject<Headers>(
-        'Headers',
-        [init],
-      );
+      WebRuntime.current.createWebObject<Headers>('Headers', [init]);
   void append(String name, String value);
   void delete(String name);
   String? get_(String name);
@@ -43,10 +40,7 @@ typedef HeadersInit = Object;
 
 abstract interface class Request {
   factory Request(RequestInfo input, [RequestInit? init]) =>
-      WebRuntime.current.createWebObject<Request>(
-        'Request',
-        [input, init],
-      );
+      WebRuntime.current.createWebObject<Request>('Request', [input, init]);
   ReadableStream? get body;
   bool get bodyUsed;
   Future<Object> arrayBuffer();
@@ -90,10 +84,7 @@ typedef RequestRedirect = String;
 
 abstract interface class Response {
   factory Response([BodyInit? body, ResponseInit? init]) =>
-      WebRuntime.current.createWebObject<Response>(
-        'Response',
-        [body, init],
-      );
+      WebRuntime.current.createWebObject<Response>('Response', [body, init]);
   ReadableStream? get body;
   bool get bodyUsed;
   Future<Object> arrayBuffer();
@@ -129,14 +120,9 @@ final class ResponseInitValue implements ResponseInit {
   @override
   HeadersInit? headers;
 
-  ResponseInitValue({
-    this.status,
-    this.statusText,
-    this.headers,
-  });
+  ResponseInitValue({this.status, this.statusText, this.headers});
 }
 
 typedef ResponseType = String;
 
 typedef XMLHttpRequestBodyInit = Object;
-

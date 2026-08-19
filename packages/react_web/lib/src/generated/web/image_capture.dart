@@ -13,16 +13,14 @@ abstract interface class ConstrainPoint2DParameters {
   set ideal(List<Point2D>? value);
 }
 
-final class ConstrainPoint2DParametersValue implements ConstrainPoint2DParameters {
+final class ConstrainPoint2DParametersValue
+    implements ConstrainPoint2DParameters {
   @override
   List<Point2D>? exact;
   @override
   List<Point2D>? ideal;
 
-  ConstrainPoint2DParametersValue({
-    this.exact,
-    this.ideal,
-  });
+  ConstrainPoint2DParametersValue({this.exact, this.ideal});
 }
 
 typedef FillLightMode = String;
@@ -44,11 +42,7 @@ final class MediaSettingsRangeValue implements MediaSettingsRange {
   @override
   double? step;
 
-  MediaSettingsRangeValue({
-    this.max,
-    this.min,
-    this.step,
-  });
+  MediaSettingsRangeValue({this.max, this.min, this.step});
 }
 
 abstract interface class MediaTrackCapabilities {
@@ -695,7 +689,8 @@ abstract interface class MediaTrackSupportedConstraints {
   set suppressLocalAudioPlayback(bool? value);
 }
 
-final class MediaTrackSupportedConstraintsValue implements MediaTrackSupportedConstraints {
+final class MediaTrackSupportedConstraintsValue
+    implements MediaTrackSupportedConstraints {
   @override
   bool? whiteBalanceMode;
   @override
@@ -885,11 +880,7 @@ final class Point2DValue implements Point2D {
   @override
   double? y;
 
-  Point2DValue({
-    this.x,
-    this.y,
-  });
+  Point2DValue({this.x, this.y});
 }
 
 typedef RedEyeReduction = String;
-

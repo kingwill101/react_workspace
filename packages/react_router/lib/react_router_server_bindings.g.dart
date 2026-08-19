@@ -22,9 +22,9 @@ import 'package:react/react.dart';
 ReactNode staticRouter({
   String? key,
   List<ReactNode> children = const [],
-    String? basename,
-    required Object location,
-    ServerFutureConfig? future,
+  String? basename,
+  required Object location,
+  ServerFutureConfig? future,
 }) => foreignComponent(
   'reactRouter.StaticRouter',
   key: key,
@@ -50,10 +50,10 @@ ReactNode staticRouter({
 )
 ReactNode staticRouterProvider({
   String? key,
-    required ServerStaticHandlerContext context,
-    required ServerRemixRouter router,
-    bool? hydrate,
-    String? nonce,
+  required ServerStaticHandlerContext context,
+  required ServerRemixRouter router,
+  bool? hydrate,
+  String? nonce,
 }) => foreignComponent(
   'reactRouter.StaticRouterProvider',
   key: key,
@@ -75,7 +75,10 @@ ReactNode staticRouterProvider({
 )
 @JS('globalThis.__reactDartBindings.reactRouter.createStaticHandler')
 external JSAny? _createStaticHandlerRaw(JSAny? routes, JSAny? opts);
-ServerStaticHandler? createStaticHandler(List<ServerCreateStaticHandlerRoutes> routes, [Object? opts]) {
+ServerStaticHandler? createStaticHandler(
+  List<ServerCreateStaticHandlerRoutes> routes, [
+  Object? opts,
+]) {
   final raw = _createStaticHandlerRaw(routes.jsify(), opts.jsify());
   if (raw == null) return null;
   return raw as ServerStaticHandler?;
@@ -90,18 +93,33 @@ ServerStaticHandler? createStaticHandler(List<ServerCreateStaticHandlerRoutes> r
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
 @JS('globalThis.__reactDartBindings.reactRouter.createStaticRouter')
-external JSAny? _createStaticRouterRaw(JSAny? routes, JSAny? context, JSAny? opts);
-ServerRemixRouter? createStaticRouter(List<ServerCreateStaticHandlerRoutes> routes, ServerStaticHandlerContext context, [ServerCreateStaticRouterOpts? opts]) {
-  final raw = _createStaticRouterRaw(routes.jsify(), context.jsify(), opts.jsify());
+external JSAny? _createStaticRouterRaw(
+  JSAny? routes,
+  JSAny? context,
+  JSAny? opts,
+);
+ServerRemixRouter? createStaticRouter(
+  List<ServerCreateStaticHandlerRoutes> routes,
+  ServerStaticHandlerContext context, [
+  ServerCreateStaticRouterOpts? opts,
+]) {
+  final raw = _createStaticRouterRaw(
+    routes.jsify(),
+    context.jsify(),
+    opts.jsify(),
+  );
   if (raw == null) return null;
   return raw as ServerRemixRouter?;
 }
 
 /// TS: (request: any, opts: { requestContext?: unknown; skipLoaderErrorBubbling?: boolean; unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any }) => any
-typedef ServerCreateStaticHandlerReturnQueryCallback = Object? Function(Object? request, Object? opts);
+typedef ServerCreateStaticHandlerReturnQueryCallback =
+    Object? Function(Object? request, Object? opts);
 
 /// Wraps a [ServerCreateStaticHandlerReturnQueryCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticHandlerReturnQueryCallback(ServerCreateStaticHandlerReturnQueryCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticHandlerReturnQueryCallback(
+  ServerCreateStaticHandlerReturnQueryCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticHandlerReturnQueryCallback',
   signature: const (
     positional: [reactAny, reactAny],
@@ -114,10 +132,13 @@ ReactCallback serverCreateStaticHandlerReturnQueryCallback(ServerCreateStaticHan
 );
 
 /// TS: (request: any, opts: { routeId?: string; requestContext?: unknown; unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any }) => any
-typedef ServerCreateStaticHandlerReturnQueryRouteCallback = Object? Function(Object? request, Object? opts);
+typedef ServerCreateStaticHandlerReturnQueryRouteCallback =
+    Object? Function(Object? request, Object? opts);
 
 /// Wraps a [ServerCreateStaticHandlerReturnQueryRouteCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticHandlerReturnQueryRouteCallback(ServerCreateStaticHandlerReturnQueryRouteCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticHandlerReturnQueryRouteCallback(
+  ServerCreateStaticHandlerReturnQueryRouteCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticHandlerReturnQueryRouteCallback',
   signature: const (
     positional: [reactAny, reactAny],
@@ -130,10 +151,17 @@ ReactCallback serverCreateStaticHandlerReturnQueryRouteCallback(ServerCreateStat
 );
 
 /// TS: (savedScrollPositions: unknown, getScrollPosition: () => number, getKey: (location: { pathname: string; search: string; hash: string; state: any; key: string }, matches: { id: any; pathname: any; params: any; data: any; handle: any }[]) => string) => () => void
-typedef ServerCreateStaticRouterReturnEnableScrollRestorationCallback = Object? Function(Object? savedScrollPositions, Object? getScrollPosition, Object? getKey);
+typedef ServerCreateStaticRouterReturnEnableScrollRestorationCallback =
+    Object? Function(
+      Object? savedScrollPositions,
+      Object? getScrollPosition,
+      Object? getKey,
+    );
 
 /// Wraps a [ServerCreateStaticRouterReturnEnableScrollRestorationCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnEnableScrollRestorationCallback(ServerCreateStaticRouterReturnEnableScrollRestorationCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnEnableScrollRestorationCallback(
+  ServerCreateStaticRouterReturnEnableScrollRestorationCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnEnableScrollRestorationCallback',
   signature: const (
     positional: [reactAny, reactAny, reactAny],
@@ -146,10 +174,13 @@ ReactCallback serverCreateStaticRouterReturnEnableScrollRestorationCallback(Serv
 );
 
 /// TS: (key: string, fn: (args: { currentLocation: { pathname: any; search: any; hash: any; state: any; key: any }; nextLocation: { pathname: any; search: any; hash: any; state: any; key: any }; historyAction: any }) => boolean) => { state: "unblocked" | "blocked" | "proceeding"; reset: () => void; proceed: () => void; location: { pathname: string; search: string; hash: string; state: any; key: string } }
-typedef ServerCreateStaticRouterReturnGetBlockerCallback = Object? Function(String elementKey, Object? fn);
+typedef ServerCreateStaticRouterReturnGetBlockerCallback =
+    Object? Function(String elementKey, Object? fn);
 
 /// Wraps a [ServerCreateStaticRouterReturnGetBlockerCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnGetBlockerCallback(ServerCreateStaticRouterReturnGetBlockerCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnGetBlockerCallback(
+  ServerCreateStaticRouterReturnGetBlockerCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnGetBlockerCallback',
   signature: const (
     positional: [reactString, reactAny],
@@ -162,10 +193,13 @@ ReactCallback serverCreateStaticRouterReturnGetBlockerCallback(ServerCreateStati
 );
 
 /// TS: (routes: { __ref: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any }; children?: any[]; index: true | false }[]) => void
-typedef ServerCreateStaticRouterReturnInternalSetRoutesCallback = void Function(Object? routes);
+typedef ServerCreateStaticRouterReturnInternalSetRoutesCallback =
+    void Function(Object? routes);
 
 /// Wraps a [ServerCreateStaticRouterReturnInternalSetRoutesCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnInternalSetRoutesCallback(ServerCreateStaticRouterReturnInternalSetRoutesCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnInternalSetRoutesCallback(
+  ServerCreateStaticRouterReturnInternalSetRoutesCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnInternalSetRoutesCallback',
   signature: const (
     positional: [reactAny],
@@ -179,10 +213,13 @@ ReactCallback serverCreateStaticRouterReturnInternalSetRoutesCallback(ServerCrea
 );
 
 /// TS: (routeId: string, children: { __ref: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any }; children?: any[]; index: true | false }[]) => void
-typedef ServerCreateStaticRouterReturnPatchRoutesCallback = void Function(String routeId, Object? children);
+typedef ServerCreateStaticRouterReturnPatchRoutesCallback =
+    void Function(String routeId, Object? children);
 
 /// Wraps a [ServerCreateStaticRouterReturnPatchRoutesCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnPatchRoutesCallback(ServerCreateStaticRouterReturnPatchRoutesCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnPatchRoutesCallback(
+  ServerCreateStaticRouterReturnPatchRoutesCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnPatchRoutesCallback',
   signature: const (
     positional: [reactString, reactAny],
@@ -199,23 +236,24 @@ ReactCallback serverCreateStaticRouterReturnPatchRoutesCallback(ServerCreateStat
 typedef ServerCreateStaticRouterReturnStateCallback = Object? Function();
 
 /// Wraps a [ServerCreateStaticRouterReturnStateCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnStateCallback(ServerCreateStaticRouterReturnStateCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnStateCallback(
+  ServerCreateStaticRouterReturnStateCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnStateCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
 );
 
 /// TS: (fn: (state: { historyAction: any; location: { pathname: any; search: any; hash: any; state: any; key: any }; matches: any[]; initialized: boolean; restoreScrollPosition: any; preventScrollReset: boolean; navigation: any; revalidation: any; loaderData: Record<string, unknown>; actionData: Record<string, unknown>; errors: Record<string, unknown>; fetchers: unknown; blockers: unknown }, opts: { deletedFetchers: any[]; unstable_viewTransitionOpts?: any; unstable_flushSync: boolean }) => void) => () => void
-typedef ServerCreateStaticRouterReturnSubscribeCallback = Object? Function(Object? fn);
+typedef ServerCreateStaticRouterReturnSubscribeCallback =
+    Object? Function(Object? fn);
 
 /// Wraps a [ServerCreateStaticRouterReturnSubscribeCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnSubscribeCallback(ServerCreateStaticRouterReturnSubscribeCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnSubscribeCallback(
+  ServerCreateStaticRouterReturnSubscribeCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnSubscribeCallback',
   signature: const (
     positional: [reactAny],
@@ -231,23 +269,24 @@ ReactCallback serverCreateStaticRouterReturnSubscribeCallback(ServerCreateStatic
 typedef ServerStaticRouterProviderContextBasenameCallback = String Function();
 
 /// Wraps a [ServerStaticRouterProviderContextBasenameCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderContextBasenameCallback(ServerStaticRouterProviderContextBasenameCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderContextBasenameCallback(
+  ServerStaticRouterProviderContextBasenameCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderContextBasenameCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
 );
 
 /// TS: (location: { pathname: string; search: string; hash: string; state: any; key: string }) => string
-typedef ServerStaticRouterProviderRouterCreateHrefCallback = String Function(Object? location);
+typedef ServerStaticRouterProviderRouterCreateHrefCallback =
+    String Function(Object? location);
 
 /// Wraps a [ServerStaticRouterProviderRouterCreateHrefCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterCreateHrefCallback(ServerStaticRouterProviderRouterCreateHrefCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterCreateHrefCallback(
+  ServerStaticRouterProviderRouterCreateHrefCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterCreateHrefCallback',
   signature: const (
     positional: [reactAny],
@@ -260,10 +299,13 @@ ReactCallback serverStaticRouterProviderRouterCreateHrefCallback(ServerStaticRou
 );
 
 /// TS: (key: string) => void
-typedef ServerStaticRouterProviderRouterDeleteFetcherCallback = void Function(String elementKey);
+typedef ServerStaticRouterProviderRouterDeleteFetcherCallback =
+    void Function(String elementKey);
 
 /// Wraps a [ServerStaticRouterProviderRouterDeleteFetcherCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterDeleteFetcherCallback(ServerStaticRouterProviderRouterDeleteFetcherCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterDeleteFetcherCallback(
+  ServerStaticRouterProviderRouterDeleteFetcherCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterDeleteFetcherCallback',
   signature: const (
     positional: [reactString],
@@ -277,10 +319,17 @@ ReactCallback serverStaticRouterProviderRouterDeleteFetcherCallback(ServerStatic
 );
 
 /// TS: (savedScrollPositions: unknown, getScrollPosition: () => number, getKey: (location: { pathname: any; search: any; hash: any; state: any; key: any }, matches: { id: any; pathname: any; params: any; data: any; handle: any }[]) => string) => () => void
-typedef ServerStaticRouterProviderRouterEnableScrollRestorationCallback = Object? Function(Object? savedScrollPositions, Object? getScrollPosition, Object? getKey);
+typedef ServerStaticRouterProviderRouterEnableScrollRestorationCallback =
+    Object? Function(
+      Object? savedScrollPositions,
+      Object? getScrollPosition,
+      Object? getKey,
+    );
 
 /// Wraps a [ServerStaticRouterProviderRouterEnableScrollRestorationCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterEnableScrollRestorationCallback(ServerStaticRouterProviderRouterEnableScrollRestorationCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterEnableScrollRestorationCallback(
+  ServerStaticRouterProviderRouterEnableScrollRestorationCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterEnableScrollRestorationCallback',
   signature: const (
     positional: [reactAny, reactAny, reactAny],
@@ -293,10 +342,13 @@ ReactCallback serverStaticRouterProviderRouterEnableScrollRestorationCallback(Se
 );
 
 /// TS: (to: any) => { pathname: string; search: string; hash: string }
-typedef ServerStaticRouterProviderRouterEncodeLocationCallback = Object? Function(Object? to);
+typedef ServerStaticRouterProviderRouterEncodeLocationCallback =
+    Object? Function(Object? to);
 
 /// Wraps a [ServerStaticRouterProviderRouterEncodeLocationCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterEncodeLocationCallback(ServerStaticRouterProviderRouterEncodeLocationCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterEncodeLocationCallback(
+  ServerStaticRouterProviderRouterEncodeLocationCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterEncodeLocationCallback',
   signature: const (
     positional: [reactAny],
@@ -309,10 +361,13 @@ ReactCallback serverStaticRouterProviderRouterEncodeLocationCallback(ServerStati
 );
 
 /// TS: (key: string, routeId: string, href: string, opts: { preventScrollReset?: boolean; relative?: "route" | "path"; unstable_flushSync?: boolean; __ref: { preventScrollReset?: any; relative?: any; unstable_flushSync?: any } }) => void
-typedef ServerStaticRouterProviderRouterFetchCallback = void Function(String elementKey, String routeId, String href, Object? opts);
+typedef ServerStaticRouterProviderRouterFetchCallback =
+    void Function(String elementKey, String routeId, String href, Object? opts);
 
 /// Wraps a [ServerStaticRouterProviderRouterFetchCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterFetchCallback(ServerStaticRouterProviderRouterFetchCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterFetchCallback(
+  ServerStaticRouterProviderRouterFetchCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterFetchCallback',
   signature: const (
     positional: [reactString, reactString, reactString, reactAny],
@@ -320,7 +375,12 @@ ReactCallback serverStaticRouterProviderRouterFetchCallback(ServerStaticRouterPr
     asynchronous: false,
   ),
   invoke: (arguments) {
-    fn(arguments[0] as String, arguments[1] as String, arguments[2] as String, arguments[3]);
+    fn(
+      arguments[0] as String,
+      arguments[1] as String,
+      arguments[2] as String,
+      arguments[3],
+    );
     return null;
   },
 );
@@ -329,23 +389,24 @@ ReactCallback serverStaticRouterProviderRouterFetchCallback(ServerStaticRouterPr
 typedef ServerStaticRouterProviderRouterFutureCallback = Object? Function();
 
 /// Wraps a [ServerStaticRouterProviderRouterFutureCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterFutureCallback(ServerStaticRouterProviderRouterFutureCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterFutureCallback(
+  ServerStaticRouterProviderRouterFutureCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterFutureCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
 );
 
 /// TS: (key: string, fn: (args: { currentLocation: any; nextLocation: any; historyAction: any }) => boolean) => { state: "unblocked" | "blocked" | "proceeding"; reset: () => void; proceed: () => void; location: { pathname: string; search: string; hash: string; state: any; key: string } }
-typedef ServerStaticRouterProviderRouterGetBlockerCallback = Object? Function(String elementKey, Object? fn);
+typedef ServerStaticRouterProviderRouterGetBlockerCallback =
+    Object? Function(String elementKey, Object? fn);
 
 /// Wraps a [ServerStaticRouterProviderRouterGetBlockerCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterGetBlockerCallback(ServerStaticRouterProviderRouterGetBlockerCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterGetBlockerCallback(
+  ServerStaticRouterProviderRouterGetBlockerCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterGetBlockerCallback',
   signature: const (
     positional: [reactString, reactAny],
@@ -358,10 +419,13 @@ ReactCallback serverStaticRouterProviderRouterGetBlockerCallback(ServerStaticRou
 );
 
 /// TS: (key: string) => { state: "idle" | "loading" | "submitting"; formMethod: Record<string, unknown>; formAction: string; formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; text: string; formData: any; json: Record<string, unknown>; data: any }
-typedef ServerStaticRouterProviderRouterGetFetcherCallback = Object? Function(String elementKey);
+typedef ServerStaticRouterProviderRouterGetFetcherCallback =
+    Object? Function(String elementKey);
 
 /// Wraps a [ServerStaticRouterProviderRouterGetFetcherCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterGetFetcherCallback(ServerStaticRouterProviderRouterGetFetcherCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterGetFetcherCallback(
+  ServerStaticRouterProviderRouterGetFetcherCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterGetFetcherCallback',
   signature: const (
     positional: [reactString],
@@ -374,10 +438,13 @@ ReactCallback serverStaticRouterProviderRouterGetFetcherCallback(ServerStaticRou
 );
 
 /// TS: (routes: { __ref: any; children?: any[]; index: true | false }[]) => void
-typedef ServerStaticRouterProviderRouterInternalSetRoutesCallback = void Function(Object? routes);
+typedef ServerStaticRouterProviderRouterInternalSetRoutesCallback =
+    void Function(Object? routes);
 
 /// Wraps a [ServerStaticRouterProviderRouterInternalSetRoutesCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterInternalSetRoutesCallback(ServerStaticRouterProviderRouterInternalSetRoutesCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterInternalSetRoutesCallback(
+  ServerStaticRouterProviderRouterInternalSetRoutesCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterInternalSetRoutesCallback',
   signature: const (
     positional: [reactAny],
@@ -391,10 +458,13 @@ ReactCallback serverStaticRouterProviderRouterInternalSetRoutesCallback(ServerSt
 );
 
 /// TS: (to: number) => any
-typedef ServerStaticRouterProviderRouterNavigateCallback = Object? Function(num to);
+typedef ServerStaticRouterProviderRouterNavigateCallback =
+    Object? Function(num to);
 
 /// Wraps a [ServerStaticRouterProviderRouterNavigateCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterNavigateCallback(ServerStaticRouterProviderRouterNavigateCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterNavigateCallback(
+  ServerStaticRouterProviderRouterNavigateCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterNavigateCallback',
   signature: const (
     positional: [reactAny],
@@ -407,10 +477,13 @@ ReactCallback serverStaticRouterProviderRouterNavigateCallback(ServerStaticRoute
 );
 
 /// TS: (routeId: string, children: { __ref: any; children?: any[]; index: true | false }[]) => void
-typedef ServerStaticRouterProviderRouterPatchRoutesCallback = void Function(String routeId, Object? children);
+typedef ServerStaticRouterProviderRouterPatchRoutesCallback =
+    void Function(String routeId, Object? children);
 
 /// Wraps a [ServerStaticRouterProviderRouterPatchRoutesCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterPatchRoutesCallback(ServerStaticRouterProviderRouterPatchRoutesCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterPatchRoutesCallback(
+  ServerStaticRouterProviderRouterPatchRoutesCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterPatchRoutesCallback',
   signature: const (
     positional: [reactString, reactAny],
@@ -427,13 +500,11 @@ ReactCallback serverStaticRouterProviderRouterPatchRoutesCallback(ServerStaticRo
 typedef ServerStaticRouterProviderRouterRevalidateCallback = void Function();
 
 /// Wraps a [ServerStaticRouterProviderRouterRevalidateCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterRevalidateCallback(ServerStaticRouterProviderRouterRevalidateCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterRevalidateCallback(
+  ServerStaticRouterProviderRouterRevalidateCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterRevalidateCallback',
-  signature: const (
-    positional: [],
-    result: reactVoid,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactVoid, asynchronous: false),
   invoke: (arguments) {
     fn();
     return null;
@@ -444,13 +515,11 @@ ReactCallback serverStaticRouterProviderRouterRevalidateCallback(ServerStaticRou
 typedef ServerStaticRouterProviderRouterRoutesCallback = Object? Function();
 
 /// Wraps a [ServerStaticRouterProviderRouterRoutesCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterRoutesCallback(ServerStaticRouterProviderRouterRoutesCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterRoutesCallback(
+  ServerStaticRouterProviderRouterRoutesCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterRoutesCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
@@ -460,23 +529,24 @@ ReactCallback serverStaticRouterProviderRouterRoutesCallback(ServerStaticRouterP
 typedef ServerStaticRouterProviderRouterStateCallback = Object? Function();
 
 /// Wraps a [ServerStaticRouterProviderRouterStateCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterStateCallback(ServerStaticRouterProviderRouterStateCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterStateCallback(
+  ServerStaticRouterProviderRouterStateCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterStateCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
 );
 
 /// TS: (fn: (state: { historyAction: any; location: any; matches: any; initialized: any; restoreScrollPosition: any; preventScrollReset: any; navigation: any; revalidation: any; loaderData: any; actionData: any; errors: any; fetchers: any; blockers: any }, opts: { deletedFetchers: any; unstable_viewTransitionOpts?: any; unstable_flushSync: any }) => void) => () => void
-typedef ServerStaticRouterProviderRouterSubscribeCallback = Object? Function(Object? fn);
+typedef ServerStaticRouterProviderRouterSubscribeCallback =
+    Object? Function(Object? fn);
 
 /// Wraps a [ServerStaticRouterProviderRouterSubscribeCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterSubscribeCallback(ServerStaticRouterProviderRouterSubscribeCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterSubscribeCallback(
+  ServerStaticRouterProviderRouterSubscribeCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterSubscribeCallback',
   signature: const (
     positional: [reactAny],
@@ -492,13 +562,11 @@ ReactCallback serverStaticRouterProviderRouterSubscribeCallback(ServerStaticRout
 typedef ServerStaticRouterProviderRouterWindowCallback = Object? Function();
 
 /// Wraps a [ServerStaticRouterProviderRouterWindowCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterWindowCallback(ServerStaticRouterProviderRouterWindowCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterWindowCallback(
+  ServerStaticRouterProviderRouterWindowCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterWindowCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
@@ -726,7 +794,8 @@ class ServerCreateStaticHandlerRoutes {
     'index': index,
     if (children != null) 'children': children,
     if (element != null) 'element': element,
-    if (hydrateFallbackElement != null) 'hydrateFallbackElement': hydrateFallbackElement,
+    if (hydrateFallbackElement != null)
+      'hydrateFallbackElement': hydrateFallbackElement,
     if (errorElement != null) 'errorElement': errorElement,
     if (Component != null) 'Component': Component,
     if (HydrateFallback != null) 'HydrateFallback': HydrateFallback,
@@ -739,9 +808,7 @@ class ServerCreateStaticHandlerRoutes {
 ///
 /// future?: { value?: any }
 class ServerCreateStaticRouterOpts {
-  const ServerCreateStaticRouterOpts({
-    ServerPick? this.future,
-  });
+  const ServerCreateStaticRouterOpts({ServerPick? this.future});
 
   /// TS: { value?: any }
   final ServerPick? future;
@@ -788,11 +855,14 @@ class ServerFutureConfig {
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     if (v7_fetcherPersist != null) 'v7_fetcherPersist': v7_fetcherPersist,
-    if (v7_normalizeFormMethod != null) 'v7_normalizeFormMethod': v7_normalizeFormMethod,
+    if (v7_normalizeFormMethod != null)
+      'v7_normalizeFormMethod': v7_normalizeFormMethod,
     if (v7_partialHydration != null) 'v7_partialHydration': v7_partialHydration,
     if (v7_prependBasename != null) 'v7_prependBasename': v7_prependBasename,
-    if (v7_relativeSplatPath != null) 'v7_relativeSplatPath': v7_relativeSplatPath,
-    if (v7_skipActionErrorRevalidation != null) 'v7_skipActionErrorRevalidation': v7_skipActionErrorRevalidation,
+    if (v7_relativeSplatPath != null)
+      'v7_relativeSplatPath': v7_relativeSplatPath,
+    if (v7_skipActionErrorRevalidation != null)
+      'v7_skipActionErrorRevalidation': v7_skipActionErrorRevalidation,
   };
 }
 
@@ -837,17 +907,13 @@ class ServerLocation {
 ///
 /// value?: any
 class ServerPick {
-  const ServerPick({
-    Object? this.value,
-  });
+  const ServerPick({Object? this.value});
 
   /// TS: any
   final Object? value;
 
   /// JSON-safe map for prop encoding through the JS bridge.
-  Map<String, Object?> toJson() => {
-    if (value != null) 'value': value,
-  };
+  Map<String, Object?> toJson() => {if (value != null) 'value': value};
 }
 
 /// Typed props for `RemixRouter`.
@@ -880,19 +946,25 @@ class ServerRemixRouter {
     required ServerStaticRouterProviderRouterWindowCallback this.window,
     required ServerStaticRouterProviderRouterWindowCallback this.initialize,
     required ServerStaticRouterProviderRouterSubscribeCallback this.subscribe,
-    required ServerStaticRouterProviderRouterEnableScrollRestorationCallback this.enableScrollRestoration,
+    required ServerStaticRouterProviderRouterEnableScrollRestorationCallback
+    this.enableScrollRestoration,
     required ServerStaticRouterProviderRouterNavigateCallback this.navigate,
     required ServerStaticRouterProviderRouterFetchCallback this.fetch,
     required ServerStaticRouterProviderRouterRevalidateCallback this.revalidate,
     required ServerStaticRouterProviderRouterCreateHrefCallback this.createHref,
-    required ServerStaticRouterProviderRouterEncodeLocationCallback this.encodeLocation,
+    required ServerStaticRouterProviderRouterEncodeLocationCallback
+    this.encodeLocation,
     required ServerStaticRouterProviderRouterGetFetcherCallback this.getFetcher,
-    required ServerStaticRouterProviderRouterDeleteFetcherCallback this.deleteFetcher,
+    required ServerStaticRouterProviderRouterDeleteFetcherCallback
+    this.deleteFetcher,
     required ServerStaticRouterProviderRouterRevalidateCallback this.dispose,
     required ServerStaticRouterProviderRouterGetBlockerCallback this.getBlocker,
-    required ServerStaticRouterProviderRouterDeleteFetcherCallback this.deleteBlocker,
-    required ServerStaticRouterProviderRouterPatchRoutesCallback this.patchRoutes,
-    required ServerStaticRouterProviderRouterInternalSetRoutesCallback this._internalSetRoutes,
+    required ServerStaticRouterProviderRouterDeleteFetcherCallback
+    this.deleteBlocker,
+    required ServerStaticRouterProviderRouterPatchRoutesCallback
+    this.patchRoutes,
+    required ServerStaticRouterProviderRouterInternalSetRoutesCallback
+    this._internalSetRoutes,
     required Object? this._internalFetchControllers,
     required Object? this._internalActiveDeferreds,
   });
@@ -919,7 +991,8 @@ class ServerRemixRouter {
   final ServerStaticRouterProviderRouterSubscribeCallback subscribe;
 
   /// TS: (savedScrollPositions: unknown, getScrollPosition: () => number, getKey: (location: { pathname: any; search: any; hash: any; state: any; key: any }, matches: { id: any; pathname: any; params: any; data: any; handle: any }[]) => string) => () => void
-  final ServerStaticRouterProviderRouterEnableScrollRestorationCallback enableScrollRestoration;
+  final ServerStaticRouterProviderRouterEnableScrollRestorationCallback
+  enableScrollRestoration;
 
   /// TS: (to: number) => any
   final ServerStaticRouterProviderRouterNavigateCallback navigate;
@@ -955,7 +1028,8 @@ class ServerRemixRouter {
   final ServerStaticRouterProviderRouterPatchRoutesCallback patchRoutes;
 
   /// TS: (routes: { __ref: any; children?: any[]; index: true | false }[]) => void
-  final ServerStaticRouterProviderRouterInternalSetRoutesCallback _internalSetRoutes;
+  final ServerStaticRouterProviderRouterInternalSetRoutesCallback
+  _internalSetRoutes;
 
   /// TS: unknown
   final Object? _internalFetchControllers;
@@ -1088,6 +1162,7 @@ class ServerStaticHandlerContext {
     'loaderHeaders': loaderHeaders,
     'actionHeaders': actionHeaders,
     'activeDeferreds': activeDeferreds,
-    if (_deepestRenderedBoundaryId != null) '_deepestRenderedBoundaryId': _deepestRenderedBoundaryId,
+    if (_deepestRenderedBoundaryId != null)
+      '_deepestRenderedBoundaryId': _deepestRenderedBoundaryId,
   };
 }

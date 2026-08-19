@@ -27,7 +27,8 @@ abstract interface class DisplayMediaStreamOptions {
   set monitorTypeSurfaces(MonitorTypeSurfacesEnum? value);
 }
 
-final class DisplayMediaStreamOptionsValue implements DisplayMediaStreamOptions {
+final class DisplayMediaStreamOptionsValue
+    implements DisplayMediaStreamOptions {
   @override
   Object? video;
   @override
@@ -61,4 +62,3 @@ typedef SelfCapturePreferenceEnum = String;
 typedef SurfaceSwitchingPreferenceEnum = String;
 
 typedef SystemAudioPreferenceEnum = String;
-

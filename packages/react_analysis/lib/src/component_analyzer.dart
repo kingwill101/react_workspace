@@ -34,9 +34,7 @@ final class ReactComponentAnalyzer {
 
     for (final element in library.topLevelFunctions) {
       if (!_hasReactComponent(element)) continue;
-      diagnostics.addAll(
-        _analyzeFunction(element, library, seenComponentIds),
-      );
+      diagnostics.addAll(_analyzeFunction(element, library, seenComponentIds));
     }
     return diagnostics;
   }
@@ -86,7 +84,8 @@ final class ReactComponentAnalyzer {
           code: ReactDiagnosticCode.invalidComponentReturn,
           message: '@ReactComponent function must return ReactNode.',
           severity: ReactDiagnosticSeverity.error,
-          correction: 'Change return type to ReactNode (e.g. Text("...") or div()).',
+          correction:
+              'Change return type to ReactNode (e.g. Text("...") or div()).',
         ),
       );
     }
@@ -111,7 +110,8 @@ final class ReactComponentAnalyzer {
             code: ReactDiagnosticCode.invalidComponentParamShape,
             message: '$name must accept a record parameter.',
             severity: ReactDiagnosticSeverity.error,
-            correction: 'Change parameter to a record, e.g. ({required String title})',
+            correction:
+                'Change parameter to a record, e.g. ({required String title})',
           ),
         );
       } else {
@@ -131,8 +131,9 @@ final class ReactComponentAnalyzer {
           if (propDiag != null) diagnostics.add(propDiag);
         }
         if (type.namedFields.any((f) => f.name == 'children')) {
-          final childrenField =
-              type.namedFields.firstWhere((f) => f.name == 'children');
+          final childrenField = type.namedFields.firstWhere(
+            (f) => f.name == 'children',
+          );
           if (!_isValidChildrenType(childrenField.type)) {
             diagnostics.add(
               const ReactDiagnostic(
@@ -183,7 +184,8 @@ final class ReactComponentAnalyzer {
     final display = type.getDisplayString();
     if (display == 'ReactNode') return true;
     // Allow nullable ReactNode as well.
-    if (type.getDisplayString().endsWith('?') && display.replaceAll('?', '') == 'ReactNode') {
+    if (type.getDisplayString().endsWith('?') &&
+        display.replaceAll('?', '') == 'ReactNode') {
       return true;
     }
     // Check via element name for aliased imports.
@@ -217,7 +219,8 @@ final class ReactComponentAnalyzer {
       if (rt is InterfaceType && rt.element.name == 'Future') {
         return ReactDiagnostic(
           code: ReactDiagnosticCode.callbackParamCannotBeBridged,
-          message: '$component.$prop has async callback type — not bridged yet.',
+          message:
+              '$component.$prop has async callback type — not bridged yet.',
           severity: ReactDiagnosticSeverity.error,
         );
       }

@@ -20,11 +20,13 @@ abstract interface class CSPViolationReportBody {
 }
 
 abstract interface class SecurityPolicyViolationEvent {
-  factory SecurityPolicyViolationEvent(String type_, [SecurityPolicyViolationEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<SecurityPolicyViolationEvent>(
-        'SecurityPolicyViolationEvent',
-        [type_, eventInitDict],
-      );
+  factory SecurityPolicyViolationEvent(
+    String type_, [
+    SecurityPolicyViolationEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<SecurityPolicyViolationEvent>(
+    'SecurityPolicyViolationEvent',
+    [type_, eventInitDict],
+  );
   String get documentURI;
   String get referrer;
   String get blockedURI;
@@ -68,7 +70,8 @@ abstract interface class SecurityPolicyViolationEventInit {
   set columnNumber(int? value);
 }
 
-final class SecurityPolicyViolationEventInitValue implements SecurityPolicyViolationEventInit {
+final class SecurityPolicyViolationEventInitValue
+    implements SecurityPolicyViolationEventInit {
   @override
   String? documentURI;
   @override
@@ -109,4 +112,3 @@ final class SecurityPolicyViolationEventInitValue implements SecurityPolicyViola
     this.columnNumber,
   });
 }
-

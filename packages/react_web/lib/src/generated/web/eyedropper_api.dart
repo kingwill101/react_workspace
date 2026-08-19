@@ -13,9 +13,7 @@ final class ColorSelectionOptionsValue implements ColorSelectionOptions {
   @override
   AbortSignal? signal;
 
-  ColorSelectionOptionsValue({
-    this.signal,
-  });
+  ColorSelectionOptionsValue({this.signal});
 }
 
 abstract interface class ColorSelectionResult {
@@ -27,8 +25,5 @@ final class ColorSelectionResultValue implements ColorSelectionResult {
   @override
   String? sRGBHex;
 
-  ColorSelectionResultValue({
-    this.sRGBHex,
-  });
+  ColorSelectionResultValue({this.sRGBHex});
 }
-

@@ -68,8 +68,5 @@ final class PointerLockOptionsValue implements PointerLockOptions {
   @override
   bool? unadjustedMovement;
 
-  PointerLockOptionsValue({
-    this.unadjustedMovement,
-  });
+  PointerLockOptionsValue({this.unadjustedMovement});
 }
-

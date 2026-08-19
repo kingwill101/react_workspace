@@ -7,10 +7,7 @@ import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class SyncEvent {
   factory SyncEvent(String type_, SyncEventInit init) =>
-      WebRuntime.current.createWebObject<SyncEvent>(
-        'SyncEvent',
-        [type_, init],
-      );
+      WebRuntime.current.createWebObject<SyncEvent>('SyncEvent', [type_, init]);
   String get tag;
   bool get lastChance;
 }
@@ -28,14 +25,10 @@ final class SyncEventInitValue implements SyncEventInit {
   @override
   bool? lastChance;
 
-  SyncEventInitValue({
-    required this.tag,
-    this.lastChance,
-  });
+  SyncEventInitValue({required this.tag, this.lastChance});
 }
 
 abstract interface class SyncManager {
   Future<void> register(String tag);
   Future<List<String>> getTags();
 }
-

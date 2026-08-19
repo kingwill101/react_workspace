@@ -83,9 +83,5 @@ final class PurchaseDetailsValue implements PurchaseDetails {
   @override
   String purchaseToken;
 
-  PurchaseDetailsValue({
-    required this.itemId,
-    required this.purchaseToken,
-  });
+  PurchaseDetailsValue({required this.itemId, required this.purchaseToken});
 }
-

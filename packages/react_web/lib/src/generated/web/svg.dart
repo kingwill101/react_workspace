@@ -20,19 +20,28 @@ import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Document {
   factory Document() =>
-      WebRuntime.current.createWebObject<Document>(
-        'Document',
-        [],
-      );
+      WebRuntime.current.createWebObject<Document>('Document', []);
   FontFaceSet get fonts;
   List<DOMQuad> getBoxQuads([BoxQuadOptions? options]);
-  DOMQuad convertQuadFromNode(DOMQuadInit quad, GeometryNode from, [ConvertCoordinateOptions? options]);
-  DOMQuad convertRectFromNode(DOMRectReadOnly rect, GeometryNode from, [ConvertCoordinateOptions? options]);
-  DOMPoint convertPointFromNode(DOMPointInit point, GeometryNode from, [ConvertCoordinateOptions? options]);
+  DOMQuad convertQuadFromNode(
+    DOMQuadInit quad,
+    GeometryNode from, [
+    ConvertCoordinateOptions? options,
+  ]);
+  DOMQuad convertRectFromNode(
+    DOMRectReadOnly rect,
+    GeometryNode from, [
+    ConvertCoordinateOptions? options,
+  ]);
+  DOMPoint convertPointFromNode(
+    DOMPointInit point,
+    GeometryNode from, [
+    ConvertCoordinateOptions? options,
+  ]);
   Element? getElementById(String elementId);
   StyleSheetList get styleSheets;
   List<CSSStyleSheet> get adoptedStyleSheets;
-   set adoptedStyleSheets(List<CSSStyleSheet> value);
+  set adoptedStyleSheets(List<CSSStyleSheet> value);
   Element? get fullscreenElement;
   Element? get activeElement;
   Element? get pictureInPictureElement;
@@ -47,220 +56,233 @@ abstract interface class Document {
   void replaceChildren([List<Object>? nodes]);
   Element? querySelector(String selectors);
   NodeList querySelectorAll(String selectors);
-  XPathExpression createExpression(String expression, [XPathNSResolver? resolver]);
+  XPathExpression createExpression(
+    String expression, [
+    XPathNSResolver? resolver,
+  ]);
   Node createNSResolver(Node nodeResolver);
-  XPathResult evaluate(String expression, Node contextNode, [XPathNSResolver? resolver, int? type_, XPathResult? result]);
+  XPathResult evaluate(
+    String expression,
+    Node contextNode, [
+    XPathNSResolver? resolver,
+    int? type_,
+    XPathResult? result,
+  ]);
   EventHandler get onanimationstart;
-   set onanimationstart(EventHandler value);
+  set onanimationstart(EventHandler value);
   EventHandler get onanimationiteration;
-   set onanimationiteration(EventHandler value);
+  set onanimationiteration(EventHandler value);
   EventHandler get onanimationend;
-   set onanimationend(EventHandler value);
+  set onanimationend(EventHandler value);
   EventHandler get onanimationcancel;
-   set onanimationcancel(EventHandler value);
+  set onanimationcancel(EventHandler value);
   EventHandler get onsnapchanged;
-   set onsnapchanged(EventHandler value);
+  set onsnapchanged(EventHandler value);
   EventHandler get onsnapchanging;
-   set onsnapchanging(EventHandler value);
+  set onsnapchanging(EventHandler value);
   EventHandler get ontransitionrun;
-   set ontransitionrun(EventHandler value);
+  set ontransitionrun(EventHandler value);
   EventHandler get ontransitionstart;
-   set ontransitionstart(EventHandler value);
+  set ontransitionstart(EventHandler value);
   EventHandler get ontransitionend;
-   set ontransitionend(EventHandler value);
+  set ontransitionend(EventHandler value);
   EventHandler get ontransitioncancel;
-   set ontransitioncancel(EventHandler value);
+  set ontransitioncancel(EventHandler value);
   EventHandler get onabort;
-   set onabort(EventHandler value);
+  set onabort(EventHandler value);
   EventHandler get onauxclick;
-   set onauxclick(EventHandler value);
+  set onauxclick(EventHandler value);
   EventHandler get onbeforeinput;
-   set onbeforeinput(EventHandler value);
+  set onbeforeinput(EventHandler value);
   EventHandler get onbeforematch;
-   set onbeforematch(EventHandler value);
+  set onbeforematch(EventHandler value);
   EventHandler get onbeforetoggle;
-   set onbeforetoggle(EventHandler value);
+  set onbeforetoggle(EventHandler value);
   EventHandler get onblur;
-   set onblur(EventHandler value);
+  set onblur(EventHandler value);
   EventHandler get oncancel;
-   set oncancel(EventHandler value);
+  set oncancel(EventHandler value);
   EventHandler get oncanplay;
-   set oncanplay(EventHandler value);
+  set oncanplay(EventHandler value);
   EventHandler get oncanplaythrough;
-   set oncanplaythrough(EventHandler value);
+  set oncanplaythrough(EventHandler value);
   EventHandler get onchange;
-   set onchange(EventHandler value);
+  set onchange(EventHandler value);
   EventHandler get onclick;
-   set onclick(EventHandler value);
+  set onclick(EventHandler value);
   EventHandler get onclose;
-   set onclose(EventHandler value);
+  set onclose(EventHandler value);
   EventHandler get oncontextlost;
-   set oncontextlost(EventHandler value);
+  set oncontextlost(EventHandler value);
   EventHandler get oncontextmenu;
-   set oncontextmenu(EventHandler value);
+  set oncontextmenu(EventHandler value);
   EventHandler get oncontextrestored;
-   set oncontextrestored(EventHandler value);
+  set oncontextrestored(EventHandler value);
   EventHandler get oncopy;
-   set oncopy(EventHandler value);
+  set oncopy(EventHandler value);
   EventHandler get oncuechange;
-   set oncuechange(EventHandler value);
+  set oncuechange(EventHandler value);
   EventHandler get oncut;
-   set oncut(EventHandler value);
+  set oncut(EventHandler value);
   EventHandler get ondblclick;
-   set ondblclick(EventHandler value);
+  set ondblclick(EventHandler value);
   EventHandler get ondrag;
-   set ondrag(EventHandler value);
+  set ondrag(EventHandler value);
   EventHandler get ondragend;
-   set ondragend(EventHandler value);
+  set ondragend(EventHandler value);
   EventHandler get ondragenter;
-   set ondragenter(EventHandler value);
+  set ondragenter(EventHandler value);
   EventHandler get ondragleave;
-   set ondragleave(EventHandler value);
+  set ondragleave(EventHandler value);
   EventHandler get ondragover;
-   set ondragover(EventHandler value);
+  set ondragover(EventHandler value);
   EventHandler get ondragstart;
-   set ondragstart(EventHandler value);
+  set ondragstart(EventHandler value);
   EventHandler get ondrop;
-   set ondrop(EventHandler value);
+  set ondrop(EventHandler value);
   EventHandler get ondurationchange;
-   set ondurationchange(EventHandler value);
+  set ondurationchange(EventHandler value);
   EventHandler get onemptied;
-   set onemptied(EventHandler value);
+  set onemptied(EventHandler value);
   EventHandler get onended;
-   set onended(EventHandler value);
+  set onended(EventHandler value);
   OnErrorEventHandler get onerror;
-   set onerror(OnErrorEventHandler value);
+  set onerror(OnErrorEventHandler value);
   EventHandler get onfocus;
-   set onfocus(EventHandler value);
+  set onfocus(EventHandler value);
   EventHandler get onformdata;
-   set onformdata(EventHandler value);
+  set onformdata(EventHandler value);
   EventHandler get oninput;
-   set oninput(EventHandler value);
+  set oninput(EventHandler value);
   EventHandler get oninvalid;
-   set oninvalid(EventHandler value);
+  set oninvalid(EventHandler value);
   EventHandler get onkeydown;
-   set onkeydown(EventHandler value);
+  set onkeydown(EventHandler value);
   EventHandler get onkeypress;
-   set onkeypress(EventHandler value);
+  set onkeypress(EventHandler value);
   EventHandler get onkeyup;
-   set onkeyup(EventHandler value);
+  set onkeyup(EventHandler value);
   EventHandler get onload;
-   set onload(EventHandler value);
+  set onload(EventHandler value);
   EventHandler get onloadeddata;
-   set onloadeddata(EventHandler value);
+  set onloadeddata(EventHandler value);
   EventHandler get onloadedmetadata;
-   set onloadedmetadata(EventHandler value);
+  set onloadedmetadata(EventHandler value);
   EventHandler get onloadstart;
-   set onloadstart(EventHandler value);
+  set onloadstart(EventHandler value);
   EventHandler get onmousedown;
-   set onmousedown(EventHandler value);
+  set onmousedown(EventHandler value);
   EventHandler get onmouseenter;
-   set onmouseenter(EventHandler value);
+  set onmouseenter(EventHandler value);
   EventHandler get onmouseleave;
-   set onmouseleave(EventHandler value);
+  set onmouseleave(EventHandler value);
   EventHandler get onmousemove;
-   set onmousemove(EventHandler value);
+  set onmousemove(EventHandler value);
   EventHandler get onmouseout;
-   set onmouseout(EventHandler value);
+  set onmouseout(EventHandler value);
   EventHandler get onmouseover;
-   set onmouseover(EventHandler value);
+  set onmouseover(EventHandler value);
   EventHandler get onmouseup;
-   set onmouseup(EventHandler value);
+  set onmouseup(EventHandler value);
   EventHandler get onpaste;
-   set onpaste(EventHandler value);
+  set onpaste(EventHandler value);
   EventHandler get onpause;
-   set onpause(EventHandler value);
+  set onpause(EventHandler value);
   EventHandler get onplay;
-   set onplay(EventHandler value);
+  set onplay(EventHandler value);
   EventHandler get onplaying;
-   set onplaying(EventHandler value);
+  set onplaying(EventHandler value);
   EventHandler get onprogress;
-   set onprogress(EventHandler value);
+  set onprogress(EventHandler value);
   EventHandler get onratechange;
-   set onratechange(EventHandler value);
+  set onratechange(EventHandler value);
   EventHandler get onreset;
-   set onreset(EventHandler value);
+  set onreset(EventHandler value);
   EventHandler get onresize;
-   set onresize(EventHandler value);
+  set onresize(EventHandler value);
   EventHandler get onscroll;
-   set onscroll(EventHandler value);
+  set onscroll(EventHandler value);
   EventHandler get onscrollend;
-   set onscrollend(EventHandler value);
+  set onscrollend(EventHandler value);
   EventHandler get onsecuritypolicyviolation;
-   set onsecuritypolicyviolation(EventHandler value);
+  set onsecuritypolicyviolation(EventHandler value);
   EventHandler get onseeked;
-   set onseeked(EventHandler value);
+  set onseeked(EventHandler value);
   EventHandler get onseeking;
-   set onseeking(EventHandler value);
+  set onseeking(EventHandler value);
   EventHandler get onselect;
-   set onselect(EventHandler value);
+  set onselect(EventHandler value);
   EventHandler get onslotchange;
-   set onslotchange(EventHandler value);
+  set onslotchange(EventHandler value);
   EventHandler get onstalled;
-   set onstalled(EventHandler value);
+  set onstalled(EventHandler value);
   EventHandler get onsubmit;
-   set onsubmit(EventHandler value);
+  set onsubmit(EventHandler value);
   EventHandler get onsuspend;
-   set onsuspend(EventHandler value);
+  set onsuspend(EventHandler value);
   EventHandler get ontimeupdate;
-   set ontimeupdate(EventHandler value);
+  set ontimeupdate(EventHandler value);
   EventHandler get ontoggle;
-   set ontoggle(EventHandler value);
+  set ontoggle(EventHandler value);
   EventHandler get onvolumechange;
-   set onvolumechange(EventHandler value);
+  set onvolumechange(EventHandler value);
   EventHandler get onwaiting;
-   set onwaiting(EventHandler value);
+  set onwaiting(EventHandler value);
   EventHandler get onwebkitanimationend;
-   set onwebkitanimationend(EventHandler value);
+  set onwebkitanimationend(EventHandler value);
   EventHandler get onwebkitanimationiteration;
-   set onwebkitanimationiteration(EventHandler value);
+  set onwebkitanimationiteration(EventHandler value);
   EventHandler get onwebkitanimationstart;
-   set onwebkitanimationstart(EventHandler value);
+  set onwebkitanimationstart(EventHandler value);
   EventHandler get onwebkittransitionend;
-   set onwebkittransitionend(EventHandler value);
+  set onwebkittransitionend(EventHandler value);
   EventHandler get onwheel;
-   set onwheel(EventHandler value);
+  set onwheel(EventHandler value);
   EventHandler get onpointerover;
-   set onpointerover(EventHandler value);
+  set onpointerover(EventHandler value);
   EventHandler get onpointerenter;
-   set onpointerenter(EventHandler value);
+  set onpointerenter(EventHandler value);
   EventHandler get onpointerdown;
-   set onpointerdown(EventHandler value);
+  set onpointerdown(EventHandler value);
   EventHandler get onpointermove;
-   set onpointermove(EventHandler value);
+  set onpointermove(EventHandler value);
   EventHandler get onpointerrawupdate;
-   set onpointerrawupdate(EventHandler value);
+  set onpointerrawupdate(EventHandler value);
   EventHandler get onpointerup;
-   set onpointerup(EventHandler value);
+  set onpointerup(EventHandler value);
   EventHandler get onpointercancel;
-   set onpointercancel(EventHandler value);
+  set onpointercancel(EventHandler value);
   EventHandler get onpointerout;
-   set onpointerout(EventHandler value);
+  set onpointerout(EventHandler value);
   EventHandler get onpointerleave;
-   set onpointerleave(EventHandler value);
+  set onpointerleave(EventHandler value);
   EventHandler get ongotpointercapture;
-   set ongotpointercapture(EventHandler value);
+  set ongotpointercapture(EventHandler value);
   EventHandler get onlostpointercapture;
-   set onlostpointercapture(EventHandler value);
+  set onlostpointercapture(EventHandler value);
   EventHandler get onselectstart;
-   set onselectstart(EventHandler value);
+  set onselectstart(EventHandler value);
   EventHandler get onselectionchange;
-   set onselectionchange(EventHandler value);
+  set onselectionchange(EventHandler value);
   EventHandler get ontouchstart;
-   set ontouchstart(EventHandler value);
+  set ontouchstart(EventHandler value);
   EventHandler get ontouchend;
-   set ontouchend(EventHandler value);
+  set ontouchend(EventHandler value);
   EventHandler get ontouchmove;
-   set ontouchmove(EventHandler value);
+  set ontouchmove(EventHandler value);
   EventHandler get ontouchcancel;
-   set ontouchcancel(EventHandler value);
+  set ontouchcancel(EventHandler value);
   EventHandler get onbeforexrselect;
-   set onbeforexrselect(EventHandler value);
+  set onbeforexrselect(EventHandler value);
   SVGSVGElement? get rootElement;
   ViewTransition startViewTransition([Object? callbackOptions]);
   Element? elementFromPoint(double x, double y);
   List<Element> elementsFromPoint(double x, double y);
-  Object caretPositionFromPoint(double x, double y, [CaretPositionFromPointOptions? options]);
+  Object caretPositionFromPoint(
+    double x,
+    double y, [
+    CaretPositionFromPointOptions? options,
+  ]);
   Element? get scrollingElement;
   DOMImplementation get implementation;
   String get url;
@@ -274,7 +296,11 @@ abstract interface class Document {
   HTMLCollection getElementsByTagNameNS(String? namespace, String localName);
   HTMLCollection getElementsByClassName(String classNames);
   Element createElement(String localName, [Object? options]);
-  Element createElementNS(String? namespace, String qualifiedName, [Object? options]);
+  Element createElementNS(
+    String? namespace,
+    String qualifiedName, [
+    Object? options,
+  ]);
   DocumentFragment createDocumentFragment();
   Text createTextNode(String data);
   CDATASection createCDATASection(String data);
@@ -286,29 +312,33 @@ abstract interface class Document {
   Attr createAttributeNS(String? namespace, String qualifiedName);
   Event createEvent(String interface_);
   Range createRange();
-  NodeIterator createNodeIterator(Node root, [int? whatToShow, NodeFilter? filter]);
+  NodeIterator createNodeIterator(
+    Node root, [
+    int? whatToShow,
+    NodeFilter? filter,
+  ]);
   TreeWalker createTreeWalker(Node root, [int? whatToShow, NodeFilter? filter]);
   bool get fullscreenEnabled;
   bool get fullscreen;
   Future<void> exitFullscreen();
   EventHandler get onfullscreenchange;
-   set onfullscreenchange(EventHandler value);
+  set onfullscreenchange(EventHandler value);
   EventHandler get onfullscreenerror;
-   set onfullscreenerror(EventHandler value);
+  set onfullscreenerror(EventHandler value);
   Location? get location;
   String get domain;
-   set domain(String value);
+  set domain(String value);
   String get referrer;
   String get cookie;
-   set cookie(String value);
+  set cookie(String value);
   String get lastModified;
   DocumentReadyState get readyState;
   String get title;
-   set title(String value);
+  set title(String value);
   String get dir;
-   set dir(String value);
+  set dir(String value);
   HTMLElement? get body;
-   set body(HTMLElement? value);
+  set body(HTMLElement? value);
   HTMLHeadElement? get head;
   HTMLCollection get images;
   HTMLCollection get embeds;
@@ -325,26 +355,26 @@ abstract interface class Document {
   Object get defaultView;
   bool hasFocus();
   String get designMode;
-   set designMode(String value);
+  set designMode(String value);
   bool execCommand(String commandId, [bool? showUI, String? value]);
   bool queryCommandIndeterm(String commandId);
   String queryCommandValue(String commandId);
   bool get hidden;
   DocumentVisibilityState get visibilityState;
   EventHandler get onreadystatechange;
-   set onreadystatechange(EventHandler value);
+  set onreadystatechange(EventHandler value);
   EventHandler get onvisibilitychange;
-   set onvisibilitychange(EventHandler value);
+  set onvisibilitychange(EventHandler value);
   String get fgColor;
-   set fgColor(String value);
+  set fgColor(String value);
   String get linkColor;
-   set linkColor(String value);
+  set linkColor(String value);
   String get vlinkColor;
-   set vlinkColor(String value);
+  set vlinkColor(String value);
   String get alinkColor;
-   set alinkColor(String value);
+  set alinkColor(String value);
   String get bgColor;
-   set bgColor(String value);
+  set bgColor(String value);
   HTMLCollection get anchors;
   HTMLCollection get applets;
   void clear();
@@ -352,13 +382,13 @@ abstract interface class Document {
   void releaseEvents();
   HTMLAllCollection get all;
   EventHandler get onresume;
-   set onresume(EventHandler value);
+  set onresume(EventHandler value);
   bool get pictureInPictureEnabled;
   Future<void> exitPictureInPicture();
   EventHandler get onpointerlockchange;
-   set onpointerlockchange(EventHandler value);
+  set onpointerlockchange(EventHandler value);
   EventHandler get onpointerlockerror;
-   set onpointerlockerror(EventHandler value);
+  set onpointerlockerror(EventHandler value);
   void exitPointerLock();
   Future<bool> hasUnpartitionedCookieAccess();
   Selection? getSelection();
@@ -375,30 +405,30 @@ abstract interface class SVGAElement {
   SVGAnimatedString get href;
   SVGAnimatedString get target;
   String get download;
-   set download(String value);
+  set download(String value);
   String get ping;
-   set ping(String value);
+  set ping(String value);
   String get rel;
-   set rel(String value);
+  set rel(String value);
   DOMTokenList get relList;
   String get hreflang;
-   set hreflang(String value);
+  set hreflang(String value);
   String get type_;
-   set type_(String value);
+  set type_(String value);
   String get text;
-   set text(String value);
+  set text(String value);
   String get referrerPolicy;
-   set referrerPolicy(String value);
+  set referrerPolicy(String value);
 }
 
 abstract interface class SVGAngle {
   int get unitType;
   double get value;
-   set value(double value);
+  set value(double value);
   double get valueInSpecifiedUnits;
-   set valueInSpecifiedUnits(double value);
+  set valueInSpecifiedUnits(double value);
   String get valueAsString;
-   set valueAsString(String value);
+  set valueAsString(String value);
   void newValueSpecifiedUnits(int unitType, double valueInSpecifiedUnits);
   void convertToSpecifiedUnits(int unitType);
 }
@@ -410,19 +440,19 @@ abstract interface class SVGAnimatedAngle {
 
 abstract interface class SVGAnimatedBoolean {
   bool get baseVal;
-   set baseVal(bool value);
+  set baseVal(bool value);
   bool get animVal;
 }
 
 abstract interface class SVGAnimatedEnumeration {
   int get baseVal;
-   set baseVal(int value);
+  set baseVal(int value);
   int get animVal;
 }
 
 abstract interface class SVGAnimatedInteger {
   int get baseVal;
-   set baseVal(int value);
+  set baseVal(int value);
   int get animVal;
 }
 
@@ -438,7 +468,7 @@ abstract interface class SVGAnimatedLengthList {
 
 abstract interface class SVGAnimatedNumber {
   double get baseVal;
-   set baseVal(double value);
+  set baseVal(double value);
   double get animVal;
 }
 
@@ -464,7 +494,7 @@ abstract interface class SVGAnimatedRect {
 
 abstract interface class SVGAnimatedString {
   String get baseVal;
-   set baseVal(String value);
+  set baseVal(String value);
   String get animVal;
 }
 
@@ -508,228 +538,226 @@ abstract interface class SVGCircleElement {
   SVGAnimatedLength get r;
 }
 
-abstract interface class SVGDefsElement {
-}
+abstract interface class SVGDefsElement {}
 
-abstract interface class SVGDescElement {
-}
+abstract interface class SVGDescElement {}
 
 abstract interface class SVGElement {
   EventHandler get onanimationstart;
-   set onanimationstart(EventHandler value);
+  set onanimationstart(EventHandler value);
   EventHandler get onanimationiteration;
-   set onanimationiteration(EventHandler value);
+  set onanimationiteration(EventHandler value);
   EventHandler get onanimationend;
-   set onanimationend(EventHandler value);
+  set onanimationend(EventHandler value);
   EventHandler get onanimationcancel;
-   set onanimationcancel(EventHandler value);
+  set onanimationcancel(EventHandler value);
   EventHandler get onsnapchanged;
-   set onsnapchanged(EventHandler value);
+  set onsnapchanged(EventHandler value);
   EventHandler get onsnapchanging;
-   set onsnapchanging(EventHandler value);
+  set onsnapchanging(EventHandler value);
   EventHandler get ontransitionrun;
-   set ontransitionrun(EventHandler value);
+  set ontransitionrun(EventHandler value);
   EventHandler get ontransitionstart;
-   set ontransitionstart(EventHandler value);
+  set ontransitionstart(EventHandler value);
   EventHandler get ontransitionend;
-   set ontransitionend(EventHandler value);
+  set ontransitionend(EventHandler value);
   EventHandler get ontransitioncancel;
-   set ontransitioncancel(EventHandler value);
+  set ontransitioncancel(EventHandler value);
   EventHandler get onabort;
-   set onabort(EventHandler value);
+  set onabort(EventHandler value);
   EventHandler get onauxclick;
-   set onauxclick(EventHandler value);
+  set onauxclick(EventHandler value);
   EventHandler get onbeforeinput;
-   set onbeforeinput(EventHandler value);
+  set onbeforeinput(EventHandler value);
   EventHandler get onbeforematch;
-   set onbeforematch(EventHandler value);
+  set onbeforematch(EventHandler value);
   EventHandler get onbeforetoggle;
-   set onbeforetoggle(EventHandler value);
+  set onbeforetoggle(EventHandler value);
   EventHandler get onblur;
-   set onblur(EventHandler value);
+  set onblur(EventHandler value);
   EventHandler get oncancel;
-   set oncancel(EventHandler value);
+  set oncancel(EventHandler value);
   EventHandler get oncanplay;
-   set oncanplay(EventHandler value);
+  set oncanplay(EventHandler value);
   EventHandler get oncanplaythrough;
-   set oncanplaythrough(EventHandler value);
+  set oncanplaythrough(EventHandler value);
   EventHandler get onchange;
-   set onchange(EventHandler value);
+  set onchange(EventHandler value);
   EventHandler get onclick;
-   set onclick(EventHandler value);
+  set onclick(EventHandler value);
   EventHandler get onclose;
-   set onclose(EventHandler value);
+  set onclose(EventHandler value);
   EventHandler get oncontextlost;
-   set oncontextlost(EventHandler value);
+  set oncontextlost(EventHandler value);
   EventHandler get oncontextmenu;
-   set oncontextmenu(EventHandler value);
+  set oncontextmenu(EventHandler value);
   EventHandler get oncontextrestored;
-   set oncontextrestored(EventHandler value);
+  set oncontextrestored(EventHandler value);
   EventHandler get oncopy;
-   set oncopy(EventHandler value);
+  set oncopy(EventHandler value);
   EventHandler get oncuechange;
-   set oncuechange(EventHandler value);
+  set oncuechange(EventHandler value);
   EventHandler get oncut;
-   set oncut(EventHandler value);
+  set oncut(EventHandler value);
   EventHandler get ondblclick;
-   set ondblclick(EventHandler value);
+  set ondblclick(EventHandler value);
   EventHandler get ondrag;
-   set ondrag(EventHandler value);
+  set ondrag(EventHandler value);
   EventHandler get ondragend;
-   set ondragend(EventHandler value);
+  set ondragend(EventHandler value);
   EventHandler get ondragenter;
-   set ondragenter(EventHandler value);
+  set ondragenter(EventHandler value);
   EventHandler get ondragleave;
-   set ondragleave(EventHandler value);
+  set ondragleave(EventHandler value);
   EventHandler get ondragover;
-   set ondragover(EventHandler value);
+  set ondragover(EventHandler value);
   EventHandler get ondragstart;
-   set ondragstart(EventHandler value);
+  set ondragstart(EventHandler value);
   EventHandler get ondrop;
-   set ondrop(EventHandler value);
+  set ondrop(EventHandler value);
   EventHandler get ondurationchange;
-   set ondurationchange(EventHandler value);
+  set ondurationchange(EventHandler value);
   EventHandler get onemptied;
-   set onemptied(EventHandler value);
+  set onemptied(EventHandler value);
   EventHandler get onended;
-   set onended(EventHandler value);
+  set onended(EventHandler value);
   OnErrorEventHandler get onerror;
-   set onerror(OnErrorEventHandler value);
+  set onerror(OnErrorEventHandler value);
   EventHandler get onfocus;
-   set onfocus(EventHandler value);
+  set onfocus(EventHandler value);
   EventHandler get onformdata;
-   set onformdata(EventHandler value);
+  set onformdata(EventHandler value);
   EventHandler get oninput;
-   set oninput(EventHandler value);
+  set oninput(EventHandler value);
   EventHandler get oninvalid;
-   set oninvalid(EventHandler value);
+  set oninvalid(EventHandler value);
   EventHandler get onkeydown;
-   set onkeydown(EventHandler value);
+  set onkeydown(EventHandler value);
   EventHandler get onkeypress;
-   set onkeypress(EventHandler value);
+  set onkeypress(EventHandler value);
   EventHandler get onkeyup;
-   set onkeyup(EventHandler value);
+  set onkeyup(EventHandler value);
   EventHandler get onload;
-   set onload(EventHandler value);
+  set onload(EventHandler value);
   EventHandler get onloadeddata;
-   set onloadeddata(EventHandler value);
+  set onloadeddata(EventHandler value);
   EventHandler get onloadedmetadata;
-   set onloadedmetadata(EventHandler value);
+  set onloadedmetadata(EventHandler value);
   EventHandler get onloadstart;
-   set onloadstart(EventHandler value);
+  set onloadstart(EventHandler value);
   EventHandler get onmousedown;
-   set onmousedown(EventHandler value);
+  set onmousedown(EventHandler value);
   EventHandler get onmouseenter;
-   set onmouseenter(EventHandler value);
+  set onmouseenter(EventHandler value);
   EventHandler get onmouseleave;
-   set onmouseleave(EventHandler value);
+  set onmouseleave(EventHandler value);
   EventHandler get onmousemove;
-   set onmousemove(EventHandler value);
+  set onmousemove(EventHandler value);
   EventHandler get onmouseout;
-   set onmouseout(EventHandler value);
+  set onmouseout(EventHandler value);
   EventHandler get onmouseover;
-   set onmouseover(EventHandler value);
+  set onmouseover(EventHandler value);
   EventHandler get onmouseup;
-   set onmouseup(EventHandler value);
+  set onmouseup(EventHandler value);
   EventHandler get onpaste;
-   set onpaste(EventHandler value);
+  set onpaste(EventHandler value);
   EventHandler get onpause;
-   set onpause(EventHandler value);
+  set onpause(EventHandler value);
   EventHandler get onplay;
-   set onplay(EventHandler value);
+  set onplay(EventHandler value);
   EventHandler get onplaying;
-   set onplaying(EventHandler value);
+  set onplaying(EventHandler value);
   EventHandler get onprogress;
-   set onprogress(EventHandler value);
+  set onprogress(EventHandler value);
   EventHandler get onratechange;
-   set onratechange(EventHandler value);
+  set onratechange(EventHandler value);
   EventHandler get onreset;
-   set onreset(EventHandler value);
+  set onreset(EventHandler value);
   EventHandler get onresize;
-   set onresize(EventHandler value);
+  set onresize(EventHandler value);
   EventHandler get onscroll;
-   set onscroll(EventHandler value);
+  set onscroll(EventHandler value);
   EventHandler get onscrollend;
-   set onscrollend(EventHandler value);
+  set onscrollend(EventHandler value);
   EventHandler get onsecuritypolicyviolation;
-   set onsecuritypolicyviolation(EventHandler value);
+  set onsecuritypolicyviolation(EventHandler value);
   EventHandler get onseeked;
-   set onseeked(EventHandler value);
+  set onseeked(EventHandler value);
   EventHandler get onseeking;
-   set onseeking(EventHandler value);
+  set onseeking(EventHandler value);
   EventHandler get onselect;
-   set onselect(EventHandler value);
+  set onselect(EventHandler value);
   EventHandler get onslotchange;
-   set onslotchange(EventHandler value);
+  set onslotchange(EventHandler value);
   EventHandler get onstalled;
-   set onstalled(EventHandler value);
+  set onstalled(EventHandler value);
   EventHandler get onsubmit;
-   set onsubmit(EventHandler value);
+  set onsubmit(EventHandler value);
   EventHandler get onsuspend;
-   set onsuspend(EventHandler value);
+  set onsuspend(EventHandler value);
   EventHandler get ontimeupdate;
-   set ontimeupdate(EventHandler value);
+  set ontimeupdate(EventHandler value);
   EventHandler get ontoggle;
-   set ontoggle(EventHandler value);
+  set ontoggle(EventHandler value);
   EventHandler get onvolumechange;
-   set onvolumechange(EventHandler value);
+  set onvolumechange(EventHandler value);
   EventHandler get onwaiting;
-   set onwaiting(EventHandler value);
+  set onwaiting(EventHandler value);
   EventHandler get onwebkitanimationend;
-   set onwebkitanimationend(EventHandler value);
+  set onwebkitanimationend(EventHandler value);
   EventHandler get onwebkitanimationiteration;
-   set onwebkitanimationiteration(EventHandler value);
+  set onwebkitanimationiteration(EventHandler value);
   EventHandler get onwebkitanimationstart;
-   set onwebkitanimationstart(EventHandler value);
+  set onwebkitanimationstart(EventHandler value);
   EventHandler get onwebkittransitionend;
-   set onwebkittransitionend(EventHandler value);
+  set onwebkittransitionend(EventHandler value);
   EventHandler get onwheel;
-   set onwheel(EventHandler value);
+  set onwheel(EventHandler value);
   EventHandler get onpointerover;
-   set onpointerover(EventHandler value);
+  set onpointerover(EventHandler value);
   EventHandler get onpointerenter;
-   set onpointerenter(EventHandler value);
+  set onpointerenter(EventHandler value);
   EventHandler get onpointerdown;
-   set onpointerdown(EventHandler value);
+  set onpointerdown(EventHandler value);
   EventHandler get onpointermove;
-   set onpointermove(EventHandler value);
+  set onpointermove(EventHandler value);
   EventHandler get onpointerrawupdate;
-   set onpointerrawupdate(EventHandler value);
+  set onpointerrawupdate(EventHandler value);
   EventHandler get onpointerup;
-   set onpointerup(EventHandler value);
+  set onpointerup(EventHandler value);
   EventHandler get onpointercancel;
-   set onpointercancel(EventHandler value);
+  set onpointercancel(EventHandler value);
   EventHandler get onpointerout;
-   set onpointerout(EventHandler value);
+  set onpointerout(EventHandler value);
   EventHandler get onpointerleave;
-   set onpointerleave(EventHandler value);
+  set onpointerleave(EventHandler value);
   EventHandler get ongotpointercapture;
-   set ongotpointercapture(EventHandler value);
+  set ongotpointercapture(EventHandler value);
   EventHandler get onlostpointercapture;
-   set onlostpointercapture(EventHandler value);
+  set onlostpointercapture(EventHandler value);
   EventHandler get onselectstart;
-   set onselectstart(EventHandler value);
+  set onselectstart(EventHandler value);
   EventHandler get onselectionchange;
-   set onselectionchange(EventHandler value);
+  set onselectionchange(EventHandler value);
   EventHandler get ontouchstart;
-   set ontouchstart(EventHandler value);
+  set ontouchstart(EventHandler value);
   EventHandler get ontouchend;
-   set ontouchend(EventHandler value);
+  set ontouchend(EventHandler value);
   EventHandler get ontouchmove;
-   set ontouchmove(EventHandler value);
+  set ontouchmove(EventHandler value);
   EventHandler get ontouchcancel;
-   set ontouchcancel(EventHandler value);
+  set ontouchcancel(EventHandler value);
   EventHandler get onbeforexrselect;
-   set onbeforexrselect(EventHandler value);
+  set onbeforexrselect(EventHandler value);
   SVGElement? get correspondingElement;
   SVGUseElement? get correspondingUseElement;
   DOMStringMap get dataset;
   String get nonce;
-   set nonce(String value);
+  set nonce(String value);
   bool get autofocus;
-   set autofocus(bool value);
+  set autofocus(bool value);
   int get tabIndex;
-   set tabIndex(int value);
+  set tabIndex(int value);
   void focus([FocusOptions? options]);
   void blur();
   StylePropertyMap get attributeStyleMap;
@@ -763,8 +791,7 @@ abstract interface class SVGForeignObjectElement {
   SVGAnimatedLength get height;
 }
 
-abstract interface class SVGGElement {
-}
+abstract interface class SVGGElement {}
 
 abstract interface class SVGGeometryElement {
   SVGAnimatedNumber get pathLength;
@@ -798,17 +825,17 @@ abstract interface class SVGImageElement {
   SVGAnimatedLength get height;
   SVGAnimatedPreserveAspectRatio get preserveAspectRatio;
   String? get crossOrigin;
-   set crossOrigin(String? value);
+  set crossOrigin(String? value);
 }
 
 abstract interface class SVGLength {
   int get unitType;
   double get value;
-   set value(double value);
+  set value(double value);
   double get valueInSpecifiedUnits;
-   set valueInSpecifiedUnits(double value);
+  set valueInSpecifiedUnits(double value);
   String get valueAsString;
-   set valueAsString(String value);
+  set valueAsString(String value);
   void newValueSpecifiedUnits(int unitType, double valueInSpecifiedUnits);
   void convertToSpecifiedUnits(int unitType);
 }
@@ -850,17 +877,16 @@ abstract interface class SVGMarkerElement {
   SVGAnimatedEnumeration get orientType;
   SVGAnimatedAngle get orientAngle;
   String get orient;
-   set orient(String value);
+  set orient(String value);
   void setOrientToAuto();
   void setOrientToAngle(SVGAngle angle);
 }
 
-abstract interface class SVGMetadataElement {
-}
+abstract interface class SVGMetadataElement {}
 
 abstract interface class SVGNumber {
   double get value;
-   set value(double value);
+  set value(double value);
 }
 
 abstract interface class SVGNumberList {
@@ -875,8 +901,7 @@ abstract interface class SVGNumberList {
   SVGNumber appendItem(SVGNumber newItem);
 }
 
-abstract interface class SVGPathElement {
-}
+abstract interface class SVGPathElement {}
 
 abstract interface class SVGPatternElement {
   SVGAnimatedRect get viewBox;
@@ -915,9 +940,9 @@ abstract interface class SVGPolylineElement {
 
 abstract interface class SVGPreserveAspectRatio {
   int get align;
-   set align(int value);
+  set align(int value);
   int get meetOrSlice;
-   set meetOrSlice(int value);
+  set meetOrSlice(int value);
 }
 
 abstract interface class SVGRadialGradientElement {
@@ -942,55 +967,58 @@ abstract interface class SVGSVGElement {
   SVGAnimatedRect get viewBox;
   SVGAnimatedPreserveAspectRatio get preserveAspectRatio;
   EventHandler get ongamepadconnected;
-   set ongamepadconnected(EventHandler value);
+  set ongamepadconnected(EventHandler value);
   EventHandler get ongamepaddisconnected;
-   set ongamepaddisconnected(EventHandler value);
+  set ongamepaddisconnected(EventHandler value);
   EventHandler get onafterprint;
-   set onafterprint(EventHandler value);
+  set onafterprint(EventHandler value);
   EventHandler get onbeforeprint;
-   set onbeforeprint(EventHandler value);
+  set onbeforeprint(EventHandler value);
   OnBeforeUnloadEventHandler get onbeforeunload;
-   set onbeforeunload(OnBeforeUnloadEventHandler value);
+  set onbeforeunload(OnBeforeUnloadEventHandler value);
   EventHandler get onhashchange;
-   set onhashchange(EventHandler value);
+  set onhashchange(EventHandler value);
   EventHandler get onlanguagechange;
-   set onlanguagechange(EventHandler value);
+  set onlanguagechange(EventHandler value);
   EventHandler get onmessage;
-   set onmessage(EventHandler value);
+  set onmessage(EventHandler value);
   EventHandler get onmessageerror;
-   set onmessageerror(EventHandler value);
+  set onmessageerror(EventHandler value);
   EventHandler get onoffline;
-   set onoffline(EventHandler value);
+  set onoffline(EventHandler value);
   EventHandler get ononline;
-   set ononline(EventHandler value);
+  set ononline(EventHandler value);
   EventHandler get onpagehide;
-   set onpagehide(EventHandler value);
+  set onpagehide(EventHandler value);
   EventHandler get onpagereveal;
-   set onpagereveal(EventHandler value);
+  set onpagereveal(EventHandler value);
   EventHandler get onpageshow;
-   set onpageshow(EventHandler value);
+  set onpageshow(EventHandler value);
   EventHandler get onpageswap;
-   set onpageswap(EventHandler value);
+  set onpageswap(EventHandler value);
   EventHandler get onpopstate;
-   set onpopstate(EventHandler value);
+  set onpopstate(EventHandler value);
   EventHandler get onrejectionhandled;
-   set onrejectionhandled(EventHandler value);
+  set onrejectionhandled(EventHandler value);
   EventHandler get onstorage;
-   set onstorage(EventHandler value);
+  set onstorage(EventHandler value);
   EventHandler get onunhandledrejection;
-   set onunhandledrejection(EventHandler value);
+  set onunhandledrejection(EventHandler value);
   EventHandler get onunload;
-   set onunload(EventHandler value);
+  set onunload(EventHandler value);
   EventHandler get onportalactivate;
-   set onportalactivate(EventHandler value);
+  set onportalactivate(EventHandler value);
   SVGAnimatedLength get x;
   SVGAnimatedLength get y;
   SVGAnimatedLength get width;
   SVGAnimatedLength get height;
   double get currentScale;
-   set currentScale(double value);
+  set currentScale(double value);
   DOMPointReadOnly get currentTranslate;
-  NodeList getIntersectionList(DOMRectReadOnly rect, SVGElement? referenceElement);
+  NodeList getIntersectionList(
+    DOMRectReadOnly rect,
+    SVGElement? referenceElement,
+  );
   NodeList getEnclosureList(DOMRectReadOnly rect, SVGElement? referenceElement);
   bool checkIntersection(SVGElement element, DOMRectReadOnly rect);
   bool checkEnclosure(SVGElement element, DOMRectReadOnly rect);
@@ -1018,9 +1046,9 @@ abstract interface class SVGSVGElement {
 abstract interface class SVGScriptElement {
   SVGAnimatedString get href;
   String get type_;
-   set type_(String value);
+  set type_(String value);
   String? get crossOrigin;
-   set crossOrigin(String? value);
+  set crossOrigin(String? value);
 }
 
 abstract interface class SVGStopElement {
@@ -1041,23 +1069,21 @@ abstract interface class SVGStringList {
 abstract interface class SVGStyleElement {
   CSSStyleSheet? get sheet;
   String get type_;
-   set type_(String value);
+  set type_(String value);
   String get media;
-   set media(String value);
+  set media(String value);
   String get title;
-   set title(String value);
+  set title(String value);
 }
 
-abstract interface class SVGSwitchElement {
-}
+abstract interface class SVGSwitchElement {}
 
 abstract interface class SVGSymbolElement {
   SVGAnimatedRect get viewBox;
   SVGAnimatedPreserveAspectRatio get preserveAspectRatio;
 }
 
-abstract interface class SVGTSpanElement {
-}
+abstract interface class SVGTSpanElement {}
 
 abstract interface class SVGTests {
   SVGStringList get requiredExtensions;
@@ -1078,8 +1104,7 @@ abstract interface class SVGTextContentElement {
   void selectSubString(int charnum, int nchars);
 }
 
-abstract interface class SVGTextElement {
-}
+abstract interface class SVGTextElement {}
 
 abstract interface class SVGTextPathElement {
   SVGAnimatedString get href;
@@ -1096,8 +1121,7 @@ abstract interface class SVGTextPositioningElement {
   SVGAnimatedNumberList get rotate;
 }
 
-abstract interface class SVGTitleElement {
-}
+abstract interface class SVGTitleElement {}
 
 abstract interface class SVGTransform {
   int get type_;
@@ -1128,8 +1152,7 @@ abstract interface class SVGURIReference {
   SVGAnimatedString get href;
 }
 
-abstract interface class SVGUnitTypes {
-}
+abstract interface class SVGUnitTypes {}
 
 abstract interface class SVGUseElement {
   SVGAnimatedString get href;
@@ -1143,4 +1166,3 @@ abstract interface class SVGViewElement {
   SVGAnimatedRect get viewBox;
   SVGAnimatedPreserveAspectRatio get preserveAspectRatio;
 }
-

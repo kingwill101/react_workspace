@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: fullscreen
 // ignore_for_file: type=lint
 
-
 typedef FullscreenNavigationUI = String;
 
 abstract interface class FullscreenOptions {
@@ -18,9 +17,5 @@ final class FullscreenOptionsValue implements FullscreenOptions {
   @override
   Object? screen;
 
-  FullscreenOptionsValue({
-    this.navigationUI,
-    this.screen,
-  });
+  FullscreenOptionsValue({this.navigationUI, this.screen});
 }
-

@@ -7,4 +7,3 @@ import 'webgl1.dart';
 abstract interface class WEBGL_debug_shaders {
   String getTranslatedShaderSource(WebGLShader shader);
 }
-

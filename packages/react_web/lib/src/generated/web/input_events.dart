@@ -9,10 +9,10 @@ import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class InputEvent {
   factory InputEvent(String type_, [InputEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<InputEvent>(
-        'InputEvent',
-        [type_, eventInitDict],
-      );
+      WebRuntime.current.createWebObject<InputEvent>('InputEvent', [
+        type_,
+        eventInitDict,
+      ]);
   DataTransfer? get dataTransfer;
   List<StaticRange> getTargetRanges();
   String? get data;
@@ -53,4 +53,3 @@ final class InputEventInitValue implements InputEventInit {
     this.inputType,
   });
 }
-

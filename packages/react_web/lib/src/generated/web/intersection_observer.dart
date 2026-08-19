@@ -9,11 +9,13 @@ import 'geometry.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class IntersectionObserver {
-  factory IntersectionObserver(IntersectionObserverCallback callback, [IntersectionObserverInit? options]) =>
-      WebRuntime.current.createWebObject<IntersectionObserver>(
-        'IntersectionObserver',
-        [callback, options],
-      );
+  factory IntersectionObserver(
+    IntersectionObserverCallback callback, [
+    IntersectionObserverInit? options,
+  ]) => WebRuntime.current.createWebObject<IntersectionObserver>(
+    'IntersectionObserver',
+    [callback, options],
+  );
   Object get root;
   String get rootMargin;
   List<double> get thresholds;
@@ -23,14 +25,19 @@ abstract interface class IntersectionObserver {
   List<IntersectionObserverEntry> takeRecords();
 }
 
-typedef IntersectionObserverCallback = void Function(List<IntersectionObserverEntry> entries, IntersectionObserver observer,);
+typedef IntersectionObserverCallback =
+    void Function(
+      List<IntersectionObserverEntry> entries,
+      IntersectionObserver observer,
+    );
 
 abstract interface class IntersectionObserverEntry {
-  factory IntersectionObserverEntry(IntersectionObserverEntryInit intersectionObserverEntryInit) =>
-      WebRuntime.current.createWebObject<IntersectionObserverEntry>(
-        'IntersectionObserverEntry',
-        [intersectionObserverEntryInit],
-      );
+  factory IntersectionObserverEntry(
+    IntersectionObserverEntryInit intersectionObserverEntryInit,
+  ) => WebRuntime.current.createWebObject<IntersectionObserverEntry>(
+    'IntersectionObserverEntry',
+    [intersectionObserverEntryInit],
+  );
   DOMHighResTimeStamp get time;
   DOMRectReadOnly? get rootBounds;
   DOMRectReadOnly get boundingClientRect;
@@ -57,7 +64,8 @@ abstract interface class IntersectionObserverEntryInit {
   set target(Element value);
 }
 
-final class IntersectionObserverEntryInitValue implements IntersectionObserverEntryInit {
+final class IntersectionObserverEntryInitValue
+    implements IntersectionObserverEntryInit {
   @override
   DOMHighResTimeStamp time;
   @override
@@ -112,4 +120,3 @@ final class IntersectionObserverInitValue implements IntersectionObserverInit {
     this.threshold,
   });
 }
-

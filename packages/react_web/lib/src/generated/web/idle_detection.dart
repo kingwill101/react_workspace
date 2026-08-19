@@ -17,13 +17,9 @@ final class IdleOptionsValue implements IdleOptions {
   @override
   AbortSignal? signal;
 
-  IdleOptionsValue({
-    this.threshold,
-    this.signal,
-  });
+  IdleOptionsValue({this.threshold, this.signal});
 }
 
 typedef ScreenIdleState = String;
 
 typedef UserIdleState = String;
-

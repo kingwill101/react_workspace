@@ -185,40 +185,44 @@ $accent: #336699;
 
       final binary = Platform.isWindows ? 'server.exe' : 'server';
       final serverFile = File('${root.path}/build/react/$binary');
-      expect(serverFile.existsSync(), isTrue,
-          reason: 'expected server binary at build/react/$binary');
-      final manifest = jsonDecode(
-        await File(
-          '${root.path}/build/react/bundle_manifest.json',
-        ).readAsString(),
-      ) as Map<String, Object?>;
+      expect(
+        serverFile.existsSync(),
+        isTrue,
+        reason: 'expected server binary at build/react/$binary',
+      );
+      final manifest =
+          jsonDecode(
+                await File(
+                  '${root.path}/build/react/bundle_manifest.json',
+                ).readAsString(),
+              )
+              as Map<String, Object?>;
       expect(manifest['server'], {'binary': './$binary'});
     },
   );
 
-  test(
-    'skips the server compile when the entrypoint is missing',
-    () async {
-      final config = ReactProjectConfig.load(root);
-      final builder = ReactBuilder(
-        config: config,
-        release: false,
-        server: true,
-        log: (_) {},
-        npmCommand: await writeNpmStub(root),
-      );
+  test('skips the server compile when the entrypoint is missing', () async {
+    final config = ReactProjectConfig.load(root);
+    final builder = ReactBuilder(
+      config: config,
+      release: false,
+      server: true,
+      log: (_) {},
+      npmCommand: await writeNpmStub(root),
+    );
 
-      await builder.build();
+    await builder.build();
 
-      expect(File('${root.path}/build/react/server').existsSync(), isFalse);
-      final manifest = jsonDecode(
-        await File(
-          '${root.path}/build/react/bundle_manifest.json',
-        ).readAsString(),
-      ) as Map<String, Object?>;
-      expect(manifest.containsKey('server'), isFalse);
-    },
-  );
+    expect(File('${root.path}/build/react/server').existsSync(), isFalse);
+    final manifest =
+        jsonDecode(
+              await File(
+                '${root.path}/build/react/bundle_manifest.json',
+              ).readAsString(),
+            )
+            as Map<String, Object?>;
+    expect(manifest.containsKey('server'), isFalse);
+  });
 
   test(
     'bundles project foreign components into per-target aggregates',
@@ -607,11 +611,13 @@ globalThis.ReactDOM = ReactDOM;
       expect(parsed.ssrEntry, 'ssr.entry.mjs');
       expect(parsed.ssr?.runtime, 'ssr_runtime.mjs');
 
-      final report = jsonDecode(
-            await File('${root.path}/build/react/bundle_report.json')
-                .readAsString(),
-          )
-          as Map;
+      final report =
+          jsonDecode(
+                await File(
+                  '${root.path}/build/react/bundle_report.json',
+                ).readAsString(),
+              )
+              as Map;
       expect(report['schema'], 1);
       expect(report['mode'], 'development');
       for (final target in ['browser', 'ssr']) {
@@ -694,10 +700,7 @@ foreign:
             as Map;
     for (final target in ['browser', 'ssr']) {
       final targetReport = report[target] as Map;
-      expect(
-        (targetReport['artifacts'] as int),
-        greaterThanOrEqualTo(1),
-      );
+      expect((targetReport['artifacts'] as int), greaterThanOrEqualTo(1));
       expect((targetReport['uncompressedBytes'] as int), greaterThan(0));
       expect(targetReport['retainedExports'], isEmpty);
     }

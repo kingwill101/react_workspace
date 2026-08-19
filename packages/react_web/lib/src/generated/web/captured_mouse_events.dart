@@ -17,9 +17,5 @@ final class CapturedMouseEventInitValue implements CapturedMouseEventInit {
   @override
   int? surfaceY;
 
-  CapturedMouseEventInitValue({
-    this.surfaceX,
-    this.surfaceY,
-  });
+  CapturedMouseEventInitValue({this.surfaceX, this.surfaceY});
 }
-

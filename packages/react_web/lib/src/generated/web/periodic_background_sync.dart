@@ -13,9 +13,7 @@ final class BackgroundSyncOptionsValue implements BackgroundSyncOptions {
   @override
   int? minInterval;
 
-  BackgroundSyncOptionsValue({
-    this.minInterval,
-  });
+  BackgroundSyncOptionsValue({this.minInterval});
 }
 
 abstract interface class PeriodicSyncEventInit {
@@ -27,8 +25,5 @@ final class PeriodicSyncEventInitValue implements PeriodicSyncEventInit {
   @override
   String tag;
 
-  PeriodicSyncEventInitValue({
-    required this.tag,
-  });
+  PeriodicSyncEventInitValue({required this.tag});
 }
-

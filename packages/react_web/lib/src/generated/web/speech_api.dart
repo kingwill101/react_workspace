@@ -7,46 +7,43 @@ import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class SpeechRecognition {
-  factory SpeechRecognition() =>
-      WebRuntime.current.createWebObject<SpeechRecognition>(
-        'SpeechRecognition',
-        [],
-      );
+  factory SpeechRecognition() => WebRuntime.current
+      .createWebObject<SpeechRecognition>('SpeechRecognition', []);
   Object get grammars;
-   set grammars(Object value);
+  set grammars(Object value);
   String get lang;
-   set lang(String value);
+  set lang(String value);
   bool get continuous;
-   set continuous(bool value);
+  set continuous(bool value);
   bool get interimResults;
-   set interimResults(bool value);
+  set interimResults(bool value);
   int get maxAlternatives;
-   set maxAlternatives(int value);
+  set maxAlternatives(int value);
   void start();
   void stop();
   void abort();
   EventHandler get onaudiostart;
-   set onaudiostart(EventHandler value);
+  set onaudiostart(EventHandler value);
   EventHandler get onsoundstart;
-   set onsoundstart(EventHandler value);
+  set onsoundstart(EventHandler value);
   EventHandler get onspeechstart;
-   set onspeechstart(EventHandler value);
+  set onspeechstart(EventHandler value);
   EventHandler get onspeechend;
-   set onspeechend(EventHandler value);
+  set onspeechend(EventHandler value);
   EventHandler get onsoundend;
-   set onsoundend(EventHandler value);
+  set onsoundend(EventHandler value);
   EventHandler get onaudioend;
-   set onaudioend(EventHandler value);
+  set onaudioend(EventHandler value);
   EventHandler get onresult;
-   set onresult(EventHandler value);
+  set onresult(EventHandler value);
   EventHandler get onnomatch;
-   set onnomatch(EventHandler value);
+  set onnomatch(EventHandler value);
   EventHandler get onerror;
-   set onerror(EventHandler value);
+  set onerror(EventHandler value);
   EventHandler get onstart;
-   set onstart(EventHandler value);
+  set onstart(EventHandler value);
   EventHandler get onend;
-   set onend(EventHandler value);
+  set onend(EventHandler value);
 }
 
 abstract interface class SpeechRecognitionAlternative {
@@ -57,11 +54,13 @@ abstract interface class SpeechRecognitionAlternative {
 typedef SpeechRecognitionErrorCode = String;
 
 abstract interface class SpeechRecognitionErrorEvent {
-  factory SpeechRecognitionErrorEvent(String type_, SpeechRecognitionErrorEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<SpeechRecognitionErrorEvent>(
-        'SpeechRecognitionErrorEvent',
-        [type_, eventInitDict],
-      );
+  factory SpeechRecognitionErrorEvent(
+    String type_,
+    SpeechRecognitionErrorEventInit eventInitDict,
+  ) => WebRuntime.current.createWebObject<SpeechRecognitionErrorEvent>(
+    'SpeechRecognitionErrorEvent',
+    [type_, eventInitDict],
+  );
   SpeechRecognitionErrorCode get error;
   String get message;
 }
@@ -73,24 +72,24 @@ abstract interface class SpeechRecognitionErrorEventInit {
   set message(String? value);
 }
 
-final class SpeechRecognitionErrorEventInitValue implements SpeechRecognitionErrorEventInit {
+final class SpeechRecognitionErrorEventInitValue
+    implements SpeechRecognitionErrorEventInit {
   @override
   SpeechRecognitionErrorCode error;
   @override
   String? message;
 
-  SpeechRecognitionErrorEventInitValue({
-    required this.error,
-    this.message,
-  });
+  SpeechRecognitionErrorEventInitValue({required this.error, this.message});
 }
 
 abstract interface class SpeechRecognitionEvent {
-  factory SpeechRecognitionEvent(String type_, SpeechRecognitionEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<SpeechRecognitionEvent>(
-        'SpeechRecognitionEvent',
-        [type_, eventInitDict],
-      );
+  factory SpeechRecognitionEvent(
+    String type_,
+    SpeechRecognitionEventInit eventInitDict,
+  ) => WebRuntime.current.createWebObject<SpeechRecognitionEvent>(
+    'SpeechRecognitionEvent',
+    [type_, eventInitDict],
+  );
   int get resultIndex;
   SpeechRecognitionResultList get results;
 }
@@ -102,16 +101,14 @@ abstract interface class SpeechRecognitionEventInit {
   set results(SpeechRecognitionResultList value);
 }
 
-final class SpeechRecognitionEventInitValue implements SpeechRecognitionEventInit {
+final class SpeechRecognitionEventInitValue
+    implements SpeechRecognitionEventInit {
   @override
   int? resultIndex;
   @override
   SpeechRecognitionResultList results;
 
-  SpeechRecognitionEventInitValue({
-    this.resultIndex,
-    required this.results,
-  });
+  SpeechRecognitionEventInitValue({this.resultIndex, required this.results});
 }
 
 abstract interface class SpeechRecognitionResult {
@@ -130,7 +127,7 @@ abstract interface class SpeechSynthesis {
   bool get speaking;
   bool get paused;
   EventHandler get onvoiceschanged;
-   set onvoiceschanged(EventHandler value);
+  set onvoiceschanged(EventHandler value);
   void speak(SpeechSynthesisUtterance utterance);
   void cancel();
   void pause();
@@ -141,11 +138,13 @@ abstract interface class SpeechSynthesis {
 typedef SpeechSynthesisErrorCode = String;
 
 abstract interface class SpeechSynthesisErrorEvent {
-  factory SpeechSynthesisErrorEvent(String type_, SpeechSynthesisErrorEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<SpeechSynthesisErrorEvent>(
-        'SpeechSynthesisErrorEvent',
-        [type_, eventInitDict],
-      );
+  factory SpeechSynthesisErrorEvent(
+    String type_,
+    SpeechSynthesisErrorEventInit eventInitDict,
+  ) => WebRuntime.current.createWebObject<SpeechSynthesisErrorEvent>(
+    'SpeechSynthesisErrorEvent',
+    [type_, eventInitDict],
+  );
   SpeechSynthesisErrorCode get error;
 }
 
@@ -154,21 +153,22 @@ abstract interface class SpeechSynthesisErrorEventInit {
   set error(SpeechSynthesisErrorCode value);
 }
 
-final class SpeechSynthesisErrorEventInitValue implements SpeechSynthesisErrorEventInit {
+final class SpeechSynthesisErrorEventInitValue
+    implements SpeechSynthesisErrorEventInit {
   @override
   SpeechSynthesisErrorCode error;
 
-  SpeechSynthesisErrorEventInitValue({
-    required this.error,
-  });
+  SpeechSynthesisErrorEventInitValue({required this.error});
 }
 
 abstract interface class SpeechSynthesisEvent {
-  factory SpeechSynthesisEvent(String type_, SpeechSynthesisEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<SpeechSynthesisEvent>(
-        'SpeechSynthesisEvent',
-        [type_, eventInitDict],
-      );
+  factory SpeechSynthesisEvent(
+    String type_,
+    SpeechSynthesisEventInit eventInitDict,
+  ) => WebRuntime.current.createWebObject<SpeechSynthesisEvent>(
+    'SpeechSynthesisEvent',
+    [type_, eventInitDict],
+  );
   SpeechSynthesisUtterance get utterance;
   int get charIndex;
   int get charLength;
@@ -217,31 +217,31 @@ abstract interface class SpeechSynthesisUtterance {
         [text],
       );
   String get text;
-   set text(String value);
+  set text(String value);
   String get lang;
-   set lang(String value);
+  set lang(String value);
   SpeechSynthesisVoice? get voice;
-   set voice(SpeechSynthesisVoice? value);
+  set voice(SpeechSynthesisVoice? value);
   double get volume;
-   set volume(double value);
+  set volume(double value);
   double get rate;
-   set rate(double value);
+  set rate(double value);
   double get pitch;
-   set pitch(double value);
+  set pitch(double value);
   EventHandler get onstart;
-   set onstart(EventHandler value);
+  set onstart(EventHandler value);
   EventHandler get onend;
-   set onend(EventHandler value);
+  set onend(EventHandler value);
   EventHandler get onerror;
-   set onerror(EventHandler value);
+  set onerror(EventHandler value);
   EventHandler get onpause;
-   set onpause(EventHandler value);
+  set onpause(EventHandler value);
   EventHandler get onresume;
-   set onresume(EventHandler value);
+  set onresume(EventHandler value);
   EventHandler get onmark;
-   set onmark(EventHandler value);
+  set onmark(EventHandler value);
   EventHandler get onboundary;
-   set onboundary(EventHandler value);
+  set onboundary(EventHandler value);
 }
 
 abstract interface class SpeechSynthesisVoice {
@@ -251,4 +251,3 @@ abstract interface class SpeechSynthesisVoice {
   bool get localService;
   bool get default_;
 }
-

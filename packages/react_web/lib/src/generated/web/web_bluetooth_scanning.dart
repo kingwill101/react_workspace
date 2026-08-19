@@ -38,7 +38,8 @@ abstract interface class BluetoothLEScanPermissionDescriptor {
   set acceptAllAdvertisements(bool? value);
 }
 
-final class BluetoothLEScanPermissionDescriptorValue implements BluetoothLEScanPermissionDescriptor {
+final class BluetoothLEScanPermissionDescriptorValue
+    implements BluetoothLEScanPermissionDescriptor {
   @override
   List<BluetoothLEScanFilterInit>? filters;
   @override
@@ -52,4 +53,3 @@ final class BluetoothLEScanPermissionDescriptorValue implements BluetoothLEScanP
     this.acceptAllAdvertisements,
   });
 }
-

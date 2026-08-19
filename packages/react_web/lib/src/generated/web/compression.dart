@@ -8,22 +8,15 @@ import 'package:react_web/src/web_runtime.dart';
 typedef CompressionFormat = String;
 
 abstract interface class CompressionStream {
-  factory CompressionStream(CompressionFormat format) =>
-      WebRuntime.current.createWebObject<CompressionStream>(
-        'CompressionStream',
-        [format],
-      );
+  factory CompressionStream(CompressionFormat format) => WebRuntime.current
+      .createWebObject<CompressionStream>('CompressionStream', [format]);
   ReadableStream get readable;
   WritableStream get writable;
 }
 
 abstract interface class DecompressionStream {
-  factory DecompressionStream(CompressionFormat format) =>
-      WebRuntime.current.createWebObject<DecompressionStream>(
-        'DecompressionStream',
-        [format],
-      );
+  factory DecompressionStream(CompressionFormat format) => WebRuntime.current
+      .createWebObject<DecompressionStream>('DecompressionStream', [format]);
   ReadableStream get readable;
   WritableStream get writable;
 }
-

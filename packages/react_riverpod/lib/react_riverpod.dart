@@ -27,8 +27,7 @@ const ReactContext<ProviderContainer?> riverpodScopeContext =
 ReactNode riverpodScope(
   ProviderContainer container,
   List<ReactNode> children,
-) =>
-    riverpodScopeContext.provider(container, children);
+) => riverpodScopeContext.provider(container, children);
 
 /// Reads [provider] and rebuilds this component whenever its value changes.
 ///
@@ -48,10 +47,7 @@ T useRiverpod<T>(ProviderListenable<T> provider) {
   }
   return useSyncExternalStore<T>(
     (onChange) {
-      final subscription = container.listen<T>(
-        provider,
-        (_, _) => onChange(),
-      );
+      final subscription = container.listen<T>(provider, (_, _) => onChange());
       return subscription.close;
     },
     () => container.read(provider),

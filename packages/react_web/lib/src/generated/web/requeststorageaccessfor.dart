@@ -9,12 +9,10 @@ abstract interface class TopLevelStorageAccessPermissionDescriptor {
   set requestedOrigin(String? value);
 }
 
-final class TopLevelStorageAccessPermissionDescriptorValue implements TopLevelStorageAccessPermissionDescriptor {
+final class TopLevelStorageAccessPermissionDescriptorValue
+    implements TopLevelStorageAccessPermissionDescriptor {
   @override
   String? requestedOrigin;
 
-  TopLevelStorageAccessPermissionDescriptorValue({
-    this.requestedOrigin,
-  });
+  TopLevelStorageAccessPermissionDescriptorValue({this.requestedOrigin});
 }
-

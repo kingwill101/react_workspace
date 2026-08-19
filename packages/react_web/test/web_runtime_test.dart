@@ -13,7 +13,10 @@ void main() {
     });
 
     test('message includes exposed when provided', () {
-      final error = UnsupportedWebApiError('Window.localStorage', exposed: 'Window');
+      final error = UnsupportedWebApiError(
+        'Window.localStorage',
+        exposed: 'Window',
+      );
       expect(error.exposed, 'Window');
       expect(error.message, contains('Exposed=Window'));
     });
@@ -47,12 +50,18 @@ void main() {
 
     test('createWebObject throws for SSR fake', () {
       final runtime = _FakeWebRuntime();
-      expect(() => runtime.createWebObject('BroadcastChannel', []), throwsA(isA<UnsupportedWebApiError>()));
+      expect(
+        () => runtime.createWebObject('BroadcastChannel', []),
+        throwsA(isA<UnsupportedWebApiError>()),
+      );
     });
 
     test('invokeNamespace delegates', () {
       final runtime = _FakeWebRuntime();
-      expect(runtime.invokeNamespace('CSS', 'supports', ['display', 'grid']), 'fake-css-supports');
+      expect(
+        runtime.invokeNamespace('CSS', 'supports', ['display', 'grid']),
+        'fake-css-supports',
+      );
     });
 
     test('getNamespaceProperty delegates', () {
@@ -108,7 +117,11 @@ class _FakeWebRuntime implements WebRuntime {
   dynamic getNamespaceProperty(String namespace, String property) => null;
 
   @override
-  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments) {
+  dynamic invokeNamespace(
+    String namespace,
+    String member,
+    List<Object?> arguments,
+  ) {
     if (namespace == 'CSS' && member == 'supports') return 'fake-css-supports';
     throw UnsupportedWebApiError('$namespace.$member');
   }

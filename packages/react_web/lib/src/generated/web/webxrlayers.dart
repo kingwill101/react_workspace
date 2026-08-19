@@ -16,9 +16,7 @@ final class XRCubeLayerInitValue implements XRCubeLayerInit {
   @override
   DOMPointReadOnly? orientation;
 
-  XRCubeLayerInitValue({
-    this.orientation,
-  });
+  XRCubeLayerInitValue({this.orientation});
 }
 
 abstract interface class XRCylinderLayerInit {
@@ -103,9 +101,7 @@ final class XRLayerEventInitValue implements XRLayerEventInit {
   @override
   Object layer;
 
-  XRLayerEventInitValue({
-    required this.layer,
-  });
+  XRLayerEventInitValue({required this.layer});
 }
 
 abstract interface class XRLayerInit {
@@ -246,11 +242,7 @@ final class XRMediaLayerInitValue implements XRMediaLayerInit {
   @override
   bool? invertStereo;
 
-  XRMediaLayerInitValue({
-    required this.space,
-    this.layout,
-    this.invertStereo,
-  });
+  XRMediaLayerInitValue({required this.space, this.layout, this.invertStereo});
 }
 
 abstract interface class XRMediaQuadLayerInit {
@@ -270,11 +262,7 @@ final class XRMediaQuadLayerInitValue implements XRMediaQuadLayerInit {
   @override
   double? height;
 
-  XRMediaQuadLayerInitValue({
-    this.transform,
-    this.width,
-    this.height,
-  });
+  XRMediaQuadLayerInitValue({this.transform, this.width, this.height});
 }
 
 abstract interface class XRProjectionLayerInit {
@@ -341,4 +329,3 @@ final class XRQuadLayerInitValue implements XRQuadLayerInit {
 }
 
 typedef XRTextureType = String;
-

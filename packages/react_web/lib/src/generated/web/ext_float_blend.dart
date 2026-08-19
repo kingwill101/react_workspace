@@ -2,7 +2,4 @@
 // Neutral Web surface for spec: EXT_float_blend
 // ignore_for_file: type=lint
 
-
-abstract interface class EXT_float_blend {
-}
-
+abstract interface class EXT_float_blend {}

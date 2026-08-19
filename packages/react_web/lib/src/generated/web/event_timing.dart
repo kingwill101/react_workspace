@@ -9,8 +9,7 @@ import 'html.dart';
 import 'user_timing.dart';
 import 'dom.dart';
 
-abstract interface class EventCounts {
-}
+abstract interface class EventCounts {}
 
 abstract interface class Performance {
   EventCounts get eventCounts;
@@ -25,10 +24,14 @@ abstract interface class Performance {
   void clearResourceTimings();
   void setResourceTimingBufferSize(int maxSize);
   EventHandler get onresourcetimingbufferfull;
-   set onresourcetimingbufferfull(EventHandler value);
+  set onresourcetimingbufferfull(EventHandler value);
   PerformanceMark mark(String markName, [PerformanceMarkOptions? markOptions]);
   void clearMarks([String? markName]);
-  PerformanceMeasure measure(String measureName, [Object? startOrMeasureOptions, String? endMark]);
+  PerformanceMeasure measure(
+    String measureName, [
+    Object? startOrMeasureOptions,
+    String? endMark,
+  ]);
   void clearMeasures([String? measureName]);
 }
 
@@ -67,4 +70,3 @@ final class PerformanceObserverInitValue implements PerformanceObserverInit {
     this.buffered,
   });
 }
-

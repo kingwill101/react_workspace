@@ -14,9 +14,7 @@ final class PortalActivateEventInitValue implements PortalActivateEventInit {
   @override
   Object? data;
 
-  PortalActivateEventInitValue({
-    this.data,
-  });
+  PortalActivateEventInitValue({this.data});
 }
 
 abstract interface class PortalActivateOptions {
@@ -28,8 +26,5 @@ final class PortalActivateOptionsValue implements PortalActivateOptions {
   @override
   Object? data;
 
-  PortalActivateOptionsValue({
-    this.data,
-  });
+  PortalActivateOptionsValue({this.data});
 }
-

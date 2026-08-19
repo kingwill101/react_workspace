@@ -13,4 +13,3 @@ abstract interface class LargestContentfulPaint {
   String get url;
   Element? get element;
 }
-

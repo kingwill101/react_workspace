@@ -19,7 +19,9 @@ typedef GamepadHand = String;
 
 abstract interface class GamepadHapticActuator {
   Future<bool> pulse(double value, double duration);
-  Future<GamepadHapticsResult> playEffect(GamepadHapticEffectType type_, [GamepadEffectParameters? params]);
+  Future<GamepadHapticsResult> playEffect(
+    GamepadHapticEffectType type_, [
+    GamepadEffectParameters? params,
+  ]);
   Future<GamepadHapticsResult> reset();
 }
-

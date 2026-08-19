@@ -10,17 +10,24 @@ class BrowserImportInServerRule extends AnalysisRule {
   static const LintCode code = LintCode(
     'browser_import_in_server',
     'Browser package import must not be used in server context.',
-    correctionMessage: 'Use portable package:react or the public *.react.dart API.',
+    correctionMessage:
+        'Use portable package:react or the public *.react.dart API.',
   );
 
   BrowserImportInServerRule()
-      : super(name: 'browser_import_in_server', description: 'Flags react_web/react_js in server files.');
+    : super(
+        name: 'browser_import_in_server',
+        description: 'Flags react_web/react_js in server files.',
+      );
 
   @override
   LintCode get diagnosticCode => code;
 
   @override
-  void registerNodeProcessors(RuleVisitorRegistry registry, RuleContext context) {
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
     registry.addCompilationUnit(this, _Visitor(this, context));
   }
 }

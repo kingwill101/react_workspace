@@ -7,7 +7,8 @@ import 'package:routed_io/routed_io.dart';
 import 'package:react_server_routed/react_server_routed.dart';
 import 'package:react_server_routed_example/.generated/server_actions.g.dart';
 
-const _defaultRootComponent = 'package:react_server_routed_example/lib/app.dart#App';
+const _defaultRootComponent =
+    'package:react_server_routed_example/lib/app.dart#App';
 
 Future<void> main() async {
   final port = int.tryParse(Platform.environment['PORT'] ?? '') ?? 8080;

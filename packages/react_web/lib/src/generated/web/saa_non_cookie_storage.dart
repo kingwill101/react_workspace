@@ -22,9 +22,7 @@ final class SharedWorkerOptionsValue implements SharedWorkerOptions {
   @override
   SameSiteCookiesType? sameSiteCookies;
 
-  SharedWorkerOptionsValue({
-    this.sameSiteCookies,
-  });
+  SharedWorkerOptionsValue({this.sameSiteCookies});
 }
 
 abstract interface class StorageAccessHandle {
@@ -112,4 +110,3 @@ final class StorageAccessTypesValue implements StorageAccessTypes {
     this.sharedWorker,
   });
 }
-

@@ -5,11 +5,8 @@
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class URLSearchParams {
-  factory URLSearchParams([Object? init]) =>
-      WebRuntime.current.createWebObject<URLSearchParams>(
-        'URLSearchParams',
-        [init],
-      );
+  factory URLSearchParams([Object? init]) => WebRuntime.current
+      .createWebObject<URLSearchParams>('URLSearchParams', [init]);
   int get size;
   void append(String name, String value);
   void delete(String name, [String? value]);
@@ -19,4 +16,3 @@ abstract interface class URLSearchParams {
   void set_(String name, String value);
   void sort();
 }
-

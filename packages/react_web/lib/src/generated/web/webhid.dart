@@ -57,9 +57,7 @@ final class HIDConnectionEventInitValue implements HIDConnectionEventInit {
   @override
   Object device;
 
-  HIDConnectionEventInitValue({
-    required this.device,
-  });
+  HIDConnectionEventInitValue({required this.device});
 }
 
 abstract interface class HIDDeviceFilter {
@@ -104,10 +102,7 @@ final class HIDDeviceRequestOptionsValue implements HIDDeviceRequestOptions {
   @override
   List<HIDDeviceFilter>? exclusionFilters;
 
-  HIDDeviceRequestOptionsValue({
-    required this.filters,
-    this.exclusionFilters,
-  });
+  HIDDeviceRequestOptionsValue({required this.filters, this.exclusionFilters});
 }
 
 abstract interface class HIDInputReportEventInit {
@@ -147,10 +142,7 @@ final class HIDReportInfoValue implements HIDReportInfo {
   @override
   List<HIDReportItem>? items;
 
-  HIDReportInfoValue({
-    this.reportId,
-    this.items,
-  });
+  HIDReportInfoValue({this.reportId, this.items});
 }
 
 abstract interface class HIDReportItem {
@@ -303,4 +295,3 @@ final class HIDReportItemValue implements HIDReportItem {
 }
 
 typedef HIDUnitSystem = String;
-

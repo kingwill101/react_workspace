@@ -20,10 +20,7 @@ final class ScrollTimelineOptionsValue implements ScrollTimelineOptions {
   @override
   ScrollAxis? axis;
 
-  ScrollTimelineOptionsValue({
-    this.source,
-    this.axis,
-  });
+  ScrollTimelineOptionsValue({this.source, this.axis});
 }
 
 abstract interface class ViewTimelineOptions {
@@ -43,10 +40,5 @@ final class ViewTimelineOptionsValue implements ViewTimelineOptions {
   @override
   Object? inset;
 
-  ViewTimelineOptionsValue({
-    this.subject,
-    this.axis,
-    this.inset,
-  });
+  ViewTimelineOptionsValue({this.subject, this.axis, this.inset});
 }
-

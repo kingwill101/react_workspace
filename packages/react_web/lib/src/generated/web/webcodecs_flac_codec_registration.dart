@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: webcodecs-flac-codec-registration
 // ignore_for_file: type=lint
 
-
 abstract interface class FlacEncoderConfig {
   int? get blockSize;
   set blockSize(int? value);
@@ -16,9 +15,5 @@ final class FlacEncoderConfigValue implements FlacEncoderConfig {
   @override
   int? compressLevel;
 
-  FlacEncoderConfigValue({
-    this.blockSize,
-    this.compressLevel,
-  });
+  FlacEncoderConfigValue({this.blockSize, this.compressLevel});
 }
-

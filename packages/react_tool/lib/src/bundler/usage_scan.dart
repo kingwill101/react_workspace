@@ -11,10 +11,7 @@ library;
 
 /// Component registration keys from [retainedExports] whose quoted literal
 /// appears in [dartJs], in [retainedExports] order.
-List<String> usedComponentsIn(
-  String dartJs,
-  List<String> retainedExports,
-) {
+List<String> usedComponentsIn(String dartJs, List<String> retainedExports) {
   if (retainedExports.isEmpty) return const [];
   return [
     for (final key in retainedExports)
@@ -28,10 +25,7 @@ List<String> usedComponentsIn(
 /// form emitted by `react ts bind --hooks` in its dot-access, bracket-access,
 /// and unoptimized `-O0` `_getPropertyTrustType`-chain compiled shapes, plus
 /// the legacy `__reactDartHooks` bridge.
-List<String> usedHooksIn(
-  String dartJs,
-  List<String> namespaces,
-) {
+List<String> usedHooksIn(String dartJs, List<String> namespaces) {
   final used = <String>{};
   for (final ns in namespaces) {
     final dot = RegExp(
@@ -54,8 +48,9 @@ List<String> usedHooksIn(
       used.add('$ns.${match.group(1)}');
     }
   }
-  for (final match
-      in RegExp('__reactDartHooks\\.(use\\w+)').allMatches(dartJs)) {
+  for (final match in RegExp(
+    '__reactDartHooks\\.(use\\w+)',
+  ).allMatches(dartJs)) {
     used.add(match.group(1)!);
   }
   return used.toList()..sort();

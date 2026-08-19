@@ -14,8 +14,5 @@ final class Ed448ParamsValue implements Ed448Params {
   @override
   BufferSource? context;
 
-  Ed448ParamsValue({
-    this.context,
-  });
+  Ed448ParamsValue({this.context});
 }
-

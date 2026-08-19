@@ -6,11 +6,9 @@ import 'generic_sensor.dart';
 import 'hr_time.dart';
 import 'dom.dart';
 
-abstract interface class GeolocationSensorOptions {
-}
+abstract interface class GeolocationSensorOptions {}
 
 final class GeolocationSensorOptionsValue implements GeolocationSensorOptions {
-
   GeolocationSensorOptionsValue();
 }
 
@@ -72,8 +70,5 @@ final class ReadOptionsValue implements ReadOptions {
   @override
   AbortSignal? signal;
 
-  ReadOptionsValue({
-    this.signal,
-  });
+  ReadOptionsValue({this.signal});
 }
-

@@ -15,4 +15,3 @@ abstract interface class XRInputSource {
   XRSpace? get gripSpace;
   List<String> get profiles;
 }
-

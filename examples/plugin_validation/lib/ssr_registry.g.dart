@@ -1,9 +1,11 @@
 // GENERATED CODE — DO NOT EDIT
 
 import 'package:react/react.dart';
-import 'package:plugin_validation/hook_errors.react.dart' show idHookInConditional;
+import 'package:plugin_validation/hook_errors.react.dart'
+    show idHookInConditional;
 import 'package:plugin_validation/hook_errors.react.dart' show idHookInLoop;
-import 'package:plugin_validation/hook_errors.react.dart' show idHookAfterReturn;
+import 'package:plugin_validation/hook_errors.react.dart'
+    show idHookAfterReturn;
 import 'package:plugin_validation/hook_errors.react.dart' show idHookCorrect;
 import 'package:plugin_validation/ssr_errors.react.dart' show idSsrBadRead;
 import 'package:plugin_validation/ssr_errors.react.dart' show idSsrGoodRead;
@@ -18,7 +20,10 @@ final class SsrComponentRegistry {
 
   static final _builders = <String, ReactNode Function(Map<String, dynamic>)>{};
 
-  static void register(String id, ReactNode Function(Map<String, dynamic>) builder) {
+  static void register(
+    String id,
+    ReactNode Function(Map<String, dynamic>) builder,
+  ) {
     _builders[id] = builder;
   }
 
@@ -32,14 +37,17 @@ final class SsrComponentRegistry {
 }
 
 void registerKnownSsComponentIds() {
-  SsrComponentRegistry.register(    idHookInConditional.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idHookInLoop.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idHookAfterReturn.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idHookCorrect.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idSsrBadRead.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idSsrGoodRead.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idSsrClientOnly.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idSsrDocumentRead.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idGreeting.value, (_) => const Empty());
-  SsrComponentRegistry.register(    idCard.value, (_) => const Empty());
+  SsrComponentRegistry.register(
+    idHookInConditional.value,
+    (_) => const Empty(),
+  );
+  SsrComponentRegistry.register(idHookInLoop.value, (_) => const Empty());
+  SsrComponentRegistry.register(idHookAfterReturn.value, (_) => const Empty());
+  SsrComponentRegistry.register(idHookCorrect.value, (_) => const Empty());
+  SsrComponentRegistry.register(idSsrBadRead.value, (_) => const Empty());
+  SsrComponentRegistry.register(idSsrGoodRead.value, (_) => const Empty());
+  SsrComponentRegistry.register(idSsrClientOnly.value, (_) => const Empty());
+  SsrComponentRegistry.register(idSsrDocumentRead.value, (_) => const Empty());
+  SsrComponentRegistry.register(idGreeting.value, (_) => const Empty());
+  SsrComponentRegistry.register(idCard.value, (_) => const Empty());
 }

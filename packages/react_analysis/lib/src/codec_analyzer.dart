@@ -16,10 +16,7 @@ final class ReactCodecAnalyzer {
   const ReactCodecAnalyzer();
 
   /// Validate a single type that will cross the bridge.
-  ReactDiagnostic? validateType(
-    DartType type, {
-    required String context,
-  }) {
+  ReactDiagnostic? validateType(DartType type, {required String context}) {
     if (type is FunctionType) {
       return _validateFunction(type, context);
     }
@@ -58,7 +55,8 @@ final class ReactCodecAnalyzer {
             message:
                 '$context: $name cannot cross the React JavaScript bridge. Add a ReactCodec<$name>, mark it native-only, or remove it from the boundary.',
             severity: ReactDiagnosticSeverity.warning,
-            correction: 'Create class ${name}Codec implements ReactCodec<$name> {}',
+            correction:
+                'Create class ${name}Codec implements ReactCodec<$name> {}',
           );
       }
     }

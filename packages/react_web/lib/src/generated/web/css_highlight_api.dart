@@ -6,19 +6,14 @@ import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Highlight {
-  factory Highlight([List<AbstractRange>? initialRanges]) =>
-      WebRuntime.current.createWebObject<Highlight>(
-        'Highlight',
-        [initialRanges],
-      );
+  factory Highlight([List<AbstractRange>? initialRanges]) => WebRuntime.current
+      .createWebObject<Highlight>('Highlight', [initialRanges]);
   int get priority;
-   set priority(int value);
+  set priority(int value);
   HighlightType get type_;
-   set type_(HighlightType value);
+  set type_(HighlightType value);
 }
 
-abstract interface class HighlightRegistry {
-}
+abstract interface class HighlightRegistry {}
 
 typedef HighlightType = String;
-

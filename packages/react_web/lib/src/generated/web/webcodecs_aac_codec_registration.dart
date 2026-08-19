@@ -17,9 +17,7 @@ final class AacEncoderConfigValue implements AacEncoderConfig {
   @override
   AacBitstreamFormat? format;
 
-  AacEncoderConfigValue({
-    this.format,
-  });
+  AacEncoderConfigValue({this.format});
 }
 
 abstract interface class AudioEncoderConfig {
@@ -70,4 +68,3 @@ final class AudioEncoderConfigValue implements AudioEncoderConfig {
     this.bitrateMode,
   });
 }
-

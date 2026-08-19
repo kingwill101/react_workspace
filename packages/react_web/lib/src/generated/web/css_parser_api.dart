@@ -14,12 +14,9 @@ final class CSSParserOptionsValue implements CSSParserOptions {
   @override
   Object? atRules;
 
-  CSSParserOptionsValue({
-    this.atRules,
-  });
+  CSSParserOptionsValue({this.atRules});
 }
 
 typedef CSSStringSource = Object;
 
 typedef CSSToken = Object;
-

@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: css-properties-values-api
 // ignore_for_file: type=lint
 
-
 abstract interface class CSSPropertyRule {
   Object get name;
   Object get syntax;
@@ -38,4 +37,3 @@ final class PropertyDefinitionValue implements PropertyDefinition {
     this.initialValue,
   });
 }
-

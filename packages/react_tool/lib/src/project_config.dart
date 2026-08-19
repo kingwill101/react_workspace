@@ -203,7 +203,8 @@ final class ReactProjectConfig {
     // A structured `foreign:` block (with `components:`/`modules:`/`host:`
     // keys) keeps its components nested; a bare list/map of name→module pairs
     // is the legacy inline form.
-    final isStructured = foreignValue is Map &&
+    final isStructured =
+        foreignValue is Map &&
         (foreignMap.containsKey('components') ||
             foreignMap.containsKey('host') ||
             foreignMap.containsKey('modules') ||
@@ -216,12 +217,8 @@ final class ReactProjectConfig {
           explicit['foreignModules'] ??
           explicit['modules'],
     );
-    final esbuildPath = _string(
-      foreignMap['esbuild'] ?? explicit['esbuild'],
-    );
-    final foreignExternals = _stringList(
-      foreignMap['externals'],
-    );
+    final esbuildPath = _string(foreignMap['esbuild'] ?? explicit['esbuild']);
+    final foreignExternals = _stringList(foreignMap['externals']);
     final jsHostMode =
         _boolNullable(foreignMap['host']) ??
         _boolNullable(explicit['hostJs']) ??
@@ -364,7 +361,8 @@ List<ReactJsBindGroup> _jsBindGroups(Object? value) {
   return groups;
 }
 
-List<ReactForeignComponentConfig> _foreignComponents(Object? value) {  final result = <ReactForeignComponentConfig>[];
+List<ReactForeignComponentConfig> _foreignComponents(Object? value) {
+  final result = <ReactForeignComponentConfig>[];
   if (value is Map) {
     for (final entry in value.entries) {
       final name = _string(entry.key);

@@ -8,19 +8,10 @@ library;
 import 'package:analyzer/dart/ast/ast.dart';
 
 /// The kind of runtime symbol a Dart declaration bridges to.
-enum ReactRuntimeSymbolKind {
-  component,
-  hook,
-  function,
-  value,
-}
+enum ReactRuntimeSymbolKind { component, hook, function, value }
 
 /// Which render targets a symbol is valid for.
-enum ReactRenderTarget {
-  browser,
-  server,
-  test,
-}
+enum ReactRenderTarget { browser, server, test }
 
 /// Machine-readable bridge metadata added to generated declarations.
 ///
@@ -52,18 +43,9 @@ final class ReactHook {
 }
 
 /// Describes a Web API's realm exposure and SSR support.
-enum WebRealm {
-  window,
-  document,
-  worker,
-  shared,
-}
+enum WebRealm { window, document, worker, shared }
 
-enum WebSsrSupport {
-  available,
-  unavailable,
-  emulated,
-}
+enum WebSsrSupport { available, unavailable, emulated }
 
 final class WebApiRuntimeInfo {
   final String id;
@@ -78,11 +60,7 @@ final class WebApiRuntimeInfo {
 }
 
 /// Diagnostic severity for react_analysis validators.
-enum ReactDiagnosticSeverity {
-  error,
-  warning,
-  info,
-}
+enum ReactDiagnosticSeverity { error, warning, info }
 
 /// A single analyzer diagnostic produced by react_analysis.
 final class ReactDiagnostic {
@@ -122,8 +100,7 @@ abstract final class ReactDiagnosticCode {
   static const hookInLoop = 'react_hook_in_loop';
   static const hookAfterEarlyReturn = 'react_hook_after_early_return';
   static const customHookInvalidName = 'react_custom_hook_invalid_name';
-  static const componentCalledAsFunction =
-      'react_component_called_as_function';
+  static const componentCalledAsFunction = 'react_component_called_as_function';
 
   // SSR.
   static const browserApiDuringSsr = 'react_browser_api_during_ssr';

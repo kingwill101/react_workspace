@@ -13,8 +13,7 @@ abstract interface class WakeLockSentinel {
   WakeLockType get type_;
   Future<void> release();
   EventHandler get onrelease;
-   set onrelease(EventHandler value);
+  set onrelease(EventHandler value);
 }
 
 typedef WakeLockType = String;
-

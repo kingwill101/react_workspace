@@ -132,7 +132,8 @@ js:
     expect(server.exclude, ['UNSAFE_Something']);
   });
 
-  test('reads foreign component module mappings', () async {    await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
+  test('reads foreign component module mappings', () async {
+    await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
     await File('${root.path}/react.yaml').writeAsString('''
 components:
   - name: Button

@@ -6,21 +6,18 @@ import 'svg.dart';
 import 'html.dart';
 import 'anonymous_iframe.dart';
 
-abstract interface class SVGAnimateElement {
-}
+abstract interface class SVGAnimateElement {}
 
-abstract interface class SVGAnimateMotionElement {
-}
+abstract interface class SVGAnimateMotionElement {}
 
-abstract interface class SVGAnimateTransformElement {
-}
+abstract interface class SVGAnimateTransformElement {}
 
 abstract interface class SVGAnimationElement {
   SVGStringList get requiredExtensions;
   SVGStringList get systemLanguage;
   SVGElement? get targetElement;
   EventHandler get onend;
-   set onend(EventHandler value);
+  set onend(EventHandler value);
   double getStartTime();
   double getCurrentTime();
   double getSimpleDuration();
@@ -34,12 +31,10 @@ abstract interface class SVGMPathElement {
   SVGAnimatedString get href;
 }
 
-abstract interface class SVGSetElement {
-}
+abstract interface class SVGSetElement {}
 
 abstract interface class TimeEvent {
   Object get view;
   int get detail;
   void initTimeEvent(String typeArg, Window? viewArg, int detailArg);
 }
-

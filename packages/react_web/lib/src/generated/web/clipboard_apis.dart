@@ -17,10 +17,10 @@ abstract interface class Clipboard {
 
 abstract interface class ClipboardEvent {
   factory ClipboardEvent(String type_, [ClipboardEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<ClipboardEvent>(
-        'ClipboardEvent',
-        [type_, eventInitDict],
-      );
+      WebRuntime.current.createWebObject<ClipboardEvent>('ClipboardEvent', [
+        type_,
+        eventInitDict,
+      ]);
   DataTransfer? get clipboardData;
 }
 
@@ -33,17 +33,17 @@ final class ClipboardEventInitValue implements ClipboardEventInit {
   @override
   DataTransfer? clipboardData;
 
-  ClipboardEventInitValue({
-    this.clipboardData,
-  });
+  ClipboardEventInitValue({this.clipboardData});
 }
 
 abstract interface class ClipboardItem {
-  factory ClipboardItem(Map<String, ClipboardItemData> items, [ClipboardItemOptions? options]) =>
-      WebRuntime.current.createWebObject<ClipboardItem>(
-        'ClipboardItem',
-        [items, options],
-      );
+  factory ClipboardItem(
+    Map<String, ClipboardItemData> items, [
+    ClipboardItemOptions? options,
+  ]) => WebRuntime.current.createWebObject<ClipboardItem>('ClipboardItem', [
+    items,
+    options,
+  ]);
   PresentationStyle get presentationStyle;
   List<String> get types;
   Future<Blob> getType(String type_);
@@ -60,9 +60,7 @@ final class ClipboardItemOptionsValue implements ClipboardItemOptions {
   @override
   PresentationStyle? presentationStyle;
 
-  ClipboardItemOptionsValue({
-    this.presentationStyle,
-  });
+  ClipboardItemOptionsValue({this.presentationStyle});
 }
 
 typedef ClipboardItems = List<ClipboardItem>;
@@ -72,13 +70,12 @@ abstract interface class ClipboardPermissionDescriptor {
   set allowWithoutGesture(bool? value);
 }
 
-final class ClipboardPermissionDescriptorValue implements ClipboardPermissionDescriptor {
+final class ClipboardPermissionDescriptorValue
+    implements ClipboardPermissionDescriptor {
   @override
   bool? allowWithoutGesture;
 
-  ClipboardPermissionDescriptorValue({
-    this.allowWithoutGesture,
-  });
+  ClipboardPermissionDescriptorValue({this.allowWithoutGesture});
 }
 
 abstract interface class ClipboardUnsanitizedFormats {
@@ -86,14 +83,12 @@ abstract interface class ClipboardUnsanitizedFormats {
   set unsanitized(List<String>? value);
 }
 
-final class ClipboardUnsanitizedFormatsValue implements ClipboardUnsanitizedFormats {
+final class ClipboardUnsanitizedFormatsValue
+    implements ClipboardUnsanitizedFormats {
   @override
   List<String>? unsanitized;
 
-  ClipboardUnsanitizedFormatsValue({
-    this.unsanitized,
-  });
+  ClipboardUnsanitizedFormatsValue({this.unsanitized});
 }
 
 typedef PresentationStyle = String;
-

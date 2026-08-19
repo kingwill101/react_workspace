@@ -10,17 +10,24 @@ class JsInteropInServerRule extends AnalysisRule {
   static const LintCode code = LintCode(
     'js_interop_in_server',
     'JS interop import must not be used in server context.',
-    correctionMessage: 'Move browser-only code to web/ or a @ClientOnly component.',
+    correctionMessage:
+        'Move browser-only code to web/ or a @ClientOnly component.',
   );
 
   JsInteropInServerRule()
-      : super(name: 'js_interop_in_server', description: 'Flags dart:js_interop in server files.');
+    : super(
+        name: 'js_interop_in_server',
+        description: 'Flags dart:js_interop in server files.',
+      );
 
   @override
   LintCode get diagnosticCode => code;
 
   @override
-  void registerNodeProcessors(RuleVisitorRegistry registry, RuleContext context) {
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
     registry.addCompilationUnit(this, _Visitor(this, context));
   }
 }

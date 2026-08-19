@@ -6,11 +6,13 @@ import 'hr_time.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class PerformanceMark {
-  factory PerformanceMark(String markName, [PerformanceMarkOptions? markOptions]) =>
-      WebRuntime.current.createWebObject<PerformanceMark>(
-        'PerformanceMark',
-        [markName, markOptions],
-      );
+  factory PerformanceMark(
+    String markName, [
+    PerformanceMarkOptions? markOptions,
+  ]) => WebRuntime.current.createWebObject<PerformanceMark>('PerformanceMark', [
+    markName,
+    markOptions,
+  ]);
   Object get detail;
 }
 
@@ -27,10 +29,7 @@ final class PerformanceMarkOptionsValue implements PerformanceMarkOptions {
   @override
   DOMHighResTimeStamp? startTime;
 
-  PerformanceMarkOptionsValue({
-    this.detail,
-    this.startTime,
-  });
+  PerformanceMarkOptionsValue({this.detail, this.startTime});
 }
 
 abstract interface class PerformanceMeasure {
@@ -48,7 +47,8 @@ abstract interface class PerformanceMeasureOptions {
   set end(Object? value);
 }
 
-final class PerformanceMeasureOptionsValue implements PerformanceMeasureOptions {
+final class PerformanceMeasureOptionsValue
+    implements PerformanceMeasureOptions {
   @override
   Object? detail;
   @override
@@ -65,4 +65,3 @@ final class PerformanceMeasureOptionsValue implements PerformanceMeasureOptions 
     this.end,
   });
 }
-

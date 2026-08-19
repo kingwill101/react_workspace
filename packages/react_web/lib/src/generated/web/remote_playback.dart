@@ -9,15 +9,14 @@ abstract interface class RemotePlayback {
   Future<void> cancelWatchAvailability([int? id]);
   RemotePlaybackState get state;
   EventHandler get onconnecting;
-   set onconnecting(EventHandler value);
+  set onconnecting(EventHandler value);
   EventHandler get onconnect;
-   set onconnect(EventHandler value);
+  set onconnect(EventHandler value);
   EventHandler get ondisconnect;
-   set ondisconnect(EventHandler value);
+  set ondisconnect(EventHandler value);
   Future<void> prompt();
 }
 
-typedef RemotePlaybackAvailabilityCallback = void Function(bool available,);
+typedef RemotePlaybackAvailabilityCallback = void Function(bool available);
 
 typedef RemotePlaybackState = String;
-

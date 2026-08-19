@@ -19,7 +19,8 @@ abstract interface class VideoEncoderEncodeOptions {
   set keyFrame(bool? value);
 }
 
-final class VideoEncoderEncodeOptionsValue implements VideoEncoderEncodeOptions {
+final class VideoEncoderEncodeOptionsValue
+    implements VideoEncoderEncodeOptions {
   @override
   VideoEncoderEncodeOptionsForAv1? av1;
   @override
@@ -45,12 +46,10 @@ abstract interface class VideoEncoderEncodeOptionsForAv1 {
   set quantizer(int? value);
 }
 
-final class VideoEncoderEncodeOptionsForAv1Value implements VideoEncoderEncodeOptionsForAv1 {
+final class VideoEncoderEncodeOptionsForAv1Value
+    implements VideoEncoderEncodeOptionsForAv1 {
   @override
   int? quantizer;
 
-  VideoEncoderEncodeOptionsForAv1Value({
-    this.quantizer,
-  });
+  VideoEncoderEncodeOptionsForAv1Value({this.quantizer});
 }
-
