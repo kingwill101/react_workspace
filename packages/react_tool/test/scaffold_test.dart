@@ -178,6 +178,51 @@ void main() {
     expect(readme, contains('# My App'));
   });
 
+  test('init command with --template routed scaffolds a routed app', () async {
+    final runner = CommandRunner<void>('react', '')
+      ..addCommand(InitCommand(workingDirectory: root));
+    await runner.run(['init', '--template', 'routed', 'routed_app']);
+
+    expect(
+      File(p.join(root.path, 'routed_app', 'pubspec.yaml')).existsSync(),
+      isTrue,
+    );
+    expect(
+      File(p.join(root.path, 'routed_app', 'bin/server.dart')).existsSync(),
+      isTrue,
+    );
+    expect(
+      File(p.join(root.path, 'routed_app', 'lib', 'ssr.dart')).existsSync(),
+      isTrue,
+    );
+
+    final pubspec = await File(
+      p.join(root.path, 'routed_app', 'pubspec.yaml'),
+    ).readAsString();
+    expect(pubspec, contains('name: routed_app'));
+    expect(pubspec, isNot(contains('react_server_shelf')));
+    expect(pubspec, contains('react_server_routed'));
+    expect(pubspec, contains('routed_core'));
+    expect(pubspec, contains('routed_io'));
+    expect(pubspec, contains('routed_testing'));
+    expect(pubspec, isNot(contains('\n  shelf:')));
+
+    final server = await File(
+      p.join(root.path, 'routed_app', 'bin/server.dart'),
+    ).readAsString();
+    expect(
+      server,
+      contains('import \'package:routed_core/routed_core.dart\';'),
+    );
+    expect(server, contains('import \'package:routed_io/routed_io.dart\';'));
+    expect(server, contains('RoutedReactApplication'));
+
+    final readme = await File(
+      p.join(root.path, 'routed_app', 'README.md'),
+    ).readAsString();
+    expect(readme, contains('Routed'));
+  });
+
   test('refuses to overwrite without force and allows it with force', () async {
     final target = Directory(p.join(root.path, 'my_app'));
     await ScaffoldGenerator().generate(

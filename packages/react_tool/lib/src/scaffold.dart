@@ -48,6 +48,13 @@ const _clientTemplateOutputs = <String, String>{
   'test/app_test.client.dart.liquid': 'test/app_test.dart',
 };
 
+const _routedTemplateOutputs = <String, String>{
+  ..._ssrTemplateOutputs,
+  'pubspec.routed.yaml.liquid': 'pubspec.yaml',
+  'bin/server.routed.dart.liquid': 'bin/server.dart',
+  'README.routed.md.liquid': 'README.md',
+};
+
 /// Generates a new React Dart project from Liquid templates.
 final class ScaffoldGenerator {
   ScaffoldGenerator({void Function(Object)? log}) : log = log ?? print;
@@ -58,7 +65,8 @@ final class ScaffoldGenerator {
   /// Renders every template into [target]. Throws [ReactToolException] if
   /// [target] already exists unless [force] is set.
   ///
-  /// [template] selects the scaffold variant: `'ssr'` (default) or `'client'`.
+  /// [template] selects the scaffold variant: `'ssr'` (default), `'client'`, or
+  /// `'routed'`.
   Future<void> generate({
     required String name,
     required String packagesPath,
@@ -79,9 +87,11 @@ final class ScaffoldGenerator {
       'title': _humanize(name),
     };
 
-    final outputs = template == 'client'
-        ? _clientTemplateOutputs
-        : _ssrTemplateOutputs;
+    final outputs = switch (template) {
+      'client' => _clientTemplateOutputs,
+      'routed' => _routedTemplateOutputs,
+      _ => _ssrTemplateOutputs,
+    };
 
     for (final entry in outputs.entries) {
       final source = File(p.join(templatesDir.path, entry.key));
@@ -132,15 +142,19 @@ final class InitCommand extends Command<void> {
       ..addOption(
         'packages',
         defaultsTo: '../packages',
-        help: 'Path to the react_* package directories referenced by the '
+        help:
+            'Path to the react_* package directories referenced by the '
             'generated pubspec (default: ../packages).',
       )
       ..addOption(
         'template',
         defaultsTo: 'ssr',
-        allowed: ['ssr', 'client'],
-        help: 'Scaffold template variant: "ssr" (default) includes SSR and '
-            'server functions; "client" scaffolds a client-only project.',
+        allowed: ['ssr', 'client', 'routed'],
+        help:
+            'Scaffold template variant: "ssr" (default) includes SSR and '
+            'server functions; "client" scaffolds a client-only project; '
+            '"routed" scaffolds a Shelf-free SSR app using '
+            '`react_server_routed` and `routed_io`.',
       )
       ..addFlag(
         'force',
