@@ -45,6 +45,21 @@ dart run react_tool:react init --template routed my_routed_app
 dart run react_tool:react init --template client my_client_app
 ```
 
+Scaffolded projects also include:
+
+- `.gitignore` entries for generated artifacts (`.dart_tool`, `build`, `lib/.generated`).
+- a VS Code `.vscode/settings.json` generated as:
+  - `**/.dart_tool`
+  - `**/.generated`
+  - `**/build`
+
+During iteration, you usually edit only:
+
+- `lib/app.dart` for UI
+- `lib/greeting.dart` for server functions
+
+That makes it easier to work around generated SSR/build churn while still shipping a complete full-stack example.
+
 ## Configuration
 
 Configuration is defined in a `react.yaml` file (or a `react:` section in `pubspec.yaml`).

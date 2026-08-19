@@ -111,6 +111,12 @@ dart run react_tool:react init my_app --template routed
 dart run react_tool:react init my_app --template client
 ```
 
+Scaffolded projects are optimized for iteration:
+
+- Generated internals live in `lib/.generated/`, `build/`, and `.dart_tool/`.
+- Scaffolded `.vscode/settings.json` hides those paths by default in the Explorer/search.
+- Day-to-day edits are usually in `lib/app.dart` and `lib/greeting.dart`.
+
 ### 3. Build & Run
 
 ```bash
