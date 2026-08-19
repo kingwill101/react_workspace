@@ -107,6 +107,9 @@ dart run react_tool:react init my_app
 # Routed Host Project (Shelf-free, SSR via `routed_io`)
 dart run react_tool:react init my_app --template routed
 
+# Routed Host Project with smaller starter surface (no tests/docker)
+dart run react_tool:react init my_app --template routed-minimal
+
 # Client-Only Static Project
 dart run react_tool:react init my_app --template client
 ```

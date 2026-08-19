@@ -41,6 +41,9 @@ dart run react_tool:react init my_app
 # Routed-hosted SSR project (no Shelf dependency)
 dart run react_tool:react init --template routed my_routed_app
 
+# Routed-hosted SSR project with reduced starter surface
+dart run react_tool:react init --template routed-minimal my_routed_app_compact
+
 # Client-only project (no server code)
 dart run react_tool:react init --template client my_client_app
 ```

@@ -57,6 +57,23 @@ const _routedTemplateOutputs = <String, String>{
   'README.routed.md.liquid': 'README.md',
 };
 
+const _routedMinimalTemplateOutputs = <String, String>{
+  'pubspec.routed.yaml.liquid': 'pubspec.yaml',
+  'analysis_options.yaml.liquid': 'analysis_options.yaml',
+  '.gitignore.liquid': '.gitignore',
+  'vscode_settings.json.liquid': '.vscode/settings.json',
+  'react.yaml.liquid': 'react.yaml',
+  'package.json.liquid': 'package.json',
+  'web/index.html.liquid': 'web/index.html',
+  'web/styles.scss.liquid': 'web/styles.scss',
+  'web/client.dart.liquid': 'web/client.dart',
+  'lib/app.dart.liquid': 'lib/app.dart',
+  'lib/greeting.dart.liquid': 'lib/greeting.dart',
+  'lib/ssr.dart.liquid': 'lib/ssr.dart',
+  'bin/server.routed.dart.liquid': 'bin/server.dart',
+  'README.routed.md.liquid': 'README.md',
+};
+
 /// Generates a new React Dart project from Liquid templates.
 final class ScaffoldGenerator {
   ScaffoldGenerator({void Function(Object)? log}) : log = log ?? print;
@@ -92,6 +109,7 @@ final class ScaffoldGenerator {
     final outputs = switch (template) {
       'client' => _clientTemplateOutputs,
       'routed' => _routedTemplateOutputs,
+      'routed-minimal' => _routedMinimalTemplateOutputs,
       _ => _ssrTemplateOutputs,
     };
 
@@ -151,12 +169,13 @@ final class InitCommand extends Command<void> {
       ..addOption(
         'template',
         defaultsTo: 'ssr',
-        allowed: ['ssr', 'client', 'routed'],
+        allowed: ['ssr', 'client', 'routed', 'routed-minimal'],
         help:
             'Scaffold template variant: "ssr" (default) includes SSR and '
             'server functions; "client" scaffolds a client-only project; '
             '"routed" scaffolds a Shelf-free SSR app using '
-            '`react_server_routed` and `routed_io`.',
+            '`react_server_routed` and `routed_io`; '
+            '"routed-minimal" uses the same stack with fewer starter files.',
       )
       ..addFlag(
         'force',

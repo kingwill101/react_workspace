@@ -235,6 +235,51 @@ void main() {
     expect(vscodeSettings, contains('build'));
   });
 
+  test(
+    'init command with --template routed-minimal scaffolds smaller routed app',
+    () async {
+      final runner = CommandRunner<void>('react', '')
+        ..addCommand(InitCommand(workingDirectory: root));
+      await runner.run(['init', '--template', 'routed-minimal', 'routed_mini']);
+
+      final appDir = Directory(p.join(root.path, 'routed_mini'));
+      expect(File(p.join(appDir.path, 'pubspec.yaml')).existsSync(), isTrue);
+      expect(File(p.join(appDir.path, 'bin/server.dart')).existsSync(), isTrue);
+      expect(File(p.join(appDir.path, 'lib', 'ssr.dart')).existsSync(), isTrue);
+      expect(File(p.join(appDir.path, 'README.md')).existsSync(), isTrue);
+
+      final notExpected = <String>[
+        'test/app_test.dart',
+        'test/greeting_test.dart',
+        'Dockerfile',
+        '.dockerignore',
+      ];
+      for (final relative in notExpected) {
+        expect(
+          File(p.join(appDir.path, relative)).existsSync(),
+          isFalse,
+          reason: 'did not expect $relative',
+        );
+      }
+
+      final pubspec = await File(
+        p.join(appDir.path, 'pubspec.yaml'),
+      ).readAsString();
+      expect(pubspec, contains('name: routed_mini'));
+      expect(pubspec, contains('react_server_routed'));
+      expect(pubspec, contains('routed_io'));
+
+      final vscodeSettings = await File(
+        p.join(appDir.path, '.vscode', 'settings.json'),
+      ).readAsString();
+      expect(vscodeSettings, contains('"files.exclude"'));
+      expect(vscodeSettings, contains('.generated'));
+      expect(vscodeSettings, contains('build'));
+
+      await appDir.delete(recursive: true);
+    },
+  );
+
   test('refuses to overwrite without force and allows it with force', () async {
     final target = Directory(p.join(root.path, 'my_app'));
     await ScaffoldGenerator().generate(
