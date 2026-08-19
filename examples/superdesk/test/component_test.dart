@@ -29,17 +29,14 @@ void main() {
     });
 
     test('SsrTestHarness mocks SSR without build', () async {
-      final harness = SsrTestHarness(
-        indexTemplate: '<html>{{SSR}}</html>',
-      );
+      final harness = SsrTestHarness();
       harness.mockRender('<div>mocked superdesk</div>');
-      await harness.start(
-        rootComponent: 'package:superdesk/lib/app.dart#App',
+      final ssr = await harness.start();
+      final rendered = await ssr.render(
+        component: 'package:superdesk/lib/app.dart#App',
+        props: const {},
       );
-      final client = harness.createClient();
-      final response = await client.get('/dashboard');
-      response.assertStatus(200);
-      expect(response.body, contains('mocked superdesk'));
+      expect(rendered.html, contains('mocked superdesk'));
       await harness.close();
     });
 

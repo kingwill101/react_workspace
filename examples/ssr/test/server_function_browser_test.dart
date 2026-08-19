@@ -1,9 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:example/server_actions.g.dart';
+import 'package:example/.generated/server_actions.g.dart';
+import 'package:react_server/react_server.dart';
+import 'package:react_server_shelf/react_server_shelf.dart';
 import 'package:react_testing/react_testing.dart';
 import 'package:server_testing/server_testing.dart';
+import 'package:server_testing_shelf/server_testing_shelf.dart';
+import 'package:shelf_static/shelf_static.dart';
 
 const _appId = 'package:example/lib/app.dart#App';
 
@@ -21,11 +25,25 @@ Future<void> main() async {
 
   final harness = await ReactTestHarness.start(
     projectRoot: Directory('examples/ssr'),
+  );
+  final registry = ServerFunctionRegistry();
+  registerServerActions(registry: registry);
+  final app = ReactServerApp(
+    actionRegistry: registry,
+    staticHandler: createStaticHandler(
+      harness.outputDirectory.path,
+      defaultDocument: 'index.html',
+    ),
+    indexTemplate: harness.indexTemplate,
+    ssr: harness.ssrClient,
     rootComponent: _appId,
-    registerActions: (registry) => registerServerActions(registry: registry),
     pageProps: (request) => {'title': 'hi'},
   );
-  final baseUrl = harness.baseUrl;
+  final serverClient = harness.createClient(
+    ShelfRequestHandler(app.handler),
+    mode: TransportMode.ephemeralServer,
+  );
+  final baseUrl = await serverClient.baseUrlFuture;
 
   await testBootstrap(
     BrowserConfig(
@@ -85,7 +103,10 @@ Future<void> main() async {
     timeout: const Duration(seconds: 30),
   );
 
-  tearDownAll(harness.close);
+  tearDownAll(() async {
+    await serverClient.close();
+    await harness.close();
+  });
 }
 
 Future<String> _get(String url) async {
@@ -95,7 +116,7 @@ Future<String> _get(String url) async {
     final response = await client
         .getUrl(uri)
         .then((request) => request.close());
-    return response.transform(utf8.decoder).join();
+    return await response.transform(utf8.decoder).join();
   } finally {
     client.close(force: true);
   }

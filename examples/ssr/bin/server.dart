@@ -5,10 +5,10 @@ import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_static/shelf_static.dart';
 
 import 'package:react_server/react_server.dart';
-import 'package:example/server_actions.g.dart';
+import 'package:react_server_shelf/react_server_shelf.dart';
+import 'package:example/.generated/server_actions.g.dart';
 
-const _defaultRootComponent =
-    'package:example/lib/app.dart#App';
+const _defaultRootComponent = 'package:example/lib/app.dart#App';
 
 Future<void> main() async {
   final port = int.tryParse(Platform.environment['PORT'] ?? '') ?? 8080;
@@ -35,10 +35,7 @@ Future<void> main() async {
     ssr: ssr,
     rootComponent:
         Platform.environment['REACT_ROOT_COMPONENT'] ?? _defaultRootComponent,
-    pageProps: (request) => {
-      'title': 'hi',
-      'path': _documentPath(request.url),
-    },
+    pageProps: (request) => {'title': 'hi', 'path': _documentPath(request.url)},
   );
 
   final server = await io.serve(app.handler, InternetAddress.anyIPv4, port);

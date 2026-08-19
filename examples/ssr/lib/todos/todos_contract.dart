@@ -20,8 +20,5 @@ final class TodoListResult {
   final List<TodoItem> items;
   final int total;
 
-  const TodoListResult({
-    required this.items,
-    required this.total,
-  });
+  const TodoListResult({required this.items, required this.total});
 }

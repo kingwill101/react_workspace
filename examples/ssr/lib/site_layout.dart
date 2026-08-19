@@ -1,13 +1,13 @@
 import 'package:react_router/react_router.dart';
 import 'package:react_web/react_web.dart' hide link;
 
-import 'about_page.react.dart';
+import '.generated/about_page.react.dart';
 import 'app_context.dart';
-import 'home_page.react.dart';
-import 'hooks_page.react.dart';
-import 'not_found_page.react.dart';
-import 'router_pages.react.dart';
-import 'state_pages.react.dart';
+import '.generated/home_page.react.dart';
+import '.generated/hooks_page.react.dart';
+import '.generated/not_found_page.react.dart';
+import '.generated/router_pages.react.dart';
+import '.generated/state_pages.react.dart';
 
 /// Persistent application shell: brand, top navigation, and the routed page
 /// tree.
@@ -56,18 +56,27 @@ ReactNode SiteLayout(({String title}) props) {
               key: 'site-nav',
               className: 'site-nav',
               children: [
-                navLink(to: '/', className: 'nav-link', end: true, children: [
-                  const Text('Home'),
-                ]),
-                navLink(to: '/state', className: 'nav-link', children: [
-                  const Text('State'),
-                ]),
-                navLink(to: '/router', className: 'nav-link', children: [
-                  const Text('Router'),
-                ]),
-                navLink(to: '/about', className: 'nav-link', children: [
-                  const Text('About'),
-                ]),
+                navLink(
+                  to: '/',
+                  className: 'nav-link',
+                  end: true,
+                  children: [const Text('Home')],
+                ),
+                navLink(
+                  to: '/state',
+                  className: 'nav-link',
+                  children: [const Text('State')],
+                ),
+                navLink(
+                  to: '/router',
+                  className: 'nav-link',
+                  children: [const Text('Router')],
+                ),
+                navLink(
+                  to: '/about',
+                  className: 'nav-link',
+                  children: [const Text('About')],
+                ),
               ],
             ),
           ],
@@ -79,7 +88,10 @@ ReactNode SiteLayout(({String title}) props) {
             routes(
               key: 'app-routes',
               children: [
-                route(path: '/', element: HomePage(title: props.title)),
+                route(
+                  path: '/',
+                  element: HomePage(title: props.title),
+                ),
                 route(
                   path: 'state',
                   element: StateSection(title: 'State management'),
@@ -100,8 +112,14 @@ ReactNode SiteLayout(({String title}) props) {
                       path: 'riverpod',
                       element: RiverpodPage(title: 'Riverpod'),
                     ),
-                    route(path: 'bloc', element: BlocPage(title: 'Bloc')),
-                    route(path: 'todos', element: TodosPage(title: 'Todos')),
+                    route(
+                      path: 'bloc',
+                      element: BlocPage(title: 'Bloc'),
+                    ),
+                    route(
+                      path: 'todos',
+                      element: TodosPage(title: 'Todos'),
+                    ),
                   ],
                 ),
                 route(
@@ -133,7 +151,10 @@ ReactNode SiteLayout(({String title}) props) {
                     ),
                   ],
                 ),
-                route(path: 'about', element: AboutPage(title: 'About')),
+                route(
+                  path: 'about',
+                  element: AboutPage(title: 'About'),
+                ),
                 route(
                   path: '*',
                   element: NotFoundPage(title: 'Page not found'),

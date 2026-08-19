@@ -1,8 +1,9 @@
 import 'package:react_router/react_router.dart';
 import 'package:react_router/react_router_hooks.dart'; // JS-only hooks
-import 'package:react_web/react_web.dart' hide link; // <link> collides with router Link
+import 'package:react_web/react_web.dart'
+    hide link; // <link> collides with router Link
 
-import 'route_item.react.dart';
+import '.generated/route_item.react.dart';
 
 /// `/router/*` section layout: heading, sub-navigation, and an `Outlet` that
 /// renders the matched child route.
@@ -34,9 +35,11 @@ ReactNode RouterSection(({String title}) props) {
             end: true,
             children: [const Text('Overview')],
           ),
-          navLink(to: '/router/items/7', className: 'router-link', children: [
-            const Text('Item 7'),
-          ]),
+          navLink(
+            to: '/router/items/7',
+            className: 'router-link',
+            children: [const Text('Item 7')],
+          ),
           navLink(
             to: '/router/search?q=hydrated',
             className: 'router-link',
@@ -95,15 +98,18 @@ ReactNode RouterOverview(({String title}) props) {
             key: 'mini-links',
             className: 'mini-links',
             children: [
-              link(to: '/router/items/42', children: [
-                const Text('View item 42 →'),
-              ]),
-              link(to: '/router/search?q=dart', children: [
-                const Text('Search for "dart" →'),
-              ]),
-              link(to: '/router/programmatic', children: [
-                const Text('Programmatic navigation →'),
-              ]),
+              link(
+                to: '/router/items/42',
+                children: [const Text('View item 42 →')],
+              ),
+              link(
+                to: '/router/search?q=dart',
+                children: [const Text('Search for "dart" →')],
+              ),
+              link(
+                to: '/router/programmatic',
+                children: [const Text('Programmatic navigation →')],
+              ),
             ],
           ),
         ],

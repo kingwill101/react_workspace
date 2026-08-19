@@ -1,6 +1,6 @@
 import 'package:react_web/react_web.dart';
 
-import 'counter.react.dart';
+import '.generated/counter.react.dart';
 
 typedef CounterProps = ({
   String title,
