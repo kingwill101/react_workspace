@@ -2,23 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:react_actions/react_actions.dart';
+import 'package:react_server/react_server.dart';
 import 'package:shelf/shelf.dart';
 
-import 'context.dart';
-import 'registry.dart';
-
-/// Creates a Shelf handler for server function dispatch at
-/// `/__react/actions`.
-///
-/// Usage:
-/// ```dart
-/// final registry = ServerFunctionRegistry();
-/// registerMyFunctions(registry);
-///
-/// final handler = Router()
-///   ..post('/__react/actions', createServerActionHandler(registry))
-///   ..get('/<page|.*>', (req) => ...);
-/// ```
 FutureOr<Response> Function(Request) createServerActionHandler(
   ServerFunctionRegistry registry, {
   Object? Function(Request req) authenticate = _noopAuthenticate,
@@ -26,25 +12,19 @@ FutureOr<Response> Function(Request) createServerActionHandler(
   int maxBodySize = 1024 * 1024,
 }) {
   return (Request req) async {
-    // POST only
-    if (req.method != 'POST') {
-      return Response(405);
-    }
+    if (req.method != 'POST') return Response(405);
 
-    // Content-Type check
     final contentType = req.headers['content-type'] ?? '';
     if (!contentType.startsWith('application/json') &&
         !contentType.startsWith(serverFunctionContentType)) {
       return Response(415);
     }
 
-    // Body-size limit
     final body = await req.readAsString();
     if (utf8.encode(body).length > maxBodySize) {
       return _errorResponse('request_too_large', 'Request too large.', 413);
     }
 
-    // Parse JSON
     late Map<String, dynamic> payload;
     try {
       payload = jsonDecode(body) as Map<String, dynamic>;
@@ -52,9 +32,6 @@ FutureOr<Response> Function(Request) createServerActionHandler(
       return _errorResponse('invalid_json', 'Invalid JSON.', 400);
     }
 
-    // Protocol metadata is duplicated in headers so proxies and observability
-    // tools can route actions without decoding the body. The envelope remains
-    // the canonical payload for backwards compatibility.
     final headerProtocol = req.headers[serverFunctionProtocolHeader];
     if (headerProtocol != null && headerProtocol != '${payload['protocol']}') {
       return _errorResponse(
@@ -109,10 +86,7 @@ FutureOr<Response> Function(Request) createServerActionHandler(
         400,
       );
     }
-    final arguments = payload['arguments'];
 
-    // Contract hash validation. Once a function is registered, the contract
-    // is mandatory so stale clients cannot silently invoke a changed codec.
     final expectedHash = registry.contractHashFor(id);
     if (expectedHash != null && contract != expectedHash) {
       return _errorResponse(
@@ -122,21 +96,19 @@ FutureOr<Response> Function(Request) createServerActionHandler(
       );
     }
 
-    final cancellation = CancellationToken();
     final context = ServerFunctionContext(
       requestId: _generateId(),
       principal: authenticate(req),
       headers: req.headers,
       requestUri: req.url,
       deadline: DateTime.now().add(requestTimeout),
-      cancellation: cancellation,
+      cancellation: CancellationToken(),
     );
 
     try {
       final encoded = await registry
-          .dispatch(id, arguments, context)
+          .dispatch(id, payload['arguments'], context)
           .timeout(requestTimeout);
-
       return Response.ok(
         jsonEncode(ServerFunctionResponse.ok(encoded).toJson()),
         headers: {'content-type': serverFunctionContentType},
@@ -148,25 +120,25 @@ FutureOr<Response> Function(Request) createServerActionHandler(
         504,
         requestId: context.requestId,
       );
-    } on ServerFunctionFailure catch (e) {
+    } on ServerFunctionFailure catch (error) {
       return Response(
-        e.statusCode,
+        error.statusCode,
         body: jsonEncode(
           ServerFunctionResponse.error(
             ServerFunctionError(
-              code: e.code,
-              message: e.message,
-              details: e.details,
+              code: error.code,
+              message: error.message,
+              details: error.details,
               requestId: context.requestId,
             ),
           ).toJson(),
         ),
         headers: {'content-type': serverFunctionContentType},
       );
-    } on UnknownServerFunctionException catch (e) {
+    } on UnknownServerFunctionException catch (error) {
       return _errorResponse(
         'unknown_function',
-        'Unknown function: ${e.id}.',
+        'Unknown function: ${error.id}.',
         404,
       );
     } catch (_) {
@@ -185,17 +157,15 @@ Response _errorResponse(
   String message,
   int statusCode, {
   String? requestId,
-}) {
-  return Response(
-    statusCode,
-    body: jsonEncode(
-      ServerFunctionResponse.error(
-        ServerFunctionError(code: code, message: message, requestId: requestId),
-      ).toJson(),
-    ),
-    headers: {'content-type': serverFunctionContentType},
-  );
-}
+}) => Response(
+  statusCode,
+  body: jsonEncode(
+    ServerFunctionResponse.error(
+      ServerFunctionError(code: code, message: message, requestId: requestId),
+    ).toJson(),
+  ),
+  headers: {'content-type': serverFunctionContentType},
+);
 
 Object? _noopAuthenticate(Request req) => null;
 

@@ -92,6 +92,7 @@ JSAny? _expandTree(ReactNode node) => switch (node) {
   ForeignComponent(:var name, :var props, :var children, :var key) =>
     _expandForeignComponent(name, props, children, key: key),
   Text(:var value) => value.toJS,
+  OpaqueReactNode(:final value) => value as JSAny,
   Fragment(:var children, :var key) => _createFragment(children, key: key),
   StrictMode(:var children) => _createReactElement(_strictMode, children),
   Suspense(:var fallback, :var children) => _createReactElement(

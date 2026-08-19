@@ -4,7 +4,9 @@ Server-side rendering (SSR) and server orchestration for React Dart.
 
 ## Ecosystem Role
 
-`react_server` provides the necessary glue to render your React Dart component tree into an HTML string on the server using React's native `ReactDOMServer`. It integrates with `react_js` to provide the server context, error boundary fallbacks, and server-side component registration required to bootstrap a full-stack Dart application.
+`react_server` provides the portable server runtime for React Dart applications: SSR worker communication, server-function context, registries, and protocol types. It does not depend on a particular HTTP framework.
+
+Shelf applications should add [`react_server_shelf`](../react_server_shelf) separately. Routed applications can depend on `react_server` without bringing Shelf into their package graph.
 
 ## Installation
 
