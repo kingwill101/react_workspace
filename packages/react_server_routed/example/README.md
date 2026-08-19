@@ -9,6 +9,14 @@ A complete React Dart application hosted by Routed. It demonstrates:
 The example deliberately has no Shelf dependency. `react_server_routed` composes React
 with `routed_core`; the application chooses `routed_io` as its host.
 
+For day-to-day editing, the files you typically change are:
+
+- `lib/app.dart` for UI.
+- `lib/greeting.dart` for server actions.
+
+Everything else is generated or build output (`lib/.generated/`, `build/react`) and is
+safe to ignore during normal iteration.
+
 ## Setup
 
 ```sh
