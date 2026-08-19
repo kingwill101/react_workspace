@@ -1,6 +1,7 @@
 name: react_server_routed_example
 description: A React Dart application with server-side rendering.
 publish_to: none
+resolution: workspace
 
 environment:
   sdk: ">=3.12.0 <4.0.0"
@@ -34,28 +35,6 @@ dev_dependencies:
   lints: ^6.1.0
   test: ^1.31.2
   server_testing: 0.4.0
-  routed_testing:
-    git:
-      url: https://github.com/kingwill101/routed.git
-      ref: master
-      path: packages/server_testing/routed_testing
-
-# The react_* packages are not published yet, so every project depends on
-# them by path. The overrides keep a path package (for example react_dom's
-# bare `react:` entry) resolving against the local copies.
-dependency_overrides:
-  react: {path: ../../react}
-  react_js: {path: ../../react_js}
-  react_dom: {path: ../../react_dom}
-  react_web: {path: ../../react_web}
-  react_actions: {path: ../../react_actions}
-  react_server: {path: ../../react_server}
-  react_testing: {path: ../../react_testing}
-  routed_core:
-    git:
-      url: https://github.com/kingwill101/routed.git
-      ref: master
-      path: packages/routed_core
   routed_testing:
     git:
       url: https://github.com/kingwill101/routed.git

@@ -826,6 +826,24 @@ packages:
       url: "https://github.com/kingwill101/routed.git"
     source: git
     version: "0.4.0"
+  routed_io:
+    dependency: transitive
+    description:
+      path: "packages/routed_io"
+      ref: master
+      resolved-ref: "1c656672e699b43e69be1621110c1c9252e9bdea"
+      url: "https://github.com/kingwill101/routed.git"
+    source: git
+    version: "0.1.0"
+  routed_testing:
+    dependency: transitive
+    description:
+      path: "packages/server_testing/routed_testing"
+      ref: master
+      resolved-ref: "1c656672e699b43e69be1621110c1c9252e9bdea"
+      url: "https://github.com/kingwill101/routed.git"
+    source: git
+    version: "0.4.0"
   sass:
     dependency: transitive
     description:

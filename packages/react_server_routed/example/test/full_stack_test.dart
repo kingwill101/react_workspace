@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
-import 'package:react_server_routed_example/.generated/greeting.action.g.dart' show greetRef;
+import 'package:react_server_routed_example/.generated/greeting.action.g.dart'
+    show greetRef;
 import 'package:react_server_routed_example/.generated/server_actions.g.dart';
 import 'package:path/path.dart' as p;
 import 'package:react_server/react_server.dart';
@@ -15,9 +18,8 @@ void main() {
   TestClient? client;
 
   setUpAll(() async {
-    final testHarness = await ReactTestHarness.start(
-      projectRoot: Directory.current,
-    );
+    final packageRoot = await _resolveProjectRootFromTestHarness();
+    final testHarness = await ReactTestHarness.start(projectRoot: packageRoot);
     harness = testHarness;
     final registry = ServerFunctionRegistry();
     registerServerActions(registry: registry);
@@ -93,6 +95,67 @@ Future<Response> _serveStatic(
   context.response.writeBytes(await file.readAsBytes());
   await context.close();
   return context.response;
+}
+
+Future<Directory> _resolveProjectRootFromTestHarness() async {
+  final configRoot = await _resolveProjectRootFromPackageConfig(
+    'react_server_routed_example',
+  );
+  if (configRoot != null) {
+    return configRoot;
+  }
+
+  Directory candidate = File(
+    Platform.script.toFilePath(),
+  ).absolute.parent.parent;
+  for (var i = 0; i < 8; i++) {
+    if (_containsPubspec(
+      candidate,
+      expectedPackageName: 'react_server_routed_example',
+    )) {
+      return candidate;
+    }
+    if (candidate.path == candidate.parent.path) break;
+    candidate = candidate.parent;
+  }
+
+  throw StateError(
+    'Could not locate react_server_routed_example root from '
+    '${Platform.script}; tried package config and ancestor traversal.',
+  );
+}
+
+Future<Directory?> _resolveProjectRootFromPackageConfig(
+  String packageName,
+) async {
+  final configUri = await Isolate.packageConfig;
+  if (configUri == null) return null;
+
+  final contents = await File.fromUri(configUri).readAsString();
+  final decoded = jsonDecode(contents) as Map<String, dynamic>;
+  final packages = decoded['packages'];
+  if (packages is! List) return null;
+
+  for (final entry in packages) {
+    if (entry is! Map<String, dynamic>) continue;
+    if (entry['name'] != packageName) continue;
+    final rawRootUri = entry['rootUri'];
+    if (rawRootUri is! String) continue;
+    final root = Directory.fromUri(configUri.resolve(rawRootUri));
+    if (root.existsSync()) return root;
+  }
+  return null;
+}
+
+bool _containsPubspec(
+  Directory directory, {
+  required String expectedPackageName,
+}) {
+  final pubspec = File(p.join(directory.path, 'pubspec.yaml'));
+  if (!pubspec.existsSync()) return false;
+
+  final raw = pubspec.readAsStringSync();
+  return raw.contains('name: $expectedPackageName');
 }
 
 String _contentType(String path) => switch (p.extension(path).toLowerCase()) {
