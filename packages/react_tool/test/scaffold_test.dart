@@ -291,6 +291,8 @@ void main() {
         p.join(root.path, 'client_app', 'pubspec.yaml'),
       ).readAsString();
       expect(pubspec, contains('name: client_app'));
+      expect(pubspec, isNot(contains('server_testing')));
+      expect(pubspec, isNot(contains('server_testing_shelf')));
       expect(pubspec, isNot(contains('react_server')));
       expect(pubspec, isNot(contains('\n  shelf:')));
       final clientSource = await File(
