@@ -284,6 +284,8 @@ void main() {
       expect(pubspec, contains('name: routed_mini'));
       expect(pubspec, contains('react_server_routed'));
       expect(pubspec, contains('routed_io'));
+      expect(pubspec, isNot(contains('react_server_shelf')));
+      expect(pubspec, isNot(contains('\n  shelf:')));
 
       final vscodeSettings = await File(
         p.join(appDir.path, '.vscode', 'settings.json'),
