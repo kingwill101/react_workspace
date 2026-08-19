@@ -119,8 +119,15 @@ void main() {
       pubspec,
       contains('react_codegen: {path: ../packages/react_codegen}'),
     );
+    expect(
+      pubspec,
+      contains('react_server_shelf: {path: ../packages/react_server_shelf}'),
+    );
     expect(pubspec, contains('react_tool: {path: ../packages/react_tool}'));
     expect(pubspec, contains('build_runner: ^2.15.3'));
+
+    final gitignore = read('.gitignore');
+    expect(gitignore, contains('lib/.generated/'));
 
     final html = read('web/index.html');
     expect(html, contains('<title>My App</title>'));
@@ -133,18 +140,23 @@ void main() {
       client,
       isNot(contains("import 'package:react_web/react_web.dart'")),
     );
-    expect(client, contains('package:my_app/app.react.dart'));
-    expect(client, contains('package:my_app/react_components.g.dart'));
+    expect(client, contains('package:my_app/.generated/app.react.dart'));
+    expect(
+      client,
+      contains('package:my_app/.generated/react_components.g.dart'),
+    );
 
     final server = read('bin/server.dart');
-    expect(server, contains('package:my_app/server_actions.g.dart'));
+    expect(server, contains('package:my_app/.generated/server_actions.g.dart'));
     expect(server, contains('_defaultRootComponent'));
     expect(server, contains("'title': 'Hello from SSR'"));
 
     final app = read('lib/app.dart');
     expect(app, contains("import 'package:react_dom/react_dom.dart';"));
     expect(app, isNot(contains("import 'package:react/react.dart';")));
-    expect(app, contains("'fontFamily': 'system-ui, sans-serif'"));
+    expect(app, contains("fontFamily: 'system-ui, sans-serif'"));
+    expect(app, contains("children: [props.title]"));
+    expect(app, contains("dataAttributes({'app': 'react-dart'})"));
     expect(app, contains('@reactComponent'));
     expect(app, contains("greetAction(name: 'world')"));
 
@@ -153,6 +165,7 @@ void main() {
     expect(greeting, contains('Future<String> greet'));
 
     final ssr = read('lib/ssr.dart');
+    expect(ssr, contains("import '.generated/app.react.dart';"));
     expect(ssr, contains('SsrComponentRegistry.register'));
     expect(ssr, contains('registerGlobalRenderer'));
 

@@ -5,24 +5,24 @@ import 'package:react_dom/react_dom.dart';
 @reactComponent
 ReactNode App(({String title}) props) {
   return div(
-    style: const {
-      'fontFamily': 'system-ui, sans-serif',
-      'maxWidth': '640px',
-      'margin': '0 auto',
-      'padding': '48px 24px',
-      'textAlign': 'center',
-    },
+    className: classNames('app-shell'),
+    style: css(
+      fontFamily: 'system-ui, sans-serif',
+      maxWidth: 640,
+      margin: '0 auto',
+      padding: '48px 24px',
+      textAlign: 'center',
+    ),
+    additionalProps: dataAttributes({'app': 'react-dart'}),
     children: [
-      div(key: 'title', children: [Text(props.title)]),
+      h1(key: 'title', children: [props.title]),
       div(
         key: 'welcome',
-        children: [
-          const Text('Hello from the client — edit lib/app.dart to get started.'),
-        ],
+        children: ['Hello from the client — edit lib/app.dart to get started.'],
       ),
       div(
         key: 'instructions',
-        children: [const Text('Edit lib/app.dart and rebuild to see changes.')],
+        children: ['Edit lib/app.dart and rebuild to see changes.'],
       ),
     ],
   );
