@@ -276,6 +276,13 @@ void main() {
       expect(vscodeSettings, contains('.generated'));
       expect(vscodeSettings, contains('build'));
 
+      final readme = await File(
+        p.join(appDir.path, 'README.md'),
+      ).readAsString();
+      expect(readme, contains('Routed'));
+      expect(readme, isNot(contains('Dockerfile')));
+      expect(readme, isNot(contains('docker build')));
+
       await appDir.delete(recursive: true);
     },
   );

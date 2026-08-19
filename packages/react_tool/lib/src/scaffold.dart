@@ -71,7 +71,7 @@ const _routedMinimalTemplateOutputs = <String, String>{
   'lib/greeting.dart.liquid': 'lib/greeting.dart',
   'lib/ssr.dart.liquid': 'lib/ssr.dart',
   'bin/server.routed.dart.liquid': 'bin/server.dart',
-  'README.routed.md.liquid': 'README.md',
+  'README.routed-minimal.md.liquid': 'README.md',
 };
 
 /// Generates a new React Dart project from Liquid templates.

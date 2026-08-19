@@ -25,7 +25,7 @@ dart run react_tool:react doctor
 The CLI provides commands to manage the full lifecycle of a React Dart project:
 
 - `react doctor` - Inspect the current React Dart project configuration and diagnostics.
-- `react init <project_name> [--template <ssr|client|routed>]` - Scaffold a new project. `ssr` includes Shelf-based SSR defaults, `client` omits server code, and `routed` uses Routed (`react_server_routed` + `routed_io`) with no Shelf dependency.
+- `react init <project_name> [--template <ssr|client|routed|routed-minimal>]` - Scaffold a new project. `ssr` includes Shelf-based SSR defaults, `client` omits server code, and `routed` uses Routed (`react_server_routed` + `routed_io`) with no Shelf dependency; `routed-minimal` uses the same stack with reduced starter files.
 - `react build [--watch] [--release] [--server]` - Generate code, compile client and SSR Dart bundles, compile Sass, bundle JS dependencies, and copy static assets.
 - `react serve [--watch] [--release] [--no-ssr]` - Build the project and run the Dart server (and SSR worker if configured) locally.
 - `react js install` - Install exact wrapper versions into `.dart_tool/react/js`.
