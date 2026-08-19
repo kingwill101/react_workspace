@@ -542,10 +542,10 @@ class ServerAgnosticDataRouteMatch {
 /// id: string; children?: any[]
 class ServerCreateStaticHandlerReturnDataRoutes {
   const ServerCreateStaticHandlerReturnDataRoutes({
-    required ServerCreateStaticHandlerReturnDataRoutesRef this.__ref,
+    required ServerCreateStaticHandlerReturnDataRoutesRef ref,
     required String this.id,
     List<Object?>? this.children,
-  });
+  }) : __ref = ref;
 
   /// TS: { caseSensitive?: boolean; path?: string; id?: string; loader?: any; action?: any; hasErrorBoundary?: boolean; shouldRevalidate?: any; handle?: any; lazy?: any; children?: null; index: true }
   final ServerCreateStaticHandlerReturnDataRoutesRef __ref;
@@ -1091,4 +1091,3 @@ class ServerStaticHandlerContext {
     if (_deepestRenderedBoundaryId != null) '_deepestRenderedBoundaryId': _deepestRenderedBoundaryId,
   };
 }
-

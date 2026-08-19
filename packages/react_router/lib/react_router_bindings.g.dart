@@ -1257,6 +1257,12 @@ class Omit {
 /// Typed props for `Path`.
 ///
 /// pathname: string; search: string; hash: string
+extension type _PathJs(JSObject _) implements JSObject {
+  external JSString get pathname;
+  external JSString get search;
+  external JSString get hash;
+}
+
 class Path {
   const Path({
     required String this.pathname,
@@ -1273,12 +1279,29 @@ class Path {
   /// TS: string
   final String hash;
 
+  /// Decodes the shim's raw JS object.
+  factory Path.fromJs(JSObject js) {
+    final v = _PathJs(js);
+    return Path(
+      pathname: v.pathname.toDart,
+      search: v.search.toDart,
+      hash: v.hash.toDart,
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     'pathname': pathname,
     'search': search,
     'hash': hash,
   };
+}
+
+extension type _PathMatchJs(JSObject _) implements JSObject {
+  external JSAny? get params;
+  external JSString get pathname;
+  external JSString get pathnameBase;
+  external JSObject get pattern;
 }
 
 /// Typed props for `PathMatch`.
@@ -1304,6 +1327,17 @@ class PathMatch {
 
   /// TS: { path: { pathname: string; search: string; hash: string }; caseSensitive?: boolean; end?: boolean }
   final PathPattern pattern;
+
+  /// Decodes the shim's raw JS object.
+  factory PathMatch.fromJs(JSObject js) {
+    final v = _PathMatchJs(js);
+    return PathMatch(
+      params: v.params,
+      pathname: v.pathname.toDart,
+      pathnameBase: v.pathnameBase.toDart,
+      pattern: PathPattern.fromJs(v.pattern),
+    );
+  }
 
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
@@ -1334,12 +1368,28 @@ class PathPattern {
   /// TS: boolean
   final bool? end;
 
+  /// Decodes the shim's raw JS object.
+  factory PathPattern.fromJs(JSObject js) {
+    final v = _PathPatternJs(js);
+    return PathPattern(
+      path: Path.fromJs(v.path),
+      caseSensitive: v.caseSensitive?.toDart,
+      end: v.end?.toDart,
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     'path': path.toJson(),
     if (caseSensitive != null) 'caseSensitive': caseSensitive,
     if (end != null) 'end': end,
   };
+}
+
+extension type _PathPatternJs(JSObject _) implements JSObject {
+  external _PathJs get path;
+  external JSBoolean? get caseSensitive;
+  external JSBoolean? get end;
 }
 
 /// Typed props for `Pick`.
@@ -1390,4 +1440,3 @@ class RouteMatch {
     'route': route,
   };
 }
-
