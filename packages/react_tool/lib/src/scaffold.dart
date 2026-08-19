@@ -53,6 +53,7 @@ const _routedTemplateOutputs = <String, String>{
   'pubspec.routed.yaml.liquid': 'pubspec.yaml',
   'bin/server.routed.dart.liquid': 'bin/server.dart',
   'README.routed.md.liquid': 'README.md',
+  'vscode_settings.routed.json.liquid': '.vscode/settings.json',
 };
 
 /// Generates a new React Dart project from Liquid templates.

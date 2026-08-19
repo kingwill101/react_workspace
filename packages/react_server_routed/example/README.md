@@ -17,6 +17,9 @@ For day-to-day editing, the files you typically change are:
 Everything else is generated or build output (`lib/.generated/`, `build/react`) and is
 safe to ignore during normal iteration.
 
+For less editor noise, `.vscode/settings.json` hides generated and build
+artifacts by default.
+
 ## Setup
 
 ```sh

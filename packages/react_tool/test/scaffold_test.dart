@@ -221,6 +221,13 @@ void main() {
       p.join(root.path, 'routed_app', 'README.md'),
     ).readAsString();
     expect(readme, contains('Routed'));
+
+    final vscodeSettings = await File(
+      p.join(root.path, 'routed_app', '.vscode', 'settings.json'),
+    ).readAsString();
+    expect(vscodeSettings, contains('"files.exclude"'));
+    expect(vscodeSettings, contains('.generated'));
+    expect(vscodeSettings, contains('build'));
   });
 
   test('refuses to overwrite without force and allows it with force', () async {
