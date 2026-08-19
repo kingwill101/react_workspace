@@ -8,6 +8,7 @@ workspace:
   - packages/react_dom
   - packages/react_codegen
   - packages/react_server
+  - packages/react_server_shelf
   - packages/react_web
   - packages/react_web_generator
   - packages/react_tool
@@ -18,7 +19,7 @@ workspace:
   - packages/react_bloc
   - packages/react_analysis
   - packages/react_analyzer
-  - packages/routed_react
+  - packages/react_server_routed
   - examples/ssr
   - examples/plugin_validation
   - examples/client

@@ -297,7 +297,12 @@ class JsBinding extends ReactBinding {
     // Layout effects are client-only. Keeping SSR as a no-op prevents a
     // browser timing primitive from changing server output.
     if (currentReactRuntime.target == ReactRenderTarget.server) return;
-    unsupportedReactFeature('useLayoutEffect');
+
+    final jsFn = (() {
+      final cleanup = effect();
+      return cleanup is EffectCleanup ? cleanup.toJS : _jsUndefined;
+    }).toJS;
+    _useLayoutEffect(jsFn, _depsToJS(deps));
   }
 
   @override
@@ -373,6 +378,9 @@ external JSAny? _useSyncExternalStore(
 
 @JS('React.useState')
 external JSArray _useState(JSAny? initial);
+
+@JS('React.useLayoutEffect')
+external void _useLayoutEffect(JSFunction effect, JSAny? deps);
 
 @JS('React.useReducer')
 external JSArray _useReducer(JSFunction reducer, JSAny? initialArg);

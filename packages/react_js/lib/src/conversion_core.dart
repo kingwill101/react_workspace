@@ -28,6 +28,47 @@ JSAny? toReactJS(Object? v) => switch (v) {
 JSAny renderNode(ReactNode n) =>
     currentReactRuntime.renderer.render(n) as JSAny;
 
+/// Decodes React's native `props.children` value into portable child nodes.
+List<ReactNode> reactChildrenFromJS(JSObject props) {
+  final result = <ReactNode>[];
+
+  void append(JSAny? value) {
+    if (value == null || value.isUndefined) return;
+    if (value.isA<JSBoolean>()) return;
+    if (value.isA<JSString>()) {
+      result.add(Text((value as JSString).toDart));
+      return;
+    }
+    if (value.isA<JSNumber>()) {
+      result.add(Text('${(value as JSNumber).toDartDouble}'));
+      return;
+    }
+    if (value.isA<JSArray<JSAny?>>()) {
+      for (final child in (value as JSArray<JSAny?>).toDart) {
+        append(child);
+      }
+      return;
+    }
+    result.add(OpaqueReactNode(value));
+  }
+
+  append(props.getProperty('children'.toJS));
+  return result;
+}
+
+/// Decodes one required React child from a component props object.
+ReactNode requiredReactChildFromJS(JSObject props, {String? component}) {
+  final children = reactChildrenFromJS(props);
+  if (children.length != 1) {
+    final prefix = component == null ? 'Component' : component;
+    throw ArgumentError(
+      '$prefix requires exactly one ReactNode child, but received '
+      '${children.length}.',
+    );
+  }
+  return children.single;
+}
+
 // ═══════════════════════════════════════════
 // Safe property access — prevents dart2js -O2 from
 // inlining `getProperty` to `js.prop` which would

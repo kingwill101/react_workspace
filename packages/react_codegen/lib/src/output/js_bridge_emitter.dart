@@ -15,7 +15,9 @@ final class JsBridgeEmitter {
       ..writeln("import 'dart:js_interop';")
       ..writeln("import 'dart:js_interop_unsafe';")
       ..writeln("import 'package:react_js/react_js.dart';")
-      ..writeln("import 'package:react_js/src/codec_registry.dart' show ReactCodecRegistry;")
+      ..writeln(
+        "import 'package:react_js/src/codec_registry.dart' show ReactCodecRegistry;",
+      )
       ..writeln("import '${model.inputFile}' as impl;");
     for (final component in model.components) {
       buffer.writeln("import '${model.reactFile}' show id${component.name};");
@@ -43,7 +45,11 @@ final class JsBridgeEmitter {
     toJSBuffer.writeln('  final o = JSObject();');
 
     for (final prop in component.props) {
-      if (_isCallback(prop.type)) {
+      if (_isChildrenProp(prop)) {
+        toJSBuffer.writeln(
+          "  o.setProperty('children'.toJS, toReactJS(props.children));",
+        );
+      } else if (_isCallback(prop.type)) {
         final modelCode = callbackEmitter.descriptor(
           callbackExpression: 'props.${prop.name}',
           debugName: '${component.name}.${prop.name}',
@@ -87,7 +93,13 @@ final class JsBridgeEmitter {
       '${_recordCode(component.propsRecord)} _${component.name}_fromJS(JSObject js) {',
     );
     for (final prop in component.props) {
-      if (_isCallback(prop.type)) {
+      if (_isChildrenProp(prop)) {
+        fromJSBuffer.writeln(
+          _isChildrenList(prop)
+              ? 'final children = reactChildrenFromJS(js);'
+              : 'final children = requiredReactChildFromJS(js, component: "${component.name}");',
+        );
+      } else if (_isCallback(prop.type)) {
         final proxy = callbackEmitter.jsProxy(
           fieldName: prop.name,
           callback: _callbackModel(prop.type),
@@ -162,6 +174,21 @@ final class JsBridgeEmitter {
 
   bool _isCollection(ReactTypeRef type) =>
       type is NamedTypeRef && (type.symbol == 'List' || type.symbol == 'Map');
+
+  bool _isChildrenProp(ReactPropModel prop) =>
+      prop.name == 'children' &&
+      (_isChildrenList(prop) ||
+          prop.type is NamedTypeRef &&
+              (prop.type as NamedTypeRef).symbol == 'ReactNode');
+
+  bool _isChildrenList(ReactPropModel prop) =>
+      prop.type is NamedTypeRef &&
+      (prop.type as NamedTypeRef).symbol == 'List' &&
+      (prop.type as NamedTypeRef).typeArguments.length == 1 &&
+      (prop.type as NamedTypeRef).typeArguments.single is NamedTypeRef &&
+      ((prop.type as NamedTypeRef).typeArguments.single as NamedTypeRef)
+              .symbol ==
+          'ReactNode';
 
   ReactCallbackModel _callbackModel(ReactTypeRef type) {
     if (type is! FunctionTypeRef) {
@@ -259,7 +286,8 @@ final class JsBridgeEmitter {
     // Host-platform prop — decode via ReactCodecRegistry.
     if (prop.type is HostTypeRef) {
       final t = prop.type as HostTypeRef;
-      final raw = "ReactCodecRegistry.decodeHostValue('${t.hostNamespace}', '${t.typeId}', js.getProperty('${prop.name}'.toJS)) as ${_typeCode(t)}";
+      final raw =
+          "ReactCodecRegistry.decodeHostValue('${t.hostNamespace}', '${t.typeId}', js.getProperty('${prop.name}'.toJS)) as ${_typeCode(t)}";
       return raw;
     }
 

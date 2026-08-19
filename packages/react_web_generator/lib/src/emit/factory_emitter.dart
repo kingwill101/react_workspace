@@ -13,12 +13,8 @@ final class FactoryEmitter {
     buf.writeln();
 
     buf.writeln("import 'package:react/react.dart';");
-    buf.writeln(
-      "import 'package:react_web/src/generated/react_events.dart';",
-    );
-    buf.writeln(
-      "import 'package:react_web/src/generated/web/web.dart';",
-    );
+    buf.writeln("import 'package:react_web/src/generated/react_events.dart';");
+    buf.writeln("import 'package:react_web/src/generated/web/web.dart';");
     buf.writeln();
 
     for (final el in elements) {
@@ -56,7 +52,9 @@ final class FactoryEmitter {
 
     // Annotate the factory so ReactSsrAnalyzer can resolve WebApiRuntimeInfo
     // on the actual invoked method (div(...)), not on the SsrDefinition const.
-    buf.writeln('@WebApiRuntimeInfo(id: "HTML.${el.tagName}", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)');
+    buf.writeln(
+      '@WebApiRuntimeInfo(id: "HTML.${el.tagName}", exposed: {WebRealm.window}, ssr: WebSsrSupport.emulated)',
+    );
     buf.writeln("ReactNode ${el.factoryName}({");
     for (final p in el.props) {
       buf.writeln("  ${_dt(p.dartType, nullable: true)} ${p.reactName},");
@@ -67,7 +65,9 @@ final class FactoryEmitter {
       buf.writeln("  void Function($rt)? ${e.captureName},");
     }
     buf.writeln("  void Function(${_dt(el.elementType)}?)? ref,");
-    buf.writeln("  List<ReactNode> children = const [],");
+    if (!el.voidElement) {
+      buf.writeln("  ReactChildren children = const [],");
+    }
     buf.writeln("  String? key,");
     buf.writeln("  Map<String, Object?> additionalProps = const {},");
     buf.writeln("}) {");
@@ -92,7 +92,9 @@ final class FactoryEmitter {
     );
     buf.writeln("      ...additionalProps,");
     buf.writeln("    },");
-    buf.writeln("    children: children,");
+    if (!el.voidElement) {
+      buf.writeln("    children: normalizeChildren(children),");
+    }
     buf.writeln("    key: key,");
     buf.writeln("  );");
     buf.writeln("}");

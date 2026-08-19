@@ -200,7 +200,7 @@ void main() {
       );
       // Typed props (classes, enum, callback typedef).
       expect(code, contains('ReactNode greeting('));
-      expect(code, contains('  List<ReactNode> children = const [],'));
+      expect(code, contains('  ReactChildren children = const [],'));
       expect(code, contains('String? name,'));
       expect(code, contains('required num count,'));
       expect(code, contains('List<String>? items,'));
@@ -283,7 +283,7 @@ void main() {
         declarations: const [greetingDecl],
         commandLine: 'x',
       );
-      expect(code, contains('  List<ReactNode> children = const [],'));
+      expect(code, contains('  ReactChildren children = const [],'));
       expect(code, contains("if (badge != null) 'badge': badge,"));
       // children must NOT also appear in the props map.
       expect(
@@ -309,7 +309,7 @@ void main() {
         declarations: [decl],
         commandLine: 'x',
       );
-      expect(code, contains('  List<ReactNode> children = const [],'));
+      expect(code, contains('  ReactChildren children = const [],'));
       expect(code, contains('  children: children,'));
       expect(
         code.split("if (children != null) 'children': children,").length,
@@ -337,7 +337,13 @@ void main() {
         name: 'useThing',
         kind: 'hook',
         props: [],
-        params: [TsIrProp(name: 'key', required: true, type: TsIrType(kind: 'string'))],
+        params: [
+          TsIrProp(
+            name: 'key',
+            required: true,
+            type: TsIrType(kind: 'string'),
+          ),
+        ],
         returns: TsIrType(kind: 'string'),
       );
       final shim = generateShim(

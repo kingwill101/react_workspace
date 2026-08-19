@@ -136,7 +136,7 @@ final class ReactRuntimeCapabilities {
     supportsEvents: true,
     supportsRefs: true,
     supportsEffects: true,
-    supportsLayoutEffects: false,
+    supportsLayoutEffects: true,
     supportsContext: true,
     supportsSuspense: true,
   );

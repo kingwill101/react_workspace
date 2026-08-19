@@ -19,6 +19,12 @@ import 'js_environment.dart';
 import 'project_config.dart';
 import 'styles.dart';
 
+/// Directory under `lib/` reserved for source files produced by React codegen.
+///
+/// Keeping this boundary hidden makes the authored project surface easier to
+/// navigate while preserving normal Dart package imports.
+const generatedSourceDirectory = '.generated';
+
 /// Runs the standardized React Dart build pipeline.
 final class ReactBuilder {
   final ReactProjectConfig config;
@@ -169,7 +175,9 @@ final class ReactBuilder {
   Future<String?> _compileServer() async {
     final server = config.serverEntrypoint;
     if (server == null || !config.file(server).existsSync()) {
-      log('Skipping server compile: ${server ?? '(not configured)'} not found.');
+      log(
+        'Skipping server compile: ${server ?? '(not configured)'} not found.',
+      );
       return null;
     }
     final output = config.directory(config.outputDirectory);
@@ -189,28 +197,146 @@ final class ReactBuilder {
   }
 
   /// Copies build_runner outputs (`.react.dart`, `.action.g.dart`, …) from
-  /// `.dart_tool/build/generated/<package>/lib` back into the project's `lib/`
-  /// so `dart compile js` can resolve the relative imports. With `--workspace`
-  /// the generated tree lives under the workspace root, hence the upward walk.
+  /// `.dart_tool/build/generated/<package>/lib` into `lib/.generated/` so
+  /// `dart compile js` can resolve the package imports without exposing the
+  /// generated files beside authored source files. With `--workspace` the
+  /// generated tree lives under the workspace root, hence the upward walk.
   Future<void> _syncGeneratedSources() async {
     final generatedRoot = _findGeneratedRoot(config.packageName);
-    if (generatedRoot == null) return;
-    final libSource = Directory(p.join(generatedRoot.path, 'lib'));
-    if (!libSource.existsSync()) return;
+    final files = <String, File>{};
+    final sourceGeneratedFiles = <File>[];
 
-    final libTarget = Directory(p.join(config.root.path, 'lib'));
+    if (generatedRoot != null) {
+      final libSource = Directory(p.join(generatedRoot.path, 'lib'));
+      if (libSource.existsSync()) {
+        await for (final entity in libSource.list(recursive: true)) {
+          if (entity is! File || !entity.path.endsWith('.dart')) continue;
+          if (p.basename(entity.path).startsWith(r'$')) continue;
+          final relative = p.relative(entity.path, from: libSource.path);
+          files[relative] = entity;
+        }
+      }
+    }
+
+    // `react_codegen` intentionally writes server-function and aggregate
+    // outputs to source. Include those files in the same hidden boundary as
+    // the component outputs that arrive through build_runner's cache.
+    final libRoot = Directory(p.join(config.root.path, 'lib'));
+    if (libRoot.existsSync()) {
+      await for (final entity in libRoot.list(recursive: true)) {
+        if (entity is! File || !entity.path.endsWith('.dart')) continue;
+        final relative = p.relative(entity.path, from: libRoot.path);
+        if (relative.startsWith('$generatedSourceDirectory/') ||
+            !_isGeneratedSource(relative)) {
+          continue;
+        }
+        files[relative] = entity;
+        sourceGeneratedFiles.add(entity);
+      }
+    }
+
+    final libTarget = Directory(
+      p.join(config.root.path, 'lib', generatedSourceDirectory),
+    );
+    if (files.isEmpty) {
+      if (libTarget.existsSync()) await libTarget.delete(recursive: true);
+      return;
+    }
+    if (libTarget.existsSync()) {
+      await libTarget.delete(recursive: true);
+    }
     await libTarget.create(recursive: true);
     var copied = 0;
-    await for (final entity in libSource.list(recursive: true)) {
-      if (entity is! File || !entity.path.endsWith('.dart')) continue;
-      if (p.basename(entity.path).startsWith(r'$')) continue; // aggregate $lib$
-      final relative = p.relative(entity.path, from: libSource.path);
-      await entity.copy(p.join(libTarget.path, relative));
+    for (final entry in files.entries) {
+      final relative = entry.key;
+      final entity = entry.value;
+      final content = await entity.readAsString();
+      final relocated = _relocateGeneratedImports(
+        content,
+        generatedRelativePath: relative,
+      );
+      final destination = File(p.join(libTarget.path, relative));
+      await destination.parent.create(recursive: true);
+      await destination.writeAsString(relocated);
       copied++;
     }
-    if (copied > 0) {
-      log('Synced $copied generated sources into lib/.');
+    for (final sourceFile in sourceGeneratedFiles) {
+      if (sourceFile.existsSync()) await sourceFile.delete();
     }
+    if (copied > 0) {
+      log(
+        'Synced $copied generated sources into '
+        'lib/$generatedSourceDirectory/.',
+      );
+    }
+  }
+
+  String _relocateGeneratedImports(
+    String content, {
+    required String generatedRelativePath,
+  }) {
+    final generatedFile = p.join(
+      generatedSourceDirectory,
+      generatedRelativePath,
+    );
+    final generatedDirectory = p.dirname(generatedFile);
+    final originalDirectory = p.dirname(generatedRelativePath);
+
+    return content.replaceAllMapped(
+      RegExp(
+        r'''(^\s*(?:import|export|part\s+of)\s+['"])([^'"]+)(['"])''',
+        multiLine: true,
+      ),
+      (match) {
+        final prefix = match.group(1)!;
+        final uri = match.group(2)!;
+        final suffix = match.group(3)!;
+        final relocated = _relocateImportUri(
+          uri,
+          originalDirectory: originalDirectory,
+          generatedDirectory: generatedDirectory,
+        );
+        return '$prefix$relocated$suffix';
+      },
+    );
+  }
+
+  String _relocateImportUri(
+    String uri, {
+    required String originalDirectory,
+    required String generatedDirectory,
+  }) {
+    if (uri.startsWith('dart:') || uri.startsWith('package:')) {
+      if (!uri.startsWith('package:${config.packageName}/')) return uri;
+      final packagePath = uri.substring(
+        'package:${config.packageName}/'.length,
+      );
+      if (!_isGeneratedSource(packagePath)) return uri;
+      return 'package:${config.packageName}/$generatedSourceDirectory/$packagePath';
+    }
+
+    final originalTarget = p.normalize(p.join(originalDirectory, uri));
+    if (_isGeneratedSource(originalTarget)) return uri;
+
+    final generatedTarget = p.relative(
+      originalTarget,
+      from: generatedDirectory,
+    );
+    return generatedTarget.startsWith('.')
+        ? generatedTarget
+        : './$generatedTarget';
+  }
+
+  bool _isGeneratedSource(String path) {
+    final name = p.basename(path);
+    return name.endsWith('.react.dart') ||
+        name.endsWith('.react.g.dart') ||
+        name.endsWith('.action.g.dart') ||
+        name.endsWith('.client.g.dart') ||
+        name.endsWith('.registry.g.dart') ||
+        name == 'react_components.g.dart' ||
+        name == 'ssr_registry.g.dart' ||
+        name == 'server_actions.g.dart';
   }
 
   Directory? _findGeneratedRoot(String packageName) {
@@ -368,6 +494,11 @@ final class ReactBuilder {
     final hasProjectModules =
         config.foreignModules.isNotEmpty || config.foreignComponents.isNotEmpty;
     if (!hasProjectModules && wrappers.every((w) => w.isEmpty)) return;
+    final bindings = config.file('lib/foreign_components.g.dart');
+    if (config.foreignComponents.isEmpty) {
+      if (bindings.existsSync()) await bindings.delete();
+      return;
+    }
     await _writeForeignBindings();
   }
 
@@ -386,8 +517,12 @@ final class ReactBuilder {
     required dynamic ssrUsage,
     required Directory dotDartToolReact,
   }) async {
-    final out = File(p.join(dotDartToolReact.path, 'native_ssr_compatibility.json'));
-    final diffOut = File(p.join(dotDartToolReact.path, 'browser_ssr_symbol_diff.json'));
+    final out = File(
+      p.join(dotDartToolReact.path, 'native_ssr_compatibility.json'),
+    );
+    final diffOut = File(
+      p.join(dotDartToolReact.path, 'browser_ssr_symbol_diff.json'),
+    );
     await dotDartToolReact.create(recursive: true);
     // Comprehensive symbol diff — not yet a full native SSR compatibility analysis.
     // The current report compares all runtime-symbol kinds and notes that a true
@@ -415,11 +550,14 @@ final class ReactBuilder {
     final browserValues = asList(browserUsage, 'values');
     final ssrValues = asList(ssrUsage, 'values');
 
-    List<String> diff(List<String> a, List<String> b) => a.where((c) => !b.contains(c)).toList();
+    List<String> diff(List<String> a, List<String> b) =>
+        a.where((c) => !b.contains(c)).toList();
 
     final payload = {
-      'summary': 'browser/ssr symbol diff — WebApiRuntimeInfo emitted, not yet full native SSR compatibility',
-      'note': 'A real compatibility report needs: resolved SSR graph + WebApiRuntimeInfo + adapter registry + client-only boundaries + hook matrix. This file is a symbol diff.',
+      'summary':
+          'browser/ssr symbol diff — WebApiRuntimeInfo emitted, not yet full native SSR compatibility',
+      'note':
+          'A real compatibility report needs: resolved SSR graph + WebApiRuntimeInfo + adapter registry + client-only boundaries + hook matrix. This file is a symbol diff.',
       'generatedAt': DateTime.now().toIso8601String(),
       'browserComponents': browserComps,
       'ssrComponents': ssrComps,
@@ -443,24 +581,31 @@ final class ReactBuilder {
       },
       // Temporary heuristic: compatible only if SSR has no exclusive symbols.
       // Real check would inspect browserApi issues, adapter registry, etc.
-      'compatible': diff(ssrComps, browserComps).isEmpty &&
+      'compatible':
+          diff(ssrComps, browserComps).isEmpty &&
           diff(ssrHooks, browserHooks).isEmpty &&
           diff(ssrFunctions, browserFunctions).isEmpty &&
           diff(ssrValues, browserValues).isEmpty,
-      'webApiRuntimeInfo': 'emitted via react_web_generator (SsrMetadataEmitter + FactoryEmitter) on HTML.* factories',
+      'webApiRuntimeInfo':
+          'emitted via react_web_generator (SsrMetadataEmitter + FactoryEmitter) on HTML.* factories',
       'issues': [
         if (diff(ssrComps, browserComps).isNotEmpty)
           {
             'kind': 'ssrOnlyComponent',
             'symbols': diff(ssrComps, browserComps),
-            'reason': 'SSR uses components not in browser bundle — may be deliberate server-only, or missing browser entry'
+            'reason':
+                'SSR uses components not in browser bundle — may be deliberate server-only, or missing browser entry',
           },
       ],
     };
 
     // Write both the historical name (for backward compat) and the accurately named diff.
-    await out.writeAsString('${const JsonEncoder.withIndent('  ').convert(payload)}\n');
-    await diffOut.writeAsString('${const JsonEncoder.withIndent('  ').convert(payload)}\n');
+    await out.writeAsString(
+      '${const JsonEncoder.withIndent('  ').convert(payload)}\n',
+    );
+    await diffOut.writeAsString(
+      '${const JsonEncoder.withIndent('  ').convert(payload)}\n',
+    );
   }
 
   Future<void> _bundleForeignTargets(
@@ -510,8 +655,8 @@ final class ReactBuilder {
       final usedComponents = dartUsage == null
           ? jsComponents
           : dartUsage.complete == true
-              ? semanticComponents
-              : {...semanticComponents, ...jsComponents};
+          ? semanticComponents
+          : {...semanticComponents, ...jsComponents};
       for (final component in config.foreignComponents) {
         if (!usedComponents.contains(component.name)) continue;
         final path = await _resolveModulePath(component.module);
@@ -528,8 +673,9 @@ final class ReactBuilder {
       // (files that only import local modules) are rewritten to import the
       // pruned copies; opaque entries (raw registration modules, prebuilt
       // bundles) are imported as-is.
-      final dartUsageForTarget =
-          target == 'browser' ? dartBrowserUsage : dartSsrUsage;
+      final dartUsageForTarget = target == 'browser'
+          ? dartBrowserUsage
+          : dartSsrUsage;
       for (final wrapper in wrappers) {
         final entry = wrapper.entryFor(target);
         if (entry == null) continue;
@@ -650,15 +796,17 @@ final class ReactBuilder {
           : usedComponentsIn(dartJs, shim.componentKeys).toSet();
       final semanticComponents = dartUsage != null
           ? Set<String>.from(
-              (dartUsage.components as List).where(shim.componentKeys.contains))
+              (dartUsage.components as List).where(shim.componentKeys.contains),
+            )
           : <String>{};
       final usedComponents = dartUsage == null
           ? jsComponents
           : (dartUsage.complete == true
-              ? semanticComponents
-              : ({...semanticComponents, ...jsComponents}
-                    .where(shim.componentKeys.contains)
-                    .toSet()));
+                ? semanticComponents
+                : ({
+                    ...semanticComponents,
+                    ...jsComponents,
+                  }.where(shim.componentKeys.contains).toSet()));
       final jsHooks = dartJs == null
           ? _allHookKeys(shim)
           : usedHooksIn(dartJs, [
@@ -666,13 +814,14 @@ final class ReactBuilder {
             ]).where(_allHookKeys(shim).contains).toSet();
       final semanticHooks = dartUsage != null
           ? Set<String>.from(
-              (dartUsage.hooks as List).where(_allHookKeys(shim).contains))
+              (dartUsage.hooks as List).where(_allHookKeys(shim).contains),
+            )
           : <String>{};
       final usedHooks = dartUsage == null
           ? jsHooks
           : (dartUsage.complete == true
-              ? semanticHooks
-              : {...semanticHooks, ...jsHooks});
+                ? semanticHooks
+                : {...semanticHooks, ...jsHooks});
       await File(outPath).writeAsString(
         pruneShim(
           source,
@@ -1163,8 +1312,8 @@ final class ReactBuilder {
     if (!await _hasForeignSurface()) {
       entry = entry.replaceAll(
         "if (process.env.REACT_FOREIGN_COMPONENTS !== 'false') {\n"
-        "  await import('./foreign/ssr/bundle.mjs');\n"
-        '}\n',
+            "  await import('./foreign/ssr/bundle.mjs');\n"
+            '}\n',
         '',
       );
     }
@@ -1222,9 +1371,7 @@ final class ReactBuilder {
     }
 
     if (serverBinary != null) {
-      manifest['server'] = <String, Object?>{
-        'binary': serverBinary,
-      };
+      manifest['server'] = <String, Object?>{'binary': serverBinary};
     }
 
     await File(p.join(output.path, 'bundle_manifest.json')).writeAsString(

@@ -4,9 +4,39 @@ import 'package:test/test.dart';
 
 void main() {
   group('ReactNode hierarchy', () {
+    test('normalizes text, numbers, nested iterables, and empty values', () {
+      final children = normalizeChildren([
+        'hello',
+        42,
+        [const Text('nested'), null, false],
+        true,
+      ]);
+
+      expect(children, hasLength(3));
+      expect((children[0] as Text).value, 'hello');
+      expect((children[1] as Text).value, '42');
+      expect((children[2] as Text).value, 'nested');
+    });
+
+    test('rejects unsupported child values', () {
+      expect(() => normalizeChildren([Object()]), throwsArgumentError);
+    });
+
+    test('text and fragment helpers create portable nodes', () {
+      expect(text(42).value, '42');
+      final node = fragment(['hello', 7], key: 'group') as Fragment;
+      expect(node.key, 'group');
+      expect(node.children, hasLength(2));
+    });
+
     test('HostNode stores type, props, children, key', () {
       const type = HostType<Map<String, Object?>>('web', 'div');
-      final node = HostNode(type, {'id': 'a'}, children: const [Text('hi')], key: 'k');
+      final node = HostNode(
+        type,
+        {'id': 'a'},
+        children: const [Text('hi')],
+        key: 'k',
+      );
       expect(node.type, type);
       expect(node.props['id'], 'a');
       expect(node.children, hasLength(1));
@@ -25,9 +55,14 @@ void main() {
     });
 
     test('foreignComponent helper creates ForeignComponent', () {
-      final node = foreignComponent('Card', props: {'label': 'hi'});
+      final node = foreignComponent(
+        'Card',
+        props: {'label': 'hi'},
+        children: ['child'],
+      );
       expect(node.name, 'Card');
       expect(node.props['label'], 'hi');
+      expect((node.children.single as Text).value, 'child');
     });
 
     test('Component stores id and props', () {
@@ -56,7 +91,6 @@ void main() {
     test('ComponentId is extension type of String', () {
       const id = ComponentId('foo#bar');
       expect(id.value, 'foo#bar');
-      expect(id is String, isTrue);
     });
   });
 
@@ -100,7 +134,7 @@ void main() {
 
   group('dom helpers', () {
     test('div creates HostNode', () {
-      final node = dom.div(children: const [Text('hi')]);
+      final node = dom.div(children: const ['hi']);
       expect(node, isA<HostNode>());
       final host = node as HostNode;
       expect(host.type.name, 'div');
@@ -144,7 +178,11 @@ void main() {
   group('ReactCallback', () {
     test('stores signature and invoke', () {
       final cb = ReactCallback(
-        signature: const (positional: [], result: reactVoid, asynchronous: false),
+        signature: const (
+          positional: [],
+          result: reactVoid,
+          asynchronous: false,
+        ),
         invoke: (args) => 'result',
       );
       expect(cb.invoke([]), 'result');
@@ -153,7 +191,11 @@ void main() {
 
     test('ReactEventProp wraps callback', () {
       final cb = ReactCallback(
-        signature: const (positional: [], result: reactVoid, asynchronous: false),
+        signature: const (
+          positional: [],
+          result: reactVoid,
+          asynchronous: false,
+        ),
         invoke: (_) => null,
       );
       final prop = ReactEventProp(cb);
@@ -162,7 +204,11 @@ void main() {
 
     test('ReactRefProp wraps callback', () {
       final cb = ReactCallback(
-        signature: const (positional: [], result: reactVoid, asynchronous: false),
+        signature: const (
+          positional: [],
+          result: reactVoid,
+          asynchronous: false,
+        ),
         invoke: (_) => null,
       );
       final prop = ReactRefProp(cb);

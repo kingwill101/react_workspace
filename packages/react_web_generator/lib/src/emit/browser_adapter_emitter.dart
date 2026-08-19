@@ -30,24 +30,42 @@ final class BrowserAdapterEmitter {
   late final Map<String, String> _kinds;
   late final Map<String, String> _jsNames;
 
-  BrowserAdapterEmitter(
-    this.model, {
-    this.packageWebNames = const {},
-  }) {
+  BrowserAdapterEmitter(this.model, {this.packageWebNames = const {}}) {
     _compute();
   }
 
   static const _reservedTypeNames = <String>{
-    'Function', 'Object', 'String', 'int', 'double', 'bool', 'dynamic',
-    'void', 'num', 'Null', 'Never', 'Future', 'List', 'Map', 'Set',
-    'Iterable', 'Type',
+    'Function',
+    'Object',
+    'String',
+    'int',
+    'double',
+    'bool',
+    'dynamic',
+    'void',
+    'num',
+    'Null',
+    'Never',
+    'Future',
+    'List',
+    'Map',
+    'Set',
+    'Iterable',
+    'Type',
   };
 
   /// Interface names that anchor the wrapper closure even though they are not
   /// `HTML`/`SVG`/`MathML` prefixed.
   static const _elementSeeds = <String>{
-    'EventTarget', 'Node', 'Element', 'HTMLElement', 'SVGElement',
-    'MathMLElement', 'Window', 'Document', 'Navigator',
+    'EventTarget',
+    'Node',
+    'Element',
+    'HTMLElement',
+    'SVGElement',
+    'MathMLElement',
+    'Window',
+    'Document',
+    'Navigator',
   };
 
   /// Computes the wrapper set: element-like interfaces plus constructible
@@ -191,7 +209,12 @@ final class BrowserAdapterEmitter {
   void _collectEventTable(ReactEventDef def) {
     final className = 'Browser${def.name}';
     final base = reactEventDefs.first;
-    for (final m in [...base.members, ...base.methods, ...def.members, ...def.methods]) {
+    for (final m in [
+      ...base.members,
+      ...base.methods,
+      ...def.members,
+      ...def.methods,
+    ]) {
       _kinds['$className.${m.name}'] = _kindFromReturnType(m.returnType);
     }
   }
@@ -204,9 +227,18 @@ final class BrowserAdapterEmitter {
         if (_callbackNames.contains(name)) return 'jsfunction';
         // Broader IDL shape coverage.
         if (name == 'Promise') return 'promise';
-        if (name == 'sequence' || name == 'FrozenArray' || name == 'ObservableArray') return 'list';
+        if (name == 'sequence' ||
+            name == 'FrozenArray' ||
+            name == 'ObservableArray')
+          return 'list';
         if (name == 'record') return 'map';
-        if (name.endsWith('Array') && (name.startsWith('Int') || name.startsWith('Uint') || name.startsWith('Float') || name == 'ArrayBuffer' || name == 'SharedArrayBuffer')) return 'typedArray';
+        if (name.endsWith('Array') &&
+            (name.startsWith('Int') ||
+                name.startsWith('Uint') ||
+                name.startsWith('Float') ||
+                name == 'ArrayBuffer' ||
+                name == 'SharedArrayBuffer'))
+          return 'typedArray';
         return switch (name) {
           'bool' => 'bool',
           'int' => 'int',
@@ -243,10 +275,10 @@ final class BrowserAdapterEmitter {
     buf.writeln("import 'dart:js_interop';");
     buf.writeln("import 'dart:js_interop_unsafe';");
     buf.writeln();
-    buf.writeln("import 'package:react_js/react_js.dart' show ReactCodecRegistry;");
     buf.writeln(
-      "import 'package:react_web/src/generated/react_events.dart';",
+      "import 'package:react_js/react_js.dart' show ReactCodecRegistry;",
     );
+    buf.writeln("import 'package:react_web/src/generated/react_events.dart';");
     buf.writeln("import 'package:react_web/src/generated/web/web.dart';");
     buf.writeln("import 'package:react_web/src/web_runtime.dart';");
     buf.writeln("import 'package:web/web.dart' as web;");
@@ -274,7 +306,9 @@ final class BrowserAdapterEmitter {
     buf.writeln();
     buf.writeln('  @override');
     buf.writeln('  dynamic noSuchMethod(Invocation invocation) {');
-    buf.writeln('    final className = _baseClassName(runtimeType.toString());');
+    buf.writeln(
+      '    final className = _baseClassName(runtimeType.toString());',
+    );
     buf.writeln('    final name = _memberName(invocation);');
     buf.writeln("    final key = '\$className.\$name';");
     buf.writeln('    final jsName = _jsNames[key] ?? name;');
@@ -310,7 +344,9 @@ final class BrowserAdapterEmitter {
     buf.writeln('}');
     buf.writeln();
     buf.writeln('/// Strips type arguments from `runtimeType` string forms so');
-    buf.writeln('/// generic proxies (e.g. `BrowserReactMouseEvent<EventTarget>`)');
+    buf.writeln(
+      '/// generic proxies (e.g. `BrowserReactMouseEvent<EventTarget>`)',
+    );
     buf.writeln('/// still hit their kind-table entries.');
     buf.writeln('String _baseClassName(String runtimeTypeName) {');
     buf.writeln("  final i = runtimeTypeName.indexOf('<');");
@@ -326,7 +362,9 @@ final class BrowserAdapterEmitter {
     buf.writeln(
       '  var name = open < 0 ? symbol : symbol.substring(open + 1, close);',
     );
-    buf.writeln("  if (name.endsWith('=')) name = name.substring(0, name.length - 1);");
+    buf.writeln(
+      "  if (name.endsWith('=')) name = name.substring(0, name.length - 1);",
+    );
     buf.writeln('  return name;');
     buf.writeln('}');
     buf.writeln();
@@ -346,10 +384,18 @@ final class BrowserAdapterEmitter {
     );
     buf.writeln('}');
     buf.writeln();
-    buf.writeln('/// Creates a JS function that invokes the Dart handler [reference]');
-    buf.writeln('/// through the module-level [_dispatchDartHandler] trampoline.');
-    buf.writeln('/// Uses the same `__dartReactCallbacks.create` machinery as the React');
-    buf.writeln('/// callback bridge (see `package:react_js`), which dart2js always');
+    buf.writeln(
+      '/// Creates a JS function that invokes the Dart handler [reference]',
+    );
+    buf.writeln(
+      '/// through the module-level [_dispatchDartHandler] trampoline.',
+    );
+    buf.writeln(
+      '/// Uses the same `__dartReactCallbacks.create` machinery as the React',
+    );
+    buf.writeln(
+      '/// callback bridge (see `package:react_js`), which dart2js always',
+    );
     buf.writeln('/// compiles into a real JS function.');
     buf.writeln('@JS(\'__dartReactCallbacks.create\')');
     buf.writeln('external JSFunction _createDartHandler(');
@@ -357,17 +403,27 @@ final class BrowserAdapterEmitter {
     buf.writeln('  JSExportedDartFunction dispatcher,');
     buf.writeln(');');
     buf.writeln();
-    buf.writeln('/// Module-level trampoline: decodes the raw JS arguments, wraps the');
-    buf.writeln('/// event object in a `Browser*` proxy, and forwards it to the');
-    buf.writeln('/// Dart handler. Top-level (not a closure) so that `.toJS` compiles');
-    buf.writeln('/// into a real JS function, exactly like `_dispatchReactCallback`.');
+    buf.writeln(
+      '/// Module-level trampoline: decodes the raw JS arguments, wraps the',
+    );
+    buf.writeln(
+      '/// event object in a `Browser*` proxy, and forwards it to the',
+    );
+    buf.writeln(
+      '/// Dart handler. Top-level (not a closure) so that `.toJS` compiles',
+    );
+    buf.writeln(
+      '/// into a real JS function, exactly like `_dispatchReactCallback`.',
+    );
     buf.writeln('JSAny? _dispatchDartHandler(');
     buf.writeln('  ExternalDartReference<Function> reference,');
     buf.writeln('  JSArray<JSAny?> rawArguments,');
     buf.writeln(') {');
     buf.writeln('  final handler = reference.toDartObject;');
     buf.writeln('  Object? event;');
-    buf.writeln('  final raw = rawArguments.length > 0 ? rawArguments[0] : null;');
+    buf.writeln(
+      '  final raw = rawArguments.length > 0 ? rawArguments[0] : null;',
+    );
     buf.writeln('  if (raw != null && !raw.isNull && !raw.isUndefined) {');
     buf.writeln('    if (raw is JSString) {');
     buf.writeln('      event = raw.toDart;');
@@ -388,9 +444,13 @@ final class BrowserAdapterEmitter {
     buf.writeln('final JSExportedDartFunction _dispatchDartHandlerJS =');
     buf.writeln('    _dispatchDartHandler.toJS;');
     buf.writeln();
-    buf.writeln('/// Bridges a Dart callback (e.g. an `onmessage` handler) into a');
+    buf.writeln(
+      '/// Bridges a Dart callback (e.g. an `onmessage` handler) into a',
+    );
     buf.writeln('/// JS function. The callback travels to JS as an opaque');
-    buf.writeln('/// [ExternalDartReference]; the actual JS function is created by the');
+    buf.writeln(
+      '/// [ExternalDartReference]; the actual JS function is created by the',
+    );
     buf.writeln('/// `__dartReactCallbacks.create` trampoline.');
     buf.writeln('JSFunction? _handlerToJs(Object? value) {');
     buf.writeln('  if (value == null) return null;');
@@ -401,15 +461,21 @@ final class BrowserAdapterEmitter {
     buf.writeln('}');
     buf.writeln();
     buf.writeln('dynamic _convert(JSAny? value, String kind) {');
-    buf.writeln('  if (value == null || value.isNull || value.isUndefined) return null;');
+    buf.writeln(
+      '  if (value == null || value.isNull || value.isUndefined) return null;',
+    );
     buf.writeln('  if (kind == "promise" && value is JSPromise) {');
     buf.writeln('    return (value as JSPromise<JSAny?>).toDart;');
     buf.writeln('  }');
     buf.writeln('  if (kind == "list" && value is JSArray) {');
-    buf.writeln('    return (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, "wrap")).toList();');
+    buf.writeln(
+      '    return (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, "wrap")).toList();',
+    );
     buf.writeln('  }');
     buf.writeln('  if (kind == "map" && value is JSObject) {');
-    buf.writeln('    // record<K,V> → JS object with string keys; best-effort map view.');
+    buf.writeln(
+      '    // record<K,V> → JS object with string keys; best-effort map view.',
+    );
     buf.writeln('    return _wrapObject(value as JSObject);');
     buf.writeln('  }');
     buf.writeln('  return switch (kind) {');
@@ -419,8 +485,12 @@ final class BrowserAdapterEmitter {
     buf.writeln("    'string' => (value as JSString).toDart,");
     buf.writeln("    'void' => null,");
     buf.writeln("    'jsfunction' => value,");
-    buf.writeln("    'promise' => (value is JSPromise ? (value as JSPromise<JSAny?>).toDart : _wrapObject(value as JSObject)),");
-    buf.writeln("    'list' => (value is JSArray ? (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, 'wrap')).toList() : _wrapObject(value as JSObject)),");
+    buf.writeln(
+      "    'promise' => (value is JSPromise ? (value as JSPromise<JSAny?>).toDart : _wrapObject(value as JSObject)),",
+    );
+    buf.writeln(
+      "    'list' => (value is JSArray ? (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, 'wrap')).toList() : _wrapObject(value as JSObject)),",
+    );
     buf.writeln("    'typedArray' => value,");
     buf.writeln('    _ => value is JSString');
     buf.writeln('        ? (value as JSString).toDart');
@@ -436,12 +506,16 @@ final class BrowserAdapterEmitter {
     buf.writeln('/// name, or an opaque fallback proxy when unknown.');
     buf.writeln('BrowserObjectAdapter _wrapObject(JSObject object) {');
     buf.writeln('  final factory = _wrapFactories[_ctorName(object)];');
-    buf.writeln('  return factory != null ? factory(object) : _UnknownObject(object);');
+    buf.writeln(
+      '  return factory != null ? factory(object) : _UnknownObject(object);',
+    );
     buf.writeln('}');
     buf.writeln();
     buf.writeln('String _ctorName(JSObject object) {');
     buf.writeln('  try {');
-    buf.writeln("    final constructor = object.getProperty('constructor'.toJS);");
+    buf.writeln(
+      "    final constructor = object.getProperty('constructor'.toJS);",
+    );
     buf.writeln('    if (constructor is JSObject) {');
     buf.writeln("      final name = constructor.getProperty('name'.toJS);");
     buf.writeln('      if (name is JSString) return name.toDart;');
@@ -476,7 +550,8 @@ final class BrowserAdapterEmitter {
     for (final m in flattenMembers(model, iface)) {
       if (m is IdlOperation) {
         final existing = ops[m.name];
-        if (existing == null || m.parameters.length > existing.parameters.length) {
+        if (existing == null ||
+            m.parameters.length > existing.parameters.length) {
           ops[m.name] = m;
         }
         if (seenNames.add(m.name)) out.add(m);
@@ -484,9 +559,7 @@ final class BrowserAdapterEmitter {
         if (seenNames.add(m.name)) out.add(m);
       }
     }
-    return {
-      for (final m in out) m.name: m is IdlOperation ? ops[m.name]! : m,
-    };
+    return {for (final m in out) m.name: m is IdlOperation ? ops[m.name]! : m};
   }
 
   List<String> _implementsNames(String name) {
@@ -522,14 +595,19 @@ final class BrowserAdapterEmitter {
   String _memberSignature(IdlMember m) {
     return switch (m) {
       IdlAttribute() => 'attr:${m.readonly}:${m.type}',
-      IdlOperation() => 'op:${m.returnType}:${m.parameters.map((p) => '${p.name}:${p.type}').join(',')}',
+      IdlOperation() =>
+        'op:${m.returnType}:${m.parameters.map((p) => '${p.name}:${p.type}').join(',')}',
       _ => 'other',
     };
   }
 
   void _emitKindTable(StringBuffer buf) {
-    buf.writeln('/// Member kinds by `ClassName.member`, mirroring the neutral');
-    buf.writeln('/// surface member types for [BrowserObjectAdapter] delegation.');
+    buf.writeln(
+      '/// Member kinds by `ClassName.member`, mirroring the neutral',
+    );
+    buf.writeln(
+      '/// surface member types for [BrowserObjectAdapter] delegation.',
+    );
     buf.writeln('const Map<String, String> _kinds = {');
     final kinds = _kinds.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
@@ -538,7 +616,9 @@ final class BrowserAdapterEmitter {
     }
     buf.writeln('};');
     buf.writeln();
-    buf.writeln('/// JS property renames for IDL members whose escaped Dart name');
+    buf.writeln(
+      '/// JS property renames for IDL members whose escaped Dart name',
+    );
     buf.writeln('/// differs from the actual JS name.');
     buf.writeln('const Map<String, String> _jsNames = {');
     final jsNames = _jsNames.entries.toList()
@@ -560,9 +640,7 @@ final class BrowserAdapterEmitter {
       if (ancestors.isEmpty) {
         buf.writeln('    implements $name {');
       } else {
-        buf.writeln(
-          '    implements $name, ${ancestors.join(', ')} {',
-        );
+        buf.writeln('    implements $name, ${ancestors.join(', ')} {');
       }
       buf.writeln('  Browser$name(super.element);');
       buf.writeln();
@@ -584,11 +662,15 @@ final class BrowserAdapterEmitter {
     buf.writeln('};');
     buf.writeln();
 
-    buf.writeln('/// JS constructors for neutral constructible interfaces, keyed');
+    buf.writeln(
+      '/// JS constructors for neutral constructible interfaces, keyed',
+    );
     buf.writeln('/// by interface name. Each entry invokes the global JS');
     buf.writeln('/// constructor with the IDL arguments converted to JS and');
     buf.writeln('/// returns the wrapped `Browser*` proxy.');
-    buf.writeln('final Map<String, BrowserObjectAdapter Function(List<Object?>)>');
+    buf.writeln(
+      'final Map<String, BrowserObjectAdapter Function(List<Object?>)>',
+    );
     buf.writeln('    _webConstructors = {');
     for (final name in _constructibleNames) {
       buf.writeln("  '$name': (arguments) => Browser$name((globalContext");
@@ -605,9 +687,7 @@ final class BrowserAdapterEmitter {
     buf.writeln();
 
     for (final def in reactEventDefs) {
-      buf.writeln(
-        'final class Browser${def.name}<T extends EventTarget>',
-      );
+      buf.writeln('final class Browser${def.name}<T extends EventTarget>');
       buf.writeln('    extends BrowserObjectAdapter');
       buf.writeln('    implements ${def.name}<T> {');
       buf.writeln('  Browser${def.name}(super.element);');
@@ -640,36 +720,58 @@ final class BrowserAdapterEmitter {
     buf.writeln('    return ctor(arguments) as T;');
     buf.writeln('  }');
     buf.writeln('  @override');
-    buf.writeln('  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments) {');
+    buf.writeln(
+      '  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments) {',
+    );
     buf.writeln('    final ns = globalContext.getProperty(namespace.toJS);');
-    buf.writeln('    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("\$namespace.\$member");');
+    buf.writeln(
+      '    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("\$namespace.\$member");',
+    );
     buf.writeln('    final jsArgs = [for (final a in arguments) _toJs(a)];');
-    buf.writeln('    final result = (ns as JSObject).callMethodVarArgs(member.toJS, jsArgs);');
+    buf.writeln(
+      '    final result = (ns as JSObject).callMethodVarArgs(member.toJS, jsArgs);',
+    );
     buf.writeln('    return _convert(result, "wrap");');
     buf.writeln('  }');
     buf.writeln('  @override');
-    buf.writeln('  dynamic getNamespaceProperty(String namespace, String property) {');
+    buf.writeln(
+      '  dynamic getNamespaceProperty(String namespace, String property) {',
+    );
     buf.writeln('    final ns = globalContext.getProperty(namespace.toJS);');
-    buf.writeln('    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("\$namespace.\$property");');
-    buf.writeln('    final value = (ns as JSObject).getProperty(property.toJS);');
+    buf.writeln(
+      '    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("\$namespace.\$property");',
+    );
+    buf.writeln(
+      '    final value = (ns as JSObject).getProperty(property.toJS);',
+    );
     buf.writeln('    return _convert(value, "wrap");');
     buf.writeln('  }');
     buf.writeln('  @override');
-    buf.writeln('  void setNamespaceProperty(String namespace, String property, Object? value) {');
+    buf.writeln(
+      '  void setNamespaceProperty(String namespace, String property, Object? value) {',
+    );
     buf.writeln('    final ns = globalContext.getProperty(namespace.toJS);');
-    buf.writeln('    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("\$namespace.\$property");');
-    buf.writeln('    (ns as JSObject).setProperty(property.toJS, _toJs(value));');
+    buf.writeln(
+      '    if (ns == null || ns.isNull || ns.isUndefined) throw UnsupportedWebApiError("\$namespace.\$property");',
+    );
+    buf.writeln(
+      '    (ns as JSObject).setProperty(property.toJS, _toJs(value));',
+    );
     buf.writeln('  }');
     buf.writeln('}');
     buf.writeln();
-    buf.writeln('/// Installs the browser [WebRuntime]. Safe to call repeatedly.');
+    buf.writeln(
+      '/// Installs the browser [WebRuntime]. Safe to call repeatedly.',
+    );
     buf.writeln('void installBrowserWebRuntime() =>');
     buf.writeln('    WebRuntime.install(BrowserWebRuntime());');
     buf.writeln();
   }
 
   void _emitRegistration(StringBuffer buf) {
-    buf.writeln('/// Registers browser host-value codecs for elements and React');
+    buf.writeln(
+      '/// Registers browser host-value codecs for elements and React',
+    );
     buf.writeln('/// synthetic events. Safe to call repeatedly.');
     buf.writeln('void registerBrowserAdapters() {');
     for (final name in _wrapperNames.toList()..sort()) {
@@ -677,9 +779,7 @@ final class BrowserAdapterEmitter {
       if (!_isElementLike(name)) continue;
       buf.writeln('  ReactCodecRegistry.registerHostValue(');
       buf.writeln("    'web', '$name',");
-      buf.writeln(
-        '    decoder: (value) => Browser$name(value as JSObject),',
-      );
+      buf.writeln('    decoder: (value) => Browser$name(value as JSObject),');
       buf.writeln(
         '    encoder: (value) => (value as Browser$name)._element as JSAny?,',
       );

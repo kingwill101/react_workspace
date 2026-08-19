@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:react_web_generator/src/emit/factory_emitter.dart';
+import 'package:react_web_generator/src/emit/dom_factory_emitter.dart';
+import 'package:react_web_generator/src/emit/svg_factory_emitter.dart';
 import 'package:react_web_generator/src/web_host_ir.dart';
 import 'package:react_web_generator/src/web_dart_type.dart';
 import 'package:test/test.dart';
@@ -97,7 +101,7 @@ void main() {
         ),
       );
       expect(output, contains('void Function(HTMLDivElement?)? ref,'));
-      expect(output, contains('List<ReactNode> children = const [],'));
+      expect(output, contains('ReactChildren children = const [],'));
       expect(output, contains('String? key,'));
       expect(
         output,
@@ -112,6 +116,7 @@ void main() {
         output,
         contains("if (className != null) 'className': className,"),
       );
+      expect(output, contains('children: normalizeChildren(children),'));
     });
 
     test('wraps event callbacks in ReactEventProp', () {
@@ -222,6 +227,7 @@ void main() {
       expect(output, contains("HostType<Map<String, Object?>>('html', 'img')"));
       expect(output, contains('ReactNode img({'));
       expect(output, contains('void Function(HTMLImageElement?)? ref,'));
+      expect(output, isNot(contains('ReactChildren children')));
     });
 
     test('multiple elements are emitted', () {
@@ -245,6 +251,100 @@ void main() {
       expect(output, contains('const _spanHostType'));
       expect(output, contains('ReactNode div({'));
       expect(output, contains('ReactNode span({'));
+    });
+  });
+
+  group('SvgFactoryEmitter', () {
+    test('generates namespaced SVG factories with portable children', () {
+      final directory = Directory.systemTemp.createTempSync(
+        'react_svg_factory_test_',
+      );
+      addTearDown(() => directory.deleteSync(recursive: true));
+
+      final path = WebHostElementIR(
+        tagName: 'path',
+        factoryName: 'path',
+        namespace: WebNamespace.svg,
+        elementType: WebDartType(
+          symbol: 'SVGPathElement',
+          import: pkg('package:web/web.dart'),
+          nullable: false,
+        ),
+        voidElement: false,
+        props: [
+          WebHostPropIR(
+            idlName: 'd',
+            dartName: 'd',
+            reactName: 'd',
+            dartType: WebDartType(
+              symbol: 'String',
+              import: pkg('dart:core'),
+              nullable: true,
+            ),
+            required: false,
+            clientOnly: false,
+            ssrBehavior: WebSsrBehavior.attribute,
+          ),
+        ],
+        events: [],
+      );
+
+      SvgFactoryEmitter([path]).emitToDirectory(directory.path);
+      final output = File('${directory.path}/svg.dart').readAsStringSync();
+
+      expect(output, contains('abstract final class Svg'));
+      expect(output, contains('static ReactNode path({'));
+      expect(output, contains('String? d,'));
+      expect(output, contains("if (d != null) 'd': d,"));
+      expect(output, contains("HostType<Map<String, Object?>>('svg', 'path')"));
+      expect(output, contains('ReactChildren children = const [],'));
+      expect(output, contains('children: normalizeChildren(children),'));
+    });
+  });
+
+  group('DomFactoryEmitter', () {
+    test('generates a typed fluent props builder', () {
+      final directory = Directory.systemTemp.createTempSync(
+        'react_dom_factory_test_',
+      );
+      addTearDown(() => directory.deleteSync(recursive: true));
+
+      final div = WebHostElementIR(
+        tagName: 'div',
+        factoryName: 'div',
+        namespace: WebNamespace.html,
+        elementType: WebDartType(
+          symbol: 'HTMLDivElement',
+          import: pkg('package:web/web.dart'),
+          nullable: false,
+        ),
+        voidElement: false,
+        props: [
+          WebHostPropIR(
+            idlName: 'className',
+            dartName: 'className',
+            reactName: 'className',
+            dartType: WebDartType(
+              symbol: 'String',
+              import: pkg('dart:core'),
+              nullable: true,
+            ),
+            required: false,
+            clientOnly: false,
+            ssrBehavior: WebSsrBehavior.attribute,
+          ),
+        ],
+        events: [],
+      );
+
+      DomFactoryEmitter([div]).emitToDirectory(directory.path);
+      final output = File('${directory.path}/dom.dart').readAsStringSync();
+
+      expect(output, contains('DivPropsBuilder divProps()'));
+      expect(output, contains('final class DivPropsBuilder'));
+      expect(output, contains('String? className;'));
+      expect(output, contains('ReactNode call([ReactChildren? childValues])'));
+      expect(output, contains('children: childValues ?? children,'));
     });
   });
 }

@@ -16,11 +16,7 @@ final class ServerFunctionBuilder implements Builder {
 
   @override
   final buildExtensions = const {
-    '.dart': [
-      '.action.g.dart',
-      '.client.g.dart',
-      '.registry.g.dart',
-    ],
+    '.dart': ['.action.g.dart', '.client.g.dart', '.registry.g.dart'],
   };
 
   @override
@@ -29,10 +25,13 @@ final class ServerFunctionBuilder implements Builder {
 
     // Skip files that contain ".action.", ".client.", or ".registry." in
     // their name to avoid re-processing generated outputs.
-    if (inputId.pathSegments.any((s) =>
-        s.contains('.action.') ||
-        s.contains('.client.') ||
-        s.contains('.registry.'))) {
+    if (inputId.pathSegments.any(
+      (s) =>
+          s.contains('.action.') ||
+          s.contains('.client.') ||
+          s.contains('.registry.') ||
+          s == '.generated',
+    )) {
       return;
     }
 

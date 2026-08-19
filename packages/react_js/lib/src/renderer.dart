@@ -40,6 +40,7 @@ class JsRenderer extends ReactRenderer {
       key: key,
     ),
     Text(:var value) => value.toJS,
+    OpaqueReactNode(:final value) => value as JSAny,
     Fragment(:var children, :var key) => _createElement(
       _fragment,
       null,

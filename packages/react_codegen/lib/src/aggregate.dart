@@ -18,11 +18,17 @@ class AggregateBuilder implements Builder {
     final currentPkg = step.inputId.package;
     final componentInputs = await step
         .findAssets(Glob('**/*.react.g.dart'))
-        .where((a) => a.package == currentPkg)
+        .where(
+          (a) =>
+              a.package == currentPkg && !a.pathSegments.contains('.generated'),
+        )
         .toList();
     final actionInputs = await step
         .findAssets(Glob('**/*.registry.g.dart'))
-        .where((a) => a.package == currentPkg)
+        .where(
+          (a) =>
+              a.package == currentPkg && !a.pathSegments.contains('.generated'),
+        )
         .toList();
 
     if (componentInputs.isNotEmpty) {
@@ -75,10 +81,9 @@ class AggregateBuilder implements Builder {
   /// The name is derived from the source library (see
   /// `registry_file_emitter.dart`), so any `register` function in a
   /// `*.registry.g.dart` file is a candidate.
-  static List<String> registrationFunctions(String content) =>
-      RegExp(
-        r'void\s+(register\w+)\s*\(',
-      ).allMatches(content).map((m) => m.group(1)!).toList();
+  static List<String> registrationFunctions(String content) => RegExp(
+    r'void\s+(register\w+)\s*\(',
+  ).allMatches(content).map((m) => m.group(1)!).toList();
 
   Future<void> _writeActionRegistry(
     BuildStep step,

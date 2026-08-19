@@ -43,8 +43,8 @@ final class ReactContext<T> {
   /// Creates a provider node for this context.
   ///
   /// See https://react.dev/reference/react/createContext#provider.
-  ReactNode provider(T value, List<ReactNode> children) =>
-      ContextProvider(this, value, children);
+  ReactNode provider(T value, ReactChildren children) =>
+      ContextProvider(this, value, normalizeChildren(children));
 }
 
 /// A provider node for [context].
@@ -146,8 +146,8 @@ ReactContext<T> createContext<T>(T defaultValue) => ReactContext(defaultValue);
 ReactNode provideContext<T>(
   ReactContext<T> context,
   T value,
-  List<ReactNode> children,
-) => ContextProvider(context, value, children);
+  ReactChildren children,
+) => ContextProvider(context, value, normalizeChildren(children));
 
 /// Describes a memoized component comparison.
 typedef PropsAreEqual<P> = bool Function(P previous, P next);
@@ -347,32 +347,37 @@ LazyComponent<P> lazy<P>(LazyComponentLoader<P> load) => LazyComponent(load);
 ///
 /// See https://react.dev/reference/react-dom/createPortal.
 ReactNode createPortal(
-  List<ReactNode> children,
+  ReactChildren children,
   Object container, {
   String? key,
-}) => Portal(children, container, key: key);
+}) => Portal(normalizeChildren(children), container, key: key);
 
 /// Creates a Suspense boundary node.
 ///
 /// See https://react.dev/reference/react/Suspense.
 ReactNode suspense({
   required ReactNode fallback,
-  required List<ReactNode> children,
-}) => Suspense(fallback: fallback, children: children);
+  required ReactChildren children,
+}) => Suspense(fallback: fallback, children: normalizeChildren(children));
 
 /// Creates a strict-mode boundary node.
 ///
 /// See https://react.dev/reference/react/StrictMode.
-ReactNode strictMode(List<ReactNode> children) => StrictMode(children);
+ReactNode strictMode(ReactChildren children) =>
+    StrictMode(normalizeChildren(children));
 
 /// Creates an error-boundary node.
 ///
 /// See https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary.
 ReactNode errorBoundary({
-  required List<ReactNode> children,
+  required ReactChildren children,
   required ReactNode fallback,
   void Function(Object error, StackTrace stack)? onError,
-}) => ErrorBoundary(children: children, fallback: fallback, onError: onError);
+}) => ErrorBoundary(
+  children: normalizeChildren(children),
+  fallback: fallback,
+  onError: onError,
+);
 
 /// A future-compatible action result for [useActionState].
 typedef Action<T, A> = FutureOr<T> Function(T previousState, A action);

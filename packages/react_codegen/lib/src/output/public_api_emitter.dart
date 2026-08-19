@@ -14,15 +14,33 @@ final class PublicApiEmitter {
           "const id${component.name} = ComponentId('${component.componentId}');",
         )
         ..writeln();
-      buffer.writeln('ReactNode ${component.name}({');
+      buffer.writeln('const ${component.name} = _${component.name}Factory();');
+      buffer.writeln();
+      buffer.writeln('final class _${component.name}Factory {');
+      buffer.writeln('  const _${component.name}Factory();');
+      buffer.writeln();
+      buffer.writeln('  ReactNode call({');
       buffer.writeln('  ${_params(component)}');
-      buffer.writeln('}) {');
-      buffer.writeln('  final props = ${_propsLiteral(component)};');
+      buffer.writeln('  }) {');
+      final children = _childrenProp(component);
+      if (children != null && _isChildrenList(children)) {
+        buffer.writeln(
+          '    final normalizedChildren = normalizeChildren(children);',
+        );
+      }
+      buffer.writeln('    final props = ${_propsLiteral(component)};');
       buffer.writeln(
-        '  return Component(id${component.name}, props, key: key, children: children);',
+        '    return Component(id${component.name}, props, key: key, children: ${_componentChildren(component)});',
+      );
+      buffer.writeln('  }');
+      buffer.writeln();
+      buffer.writeln(
+        '  ${component.name}PropsBuilder props() => ${component.name}PropsBuilder();',
       );
       buffer.writeln('}');
       buffer.writeln();
+
+      _emitPropsBuilder(buffer, component);
     }
 
     return buffer.toString();
@@ -31,7 +49,9 @@ final class PublicApiEmitter {
   String _params(ReactComponentModel component) {
     final parts = <String>[];
 
-    for (final prop in component.props) {
+    for (final prop in component.props.where(
+      (prop) => prop.name != 'children',
+    )) {
       final typeCode = _typeCode(prop.type);
       if (prop.required) {
         parts.add('required $typeCode ${prop.name}');
@@ -41,16 +61,91 @@ final class PublicApiEmitter {
     }
 
     parts.add("String? key");
-    parts.add("List<ReactNode> children = const []");
+    final children = _childrenProp(component);
+    if (children != null) {
+      parts.add(
+        _isChildrenList(children)
+            ? 'ReactChildren children = const []'
+            : 'required ReactNode children',
+      );
+    }
 
     return parts.join(',\n  ');
   }
 
   String _propsLiteral(ReactComponentModel component) {
     final parts = component.props
-        .map((prop) => '${prop.name}: ${prop.name}')
+        .map(
+          (prop) => prop.name == 'children' && _isChildrenList(prop)
+              ? 'children: normalizedChildren'
+              : '${prop.name}: ${prop.name}',
+        )
         .join(', ');
     return '($parts)';
+  }
+
+  void _emitPropsBuilder(StringBuffer buffer, ReactComponentModel component) {
+    buffer.writeln('final class ${component.name}PropsBuilder {');
+    for (final prop in component.props.where(
+      (prop) => prop.name != 'children',
+    )) {
+      final typeCode = _typeCode(prop.type);
+      buffer.writeln(
+        prop.required
+            ? '  late $typeCode ${prop.name};'
+            : '  $typeCode ${prop.name};',
+      );
+    }
+    buffer.writeln('  String? key;');
+    final children = _childrenProp(component);
+    if (children != null) {
+      buffer.writeln(
+        _isChildrenList(children)
+            ? '  ReactChildren children = const [];'
+            : '  late ReactNode children;',
+      );
+    }
+    buffer.writeln();
+    buffer.writeln(switch (children) {
+      null => '  ReactNode call() {',
+      final child when _isChildrenList(child) =>
+        '  ReactNode call([ReactChildren? childValues]) {',
+      _ => '  ReactNode call([ReactNode? childValue]) {',
+    });
+    buffer.writeln('    return ${component.name}(');
+    for (final prop in component.props.where(
+      (prop) => prop.name != 'children',
+    )) {
+      buffer.writeln('      ${prop.name}: ${prop.name},');
+    }
+    buffer.writeln('      key: key,');
+    if (children != null) {
+      buffer.writeln(
+        _isChildrenList(children)
+            ? '      children: childValues ?? this.children,'
+            : '      children: childValue ?? this.children,',
+      );
+    }
+    buffer.writeln('    );');
+    buffer.writeln('  }');
+    buffer.writeln('}');
+    buffer.writeln();
+  }
+
+  ReactPropModel? _childrenProp(ReactComponentModel component) {
+    for (final prop in component.props) {
+      if (prop.name == 'children') return prop;
+    }
+    return null;
+  }
+
+  bool _isChildrenList(ReactPropModel prop) =>
+      prop.type is NamedTypeRef && (prop.type as NamedTypeRef).symbol == 'List';
+
+  String _componentChildren(ReactComponentModel component) {
+    final children = _childrenProp(component);
+    if (children == null) return 'const []';
+    return _isChildrenList(children) ? 'normalizedChildren' : '[children]';
   }
 
   String _typeCode(ReactTypeRef type) {

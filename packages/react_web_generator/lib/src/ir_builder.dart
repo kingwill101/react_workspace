@@ -71,6 +71,7 @@ final class WebHostIrBuilder {
       return RootElement(
         tag: entry['tag'] as String,
         voidElement: entry['voidElement'] as bool? ?? false,
+        namespace: WebNamespace.html,
       );
     }).toList();
   }
@@ -81,9 +82,24 @@ final class WebHostIrBuilder {
 
   List<WebHostElementIR> buildAll() {
     final allRoots = _elementSnapshot.htmlTags.map((tag) {
-      return RootElement(tag: tag, voidElement: _voidElementTags.contains(tag));
+      return RootElement(
+        tag: tag,
+        voidElement: _voidElementTags.contains(tag),
+        namespace: WebNamespace.html,
+      );
     }).toList();
     return _buildElements(allRoots, strict: false);
+  }
+
+  List<WebHostElementIR> buildSvg() {
+    final roots = _elementSnapshot.svgTags.map((tag) {
+      return RootElement(
+        tag: tag,
+        voidElement: false,
+        namespace: WebNamespace.svg,
+      );
+    }).toList();
+    return _buildElements(roots, strict: false);
   }
 
   List<WebHostElementIR> _buildElements(
@@ -95,7 +111,7 @@ final class WebHostIrBuilder {
     final idlByName = _flattenIdl(idlSpecs);
 
     for (final el in elements) {
-      final interfaceName = _interfaceName(el.tag);
+      final interfaceName = _interfaceName(el);
       final iface = idlByName[interfaceName];
 
       if (iface == null) {
@@ -125,10 +141,10 @@ final class WebHostIrBuilder {
         WebHostElementIR(
           tagName: el.tag,
           factoryName: _camelCase(el.tag),
-          namespace: WebNamespace.html,
+          namespace: el.namespace,
           elementType: elementType,
           voidElement: el.voidElement,
-          props: _buildProps(members),
+          props: _buildProps(members, namespace: el.namespace),
           events: _buildEvents(),
         ),
       );
@@ -137,10 +153,15 @@ final class WebHostIrBuilder {
     return result;
   }
 
-  String _interfaceName(String tag) {
-    final iface = _elementSnapshot.tagToInterface[tag];
+  String _interfaceName(RootElement element) {
+    final iface = _elementSnapshot.interfaceFor(
+      element.tag,
+      svg: element.namespace == WebNamespace.svg,
+    );
     if (iface != null) return iface;
-    throw StateError('No interface mapping found for element "$tag".');
+    throw StateError(
+      'No interface mapping found for element "${element.tag}".',
+    );
   }
 
   Map<String, Map<String, dynamic>> _flattenIdl(Map<String, dynamic> specs) {
@@ -179,7 +200,7 @@ final class WebHostIrBuilder {
       final rawMembers = iface['members'] as List<dynamic>? ?? [];
       for (final m in rawMembers) {
         final mm = m as Map<String, dynamic>;
-        if (mm['type'] == 'attribute') {
+        if (mm['type'] == 'attribute' && mm['readonly'] != true) {
           final attrName = mm['name'] as String;
           if (!members.containsKey(attrName)) {
             members[attrName] = mm;
@@ -196,11 +217,19 @@ final class WebHostIrBuilder {
   }
 
   List<WebHostPropIR> _buildProps(
-    Map<String, Map<String, dynamic>> idlMembers,
-  ) {
+    Map<String, Map<String, dynamic>> idlMembers, {
+    required WebNamespace namespace,
+  }) {
     final renames = _overlay['propertyRenames'] as Map<String, dynamic>? ?? {};
     final globalProps = _overlay['globalProps'] as List<dynamic>? ?? [];
     final globalSet = globalProps.cast<String>().toSet();
+    final svgProps = namespace == WebNamespace.svg
+        ? (_overlay['svgProps'] as Map<String, dynamic>? ?? const {})
+        : const <String, dynamic>{};
+    final excludedProps =
+        (_overlay['excludedProps'] as List<dynamic>? ?? const [])
+            .cast<String>()
+            .toSet();
 
     final result = <WebHostPropIR>[];
     final coreUri = Uri.parse('dart:core');
@@ -223,6 +252,10 @@ final class WebHostIrBuilder {
       final idlName = entry.key;
       final dartName = renames[idlName] as String? ?? idlName;
       final reactName = dartName;
+      if (excludedProps.contains(idlName) ||
+          excludedProps.contains(reactName)) {
+        continue;
+      }
 
       final mm = entry.value;
       final idlType = mm['idlType'] as Map<String, dynamic>? ?? {};
@@ -250,6 +283,25 @@ final class WebHostIrBuilder {
           dartName: name,
           reactName: name,
           dartType: name == 'style' ? styleType : stringType,
+          required: false,
+          clientOnly: false,
+          ssrBehavior: WebSsrBehavior.attribute,
+        ),
+      );
+    }
+
+    for (final entry in svgProps.entries) {
+      final name = entry.key;
+      if (result.any((prop) => prop.reactName == name)) continue;
+      result.add(
+        WebHostPropIR(
+          idlName: name,
+          dartName: name,
+          reactName: name,
+          dartType: switch (entry.value) {
+            'String' => stringType,
+            _ => WebDartType(symbol: 'Object', import: coreUri, nullable: true),
+          },
           required: false,
           clientOnly: false,
           ssrBehavior: WebSsrBehavior.attribute,
@@ -392,6 +444,11 @@ final class WebHostIrBuilder {
 final class RootElement {
   final String tag;
   final bool voidElement;
+  final WebNamespace namespace;
 
-  const RootElement({required this.tag, required this.voidElement});
+  const RootElement({
+    required this.tag,
+    required this.voidElement,
+    required this.namespace,
+  });
 }

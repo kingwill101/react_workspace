@@ -146,7 +146,8 @@ final class TsBindingsResult {
         declarations: (json['declarations'] as List<dynamic>)
             .map((d) => TsIrDeclaration.fromJson(d as Map<String, dynamic>))
             .toList(),
-        skipped: (json['skipped'] as List<dynamic>?)
+        skipped:
+            (json['skipped'] as List<dynamic>?)
                 ?.map((s) => s as String)
                 .toList() ??
             const [],
@@ -678,15 +679,20 @@ void _emitDeclaration(
         ..writeln('@ReactRuntimeSymbol(')
         ..writeln('  kind: ReactRuntimeSymbolKind.function,')
         ..writeln("  runtimeKey: '$foreignName',")
-        ..writeln('  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},')
+        ..writeln(
+          '  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},',
+        )
         ..writeln(')');
       // Generate a plain function wrapper using the shared hook codec.
       // Input encoding: dictionary/object values use toJson().jsify(), primitives use jsify().
       // Return decoding reuses the hook helpers (_decodePairs, _decodeList, fromJs).
       final rawName = '_${functionName}Raw';
-      final jsTarget = 'globalThis.__reactDartBindings.$prefix.${declaration.name}';
+      final jsTarget =
+          'globalThis.__reactDartBindings.$prefix.${declaration.name}';
       buffer.writeln("@JS('$jsTarget')");
-      final externalParams = funcParams.map((p) => 'JSAny? ${p.name}').join(', ');
+      final externalParams = funcParams
+          .map((p) => 'JSAny? ${p.name}')
+          .join(', ');
       buffer.writeln('external JSAny? $rawName($externalParams);');
       // Dart signature: required positional first, then optional positional in brackets
       final requiredParams = <String>[];
@@ -712,43 +718,71 @@ void _emitDeclaration(
       } else {
         sig = '${requiredParams.join(', ')}, [${optionalParams.join(', ')}]';
       }
-      final dartReturn = funcReturns != null ? _hookDartType(funcReturns, registry) : 'Object?';
-      final publicReturn = funcReturns == null ? 'JSAny?' : (funcReturns.kind == 'void' ? 'void' : '$dartReturn?');
+      final dartReturn = funcReturns != null
+          ? _hookDartType(funcReturns, registry)
+          : 'Object?';
+      final publicReturn = funcReturns == null
+          ? 'JSAny?'
+          : (funcReturns.kind == 'void' ? 'void' : '$dartReturn?');
       buffer.writeln('$publicReturn $functionName($sig) {');
       // Encode each argument: object/dictionary values that have toJson use it, else jsify.
-      final callArgs = funcParams.map((p) {
-        final n = _safeParamName(p.name);
-        final isObject = p.type.kind == 'object' && (p.type.members?.isNotEmpty ?? false);
-        final isRecord = p.type.kind == 'record' || p.type.kind == 'urlSearchParams';
-        if (isObject || isRecord) {
-          // Generated types have toJson(); use it when available, else jsify the map.
-          return '($n == null ? null : ($n is List || $n is Map ? $n.jsify() : ($n as dynamic).toJson().jsify())) as JSAny?';
-        }
-        return '$n.jsify() as JSAny?';
-      }).join(', ');
+      final callArgs = funcParams
+          .map((p) {
+            final n = _safeParamName(p.name);
+            final isObject =
+                p.type.kind == 'object' &&
+                (p.type.members?.isNotEmpty ?? false);
+            final isRecord =
+                p.type.kind == 'record' || p.type.kind == 'urlSearchParams';
+            if (isObject || isRecord) {
+              // Generated types have toJson(); use it when available, else jsify the map.
+              return '($n == null ? null : ($n is List || $n is Map ? $n.jsify() : ($n as dynamic).toJson().jsify())) as JSAny?';
+            }
+            return '$n.jsify() as JSAny?';
+          })
+          .join(', ');
       buffer.writeln('  final raw = $rawName($callArgs);');
       if (funcReturns == null || funcReturns.kind == 'void') {
         buffer.writeln('  return;');
-      } else if (funcReturns.kind == 'string' || funcReturns.kind == 'number' || funcReturns.kind == 'boolean') {
+      } else if (funcReturns.kind == 'string' ||
+          funcReturns.kind == 'number' ||
+          funcReturns.kind == 'boolean') {
         buffer.writeln('  if (raw == null) return null as $publicReturn;');
         if (funcReturns.kind == 'string') {
           buffer.writeln('  return (raw as JSString).toDart as $publicReturn;');
-        } else if (funcReturns.kind == 'number') buffer.writeln('  return (raw as JSNumber).toDartDouble as $publicReturn;');
-        else buffer.writeln('  return (raw as JSBoolean).toDart as $publicReturn;');
+        } else if (funcReturns.kind == 'number')
+          buffer.writeln(
+            '  return (raw as JSNumber).toDartDouble as $publicReturn;',
+          );
+        else
+          buffer.writeln(
+            '  return (raw as JSBoolean).toDart as $publicReturn;',
+          );
       } else if (funcReturns.kind == 'array') {
         final inner = funcReturns.element ?? const TsIrType(kind: 'any');
         final innerDart = _hookDartType(inner, registry);
         buffer.writeln('  if (raw == null) return null as $publicReturn;');
         if (innerDart == 'String') {
-          buffer.writeln('  return (raw as JSArray).toDart.map((e) => (e as JSString).toDart).toList() as $publicReturn;');
-        } else if (inner.kind == 'object') buffer.writeln('  return _decodeList<$innerDart>(raw as JSArray, (e) => $innerDart.fromJs(e as JSObject)) as $publicReturn;');
-        else buffer.writeln('  return (raw as JSArray).toDart as $publicReturn;');
+          buffer.writeln(
+            '  return (raw as JSArray).toDart.map((e) => (e as JSString).toDart).toList() as $publicReturn;',
+          );
+        } else if (inner.kind == 'object')
+          buffer.writeln(
+            '  return _decodeList<$innerDart>(raw as JSArray, (e) => $innerDart.fromJs(e as JSObject)) as $publicReturn;',
+          );
+        else
+          buffer.writeln('  return (raw as JSArray).toDart as $publicReturn;');
       } else if (funcReturns.kind == 'object') {
         buffer.writeln('  if (raw == null) return null as $publicReturn;');
-        buffer.writeln('  return $dartReturn.fromJs(raw as JSObject) as $publicReturn;');
+        buffer.writeln(
+          '  return $dartReturn.fromJs(raw as JSObject) as $publicReturn;',
+        );
       } else {
-        buffer.writeln('  if (raw == null) return ${funcReturns.kind == 'void' ? '' : 'null as $publicReturn;'}');
-        if (funcReturns.kind != 'void') buffer.writeln('  return raw as $publicReturn;');
+        buffer.writeln(
+          '  if (raw == null) return ${funcReturns.kind == 'void' ? '' : 'null as $publicReturn;'}',
+        );
+        if (funcReturns.kind != 'void')
+          buffer.writeln('  return raw as $publicReturn;');
       }
       buffer.writeln('}');
       return;
@@ -764,15 +798,17 @@ void _emitDeclaration(
         ..writeln('@ReactRuntimeSymbol(')
         ..writeln('  kind: ReactRuntimeSymbolKind.component,')
         ..writeln("  runtimeKey: '$foreignName',")
-        ..writeln('  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},')
+        ..writeln(
+          '  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},',
+        )
         ..writeln(')')
         ..writeln('ReactNode $functionName({')
         ..writeln('  String? key,');
       if (hasChildren) {
         buffer.writeln(
           childrenRequired
-              ? '  required List<ReactNode> children,'
-              : '  List<ReactNode> children = const [],',
+              ? '  required ReactChildren children,'
+              : '  ReactChildren children = const [],',
         );
       }
       for (final prop in propParams) {
@@ -1326,8 +1362,15 @@ String generateHooks({
   buffer.write(_hookHelpers());
 
   for (final hook in hooks) {
-    buffer.write(_emitHook(hook, registry,
-        bridgeTarget: bridgeTarget, namespace: namespace, specifier: specifier));
+    buffer.write(
+      _emitHook(
+        hook,
+        registry,
+        bridgeTarget: bridgeTarget,
+        namespace: namespace,
+        specifier: specifier,
+      ),
+    );
     buffer.writeln();
   }
 
@@ -1733,7 +1776,9 @@ String _emitHook(
       ? 'Object?'
       : _hookDartType(returns, registry);
 
-  final effectiveNamespace = namespace.isNotEmpty ? namespace : lowerCamel(specifier.split('/').first);
+  final effectiveNamespace = namespace.isNotEmpty
+      ? namespace
+      : lowerCamel(specifier.split('/').first);
   final runtimeKey = '$effectiveNamespace.$name';
   final buffer = StringBuffer()
     ..writeln('/// ${_hookDoc(hook)}')
@@ -1744,7 +1789,9 @@ String _emitHook(
     ..writeln('@ReactRuntimeSymbol(')
     ..writeln('  kind: ReactRuntimeSymbolKind.hook,')
     ..writeln("  runtimeKey: '$runtimeKey',")
-    ..writeln('  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},')
+    ..writeln(
+      '  targets: {ReactRenderTarget.browser, ReactRenderTarget.server},',
+    )
     ..writeln(')')
     ..writeln('$returnType $name(${sig.join(', ')}) {');
 
@@ -2110,8 +2157,8 @@ String _jsHookBody(TsIrDeclaration hook, Map<String, String> localFor) {
   // TypeScript signature.
   final callExpr = hook.params.any((p) => !p.required)
       ? '(() => { const as = [${args.join(', ')}]; '
-          'while (as.length && as[as.length - 1] == null) as.pop(); '
-          'return ${localFor[hook.name]}(...as); })()'
+            'while (as.length && as[as.length - 1] == null) as.pop(); '
+            'return ${localFor[hook.name]}(...as); })()'
       : '${localFor[hook.name]}(${args.join(', ')})';
   final returns = hook.returns;
   const simple = {
