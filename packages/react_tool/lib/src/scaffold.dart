@@ -85,7 +85,7 @@ final class ScaffoldGenerator {
   /// [target] already exists unless [force] is set.
   ///
   /// [template] selects the scaffold variant: `'ssr'` (default), `'client'`, or
-  /// `'routed'`.
+  /// `'routed'`, or `'routed-minimal'`.
   Future<void> generate({
     required String name,
     required String packagesPath,
@@ -151,7 +151,7 @@ final class InitCommand extends Command<void> {
 
   @override
   String get description =>
-      'Scaffold a new React Dart project (SSR or client-only).';
+      'Scaffold a new React Dart project for SSR or client-only flows.';
 
   @override
   String get invocation => 'react init <project-name>';

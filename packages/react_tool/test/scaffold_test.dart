@@ -19,6 +19,20 @@ void main() {
     }
   });
 
+  test('init command exposes routed-minimal template option and text', () {
+    final command = InitCommand(workingDirectory: root);
+    final templateOption = command.argParser.options['template'];
+    expect(templateOption, isNotNull);
+    expect(
+      templateOption!.allowed,
+      containsAll(<String>['ssr', 'client', 'routed', 'routed-minimal']),
+    );
+    expect(
+      templateOption.help ?? '',
+      allOf(contains('routed'), contains('routed-minimal')),
+    );
+  });
+
   test('generates the full project skeleton', () async {
     final target = Directory(p.join(root.path, 'my_app'));
     await ScaffoldGenerator().generate(
