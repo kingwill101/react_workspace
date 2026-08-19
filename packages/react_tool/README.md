@@ -32,6 +32,19 @@ The CLI provides commands to manage the full lifecycle of a React Dart project:
 - `react js sync` - Validate that the host JS project satisfies every wrapper.
 - `react ts bind <specifier> [<names...>]` - Generate typed Dart bindings from TypeScript declarations for seamless interop with NPM packages.
 
+### Scaffolding
+
+```console
+# Shelf-backed SSR project (default)
+dart run react_tool:react init my_app
+
+# Routed-hosted SSR project (no Shelf dependency)
+dart run react_tool:react init --template routed my_routed_app
+
+# Client-only project (no server code)
+dart run react_tool:react init --template client my_client_app
+```
+
 ## Configuration
 
 Configuration is defined in a `react.yaml` file (or a `react:` section in `pubspec.yaml`).
