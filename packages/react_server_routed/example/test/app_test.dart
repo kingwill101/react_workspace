@@ -6,7 +6,7 @@ import 'package:routed_core/routed_core.dart';
 import 'package:routed_testing/routed_testing.dart';
 import 'package:server_testing/server_testing.dart';
 
-import 'package:example/app.dart';
+import 'package:react_server_routed_example/app.dart';
 
 void main() {
   group('App', () {
@@ -43,7 +43,7 @@ void main() {
         staticHandler: (context) => context.string('static'),
         indexTemplate: '<div>{{SSR}}</div>',
         ssr: ssr,
-        rootComponent: 'package:example/lib/app.dart#App',
+        rootComponent: 'package:react_server_routed_example/lib/app.dart#App',
       );
       final engine = Engine();
       app.mount(engine);

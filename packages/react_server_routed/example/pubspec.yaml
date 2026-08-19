@@ -1,4 +1,4 @@
-name: example
+name: react_server_routed_example
 description: A React Dart application with server-side rendering.
 publish_to: none
 

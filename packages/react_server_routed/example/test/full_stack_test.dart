@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:example/.generated/greeting.action.g.dart' show greetRef;
-import 'package:example/.generated/server_actions.g.dart';
+import 'package:react_server_routed_example/.generated/greeting.action.g.dart' show greetRef;
+import 'package:react_server_routed_example/.generated/server_actions.g.dart';
 import 'package:path/path.dart' as p;
 import 'package:react_server/react_server.dart';
 import 'package:react_server_routed/react_server_routed.dart';
@@ -27,7 +27,7 @@ void main() {
           _serveStatic(context, testHarness.outputDirectory),
       indexTemplate: testHarness.indexTemplate,
       ssr: testHarness.ssrClient,
-      rootComponent: 'package:example/lib/app.dart#App',
+      rootComponent: 'package:react_server_routed_example/lib/app.dart#App',
       pageProps: (_) => {'title': 'Hello from SSR'},
     );
     final engine = Engine();

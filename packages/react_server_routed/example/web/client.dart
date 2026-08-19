@@ -1,8 +1,8 @@
 import 'package:react_actions/react_actions.dart';
 import 'package:react_dom/react_dom.dart';
 
-import 'package:example/.generated/app.react.dart';
-import 'package:example/.generated/react_components.g.dart';
+import 'package:react_server_routed_example/.generated/app.react.dart';
+import 'package:react_server_routed_example/.generated/react_components.g.dart';
 
 void main() {
   initReact();

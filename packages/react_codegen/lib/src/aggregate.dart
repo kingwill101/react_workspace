@@ -51,7 +51,6 @@ class AggregateBuilder implements Builder {
 
     for (final aid in inputs) {
       final content = await step.readAsString(aid);
-      final reactDartUri = _toReactDartUri(aid.uri);
 
       for (final m in RegExp(
         r'void\s+(register\w+)\s*\(',
@@ -64,8 +63,10 @@ class AggregateBuilder implements Builder {
             ? 'c'
             : '${cname[0].toLowerCase()}${cname.substring(1)}';
 
-        imports.add("import '${aid.uri}' as $prefix;");
-        idImports.add("import '$reactDartUri' show id$cname;");
+        final componentImport = _toPackagePathUri(aid.path, pkg);
+        final reactImport = _toReactDartUri(aid.path, pkg);
+        imports.add("import '$componentImport' as $prefix;");
+        idImports.add("import '$reactImport' show id$cname;");
         idConstants.add('    id$cname.value');
       }
     }
@@ -100,7 +101,10 @@ class AggregateBuilder implements Builder {
       if (matches.isEmpty) continue;
 
       final prefix = 'serverActions$index';
-      imports.add("import '${aid.uri}' as $prefix;");
+      final registryImportPath = aid.path.startsWith('lib/')
+          ? "package:$pkg/${aid.path.substring('lib/'.length)}"
+          : "package:$pkg/${aid.path}";
+      imports.add("import '$registryImportPath' as $prefix;");
       for (final match in matches) {
         registrations.add('  $prefix.$match(registry: registry);');
       }
@@ -133,8 +137,15 @@ class AggregateBuilder implements Builder {
     );
   }
 
-  String _toReactDartUri(Uri uri) =>
-      uri.toString().replaceAll('.react.g.dart', '.react.dart');
+  String _toPackagePathUri(String path, String pkg) {
+    final relativePath = path.startsWith('lib/')
+        ? path.substring('lib/'.length)
+        : path;
+    return "package:$pkg/$relativePath";
+  }
+
+  String _toReactDartUri(String uri, String pkg) =>
+      _toPackagePathUri(uri, pkg).replaceAll('.react.g.dart', '.react.dart');
 
   Future<void> _writeComponentsRegistry(
     BuildStep step,
