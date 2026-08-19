@@ -16,6 +16,7 @@ const _ssrTemplateOutputs = <String, String>{
   'pubspec.yaml.liquid': 'pubspec.yaml',
   'analysis_options.yaml.liquid': 'analysis_options.yaml',
   '.gitignore.liquid': '.gitignore',
+  'vscode_settings.json.liquid': '.vscode/settings.json',
   'react.yaml.liquid': 'react.yaml',
   'package.json.liquid': 'package.json',
   'web/index.html.liquid': 'web/index.html',
@@ -37,6 +38,7 @@ const _clientTemplateOutputs = <String, String>{
   'pubspec.client.yaml.liquid': 'pubspec.yaml',
   'analysis_options.yaml.liquid': 'analysis_options.yaml',
   '.gitignore.liquid': '.gitignore',
+  'vscode_settings.json.liquid': '.vscode/settings.json',
   'react.client.yaml.liquid': 'react.yaml',
   'package.json.liquid': 'package.json',
   'web/index.client.html.liquid': 'web/index.html',
@@ -53,7 +55,6 @@ const _routedTemplateOutputs = <String, String>{
   'pubspec.routed.yaml.liquid': 'pubspec.yaml',
   'bin/server.routed.dart.liquid': 'bin/server.dart',
   'README.routed.md.liquid': 'README.md',
-  'vscode_settings.routed.json.liquid': '.vscode/settings.json',
 };
 
 /// Generates a new React Dart project from Liquid templates.

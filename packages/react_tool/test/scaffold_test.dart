@@ -176,6 +176,11 @@ void main() {
 
     final readme = read('README.md');
     expect(readme, contains('# My App'));
+
+    final vscodeSettings = read('.vscode/settings.json');
+    expect(vscodeSettings, contains('"files.exclude"'));
+    expect(vscodeSettings, contains('.generated'));
+    expect(vscodeSettings, contains('build'));
   });
 
   test('init command with --template routed scaffolds a routed app', () async {
@@ -323,6 +328,12 @@ void main() {
       ).readAsString();
       expect(reactYaml, isNot(contains('ssr:')));
       expect(reactYaml, isNot(contains('server:')));
+      final vscodeSettings = await File(
+        p.join(root.path, 'client_app', '.vscode', 'settings.json'),
+      ).readAsString();
+      expect(vscodeSettings, contains('"files.exclude"'));
+      expect(vscodeSettings, contains('.generated'));
+      expect(vscodeSettings, contains('build'));
     },
   );
 
