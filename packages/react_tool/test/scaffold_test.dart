@@ -425,4 +425,15 @@ void main() {
     // be created.
     expect(Directory(p.join(root.path, 'Bad Name')).existsSync(), isFalse);
   });
+
+  test(
+    'init command with invalid template does not scaffold project',
+    () async {
+      final runner = CommandRunner<void>('react', '')
+        ..addCommand(InitCommand(workingDirectory: root));
+
+      await runner.run(['init', '--template', 'bad-template', 'bad_app']);
+      expect(Directory(p.join(root.path, 'bad_app')).existsSync(), isFalse);
+    },
+  );
 }
