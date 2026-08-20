@@ -1,7 +1,6 @@
 name: react_analyzer
 description: Analyzer plugin for React Dart — live diagnostics, fixes, and assists.
 version: 0.1.0
-publish_to: none
 resolution: workspace
 
 environment:

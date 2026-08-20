@@ -1,7 +1,6 @@
 name: react_analysis
 description: Shared analyzer engine for React Dart — component, hook, SSR, and runtime-usage semantics.
 version: 0.1.0
-publish_to: none
 resolution: workspace
 
 environment:

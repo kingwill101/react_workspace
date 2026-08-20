@@ -1,7 +1,6 @@
 name: react_server_routed
 description: Routed application handlers for React Dart SSR and server actions.
 version: 0.1.0
-publish_to: none
 resolution: workspace
 
 environment:
