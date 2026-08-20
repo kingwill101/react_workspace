@@ -1,6 +1,7 @@
 name: react_riverpod
 description: React bindings for the Riverpod state-management library.
 version: 0.0.1
+repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_riverpod
 resolution: workspace
 environment:
   sdk: ">=3.12.0 <4.0.0"

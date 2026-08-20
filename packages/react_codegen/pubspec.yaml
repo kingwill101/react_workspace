@@ -1,4 +1,7 @@
 name: react_codegen
+description: Code generation for React Dart components, server functions, and runtime bridges.
+version: 0.1.0
+repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_codegen
 resolution: workspace
 environment:
   sdk: ">=3.12.0 <4.0.0"

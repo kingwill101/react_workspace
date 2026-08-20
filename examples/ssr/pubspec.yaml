@@ -8,7 +8,7 @@ dependencies:
   react_dom: {path: ../packages/react_dom}
   react_server: {path: ../packages/react_server}
   react_server_shelf: {path: ../packages/react_server_shelf}
-  react_web: ^0.0.0
+  react_web: ^0.1.0
   react_actions: {path: ../packages/react_actions}
   react_router: {path: ../packages/react_router}
   react_zustand: {path: ../packages/react_zustand}
