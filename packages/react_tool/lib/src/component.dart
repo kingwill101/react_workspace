@@ -12,6 +12,7 @@ final class ComponentCommand extends Command<void> {
   ComponentCommand({Directory? workingDirectory})
     : _workingDirectory = workingDirectory ?? Directory.current {
     addSubcommand(_AddComponentCommand(_workingDirectory));
+    addSubcommand(_ListComponentExportsCommand(_workingDirectory));
   }
 
   final Directory _workingDirectory;
@@ -21,6 +22,50 @@ final class ComponentCommand extends Command<void> {
 
   @override
   String get description => 'Manage foreign React component declarations.';
+}
+
+final class _ListComponentExportsCommand extends Command<void> {
+  _ListComponentExportsCommand(this._workingDirectory);
+
+  final Directory _workingDirectory;
+
+  @override
+  String get name => 'list';
+
+  @override
+  String get description =>
+      'Enumerate public React component exports from a local TypeScript module.';
+
+  @override
+  String get invocation => 'react component list <module.tsx>';
+
+  @override
+  Future<void> run() async {
+    final rest = argResults!.rest;
+    if (rest.length != 1) {
+      usageException('Expected one local TypeScript module path.');
+    }
+    final config = ReactProjectConfig.load(_workingDirectory);
+    final module = rest.single;
+    final moduleFile = config.file(module);
+    if (!moduleFile.existsSync()) {
+      throw ReactToolException(
+        'Component module does not exist: ${moduleFile.path}',
+      );
+    }
+
+    final result = await enumerateForeignComponentExports(
+      config: config,
+      module: module,
+    );
+    line('Public React exports in $module:');
+    for (final declaration in result.declarations) {
+      line('  ${declaration.name} (${declaration.kind})');
+    }
+    if (result.skipped.isNotEmpty) {
+      line('Other public exports: ${result.skipped.join(', ')}');
+    }
+  }
 }
 
 final class _AddComponentCommand extends Command<void> {
@@ -288,6 +333,42 @@ Future<Map<String, String>> inferForeignComponentProps({
     for (final prop in declaration.single.props)
       prop.name: _dartTypeForInferredProp(prop),
   };
+}
+
+/// Discovers public React component and hook exports from a local TypeScript
+/// module using the same native extractor as `react ts bind`.
+Future<TsBindingsResult> enumerateForeignComponentExports({
+  required ReactProjectConfig config,
+  required String module,
+}) async {
+  final moduleFile = config.file(module);
+  if (!moduleFile.existsSync()) {
+    throw ReactToolException(
+      'Component module does not exist: ${moduleFile.path}',
+    );
+  }
+  final npmRoot = await _componentNpmRoot(config);
+  if (npmRoot == null) {
+    throw const ReactToolException(
+      'Cannot enumerate exports without a Node dependency root.',
+    );
+  }
+  return TsBindingExtractor(npmRoot).extract(
+    specifier: module,
+    names: const [],
+    all: true,
+    entry: moduleFile.absolute.path,
+  );
+}
+
+Future<String?> _componentNpmRoot(ReactProjectConfig config) async {
+  final projectNpmRoot = Directory('${config.root.path}/node_modules');
+  if (projectNpmRoot.existsSync()) return config.root.path;
+  return (await ReactBuilder(
+    config: config,
+    release: false,
+    log: (_) {},
+  ).ensureJsEnvironment())?.npmRoot;
 }
 
 String _dartTypeForInferredProp(TsIrProp prop) {

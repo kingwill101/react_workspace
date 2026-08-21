@@ -147,6 +147,36 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {for (final prop in declaration.props) prop.name},
         {'label', 'disabled'},
       );
+
+      final discovered = await TsBindingExtractor(npmRoot).extract(
+        specifier: './forward_ref.tsx',
+        names: const [],
+        all: true,
+        entry: local.path,
+      );
+      expect(discovered.declarations.map((declaration) => declaration.name), [
+        'Button',
+      ]);
+
+      final jsxLocal = File(p.join(npmRoot, 'table.tsx'))
+        ..writeAsStringSync('''
+export const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
+  (props, ref) => <table ref={ref} {...props} />,
+);
+export const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
+  (props, ref) => <thead ref={ref} {...props} />,
+);
+''');
+      final jsxDiscovered = await TsBindingExtractor(npmRoot).extract(
+        specifier: './table.tsx',
+        names: const [],
+        all: true,
+        entry: jsxLocal.path,
+      );
+      expect(
+        jsxDiscovered.declarations.map((declaration) => declaration.name),
+        ['Table', 'TableHeader'],
+      );
     });
 
     test('infers props from an object member component export', () async {

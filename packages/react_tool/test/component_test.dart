@@ -161,6 +161,24 @@ export const Dialog: {
         exportName: 'Dialog.Root',
       );
       expect(nested, {'open': 'bool?'});
+
+      File(p.join(root.path, 'web', 'table.tsx'))
+        ..createSync(recursive: true)
+        ..writeAsStringSync('''
+import * as React from 'react';
+export const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>((props, ref) => null);
+export const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>((props, ref) => null);
+export const TableCell = React.forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<HTMLTableCellElement>>((props, ref) => null);
+''');
+      final exports = await enumerateForeignComponentExports(
+        config: config,
+        module: 'web/table.tsx',
+      );
+      expect(exports.declarations.map((declaration) => declaration.name), [
+        'Table',
+        'TableHeader',
+        'TableCell',
+      ]);
     } finally {
       await root.delete(recursive: true);
     }

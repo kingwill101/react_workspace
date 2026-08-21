@@ -281,8 +281,17 @@ const BUILTINS: &[&str] = &[
     "false",
 ];
 
-fn parse_dts<'a>(allocator: &'a Allocator, source: &'a str) -> Option<ParsedFile> {
-    let ret = Parser::new(allocator, source, SourceType::ts()).parse();
+fn parse_dts<'a>(
+    allocator: &'a Allocator,
+    source: &'a str,
+    tsx: bool,
+) -> Option<ParsedFile> {
+    let source_type = if tsx {
+        SourceType::tsx()
+    } else {
+        SourceType::ts()
+    };
+    let ret = Parser::new(allocator, source, source_type).parse();
     if ret.panicked {
         return None;
     }
@@ -303,7 +312,13 @@ fn collect_stmt(stmt: &Statement, out: &mut ParsedFile) {
         Statement::ExportNamedDeclaration(e) => {
             if let Some(decl) = &e.declaration {
                 extract_decl(decl, true, out);
-                if let Some(name) = decl_name(decl) {
+                if let Declaration::VariableDeclaration(v) = decl {
+                    for declarator in v.declarations.iter() {
+                        if let Some(name) = binding_name(&declarator.id) {
+                            out.exported.push(name);
+                        }
+                    }
+                } else if let Some(name) = decl_name(decl) {
                     out.exported.push(name);
                 }
             }
@@ -1318,7 +1333,11 @@ fn extract(
         let Ok(source) = std::fs::read_to_string(&file) else {
             continue;
         };
-        let Some(parsed) = parse_dts(&allocator, &source) else {
+        let Some(parsed) = parse_dts(
+            &allocator,
+            &source,
+            file.extension().is_some_and(|e| e == "tsx"),
+        ) else {
             continue;
         };
         for (name, decl) in &parsed.decls {

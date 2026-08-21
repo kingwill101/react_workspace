@@ -24,6 +24,21 @@ npm install
 npm run build:css
 ```
 
+## Add and enumerate a shadcn component
+
+The source for the table is created by the normal shadcn CLI. `react_tool`
+then discovers every public React component export in that local module:
+
+```sh
+npx --yes shadcn@latest add table --yes
+dart run react_tool:react component list web/components/ui/table.tsx
+```
+
+The table module exposes `Table`, `TableHeader`, `TableBody`, `TableFooter`,
+`TableHead`, `TableRow`, `TableCell`, and `TableCaption`. Each export can then
+be added to `react.yaml` with `react component add`, using `--infer` to derive
+its props from the TypeScript source.
+
 ## Build
 
 ```sh
