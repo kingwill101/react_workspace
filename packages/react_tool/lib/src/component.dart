@@ -119,7 +119,7 @@ final class _AddComponentCommand extends Command<void> {
           '`--export ComponentName`.',
         );
       }
-      final inferred = await _inferProps(
+      final inferred = await inferForeignComponentProps(
         config: config,
         module: module,
         exportName: exportName,
@@ -160,7 +160,13 @@ final class _AddComponentCommand extends Command<void> {
   }
 }
 
-Future<Map<String, String>> _inferProps({
+/// Infers Dart-facing prop types for a named component in a local TypeScript
+/// module.
+///
+/// The module must expose a typed component declaration that the TypeScript
+/// extractor can identify. This is intentionally shared by the generic and
+/// convenience component commands so there is one inference path to maintain.
+Future<Map<String, String>> inferForeignComponentProps({
   required ReactProjectConfig config,
   required String module,
   required String exportName,

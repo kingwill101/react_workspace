@@ -178,6 +178,19 @@ dart run react_tool:react component add design.Button \
   variant:String? disabled:bool? onClick:Function?
 ```
 
+For projects following the shadcn directory and naming conventions, the
+optional adapter reduces this to:
+
+```console
+dart run react_tool:react shadcn add button
+```
+
+It declares `web/components/ui/button.tsx` as `shadcn.Button`. Use
+`--directory`, `--namespace`, `--export`, and `--style` when the project uses
+different conventions. `--infer` is available for typed local components.
+The adapter writes the same `foreign.components` manifest consumed by the
+generic command; it does not add a shadcn-specific runtime or generator.
+
 Use `--style web/components/button.css` to add a local stylesheet to the
 project's existing `styles.entrypoints` pipeline. Sass compilation, CSS
 Modules, output naming, and document stylesheet links continue to use the

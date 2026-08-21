@@ -10,6 +10,7 @@ import 'bundler/bundle_manifest.dart';
 import 'component.dart';
 import 'project_config.dart';
 import 'scaffold.dart';
+import 'shadcn.dart';
 import 'ts_bindings.dart';
 
 /// Runs the React CLI programmatically.
@@ -28,6 +29,7 @@ class ReactCommandRunner extends CommandRunner<void> {
     addCommand(CleanCommand());
     addCommand(ServeCommand());
     addCommand(ComponentCommand());
+    addCommand(ShadcnCommand());
     addCommand(JsCommand());
     addCommand(TsCommand());
     addCommand(AnalyzeCommand());
