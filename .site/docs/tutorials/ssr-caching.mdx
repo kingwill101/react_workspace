@@ -1,0 +1,119 @@
+---
+sidebar_position: 4
+---
+
+# Cache an SSR page
+
+This tutorial adds request-safe data caching and a cached SSR document. The
+same portable cache APIs work with both the Routed and Shelf adapters.
+
+## 1. Cache data loaded during SSR
+
+Create one `ReactDataCache` for the application lifetime. A cache key must
+include every input that changes the result:
+
+```dart
+final dataCache = ReactDataCache(
+  defaultTtl: const Duration(minutes: 5),
+  defaultStaleWhileRevalidate: const Duration(minutes: 1),
+);
+
+Future<List<Article>> loadArticles() {
+  return dataCache.getOrLoad<List<Article>>(
+    'articles:home',
+    fetchArticles,
+    tags: const ['articles'],
+  );
+}
+```
+
+Concurrent requests for the same missing key share one loader call. During the
+stale window, readers receive the previous value while the cache refreshes in
+the background.
+
+## 2. Invalidate related data
+
+After a server action changes articles, invalidate the tag instead of knowing
+every affected key:
+
+```dart
+dataCache.invalidateTag('articles');
+```
+
+Keep the cache instance in the application or provider scope. Creating a new
+cache inside a component or request defeats reuse and concurrent-load
+deduplication.
+
+## 3. Cache a complete document
+
+For a rendered route, use `ReactDocumentCache` in the selected HTTP adapter:
+
+```dart
+final documentCache = ReactDocumentCache(
+  defaultTtl: const Duration(seconds: 30),
+  maxEntries: 512,
+);
+
+final cached = documentCache.get('home');
+if (cached != null) return cached.html;
+
+final html = await renderHomePage();
+documentCache.put(
+  'home',
+  html,
+  staleWhileRevalidate: const Duration(minutes: 5),
+  tags: const ['home', 'articles'],
+);
+return html;
+```
+
+Invalidate documents after a mutation:
+
+```dart
+documentCache.invalidateTag('articles');
+```
+
+Use a `ReactDocumentStore` implementation when multiple server processes need
+to share documents or entries must survive restarts. The built-in
+`FileReactDocumentStore` is suitable for a single host; Redis, a database, or
+edge KV is a better fit for a distributed deployment.
+
+## 4. Split a shell from dynamic regions
+
+Use `ReactPartialDocument` when a page shell changes slowly but a region needs
+shorter revalidation:
+
+```dart
+final partial = ReactPartialDocument(
+  shellKey: 'dashboard:shell',
+  shell: () => '<main><!--react-partial:activity--></main>',
+  regions: [
+    ReactPartialRegion(
+      key: 'activity',
+      ttl: const Duration(seconds: 15),
+      staleWhileRevalidate: const Duration(minutes: 1),
+      render: renderRecentActivity,
+    ),
+  ],
+);
+
+final html = await partial.render(dataCache);
+```
+
+The shell must contain one marker for each region. A missing marker is an
+error, which prevents silently returning an incomplete document.
+
+## 5. Test cache behavior
+
+Test the portable cache directly with `package:test`, then exercise the full
+SSR response through `ReactTestHarness` and the application's adapter:
+
+```dart
+final first = await dataCache.getOrLoad('articles:home', fetchArticles);
+final second = await dataCache.getOrLoad('articles:home', fetchArticles);
+expect(identical(first, second), isTrue);
+```
+
+Use `RoutedRequestHandler` for Routed applications and `ShelfRequestHandler`
+for Shelf applications. Avoid fixed ports and do not use a browser test just
+to verify cache headers or rendered HTML.

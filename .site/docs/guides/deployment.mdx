@@ -121,3 +121,52 @@ gcloud run deploy my-react-app \
 ### AWS Fargate / ECS
 
 You can push your Docker image to ECR and deploy it via ECS Fargate. Set up an Application Load Balancer to route traffic to your containers.
+
+## Routed deployment
+
+The Routed template has the same build artifacts and SSR worker, but uses
+`react_server_routed` with `routed_io` instead of Shelf. The generated server
+reads `PORT`, serves `build/react`, and mounts `RoutedReactApplication` on a
+Routed `Engine`:
+
+```dart
+import 'dart:io';
+
+import 'package:routed_core/routed_core.dart';
+import 'package:routed_io/routed_io.dart';
+import 'package:react_server_routed/react_server_routed.dart';
+
+Future<void> main() async {
+  final engine = Engine();
+  final app = RoutedReactApplication(
+    actionRegistry: actionRegistry,
+    staticHandler: serveStatic,
+    indexTemplate: indexTemplate,
+    ssr: ssr,
+    rootComponent: rootComponent,
+  );
+  app.mount(engine);
+
+  await serveIo(
+    engine,
+    host: InternetAddress.anyIPv4.address,
+    port: int.parse(Platform.environment['PORT'] ?? '8080'),
+  );
+}
+```
+
+The example omits the application-specific `actionRegistry`, `serveStatic`,
+`indexTemplate`, and `ssr` setup; the generated
+`packages/react_server_routed/example/bin/server.dart` shows the complete
+implementation.
+
+Use `dart run react_tool:react init my_app --template routed` to generate the
+complete version of this entrypoint. The Routed application can be mounted
+after API routes and middleware, so authentication, logging, and other
+application concerns remain in the Routed pipeline. The `routed` and
+`routed-minimal` templates do not add Shelf to the dependency graph.
+
+When SSR is enabled, start the generated Node worker alongside the Dart
+process, or set `REACT_SSR_URL` to the worker's internal address. In a
+container deployment, keep the worker private and expose only the Dart HTTP
+server.

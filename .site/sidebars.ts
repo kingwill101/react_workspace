@@ -26,6 +26,7 @@ const sidebars: SidebarsConfig = {
         'guides/wrapper-packages',
         'guides/testing',
         'guides/deployment',
+        'guides/troubleshooting',
       ],
     },
     {
@@ -35,6 +36,8 @@ const sidebars: SidebarsConfig = {
         'tutorials/shadcn-components',
         'tutorials/custom-dart-hooks',
         'tutorials/server-actions',
+        'tutorials/ssr-caching',
+        'tutorials/wrapper-package',
       ],
     },
     {

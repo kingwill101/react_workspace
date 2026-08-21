@@ -1,0 +1,148 @@
+---
+sidebar_position: 5
+---
+
+# Build a reusable React wrapper package
+
+This tutorial shows the recommended generated wrapper workflow and then
+explains the small manual escape hatch used by the Zustand example. The same
+structure applies to charts, editors, data grids, design systems, and other
+npm React packages.
+
+## 1. Decide what Dart should expose
+
+Do not mirror an npm package automatically. Start with the Dart-facing API
+your applications need. The `react_zustand` example exposes two selectors and
+one action:
+
+```dart
+final count = useCount();
+final doubled = useDoubled();
+inc();
+```
+
+Keep portable models and VM-safe contracts separate from JavaScript-only
+entrypoints that import `dart:js_interop`.
+
+## 2. Prefer generated bindings
+
+When a package publishes TypeScript declarations, let `react_tool` generate
+both the typed Dart API and the JavaScript registration shim:
+
+```console
+dart run react_tool:react js install
+dart run react_tool:react ts bind zustand \
+  --output lib/src/zustand_bindings.g.dart \
+  --shim lib/src/zustand_bindings_shim.mjs \
+  --hooks lib/src/zustand_hooks.g.dart \
+  --namespace zustand \
+  --prefix zustand
+```
+
+For a reusable package, put the same options in a `react.js.bind` group and
+run `dart run react_tool:react ts bind` without arguments when regenerating.
+See [the wrapper guide](../guides/wrapper-packages) for the descriptor form.
+
+Use the manual path below only when the public Dart API intentionally differs
+from the npm API, the package has no usable declarations, or a focused facade
+is more valuable than a complete mirror. `react_zustand` currently takes this
+path to expose two selectors and one action.
+
+## 3. Add the npm descriptor
+
+In the wrapper package's `pubspec.yaml`, describe the shared JavaScript entry,
+dependency, peer React versions, and external React singletons:
+
+```yaml
+react:
+  js:
+    schema: 1
+    entries:
+      shared: lib/react_zustand_shim.mjs
+    dependencies:
+      zustand: ^5.0.2
+    peers:
+      react: ">=18 <20"
+      react-dom: ">=18 <20"
+    externals: [react, react-dom]
+```
+
+The wrapper owns the Zustand dependency. React and React DOM stay external so
+the application, SSR worker, and every wrapper share one React instance.
+
+## 4. Write the focused shim only for a custom facade
+
+The shim creates the store and registers a package-private bridge:
+
+```js
+import { create } from 'zustand';
+
+const useCounterStore = create((set) => ({
+  count: 0,
+  inc: () => set((state) => ({ count: state.count + 1 })),
+}));
+
+globalThis.__reactDartZustand = {
+  useCount: () => useCounterStore((state) => state.count),
+  useDoubled: () => useCounterStore((state) => state.count * 2),
+  inc: () => useCounterStore.getState().inc(),
+};
+```
+
+The global name is a private ABI. Give every wrapper a unique namespace and
+keep the values crossing the bridge to primitives or documented object shapes.
+
+## 5. Declare the Dart API
+
+```dart
+import 'dart:js_interop';
+
+/// Reads the current counter value and subscribes this component to changes.
+@JS('globalThis.__reactDartZustand.useCount')
+external int useCount();
+
+/// Reads the derived doubled counter value.
+@JS('globalThis.__reactDartZustand.useDoubled')
+external int useDoubled();
+
+/// Increments the store outside the render cycle.
+@JS('globalThis.__reactDartZustand.inc')
+external void inc();
+```
+
+Export these declarations from the package's public entrypoint. Document that
+the library runs in browser and Node SSR targets, not on the native Dart VM.
+
+## 6. Test and consume the package
+
+Add a shim contract test, then use `ReactTestHarness` for the component and
+SSR paths. An application should only need a Dart dependency:
+
+```yaml
+dependencies:
+  react_zustand: ^0.0.1
+```
+
+```dart
+import 'package:react_dom/react_dom.dart';
+import 'package:react_zustand/react_zustand.dart';
+
+@reactComponent
+ReactNode Counter(Object props) {
+  final count = useCount();
+  return button(
+    onClick: (_) => inc(),
+    children: ['Count: $count'],
+  );
+}
+```
+
+Run the wrapper's package tests and the consumer's build. The foreign bundle
+must contain the wrapper in both browser and SSR targets, while React remains
+an external singleton.
+
+For generated TypeScript APIs, keep the generated files under the package's
+implementation surface and export stable helpers from a small authored
+entrypoint. See [Build a Dart wrapper for a JavaScript
+package](../guides/wrapper-packages) for descriptor options, generated hooks,
+and the full Zustand reference.

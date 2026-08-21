@@ -1,0 +1,116 @@
+---
+sidebar_position: 10
+---
+
+# Troubleshooting
+
+Use the narrowest check that reproduces the problem. Generated files under
+`lib/.generated/` and `build/react/` are disposable; fix the authored source,
+configuration, or generator and regenerate them.
+
+## Port already in use
+
+`react serve` normally uses port `8080` for the Dart server and `3001` for the
+SSR worker. Stop the old process or choose different ports:
+
+```console
+dart run react_tool:react serve --port 8081 --ssr-port 3002
+```
+
+Do not infer that an existing process belongs to the current example. Tests
+should use harness-allocated ports.
+
+## Missing npm packages or stale JavaScript
+
+Provision the managed environment and rebuild:
+
+```console
+dart run react_tool:react js install
+dart run react_tool:react clean
+dart run react_tool:react build
+```
+
+For a project that intentionally uses a local `package.json`, run `npm
+install` in the project before `react build`. Do not install React globally.
+
+## Native Rust hook errors
+
+The TypeScript extractor is built by the native Rust hook. Errors such as
+`Failed to find lib.name` usually indicate an incompatible
+`native_toolchain_rust` parser or an invalid Cargo manifest. Check the
+`[lib]` section in `react_tool/native/Cargo.toml`, including a string `name`,
+and use the workspace's pinned dependency constraints. The Dart build may
+continue after a hook diagnostic, but generated bindings must not be trusted
+until `react ts bind` and `dart analyze` pass.
+
+## SSR says a prop has the wrong shape
+
+React DOM expects structured values for some props. In particular, `style` is
+a mapping, not a CSS string:
+
+```dart
+// Correct
+style: {'marginRight': '1em'}
+
+// Incorrect
+style: 'margin-right: 1em'
+```
+
+Prefer the generated `react_dom` host helpers and typed foreign wrappers. Do
+not manually construct host nodes or add duplicate element definitions.
+
+## Hydration or list-key warnings
+
+SSR and the browser must see the same initial tree. Keep initial hook state
+deterministic, avoid browser-only globals during render, and give every item in
+a rendered list a stable key:
+
+```dart
+children: items.map((item) => li(key: item.id, children: [item.name])).toList(),
+```
+
+A warning that points at a generated JavaScript file usually still originates
+in authored Dart or a foreign component. Inspect the nearest component and
+check its list children and props.
+
+## A generated wrapper is missing
+
+Confirm that the export is public and that the declaration is used by authored
+Dart code:
+
+```console
+dart run react_tool:react component list web/components/ui/textarea.tsx
+dart run react_tool:react component add shadcn.Textarea \
+  web/components/ui/textarea.tsx --export Textarea --infer
+dart run react_tool:react generate
+```
+
+Unused foreign declarations are pruned from the bundle. Check
+`build/react/bundle_report.json` after the component is rendered.
+
+## Server action fails
+
+Check all three boundaries:
+
+1. Run `react generate` and import the generated client proxy.
+2. Register the generated server action aggregate in the Dart server.
+3. Install the matching `HttpServerFunctionClient` in the browser entrypoint.
+
+Use `ServerFunctionHarness` for codecs and direct dispatch, then the selected
+`server_testing` adapter for the real HTTP envelope. Routed applications use
+`routed_testing`; Shelf applications use `server_testing_shelf`.
+
+## Build passes but the page is blank
+
+Run the checks in order:
+
+```console
+dart analyze
+dart test
+dart run react_tool:react doctor
+dart run react_tool:react build
+```
+
+Then inspect `build/react/bundle_manifest.json`, the browser console, and the
+server logs. For SSR, verify that the worker is running and that the Dart
+server can reach `REACT_SSR_URL`.
