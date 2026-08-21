@@ -138,18 +138,19 @@ final class _AddShadcnComponentCommand extends Command<void> {
       }
       updated = addStylesheetYaml(updated, style);
     }
-    try {
-      reactFile.writeAsStringSync(updated);
-      info('Declared $runtimeName from $module in ${reactFile.path}.');
-      await generateAndValidateForeignComponents(
-        config,
-        validate: option('validate') as bool? ?? true,
-        log: line,
-      );
-    } catch (_) {
-      reactFile.writeAsStringSync(original);
-      rethrow;
-    }
+    await runForeignComponentManifestTransaction(
+      file: reactFile,
+      original: original,
+      updated: updated,
+      action: () async {
+        info('Declared $runtimeName from $module in ${reactFile.path}.');
+        await generateAndValidateForeignComponents(
+          config,
+          validate: option('validate') as bool? ?? true,
+          log: line,
+        );
+      },
+    );
   }
 }
 

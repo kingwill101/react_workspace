@@ -154,4 +154,27 @@ export const Dialog: {
     expect(defaultNpmComponentName('@radix-ui/react-dialog'), 'ReactDialog');
     expect(defaultNpmComponentName('react-router-dom'), 'ReactRouterDom');
   });
+
+  test('restores the manifest when generation fails', () async {
+    final root = await Directory.systemTemp.createTemp('react_component_');
+    try {
+      final file = File(p.join(root.path, 'react.yaml'))
+        ..writeAsStringSync('client: web/client.dart\n');
+      const original = 'client: web/client.dart\n';
+      const updated = '$original\nforeign:\n  components:\n';
+
+      await expectLater(
+        runForeignComponentManifestTransaction(
+          file: file,
+          original: original,
+          updated: updated,
+          action: () async => throw StateError('validation failed'),
+        ),
+        throwsStateError,
+      );
+      expect(file.readAsStringSync(), original);
+    } finally {
+      await root.delete(recursive: true);
+    }
+  });
 }

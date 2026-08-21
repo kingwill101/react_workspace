@@ -178,18 +178,37 @@ final class _AddComponentCommand extends Command<void> {
       }
       updated = addStylesheetYaml(updated, style);
     }
-    try {
-      reactFile.writeAsStringSync(updated);
-      info('Declared $name from $module in ${reactFile.path}.');
-      await generateAndValidateForeignComponents(
-        config,
-        validate: option('validate') as bool? ?? true,
-        log: line,
-      );
-    } catch (_) {
-      reactFile.writeAsStringSync(original);
-      rethrow;
-    }
+    await runForeignComponentManifestTransaction(
+      file: reactFile,
+      original: original,
+      updated: updated,
+      action: () async {
+        info('Declared $name from $module in ${reactFile.path}.');
+        await generateAndValidateForeignComponents(
+          config,
+          validate: option('validate') as bool? ?? true,
+          log: line,
+        );
+      },
+    );
+  }
+}
+
+/// Writes a manifest update and restores [original] if the follow-up action
+/// fails. This keeps declaration edits atomic with wrapper generation and
+/// build validation.
+Future<void> runForeignComponentManifestTransaction({
+  required File file,
+  required String original,
+  required String updated,
+  required Future<void> Function() action,
+}) async {
+  try {
+    file.writeAsStringSync(updated);
+    await action();
+  } catch (_) {
+    file.writeAsStringSync(original);
+    rethrow;
   }
 }
 
