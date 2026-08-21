@@ -1,0 +1,51 @@
+---
+sidebar_position: 5
+---
+
+# React compatibility
+
+React Dart currently supports React 18 and React 19. The compatibility policy
+is defined by `ReactVersionPolicy` in `react_tool` and is shared by managed npm
+installation, scaffolded projects, wrapper peer ranges, and compatibility
+tests.
+
+| Runtime | Status | Notes |
+| --- | --- | --- |
+| React 18.3.1 | Supported baseline | React 19-only APIs fail with a descriptive capability error. |
+| React 19.0.0 | Supported baseline | Includes React 19 APIs exposed by the current bindings. |
+
+The managed default is React `18.3.1`. Wrapper packages use the peer range
+`>=18 <20`, allowing an application to select either supported major without
+installing a second React instance.
+
+## Version-specific APIs
+
+APIs introduced in React 19, such as `useOptimistic` and `useActionState`, are
+capability guarded. Under React 18 they throw `UnsupportedError` with the
+feature name instead of failing silently.
+
+Test version-specific behavior at both compatibility boundaries:
+
+```dart
+final harness = await ReactTestHarness.start(
+  projectRoot: projectRoot,
+  reactVersion: '19.0.0',
+);
+```
+
+Use the same project with `18.3.1` to verify the guarded failure path. Full SSR
+and server-action tests should use the selected `server_testing` adapter.
+
+## Changing the supported range
+
+When changing the minimum or maximum supported React version:
+
+1. Update `ReactVersionPolicy`.
+2. Update all wrapper peer ranges and scaffold package metadata.
+3. Regenerate a starter project and inspect its `package.json`.
+4. Run the version-policy tests and browser/SSR compatibility harnesses.
+5. Document capability guards and changelog impact before release.
+
+Do not treat a successful npm install as compatibility proof. A supported
+version must compile, hydrate, render through Node SSR, dispatch server
+functions, and preserve the shared React singleton contract.

@@ -50,9 +50,10 @@ Mount the application after specific API routes. Use `routed_io` or
 
 ## Full example
 
-See [`example/`](example/) for a project generated with `react_tool:react
-init`. It includes React codegen, browser and Node SSR builds, a generated
-server action, and a Shelf-free `routed_io` server.
+See the [full Routed example](https://github.com/kingwill101/react_workspace/tree/master/packages/react_server_routed/example)
+for a project generated with `react_tool:react init`. It includes React
+codegen, browser and Node SSR builds, a generated server action, and a
+Shelf-free `routed_io` server.
 
 ```sh
 cd packages/react_server_routed/example

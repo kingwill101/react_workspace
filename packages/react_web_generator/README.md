@@ -98,4 +98,4 @@ time. The second run must be clean.
   after regeneration.
 
 The full maintainer workflow is documented in
-[`Maintaining the workspace`](../../.site/docs/maintainers/maintenance.mdx).
+[Maintaining the workspace](https://github.com/kingwill101/react_workspace/blob/master/.site/docs/maintainers/maintenance.mdx).

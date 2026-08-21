@@ -228,6 +228,11 @@ Generated files are implementation artifacts. Export the stable helpers from
 a small authored entrypoint and regenerate them from the descriptor rather
 than hand-editing them.
 
+The normal generated path is exercised by the `react_router` wrapper tests and
+the CLI's TypeScript-binding tests. The handwritten `react_zustand` path has a
+separate shim contract test because its intentionally reduced facade is not a
+mechanical mirror of Zustand.
+
 ## Consume the wrapper
 
 The application adds only the Dart dependency:

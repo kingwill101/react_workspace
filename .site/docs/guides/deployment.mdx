@@ -84,26 +84,18 @@ Run the container, mapping port 8080 to your host machine:
 docker run -p 8080:8080 my-react-dart-app
 ```
 
-## Server Configuration
+## Server configuration
 
-In production, your Dart server (e.g., `bin/server.dart`) must serve the static files from `build/react/` and route dynamic requests to the SSR worker. Ensure your server code handles `PORT` and `HOST` environment variables appropriately.
+In production, your Dart server must serve `build/react/` and route dynamic
+requests to the SSR worker. The scaffolded entrypoints are the canonical
+implementations:
 
-```dart
-// bin/server.dart
-import 'dart:io';
-import 'package:shelf/shelf.dart';
-import 'package:shelf/shelf_io.dart' as io;
+- [Shelf server template](https://github.com/kingwill101/react_workspace/blob/master/packages/react_tool/lib/src/scaffold/templates/bin/server.dart.liquid)
+- [Routed server template](https://github.com/kingwill101/react_workspace/blob/master/packages/react_tool/lib/src/scaffold/templates/bin/server.routed.dart.liquid)
 
-void main() async {
-  final port = int.parse(Platform.environment['PORT'] ?? '8080');
-  final host = Platform.environment['HOST'] ?? 'localhost';
-  
-  // Initialize SSR, set up routes, etc.
-  
-  final server = await io.serve(handler, host, port);
-  print('Server listening on port \${server.port}');
-}
-```
+Both templates read `PORT`, load the generated `index.html`, register generated
+server actions, and use `REACT_SSR_URL` when SSR is enabled. Keep the Node SSR
+worker private and expose only the Dart HTTP server.
 
 ## Platform-Specific Deployments
 
@@ -129,36 +121,28 @@ The Routed template has the same build artifacts and SSR worker, but uses
 reads `PORT`, serves `build/react`, and mounts `RoutedReactApplication` on a
 Routed `Engine`:
 
+The core deployment shape is:
+
 ```dart
-import 'dart:io';
+final app = RoutedReactApplication(
+  actionRegistry: actionRegistry,
+  staticHandler: (context) => serveStatic(context, webDir),
+  indexTemplate: indexTemplate,
+  ssr: ssr,
+  rootComponent: rootComponent,
+);
 
-import 'package:routed_core/routed_core.dart';
-import 'package:routed_io/routed_io.dart';
-import 'package:react_server_routed/react_server_routed.dart';
-
-Future<void> main() async {
-  final engine = Engine();
-  final app = RoutedReactApplication(
-    actionRegistry: actionRegistry,
-    staticHandler: serveStatic,
-    indexTemplate: indexTemplate,
-    ssr: ssr,
-    rootComponent: rootComponent,
-  );
-  app.mount(engine);
-
-  await serveIo(
-    engine,
-    host: InternetAddress.anyIPv4.address,
-    port: int.parse(Platform.environment['PORT'] ?? '8080'),
-  );
-}
+final engine = Engine();
+app.mount(engine);
+await serveIo(
+  engine,
+  host: InternetAddress.anyIPv4.address,
+  port: int.parse(Platform.environment['PORT'] ?? '8080'),
+);
 ```
 
-The example omits the application-specific `actionRegistry`, `serveStatic`,
-`indexTemplate`, and `ssr` setup; the generated
-`packages/react_server_routed/example/bin/server.dart` shows the complete
-implementation.
+The complete static-handler, action-registry, and SSR setup is maintained in
+the [Routed server template](https://github.com/kingwill101/react_workspace/blob/master/packages/react_tool/lib/src/scaffold/templates/bin/server.routed.dart.liquid).
 
 Use `dart run react_tool:react init my_app --template routed` to generate the
 complete version of this entrypoint. The Routed application can be mounted

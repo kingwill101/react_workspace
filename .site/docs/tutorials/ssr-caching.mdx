@@ -116,4 +116,7 @@ expect(identical(first, second), isTrue);
 
 Use `RoutedRequestHandler` for Routed applications and `ShelfRequestHandler`
 for Shelf applications. Avoid fixed ports and do not use a browser test just
-to verify cache headers or rendered HTML.
+to verify cache headers or rendered HTML. The portable cache behavior is
+covered by the [react_server cache tests](https://github.com/kingwill101/react_workspace/tree/master/packages/react_server/test),
+while adapter composition is covered by the [Routed application tests](https://github.com/kingwill101/react_workspace/blob/master/packages/react_server_routed/test/application_test.dart)
+and [Shelf application tests](https://github.com/kingwill101/react_workspace/blob/master/packages/react_server_shelf/test/application_test.dart).

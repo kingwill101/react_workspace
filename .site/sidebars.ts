@@ -48,6 +48,7 @@ const sidebars: SidebarsConfig = {
         'reference/cli',
         'reference/codegen',
         'reference/type-system',
+        'reference/compatibility',
         'reference/api',
       ],
     },

@@ -129,10 +129,10 @@ ServerActionState<TArgs, TResult> useServerAction<TArgs, TResult>(
 
 /// Binds a server action to React 19's optimistic state and transitions.
 ///
-/// [optimisticUpdate] runs immediately when [invoke] is called. React keeps
+/// [optimisticUpdate] runs immediately when `invoke` is called. React keeps
 /// that state visible while the transition is pending and restores the
 /// previous state when the action settles. The server result and error remain
-/// available through [data] and [error], just as with [useServerAction].
+/// available through `data` and `error`, just as with [useServerAction].
 ///
 /// This hook requires a React runtime that supports `useOptimistic` and
 /// `useTransition`.

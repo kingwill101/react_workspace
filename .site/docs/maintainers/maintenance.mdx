@@ -188,3 +188,20 @@ README examples, repository links, license, version constraints, and
 `dart pub publish --dry-run`. A package can remain unpublished on GitHub while
 these checks stay green; publishability is a quality state, not a release
 instruction.
+
+Repeat the package documentation audit from the workspace root without
+committing generated output:
+
+```bash
+doc_root=$(mktemp -d)
+for package in packages/*; do
+  test -f "$package/pubspec.yaml" || continue
+  dart doc --validate-links \
+    -o "$doc_root/$(basename "$package")" "$package"
+done
+```
+
+Every publishable package should also have a README, a package description, a
+repository URL, and a public library entrypoint. Generated Web API packages
+can take substantially longer because their public surface is intentionally
+large; run them separately when diagnosing a documentation failure.
