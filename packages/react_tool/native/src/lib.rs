@@ -597,6 +597,15 @@ fn extract_variable(v: &VariableDeclaration, exported: bool, out: &mut ParsedFil
             if let Some(ta) = &d.type_annotation {
                 if let Some(name) = binding_name(&d.id) {
                     let ty = &ta.type_annotation;
+                    for (member, props) in object_component_members(ty) {
+                        out.decls.push((
+                            format!("{name}.{member}"),
+                            TsDecl::Component {
+                                props: Some(props),
+                                returns: None,
+                            },
+                        ));
+                    }
                     // `const X: React.FC<Props>` style.
                     if let Some(props) = component_props_from_annotation(ty) {
                         out.decls.push((
@@ -656,6 +665,25 @@ fn extract_variable(v: &VariableDeclaration, exported: bool, out: &mut ParsedFil
             }
         }
     }
+}
+
+fn object_component_members(ty: &TSType) -> Vec<(String, TyExpr)> {
+    let TSType::TSTypeLiteral(literal) = ty else {
+        return Vec::new();
+    };
+    literal
+        .members
+        .iter()
+        .filter_map(|member| {
+            let TSSignature::TSPropertySignature(property) = member else {
+                return None;
+            };
+            let name = property_name(&property.key)?;
+            let annotation = property.type_annotation.as_ref()?;
+            let props = component_props_from_annotation(&annotation.type_annotation)?;
+            Some((name, props))
+        })
+        .collect()
 }
 
 fn forward_ref_props(expr: &Expression) -> Option<TyExpr> {

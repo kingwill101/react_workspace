@@ -148,6 +148,29 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {'label', 'disabled'},
       );
     });
+
+    test('infers props from an object member component export', () async {
+      final local = File(p.join(npmRoot, 'members.d.ts'))
+        ..writeAsStringSync('''
+export interface RootProps {
+  open?: boolean;
+}
+export const Dialog: {
+  Root: React.FC<RootProps>;
+};
+''');
+
+      final result = await TsBindingExtractor(npmRoot).extract(
+        specifier: './members.d.ts',
+        names: ['Dialog.Root'],
+        entry: local.path,
+      );
+
+      final declaration = result.declarations.single;
+      expect(declaration.name, 'Dialog.Root');
+      expect(declaration.kind, 'component');
+      expect(declaration.props.single.name, 'open');
+    });
   });
 
   group('generateBindings', () {
