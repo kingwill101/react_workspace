@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:artisanal/args.dart';
+import 'package:path/path.dart' as p;
 
 import 'build.dart';
 import 'project_config.dart';
 import 'ts_bindings.dart';
 
-/// CLI commands for declaring local foreign React components.
+/// CLI commands for declaring foreign React components.
 final class ComponentCommand extends Command<void> {
   ComponentCommand() {
     addSubcommand(_AddComponentCommand());
@@ -31,6 +32,11 @@ final class _AddComponentCommand extends Command<void> {
         'infer',
         defaultsTo: false,
         help: 'Infer prop types from the local TypeScript declaration.',
+      )
+      ..addOption(
+        'version',
+        defaultsTo: '*',
+        help: 'npm version range for a bare package module (default: *).',
       );
   }
 
@@ -39,7 +45,7 @@ final class _AddComponentCommand extends Command<void> {
 
   @override
   String get description =>
-      'Declare a local React component and its Dart-facing props.';
+      'Declare a React component and its Dart-facing props.';
 
   @override
   String get invocation =>
@@ -67,7 +73,8 @@ final class _AddComponentCommand extends Command<void> {
     final name = _validateScalar(rest[0], 'runtime name');
     final module = _validateScalar(rest[1], 'module path');
     final moduleFile = config.file(module);
-    if (!moduleFile.existsSync()) {
+    final localModule = moduleFile.existsSync();
+    if (!localModule && !_isNpmSpecifier(module)) {
       throw ReactToolException(
         'Component module does not exist: ${moduleFile.path}',
       );
@@ -96,6 +103,12 @@ final class _AddComponentCommand extends Command<void> {
     );
     final infer = option('infer') as bool? ?? false;
     if (infer) {
+      if (!localModule) {
+        throw const ReactToolException(
+          '`--infer` currently supports local TypeScript modules. Add the '
+          'package first, then use an explicit prop surface for npm exports.',
+        );
+      }
       if (exportName == 'default') {
         throw const ReactToolException(
           '`--infer` currently requires a named export. Pass '
@@ -123,6 +136,9 @@ final class _AddComponentCommand extends Command<void> {
       module: module,
       exportName: exportName,
       props: props,
+      dependencies: localModule
+          ? const {}
+          : {module: option('version') as String? ?? '*'},
     );
     reactFile.writeAsStringSync(updated);
     info('Declared $name from $module in ${reactFile.path}.');
@@ -194,6 +210,7 @@ String addForeignComponentYaml(
   required String module,
   required String exportName,
   Map<String, String> props = const {},
+  Map<String, String> dependencies = const {},
 }) {
   final lines = source.split('\n');
   if (lines.isEmpty) {
@@ -202,6 +219,7 @@ String addForeignComponentYaml(
       module,
       exportName,
       props,
+      dependencies,
     ).join('\n');
   }
 
@@ -214,18 +232,33 @@ String addForeignComponentYaml(
     if (!source.endsWith('\n')) result.write('\n');
     if (source.isNotEmpty) result.write('\n');
     result.write(
-      _newForeignComponentsYaml(name, module, exportName, props).join('\n'),
+      _newForeignComponentsYaml(
+        name,
+        module,
+        exportName,
+        props,
+        dependencies,
+      ).join('\n'),
     );
     return result.toString();
   }
 
-  final componentsIndex = _findComponentsIndex(lines, foreignIndex);
+  if (dependencies.isNotEmpty) {
+    _addForeignDependencies(lines, foreignIndex, dependencies);
+  }
+
+  final currentForeignIndex = lines.indexWhere(
+    (line) => line.trimRight() == 'foreign:',
+  );
+  final componentsIndex = _findComponentsIndex(lines, currentForeignIndex);
   if (componentsIndex >= 0) {
     final insertion = _blockEnd(lines, componentsIndex, 2);
     lines.insertAll(insertion, entry);
   } else {
-    final foreignEnd = _blockEnd(lines, foreignIndex, 0);
-    final next = foreignIndex + 1 < lines.length ? lines[foreignIndex + 1] : '';
+    final foreignEnd = _blockEnd(lines, currentForeignIndex, 0);
+    final next = currentForeignIndex + 1 < lines.length
+        ? lines[currentForeignIndex + 1]
+        : '';
     if (next.trimLeft().startsWith('-')) {
       throw const ReactToolException(
         'The `foreign:` block uses the legacy list form. Convert it to '
@@ -263,11 +296,51 @@ List<String> _newForeignComponentsYaml(
   String module,
   String exportName,
   Map<String, String> props,
+  Map<String, String> dependencies,
 ) => [
   'foreign:',
+  if (dependencies.isNotEmpty) ...[
+    '  dependencies:',
+    ..._dependencyYaml(dependencies),
+  ],
   '  components:',
   ..._componentYaml(name, module, exportName, props),
 ];
+
+void _addForeignDependencies(
+  List<String> lines,
+  int foreignIndex,
+  Map<String, String> dependencies,
+) {
+  final existing = _findSectionIndex(lines, foreignIndex, 'dependencies');
+  if (existing >= 0) {
+    lines.insertAll(
+      _blockEnd(lines, existing, 2),
+      _dependencyYaml(dependencies),
+    );
+    return;
+  }
+  final insertion = _blockEnd(lines, foreignIndex, 0);
+  lines.insertAll(insertion, [
+    '  dependencies:',
+    ..._dependencyYaml(dependencies),
+  ]);
+}
+
+List<String> _dependencyYaml(Map<String, String> dependencies) => [
+  for (final entry in dependencies.entries)
+    '    ${_yamlScalar(entry.key)}: ${_yamlScalar(entry.value)}',
+];
+
+int _findSectionIndex(List<String> lines, int parentIndex, String section) {
+  for (var i = parentIndex + 1; i < lines.length; i++) {
+    final line = lines[i];
+    if (line.trim().isEmpty) continue;
+    if (_indent(line) <= 0) break;
+    if (_indent(line) == 2 && line.trim() == '$section:') return i;
+  }
+  return -1;
+}
 
 List<String> _componentYaml(
   String name,
@@ -300,3 +373,10 @@ String _validateIdentifier(String value) {
   }
   return value;
 }
+
+bool _isNpmSpecifier(String value) =>
+    !value.startsWith('.') &&
+    !value.startsWith('/') &&
+    !value.contains('\\') &&
+    !value.contains(':') &&
+    p.extension(value).isEmpty;

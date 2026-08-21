@@ -31,7 +31,7 @@ The CLI provides commands to manage the full lifecycle of a React Dart project:
 - `react prerender --routes /,/about [--output build/prerendered]` - Build the project, boot its real SSR server, and write selected routes as static HTML.
 - `react serve [--watch] [--release] [--no-ssr]` - Build the project and run the Dart server (and SSR worker if configured) locally.
 - `react clean` - Remove `build/react/`, `lib/.generated/`, and other React-owned generated outputs.
-- `react component add <name> <module> [<prop:type> ...]` - Add a local foreign React component declaration.
+- `react component add <name> <module> [<prop:type> ...]` - Add a foreign React component declaration.
 - `react js install` - Install exact wrapper versions into `.dart_tool/react/js`.
 - `react js sync` - Validate that the host JS project satisfies every wrapper.
 - `react ts bind <specifier> [<names...>]` - Generate typed Dart bindings from TypeScript declarations for seamless interop with NPM packages.
@@ -197,6 +197,20 @@ The component name is also its runtime registration key. Dotted names are
 useful for avoiding collisions between design systems, packages, and local
 components. They are kept unchanged at runtime while `react_tool` sanitizes
 the temporary JavaScript import names.
+
+Bare npm modules are supported as well. The command records the package in
+`foreign.dependencies`, so managed builds install it into the same JS
+environment used by the foreign bundler:
+
+```console
+dart run react_tool:react component add dialog.Root \
+  @radix-ui/react-dialog --export Dialog.Root --version '^1.0.0'
+```
+
+Nested export paths such as `Dialog.Root` are resolved in the generated
+browser and SSR registration entries. Package prop inference remains separate
+from local source inference for now; provide an explicit prop surface when an
+npm package does not expose a directly inferable component declaration.
 
 Running either command generates the Dart wrappers in
 `lib/.generated/foreign_components.g.dart`:

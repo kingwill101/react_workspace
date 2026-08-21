@@ -102,15 +102,21 @@ styles:
   - web/theme.scss
   - web/card.module.scss
 foreign:
-  - name: Card
-    module: web/card.js
-    props:
-      label: String
-      disabled: bool?
-      onPressed: Function
-  - name: ui.Panel
-    module: web/panel.js
-    export: Panel
+  dependencies:
+    fake-library: '*'
+  components:
+    - name: Card
+      module: web/card.js
+      props:
+        label: String
+        disabled: bool?
+        onPressed: Function
+    - name: ui.Panel
+      module: web/panel.js
+      export: Panel
+    - name: library.DialogRoot
+      module: fake-library
+      export: Dialog.Root
 ''');
     await Directory('${root.path}/web').create(recursive: true);
     await File(
@@ -366,6 +372,14 @@ const actionName = 'card';
         expect(entry, contains("__reactDartRegisterComponent('Card'"));
         expect(entry, contains("ui.Panel"));
         expect(entry, contains('_foreignui_Panel_0'));
+        expect(
+          entry,
+          contains("import { Dialog as _foreignlibrary_DialogRoot_0"),
+        );
+        expect(
+          entry,
+          contains("'library.DialogRoot', _foreignlibrary_DialogRoot_0.Root"),
+        );
       }
       final foreignBindings = await File(
         '${root.path}/lib/.generated/foreign_components.g.dart',
@@ -377,6 +391,17 @@ const actionName = 'card';
         contains('required react.ReactCallback onPressed'),
       );
       expect(foreignBindings, contains("'Card'"));
+      final jsManifest =
+          jsonDecode(
+                await File(
+                  '${root.path}/.dart_tool/react/js/package.json',
+                ).readAsString(),
+              )
+              as Map<String, dynamic>;
+      expect(
+        (jsManifest['dependencies'] as Map<String, dynamic>)['fake-library'],
+        '2.1.0',
+      );
       // The managed environment was provisioned, not the host package.json.
       expect(
         File('${root.path}/.dart_tool/react/js/package.json').existsSync(),
@@ -526,9 +551,9 @@ globalThis.__reactDartRegisterComponent?.(
       );
     }
 
-    // The environment installs only the framework singletons: the prebuilt
-    // wrapper's (nonexistent) npm dependencies must not be requested, and
-    // its peers still pin react/react-dom.
+    // The prebuilt wrapper's (nonexistent) npm dependencies are skipped, but
+    // project-level foreign dependencies are still installed alongside the
+    // framework singletons.
     final manifest =
         jsonDecode(
               await File(
@@ -537,7 +562,7 @@ globalThis.__reactDartRegisterComponent?.(
             )
             as Map;
     final dependencies = manifest['dependencies'] as Map;
-    expect(dependencies.keys.toSet(), {'react', 'react-dom'});
+    expect(dependencies.keys.toSet(), {'react', 'react-dom', 'fake-library'});
     expect(dependencies['react'], '18.3.1');
     expect(dependencies['react-dom'], '18.3.1');
     // Host manifest untouched.

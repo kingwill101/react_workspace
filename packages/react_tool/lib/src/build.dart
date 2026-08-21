@@ -801,14 +801,19 @@ final class ReactBuilder {
                 "'${r.name}', $local);",
               );
           } else {
+            final exportPath = r.export!.split('.');
+            final exportedName = exportPath.first;
+            final componentExpression = exportPath
+                .skip(1)
+                .fold<String>(local, (value, part) => '$value.$part');
             buffer
               ..writeln(
-                "import { ${r.export} as $local } "
+                "import { $exportedName as $local } "
                 "from ${jsonEncode(path)};",
               )
               ..writeln(
                 "globalThis.__reactDartRegisterComponent("
-                "'${r.name}', $local);",
+                "'${r.name}', $componentExpression);",
               );
           }
         }
@@ -1016,6 +1021,7 @@ final class ReactBuilder {
     final needsEnvironment =
         config.foreignComponents.isNotEmpty ||
         config.foreignModules.isNotEmpty ||
+        config.foreignDependencies.isNotEmpty ||
         // The SSR bootstrap always imports React and ReactDOM/server, so the
         // worker needs a JS environment even without foreign modules.
         config.ssrEntrypoint != null ||
@@ -1032,7 +1038,20 @@ final class ReactBuilder {
           managedReactVersion ?? ReactVersionPolicy.managedVersion,
       bundlingBackend: config.bundlingBackend,
     );
-    return builder.ensure(wrappers, required: needsEnvironment);
+    final allWrappers = config.foreignDependencies.isEmpty
+        ? wrappers
+        : [
+            ...wrappers,
+            JsWrapperDescriptor(
+              packageName: config.packageName,
+              // A synthetic shared entry makes the descriptor's dependencies
+              // participate in requirement collection without making it a
+              // wrapper entry for the foreign bundler.
+              entries: {'shared': ''},
+              dependencies: config.foreignDependencies,
+            ),
+          ];
+    return builder.ensure(allWrappers, required: needsEnvironment);
   }
 
   /// Descriptors of every wrapper package in the dependency graph — plus the
@@ -1179,13 +1198,19 @@ final class ReactBuilder {
       return p.join(root, packagePath);
     }
     final moduleFile = config.file(module);
-    if (!moduleFile.existsSync()) {
-      throw ReactToolException(
-        'Foreign module "$module" not found at ${moduleFile.path}.',
-      );
-    }
-    return moduleFile.absolute.path;
+    if (moduleFile.existsSync()) return moduleFile.absolute.path;
+    if (_isBareNpmSpecifier(module)) return module;
+    throw ReactToolException(
+      'Foreign module "$module" not found at ${moduleFile.path}.',
+    );
   }
+
+  bool _isBareNpmSpecifier(String module) =>
+      !module.startsWith('.') &&
+      !p.isAbsolute(module) &&
+      !module.startsWith('/') &&
+      !module.contains('\\') &&
+      p.extension(module).isEmpty;
 
   /// Resolves a wrapper's entry file (package-relative) to an absolute path.
   Future<String> _resolveWrapperEntry(String packageName, String entry) async {

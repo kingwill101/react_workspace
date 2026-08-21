@@ -156,6 +156,20 @@ components:
     });
   });
 
+  test('reads foreign npm dependencies', () async {
+    await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
+    await File('${root.path}/react.yaml').writeAsString('''
+foreign:
+  dependencies:
+    '@radix-ui/react-dialog': ^1.0.0
+  components: []
+''');
+
+    final config = ReactProjectConfig.load(root);
+
+    expect(config.foreignDependencies, {'@radix-ui/react-dialog': '^1.0.0'});
+  });
+
   test('uses styles from pubspec when react.yaml is absent', () async {
     await File('${root.path}/pubspec.yaml').writeAsString('''
 name: sample

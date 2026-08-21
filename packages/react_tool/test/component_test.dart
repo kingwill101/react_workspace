@@ -44,6 +44,19 @@ foreign:
     expect(updated, contains("name: 'design.Button'"));
   });
 
+  test('records npm dependencies for bare package modules', () {
+    final updated = addForeignComponentYaml(
+      'client: web/client.dart\n',
+      name: 'library.DialogRoot',
+      module: '@radix-ui/react-dialog',
+      exportName: 'Dialog.Root',
+      dependencies: {'@radix-ui/react-dialog': '^1.0.0'},
+    );
+
+    expect(updated, contains("'@radix-ui/react-dialog': '^1.0.0'"));
+    expect(updated, contains("export: 'Dialog.Root'"));
+  });
+
   test('rejects the legacy list-shaped foreign block', () {
     expect(
       () => addForeignComponentYaml(

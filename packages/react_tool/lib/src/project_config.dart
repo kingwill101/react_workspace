@@ -104,6 +104,9 @@ final class ReactProjectConfig {
   final String? styleOutput;
   final List<ReactForeignComponentConfig> foreignComponents;
 
+  /// npm package ranges required by project-level foreign components.
+  final Map<String, String> foreignDependencies;
+
   /// Side-effect module imports resolved into the foreign bundle.
   ///
   /// Each entry may be a relative path or a `package:` URI. Wrapper packages
@@ -143,6 +146,7 @@ final class ReactProjectConfig {
     required this.styleEntrypoints,
     required this.styleOutput,
     required this.foreignComponents,
+    this.foreignDependencies = const {},
     this.foreignModules = const [],
     this.esbuildPath,
     this.foreignExternals = const [],
@@ -217,6 +221,7 @@ final class ReactProjectConfig {
           explicit['foreignModules'] ??
           explicit['modules'],
     );
+    final foreignDependencies = _stringMap(foreignMap['dependencies']);
     final esbuildPath = _string(foreignMap['esbuild'] ?? explicit['esbuild']);
     final foreignExternals = _stringList(foreignMap['externals']);
     final jsHostMode =
@@ -246,6 +251,7 @@ final class ReactProjectConfig {
       styleEntrypoints: styleEntrypoints,
       styleOutput: styleOutput,
       foreignComponents: foreignComponents,
+      foreignDependencies: foreignDependencies,
       foreignModules: foreignModules,
       esbuildPath: esbuildPath,
       foreignExternals: foreignExternals,
@@ -298,6 +304,7 @@ final class ReactProjectConfig {
       for (final component in foreignComponents) component.toJson(),
     ],
     'foreignModules': foreignModules,
+    'foreignDependencies': foreignDependencies,
   };
 
   String toJsonString() => const JsonEncoder.withIndent('  ').convert(toJson());
@@ -317,6 +324,15 @@ Map<String, dynamic> _loadMap(File file) {
 Map<String, dynamic> _map(Object? value) {
   if (value is! Map) return <String, dynamic>{};
   return {for (final entry in value.entries) '${entry.key}': entry.value};
+}
+
+Map<String, String> _stringMap(Object? value) {
+  final map = _map(value);
+  return {
+    for (final entry in map.entries)
+      if (entry.value is String && entry.value.trim().isNotEmpty)
+        entry.key: entry.value.trim(),
+  };
 }
 
 String? _string(Object? value) =>
