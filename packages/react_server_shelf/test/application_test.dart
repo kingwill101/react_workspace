@@ -49,6 +49,48 @@ void main() {
     },
   );
 
+  test('route manifest controls document cache lifetime', () async {
+    final worker = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+    var renders = 0;
+    worker.listen((request) async {
+      renders++;
+      final response = request.response;
+      response.headers.contentType = ContentType.json;
+      response.write(
+        jsonEncode({
+          'html': '<main>render $renders</main>',
+          'props': <String, dynamic>{},
+        }),
+      );
+      await response.close();
+    });
+
+    final app = ReactServerApp(
+      actionRegistry: ServerFunctionRegistry(),
+      staticHandler: (request) => Response.ok('static'),
+      indexTemplate: '{{SSR}}',
+      ssr: ReactSsrClient(
+        endpoint: Uri.parse('http://127.0.0.1:${worker.port}/'),
+      ),
+      rootComponent: 'test.root',
+      documentCache: ReactDocumentCache(defaultTtl: const Duration(hours: 1)),
+      routeManifest: ReactRouteManifest([
+        ReactRoutePolicy(pattern: '/', ttl: Duration.zero),
+      ]),
+    );
+
+    await (await app.handler(
+      Request('GET', Uri.parse('http://localhost/')),
+    )).readAsString();
+    await (await app.handler(
+      Request('GET', Uri.parse('http://localhost/')),
+    )).readAsString();
+
+    expect(renders, 2);
+    app.ssr!.close();
+    await worker.close(force: true);
+  });
+
   test('ReactServerApp reads and writes a persistent document store', () async {
     final worker = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     var renders = 0;
