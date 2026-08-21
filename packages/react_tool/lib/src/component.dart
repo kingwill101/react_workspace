@@ -283,18 +283,34 @@ Future<Map<String, String>> inferForeignComponentProps({
 }
 
 String _dartTypeForInferredProp(TsIrProp prop) {
-  final base = switch (prop.type.kind) {
+  final base = _dartTypeForInferredType(prop.type);
+  return prop.required ? base : '$base?';
+}
+
+String _dartTypeForInferredType(TsIrType type, {int depth = 0}) {
+  if (depth >= 3) return 'Object';
+  return switch (type.kind) {
     'string' => 'String',
-    'literal' => _dartTypeForLiteralUnion(prop.type.literals ?? const []),
+    'literal' => _dartTypeForLiteralUnion(type.literals ?? const []),
     'number' => 'num',
     'boolean' => 'bool',
     'reactNode' => 'ReactNode',
     'function' || 'hostValue' => 'Function',
-    'array' || 'tuple' => 'List<Object?>',
+    'array' =>
+      'List<${_dartTypeForInferredType(type.element ?? const TsIrType(kind: 'any'), depth: depth + 1)}>',
+    'tuple' =>
+      'List<${_commonInferredElementType(type.elements ?? const [], depth)}>',
     'object' || 'record' => 'Map<String, Object?>',
     _ => 'Object',
   };
-  return prop.required ? base : '$base?';
+}
+
+String _commonInferredElementType(List<TsIrType> types, int depth) {
+  if (types.isEmpty) return 'Object';
+  final inferred = types
+      .map((type) => _dartTypeForInferredType(type, depth: depth + 1))
+      .toSet();
+  return inferred.length == 1 ? inferred.single : 'Object';
 }
 
 String _dartTypeForLiteralUnion(List<String> literals) {

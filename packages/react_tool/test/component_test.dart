@@ -114,6 +114,8 @@ export interface GreetingProps {
   priority?: 1 | 2;
   visible?: true | false;
   mixed?: "a" | 1;
+  tags?: string[];
+  scores?: [number, number];
 }
 export declare function Greeting(props: GreetingProps): React.ReactElement;
 export interface RootProps {
@@ -149,6 +151,8 @@ export const Dialog: {
         'priority': 'num?',
         'visible': 'bool?',
         'mixed': 'Object?',
+        'tags': 'List<String>?',
+        'scores': 'List<num>?',
       });
 
       final nested = await inferForeignComponentProps(
