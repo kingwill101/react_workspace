@@ -96,6 +96,7 @@ FutureOr<Response> Function(Request) createServerActionHandler(
       );
     }
 
+    final afterResponse = ReactAfterResponse();
     final context = ServerFunctionContext(
       requestId: _generateId(),
       principal: authenticate(req),
@@ -103,6 +104,7 @@ FutureOr<Response> Function(Request) createServerActionHandler(
       requestUri: req.url,
       deadline: DateTime.now().add(requestTimeout),
       cancellation: CancellationToken(),
+      afterResponse: afterResponse,
     );
 
     try {
@@ -148,6 +150,8 @@ FutureOr<Response> Function(Request) createServerActionHandler(
         500,
         requestId: context.requestId,
       );
+    } finally {
+      unawaited(Future<void>.delayed(Duration.zero, afterResponse.run));
     }
   };
 }

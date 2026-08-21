@@ -2,6 +2,7 @@
 library;
 
 export 'src/context.dart';
+export 'src/after_response.dart';
 export 'src/cache.dart';
 export 'src/data_cache.dart';
 export 'src/metadata.dart';

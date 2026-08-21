@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:react_actions/react_actions.dart';
+
+import 'after_response.dart';
 
 /// Request-scoped context passed to every registered server function.
 ///
@@ -12,6 +16,7 @@ final class ServerFunctionContext {
   final Uri requestUri;
   final DateTime deadline;
   final CancellationToken cancellation;
+  final ReactAfterResponse? afterResponse;
 
   const ServerFunctionContext({
     required this.requestId,
@@ -20,7 +25,13 @@ final class ServerFunctionContext {
     required this.requestUri,
     required this.deadline,
     required this.cancellation,
+    this.afterResponse,
   });
+
+  /// Schedules [callback] for the post-response queue when one is available.
+  void scheduleAfterResponse(FutureOr<void> Function() callback) {
+    afterResponse?.add(callback);
+  }
 
   /// Returns [principal] or throws a [ServerFunctionFailure] with
   /// status 401.

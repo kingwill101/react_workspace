@@ -360,6 +360,7 @@ final class RoutedReactApplication {
     }
 
     final requestId = _generateRequestId();
+    final afterResponse = ReactAfterResponse();
     final actionContext = ServerFunctionContext(
       requestId: requestId,
       principal: authenticate?.call(context),
@@ -367,6 +368,7 @@ final class RoutedReactApplication {
       requestUri: context.requestedUri,
       deadline: DateTime.now().add(requestTimeout),
       cancellation: CancellationToken(),
+      afterResponse: afterResponse,
     );
 
     try {
@@ -407,6 +409,8 @@ final class RoutedReactApplication {
         500,
         requestId: requestId,
       );
+    } finally {
+      unawaited(Future<void>.delayed(Duration.zero, afterResponse.run));
     }
   }
 
