@@ -14,7 +14,7 @@ ReactNode ClassesPage(
           h4(
             className: 'font-black mb-4',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('My Classes')],
+            children: [const Text('My Classes')],
           ),
           div(
             className: 'grid md:grid-cols-2 gap-4',
@@ -65,14 +65,14 @@ ReactNode ClassesPage(
               h4(
                 className: 'font-black mb-2',
                 style: {'fontFamily': 'Fredoka'},
-                children: [Text('Group Maker')],
+                children: [const Text('Group Maker')],
               ),
               div(
                 className: 'flex items-center gap-3',
                 children: [
                   span(
                     className: 'font-black text-[12px]',
-                    children: [Text('Groups:')],
+                    children: [const Text('Groups:')],
                   ),
                   input(
                     type: 'range',
@@ -85,7 +85,7 @@ ReactNode ClassesPage(
                     onClick: (_) => props.onToast('Shuffled ✨'),
                     className:
                         'h-[36px] px-4 bg-cream border-2 border-dark rounded-full font-black text-[12px]',
-                    children: [Text('Shuffle ✨')],
+                    children: [const Text('Shuffle ✨')],
                   ),
                 ],
               ),

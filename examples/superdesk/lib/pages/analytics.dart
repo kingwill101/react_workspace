@@ -62,7 +62,7 @@ ReactNode AnalyticsPage(({String? title}) props) {
               h4(
                 className: 'font-black mb-4',
                 style: {'fontFamily': 'Fredoka'},
-                children: [Text('Mastery Heatmap')],
+                children: [const Text('Mastery Heatmap')],
               ),
               div(
                 className: 'grid grid-cols-8 gap-2',
@@ -86,7 +86,7 @@ ReactNode AnalyticsPage(({String? title}) props) {
               h4(
                 className: 'font-black mb-4',
                 style: {'fontFamily': 'Fredoka'},
-                children: [Text('Engagement by Activity')],
+                children: [const Text('Engagement by Activity')],
               ),
               div(
                 className: 'space-y-3',

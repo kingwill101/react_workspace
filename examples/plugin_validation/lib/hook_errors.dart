@@ -8,7 +8,7 @@ ReactNode HookInConditional(({bool flag}) props) {
   if (props.flag) {
     final state = useState(0); // expect: invalid_hook_call — inside conditional
   }
-  return Text('hi');
+  return const Text('hi');
 }
 
 /// Hook inside loop — `invalid_hook_call` (`hookInLoop`).
@@ -19,17 +19,17 @@ ReactNode HookInLoop(({int count}) props) {
   for (var i = 0; i < props.count; i++) {
     final s = useState(i); // expect: invalid_hook_call — inside loop
   }
-  return Text('hi');
+  return const Text('hi');
 }
 
 /// Hook after early return — `invalid_hook_call` (`hookAfterEarlyReturn`).
 @ReactComponent()
 ReactNode HookAfterReturn(({bool early}) props) {
-  if (props.early) return Text('early');
+  if (props.early) return const Text('early');
   final s = useState(
     0,
   ); // expect: invalid_hook_call — after early return (if early return counted)
-  return Text('hi');
+  return const Text('hi');
 }
 
 /// Hook outside component — `invalid_hook_call` (`hookOutsideComponent`).
@@ -47,5 +47,5 @@ int badHookName() => 0; // expect: customHookInvalidName (when hook annotation p
 ReactNode HookCorrect(({String? placeholder}) props) {
   final count = useState(0);
   final memo = useMemo(() => count.$1 * 2, [count.$1]);
-  return Text('${memo}');
+  return Text('$memo');
 }

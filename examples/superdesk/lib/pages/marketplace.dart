@@ -43,7 +43,7 @@ ReactNode MarketplacePage(({Function(String) onToast}) props) {
           h4(
             className: 'font-black mb-4',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('Lesson Marketplace')],
+            children: [const Text('Lesson Marketplace')],
           ),
           div(
             className: 'grid md:grid-cols-2 lg:grid-cols-4 gap-4',
@@ -85,13 +85,13 @@ ReactNode MarketplacePage(({Function(String) onToast}) props) {
                           onClick: (_) => props.onToast('Cloned to library ✨'),
                           className:
                               'h-[32px] px-3 bg-white border-2 border-dark rounded-full font-black text-[11px] flex items-center gap-1',
-                          children: [Text('Clone')],
+                          children: [const Text('Clone')],
                         ),
                         button(
                           onClick: (_) => props.onToast('Added to cart! 🛒'),
                           className:
                               'h-[32px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
-                          children: [Text('Add')],
+                          children: [const Text('Add')],
                         ),
                       ],
                     ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:example/.generated/server_actions.g.dart';
+import 'package:example/.generated/todos/todos_actions.action.g.dart';
 import 'package:react_server/react_server.dart';
 import 'package:react_server_shelf/react_server_shelf.dart';
 import 'package:react_testing/react_testing.dart';
@@ -27,15 +28,17 @@ String _normalizeHtml(String html) =>
 
 void main() {
   ReactTestHarness? harness;
+  ServerFunctionHarness? actions;
   TestClient? client;
 
   setUpAll(() async {
     final testHarness = await ReactTestHarness.start(
-      projectRoot: Directory('examples/ssr'),
+      projectRoot: Directory.current,
     );
     harness = testHarness;
     final registry = ServerFunctionRegistry();
     registerServerActions(registry: registry);
+    actions = ServerFunctionHarness(registry: registry);
     final staticHandler = createStaticHandler(
       testHarness.outputDirectory.path,
       defaultDocument: 'index.html',
@@ -62,8 +65,8 @@ void main() {
   test('server boots and SSR-renders the home page at /', () async {
     final response = await client!.get('/');
 
-    response.assertStatus(200);
     final body = response.body;
+    expect(response.statusCode, 200, reason: body);
 
     // Shell navigation renders.
     expect(body, contains('site-nav'));
@@ -85,7 +88,7 @@ void main() {
   test('deep links SSR-render their route through StaticRouter', () async {
     // Router playground renders its overview with the current location.
     final router = await client!.get('/router');
-    router.assertStatus(200);
+    expect(router.statusCode, 200, reason: router.body);
     expect(_normalizeHtml(router.body), contains('location: /router'));
     expect(_normalizeHtml(router.body), contains('navigation type: POP'));
 
@@ -121,7 +124,7 @@ void main() {
 
     // Todos start in the server-function loading state.
     final todos = await client!.get('/state/todos');
-    todos.assertStatus(200);
+    expect(todos.statusCode, 200, reason: todos.body);
     expect(_normalizeHtml(todos.body), contains('Loading tasks…'));
 
     // Unknown paths land on the catch-all 404 page.
@@ -132,7 +135,7 @@ void main() {
 
   test('router section SSR-renders the overview and sub-routes', () async {
     final overview = await client!.get('/router');
-    overview.assertStatus(200);
+    expect(overview.statusCode, 200, reason: overview.body);
     expect(_normalizeHtml(overview.body), contains('Router playground'));
     expect(_normalizeHtml(overview.body), contains('location: /router'));
 
@@ -156,8 +159,29 @@ void main() {
 
   test('home page renders with server-function loading state', () async {
     final response = await client!.get('/');
-    response.assertStatus(200);
+    expect(response.statusCode, 200, reason: response.body);
     expect(_normalizeHtml(response.body), contains('hi'));
     expect(response.body, contains('id="__props"'));
+  });
+
+  test('generated server functions dispatch through the real app', () async {
+    final listResponse = await client!.postJson(
+      actions!.actionPath,
+      actions!.envelope(listTodosRef, (completedFilter: null)),
+    );
+    listResponse
+      ..assertStatus(HttpStatus.ok)
+      ..assertJsonPath('ok', true)
+      ..assertJsonPath('result.total', 4);
+
+    final toggleResponse = await client!.postJson(
+      actions!.actionPath,
+      actions!.envelope(toggleTodoRef, (todoId: '1', completed: false)),
+    );
+    toggleResponse
+      ..assertStatus(HttpStatus.ok)
+      ..assertJsonPath('ok', true)
+      ..assertJsonPath('result.id', '1')
+      ..assertJsonPath('result.completed', false);
   });
 }

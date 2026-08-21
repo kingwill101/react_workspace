@@ -21,14 +21,14 @@ ReactNode LiveBoardPage(
           h4(
             className: 'font-black mb-4',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('Live Board')],
+            children: [const Text('Live Board')],
           ),
           div(
             className: 'flex items-center gap-3 mb-4',
             children: [
               span(
                 className: 'text-[14px] font-bold',
-                children: [Text('Room Code:')],
+                children: [const Text('Room Code:')],
               ),
               span(
                 className:
@@ -43,7 +43,7 @@ ReactNode LiveBoardPage(
                 onClick: (_) => props.onJoin(),
                 className:
                     'h-[32px] px-3 bg-pink-200 border-2 border-dark rounded-full font-black text-[11px]',
-                children: [Text('Simulate Join (new tab)')],
+                children: [const Text('Simulate Join (new tab)')],
               ),
             ],
           ),

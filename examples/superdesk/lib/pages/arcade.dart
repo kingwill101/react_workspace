@@ -31,7 +31,7 @@ ReactNode ArcadePage(
           h2(
             className: 'font-black text-[20px] flex items-center gap-2',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('🎮 Arcade • 3D + Mini-Games')],
+            children: [const Text('🎮 Arcade • 3D + Mini-Games')],
           ),
           div(
             className: 'flex gap-2',
@@ -43,18 +43,21 @@ ReactNode ArcadePage(
                 className:
                     'h-[40px] bg-cream border-3 border-dark rounded-full px-3 font-black text-[12px]',
                 children: [
-                  option(value: 'wordpop', children: [Text('Word Pop')]),
-                  option(value: 'carousel', children: [Text('3D Carousel')]),
-                  option(value: 'memory', children: [Text('Memory 3D')]),
+                  option(value: 'wordpop', children: [const Text('Word Pop')]),
+                  option(
+                    value: 'carousel',
+                    children: [const Text('3D Carousel')],
+                  ),
+                  option(value: 'memory', children: [const Text('Memory 3D')]),
                 ],
               ),
               select(
                 className:
                     'h-[40px] bg-white border-2 border-dark rounded-full px-3 font-black text-[12px]',
                 children: [
-                  option(value: 'easy', children: [Text('Easy')]),
-                  option(value: 'medium', children: [Text('Medium')]),
-                  option(value: 'hard', children: [Text('Hard')]),
+                  option(value: 'easy', children: [const Text('Easy')]),
+                  option(value: 'medium', children: [const Text('Medium')]),
+                  option(value: 'hard', children: [const Text('Hard')]),
                 ],
               ),
               button(
@@ -81,12 +84,12 @@ ReactNode ArcadePage(
                 h3(
                   className: 'font-black text-[18px]',
                   style: {'fontFamily': 'Fredoka'},
-                  children: [Text('🎠 3D Vocab Carousel')],
+                  children: [const Text('🎠 3D Vocab Carousel')],
                 ),
                 span(
                   className:
                       'text-[11px] font-black bg-[#FFE8A3] border-2 border-dark rounded-full px-3 py-1',
-                  children: [Text('Tap a card to hear pronunciation')],
+                  children: [const Text('Tap a card to hear pronunciation')],
                 ),
               ],
             ),
@@ -149,7 +152,9 @@ ReactNode ArcadePage(
                 ),
                 p(
                   className: 'text-[11px] font-bold text-[#666] mt-2 px-2',
-                  children: [Text('Tap balloons that match the target word!')],
+                  children: [
+                    const Text('Tap balloons that match the target word!'),
+                  ],
                 ),
               ],
             ),
@@ -169,7 +174,7 @@ ReactNode ArcadePage(
                       p(
                         className: 'text-[11px] font-bold text-[#666] mt-1',
                         children: [
-                          Text(
+                          const Text(
                             'Chunky 3D cards, warm neobrutalist style, Promethean-ready',
                           ),
                         ],
@@ -177,7 +182,7 @@ ReactNode ArcadePage(
                       div(
                         className:
                             'mt-3 h-[80px] bg-white border-2 border-dark rounded-[16px] grid place-items-center font-black text-[24px]',
-                        children: [Text('🔒')],
+                        children: [const Text('🔒')],
                       ),
                     ],
                   ),

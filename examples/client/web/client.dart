@@ -1,8 +1,7 @@
 import 'package:react_actions/react_actions.dart';
 import 'package:react_dom/react_dom.dart';
-import 'package:react_web/react_web.dart' show HttpServerFunctionClient;
-import 'package:client/app.react.dart';
-import 'package:client/react_components.g.dart';
+import 'package:client/.generated/app.react.dart';
+import 'package:client/.generated/react_components.g.dart';
 
 void main() {
   initReact();

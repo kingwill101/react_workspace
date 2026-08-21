@@ -31,7 +31,7 @@ ReactNode DashboardPage(
               p(
                 className: 'font-bold text-[#555]',
                 children: [
-                  Text('Good morning! Ready to build magical lessons?'),
+                  const Text('Good morning! Ready to build magical lessons?'),
                 ],
               ),
             ],
@@ -44,8 +44,8 @@ ReactNode DashboardPage(
                 className:
                     'h-[44px] px-5 bg-dark text-white rounded-full border-3 border-dark font-black shadow-[4px_4px_0px_#111] flex items-center gap-2',
                 children: [
-                  span(className: 'text-[18px]', children: [Text('+')]),
-                  Text(' New Lesson'),
+                  span(className: 'text-[18px]', children: [const Text('+')]),
+                  const Text(' New Lesson'),
                 ],
               ),
             ],
@@ -60,7 +60,7 @@ ReactNode DashboardPage(
               span(
                 className: 'text-[20px] font-black flex items-center gap-2',
                 style: {'fontFamily': 'Fredoka'},
-                children: [Text('✨ Lesson Templates')],
+                children: [const Text('✨ Lesson Templates')],
               ),
               span(
                 className:
@@ -108,7 +108,7 @@ ReactNode DashboardPage(
                           },
                           className:
                               'h-[32px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
-                          children: [Text('Use')],
+                          children: [const Text('Use')],
                         ),
                       ],
                     ),
@@ -123,7 +123,7 @@ ReactNode DashboardPage(
           h3(
             className: 'font-black text-[18px] mb-4',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('Recent Lessons')],
+            children: [const Text('Recent Lessons')],
           ),
           div(
             className: 'space-y-3',
@@ -138,7 +138,7 @@ ReactNode DashboardPage(
                     div(
                       className:
                           'w-[40px] h-[40px] bg-white border-2 border-dark rounded-[12px] grid place-items-center text-[20px]',
-                      children: [Text('📚')],
+                      children: [const Text('📚')],
                     ),
                     div(
                       className: 'flex-1',
@@ -157,7 +157,7 @@ ReactNode DashboardPage(
                     ),
                     span(
                       className: 'font-black text-[12px] text-gray-400',
-                      children: [Text('→')],
+                      children: [const Text('→')],
                     ),
                   ],
                 ),
@@ -170,7 +170,7 @@ ReactNode DashboardPage(
           h3(
             className: 'font-black text-[18px]',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('My Units')],
+            children: [const Text('My Units')],
           ),
           div(
             className: 'grid md:grid-cols-3 gap-3',
@@ -211,19 +211,19 @@ ReactNode DashboardPage(
           div(
             className:
                 'w-[44px] h-[44px] rounded-[12px] bg-cream border-2 border-dark grid place-items-center text-[18px]',
-            children: [Text('💡')],
+            children: [const Text('💡')],
           ),
           div(
             children: [
               div(
                 className: 'font-black text-[13px]',
-                children: [Text('Promethean tip')],
+                children: [const Text('Promethean tip')],
               ),
               p(
                 className:
                     'text-[12px] font-bold text-gray-500 leading-snug mt-1',
                 children: [
-                  Text(
+                  const Text(
                     'Tap any widget in Live Board to enlarge menus — everything is tap-friendly for boards!',
                   ),
                 ],

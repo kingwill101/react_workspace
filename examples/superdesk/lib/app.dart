@@ -15,8 +15,6 @@ import 'pages/analytics.dart';
 import 'pages/live_board.dart';
 import 'pages/settings.dart';
 
-final _appId = 'superdesk';
-
 void _downloadJson(String filename, String content) {
   try {
     window.localStorage.setItem('superdesk_backup_export', content);
@@ -161,19 +159,6 @@ ReactNode App(({String title}) props) {
     };
   }, []);
 
-  final pages = [
-    'Dashboard',
-    'Resources',
-    'Marketplace',
-    'Syllabus',
-    'Classes',
-    'Builder',
-    'Arcade',
-    'Analytics',
-    'Live Board',
-    'Settings',
-  ];
-
   return html(
     lang: 'en',
     dir: 'ltr',
@@ -185,7 +170,7 @@ ReactNode App(({String title}) props) {
             name: 'viewport',
             content: 'width=device-width, initial-scale=1.0',
           ),
-          title(children: [Text('SUPERDESK v6')]),
+          title(children: [const Text('SUPERDESK v6')]),
           link(
             href:
                 'https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap',
@@ -215,19 +200,21 @@ ReactNode App(({String title}) props) {
                           children: [
                             div(
                               className: 'text-[48px] leading-none mb-3',
-                              children: [Text('☀️')],
+                              children: [const Text('☀️')],
                             ),
                             h1(
                               className:
                                   'text-[32px] font-black tracking-tight',
                               style: {'fontFamily': 'Fredoka'},
-                              children: [Text('SUPERDESK')],
+                              children: [const Text('SUPERDESK')],
                             ),
                             p(
                               className:
                                   'text-[15px] font-bold text-gray-500 mt-1',
                               children: [
-                                Text('The Super Toolkit for Language Teachers'),
+                                const Text(
+                                  'The Super Toolkit for Language Teachers',
+                                ),
                               ],
                             ),
                           ],
@@ -269,7 +256,7 @@ ReactNode App(({String title}) props) {
                               type: 'submit',
                               className:
                                   'w-full h-[52px] bg-dark text-white rounded-full font-black text-[16px] border-3 border-dark shadow-[0px_4px_0px_#111] active:translate-y-[2px] active:shadow-[0px_2px_0px_#111]',
-                              children: [Text('Continue')],
+                              children: [const Text('Continue')],
                             ),
                             button(
                               type: 'button',
@@ -282,7 +269,7 @@ ReactNode App(({String title}) props) {
                               },
                               className:
                                   'w-full h-[48px] bg-white border-3 border-dark rounded-full font-black',
-                              children: [Text('Demo as Guest')],
+                              children: [const Text('Demo as Guest')],
                             ),
                           ],
                         ),
@@ -290,7 +277,9 @@ ReactNode App(({String title}) props) {
                           className:
                               'text-center text-[12px] font-bold text-gray-400 mt-6',
                           children: [
-                            Text('Playful • Warm • Chunky • Teacher-friendly'),
+                            const Text(
+                              'Playful • Warm • Chunky • Teacher-friendly',
+                            ),
                           ],
                         ),
                       ],
@@ -315,7 +304,7 @@ ReactNode App(({String title}) props) {
                                 div(
                                   className:
                                       'w-[44px] h-[44px] bg-yellow-200 border-3 border-dark rounded-[14px] shadow-chunky grid place-items-center text-[20px]',
-                                  children: [Text('☀️')],
+                                  children: [const Text('☀️')],
                                 ),
                                 div(
                                   className: 'leading-tight',
@@ -323,12 +312,12 @@ ReactNode App(({String title}) props) {
                                     div(
                                       className: 'font-black text-[20px]',
                                       style: {'fontFamily': 'Fredoka'},
-                                      children: [Text('SUPERDESK')],
+                                      children: [const Text('SUPERDESK')],
                                     ),
                                     div(
                                       className:
                                           'text-[10px] font-black uppercase tracking-widest',
-                                      children: [Text('v6 • Warm')],
+                                      children: [const Text('v6 • Warm')],
                                     ),
                                   ],
                                 ),
@@ -368,7 +357,7 @@ ReactNode App(({String title}) props) {
                                   children: [
                                     span(
                                       className: 'text-[16px]',
-                                      children: [Text('🔍')],
+                                      children: [const Text('🔍')],
                                     ),
                                     input(
                                       value: search,
@@ -384,7 +373,7 @@ ReactNode App(({String title}) props) {
                                 div(
                                   className:
                                       'w-[40px] h-[40px] rounded-full bg-pink-200 border-3 border-dark grid place-items-center font-black',
-                                  children: [Text('R')],
+                                  children: [const Text('R')],
                                 ),
                               ],
                             ),
@@ -540,9 +529,10 @@ ReactNode App(({String title}) props) {
                               try {
                                 final data =
                                     jsonDecode(jsonStr) as Map<String, dynamic>;
-                                if (data['user'] != null)
+                                if (data['user'] != null) {
                                   setUser(data['user'] as Map<String, dynamic>);
-                                if (data['resources'] != null)
+                                }
+                                if (data['resources'] != null) {
                                   setResources(
                                     List<Map<String, dynamic>>.from(
                                       (data['resources'] as List).map(
@@ -551,7 +541,8 @@ ReactNode App(({String title}) props) {
                                       ),
                                     ),
                                   );
-                                if (data['units'] != null)
+                                }
+                                if (data['units'] != null) {
                                   setUnits(
                                     List<Map<String, dynamic>>.from(
                                       (data['units'] as List).map(
@@ -560,7 +551,8 @@ ReactNode App(({String title}) props) {
                                       ),
                                     ),
                                   );
-                                if (data['syllabuses'] != null)
+                                }
+                                if (data['syllabuses'] != null) {
                                   setSyllabuses(
                                     List<Map<String, dynamic>>.from(
                                       (data['syllabuses'] as List).map(
@@ -569,7 +561,8 @@ ReactNode App(({String title}) props) {
                                       ),
                                     ),
                                   );
-                                if (data['classes'] != null)
+                                }
+                                if (data['classes'] != null) {
                                   setClasses(
                                     List<Map<String, dynamic>>.from(
                                       (data['classes'] as List).map(
@@ -578,7 +571,8 @@ ReactNode App(({String title}) props) {
                                       ),
                                     ),
                                   );
-                                if (data['phases'] != null)
+                                }
+                                if (data['phases'] != null) {
                                   setPhases(
                                     List<Map<String, dynamic>>.from(
                                       (data['phases'] as List).map(
@@ -587,6 +581,7 @@ ReactNode App(({String title}) props) {
                                       ),
                                     ),
                                   );
+                                }
                                 setToast('Settings imported ✨');
                               } catch (e) {
                                 setToast('Import failed ❌');
@@ -612,13 +607,13 @@ ReactNode App(({String title}) props) {
                                   h3(
                                     className: 'font-black text-[18px]',
                                     style: {'fontFamily': 'Fredoka'},
-                                    children: [Text('New Resource')],
+                                    children: [const Text('New Resource')],
                                   ),
                                   button(
                                     onClick: (_) => setShowNewRes(false),
                                     className:
                                         'w-[32px] h-[32px] bg-white border-2 border-dark rounded-full grid place-items-center font-black',
-                                    children: [Text('✕')],
+                                    children: [const Text('✕')],
                                   ),
                                 ],
                               ),
@@ -644,27 +639,27 @@ ReactNode App(({String title}) props) {
                                     children: [
                                       option(
                                         value: 'vocab',
-                                        children: [Text('Vocab Pack')],
+                                        children: [const Text('Vocab Pack')],
                                       ),
                                       option(
                                         value: 'video',
-                                        children: [Text('Video')],
+                                        children: [const Text('Video')],
                                       ),
                                       option(
                                         value: 'slides',
-                                        children: [Text('Slides')],
+                                        children: [const Text('Slides')],
                                       ),
                                       option(
                                         value: 'game',
-                                        children: [Text('Game')],
+                                        children: [const Text('Game')],
                                       ),
                                       option(
                                         value: 'quiz',
-                                        children: [Text('Quiz Bank')],
+                                        children: [const Text('Quiz Bank')],
                                       ),
                                       option(
                                         value: 'image',
-                                        children: [Text('Image Pack')],
+                                        children: [const Text('Image Pack')],
                                       ),
                                     ],
                                   ),
@@ -691,7 +686,7 @@ ReactNode App(({String title}) props) {
                                     },
                                     className:
                                         'w-full h-[48px] bg-dark text-white rounded-full font-black border-3 border-dark shadow-chunky',
-                                    children: [Text('Create Resource')],
+                                    children: [const Text('Create Resource')],
                                   ),
                                 ],
                               ),
@@ -716,30 +711,30 @@ ReactNode App(({String title}) props) {
                                     className: 'font-black text-[18px]',
                                     style: {'fontFamily': 'Fredoka'},
                                     children: [
-                                      Text('Edit ${editingRes!['name']}'),
+                                      Text('Edit ${editingRes['name']}'),
                                     ],
                                   ),
                                   button(
                                     onClick: (_) => setEditingRes(null),
                                     className:
                                         'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full grid place-items-center font-black',
-                                    children: [Text('✕')],
+                                    children: [const Text('✕')],
                                   ),
                                 ],
                               ),
                               input(
-                                value: editingRes!['name'] as String? ?? '',
+                                value: editingRes['name'] as String? ?? '',
                                 onChange: (e) => setEditingRes({
-                                  ...editingRes!,
+                                  ...editingRes,
                                   'name': (e.target as HTMLInputElement).value,
                                 }),
                                 className:
                                     'w-full h-[44px] bg-cream border-2 border-dark rounded-[16px] px-3 font-black outline-none',
                               ),
                               textarea(
-                                value: editingRes!['desc'] as String? ?? '',
+                                value: editingRes['desc'] as String? ?? '',
                                 onChange: (e) => setEditingRes({
-                                  ...editingRes!,
+                                  ...editingRes,
                                   'desc':
                                       (e.target as HTMLTextAreaElement).value,
                                 }),
@@ -754,9 +749,8 @@ ReactNode App(({String title}) props) {
                                       setResources(
                                         resources
                                             .map(
-                                              (r) =>
-                                                  r['id'] == editingRes!['id']
-                                                  ? editingRes!
+                                              (r) => r['id'] == editingRes['id']
+                                                  ? editingRes
                                                   : r,
                                             )
                                             .toList(),
@@ -766,13 +760,13 @@ ReactNode App(({String title}) props) {
                                     },
                                     className:
                                         'flex-1 h-[44px] bg-dark text-white rounded-full font-black',
-                                    children: [Text('Save')],
+                                    children: [const Text('Save')],
                                   ),
                                   button(
                                     onClick: (_) => setEditingRes(null),
                                     className:
                                         'h-[44px] px-5 bg-white border-2 border-dark rounded-full font-black',
-                                    children: [Text('Cancel')],
+                                    children: [const Text('Cancel')],
                                   ),
                                 ],
                               ),
@@ -780,7 +774,7 @@ ReactNode App(({String title}) props) {
                           ),
                         ],
                       ),
-                    if (toast != null && toast!.isNotEmpty)
+                    if (toast != null && toast.isNotEmpty)
                       div(
                         className:
                             'fixed bottom-6 left-1/2 -translate-x-1/2 bg-dark text-white px-5 py-3 rounded-full font-black text-[13px] shadow-[4px_4px_0px_#FFC9CE] z-50 border-2 border-white',

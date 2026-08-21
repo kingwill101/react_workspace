@@ -1,28 +1,29 @@
 name: example
 resolution: workspace
+publish_to: none
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react: {path: ../packages/react}
-  react_js: {path: ../packages/react_js}
-  react_dom: {path: ../packages/react_dom}
-  react_server: {path: ../packages/react_server}
-  react_server_shelf: {path: ../packages/react_server_shelf}
+  react: ^0.1.0
+  react_js: ^0.1.0
+  react_dom: ^0.1.0
+  react_server: ^0.1.0
+  react_server_shelf: ^0.1.0
   react_web: ^0.1.0
-  react_actions: {path: ../packages/react_actions}
-  react_router: {path: ../packages/react_router}
-  react_zustand: {path: ../packages/react_zustand}
-  react_riverpod: {path: ../packages/react_riverpod}
-  react_bloc: {path: ../packages/react_bloc}
+  react_actions: ^0.1.0
+  react_router: ^0.0.1
+  react_zustand: ^0.0.1
+  react_riverpod: ^0.0.1
+  react_bloc: ^0.0.1
   shelf: ^1.4.0
   shelf_static: ^1.1.3
   riverpod: any
   bloc: any
 dev_dependencies:
   build_runner: ^2.15.3
-  react_codegen: {path: ../packages/react_codegen}
+  react_codegen: ^0.1.0
   lints: ^6.1.0
-  react_testing: {path: ../packages/react_testing}
-  server_testing: 0.4.0
-  server_testing_shelf: 0.4.0
+  react_testing: ^0.1.0
+  server_testing: ^0.4.0
+  server_testing_shelf: ^0.4.0
   test: ^1.31.2

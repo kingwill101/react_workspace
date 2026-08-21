@@ -24,7 +24,7 @@ ReactNode SettingsPage(
           h4(
             className: 'font-black mb-4',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('Settings')],
+            children: [const Text('Settings')],
           ),
           div(
             className: 'space-y-4',
@@ -34,7 +34,7 @@ ReactNode SettingsPage(
                 children: [
                   span(
                     className: 'font-bold text-[14px]',
-                    children: [Text('Display Name')],
+                    children: [const Text('Display Name')],
                   ),
                   input(
                     type: 'text',
@@ -49,7 +49,7 @@ ReactNode SettingsPage(
                 children: [
                   span(
                     className: 'font-bold text-[14px]',
-                    children: [Text('Email')],
+                    children: [const Text('Email')],
                   ),
                   span(
                     className: 'text-[13px] font-bold text-gray-500',
@@ -68,7 +68,7 @@ ReactNode SettingsPage(
           h4(
             className: 'font-black mb-4',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('💾 Data Backup & Restore')],
+            children: [const Text('💾 Data Backup & Restore')],
           ),
           div(
             className: 'space-y-3',
@@ -77,13 +77,13 @@ ReactNode SettingsPage(
                 onClick: (_) => props.onExport(),
                 className:
                     'w-full h-[44px] bg-cream border-3 border-dark rounded-full font-black text-[13px] hover:bg-[#ffe8a3] transition-colors',
-                children: [Text('📥 Export Settings JSON')],
+                children: [const Text('📥 Export Settings JSON')],
               ),
               label(
                 className:
                     'w-full h-[44px] bg-cream border-3 border-dark rounded-full font-black text-[13px] hover:bg-[#c8f5d4] transition-colors flex items-center justify-center cursor-pointer',
                 children: [
-                  Text('📤 Import Settings JSON'),
+                  const Text('📤 Import Settings JSON'),
                   input(
                     type: 'file',
                     accept: '.json',
@@ -117,7 +117,7 @@ ReactNode SettingsPage(
           h4(
             className: 'font-black mb-4',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('Danger Zone')],
+            children: [const Text('Danger Zone')],
           ),
           div(
             className: 'space-y-3',
@@ -126,13 +126,13 @@ ReactNode SettingsPage(
                 onClick: (_) => props.onLogout(),
                 className:
                     'w-full h-[44px] bg-white border-3 border-dark rounded-full font-black text-[13px] hover:bg-cream transition-colors',
-                children: [Text('Sign Out')],
+                children: [const Text('Sign Out')],
               ),
               button(
                 onClick: (_) => props.onReset(),
                 className:
                     'w-full h-[44px] bg-[#FFC9CE] border-3 border-dark rounded-full font-black text-[13px] hover:bg-[#ffe0e0] transition-colors',
-                children: [Text('Reset All Data')],
+                children: [const Text('Reset All Data')],
               ),
             ],
           ),

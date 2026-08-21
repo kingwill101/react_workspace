@@ -34,7 +34,7 @@ ReactNode ResourcesPage(
           h2(
             className: 'font-black text-[20px] flex items-center gap-2',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('📦 Resources')],
+            children: [const Text('📦 Resources')],
           ),
           div(
             className: 'flex gap-2',
@@ -54,19 +54,19 @@ ReactNode ResourcesPage(
                 className:
                     'h-[36px] bg-white border-2 border-dark rounded-full px-3 font-bold text-[13px]',
                 children: [
-                  option(value: 'all', children: [Text('All')]),
-                  option(value: 'Popular', children: [Text('Popular')]),
-                  option(value: 'Quick', children: [Text('Quick')]),
-                  option(value: 'Creative', children: [Text('Creative')]),
-                  option(value: 'Audio', children: [Text('Audio')]),
-                  option(value: 'Video', children: [Text('Video')]),
+                  option(value: 'all', children: [const Text('All')]),
+                  option(value: 'Popular', children: [const Text('Popular')]),
+                  option(value: 'Quick', children: [const Text('Quick')]),
+                  option(value: 'Creative', children: [const Text('Creative')]),
+                  option(value: 'Audio', children: [const Text('Audio')]),
+                  option(value: 'Video', children: [const Text('Video')]),
                 ],
               ),
               button(
                 onClick: (_) => props.onAdd(),
                 className:
                     'h-[36px] px-4 bg-dark text-white rounded-full font-black text-[13px] flex items-center gap-1',
-                children: [Text('+ New')],
+                children: [const Text('+ New')],
               ),
             ],
           ),
@@ -115,19 +115,19 @@ ReactNode ResourcesPage(
                           onClick: (_) => props.onEdit(r),
                           className:
                               'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full font-black text-[12px]',
-                          children: [Text('✏️')],
+                          children: [const Text('✏️')],
                         ),
                         button(
                           onClick: (_) => props.onDuplicate(r),
                           className:
                               'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full font-black text-[12px]',
-                          children: [Text('📋')],
+                          children: [const Text('📋')],
                         ),
                         button(
                           onClick: (_) => props.onDelete(r),
                           className:
                               'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full font-black text-[12px]',
-                          children: [Text('🗑️')],
+                          children: [const Text('🗑️')],
                         ),
                       ],
                     ),

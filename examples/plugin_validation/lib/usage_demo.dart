@@ -34,7 +34,7 @@ void Function(String) useNavigate() => (String to) {};
 
 ReactNode HookUsageDemo(({String? placeholder}) props) {
   final loc = useLocation(); // collected as `reactRouter.useLocation`
-  final navigate = useNavigate(); // collected as `reactRouter.useNavigate`
+  useNavigate(); // collected as `reactRouter.useNavigate`
   return Text(loc);
 }
 

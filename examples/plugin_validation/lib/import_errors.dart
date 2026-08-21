@@ -8,7 +8,7 @@ import 'package:react_web/react_web.dart'; // expect: browser_import_in_server
 import 'package:react_js/react_js.dart'; // expect: browser_import_in_server
 import 'package:web/web.dart'; // expect: browser_import_in_server
 
-import 'valid_component.react.g.dart'; // expect: generated_bridge_import — use *.react.dart
-import 'valid_component.react.dart'; // ok — public API
+import '.generated/valid_component.react.g.dart'; // expect: generated_bridge_import — use *.react.dart
+import '.generated/valid_component.react.dart'; // ok — public API
 
 // ignore_for_file: unused_import, directives_ordering

@@ -32,7 +32,7 @@ ReactNode SyllabusPage(
             onClick: (_) => props.onToast('New syllabus ✨'),
             className:
                 'h-[40px] px-4 bg-cream border-3 border-dashed border-dark rounded-full font-black text-[13px]',
-            children: [Text('+ New')],
+            children: [const Text('+ New')],
           ),
         ],
       ),
@@ -123,7 +123,7 @@ ReactNode SyllabusPage(
                 },
                 className:
                     'h-[36px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
-                children: [Text('+ Add Unit')],
+                children: [const Text('+ Add Unit')],
               ),
             ],
           ),
@@ -139,13 +139,13 @@ ReactNode SyllabusPage(
                 onClick: (_) => props.onToast('Linked ✨'),
                 className:
                     'h-[36px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
-                children: [Text('Link Existing')],
+                children: [const Text('Link Existing')],
               ),
               button(
                 onClick: (_) => props.onToast('Created ✨'),
                 className:
                     'h-[36px] px-4 bg-white border-2 border-dark rounded-full font-black text-[12px]',
-                children: [Text('Create New')],
+                children: [const Text('Create New')],
               ),
             ],
           ),

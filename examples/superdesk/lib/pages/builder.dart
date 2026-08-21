@@ -24,7 +24,7 @@ ReactNode BuilderPage(
           h4(
             className: 'font-black mb-4',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('Lesson Builder')],
+            children: [const Text('Lesson Builder')],
           ),
           input(
             value: props.lessonName,
@@ -54,7 +54,7 @@ ReactNode BuilderPage(
                       className:
                           'w-[40px] h-[40px] rounded-[12px] grid place-items-center text-[18px]',
                       style: {'background': t['color'] as String},
-                      children: [Text('📝')],
+                      children: [const Text('📝')],
                     ),
                     div(
                       className: 'flex-1',
@@ -81,7 +81,7 @@ ReactNode BuilderPage(
             onClick: (_) => props.onToast('AI phases added ✨'),
             className:
                 'w-full h-[40px] px-4 bg-cream border-2 border-dark rounded-full font-black text-[12px] flex items-center justify-center gap-2',
-            children: [Text('✨ AI Suggest Phases')],
+            children: [const Text('✨ AI Suggest Phases')],
           ),
           if (props.phases.isNotEmpty) ...[
             h5(
@@ -100,7 +100,7 @@ ReactNode BuilderPage(
                     children: [
                       span(
                         className: 'font-black text-[14px]',
-                        children: [Text('📋')],
+                        children: [const Text('📋')],
                       ),
                       span(
                         className: 'flex-1 font-bold text-[13px]',
@@ -124,7 +124,7 @@ ReactNode BuilderPage(
                         },
                         className:
                             'w-[28px] h-[28px] bg-cream border-2 border-dark rounded-full font-black text-[12px]',
-                        children: [Text('✕')],
+                        children: [const Text('✕')],
                       ),
                     ],
                   ),
