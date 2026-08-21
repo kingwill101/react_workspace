@@ -132,6 +132,17 @@ dart run react_tool:react prerender \
   --output build/prerendered
 ```
 
+For a checked-in route list, use a JSON manifest instead:
+
+```console
+dart run react_tool:react prerender \
+  --manifest config/prerender.json \
+  --output build/prerendered
+```
+
+The manifest can be either an array such as `["/", "/about"]` or an object
+such as `{ "routes": ["/", "/about"] }`.
+
 `prerender` builds the project, starts the configured server and generated SSR
 worker, requests each route, and writes the returned HTML. `/` becomes
 `index.html`; extensionless routes become nested `index.html` files such as

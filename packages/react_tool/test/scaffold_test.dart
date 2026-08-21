@@ -37,6 +37,7 @@ void main() {
     final command = PrerenderCommand();
     expect(command.name, 'prerender');
     expect(command.argParser.options['routes'], isNotNull);
+    expect(command.argParser.options['manifest'], isNotNull);
     expect(command.argParser.options['output'], isNotNull);
     expect(command.argParser.options['port'], isNotNull);
     expect(command.argParser.options['ssr-port'], isNotNull);

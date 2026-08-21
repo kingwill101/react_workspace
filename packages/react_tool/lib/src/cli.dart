@@ -229,6 +229,12 @@ final class PrerenderCommand extends Command<void> {
         help: 'Comma-separated routes to render, for example /,/about.',
       )
       ..addOption(
+        'manifest',
+        help:
+            'JSON file containing routes to render. Accepts an array or '
+            'an object with a "routes" array.',
+      )
+      ..addOption(
         'output',
         defaultsTo: 'build/prerendered',
         help: 'Directory receiving the generated HTML documents.',
@@ -261,7 +267,10 @@ final class PrerenderCommand extends Command<void> {
   @override
   Future<void> run() async {
     final config = ReactProjectConfig.load();
-    final routes = _routes(option('routes') as String? ?? '/');
+    final manifest = option('manifest') as String?;
+    final routes = manifest == null
+        ? _routes(option('routes') as String? ?? '/')
+        : _manifestRoutes(config.file(manifest));
     final output = option('output') as String? ?? 'build/prerendered';
     final port = _parsePortValue('port', option('port') as String?);
     final ssrPort = _parsePortValue('ssr-port', option('ssr-port') as String?);
@@ -1206,6 +1215,24 @@ List<String> _routes(String value) {
     }
   }
   return routes;
+}
+
+List<String> _manifestRoutes(File file) {
+  if (!file.existsSync()) {
+    throw ReactToolException('Prerender manifest not found: ${file.path}');
+  }
+  final decoded = jsonDecode(file.readAsStringSync());
+  final routes = decoded is List
+      ? decoded
+      : decoded is Map<String, dynamic>
+      ? decoded['routes']
+      : null;
+  if (routes is! List) {
+    throw const ReactToolException(
+      'Prerender manifest must be a JSON array or an object with a "routes" array.',
+    );
+  }
+  return _routes(routes.map((route) => '$route').join(','));
 }
 
 int _parsePortValue(String name, String? raw) {
