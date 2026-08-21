@@ -39,4 +39,5 @@ export 'src/generated/browser_adapter_stub.dart'
     show registerBrowserAdapters, installBrowserWebRuntime;
 export 'src/http_server_function_client.dart';
 export 'src/props.dart';
+export 'src/server_action.dart';
 export 'src/ssr_metadata.dart';
