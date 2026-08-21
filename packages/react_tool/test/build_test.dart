@@ -182,6 +182,24 @@ $accent: #336699;
     expect(await builder.cleanGeneratedSources(), isFalse);
   });
 
+  test('generate emits project foreign component wrappers', () async {
+    final builder = ReactBuilder(
+      config: ReactProjectConfig.load(root),
+      release: false,
+      log: (_) {},
+    );
+
+    await builder.generateSources();
+
+    final bindings = File(
+      '${root.path}/lib/.generated/foreign_components.g.dart',
+    );
+    expect(bindings.existsSync(), isTrue);
+    final source = await bindings.readAsString();
+    expect(source, contains('ReactNode uiPanel'));
+    expect(source, contains("'ui.Panel'"));
+  });
+
   test('synchronizes workspace build outputs and relocates imports', () async {
     await Directory('${root.path}/lib').create(recursive: true);
     await File(

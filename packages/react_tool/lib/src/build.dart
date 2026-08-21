@@ -79,6 +79,10 @@ final class ReactBuilder {
       log('Skipping build_runner: build_runner is not declared.');
     }
     await syncGeneratedSources();
+    // Project-level foreign component wrappers are source-generation output
+    // too. Generate them here so `react generate` is sufficient for analyzers
+    // and editors that import `lib/.generated/foreign_components.g.dart`.
+    await _writeForeignComponents(null);
   }
 
   /// Synchronizes existing build-runner outputs into `lib/.generated/`.
