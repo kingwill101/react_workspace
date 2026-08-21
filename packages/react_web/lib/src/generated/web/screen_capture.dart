@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: screen-capture
 // ignore_for_file: type=lint
 
-import 'mediacapture_streams.dart';
-
 typedef CaptureStartFocusBehavior = String;
 
 typedef CursorCaptureConstraint = String;
@@ -27,7 +25,8 @@ abstract interface class DisplayMediaStreamOptions {
   set monitorTypeSurfaces(MonitorTypeSurfacesEnum? value);
 }
 
-final class DisplayMediaStreamOptionsValue implements DisplayMediaStreamOptions {
+final class DisplayMediaStreamOptionsValue
+    implements DisplayMediaStreamOptions {
   @override
   Object? video;
   @override
@@ -61,4 +60,3 @@ typedef SelfCapturePreferenceEnum = String;
 typedef SurfaceSwitchingPreferenceEnum = String;
 
 typedef SystemAudioPreferenceEnum = String;
-

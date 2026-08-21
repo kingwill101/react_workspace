@@ -38,6 +38,8 @@
 /// where you render with hooks (from JS-targeted Dart only).
 library;
 
+import 'react_router_bindings.g.dart' show Location;
+
 /// Typed helpers for the `reactRouter.*` components.
 export 'react_router_bindings.g.dart';
 
@@ -45,3 +47,8 @@ export 'react_router_bindings.g.dart';
 /// (`staticRouter` is the SSR counterpart of `browserRouter`).
 export 'react_router_server_bindings.g.dart';
 
+/// Convenience accessors for a React Router [Location].
+extension ReactRouterLocation on Location {
+  /// The URL path, query string, and fragment as one browser-relative value.
+  String get fullPath => '$pathname$search$hash';
+}

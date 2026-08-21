@@ -2,53 +2,233 @@
 sidebar_position: 2
 ---
 
-# CLI Reference (`react_tool`)
+# CLI reference
 
-The `react_tool` package exposes the `react` executable, which orchestrates the entire build and development lifecycle of a React Dart application.
+`react_tool` owns project scaffolding, Dart generation, JavaScript dependency
+management, browser and SSR compilation, and local process orchestration.
 
-## Global Activation
+Run it from an application package:
 
-```bash
-dart pub global activate react_tool
+```console
+dart run react_tool:react <command>
 ```
 
-You can then run `react <command>` or `dart run react_tool:react <command>`.
+After global activation, the shorter `react <command>` form is equivalent:
 
-## Commands
+```console
+dart pub global activate react_tool
+react doctor
+```
 
-### `react doctor`
-Inspects the current project and verifies that the `react.yaml` configuration is valid, dependencies are installed, and the environment is ready for development.
+## Command overview
 
-### `react init <directory> [--template <name>]`
-Scaffolds a new React Dart project.
-- `--template ssr` (default): Creates a full-stack SSR project with a backend server.
-- `--template client`: Creates a client-only static site project.
+| Command | Purpose |
+| --- | --- |
+| `doctor` | Inspect resolved project configuration and development readiness. |
+| `init` | Scaffold an SSR, client-only, or Routed application. |
+| `generate` | Generate Dart sources into `lib/.generated/` without compiling bundles. |
+| `build` | Generate sources and compile production artifacts. |
+| `serve` | Build, then run the application server and optional Node SSR worker. |
+| `clean` | Remove React-owned build and generated outputs. |
+| `js install` | Provision the managed npm environment. |
+| `js sync` | Validate npm requirements in host-JS mode. |
+| `ts bind` | Generate typed Dart bindings and registration shims from TypeScript. |
+| `analyze` | Run Dart analysis and print resolved React usage information. |
+| `test` | Run Dart tests, optionally with coverage. |
 
-### `react build`
-Compiles the application for production.
-- **Flags**:
-  - `--release`: Minifies Dart and JS outputs, and compresses CSS.
-  - `--watch`: Watches the file system and incrementally rebuilds on changes.
-- **Outputs**: Generates files into the configured output directory (usually `build/react/`). This includes the manifest, JS bundles, and compiled stylesheets.
+## `react doctor`
 
-### `react serve`
-Starts the development server.
-- **Flags**:
-  - `--watch`: Rebuilds and restarts the server on code changes.
-  - `--release`: Runs the server using release-mode artifacts.
-  - `--no-ssr`: Disables the SSR worker for debugging client-side rendering.
-- **Behavior**: Runs the Dart executable specified in `serverEntrypoint` (e.g., `bin/server.dart`). In client-only mode, it spins up a simple static file server instead.
+```console
+dart run react_tool:react doctor
+```
 
-### `react js install`
-Provisions an isolated NPM environment in `.dart_tool/react/js`. This is used internally during `build`, but can be run manually to force an npm dependency resolution based on your wrapper definitions.
+Reports the package root, configuration source, client/SSR/server entrypoints,
+styles, static directory, output directory, and whether analysis and testing
+support are configured. Run it from a directory containing `pubspec.yaml`.
 
-### `react js sync`
-Validates that a host JS project satisfies all wrapper requirements. Useful when `foreign.host: true` is set in `react.yaml`.
+## `react init`
 
-### `react ts bind <specifier> [names...]`
-Extracts TypeScript declarations from an NPM package and generates Dart bindings.
-- **Arguments**:
-  - `<specifier>`: The npm package name (e.g., `react-router-dom`).
-  - `[names...]`: Specific exports to bind. If omitted, discovers all React components and hooks.
-- **Flags**:
-  - `--hooks <file>`: Specify an output file for generated hook bindings.
+```console
+dart run react_tool:react init <project_name> [options]
+```
+
+Options:
+
+- `--template <ssr|client|routed|routed-minimal>` selects the starter. The
+  default is `ssr`.
+- `--packages <path>` selects the local React package directory used by the
+  generated path dependencies. It defaults to `../packages`.
+- `--force` allows writing into an existing target directory.
+
+The `routed` templates use `react_server_routed` and `routed_io` without a
+Shelf dependency. `routed-minimal` keeps the same full-stack behavior while
+reducing starter-facing files.
+
+```console
+dart run react_tool:react init dashboard --template routed-minimal
+cd dashboard
+dart pub get
+dart run react_tool:react serve
+```
+
+## `react generate`
+
+```console
+dart run react_tool:react generate
+```
+
+Runs build-runner generation and synchronizes application-facing outputs into
+`lib/.generated/`. It does not compile CSS, browser JavaScript, or the SSR
+worker. Use it when changing component signatures, server functions, or
+generated imports and you want a quick feedback cycle.
+
+Import generated factories through package URIs:
+
+```dart
+import 'package:my_app/.generated/app.react.dart';
+```
+
+Do not edit or commit `lib/.generated/`; change the annotated source,
+generator, or scaffold template and regenerate.
+
+For a multi-package workspace, CI can compile all builders once and then sync
+each application's package-local imports without repeating the build:
+
+```console
+dart run build_runner build --workspace
+cd examples/my_app
+dart run react_tool:react generate --sync-only
+```
+
+`--sync-only` never invokes build-runner. It expects a successful workspace
+build to already exist under the nearest `.dart_tool/build/generated/` tree,
+so it is an orchestration option rather than the normal development command.
+
+## `react build`
+
+```console
+dart run react_tool:react build [--release] [--server] [--watch]
+```
+
+- `--release` uses release optimization for the client bundle.
+- `--server` also compiles the configured Dart server to a native executable.
+- `--watch` rebuilds when authored project files change.
+
+A full build can produce:
+
+- `build/react/browser.entry.mjs` and the compiled Dart client;
+- `build/react/ssr.entry.mjs`, `ssr_runtime.mjs`, and the compiled SSR code;
+- compiled styles and copied static assets;
+- browser and SSR foreign-module bundles;
+- `bundle_manifest.json` and `bundle_report.json`;
+- an optional native server executable.
+
+## `react serve`
+
+```console
+dart run react_tool:react serve \
+  [--port 8080] [--ssr-port 3001] \
+  [--watch] [--release] [--no-ssr]
+```
+
+`serve` builds first, then starts the configured Dart server. If an SSR bundle
+exists, it also starts the generated Node worker and passes its URL to the
+server. Client-only projects use the built-in static server.
+
+- `--port` selects the application port.
+- `--ssr-port` selects the worker port.
+- `--no-ssr` starts only the Dart application server.
+- `--watch` rebuilds and restarts after successful changes.
+- `--release` builds optimized client output.
+
+For tests, use `ReactTestHarness` rather than fixed ports; it allocates isolated
+ports and composes with the selected `server_testing` adapter.
+
+## `react clean`
+
+```console
+dart run react_tool:react clean
+```
+
+Removes `build/react/`, `lib/.generated/`, generated CSS-module bindings,
+and legacy project-level foreign-component bindings owned by the tool. It does
+not remove authored source or the complete Dart build cache.
+
+## JavaScript environment
+
+```console
+dart run react_tool:react js install
+dart run react_tool:react js sync
+```
+
+`js install` resolves wrapper descriptors and provisions exact npm versions
+under `.dart_tool/react/js/`. It does not mutate the application's
+`package.json`.
+
+`js sync` is for `foreign.host: true` projects. It validates that the host
+JavaScript project satisfies every wrapper dependency and peer range.
+
+## TypeScript bindings
+
+Explicit mode extracts selected exports, or discovers components and hooks when
+no names are supplied:
+
+```console
+dart run react_tool:react ts bind react-router-dom MemoryRouter Link \
+  --output lib/src/router_bindings.g.dart \
+  --shim lib/src/router_shim.mjs \
+  --hooks lib/src/router_hooks.g.dart \
+  --namespace reactRouter \
+  --prefix reactRouter
+```
+
+Options:
+
+- `--output`, `-o`: Dart binding output.
+- `--shim`: self-registering JavaScript module.
+- `--hooks`: Dart hook binding output.
+- `--namespace`: isolated global hook/function bridge namespace.
+- `--prefix`: component registration-key prefix.
+- `--type-prefix`: prefix generated Dart type names to avoid collisions.
+- `--npm-root`: resolve declarations from a nonstandard npm installation.
+
+Declarative mode regenerates every `react.js.bind` group in `react.yaml` or
+`pubspec.yaml`:
+
+```yaml
+react:
+  js:
+    bind:
+      - specifier: some-react-library
+        output: lib/src/some_bindings.g.dart
+        shim: lib/src/some_bindings_shim.mjs
+        hooks: lib/src/some_hooks.g.dart
+        namespace: someLibrary
+        prefix: someLibrary
+        exclude: [UnsupportedExport]
+```
+
+```console
+dart run react_tool:react js install
+dart run react_tool:react ts bind
+```
+
+Generated wrapper files are normally committed and reviewed because they are
+the wrapper package's implementation. Application codegen under
+`lib/.generated/` is ephemeral.
+
+## Analysis and tests
+
+```console
+dart run react_tool:react analyze [--path <project>] [--verbose]
+dart run react_tool:react test [--path <test-path>] [--coverage]
+```
+
+`analyze` runs `dart analyze`; when the analyzer plugin is enabled, its React
+rules participate. It also previews resolved component and hook usage for the
+configured client and SSR entrypoints.
+
+`test` delegates to `dart test`. The default path is `test`; `--coverage`
+writes `coverage/lcov.info`. Use `react_testing` and the relevant
+`server_testing` adapter for component, SSR, asset, and server-function
+behavior.

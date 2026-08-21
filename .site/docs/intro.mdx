@@ -2,60 +2,64 @@
 sidebar_position: 1
 ---
 
-# Introduction to React Dart
+# React Dart
 
-Welcome to **React Dart**, a framework for building robust, scalable React applications entirely in Dart. By combining the power of the Dart language with the React ecosystem, React Dart offers a unique, type-safe development experience that bridges the gap between client and server.
+React Dart is a typed Dart component system that renders through React in the
+browser and Node SSR while keeping server transports and JavaScript wrappers
+modular.
 
-## What is React Dart?
+## What it provides
 
-React Dart is a framework designed to build React interfaces using Dart, bringing full Server-Side Rendering (SSR), typed server functions, and a contract-based client/server communication model. It allows you to write components in Dart, which are then compiled and executed in the browser or rendered on the server.
+- portable `ReactNode`, component, hook, context, ref, suspense, memo, lazy,
+  and error-boundary contracts;
+- generated HTML/SVG factories and Web API shapes shared by browser and SSR;
+- browser mounting and hydration through `react_dom`;
+- typed server functions with generated symmetric codecs;
+- separate Routed and Shelf server integrations;
+- npm wrapper descriptors and generated TypeScript bindings;
+- Sass, CSS Modules, foreign bundles, and build manifests;
+- native component, SSR, server-function, generator, and full-build harnesses.
 
-### Core Philosophy
-
-1. **Type Safety End-to-End**: Leverage Dart's strong type system across both the UI layer and the backend server logic.
-2. **Seamless Server Integration**: With `@serverFunction`, call backend logic directly from your UI components without manually writing API endpoints or serialization logic.
-3. **Interop without Tears**: Import and use any JavaScript/TypeScript React component effortlessly. React Dart handles the bundling and bridge generation.
-4. **Zero-Configuration Build**: The `react_tool` CLI orchestrates Dart compilation, JS bundling (via esbuild or rolldown), and CSS/Sass compilation.
-
-## Key Features
-
-### 1. Server-Side Rendering (SSR)
-React Dart supports out-of-the-box SSR. Your application renders to HTML on the server, sending a fully formed document to the client, which is then hydrated. This results in incredibly fast initial page loads and excellent SEO.
-
-### 2. Typed Server Functions
-Gone are the days of manual REST APIs for every small interaction. By simply annotating a Dart function with `@serverFunction`, React Dart automatically generates the necessary client proxies, cryptographic contract hashes, and secure serialization codecs.
+## Component model
 
 ```dart
-@serverFunction
-Future<bool> validateUser(ServerFunctionContext context, {required String username}) async {
-  return await db.users.exists(username);
+import 'package:react_dom/react_dom.dart';
+
+@reactComponent
+ReactNode Greeting(({String name}) props) {
+  return h1(
+    style: css(color: '#6d5dfc'),
+    children: ['Hello, ${props.name}'],
+  );
 }
 ```
 
-### 3. Automated Code Generation
-React Dart embraces Dart's macro and builder ecosystem. The `react_codegen` package generates:
-- Pure sealed Dart components (e.g., `Component` with keys and children).
-- JavaScript wrapper extensions for seamless prop passing.
-- Action codecs for server functions.
+The authored function is portable. Code generation emits a callable factory and
+browser/SSR bridges under `lib/.generated/`.
 
-### 4. Foreign Component Support
-Want to use `react-router-dom` or a complex date picker from npm? React Dart's `foreign:` configuration lets you register JavaScript/TypeScript components. The CLI bundles them, and you can generate typed Dart bindings to interact with them as if they were native Dart components.
+## Package boundaries
 
-### 5. First-class CSS and Sass
-Support for CSS and Sass is built directly into the CLI. Simply define your styles in `react.yaml`. It also supports CSS Modules natively for any file ending in `.module.scss`, `.module.sass`, or `.module.css`.
+- `react`: portable model and runtime contracts;
+- `react_web`: pinned generated Web surface and host factories;
+- `react_dom`: recommended component entrypoint plus mount/hydrate;
+- `react_js`: JavaScript renderer and React hook implementation;
+- `react_actions`: browser-safe server-function protocol;
+- `react_server`: transport-neutral registry and SSR primitives;
+- `react_server_routed` / `react_server_shelf`: concrete HTTP integrations;
+- `react_codegen`: Dart source generation;
+- `react_tool`: scaffolding, generation, compilation, npm, and serving;
+- `react_testing`: native test stack built on `server_testing`;
+- `react_analysis` / `react_analyzer`: shared semantics and IDE diagnostics.
 
-## Ecosystem Packages
+## Start
 
-The React Dart workspace is composed of several specialized packages:
+```console
+dart run react_tool:react init my_app --template routed-minimal
+cd my_app
+dart pub get
+dart run react_tool:react serve
+```
 
-- **`react`**: The core package containing the portable `ReactNode` tree, `Component` definitions, and core hooks (`useState`, `useEffect`).
-- **`react_dom`**: Handles DOM mounting, hydration, and browser-specific implementations.
-- **`react_js`**: Provides the JavaScript bindings and exhaustive renderer switches.
-- **`react_actions`**: Contains the `@serverFunction` and `@serverData` annotations for client-server RPC.
-- **`react_codegen`**: The build_runner backend that generates `.react.dart` component files and `.react.g.dart` JS wrappers.
-- **`react_tool`**: The CLI that orchestrates the entire build pipeline (`react build`, `react serve`).
-- **`react_testing`**: Tools for executing headless browser testing and SSR validation.
-
-## Next Steps
-
-Ready to dive in? Proceed to the [Installation](./getting-started/installation.mdx) guide to set up your environment, or jump straight into the [Quick Start](./getting-started/quick-start.mdx) to build your first app.
+Continue with [Installation](./getting-started/installation.mdx), [Quick
+start](./getting-started/quick-start.mdx), or [Component authoring
+ergonomics](./guides/component-ergonomics.mdx).

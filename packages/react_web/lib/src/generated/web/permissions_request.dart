@@ -8,4 +8,3 @@ abstract interface class Permissions {
   Future<PermissionStatus> revoke(Object permissionDesc);
   Future<PermissionStatus> query(Object permissionDesc);
 }
-

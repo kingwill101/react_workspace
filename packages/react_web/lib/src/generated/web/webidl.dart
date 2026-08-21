@@ -11,15 +11,11 @@ typedef ArrayBufferView = Object;
 typedef BufferSource = Object;
 
 abstract interface class DOMException {
-  factory DOMException([String? message, String? name]) =>
-      WebRuntime.current.createWebObject<DOMException>(
-        'DOMException',
-        [message, name],
-      );
+  factory DOMException([String? message, String? name]) => WebRuntime.current
+      .createWebObject<DOMException>('DOMException', [message, name]);
   String get name;
   String get message;
   int get code;
 }
 
 typedef VoidFunction = void Function();
-

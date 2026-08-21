@@ -8,19 +8,10 @@ library;
 import 'package:analyzer/dart/ast/ast.dart';
 
 /// The kind of runtime symbol a Dart declaration bridges to.
-enum ReactRuntimeSymbolKind {
-  component,
-  hook,
-  function,
-  value,
-}
+enum ReactRuntimeSymbolKind { component, hook, function, value }
 
 /// Which render targets a symbol is valid for.
-enum ReactRenderTarget {
-  browser,
-  server,
-  test,
-}
+enum ReactRenderTarget { browser, server, test }
 
 /// Machine-readable bridge metadata added to generated declarations.
 ///
@@ -34,8 +25,13 @@ enum ReactRenderTarget {
 /// ReactRouterLocation useLocation() => ...
 /// ```
 final class ReactRuntimeSymbol {
+  /// The kind of declaration exposed to React.
   final ReactRuntimeSymbolKind kind;
+
+  /// Stable lookup key used by generated runtime bridges.
   final String runtimeKey;
+
+  /// Render environments in which this symbol may be used.
   final Set<ReactRenderTarget> targets;
 
   const ReactRuntimeSymbol({
@@ -52,22 +48,18 @@ final class ReactHook {
 }
 
 /// Describes a Web API's realm exposure and SSR support.
-enum WebRealm {
-  window,
-  document,
-  worker,
-  shared,
-}
+enum WebRealm { window, document, worker, shared }
 
-enum WebSsrSupport {
-  available,
-  unavailable,
-  emulated,
-}
+enum WebSsrSupport { available, unavailable, emulated }
 
 final class WebApiRuntimeInfo {
+  /// Stable Web API identifier.
   final String id;
+
+  /// JavaScript realms that expose the API.
   final Set<WebRealm> exposed;
+
+  /// Whether and how the API is available during server rendering.
   final WebSsrSupport ssr;
 
   const WebApiRuntimeInfo({
@@ -78,18 +70,23 @@ final class WebApiRuntimeInfo {
 }
 
 /// Diagnostic severity for react_analysis validators.
-enum ReactDiagnosticSeverity {
-  error,
-  warning,
-  info,
-}
+enum ReactDiagnosticSeverity { error, warning, info }
 
 /// A single analyzer diagnostic produced by react_analysis.
 final class ReactDiagnostic {
+  /// Stable machine-readable diagnostic identifier.
   final String code;
+
+  /// Human-readable explanation of the problem.
   final String message;
+
+  /// Importance assigned by the shared analyzer engine.
   final ReactDiagnosticSeverity severity;
+
+  /// Optional guidance for correcting the problem.
   final String? correction;
+
+  /// AST node associated with the diagnostic, when one is available.
   final AstNode? node;
 
   const ReactDiagnostic({
@@ -122,8 +119,7 @@ abstract final class ReactDiagnosticCode {
   static const hookInLoop = 'react_hook_in_loop';
   static const hookAfterEarlyReturn = 'react_hook_after_early_return';
   static const customHookInvalidName = 'react_custom_hook_invalid_name';
-  static const componentCalledAsFunction =
-      'react_component_called_as_function';
+  static const componentCalledAsFunction = 'react_component_called_as_function';
 
   // SSR.
   static const browserApiDuringSsr = 'react_browser_api_during_ssr';

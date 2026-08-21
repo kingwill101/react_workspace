@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'html.dart';
-import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef PaymentComplete = String;
@@ -17,9 +16,7 @@ final class PaymentCompleteDetailsValue implements PaymentCompleteDetails {
   @override
   Object? data;
 
-  PaymentCompleteDetailsValue({
-    this.data,
-  });
+  PaymentCompleteDetailsValue({this.data});
 }
 
 abstract interface class PaymentCurrencyAmount {
@@ -35,10 +32,7 @@ final class PaymentCurrencyAmountValue implements PaymentCurrencyAmount {
   @override
   String value;
 
-  PaymentCurrencyAmountValue({
-    required this.currency,
-    required this.value,
-  });
+  PaymentCurrencyAmountValue({required this.currency, required this.value});
 }
 
 abstract interface class PaymentDetailsBase {
@@ -54,10 +48,7 @@ final class PaymentDetailsBaseValue implements PaymentDetailsBase {
   @override
   List<PaymentDetailsModifier>? modifiers;
 
-  PaymentDetailsBaseValue({
-    this.displayItems,
-    this.modifiers,
-  });
+  PaymentDetailsBaseValue({this.displayItems, this.modifiers});
 }
 
 abstract interface class PaymentDetailsInit {
@@ -73,10 +64,7 @@ final class PaymentDetailsInitValue implements PaymentDetailsInit {
   @override
   PaymentItem total;
 
-  PaymentDetailsInitValue({
-    this.id,
-    required this.total,
-  });
+  PaymentDetailsInitValue({this.id, required this.total});
 }
 
 abstract interface class PaymentDetailsModifier {
@@ -121,10 +109,7 @@ final class PaymentDetailsUpdateValue implements PaymentDetailsUpdate {
   @override
   Object? paymentMethodErrors;
 
-  PaymentDetailsUpdateValue({
-    this.total,
-    this.paymentMethodErrors,
-  });
+  PaymentDetailsUpdateValue({this.total, this.paymentMethodErrors});
 }
 
 abstract interface class PaymentItem {
@@ -144,19 +129,17 @@ final class PaymentItemValue implements PaymentItem {
   @override
   bool? pending;
 
-  PaymentItemValue({
-    required this.label,
-    required this.amount,
-    this.pending,
-  });
+  PaymentItemValue({required this.label, required this.amount, this.pending});
 }
 
 abstract interface class PaymentMethodChangeEvent {
-  factory PaymentMethodChangeEvent(String type, [PaymentMethodChangeEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<PaymentMethodChangeEvent>(
-        'PaymentMethodChangeEvent',
-        [type, eventInitDict],
-      );
+  factory PaymentMethodChangeEvent(
+    String type_, [
+    PaymentMethodChangeEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<PaymentMethodChangeEvent>(
+    'PaymentMethodChangeEvent',
+    [type_, eventInitDict],
+  );
   String get methodName;
   Object? get methodDetails;
 }
@@ -168,16 +151,14 @@ abstract interface class PaymentMethodChangeEventInit {
   set methodDetails(Object? value);
 }
 
-final class PaymentMethodChangeEventInitValue implements PaymentMethodChangeEventInit {
+final class PaymentMethodChangeEventInitValue
+    implements PaymentMethodChangeEventInit {
   @override
   String? methodName;
   @override
   Object? methodDetails;
 
-  PaymentMethodChangeEventInitValue({
-    this.methodName,
-    this.methodDetails,
-  });
+  PaymentMethodChangeEventInitValue({this.methodName, this.methodDetails});
 }
 
 abstract interface class PaymentMethodData {
@@ -193,40 +174,40 @@ final class PaymentMethodDataValue implements PaymentMethodData {
   @override
   Object? data;
 
-  PaymentMethodDataValue({
-    required this.supportedMethods,
-    this.data,
-  });
+  PaymentMethodDataValue({required this.supportedMethods, this.data});
 }
 
 abstract interface class PaymentRequest {
-  factory PaymentRequest(List<PaymentMethodData> methodData, PaymentDetailsInit details) =>
-      WebRuntime.current.createWebObject<PaymentRequest>(
-        'PaymentRequest',
-        [methodData, details],
-      );
+  factory PaymentRequest(
+    List<PaymentMethodData> methodData,
+    PaymentDetailsInit details,
+  ) => WebRuntime.current.createWebObject<PaymentRequest>('PaymentRequest', [
+    methodData,
+    details,
+  ]);
   Future<PaymentResponse> show_([Future<PaymentDetailsUpdate>? detailsPromise]);
   Future<void> abort();
   Future<bool> canMakePayment();
   String get id;
   EventHandler get onpaymentmethodchange;
-   set onpaymentmethodchange(EventHandler value);
+  set onpaymentmethodchange(EventHandler value);
 }
 
 abstract interface class PaymentRequestUpdateEvent {
-  factory PaymentRequestUpdateEvent(String type, [PaymentRequestUpdateEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<PaymentRequestUpdateEvent>(
-        'PaymentRequestUpdateEvent',
-        [type, eventInitDict],
-      );
+  factory PaymentRequestUpdateEvent(
+    String type_, [
+    PaymentRequestUpdateEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<PaymentRequestUpdateEvent>(
+    'PaymentRequestUpdateEvent',
+    [type_, eventInitDict],
+  );
   void updateWith(Future<PaymentDetailsUpdate> detailsPromise);
 }
 
-abstract interface class PaymentRequestUpdateEventInit {
-}
+abstract interface class PaymentRequestUpdateEventInit {}
 
-final class PaymentRequestUpdateEventInitValue implements PaymentRequestUpdateEventInit {
-
+final class PaymentRequestUpdateEventInitValue
+    implements PaymentRequestUpdateEventInit {
   PaymentRequestUpdateEventInitValue();
 }
 
@@ -235,7 +216,10 @@ abstract interface class PaymentResponse {
   String get requestId;
   String get methodName;
   Object get details;
-  Future<void> complete([PaymentComplete? result, PaymentCompleteDetails? details]);
+  Future<void> complete([
+    PaymentComplete? result,
+    PaymentCompleteDetails? details,
+  ]);
   Future<void> retry([PaymentValidationErrors? errorFields]);
 }
 
@@ -252,9 +236,5 @@ final class PaymentValidationErrorsValue implements PaymentValidationErrors {
   @override
   Object? paymentMethod;
 
-  PaymentValidationErrorsValue({
-    this.error,
-    this.paymentMethod,
-  });
+  PaymentValidationErrorsValue({this.error, this.paymentMethod});
 }
-

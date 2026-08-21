@@ -16,10 +16,10 @@ import 'package:react/react.dart';
 ReactNode memoryRouter({
   String? key,
   List<ReactNode> children = const [],
-    String? basename,
-    FutureConfig? future,
-    List<Object?>? initialEntries,
-    num? initialIndex,
+  String? basename,
+  FutureConfig? future,
+  List<Object?>? initialEntries,
+  num? initialIndex,
 }) => foreignComponent(
   'reactRouterDom.MemoryRouter',
   key: key,
@@ -45,22 +45,22 @@ ReactNode memoryRouter({
 ReactNode route({
   String? key,
   List<ReactNode> children = const [],
-    Object? shouldRevalidate,
-    ReactNode? element,
-    Object? HydrateFallback,
-    Object? id,
-    Object? lazy,
-    ReactNode? hydrateFallbackElement,
-    ReactNode? errorElement,
-    Object? Component,
-    Object? action,
-    Object? path,
-    bool? index,
-    Object? hasErrorBoundary,
-    Object? handle,
-    Object? caseSensitive,
-    Object? loader,
-    Object? ErrorBoundary,
+  Object? shouldRevalidate,
+  ReactNode? element,
+  Object? HydrateFallback,
+  Object? id,
+  Object? lazy,
+  ReactNode? hydrateFallbackElement,
+  ReactNode? errorElement,
+  Object? Component,
+  Object? action,
+  Object? path,
+  bool? index,
+  Object? hasErrorBoundary,
+  Object? handle,
+  Object? caseSensitive,
+  Object? loader,
+  Object? ErrorBoundary,
 }) => foreignComponent(
   'reactRouterDom.Route',
   key: key,
@@ -70,7 +70,8 @@ ReactNode route({
     if (HydrateFallback != null) 'HydrateFallback': HydrateFallback,
     if (id != null) 'id': id,
     if (lazy != null) 'lazy': lazy,
-    if (hydrateFallbackElement != null) 'hydrateFallbackElement': hydrateFallbackElement,
+    if (hydrateFallbackElement != null)
+      'hydrateFallbackElement': hydrateFallbackElement,
     if (errorElement != null) 'errorElement': errorElement,
     if (Component != null) 'Component': Component,
     if (action != null) 'action': action,
@@ -85,11 +86,11 @@ ReactNode route({
   children: children,
 );
 
-
 /// Literal union: "route" | "path"
 enum NavigatePropsRelative {
   route('route'),
   path('path');
+
   const NavigatePropsRelative(this.value);
   final String value;
 }
@@ -112,7 +113,8 @@ class FutureConfig {
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     if (v7_startTransition != null) 'v7_startTransition': v7_startTransition,
-    if (v7_relativeSplatPath != null) 'v7_relativeSplatPath': v7_relativeSplatPath,
+    if (v7_relativeSplatPath != null)
+      'v7_relativeSplatPath': v7_relativeSplatPath,
   };
 }
 
@@ -147,4 +149,3 @@ class NavigateProps {
     if (state != null) 'state': state,
   };
 }
-

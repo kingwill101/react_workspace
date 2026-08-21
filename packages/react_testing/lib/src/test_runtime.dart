@@ -7,33 +7,33 @@ import 'package:react/react.dart';
 class TestRuntimes {
   /// A runtime that supports all test-capable features (no effects).
   static ReactRuntime get standard => ReactRuntime(
-        target: ReactRenderTarget.test,
-        capabilities: const ReactRuntimeCapabilities(
-          supportsEvents: true,
-          supportsRefs: true,
-          supportsEffects: false,
-          supportsContext: true,
-          supportsSuspense: true,
-        ),
-        binding: _TestBinding(),
-        renderer: _TestRenderer(),
-      );
+    target: ReactRenderTarget.test,
+    capabilities: const ReactRuntimeCapabilities(
+      supportsEvents: true,
+      supportsRefs: true,
+      supportsEffects: false,
+      supportsContext: true,
+      supportsSuspense: true,
+    ),
+    binding: _TestBinding(),
+    renderer: _TestRenderer(),
+  );
 
   /// A runtime that pretends to be the browser (effects enabled).
   static ReactRuntime get browser => ReactRuntime(
-        target: ReactRenderTarget.browser,
-        capabilities: ReactRuntimeCapabilities.browser,
-        binding: _TestBinding(supportsEffects: true),
-        renderer: _TestRenderer(),
-      );
+    target: ReactRenderTarget.browser,
+    capabilities: ReactRuntimeCapabilities.browser,
+    binding: _TestBinding(supportsEffects: true),
+    renderer: _TestRenderer(),
+  );
 
   /// A runtime that pretends to be the server (SSR, no events/refs).
   static ReactRuntime get server => ReactRuntime(
-        target: ReactRenderTarget.server,
-        capabilities: ReactRuntimeCapabilities.server,
-        binding: _TestBinding(),
-        renderer: _TestRenderer(),
-      );
+    target: ReactRenderTarget.server,
+    capabilities: ReactRuntimeCapabilities.server,
+    binding: _TestBinding(),
+    renderer: _TestRenderer(),
+  );
 }
 
 class _TestBinding extends ReactBinding {
@@ -67,8 +67,7 @@ class _TestBinding extends ReactBinding {
     StoreSubscribe subscribe,
     Snapshot<T> getSnapshot,
     Snapshot<T>? getServerSnapshot,
-  ) =>
-      getSnapshot();
+  ) => getSnapshot();
 
   @override
   T useMemo<T>(T Function() factory, List<Object?>? deps) => factory();

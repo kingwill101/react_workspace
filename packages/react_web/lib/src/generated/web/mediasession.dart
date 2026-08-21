@@ -21,11 +21,7 @@ final class ChapterInformationInitValue implements ChapterInformationInit {
   @override
   List<MediaImage>? artwork;
 
-  ChapterInformationInitValue({
-    this.title,
-    this.startTime,
-    this.artwork,
-  });
+  ChapterInformationInitValue({this.title, this.startTime, this.artwork});
 }
 
 abstract interface class MediaImage {
@@ -33,8 +29,8 @@ abstract interface class MediaImage {
   set src(String value);
   String? get sizes;
   set sizes(String? value);
-  String? get type;
-  set type(String? value);
+  String? get type_;
+  set type_(String? value);
 }
 
 final class MediaImageValue implements MediaImage {
@@ -43,29 +39,22 @@ final class MediaImageValue implements MediaImage {
   @override
   String? sizes;
   @override
-  String? type;
+  String? type_;
 
-  MediaImageValue({
-    required this.src,
-    this.sizes,
-    this.type,
-  });
+  MediaImageValue({required this.src, this.sizes, this.type_});
 }
 
 abstract interface class MediaMetadata {
-  factory MediaMetadata([MediaMetadataInit? init]) =>
-      WebRuntime.current.createWebObject<MediaMetadata>(
-        'MediaMetadata',
-        [init],
-      );
+  factory MediaMetadata([MediaMetadataInit? init]) => WebRuntime.current
+      .createWebObject<MediaMetadata>('MediaMetadata', [init]);
   String get title;
-   set title(String value);
+  set title(String value);
   String get artist;
-   set artist(String value);
+  set artist(String value);
   String get album;
-   set album(String value);
+  set album(String value);
   List<MediaImage> get artwork;
-   set artwork(List<MediaImage> value);
+  set artwork(List<MediaImage> value);
 }
 
 abstract interface class MediaMetadataInit {
@@ -119,19 +108,18 @@ final class MediaPositionStateValue implements MediaPositionState {
   @override
   double? position;
 
-  MediaPositionStateValue({
-    this.duration,
-    this.playbackRate,
-    this.position,
-  });
+  MediaPositionStateValue({this.duration, this.playbackRate, this.position});
 }
 
 abstract interface class MediaSession {
   MediaMetadata? get metadata;
-   set metadata(MediaMetadata? value);
+  set metadata(MediaMetadata? value);
   MediaSessionPlaybackState get playbackState;
-   set playbackState(MediaSessionPlaybackState value);
-  void setActionHandler(MediaSessionAction action, MediaSessionActionHandler? handler);
+  set playbackState(MediaSessionPlaybackState value);
+  void setActionHandler(
+    MediaSessionAction action,
+    MediaSessionActionHandler? handler,
+  );
   void setPositionState([MediaPositionState? state]);
 }
 
@@ -142,29 +130,28 @@ abstract interface class MediaSessionActionDetails {
   set action(MediaSessionAction value);
 }
 
-final class MediaSessionActionDetailsValue implements MediaSessionActionDetails {
+final class MediaSessionActionDetailsValue
+    implements MediaSessionActionDetails {
   @override
   MediaSessionAction action;
 
-  MediaSessionActionDetailsValue({
-    required this.action,
-  });
+  MediaSessionActionDetailsValue({required this.action});
 }
 
-typedef MediaSessionActionHandler = void Function(MediaSessionActionDetails details,);
+typedef MediaSessionActionHandler =
+    void Function(MediaSessionActionDetails details);
 
 abstract interface class MediaSessionCaptureActionDetails {
   bool? get isActivating;
   set isActivating(bool? value);
 }
 
-final class MediaSessionCaptureActionDetailsValue implements MediaSessionCaptureActionDetails {
+final class MediaSessionCaptureActionDetailsValue
+    implements MediaSessionCaptureActionDetails {
   @override
   bool? isActivating;
 
-  MediaSessionCaptureActionDetailsValue({
-    this.isActivating,
-  });
+  MediaSessionCaptureActionDetailsValue({this.isActivating});
 }
 
 typedef MediaSessionPlaybackState = String;
@@ -174,13 +161,12 @@ abstract interface class MediaSessionSeekActionDetails {
   set seekOffset(double? value);
 }
 
-final class MediaSessionSeekActionDetailsValue implements MediaSessionSeekActionDetails {
+final class MediaSessionSeekActionDetailsValue
+    implements MediaSessionSeekActionDetails {
   @override
   double? seekOffset;
 
-  MediaSessionSeekActionDetailsValue({
-    this.seekOffset,
-  });
+  MediaSessionSeekActionDetailsValue({this.seekOffset});
 }
 
 abstract interface class MediaSessionSeekToActionDetails {
@@ -190,15 +176,12 @@ abstract interface class MediaSessionSeekToActionDetails {
   set fastSeek(bool? value);
 }
 
-final class MediaSessionSeekToActionDetailsValue implements MediaSessionSeekToActionDetails {
+final class MediaSessionSeekToActionDetailsValue
+    implements MediaSessionSeekToActionDetails {
   @override
   double seekTime;
   @override
   bool? fastSeek;
 
-  MediaSessionSeekToActionDetailsValue({
-    required this.seekTime,
-    this.fastSeek,
-  });
+  MediaSessionSeekToActionDetailsValue({required this.seekTime, this.fastSeek});
 }
-

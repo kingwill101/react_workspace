@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'dom.dart';
-import 'uievents.dart';
 
 abstract interface class MouseEventInit {
   double? get movementX;
@@ -68,8 +67,5 @@ final class PointerLockOptionsValue implements PointerLockOptions {
   @override
   bool? unadjustedMovement;
 
-  PointerLockOptionsValue({
-    this.unadjustedMovement,
-  });
+  PointerLockOptionsValue({this.unadjustedMovement});
 }
-

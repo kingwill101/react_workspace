@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'geometry.dart';
-import 'dom.dart';
 
 abstract interface class WindowControlsOverlayGeometryChangeEventInit {
   DOMRect get titlebarAreaRect;
@@ -12,7 +11,8 @@ abstract interface class WindowControlsOverlayGeometryChangeEventInit {
   set visible(bool? value);
 }
 
-final class WindowControlsOverlayGeometryChangeEventInitValue implements WindowControlsOverlayGeometryChangeEventInit {
+final class WindowControlsOverlayGeometryChangeEventInitValue
+    implements WindowControlsOverlayGeometryChangeEventInit {
   @override
   DOMRect titlebarAreaRect;
   @override
@@ -23,4 +23,3 @@ final class WindowControlsOverlayGeometryChangeEventInitValue implements WindowC
     this.visible,
   });
 }
-

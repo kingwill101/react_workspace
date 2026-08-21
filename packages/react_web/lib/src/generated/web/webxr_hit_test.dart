@@ -51,12 +51,7 @@ final class XRRayDirectionInitValue implements XRRayDirectionInit {
   @override
   double? w;
 
-  XRRayDirectionInitValue({
-    this.x,
-    this.y,
-    this.z,
-    this.w,
-  });
+  XRRayDirectionInitValue({this.x, this.y, this.z, this.w});
 }
 
 abstract interface class XRTransientInputHitTestOptionsInit {
@@ -68,7 +63,8 @@ abstract interface class XRTransientInputHitTestOptionsInit {
   set offsetRay(Object? value);
 }
 
-final class XRTransientInputHitTestOptionsInitValue implements XRTransientInputHitTestOptionsInit {
+final class XRTransientInputHitTestOptionsInitValue
+    implements XRTransientInputHitTestOptionsInit {
   @override
   String profile;
   @override
@@ -82,4 +78,3 @@ final class XRTransientInputHitTestOptionsInitValue implements XRTransientInputH
     this.offsetRay,
   });
 }
-

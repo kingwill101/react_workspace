@@ -20,7 +20,8 @@ class _IntCodec extends ServerFunctionJsonCodec<int> {
 
 class _ArgsCodec extends ServerFunctionJsonCodec<({String name})> {
   @override
-  ({String name}) decode(dynamic json) => (name: (json as Map)['name'] as String);
+  ({String name}) decode(dynamic json) =>
+      (name: (json as Map)['name'] as String);
   @override
   Map<String, dynamic> encode(({String name}) value) => {'name': value.name};
 }
@@ -47,13 +48,13 @@ final _incrementRef = ServerFunctionRef<int, int>(
 );
 
 ServerFunctionContext _ctx() => ServerFunctionContext(
-      requestId: 'test-req',
-      principal: 'tester',
-      headers: const {},
-      requestUri: Uri.parse('/'),
-      deadline: DateTime.now().add(const Duration(seconds: 30)),
-      cancellation: CancellationToken(),
-    );
+  requestId: 'test-req',
+  principal: 'tester',
+  headers: const {},
+  requestUri: Uri.parse('/'),
+  deadline: DateTime.now().add(const Duration(seconds: 30)),
+  cancellation: CancellationToken(),
+);
 
 void main() {
   group('ServerFunctionRegistry', () {
@@ -66,13 +67,22 @@ void main() {
       expect(_echoRef.resultCodec.decode(result), 'echo:hello');
     });
 
-    test('dispatch throws UnknownServerFunctionException for unknown id', () async {
-      final registry = ServerFunctionRegistry();
-      expect(
-        () => registry.dispatch('unknown', null, _ctx()),
-        throwsA(isA<UnknownServerFunctionException>().having((e) => e.id, 'id', 'unknown')),
-      );
-    });
+    test(
+      'dispatch throws UnknownServerFunctionException for unknown id',
+      () async {
+        final registry = ServerFunctionRegistry();
+        expect(
+          () => registry.dispatch('unknown', null, _ctx()),
+          throwsA(
+            isA<UnknownServerFunctionException>().having(
+              (e) => e.id,
+              'id',
+              'unknown',
+            ),
+          ),
+        );
+      },
+    );
 
     test('register throws on duplicate id', () {
       final registry = ServerFunctionRegistry();
@@ -100,8 +110,18 @@ void main() {
 
     test('dispatch propagates handler exception', () async {
       final registry = ServerFunctionRegistry();
-      registry.register(_echoRef, (args, ctx) => throw const ServerFunctionFailure(code: 'fail', message: 'oops', statusCode: 500));
-      expect(() => registry.dispatch('test.echo', 'hi', _ctx()), throwsA(isA<ServerFunctionFailure>()));
+      registry.register(
+        _echoRef,
+        (args, ctx) => throw const ServerFunctionFailure(
+          code: 'fail',
+          message: 'oops',
+          statusCode: 500,
+        ),
+      );
+      expect(
+        () => registry.dispatch('test.echo', 'hi', _ctx()),
+        throwsA(isA<ServerFunctionFailure>()),
+      );
     });
 
     test('dispatch supports async handler', () async {
@@ -120,7 +140,10 @@ void main() {
       registry.register(_greetRef, (args, ctx) => 'b:${args.name}');
       registry.register(_incrementRef, (args, ctx) => args * 2);
       expect(await registry.dispatch('test.echo', 'x', _ctx()), 'a:x');
-      expect(await registry.dispatch('test.greet', {'name': 'y'}, _ctx()), 'b:y');
+      expect(
+        await registry.dispatch('test.greet', {'name': 'y'}, _ctx()),
+        'b:y',
+      );
       expect(await registry.dispatch('test.increment', 5, _ctx()), 10);
     });
 

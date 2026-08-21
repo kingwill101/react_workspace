@@ -11,12 +11,15 @@ import 'src/rules/invalid_hook_call_rule.dart';
 import 'src/rules/invalid_react_component_rule.dart';
 import 'src/rules/js_interop_in_server_rule.dart';
 
+/// Analyzer plugin instance discovered by `analysis_server_plugin`.
 final plugin = ReactAnalyzerPlugin();
 
+/// Registers React component, hook, SSR, and import-boundary diagnostics.
 class ReactAnalyzerPlugin extends Plugin {
   @override
   String get name => 'React Dart analyzer';
 
+  /// Adds this package's warning rules, fixes, and assists to [registry].
   @override
   void register(PluginRegistry registry) {
     registry

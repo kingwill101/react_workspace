@@ -1,0 +1,190 @@
+---
+title: Maintaining the workspace
+description: Update Web bindings, React support, generated APIs, and packages without drifting the runtime contracts.
+---
+
+# Maintaining the workspace
+
+This workspace has three related contracts: the portable Dart API, the React
+JavaScript runtime, and the browser surface mirrored from `package:web`. Update
+the source of truth for a contract first, regenerate its outputs, and validate
+the browser and SSR paths together.
+
+## Sources of truth
+
+| Contract | Source of truth | Generated or synchronized outputs |
+| --- | --- | --- |
+| Web platform | `tool/web_idl/pin.json`, `third_party/web`, generator config | `tool/web_idl/snapshots/`, `packages/react_web/lib/src/generated/`, `packages/react_codegen/lib/src/generated/web_host_types.g.dart` |
+| React versions | `packages/react_tool/lib/src/react_versions.dart` | managed npm environment, scaffold `package.json`, wrapper peer declarations |
+| React hooks and nodes | `react` contracts plus renderer implementations | browser and SSR behavior |
+| Third-party wrappers | each package's `react.js` descriptor and generated Dart bindings | shim modules and target bundles |
+
+Never hand-edit `lib/.generated/`, `build/react/`, or files marked
+`GENERATED CODE`. Change the generator, template, descriptor, or overlay that
+owns the output.
+
+## Update the Web bindings
+
+The workspace currently generates against the published `package:web 1.1.1`
+release. Both `react_web` and `react_web_generator` use `web: ^1.1.1`, while
+the generator source and provenance stay pinned to exactly `1.1.1`. The
+matching upstream source is the `web-v1.1.1` tag at commit
+`222164b5010cb0324d4132666f1d43750ffc6448`.
+
+The pin deliberately ties four things together:
+
+- the published Dart package version;
+- the `third_party/web` submodule commit;
+- the WebRef dependency versions in the upstream lockfile;
+- the generated snapshot provenance.
+
+Refresh the current pin from the workspace root:
+
+```bash
+git submodule update --init third_party/web
+dart run tool/web_idl/update.dart
+dart run tool/web_idl/generate_factories.dart
+dart run tool/web_idl/verify.dart --strict
+dart test packages/react_web_generator
+dart test packages/react_testing/test/generator_fidelity_test.dart
+```
+
+`update.dart` runs `npm ci` against the upstream lockfile and invokes the
+workspace-owned `preparse.mjs`. It refuses to run when the submodule, package
+version, or Dart dependency declarations disagree with `pin.json`.
+
+`generate_factories.dart` is intentionally a thin launcher. The maintainable
+pipeline lives in `react_web_generator/src/generation/`, where paths, model
+loading, completeness verification, runtime emission, host IR emission, and
+output formatting are separate phases. Browser adapter graph analysis lives in
+`src/emit/browser_adapter_plan.dart`; the emitter only renders that plan.
+
+To adopt a future published `package:web` release:
+
+1. Identify its upstream tag and exact commit.
+2. Move only the `third_party/web` gitlink to that commit.
+3. Update every field in `tool/web_idl/pin.json`.
+4. Change the lower bound of the `web` dependency in `react_web` and
+   `react_web_generator` to the new generated-against release.
+5. Run the refresh, generation, strict verification, and tests above.
+6. Review provenance and generated API changes. A snapshot change without a
+   matching provenance change is invalid.
+7. Run the update and generation commands a second time. The second run must
+   produce no diff.
+
+Keep `generateAll` false unless the ecosystem intentionally adopts upstream
+experimental and non-standard APIs. That is an API policy change, not a
+routine refresh.
+
+## Supported React versions
+
+`ReactVersionPolicy` is the workspace authority:
+
+| Policy | Current value |
+| --- | --- |
+| Managed default | `18.3.1` |
+| Wrapper peer range | `>=18 <20` |
+| Compatibility boundaries | `18.3.1`, `19.0.0` |
+
+The managed default is installed when an application has not selected a React
+version. Generated projects use the same version. Wrapper packages accept
+React 18 and 19, but APIs introduced in React 19 perform runtime capability
+checks. For example, `useOptimistic` and `useActionState` throw a descriptive
+`UnsupportedError` under React 18.
+
+The React version used by Docusaurus under `.site/` is unrelated to the Dart
+runtime support policy.
+
+When changing React support:
+
+1. Update `ReactVersionPolicy`.
+2. Update wrapper peer ranges if the supported major interval changed.
+3. Regenerate a starter and verify its `package.json`.
+4. Run `packages/react_tool/test/react_version_policy_test.dart`.
+5. Build and exercise the routed example with
+   `ReactTestHarness.start(reactVersion: ...)` and `RoutedRequestHandler` at
+   each compatibility boundary.
+6. Test version-specific hooks in both browser rendering and the Node SSR
+   worker. Keep capability guards until the minimum supported version exports
+   the API.
+7. Record breaking minimum-version changes in the package changelogs before a
+   release.
+
+Do not infer support from a successful npm install. A supported version must
+compile, hydrate, render on the server, dispatch server functions, and preserve
+the wrapper peer contract.
+
+## Add a React API
+
+Classify the API before editing code:
+
+- A portable component, hook, ref, context, or host-node shape belongs in
+  `react`.
+- A browser React implementation belongs in `react_js`.
+- A Node SSR implementation belongs in `react_server`.
+- DOM declarations and factories belong in `react_web` and are generated when
+  they mirror the Web platform.
+- Server-framework transports belong in `react_server_routed` or
+  `react_server_shelf`, never in `react_server`.
+
+For a hook, add or update the public helper in `react`, the `ReactBinding`
+contract, the JS binding, and any server behavior. Document version
+requirements in the public Dartdoc. Test the default unsupported binding,
+component behavior with `ReactComponentHarness`, browser runtime behavior, and
+SSR behavior.
+
+For a new node kind, update the portable node model first, then every renderer
+switch in `react_js` and `react_server`. Add traversal and serialization tests
+so a renderer cannot silently omit the new node.
+
+For a DOM API, first determine whether it exists in the pinned Web IDL. If it
+does, fix the generator or overlay and regenerate. Add a handwritten API only
+when it is React-specific rather than a browser-platform declaration, and
+document why it cannot come from Web IDL.
+
+## Maintain wrapper packages
+
+A wrapper package declares its JavaScript contract under `react.js` in its
+`pubspec.yaml`. Keep React and React DOM as peers so the browser and SSR graphs
+share one runtime instance. Put third-party libraries under `dependencies`,
+select `browser`, `ssr`, or `shared` entries, and leave singleton modules in
+`externals`.
+
+Regenerate TypeScript-backed bindings with the CLI from the wrapper directory:
+
+```bash
+dart run react_tool:react ts bind
+```
+
+Review the generated Dart declarations and shim together. Then test the Dart
+API, bundle both targets, and render at least one wrapped component through the
+native React harness. The [wrapper package guide](../guides/wrapper-packages)
+contains the consumer-facing descriptor and generation workflow.
+
+## Validation and release readiness
+
+Run narrow checks first, then the integration layer affected by the change:
+
+```bash
+dart format <changed Dart files>
+dart analyze
+dart test
+```
+
+Generated or maintained applications additionally follow this order:
+
+1. `dart analyze`
+2. `dart test`
+3. `ReactTestHarness` with the selected `server_testing` adapter
+4. `dart run react_tool:react build` when generated production artifacts are in scope
+
+Use `ReactComponentHarness`, `ServerFunctionHarness`, `SsrTestHarness`, and
+`ReactTestHarness` before introducing browser automation. Use
+`server_testing_shelf` for Shelf applications and `routed_testing` for Routed
+applications.
+
+Before marking a package publishable, also verify its public imports, Dartdoc,
+README examples, repository links, license, version constraints, and
+`dart pub publish --dry-run`. A package can remain unpublished on GitHub while
+these checks stay green; publishability is a quality state, not a release
+instruction.

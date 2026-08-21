@@ -14,12 +14,8 @@ final class DomFactoryEmitter {
     buf.writeln('// ignore_for_file: type=lint');
     buf.writeln();
     buf.writeln("import 'package:react/react.dart';");
-    buf.writeln(
-      "import 'package:react_web/src/generated/react_events.dart';",
-    );
-    buf.writeln(
-      "import 'package:react_web/src/generated/web/web.dart';",
-    );
+    buf.writeln("import 'package:react_web/src/generated/react_events.dart';");
+    buf.writeln("import 'package:react_web/src/generated/web/web.dart';");
     buf.writeln();
 
     final sorted = elements.toList()
@@ -27,11 +23,70 @@ final class DomFactoryEmitter {
 
     for (final el in sorted) {
       _emitFactory(buf, el);
+      _emitPropsBuilder(buf, el);
     }
 
     final file = File('$outputDir/dom.dart');
     file.createSync(recursive: true);
     file.writeAsStringSync(buf.toString());
+  }
+
+  void _emitPropsBuilder(StringBuffer buf, WebHostElementIR el) {
+    final factoryName = _safeIdent(el.factoryName);
+    final builderName = '${_pascal(factoryName)}PropsBuilder';
+    final factoryReference = '_${factoryName}BuilderFactory';
+
+    buf.writeln('final $factoryReference = $factoryName;');
+    buf.writeln('$builderName ${factoryName}Props() => $builderName();');
+    buf.writeln();
+    buf.writeln('final class $builderName {');
+    for (final prop in el.props) {
+      buf.writeln(
+        '  ${_dt(prop.dartType, nullable: true)} ${_safeIdent(prop.reactName)};',
+      );
+    }
+    for (final event in el.events) {
+      final eventType = _dartTypeString(event.reactEventType);
+      buf.writeln(
+        '  void Function($eventType)? ${_safeIdent(event.reactName)};',
+      );
+      buf.writeln(
+        '  void Function($eventType)? ${_safeIdent(event.captureName)};',
+      );
+    }
+    buf.writeln('  void Function(${_dt(el.elementType)}?)? ref;');
+    if (!el.voidElement) {
+      buf.writeln('  ReactChildren children = const [];');
+    }
+    buf.writeln('  String? key;');
+    buf.writeln('  Map<String, Object?> additionalProps = const {};');
+    buf.writeln();
+    buf.writeln(
+      el.voidElement
+          ? '  ReactNode call() {'
+          : '  ReactNode call([ReactChildren? childValues]) {',
+    );
+    buf.writeln('    return $factoryReference(');
+    for (final prop in el.props) {
+      final name = _safeIdent(prop.reactName);
+      buf.writeln('      $name: $name,');
+    }
+    for (final event in el.events) {
+      final eventName = _safeIdent(event.reactName);
+      final captureName = _safeIdent(event.captureName);
+      buf.writeln('      $eventName: $eventName,');
+      buf.writeln('      $captureName: $captureName,');
+    }
+    buf.writeln('      ref: ref,');
+    if (!el.voidElement) {
+      buf.writeln('      children: childValues ?? children,');
+    }
+    buf.writeln('      key: key,');
+    buf.writeln('      additionalProps: additionalProps,');
+    buf.writeln('    );');
+    buf.writeln('  }');
+    buf.writeln('}');
+    buf.writeln();
   }
 
   void _emitFactory(StringBuffer buf, WebHostElementIR el) {
@@ -57,7 +112,7 @@ final class DomFactoryEmitter {
     }
     buf.writeln('  void Function(${_dt(el.elementType)}?)? ref,');
     if (!el.voidElement) {
-      buf.writeln('  List<ReactNode> children = const [],');
+      buf.writeln('  ReactChildren children = const [],');
     }
     buf.writeln('  String? key,');
     buf.writeln('  Map<String, Object?> additionalProps = const {},');
@@ -115,7 +170,7 @@ final class DomFactoryEmitter {
     buf.writeln('      ...additionalProps,');
     buf.writeln('    },');
     if (!el.voidElement) {
-      buf.writeln('    children: children,');
+      buf.writeln('    children: normalizeChildren(children),');
     }
     buf.writeln('    key: key,');
     buf.writeln('  );');
@@ -147,6 +202,11 @@ final class DomFactoryEmitter {
     final base = s.contains('-') ? s.replaceAll('-', '_') : s;
     if (_dartKeywords.contains(base)) return '${base}_';
     return base;
+  }
+
+  String _pascal(String value) {
+    if (value.isEmpty) return value;
+    return '${value[0].toUpperCase()}${value.substring(1)}';
   }
 
   static const _dartKeywords = <String>{

@@ -1,0 +1,7 @@
+{
+  "packageWebVersion": "1.1.1",
+  "dartWebRevision": "web-v1.1.1",
+  "dartWebCommit": "222164b5010cb0324d4132666f1d43750ffc6448",
+  "submodulePath": "third_party/web",
+  "generateAll": false
+}

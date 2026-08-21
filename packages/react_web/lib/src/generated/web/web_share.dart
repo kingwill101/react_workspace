@@ -25,11 +25,5 @@ final class ShareDataValue implements ShareData {
   @override
   String? url;
 
-  ShareDataValue({
-    this.files,
-    this.title,
-    this.text,
-    this.url,
-  });
+  ShareDataValue({this.files, this.title, this.text, this.url});
 }
-

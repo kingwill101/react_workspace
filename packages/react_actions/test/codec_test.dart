@@ -16,8 +16,10 @@ class _RecordCodec extends ServerFunctionJsonCodec<({String name, int count})> {
   }
 
   @override
-  Map<String, dynamic> encode(({String name, int count}) value) =>
-      {'name': value.name, 'count': value.count};
+  Map<String, dynamic> encode(({String name, int count}) value) => {
+    'name': value.name,
+    'count': value.count,
+  };
 }
 
 void main() {
@@ -64,11 +66,7 @@ void main() {
     });
 
     test('details can be null', () {
-      const f = ServerFunctionFailure(
-        code: 'x',
-        message: 'y',
-        statusCode: 500,
-      );
+      const f = ServerFunctionFailure(code: 'x', message: 'y', statusCode: 500);
       expect(f.details, isNull);
     });
   });
@@ -93,7 +91,10 @@ void main() {
   group('ServerFunctionTransportException', () {
     test('stores message and cause', () {
       const cause = FormatException('bad json');
-      const e = ServerFunctionTransportException('transport failed', cause: cause);
+      const e = ServerFunctionTransportException(
+        'transport failed',
+        cause: cause,
+      );
       expect(e.message, 'transport failed');
       expect(e.cause, cause);
     });
@@ -136,8 +137,7 @@ class _FakeClient implements ServerFunctionClient {
   Future<TResult> invoke<TArgs, TResult>(
     ServerFunctionRef<TArgs, TResult> ref,
     TArgs arguments,
-  ) async =>
-      throw UnimplementedError();
+  ) async => throw UnimplementedError();
 
   @override
   void close() {}

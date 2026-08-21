@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: mediacapture-viewport
 // ignore_for_file: type=lint
 
-import 'mediacapture_streams.dart';
-
 abstract interface class ViewportMediaStreamConstraints {
   Object? get video;
   set video(Object? value);
@@ -11,15 +9,12 @@ abstract interface class ViewportMediaStreamConstraints {
   set audio(Object? value);
 }
 
-final class ViewportMediaStreamConstraintsValue implements ViewportMediaStreamConstraints {
+final class ViewportMediaStreamConstraintsValue
+    implements ViewportMediaStreamConstraints {
   @override
   Object? video;
   @override
   Object? audio;
 
-  ViewportMediaStreamConstraintsValue({
-    this.video,
-    this.audio,
-  });
+  ViewportMediaStreamConstraintsValue({this.video, this.audio});
 }
-

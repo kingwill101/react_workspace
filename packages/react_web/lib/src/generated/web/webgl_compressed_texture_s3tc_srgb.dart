@@ -2,7 +2,4 @@
 // Neutral Web surface for spec: WEBGL_compressed_texture_s3tc_srgb
 // ignore_for_file: type=lint
 
-
-abstract interface class WEBGL_compressed_texture_s3tc_srgb {
-}
-
+abstract interface class WEBGL_compressed_texture_s3tc_srgb {}

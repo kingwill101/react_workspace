@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: mediacapture-automation
 // ignore_for_file: type=lint
 
-
 abstract interface class MockCameraConfiguration {
   double? get defaultFrameRate;
   set defaultFrameRate(double? value);
@@ -16,10 +15,7 @@ final class MockCameraConfigurationValue implements MockCameraConfiguration {
   @override
   String? facingMode;
 
-  MockCameraConfigurationValue({
-    this.defaultFrameRate,
-    this.facingMode,
-  });
+  MockCameraConfigurationValue({this.defaultFrameRate, this.facingMode});
 }
 
 abstract interface class MockCaptureDeviceConfiguration {
@@ -31,7 +27,8 @@ abstract interface class MockCaptureDeviceConfiguration {
   set groupId(String? value);
 }
 
-final class MockCaptureDeviceConfigurationValue implements MockCaptureDeviceConfiguration {
+final class MockCaptureDeviceConfigurationValue
+    implements MockCaptureDeviceConfiguration {
   @override
   String? label;
   @override
@@ -55,7 +52,8 @@ abstract interface class MockCapturePromptResultConfiguration {
   set getDisplayMedia(MockCapturePromptResult? value);
 }
 
-final class MockCapturePromptResultConfigurationValue implements MockCapturePromptResultConfiguration {
+final class MockCapturePromptResultConfigurationValue
+    implements MockCapturePromptResultConfiguration {
   @override
   MockCapturePromptResult? getUserMedia;
   @override
@@ -72,12 +70,10 @@ abstract interface class MockMicrophoneConfiguration {
   set defaultSampleRate(int? value);
 }
 
-final class MockMicrophoneConfigurationValue implements MockMicrophoneConfiguration {
+final class MockMicrophoneConfigurationValue
+    implements MockMicrophoneConfiguration {
   @override
   int? defaultSampleRate;
 
-  MockMicrophoneConfigurationValue({
-    this.defaultSampleRate,
-  });
+  MockMicrophoneConfigurationValue({this.defaultSampleRate});
 }
-

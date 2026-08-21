@@ -12,6 +12,4 @@ abstract interface class CSSMediaRule {
   MediaList get media;
 }
 
-abstract interface class CSSSupportsRule {
-}
-
+abstract interface class CSSSupportsRule {}

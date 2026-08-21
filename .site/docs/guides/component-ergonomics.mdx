@@ -1,0 +1,217 @@
+---
+sidebar_position: 4
+---
+
+# Component authoring ergonomics
+
+React Dart keeps its component tree portable while providing a concise,
+strongly typed authoring API. Application components normally import
+`package:react_dom/react_dom.dart`; that entrypoint combines React primitives,
+hooks, generated host elements, and prop helpers that work in browser and SSR
+builds.
+
+```dart
+import 'package:react_dom/react_dom.dart';
+```
+
+You should not need to construct `HostNode` objects or pass untyped prop maps
+for normal HTML and SVG elements.
+
+## Use typed host factories
+
+The generated DOM surface exposes functions for HTML and SVG elements. Named
+parameters cover element-specific attributes, common attributes, typed events,
+refs, children, and keys.
+
+```dart
+return button(
+  type: 'button',
+  className: 'save-button',
+  disabled: requestPending,
+  onClick: (_) => save(),
+  children: [requestPending ? 'Saving…' : 'Save'],
+);
+```
+
+Event callbacks expose portable React event types. Import a focused Web API
+type when application code needs a typed host value:
+
+```dart
+import 'package:react_dom/react_dom.dart';
+import 'package:react_web/web.dart' show HTMLInputElement;
+
+return input(
+  value: name,
+  onChange: (event) {
+    final element = event.currentTarget as HTMLInputElement;
+    setName(element.value);
+  },
+);
+```
+
+The generated factories preserve these contracts for both client rendering
+and SSR. Use `additionalProps` only for a new or uncommon attribute that the
+typed surface does not yet expose.
+
+## Compose class names
+
+`classNames` accepts strings, nested iterables, condition maps, `false`, and
+`null`. It removes empty values and duplicates while preserving order.
+
+```dart
+final classes = classNames(
+  'button button--primary',
+  ['button--large', inheritedClassName],
+  {
+    'button--pending': requestPending,
+    'button--disabled': disabled,
+  },
+);
+
+return button(className: classes, children: ['Continue']);
+```
+
+This is useful for local state and for composing classes received through
+component props. Prefer generated CSS Module names over handwritten global
+names when a class is private to one component.
+
+## Build React-compatible inline styles
+
+React expects the `style` prop to be a property map, not a CSS string. The
+`css` helper returns a `CssStyle` map with named parameters for common
+properties:
+
+```dart
+return div(
+  style: css(
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    maxWidth: 640,
+    margin: '0 auto',
+    padding: '24px 32px',
+    borderRadius: 8,
+  ),
+  children: content,
+);
+```
+
+Property names follow React's camel-case style shape. Values remain `Object?`
+because React accepts both numbers and strings depending on the property.
+
+Use `custom` for CSS variables or properties not yet represented by a named
+parameter:
+
+```dart
+final style = css(color: foreground)
+  ..custom('--card-accent', accent)
+  ..custom('textWrap', 'balance');
+
+return article(style: style, children: children);
+```
+
+Passing `null` to `custom` removes that property. `CssStyle` also implements
+`Map<String, Object?>`, so it can be passed directly to a generated element's
+`style` prop.
+
+## Add ARIA and data attributes
+
+Generated elements expose `additionalProps` for open-ended attributes. The
+`aria` and `dataAttributes` helpers build correctly prefixed maps:
+
+```dart
+return button(
+  disabled: requestPending,
+  additionalProps: {
+    ...aria(
+      label: 'Save project',
+      busy: requestPending,
+      describedBy: 'save-status',
+    ),
+    ...dataAttributes({
+      'state': requestPending ? 'pending' : 'idle',
+      'test-id': 'save-project',
+    }),
+  },
+  children: ['Save'],
+);
+```
+
+Keys that already begin with `aria-` or `data-` are preserved.
+
+## Choose direct calls or fluent builders
+
+Direct factory calls are the clearest default:
+
+```dart
+return button(
+  className: 'primary',
+  disabled: saving,
+  children: ['Ship it'],
+);
+```
+
+Every generated host factory also has a props builder. Builders are useful
+when cascades, conditional assignment, or shared setup make a long named call
+harder to read:
+
+```dart
+final props = buttonProps()
+  ..type = 'button'
+  ..className = classNames('button', {'button--quiet': quiet})
+  ..disabled = saving
+  ..onClick = (_) => ship();
+
+if (compact) props.style = css(padding: '6px 10px');
+
+return props([saving ? 'Shipping…' : 'Ship it']);
+```
+
+Generated Dart components follow the same pattern. The callable component
+factory handles the common case, while `.props()` returns its typed builder:
+
+```dart
+return UserCard(name: user.name, role: user.role);
+
+// Builder form for conditional or reusable configuration.
+final card = UserCard.props()
+  ..name = user.name
+  ..role = user.role;
+
+if (showAvatar) card.avatarUrl = user.avatarUrl;
+return card();
+```
+
+Required props are `late` fields in the generated builder, so they must be
+assigned before calling it.
+
+## A complete portable component
+
+These helpers compose without introducing a browser-only import:
+
+```dart
+import 'package:react_dom/react_dom.dart';
+
+@reactComponent
+ReactNode Counter(({String title, bool compact}) props) {
+  final (count, setCount) = useState(0);
+
+  return button(
+    className: classNames('counter', {
+      'counter--active': count > 0,
+      'counter--compact': props.compact,
+    }),
+    style: css(
+      padding: props.compact ? 8 : 16,
+      borderRadius: 8,
+      cursor: 'pointer',
+    ),
+    onClick: (_) => setCount(count + 1),
+    additionalProps: aria(label: 'Increment ${props.title}'),
+    children: ['${props.title}: $count'],
+  );
+}
+```
+
+The same function can be evaluated by the browser runtime, the Node SSR
+worker, and `ReactComponentHarness` in tests.

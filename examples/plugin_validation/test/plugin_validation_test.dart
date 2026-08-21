@@ -27,7 +27,10 @@ ReactNode C() {
 ''';
       final unit = parseString(content: code).unit;
       final diags = const ReactHookAnalyzer().analyzeUnit(unit);
-      expect(diags.any((d) => d.code == ReactDiagnosticCode.hookInConditional), isTrue);
+      expect(
+        diags.any((d) => d.code == ReactDiagnosticCode.hookInConditional),
+        isTrue,
+      );
     });
   });
 
@@ -43,7 +46,10 @@ ReactNode HookInConditional(({bool flag}) props) {
 ''';
       final unit = parseString(content: code).unit;
       final diags = const ReactHookAnalyzer().analyzeUnit(unit);
-      expect(diags.any((d) => d.code == ReactDiagnosticCode.hookInConditional), isTrue);
+      expect(
+        diags.any((d) => d.code == ReactDiagnosticCode.hookInConditional),
+        isTrue,
+      );
     });
 
     test('detects hook outside component', () {
@@ -53,7 +59,10 @@ void notAComponent() { final s = useState(0); }
 ''';
       final unit = parseString(content: code).unit;
       final diags = const ReactHookAnalyzer().analyzeUnit(unit);
-      expect(diags.any((d) => d.code == ReactDiagnosticCode.hookOutsideComponent), isTrue);
+      expect(
+        diags.any((d) => d.code == ReactDiagnosticCode.hookOutsideComponent),
+        isTrue,
+      );
     });
 
     test('allows hook at top level of component', () {
@@ -67,7 +76,10 @@ ReactNode Ok() {
 ''';
       final unit = parseString(content: code).unit;
       final diags = const ReactHookAnalyzer().analyzeUnit(unit);
-      expect(diags.where((d) => d.code == ReactDiagnosticCode.hookInConditional), isEmpty);
+      expect(
+        diags.where((d) => d.code == ReactDiagnosticCode.hookInConditional),
+        isEmpty,
+      );
     });
   });
 
@@ -83,7 +95,10 @@ ReactNode SsrBad() {
 ''';
       final unit = parseString(content: code).unit;
       final diags = const ReactSsrAnalyzer().analyzeUnit(unit);
-      expect(diags.any((d) => d.code == ReactDiagnosticCode.browserApiDuringSsr), isTrue);
+      expect(
+        diags.any((d) => d.code == ReactDiagnosticCode.browserApiDuringSsr),
+        isTrue,
+      );
     });
 
     test('allows same API inside useEffect', () {
@@ -141,7 +156,10 @@ ReactNode App() {
 ''';
       final unit = parseString(content: code).unit;
       final result = const ReactRuntimeUsageCollector().collectUnit(unit);
-      expect(result.components, containsAll(['reactRouter.Link', 'reactRouter.Route']));
+      expect(
+        result.components,
+        containsAll(['reactRouter.Link', 'reactRouter.Route']),
+      );
     });
   });
 
@@ -149,36 +167,66 @@ ReactNode App() {
     test('flags js_interop in server file', () {
       const code = "import 'dart:js_interop';\n";
       final unit = parseString(content: code, path: 'bin/server.dart').unit;
-      final diags = const ServerClientImportAnalyzer().analyzeFile('bin/server.dart', unit);
-      expect(diags.any((d) => d.code == ReactDiagnosticCode.jsInteropInServer), isTrue);
+      final diags = const ServerClientImportAnalyzer().analyzeFile(
+        'bin/server.dart',
+        unit,
+      );
+      expect(
+        diags.any((d) => d.code == ReactDiagnosticCode.jsInteropInServer),
+        isTrue,
+      );
     });
 
     test('flags browser package in server file', () {
       const code = "import 'package:react_web/react_web.dart';\n";
       final unit = parseString(content: code, path: 'lib/ssr.dart').unit;
-      final diags = const ServerClientImportAnalyzer().analyzeFile('lib/ssr.dart', unit);
-      expect(diags.any((d) => d.code == ReactDiagnosticCode.browserImportInServer), isTrue);
+      final diags = const ServerClientImportAnalyzer().analyzeFile(
+        'lib/ssr.dart',
+        unit,
+      );
+      expect(
+        diags.any((d) => d.code == ReactDiagnosticCode.browserImportInServer),
+        isTrue,
+      );
     });
 
     test('flags generated bridge import', () {
       const code = "import 'valid_component.react.g.dart';\n";
       final unit = parseString(content: code, path: 'lib/app.dart').unit;
-      final diags = const ServerClientImportAnalyzer().analyzeFile('lib/app.dart', unit);
-      expect(diags.any((d) => d.code == ReactDiagnosticCode.generatedBridgeImport), isTrue);
+      final diags = const ServerClientImportAnalyzer().analyzeFile(
+        'lib/app.dart',
+        unit,
+      );
+      expect(
+        diags.any((d) => d.code == ReactDiagnosticCode.generatedBridgeImport),
+        isTrue,
+      );
     });
 
     test('allows public api import', () {
       const code = "import 'valid_component.react.dart';\n";
       final unit = parseString(content: code, path: 'lib/app.dart').unit;
-      final diags = const ServerClientImportAnalyzer().analyzeFile('lib/app.dart', unit);
-      expect(diags.where((d) => d.code == ReactDiagnosticCode.generatedBridgeImport), isEmpty);
+      final diags = const ServerClientImportAnalyzer().analyzeFile(
+        'lib/app.dart',
+        unit,
+      );
+      expect(
+        diags.where((d) => d.code == ReactDiagnosticCode.generatedBridgeImport),
+        isEmpty,
+      );
     });
 
     test('allows js_interop in client file', () {
       const code = "import 'dart:js_interop';\n";
       final unit = parseString(content: code, path: 'web/client.dart').unit;
-      final diags = const ServerClientImportAnalyzer().analyzeFile('web/client.dart', unit);
-      expect(diags.where((d) => d.code == ReactDiagnosticCode.jsInteropInServer), isEmpty);
+      final diags = const ServerClientImportAnalyzer().analyzeFile(
+        'web/client.dart',
+        unit,
+      );
+      expect(
+        diags.where((d) => d.code == ReactDiagnosticCode.jsInteropInServer),
+        isEmpty,
+      );
     });
   });
 

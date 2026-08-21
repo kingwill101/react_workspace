@@ -23,6 +23,7 @@ void main() {
       expect(ReactRuntimeCapabilities.server.supportsEvents, isFalse);
       expect(ReactRuntimeCapabilities.server.supportsRefs, isFalse);
       expect(ReactRuntimeCapabilities.server.supportsEffects, isFalse);
+      expect(ReactRuntimeCapabilities.server.supportsLayoutEffects, isFalse);
       expect(ReactRuntimeCapabilities.server.supportsContext, isTrue);
     });
 
@@ -30,6 +31,7 @@ void main() {
       expect(ReactRuntimeCapabilities.browser.supportsEvents, isTrue);
       expect(ReactRuntimeCapabilities.browser.supportsRefs, isTrue);
       expect(ReactRuntimeCapabilities.browser.supportsEffects, isTrue);
+      expect(ReactRuntimeCapabilities.browser.supportsLayoutEffects, isTrue);
       expect(ReactRuntimeCapabilities.browser.supportsContext, isTrue);
     });
   });

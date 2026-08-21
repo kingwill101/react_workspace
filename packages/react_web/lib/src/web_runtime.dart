@@ -47,7 +47,11 @@ abstract interface class WebRuntime {
   T createWebObject<T extends Object>(String name, List<Object?> arguments);
 
   /// Invokes a namespace operation (e.g. `CSS.supports()`).
-  dynamic invokeNamespace(String namespace, String member, List<Object?> arguments);
+  dynamic invokeNamespace(
+    String namespace,
+    String member,
+    List<Object?> arguments,
+  );
 
   /// Reads a namespace attribute.
   dynamic getNamespaceProperty(String namespace, String property);

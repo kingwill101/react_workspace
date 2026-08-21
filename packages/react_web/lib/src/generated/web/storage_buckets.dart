@@ -25,10 +25,5 @@ final class StorageBucketOptionsValue implements StorageBucketOptions {
   @override
   DOMHighResTimeStamp? expires;
 
-  StorageBucketOptionsValue({
-    this.persisted,
-    this.quota,
-    this.expires,
-  });
+  StorageBucketOptionsValue({this.persisted, this.quota, this.expires});
 }
-

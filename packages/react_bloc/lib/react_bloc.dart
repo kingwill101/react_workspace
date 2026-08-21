@@ -57,3 +57,22 @@ S useBlocState<B extends Bloc<dynamic, S>, S>(B bloc) {
     () => bloc.state,
   );
 }
+
+/// Selects part of [bloc]'s state and rebuilds when that snapshot changes.
+///
+/// Keep [selector] pure and return a value with stable equality semantics.
+/// React's external-store comparison can then skip renders when unrelated
+/// state changes leave the selected value unchanged.
+T useBlocSelector<B extends Bloc<dynamic, S>, S, T>(
+  B bloc,
+  T Function(S state) selector,
+) {
+  return useSyncExternalStore<T>(
+    (onChange) {
+      final subscription = bloc.stream.listen((_) => onChange());
+      return subscription.cancel;
+    },
+    () => selector(bloc.state),
+    () => selector(bloc.state),
+  );
+}

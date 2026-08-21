@@ -59,15 +59,12 @@ void main() {
     test('extracts specifier, aliases, component keys, hooks, namespace', () {
       final shim = parseForeignShim(_shimSource)!;
       expect(shim.specifier, 'react-router-dom');
-      expect(
-        shim.aliasByExport,
-        {
-          'Link': '__reactDartLink',
-          'Route': '__reactDartRoute',
-          'useLocation': '__reactDartUseLocation',
-          'useParams': '__reactDartUseParams',
-        },
-      );
+      expect(shim.aliasByExport, {
+        'Link': '__reactDartLink',
+        'Route': '__reactDartRoute',
+        'useLocation': '__reactDartUseLocation',
+        'useParams': '__reactDartUseParams',
+      });
       expect(shim.componentKeys, ['reactRouter.Link', 'reactRouter.Route']);
       expect(shim.hookNames, ['useLocation', 'useParams']);
       expect(shim.namespace, 'reactRouter');
@@ -81,9 +78,7 @@ void main() {
 
     test('returns null for non-generated modules', () {
       expect(
-        parseForeignShim(
-          'export const Card = () => <div>card</div>;\n',
-        ),
+        parseForeignShim('export const Card = () => <div>card</div>;\n'),
         isNull,
       );
     });

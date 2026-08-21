@@ -2,9 +2,6 @@
 // Neutral Web surface for spec: portals
 // ignore_for_file: type=lint
 
-import 'dom.dart';
-import 'html.dart';
-
 abstract interface class PortalActivateEventInit {
   Object? get data;
   set data(Object? value);
@@ -14,9 +11,7 @@ final class PortalActivateEventInitValue implements PortalActivateEventInit {
   @override
   Object? data;
 
-  PortalActivateEventInitValue({
-    this.data,
-  });
+  PortalActivateEventInitValue({this.data});
 }
 
 abstract interface class PortalActivateOptions {
@@ -28,8 +23,5 @@ final class PortalActivateOptionsValue implements PortalActivateOptions {
   @override
   Object? data;
 
-  PortalActivateOptionsValue({
-    this.data,
-  });
+  PortalActivateOptionsValue({this.data});
 }
-

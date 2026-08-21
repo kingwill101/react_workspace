@@ -25,11 +25,52 @@ dart run react_tool:react doctor
 The CLI provides commands to manage the full lifecycle of a React Dart project:
 
 - `react doctor` - Inspect the current React Dart project configuration and diagnostics.
+- `react init <project_name> [--template <ssr|client|routed|routed-minimal>]` - Scaffold a new project. `ssr` includes Shelf-based SSR defaults, `client` omits server code, and `routed` uses Routed (`react_server_routed` + `routed_io`) with no Shelf dependency; `routed-minimal` uses the same stack with reduced starter files.
+- `react generate` - Run Dart code generation and synchronize formatted sources into `lib/.generated/` without compiling bundles. Workspace orchestration may use `--sync-only` after one successful `build_runner build --workspace` invocation.
 - `react build [--watch] [--release] [--server]` - Generate code, compile client and SSR Dart bundles, compile Sass, bundle JS dependencies, and copy static assets.
 - `react serve [--watch] [--release] [--no-ssr]` - Build the project and run the Dart server (and SSR worker if configured) locally.
+- `react clean` - Remove `build/react/`, `lib/.generated/`, and other React-owned generated outputs.
 - `react js install` - Install exact wrapper versions into `.dart_tool/react/js`.
 - `react js sync` - Validate that the host JS project satisfies every wrapper.
 - `react ts bind <specifier> [<names...>]` - Generate typed Dart bindings from TypeScript declarations for seamless interop with NPM packages.
+- `react analyze [--path <project>]` - Run Dart analysis and preview resolved React usage.
+- `react test [--path <test-path>] [--coverage]` - Run the native Dart test stack.
+
+### Scaffolding
+
+```console
+# Shelf-backed SSR project (default)
+dart run react_tool:react init my_app
+
+# Routed-hosted SSR project (no Shelf dependency)
+dart run react_tool:react init --template routed my_routed_app
+
+# Routed-hosted SSR project with reduced starter surface
+dart run react_tool:react init --template routed-minimal my_routed_app_compact
+
+# Client-only project (no server code)
+dart run react_tool:react init --template client my_client_app
+```
+
+Scaffolded projects also include:
+
+- `.gitignore` entries for generated artifacts (`.dart_tool`, `build`, `lib/.generated`).
+- a VS Code `.vscode/settings.json` generated as:
+  - `**/.dart_tool`
+  - `**/.generated`
+  - `**/build`
+
+During iteration, you usually edit only:
+
+- `lib/app.dart` for UI
+- `lib/greeting.dart` for server functions
+
+That makes it easier to work around generated SSR/build churn while still shipping a complete full-stack example.
+
+Project-level foreign-component helpers are also written under
+`lib/.generated/`. Reusable wrapper packages are different: their generated
+TypeScript bindings and shims are package implementation files and are normally
+committed and reviewed.
 
 ## Configuration
 
@@ -70,6 +111,12 @@ react ts bind react-router-dom --hooks lib/hooks.dart
 ```
 
 This extracts declarations and emits Dart helpers, allowing you to use TypeScript packages without writing manual interop.
+
+For repeatable wrappers, declare `react.js.bind` groups in `pubspec.yaml` and
+run `react ts bind` without positional arguments. The generator is split into
+native extraction, serialized IR, type registration, component emission, hook
+emission, and shim emission; structure and fidelity tests keep those phases
+reviewable and deterministic.
 
 ## Architecture Notes
 

@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'css_nav.dart';
-import 'css_typed_om.dart';
 
 typedef ScrollAxis = String;
 
@@ -20,10 +19,7 @@ final class ScrollTimelineOptionsValue implements ScrollTimelineOptions {
   @override
   ScrollAxis? axis;
 
-  ScrollTimelineOptionsValue({
-    this.source,
-    this.axis,
-  });
+  ScrollTimelineOptionsValue({this.source, this.axis});
 }
 
 abstract interface class ViewTimelineOptions {
@@ -43,10 +39,5 @@ final class ViewTimelineOptionsValue implements ViewTimelineOptions {
   @override
   Object? inset;
 
-  ViewTimelineOptionsValue({
-    this.subject,
-    this.axis,
-    this.inset,
-  });
+  ViewTimelineOptionsValue({this.subject, this.axis, this.inset});
 }
-

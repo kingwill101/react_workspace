@@ -1,0 +1,3 @@
+tags:
+  browser:
+    timeout: 15m

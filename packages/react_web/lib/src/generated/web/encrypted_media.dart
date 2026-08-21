@@ -2,17 +2,18 @@
 // Neutral Web surface for spec: encrypted-media
 // ignore_for_file: type=lint
 
-import 'dom.dart';
 import 'html.dart';
 import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class MediaEncryptedEvent {
-  factory MediaEncryptedEvent(String type, [MediaEncryptedEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<MediaEncryptedEvent>(
-        'MediaEncryptedEvent',
-        [type, eventInitDict],
-      );
+  factory MediaEncryptedEvent(
+    String type_, [
+    MediaEncryptedEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<MediaEncryptedEvent>(
+    'MediaEncryptedEvent',
+    [type_, eventInitDict],
+  );
   String get initDataType;
   Object get initData;
 }
@@ -30,18 +31,17 @@ final class MediaEncryptedEventInitValue implements MediaEncryptedEventInit {
   @override
   Object? initData;
 
-  MediaEncryptedEventInitValue({
-    this.initDataType,
-    this.initData,
-  });
+  MediaEncryptedEventInitValue({this.initDataType, this.initData});
 }
 
 abstract interface class MediaKeyMessageEvent {
-  factory MediaKeyMessageEvent(String type, MediaKeyMessageEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<MediaKeyMessageEvent>(
-        'MediaKeyMessageEvent',
-        [type, eventInitDict],
-      );
+  factory MediaKeyMessageEvent(
+    String type_,
+    MediaKeyMessageEventInit eventInitDict,
+  ) => WebRuntime.current.createWebObject<MediaKeyMessageEvent>(
+    'MediaKeyMessageEvent',
+    [type_, eventInitDict],
+  );
   MediaKeyMessageType get messageType;
   Object get message;
 }
@@ -73,9 +73,9 @@ abstract interface class MediaKeySession {
   Future<MediaKeySessionClosedReason> get closed;
   MediaKeyStatusMap get keyStatuses;
   EventHandler get onkeystatuseschange;
-   set onkeystatuseschange(EventHandler value);
+  set onkeystatuseschange(EventHandler value);
   EventHandler get onmessage;
-   set onmessage(EventHandler value);
+  set onmessage(EventHandler value);
   Future<void> generateRequest(String initDataType, BufferSource initData);
   Future<bool> load(String sessionId);
   Future<void> update(BufferSource response);
@@ -118,7 +118,8 @@ abstract interface class MediaKeySystemConfiguration {
   set sessionTypes(List<String>? value);
 }
 
-final class MediaKeySystemConfigurationValue implements MediaKeySystemConfiguration {
+final class MediaKeySystemConfigurationValue
+    implements MediaKeySystemConfiguration {
   @override
   String? label;
   @override
@@ -154,7 +155,8 @@ abstract interface class MediaKeySystemMediaCapability {
   set robustness(String? value);
 }
 
-final class MediaKeySystemMediaCapabilityValue implements MediaKeySystemMediaCapability {
+final class MediaKeySystemMediaCapabilityValue
+    implements MediaKeySystemMediaCapability {
   @override
   String? contentType;
   @override
@@ -184,10 +186,7 @@ final class MediaKeysPolicyValue implements MediaKeysPolicy {
   @override
   String? minHdcpVersion;
 
-  MediaKeysPolicyValue({
-    this.minHdcpVersion,
-  });
+  MediaKeysPolicyValue({this.minHdcpVersion});
 }
 
 typedef MediaKeysRequirement = String;
-

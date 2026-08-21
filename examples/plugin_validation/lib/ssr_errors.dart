@@ -6,7 +6,9 @@ import 'package:react_web/react_web.dart' show window;
 /// Browser-only API during SSR render — `browser_api_during_ssr`.
 @ReactComponent()
 ReactNode SsrBadRead(({String? placeholder}) props) {
-  final theme = window.localStorage.getItem('theme'); // expect: browser_api_during_ssr
+  final theme = window.localStorage.getItem(
+    'theme',
+  ); // expect: browser_api_during_ssr
   return Text(theme ?? 'light');
 }
 
@@ -32,6 +34,7 @@ ReactNode SsrClientOnly(({String? placeholder}) props) {
 /// Direct document access — also SSR-sensitive.
 @ReactComponent()
 ReactNode SsrDocumentRead(({String? placeholder}) props) {
-  final title = window.document.title; // expect: browser_api_during_ssr (heuristics)
+  final title =
+      window.document.title; // expect: browser_api_during_ssr (heuristics)
   return Text(title);
 }

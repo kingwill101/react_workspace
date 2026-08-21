@@ -1,5 +1,12 @@
 import 'component_id.dart';
 
+/// Values accepted by ergonomic React child APIs.
+///
+/// Renderers continue to receive a normalized [List] of [ReactNode] values.
+/// This input type intentionally accepts nested iterables so ordinary Dart
+/// collection-if, collection-for, and spread expressions remain convenient.
+typedef ReactChildren = Iterable<Object?>;
+
 abstract class ReactNode {
   const ReactNode();
 }
@@ -52,6 +59,16 @@ final class Text extends ReactNode {
   const Text(this.value);
 }
 
+/// A React value received from a renderer-specific component boundary.
+///
+/// Generated bridges use this node to preserve children that React supplies
+/// as native elements. Applications normally create portable nodes instead.
+final class OpaqueReactNode extends ReactNode {
+  final Object value;
+
+  const OpaqueReactNode(this.value);
+}
+
 /// Groups children without adding a host element.
 ///
 /// See https://react.dev/reference/react/Fragment.
@@ -65,11 +82,53 @@ final class Empty extends ReactNode {
   const Empty();
 }
 
+/// Normalizes Dart-friendly child values into the portable React node model.
+///
+/// Supported values are [ReactNode], [String], [num], nested [Iterable]
+/// values, `null`, and booleans. Like React, `null` and booleans render
+/// nothing. Unsupported values fail early with a descriptive error.
+List<ReactNode> normalizeChildren(ReactChildren children) {
+  final normalized = <ReactNode>[];
+
+  void append(Object? child) {
+    switch (child) {
+      case null || bool():
+        return;
+      case ReactNode():
+        normalized.add(child);
+      case String():
+        normalized.add(Text(child));
+      case num():
+        normalized.add(Text('$child'));
+      case Iterable<Object?>():
+        for (final nested in child) {
+          append(nested);
+        }
+      default:
+        throw ArgumentError.value(
+          child,
+          'children',
+          'Expected a ReactNode, String, number, boolean, null, or Iterable.',
+        );
+    }
+  }
+
+  for (final child in children) {
+    append(child);
+  }
+  return normalized;
+}
+
 /// Creates a node for a component registered by a JavaScript/TypeScript
 /// module.
 ForeignComponent foreignComponent(
   String name, {
   Map<String, Object?> props = const {},
   String? key,
-  List<ReactNode> children = const [],
-}) => ForeignComponent(name, props: props, key: key, children: children);
+  ReactChildren children = const [],
+}) => ForeignComponent(
+  name,
+  props: props,
+  key: key,
+  children: normalizeChildren(children),
+);

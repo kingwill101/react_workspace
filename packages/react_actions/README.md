@@ -12,8 +12,7 @@ Add `react_actions` to your `dependencies`:
 
 ```yaml
 dependencies:
-  react_actions:
-    path: packages/react_actions
+  react_actions: ^0.1.0
 ```
 
 ## How to Use

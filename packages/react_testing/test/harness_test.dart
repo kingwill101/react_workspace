@@ -1,13 +1,7 @@
-import 'dart:io';
-
 import 'package:react/react.dart';
 import 'package:react_actions/react_actions.dart';
-import 'package:react_server/react_server.dart';
 import 'package:react_testing/react_testing.dart';
 import 'package:server_testing/server_testing.dart';
-import 'package:server_testing_shelf/server_testing_shelf.dart';
-import 'package:shelf/shelf.dart';
-import 'package:test/test.dart';
 
 class _StringCodec extends ServerFunctionJsonCodec<String> {
   @override
@@ -18,7 +12,8 @@ class _StringCodec extends ServerFunctionJsonCodec<String> {
 
 class _ArgsCodec extends ServerFunctionJsonCodec<({String name})> {
   @override
-  ({String name}) decode(dynamic json) => (name: (json as Map)['name'] as String);
+  ({String name}) decode(dynamic json) =>
+      (name: (json as Map)['name'] as String);
   @override
   Map<String, dynamic> encode(({String name}) value) => {'name': value.name};
 }
@@ -69,18 +64,14 @@ void main() {
       expect(env['contract'], isNot(_echoRef.contractHash));
     });
 
-    test('createClient dispatches via HTTP and validates success', () async {
-      final harness = ServerFunctionHarness();
-      harness.registry.register(_greetRef, (args, ctx) => 'Hello ${args.name}');
-      final client = harness.createClient();
-      final response = await client.postJson('/__react/actions', harness.envelope(_greetRef, (name: 'Ada')));
-      response.assertServerFunctionSuccess('Hello Ada');
-    });
-
     test('expectFailure validates failure code', () async {
       final harness = ServerFunctionHarness();
       harness.registry.register(_echoRef, (args, ctx) {
-        throw const ServerFunctionFailure(code: 'bad_input', message: 'bad', statusCode: 400);
+        throw const ServerFunctionFailure(
+          code: 'bad_input',
+          message: 'bad',
+          statusCode: 400,
+        );
       });
       await harness.expectFailure(_echoRef, 'x', code: 'bad_input');
     });
@@ -88,60 +79,59 @@ void main() {
     test('expectFailure throws if dispatch succeeds', () async {
       final harness = ServerFunctionHarness();
       harness.registry.register(_echoRef, (args, ctx) => 'ok');
-      expect(() => harness.expectFailure(_echoRef, 'x', code: 'bad_input'), throwsStateError);
-    });
-
-    test('HTTP-level contract mismatch is rejected', () async {
-      final harness = ServerFunctionHarness();
-      harness.registry.register(_echoRef, (args, ctx) => args);
-      final client = harness.createClient();
-      final response = await client.postJson('/__react/actions', harness.staleEnvelope(_echoRef, 'hi'));
-      response.assertContractMismatch();
-    });
-
-    test('in-memory client rejects unauthenticated when authenticate returns null', () async {
-      final harness = ServerFunctionHarness(authenticate: (_) => null);
-      final privilegedRef = ServerFunctionRef<String, String>(
-        id: const ServerFunctionId('test.priv'),
-        contractHash: 'sha256:priv',
-        argumentsCodec: _StringCodec(),
-        resultCodec: _StringCodec(),
+      expect(
+        () => harness.expectFailure(_echoRef, 'x', code: 'bad_input'),
+        throwsStateError,
       );
-      harness.registry.register(privilegedRef, (args, ctx) {
-        ctx.requireUser();
-        return 'secret';
-      });
-      final client = harness.createClient();
-      final response = await client.postJson('/__react/actions', harness.envelope(privilegedRef, 'x'));
-      response.assertUnauthenticated();
     });
 
-    test('SsrTestHarness mockRender injects HTML', () async {
-      final ssrHarness = SsrTestHarness(indexTemplate: '<html>{{SSR}} - {{PROPS}}</html>');
+    test('SsrTestHarness returns configured worker output', () async {
+      final ssrHarness = SsrTestHarness();
       ssrHarness.mockRender('<div>mocked</div>', props: {'a': 1});
-      final app = await ssrHarness.start();
-      final client = TestClient.inMemory(ShelfRequestHandler(app.handler));
-      final resp = await client.get('/');
-      expect(await resp.body, contains('<div>mocked</div>'));
-      expect(await resp.body, contains('"a":1'));
+      final ssr = await ssrHarness.start();
+      final rendered = await ssr.render(
+        component: 'test.Root',
+        props: const {},
+      );
+      expect(rendered.html, '<div>mocked</div>');
+      expect(rendered.props, {'a': 1});
       await ssrHarness.close();
     });
 
+    test('createClient accepts a server_testing handler', () async {
+      final harness = ServerFunctionHarness();
+      final client = harness.createClient(
+        const FixedResponseClient({'ok': true}),
+      );
+      final response = await client.get('/');
+      response.assertStatus(200).assertJsonContains({'ok': true});
+      await client.close();
+    });
+
     test('InMemorySsrHarness renders template', () {
-      final harness = InMemorySsrHarness(indexTemplate: 'HEAD:{{SSR}}:PROPS:{{PROPS}}');
+      final harness = InMemorySsrHarness(
+        indexTemplate: 'HEAD:{{SSR}}:PROPS:{{PROPS}}',
+      );
       final doc = harness.render(renderedHtml: '<p>hi</p>', props: {'x': 1});
       expect(doc, contains('<p>hi</p>'));
       expect(doc, contains('"x":1'));
-      harness.assertDocument(doc, containsHtml: '<p>hi</p>', containsProps: {'x': 1});
+      harness.assertDocument(
+        doc,
+        containsHtml: '<p>hi</p>',
+        containsProps: {'x': 1},
+      );
     });
 
     test('ReactComponentHarness renders nodes', () {
       final harness = ReactComponentHarness();
       final node = harness.run(() => const Text('hello'));
       expect(node, isA<Text>());
-      expect((node as Text).value, 'hello');
+      expect(node.value, 'hello');
 
-      final div = harness.renderDiv(props: {'id': 'main'}, children: const [Text('child')]);
+      final div = harness.renderDiv(
+        props: {'id': 'main'},
+        children: const [Text('child')],
+      );
       expect(div.type.name, 'div');
       expect(div.children, hasLength(1));
     });
@@ -155,19 +145,44 @@ void main() {
 
   group('ServerFunctionResponseAssertions', () {
     test('assertServerFunctionSuccess validates envelope', () async {
-      final harness = ServerFunctionHarness();
-      harness.registry.register(_echoRef, (args, ctx) => 'ok');
-      final client = harness.createClient();
-      final response = await client.postJson('/__react/actions', harness.envelope(_echoRef, 'hi'));
+      final client = TestClient.inMemory(
+        const FixedResponseClient({
+          'ok': true,
+          'result': 'ok',
+        }, contentType: serverFunctionContentType),
+      );
+      final response = await client.get('/');
       expect(() => response.assertServerFunctionSuccess('ok'), returnsNormally);
+      await client.close();
     });
 
     test('assertServerFunctionError validates error code', () async {
-      final harness = ServerFunctionHarness();
-      harness.registry.register(_echoRef, (args, ctx) => throw const ServerFunctionFailure(code: 'fail', message: 'x', statusCode: 400));
-      final client = harness.createClient();
-      final response = await client.postJson('/__react/actions', harness.envelope(_echoRef, 'hi'));
+      final client = TestClient.inMemory(
+        const FixedResponseClient(
+          {
+            'ok': false,
+            'error': {'code': 'fail'},
+          },
+          status: 400,
+          contentType: serverFunctionContentType,
+        ),
+      );
+      final response = await client.get('/');
       expect(() => response.assertServerFunctionError('fail'), returnsNormally);
+      await client.close();
+    });
+
+    test('assertIsHtml accepts canonical header casing', () {
+      final response = TestResponse(
+        uri: '/',
+        statusCode: 200,
+        headers: const {
+          'Content-Type': ['text/html; charset=utf-8'],
+        },
+        bodyBytes: const [],
+      );
+
+      expect(response.assertIsHtml, returnsNormally);
     });
   });
 }

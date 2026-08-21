@@ -4,75 +4,66 @@ sidebar_position: 0
 
 # Installation
 
-Before you can start building applications with React Dart, you need to set up your environment and install the necessary tools. This guide will walk you through the prerequisites and the installation of the React Dart CLI.
+## Requirements
 
-## Prerequisites
+- Dart SDK `>=3.12.0 <4.0.0`.
+- Node.js with npm for managed React dependencies, bundling, and the SSR worker.
+- A Rust toolchain compatible with the version declared by
+  `react_tool/native/Cargo.toml` when building the native TypeScript
+  declaration extractor.
 
-React Dart leverages the latest features of the Dart language and requires a modern SDK environment.
+The CLI keeps npm dependencies under `.dart_tool/react/js/`; it does not
+install React globally or modify an application's `package.json`.
 
-1. **Dart SDK**: You must have Dart version `>=3.12.0 <4.0.0` installed.
-   - [Install Dart](https://dart.dev/get-dart)
-2. **Node.js**: (Optional but recommended) While React Dart uses Dart's `sass` package natively and manages isolated npm environments internally, having Node.js installed is beneficial if you plan on using custom JS/TS components or external bundlers like Rolldown.
+## Install the CLI
 
-## Installing the React Dart CLI
+Once published, activate it globally:
 
-The core orchestration tool for React Dart is the `react_tool` package, which provides the `react` executable. It handles everything from scaffolding projects to compiling Dart to JS, bundling foreign assets, and starting development servers.
-
-Activate the CLI globally using Dart pub:
-
-```bash
+```console
 dart pub global activate react_tool
-```
-
-Ensure that your global pub cache bin directory is in your system's `PATH`.
-- **Linux/macOS**: `~/.pub-cache/bin`
-- **Windows**: `%LOCALAPPDATA%\Pub\Cache\bin`
-
-Once activated, you can verify the installation by running:
-
-```bash
 react doctor
 ```
 
-*(Note: Depending on your shell setup, you might also invoke it via `dart run react_tool:react doctor` from within a project directory.)*
+Within this GitHub workspace, use the workspace-resolved executable:
 
-## Setting up your IDE
+```console
+dart pub get
+dart run react_tool:react doctor
+```
 
-Because React Dart relies heavily on code generation (via `build_runner`), you will want your IDE to play nicely with generated files.
+Run project commands from the directory containing that project's
+`pubspec.yaml`.
 
-### VS Code
+## IDE setup
 
-If you use Visual Studio Code, ensure you have the official **Dart** and **Flutter** extensions installed.
-We also recommend hiding `.react.dart` and `.react.g.dart` files from your explorer to reduce clutter, since you should never edit these manually:
+Generated application source lives under `lib/.generated/`; build artifacts
+live under `build/`. Scaffolded projects include VS Code settings that hide
+both:
 
 ```json
-// .vscode/settings.json
 {
   "files.exclude": {
-    "**/*.react.dart": true,
-    "**/*.react.g.dart": true,
-    "**/*.module.dart": true
+    "**/.dart_tool": true,
+    "**/.generated": true,
+    "**/build": true
   }
 }
 ```
 
-### IntelliJ / Android Studio
+These directories are disposable. Navigation and edits should stay in authored
+files such as `lib/app.dart`, feature files, and tests.
 
-The Dart plugin provides excellent support. Generated files will be automatically marked as derived.
+## Verify a project
 
-## Validating the Installation
-
-To ensure everything is working, create a temporary directory and run the doctor command:
-
-```bash
-mkdir test_react_dart
-cd test_react_dart
-dart pub init
+```console
+dart run react_tool:react init sample_app --template client
+cd sample_app
+dart pub get
 dart run react_tool:react doctor
+dart analyze --fatal-infos
+dart test
+dart run react_tool:react build
 ```
 
-The doctor command will analyze the directory and report that it is missing a `react.yaml` file, which confirms the CLI is successfully evaluating the workspace.
-
-## Next Steps
-
-Now that you have the tools installed, head over to the [Quick Start](./quick-start.mdx) guide to scaffold and run your first React Dart application!
+For SSR, use the `ssr`, `routed`, or `routed-minimal` template and keep
+Node available when serving the generated worker.

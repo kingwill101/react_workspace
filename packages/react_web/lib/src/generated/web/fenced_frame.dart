@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: fenced-frame
 // ignore_for_file: type=lint
 
-
 abstract interface class FenceEvent {
   String? get eventType;
   set eventType(String? value);
@@ -53,4 +52,3 @@ typedef OpaqueProperty = String;
 typedef ReportEventType = Object;
 
 typedef UrnOrConfig = Object;
-

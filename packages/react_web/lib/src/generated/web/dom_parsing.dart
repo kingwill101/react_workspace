@@ -7,10 +7,6 @@ import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class XMLSerializer {
   factory XMLSerializer() =>
-      WebRuntime.current.createWebObject<XMLSerializer>(
-        'XMLSerializer',
-        [],
-      );
+      WebRuntime.current.createWebObject<XMLSerializer>('XMLSerializer', []);
   String serializeToString(Node root);
 }
-

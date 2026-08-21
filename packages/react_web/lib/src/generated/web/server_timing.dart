@@ -10,4 +10,3 @@ abstract interface class PerformanceServerTiming {
   String get description;
   Object toJSON();
 }
-

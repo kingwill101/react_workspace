@@ -14,13 +14,16 @@ class InvalidHookCallRule extends AnalysisRule {
   );
 
   InvalidHookCallRule()
-      : super(name: 'invalid_hook_call', description: 'Enforces Rules of Hooks.');
+    : super(name: 'invalid_hook_call', description: 'Enforces Rules of Hooks.');
 
   @override
   LintCode get diagnosticCode => code;
 
   @override
-  void registerNodeProcessors(RuleVisitorRegistry registry, RuleContext context) {
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
     registry.addCompilationUnit(this, _Visitor(this, context));
   }
 }

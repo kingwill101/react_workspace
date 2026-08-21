@@ -3,20 +3,18 @@
 // ignore_for_file: type=lint
 
 import 'anonymous_iframe.dart';
-import 'dom.dart';
 
 abstract interface class DocumentPictureInPictureEventInit {
   Window get window;
   set window(Window value);
 }
 
-final class DocumentPictureInPictureEventInitValue implements DocumentPictureInPictureEventInit {
+final class DocumentPictureInPictureEventInitValue
+    implements DocumentPictureInPictureEventInit {
   @override
   Window window;
 
-  DocumentPictureInPictureEventInitValue({
-    required this.window,
-  });
+  DocumentPictureInPictureEventInitValue({required this.window});
 }
 
 abstract interface class DocumentPictureInPictureOptions {
@@ -28,7 +26,8 @@ abstract interface class DocumentPictureInPictureOptions {
   set disallowReturnToOpener(bool? value);
 }
 
-final class DocumentPictureInPictureOptionsValue implements DocumentPictureInPictureOptions {
+final class DocumentPictureInPictureOptionsValue
+    implements DocumentPictureInPictureOptions {
   @override
   int? width;
   @override
@@ -42,4 +41,3 @@ final class DocumentPictureInPictureOptionsValue implements DocumentPictureInPic
     this.disallowReturnToOpener,
   });
 }
-

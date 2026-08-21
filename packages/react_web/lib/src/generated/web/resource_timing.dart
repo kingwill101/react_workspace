@@ -28,4 +28,3 @@ abstract interface class PerformanceResourceTiming {
 }
 
 typedef RenderBlockingStatusType = String;
-

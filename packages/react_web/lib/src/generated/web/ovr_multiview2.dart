@@ -5,6 +5,12 @@
 import 'webgl1.dart';
 
 abstract interface class OVR_multiview2 {
-  void framebufferTextureMultiviewOVR(GLenum target, GLenum attachment, WebGLTexture? texture, GLint level, GLint baseViewIndex, GLsizei numViews);
+  void framebufferTextureMultiviewOVR(
+    GLenum target,
+    GLenum attachment,
+    WebGLTexture? texture,
+    GLint level,
+    GLint baseViewIndex,
+    GLsizei numViews,
+  );
 }
-

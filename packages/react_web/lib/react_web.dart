@@ -18,6 +18,7 @@ export 'src/generated/elements.dart'
         a,
         img;
 export 'src/generated/dom.dart';
+export 'src/generated/svg.dart';
 export 'src/generated/web/web.dart'
     hide
         Text,
@@ -33,7 +34,9 @@ export 'src/generated/web/web.dart'
         HTMLOptionElement,
         HTMLAnchorElement,
         HTMLImageElement;
-export 'src/generated/browser_adapter.dart'
+export 'src/generated/browser_adapter_stub.dart'
+    if (dart.library.js_interop) 'src/generated/browser_adapter.dart'
     show registerBrowserAdapters, installBrowserWebRuntime;
 export 'src/http_server_function_client.dart';
+export 'src/props.dart';
 export 'src/ssr_metadata.dart';

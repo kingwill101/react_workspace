@@ -15,10 +15,9 @@ void registerTodosActions({
   registry.register(todoRef, (args, context) async {});
 }
 ''';
-      expect(
-        AggregateBuilder.registrationFunctions(content),
-        ['registerTodosActions'],
-      );
+      expect(AggregateBuilder.registrationFunctions(content), [
+        'registerTodosActions',
+      ]);
     });
 
     test('matches library-name registries without an Actions suffix', () {
@@ -33,10 +32,9 @@ void registerGreeting({
   registry.register(greetRef, (args, context) async {});
 }
 ''';
-      expect(
-        AggregateBuilder.registrationFunctions(content),
-        ['registerGreeting'],
-      );
+      expect(AggregateBuilder.registrationFunctions(content), [
+        'registerGreeting',
+      ]);
     });
   });
 }

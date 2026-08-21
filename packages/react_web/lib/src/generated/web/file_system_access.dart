@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'fs.dart';
-import 'permissions.dart';
 
 abstract interface class DirectoryPickerOptions {
   String? get id;
@@ -22,11 +21,7 @@ final class DirectoryPickerOptionsValue implements DirectoryPickerOptions {
   @override
   FileSystemPermissionMode? mode;
 
-  DirectoryPickerOptionsValue({
-    this.id,
-    this.startIn,
-    this.mode,
-  });
+  DirectoryPickerOptionsValue({this.id, this.startIn, this.mode});
 }
 
 abstract interface class FilePickerAcceptType {
@@ -42,10 +37,7 @@ final class FilePickerAcceptTypeValue implements FilePickerAcceptType {
   @override
   Map<String, Object>? accept;
 
-  FilePickerAcceptTypeValue({
-    this.description,
-    this.accept,
-  });
+  FilePickerAcceptTypeValue({this.description, this.accept});
 }
 
 abstract interface class FilePickerOptions {
@@ -88,13 +80,12 @@ abstract interface class FileSystemHandlePermissionDescriptor {
   set mode(FileSystemPermissionMode? value);
 }
 
-final class FileSystemHandlePermissionDescriptorValue implements FileSystemHandlePermissionDescriptor {
+final class FileSystemHandlePermissionDescriptorValue
+    implements FileSystemHandlePermissionDescriptor {
   @override
   FileSystemPermissionMode? mode;
 
-  FileSystemHandlePermissionDescriptorValue({
-    this.mode,
-  });
+  FileSystemHandlePermissionDescriptorValue({this.mode});
 }
 
 abstract interface class FileSystemPermissionDescriptor {
@@ -104,16 +95,14 @@ abstract interface class FileSystemPermissionDescriptor {
   set mode(FileSystemPermissionMode? value);
 }
 
-final class FileSystemPermissionDescriptorValue implements FileSystemPermissionDescriptor {
+final class FileSystemPermissionDescriptorValue
+    implements FileSystemPermissionDescriptor {
   @override
   FileSystemHandle handle;
   @override
   FileSystemPermissionMode? mode;
 
-  FileSystemPermissionDescriptorValue({
-    required this.handle,
-    this.mode,
-  });
+  FileSystemPermissionDescriptorValue({required this.handle, this.mode});
 }
 
 typedef FileSystemPermissionMode = String;
@@ -127,9 +116,7 @@ final class OpenFilePickerOptionsValue implements OpenFilePickerOptions {
   @override
   bool? multiple;
 
-  OpenFilePickerOptionsValue({
-    this.multiple,
-  });
+  OpenFilePickerOptionsValue({this.multiple});
 }
 
 abstract interface class SaveFilePickerOptions {
@@ -141,12 +128,9 @@ final class SaveFilePickerOptionsValue implements SaveFilePickerOptions {
   @override
   String? suggestedName;
 
-  SaveFilePickerOptionsValue({
-    this.suggestedName,
-  });
+  SaveFilePickerOptionsValue({this.suggestedName});
 }
 
 typedef StartInDirectory = Object;
 
 typedef WellKnownDirectory = String;
-

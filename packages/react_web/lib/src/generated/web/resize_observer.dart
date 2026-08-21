@@ -7,11 +7,8 @@ import 'geometry.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class ResizeObserver {
-  factory ResizeObserver(ResizeObserverCallback callback) =>
-      WebRuntime.current.createWebObject<ResizeObserver>(
-        'ResizeObserver',
-        [callback],
-      );
+  factory ResizeObserver(ResizeObserverCallback callback) => WebRuntime.current
+      .createWebObject<ResizeObserver>('ResizeObserver', [callback]);
   void observe(Element target, [ResizeObserverOptions? options]);
   void unobserve(Element target);
   void disconnect();
@@ -19,7 +16,8 @@ abstract interface class ResizeObserver {
 
 typedef ResizeObserverBoxOptions = String;
 
-typedef ResizeObserverCallback = void Function(List<ResizeObserverEntry> entries, ResizeObserver observer,);
+typedef ResizeObserverCallback =
+    void Function(List<ResizeObserverEntry> entries, ResizeObserver observer);
 
 abstract interface class ResizeObserverEntry {
   Element get target;
@@ -38,13 +36,10 @@ final class ResizeObserverOptionsValue implements ResizeObserverOptions {
   @override
   ResizeObserverBoxOptions? box;
 
-  ResizeObserverOptionsValue({
-    this.box,
-  });
+  ResizeObserverOptionsValue({this.box});
 }
 
 abstract interface class ResizeObserverSize {
   double get inlineSize;
   double get blockSize;
 }
-

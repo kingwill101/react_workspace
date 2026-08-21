@@ -42,12 +42,7 @@ List<IdlMember> flattenMembers(
   if (iface.inheritance != null) {
     final parent = model.interfaces[iface.inheritance];
     if (parent != null) {
-      flattenMembers(
-        model,
-        parent,
-        seen: seenSet,
-        visiting: visitingSet,
-      );
+      flattenMembers(model, parent, seen: seenSet, visiting: visitingSet);
     }
   }
 
@@ -63,8 +58,10 @@ String _memberKey(IdlMember m) {
   String t(TypeRef? r) => r == null ? '' : r.toString();
   return switch (m) {
     IdlAttribute() => 'attr:${m.name}:${t(m.type)}:${m.readonly}',
-    IdlOperation() => 'op:${m.name}:${t(m.returnType)}:${m.parameters.map((p) => '${p.name}${t(p.type)}').join(',')}:${m.special}',
-    IdlConstructor() => 'ctor:${m.parameters.map((p) => '${p.name}${t(p.type)}').join(',')}',
+    IdlOperation() =>
+      'op:${m.name}:${t(m.returnType)}:${m.parameters.map((p) => '${p.name}${t(p.type)}').join(',')}:${m.special}',
+    IdlConstructor() =>
+      'ctor:${m.parameters.map((p) => '${p.name}${t(p.type)}').join(',')}',
     IdlConstant() => 'const:${m.name}',
     IdlIterable() => 'iter:${m.async}:${m.types.map(t).join(',')}',
     IdlMaplike() => 'map:${t(m.keyType)}:${t(m.valueType)}',
@@ -81,7 +78,11 @@ String _toLowerCamel(String s) {
   //      is_search_provider_installed -> isSearchProviderInstalled
   if (s.isEmpty) return s;
   // Normalize separators to _
-  var normalized = s.replaceAll('-', '_').replaceAll(' ', '_').replaceAll('.', '_').replaceAll('#', '_');
+  var normalized = s
+      .replaceAll('-', '_')
+      .replaceAll(' ', '_')
+      .replaceAll('.', '_')
+      .replaceAll('#', '_');
   // Split by _ and also handle when no _ but has mixed case like AddSearchProvider
   // For single segment without _, just lower first char
   if (!normalized.contains('_')) {
@@ -118,7 +119,11 @@ String escapeIdentifier(String name) {
 
 String toUpperCamelCase(String s) {
   if (s.isEmpty) return s;
-  var normalized = s.replaceAll('-', '_').replaceAll(' ', '_').replaceAll('.', '_').replaceAll('#', '_');
+  var normalized = s
+      .replaceAll('-', '_')
+      .replaceAll(' ', '_')
+      .replaceAll('.', '_')
+      .replaceAll('#', '_');
   final parts = normalized.split('_').where((p) => p.isNotEmpty).toList();
   if (parts.isEmpty) return '_';
   return parts.map((p) {
@@ -128,11 +133,76 @@ String toUpperCamelCase(String s) {
 }
 
 const _keywords = <String>{
-  'abstract','as','assert','async','await','break','case','catch','class','const',
-  'continue','covariant','default','deferred','do','dynamic','else','enum','export',
-  'extends','extension','external','factory','false','final','finally','for',
-  'Function','get','hide','if','implements','import','in','interface','is','late',
-  'library','mixin','new','null','on','operator','out','part','required','rethrow',
-  'return','set','show','static','super','switch','sync','this','throw','true','try',
-  'typedef','var','void','while','with','yield','when','override',
+  'abstract',
+  'as',
+  'assert',
+  'async',
+  'await',
+  'break',
+  'case',
+  'catch',
+  'class',
+  'const',
+  'continue',
+  'covariant',
+  'default',
+  'deferred',
+  'do',
+  'dynamic',
+  'else',
+  'enum',
+  'export',
+  'extends',
+  'extension',
+  'external',
+  'factory',
+  'false',
+  'final',
+  'finally',
+  'for',
+  'Function',
+  'get',
+  'hide',
+  'if',
+  'implements',
+  'import',
+  'in',
+  'interface',
+  'is',
+  'late',
+  'library',
+  'mixin',
+  'new',
+  'null',
+  'on',
+  'operator',
+  'out',
+  'part',
+  'required',
+  'rethrow',
+  'return',
+  'set',
+  'show',
+  'static',
+  'super',
+  'switch',
+  'sync',
+  'this',
+  'throw',
+  'true',
+  'try',
+  'typedef', 'var', 'void', 'while', 'with', 'yield', 'when', 'override',
+  // Web IDL constants can use names that are Dart built-in types. Keep those
+  // names available as types inside generated declarations by escaping the
+  // member identifier (for example, `bool` becomes `bool_`).
+  'bool',
+  'double',
+  'int',
+  'num',
+  'string',
+  'object',
+  'list',
+  'map',
+  'iterable',
+  'type', 'never', 'future', 'function',
 };

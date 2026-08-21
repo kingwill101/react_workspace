@@ -2,29 +2,29 @@
 // Neutral Web surface for spec: FedCM
 // ignore_for_file: type=lint
 
-import 'credential_management.dart';
-import 'dom.dart';
-import 'digital_identities.dart';
-import 'web_otp.dart';
-import 'webauthn.dart';
-import 'html.dart';
-import 'netinfo.dart';
-import 'fs.dart';
-import 'web_locks.dart';
+import 'audio_output.dart';
 import 'battery_status.dart';
-import 'fetch.dart';
 import 'clipboard_apis.dart';
+import 'credential_management.dart';
+import 'digital_identities.dart';
+import 'dom.dart';
 import 'encrypted_media.dart';
+import 'fetch.dart';
+import 'fs.dart';
 import 'gamepad_extensions.dart';
 import 'geolocation.dart';
+import 'html.dart';
 import 'media_capabilities.dart';
-import 'audio_output.dart';
 import 'mediasession.dart';
+import 'netinfo.dart';
 import 'permissions_request.dart';
 import 'screen_wake_lock.dart';
 import 'service_workers.dart';
 import 'vibration.dart';
+import 'web_locks.dart';
+import 'web_otp.dart';
 import 'web_share.dart';
+import 'webauthn.dart';
 import 'webmidi.dart';
 
 abstract interface class CredentialRequestOptions {
@@ -85,9 +85,7 @@ final class DisconnectedAccountValue implements DisconnectedAccount {
   @override
   String accountId;
 
-  DisconnectedAccountValue({
-    required this.accountId,
-  });
+  DisconnectedAccountValue({required this.accountId});
 }
 
 abstract interface class IdentityCredentialDisconnectOptions {
@@ -95,13 +93,12 @@ abstract interface class IdentityCredentialDisconnectOptions {
   set accountHint(String value);
 }
 
-final class IdentityCredentialDisconnectOptionsValue implements IdentityCredentialDisconnectOptions {
+final class IdentityCredentialDisconnectOptionsValue
+    implements IdentityCredentialDisconnectOptions {
   @override
   String accountHint;
 
-  IdentityCredentialDisconnectOptionsValue({
-    required this.accountHint,
-  });
+  IdentityCredentialDisconnectOptionsValue({required this.accountHint});
 }
 
 abstract interface class IdentityCredentialRequestOptions {
@@ -111,7 +108,8 @@ abstract interface class IdentityCredentialRequestOptions {
   set context(IdentityCredentialRequestOptionsContext? value);
 }
 
-final class IdentityCredentialRequestOptionsValue implements IdentityCredentialRequestOptions {
+final class IdentityCredentialRequestOptionsValue
+    implements IdentityCredentialRequestOptions {
   @override
   List<IdentityProviderRequestOptions> providers;
   @override
@@ -140,7 +138,8 @@ abstract interface class IdentityProviderAPIConfig {
   set branding(IdentityProviderBranding? value);
 }
 
-final class IdentityProviderAPIConfigValue implements IdentityProviderAPIConfig {
+final class IdentityProviderAPIConfigValue
+    implements IdentityProviderAPIConfig {
   @override
   String accountsEndpoint;
   @override
@@ -218,13 +217,12 @@ abstract interface class IdentityProviderAccountList {
   set accounts(List<IdentityProviderAccount>? value);
 }
 
-final class IdentityProviderAccountListValue implements IdentityProviderAccountList {
+final class IdentityProviderAccountListValue
+    implements IdentityProviderAccountList {
   @override
   List<IdentityProviderAccount>? accounts;
 
-  IdentityProviderAccountListValue({
-    this.accounts,
-  });
+  IdentityProviderAccountListValue({this.accounts});
 }
 
 abstract interface class IdentityProviderBranding {
@@ -263,7 +261,8 @@ abstract interface class IdentityProviderClientMetadata {
   set termsOfServiceUrl(String? value);
 }
 
-final class IdentityProviderClientMetadataValue implements IdentityProviderClientMetadata {
+final class IdentityProviderClientMetadataValue
+    implements IdentityProviderClientMetadata {
   @override
   String? privacyPolicyUrl;
   @override
@@ -307,10 +306,7 @@ final class IdentityProviderIconValue implements IdentityProviderIcon {
   @override
   int? size;
 
-  IdentityProviderIconValue({
-    required this.url,
-    this.size,
-  });
+  IdentityProviderIconValue({required this.url, this.size});
 }
 
 abstract interface class IdentityProviderRequestOptions {
@@ -322,7 +318,8 @@ abstract interface class IdentityProviderRequestOptions {
   set domainHint(String? value);
 }
 
-final class IdentityProviderRequestOptionsValue implements IdentityProviderRequestOptions {
+final class IdentityProviderRequestOptionsValue
+    implements IdentityProviderRequestOptions {
   @override
   String? nonce;
   @override
@@ -346,9 +343,7 @@ final class IdentityProviderTokenValue implements IdentityProviderToken {
   @override
   String token;
 
-  IdentityProviderTokenValue({
-    required this.token,
-  });
+  IdentityProviderTokenValue({required this.token});
 }
 
 abstract interface class IdentityProviderWellKnown {
@@ -356,13 +351,12 @@ abstract interface class IdentityProviderWellKnown {
   set providerUrls(List<String> value);
 }
 
-final class IdentityProviderWellKnownValue implements IdentityProviderWellKnown {
+final class IdentityProviderWellKnownValue
+    implements IdentityProviderWellKnown {
   @override
   List<String> providerUrls;
 
-  IdentityProviderWellKnownValue({
-    required this.providerUrls,
-  });
+  IdentityProviderWellKnownValue({required this.providerUrls});
 }
 
 abstract interface class IdentityUserInfo {
@@ -386,12 +380,7 @@ final class IdentityUserInfoValue implements IdentityUserInfo {
   @override
   String? picture;
 
-  IdentityUserInfoValue({
-    this.email,
-    this.name,
-    this.givenName,
-    this.picture,
-  });
+  IdentityUserInfoValue({this.email, this.name, this.givenName, this.picture});
 }
 
 typedef LoginStatus = String;
@@ -434,7 +423,10 @@ abstract interface class Navigator {
   bool sendBeacon(String url, [BodyInit? data]);
   Clipboard get clipboard;
   CredentialsContainer get credentials;
-  Future<MediaKeySystemAccess> requestMediaKeySystemAccess(String keySystem, List<MediaKeySystemConfiguration> supportedConfigurations);
+  Future<MediaKeySystemAccess> requestMediaKeySystemAccess(
+    String keySystem,
+    List<MediaKeySystemConfiguration> supportedConfigurations,
+  );
   List<Gamepad?> getGamepads();
   Geolocation get geolocation;
   UserActivation get userActivation;
@@ -453,4 +445,3 @@ abstract interface class Navigator {
   Object get usb;
   Object get windowControlsOverlay;
 }
-

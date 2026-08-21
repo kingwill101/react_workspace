@@ -361,6 +361,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  event_bus:
+    dependency: transitive
+    description:
+      name: event_bus
+      sha256: "1a55e97923769c286d295240048fc180e7b0768902c3c2e869fe059aafa15304"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   ffi:
     dependency: transitive
     description:
@@ -401,6 +409,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  fuzzywuzzy:
+    dependency: transitive
+    description:
+      name: fuzzywuzzy
+      sha256: "3004379ffd6e7f476a0c2091f38f16588dc45f67de7adf7c41aa85dec06b432c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   gato:
     dependency: transitive
     description:
@@ -481,6 +497,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.0"
+  http2:
+    dependency: transitive
+    description:
+      name: http2
+      sha256: "382d3aefc5bd6dc68c6b892d7664f29b5beb3251611ae946a98d35158a82bbfa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.1"
   http_multi_server:
     dependency: transitive
     description:
@@ -793,6 +817,33 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.2"
+  routed_core:
+    dependency: "direct overridden"
+    description:
+      path: "packages/routed_core"
+      ref: master
+      resolved-ref: f665d2eb5896448eeb22e29ac0c51193fc4f9290
+      url: "https://github.com/kingwill101/routed.git"
+    source: git
+    version: "0.4.0"
+  routed_io:
+    dependency: transitive
+    description:
+      path: "packages/routed_io"
+      ref: master
+      resolved-ref: "1c656672e699b43e69be1621110c1c9252e9bdea"
+      url: "https://github.com/kingwill101/routed.git"
+    source: git
+    version: "0.1.0"
+  routed_testing:
+    dependency: transitive
+    description:
+      path: "packages/server_testing/routed_testing"
+      ref: master
+      resolved-ref: "1c656672e699b43e69be1621110c1c9252e9bdea"
+      url: "https://github.com/kingwill101/routed.git"
+    source: git
+    version: "0.4.0"
   sass:
     dependency: transitive
     description:
@@ -801,6 +852,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.102.0"
+  server_contracts:
+    dependency: transitive
+    description:
+      name: server_contracts
+      sha256: dd61bd9597d7f496fc2d7757118e4a47f51cdb7b228d1e02bc542961fe26468d
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   server_testing:
     dependency: transitive
     description:

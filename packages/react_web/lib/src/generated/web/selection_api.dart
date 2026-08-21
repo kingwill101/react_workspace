@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: selection-api
 // ignore_for_file: type=lint
 
-import 'dom.dart';
 import 'cssom_view.dart';
+import 'dom.dart';
 
 abstract interface class Selection {
   Node? get anchorNode;
@@ -12,7 +12,7 @@ abstract interface class Selection {
   int get focusOffset;
   bool get isCollapsed;
   int get rangeCount;
-  String get type;
+  String get type_;
   String get direction;
   Range getRangeAt(int index);
   void addRange(Range range);
@@ -24,10 +24,14 @@ abstract interface class Selection {
   void collapseToStart();
   void collapseToEnd();
   void extend(Node node, [int? offset]);
-  void setBaseAndExtent(Node anchorNode, int anchorOffset, Node focusNode, int focusOffset);
+  void setBaseAndExtent(
+    Node anchorNode,
+    int anchorOffset,
+    Node focusNode,
+    int focusOffset,
+  );
   void selectAllChildren(Node node);
   void modify([String? alter, String? direction, String? granularity]);
   void deleteFromDocument();
   bool containsNode(Node node, [bool? allowPartialContainment]);
 }
-

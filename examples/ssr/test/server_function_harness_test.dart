@@ -1,6 +1,9 @@
 import 'package:example/todos/todos_contract.dart';
 import 'package:react_actions/react_actions.dart';
+import 'package:react_server_shelf/react_server_shelf.dart';
 import 'package:react_testing/react_testing.dart';
+import 'package:server_testing/server_testing.dart';
+import 'package:server_testing_shelf/server_testing_shelf.dart';
 import 'package:test/test.dart';
 
 class _StringCodec extends ServerFunctionJsonCodec<String> {
@@ -10,7 +13,8 @@ class _StringCodec extends ServerFunctionJsonCodec<String> {
   dynamic encode(String value) => value;
 }
 
-class _ListArgsCodec extends ServerFunctionJsonCodec<({bool? completedFilter})> {
+class _ListArgsCodec
+    extends ServerFunctionJsonCodec<({bool? completedFilter})> {
   @override
   ({bool? completedFilter}) decode(dynamic json) {
     final m = json as Map<String, dynamic>;
@@ -18,8 +22,9 @@ class _ListArgsCodec extends ServerFunctionJsonCodec<({bool? completedFilter})> 
   }
 
   @override
-  dynamic encode(({bool? completedFilter}) value) =>
-      {'completedFilter': value.completedFilter};
+  dynamic encode(({bool? completedFilter}) value) => {
+    'completedFilter': value.completedFilter,
+  };
 }
 
 class _ListResultCodec extends ServerFunctionJsonCodec<TodoListResult> {
@@ -27,22 +32,24 @@ class _ListResultCodec extends ServerFunctionJsonCodec<TodoListResult> {
   TodoListResult decode(dynamic json) {
     final m = json as Map<String, dynamic>;
     final items = (m['items'] as List)
-        .map((e) => TodoItem(
-              id: e['id'] as String,
-              title: e['title'] as String,
-              completed: e['completed'] as bool,
-            ))
+        .map(
+          (e) => TodoItem(
+            id: e['id'] as String,
+            title: e['title'] as String,
+            completed: e['completed'] as bool,
+          ),
+        )
         .toList();
     return TodoListResult(items: items, total: m['total'] as int);
   }
 
   @override
   dynamic encode(TodoListResult value) => {
-        'items': value.items
-            .map((e) => {'id': e.id, 'title': e.title, 'completed': e.completed})
-            .toList(),
-        'total': value.total,
-      };
+    'items': value.items
+        .map((e) => {'id': e.id, 'title': e.title, 'completed': e.completed})
+        .toList(),
+    'total': value.total,
+  };
 }
 
 void main() {
@@ -94,10 +101,15 @@ void main() {
         resultCodec: _StringCodec(),
       );
       harness.registry.register(ref, (args, ctx) => args);
-      final client = harness.createClient();
-      final resp =
-          await client.postJson('/__react/actions', harness.staleEnvelope(ref, 'x'));
+      final client = harness.createClient(
+        ShelfRequestHandler(createServerActionHandler(harness.registry)),
+      );
+      final resp = await client.postJson(
+        '/__react/actions',
+        harness.staleEnvelope(ref, 'x'),
+      );
       resp.assertContractMismatch();
+      await client.close();
     });
   });
 }

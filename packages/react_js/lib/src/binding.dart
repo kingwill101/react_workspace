@@ -1,3 +1,6 @@
+// `react_js` is the browser implementation of the portable React contract.
+// ignore_for_file: js_interop_in_server
+
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
@@ -158,12 +161,14 @@ class JsBinding extends ReactBinding {
     T state,
     T Function(T state, A action) update,
   ) {
+    final hook = _requireReactHook(_useOptimistic, 'useOptimistic');
     final updateJS = ((JSAny? previous, JSAny? action) {
       return _toStateJS(
         update(_fromStateJS<T>(previous), _fromStateJS<A>(action)),
       );
     }).toJS;
-    final values = _useOptimistic(_toStateJS(state), updateJS);
+    final values =
+        hook.callAsFunction(null, _toStateJS(state), updateJS) as JSArray;
     final value = _fromStateJS<T>(values[0]);
     final dispatch = values[1] as JSFunction;
     return (
@@ -199,12 +204,16 @@ class JsBinding extends ReactBinding {
   }
 
   @override
-  T useDeferredValue<T>(T value, Object? options) => _fromStateJS<T>(
-    _useDeferredValue(
-      _toStateJS(value),
-      options == null ? null : toReactJS(options),
-    ),
-  );
+  T useDeferredValue<T>(T value, Object? initialValue) {
+    final encodedValue = _toStateJS(value);
+    final deferred = initialValue == null
+        ? _useDeferredValue(encodedValue)
+        : _useDeferredValueWithInitialValue(
+            encodedValue,
+            _toStateJS(initialValue),
+          );
+    return _fromStateJS<T>(deferred);
+  }
 
   @override
   (T, void Function(A)) useActionState<T, A>(
@@ -212,6 +221,7 @@ class JsBinding extends ReactBinding {
     T initialState,
     String? permalink,
   ) {
+    final hook = _requireReactHook(_useActionState, 'useActionState');
     final actionJS = ((JSAny? previous, JSAny? rawAction) {
       final result = action(
         _fromStateJS<T>(previous),
@@ -221,11 +231,14 @@ class JsBinding extends ReactBinding {
           ? result.then(_toStateJS).toJS
           : _toStateJS(result);
     }).toJS;
-    final values = _useActionState(
-      actionJS,
-      _toStateJS(initialState),
-      permalink?.toJS,
-    );
+    final values =
+        hook.callAsFunction(
+              null,
+              actionJS,
+              _toStateJS(initialState),
+              permalink?.toJS,
+            )
+            as JSArray;
     final value = _fromStateJS<T>(values[0]);
     final dispatch = values[1] as JSFunction;
     return (
@@ -297,7 +310,12 @@ class JsBinding extends ReactBinding {
     // Layout effects are client-only. Keeping SSR as a no-op prevents a
     // browser timing primitive from changing server output.
     if (currentReactRuntime.target == ReactRenderTarget.server) return;
-    unsupportedReactFeature('useLayoutEffect');
+
+    final jsFn = (() {
+      final cleanup = effect();
+      return cleanup is EffectCleanup ? cleanup.toJS : _jsUndefined;
+    }).toJS;
+    _useLayoutEffect(jsFn, _depsToJS(deps));
   }
 
   @override
@@ -315,6 +333,18 @@ class JsBinding extends ReactBinding {
 
   JSAny? _depsToJS(List<Object?>? deps) =>
       deps?.map((d) => toReactJS(d)).toList().toJS;
+}
+
+JSFunction _requireReactHook(JSAny? candidate, String name) {
+  if (candidate == null ||
+      candidate.isUndefined ||
+      !candidate.isA<JSFunction>()) {
+    throw UnsupportedError(
+      '$name requires React 19 or newer, but the active runtime does not '
+      'export it.',
+    );
+  }
+  return candidate as JSFunction;
 }
 
 @JS('undefined')
@@ -337,7 +367,7 @@ external void _useImperativeHandle(
 external void _useDebugValue(JSAny? value, JSFunction? format);
 
 @JS('React.useOptimistic')
-external JSArray _useOptimistic(JSAny? state, JSFunction update);
+external JSAny? get _useOptimistic;
 
 @JS('React.useRef')
 external JSObject _useRef(JSAny? initial);
@@ -355,14 +385,16 @@ external JSString _useId();
 external JSArray _useTransition();
 
 @JS('React.useDeferredValue')
-external JSAny? _useDeferredValue(JSAny value, JSAny? options);
+external JSAny? _useDeferredValue(JSAny value);
+
+@JS('React.useDeferredValue')
+external JSAny? _useDeferredValueWithInitialValue(
+  JSAny value,
+  JSAny initialValue,
+);
 
 @JS('React.useActionState')
-external JSArray _useActionState(
-  JSFunction action,
-  JSAny? initialState,
-  JSString? permalink,
-);
+external JSAny? get _useActionState;
 
 @JS('React.useSyncExternalStore')
 external JSAny? _useSyncExternalStore(
@@ -373,6 +405,9 @@ external JSAny? _useSyncExternalStore(
 
 @JS('React.useState')
 external JSArray _useState(JSAny? initial);
+
+@JS('React.useLayoutEffect')
+external void _useLayoutEffect(JSFunction effect, JSAny? deps);
 
 @JS('React.useReducer')
 external JSArray _useReducer(JSFunction reducer, JSAny? initialArg);

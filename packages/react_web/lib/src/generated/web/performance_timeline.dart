@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: performance-timeline
 // ignore_for_file: type=lint
 
-import 'hr_time.dart';
 import 'event_timing.dart';
+import 'hr_time.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class PerformanceEntry {
@@ -27,25 +27,28 @@ abstract interface class PerformanceObserver {
   PerformanceEntryList takeRecords();
 }
 
-typedef PerformanceObserverCallback = void Function(PerformanceObserverEntryList entries, PerformanceObserver observer, PerformanceObserverCallbackOptions options,);
+typedef PerformanceObserverCallback =
+    void Function(
+      PerformanceObserverEntryList entries,
+      PerformanceObserver observer,
+      PerformanceObserverCallbackOptions options,
+    );
 
 abstract interface class PerformanceObserverCallbackOptions {
   int? get droppedEntriesCount;
   set droppedEntriesCount(int? value);
 }
 
-final class PerformanceObserverCallbackOptionsValue implements PerformanceObserverCallbackOptions {
+final class PerformanceObserverCallbackOptionsValue
+    implements PerformanceObserverCallbackOptions {
   @override
   int? droppedEntriesCount;
 
-  PerformanceObserverCallbackOptionsValue({
-    this.droppedEntriesCount,
-  });
+  PerformanceObserverCallbackOptionsValue({this.droppedEntriesCount});
 }
 
 abstract interface class PerformanceObserverEntryList {
   PerformanceEntryList getEntries();
-  PerformanceEntryList getEntriesByType(String type);
-  PerformanceEntryList getEntriesByName(String name, [String? type]);
+  PerformanceEntryList getEntriesByType(String type_);
+  PerformanceEntryList getEntriesByName(String name, [String? type_]);
 }
-

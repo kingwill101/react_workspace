@@ -3,7 +3,7 @@
 /// The implementation runs exclusively on the server. The generator
 /// produces a client proxy, codecs, and a server registration.
 ///
-/// The function's first parameter must be [ServerFunctionContext] (from
+/// The function's first parameter must be `ServerFunctionContext` (from
 /// `package:react_server`). All remaining parameters must be required
 /// and named.
 ///
@@ -34,7 +34,7 @@ class ServerFunctionAnnotation {
 ///   the serialized fields
 /// - No cyclic type references
 /// - All field types are supported (primitives, records, other
-///   [@serverData] types, [List], [Map], [DateTime], [Uri], enums)
+///   `@serverData` types, [List], [Map], [DateTime], [Uri], enums)
 ///
 /// ```dart
 /// @serverData

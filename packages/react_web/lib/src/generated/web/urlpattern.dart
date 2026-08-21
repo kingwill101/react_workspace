@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: urlpattern
 // ignore_for_file: type=lint
 
-
 typedef URLPatternCompatible = Object;
 
 abstract interface class URLPatternComponentResult {
@@ -12,16 +11,14 @@ abstract interface class URLPatternComponentResult {
   set groups(Map<String, String>? value);
 }
 
-final class URLPatternComponentResultValue implements URLPatternComponentResult {
+final class URLPatternComponentResultValue
+    implements URLPatternComponentResult {
   @override
   String? input;
   @override
   Map<String, String>? groups;
 
-  URLPatternComponentResultValue({
-    this.input,
-    this.groups,
-  });
+  URLPatternComponentResultValue({this.input, this.groups});
 }
 
 abstract interface class URLPatternInit {
@@ -89,9 +86,7 @@ final class URLPatternOptionsValue implements URLPatternOptions {
   @override
   bool? ignoreCase;
 
-  URLPatternOptionsValue({
-    this.ignoreCase,
-  });
+  URLPatternOptionsValue({this.ignoreCase});
 }
 
 abstract interface class URLPatternResult {
@@ -147,4 +142,3 @@ final class URLPatternResultValue implements URLPatternResult {
     this.hash,
   });
 }
-

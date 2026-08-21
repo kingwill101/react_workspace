@@ -2,14 +2,12 @@
 // Neutral Web surface for spec: fetch
 // ignore_for_file: type=lint
 
-import 'streams.dart';
 import 'fileapi.dart';
-import 'xhr.dart';
 import 'attribution_reporting_api.dart';
-import 'referrer_policy.dart';
 import 'dom.dart';
-import 'webidl.dart';
-import 'url.dart';
+import 'referrer_policy.dart';
+import 'streams.dart';
+import 'xhr.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Body {
@@ -27,10 +25,7 @@ typedef BodyInit = Object;
 
 abstract interface class Headers {
   factory Headers([HeadersInit? init]) =>
-      WebRuntime.current.createWebObject<Headers>(
-        'Headers',
-        [init],
-      );
+      WebRuntime.current.createWebObject<Headers>('Headers', [init]);
   void append(String name, String value);
   void delete(String name);
   String? get_(String name);
@@ -43,10 +38,7 @@ typedef HeadersInit = Object;
 
 abstract interface class Request {
   factory Request(RequestInfo input, [RequestInit? init]) =>
-      WebRuntime.current.createWebObject<Request>(
-        'Request',
-        [input, init],
-      );
+      WebRuntime.current.createWebObject<Request>('Request', [input, init]);
   ReadableStream? get body;
   bool get bodyUsed;
   Future<Object> arrayBuffer();
@@ -90,10 +82,7 @@ typedef RequestRedirect = String;
 
 abstract interface class Response {
   factory Response([BodyInit? body, ResponseInit? init]) =>
-      WebRuntime.current.createWebObject<Response>(
-        'Response',
-        [body, init],
-      );
+      WebRuntime.current.createWebObject<Response>('Response', [body, init]);
   ReadableStream? get body;
   bool get bodyUsed;
   Future<Object> arrayBuffer();
@@ -102,7 +91,7 @@ abstract interface class Response {
   Future<FormData> formData();
   Future<Object> json();
   Future<String> text();
-  ResponseType get type;
+  ResponseType get type_;
   String get url;
   bool get redirected;
   int get status;
@@ -129,14 +118,9 @@ final class ResponseInitValue implements ResponseInit {
   @override
   HeadersInit? headers;
 
-  ResponseInitValue({
-    this.status,
-    this.statusText,
-    this.headers,
-  });
+  ResponseInitValue({this.status, this.statusText, this.headers});
 }
 
 typedef ResponseType = String;
 
 typedef XMLHttpRequestBodyInit = Object;
-

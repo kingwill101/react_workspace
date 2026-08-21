@@ -1,0 +1,6 @@
+targets:
+  $default:
+    builders:
+      react_codegen|component:
+        generate_for:
+          - lib/valid_component.dart

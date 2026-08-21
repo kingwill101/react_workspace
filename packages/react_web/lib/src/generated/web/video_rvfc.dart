@@ -27,7 +27,8 @@ abstract interface class VideoFrameCallbackMetadata {
   set rtpTimestamp(int? value);
 }
 
-final class VideoFrameCallbackMetadataValue implements VideoFrameCallbackMetadata {
+final class VideoFrameCallbackMetadataValue
+    implements VideoFrameCallbackMetadata {
   @override
   DOMHighResTimeStamp presentationTime;
   @override
@@ -63,5 +64,5 @@ final class VideoFrameCallbackMetadataValue implements VideoFrameCallbackMetadat
   });
 }
 
-typedef VideoFrameRequestCallback = void Function(DOMHighResTimeStamp now, VideoFrameCallbackMetadata metadata,);
-
+typedef VideoFrameRequestCallback =
+    void Function(DOMHighResTimeStamp now, VideoFrameCallbackMetadata metadata);

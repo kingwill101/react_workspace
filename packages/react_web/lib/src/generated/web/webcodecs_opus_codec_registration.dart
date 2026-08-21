@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: webcodecs-opus-codec-registration
 // ignore_for_file: type=lint
 
-
 typedef OpusApplication = String;
 
 typedef OpusBitstreamFormat = String;
@@ -57,4 +56,3 @@ final class OpusEncoderConfigValue implements OpusEncoderConfig {
 }
 
 typedef OpusSignal = String;
-

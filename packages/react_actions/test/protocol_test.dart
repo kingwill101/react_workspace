@@ -83,7 +83,10 @@ void main() {
     test('ok envelope round-trips', () {
       const resp = ServerFunctionResponse.ok({'value': 42});
       final json = resp.toJson();
-      expect(json, {'ok': true, 'result': {'value': 42}});
+      expect(json, {
+        'ok': true,
+        'result': {'value': 42},
+      });
       final decoded = ServerFunctionResponse.fromJson(json);
       expect(decoded.ok, isTrue);
       expect(decoded.result, {'value': 42});

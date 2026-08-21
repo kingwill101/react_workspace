@@ -2,25 +2,35 @@
 // Neutral Web surface for spec: css-nav
 // ignore_for_file: type=lint
 
-import 'cssom_view.dart';
-import 'geometry.dart';
-import 'dom.dart';
-import 'trusted_types.dart';
-import 'html.dart';
-import 'web_animations_2.dart';
-import 'web_animations.dart';
 import 'css_typed_om.dart';
+import 'cssom_view.dart';
+import 'dom.dart';
 import 'fullscreen.dart';
+import 'geometry.dart';
+import 'html.dart';
 import 'pointerlock.dart';
-import 'input_device_capabilities.dart';
+import 'web_animations.dart';
+import 'web_animations_2.dart';
 
 abstract interface class Element {
   Object get regionOverset;
   List<Range>? getRegionFlowRanges();
   List<DOMQuad> getBoxQuads([BoxQuadOptions? options]);
-  DOMQuad convertQuadFromNode(DOMQuadInit quad, GeometryNode from, [ConvertCoordinateOptions? options]);
-  DOMQuad convertRectFromNode(DOMRectReadOnly rect, GeometryNode from, [ConvertCoordinateOptions? options]);
-  DOMPoint convertPointFromNode(DOMPointInit point, GeometryNode from, [ConvertCoordinateOptions? options]);
+  DOMQuad convertQuadFromNode(
+    DOMQuadInit quad,
+    GeometryNode from, [
+    ConvertCoordinateOptions? options,
+  ]);
+  DOMQuad convertRectFromNode(
+    DOMRectReadOnly rect,
+    GeometryNode from, [
+    ConvertCoordinateOptions? options,
+  ]);
+  DOMPoint convertPointFromNode(
+    DOMPointInit point,
+    GeometryNode from, [
+    ConvertCoordinateOptions? options,
+  ]);
   HTMLCollection get children;
   Element? get firstElementChild;
   Element? get lastElementChild;
@@ -38,107 +48,107 @@ abstract interface class Element {
   void remove();
   HTMLSlotElement? get assignedSlot;
   String? get role;
-   set role(String? value);
+  set role(String? value);
   Element? get ariaActiveDescendantElement;
-   set ariaActiveDescendantElement(Element? value);
+  set ariaActiveDescendantElement(Element? value);
   String? get ariaAtomic;
-   set ariaAtomic(String? value);
+  set ariaAtomic(String? value);
   String? get ariaAutoComplete;
-   set ariaAutoComplete(String? value);
+  set ariaAutoComplete(String? value);
   String? get ariaBrailleLabel;
-   set ariaBrailleLabel(String? value);
+  set ariaBrailleLabel(String? value);
   String? get ariaBrailleRoleDescription;
-   set ariaBrailleRoleDescription(String? value);
+  set ariaBrailleRoleDescription(String? value);
   String? get ariaBusy;
-   set ariaBusy(String? value);
+  set ariaBusy(String? value);
   String? get ariaChecked;
-   set ariaChecked(String? value);
+  set ariaChecked(String? value);
   String? get ariaColCount;
-   set ariaColCount(String? value);
+  set ariaColCount(String? value);
   String? get ariaColIndex;
-   set ariaColIndex(String? value);
+  set ariaColIndex(String? value);
   String? get ariaColIndexText;
-   set ariaColIndexText(String? value);
+  set ariaColIndexText(String? value);
   String? get ariaColSpan;
-   set ariaColSpan(String? value);
+  set ariaColSpan(String? value);
   List<Element>? get ariaControlsElements;
-   set ariaControlsElements(List<Element>? value);
+  set ariaControlsElements(List<Element>? value);
   String? get ariaCurrent;
-   set ariaCurrent(String? value);
+  set ariaCurrent(String? value);
   List<Element>? get ariaDescribedByElements;
-   set ariaDescribedByElements(List<Element>? value);
+  set ariaDescribedByElements(List<Element>? value);
   String? get ariaDescription;
-   set ariaDescription(String? value);
+  set ariaDescription(String? value);
   List<Element>? get ariaDetailsElements;
-   set ariaDetailsElements(List<Element>? value);
+  set ariaDetailsElements(List<Element>? value);
   String? get ariaDisabled;
-   set ariaDisabled(String? value);
+  set ariaDisabled(String? value);
   List<Element>? get ariaErrorMessageElements;
-   set ariaErrorMessageElements(List<Element>? value);
+  set ariaErrorMessageElements(List<Element>? value);
   String? get ariaExpanded;
-   set ariaExpanded(String? value);
+  set ariaExpanded(String? value);
   List<Element>? get ariaFlowToElements;
-   set ariaFlowToElements(List<Element>? value);
+  set ariaFlowToElements(List<Element>? value);
   String? get ariaHasPopup;
-   set ariaHasPopup(String? value);
+  set ariaHasPopup(String? value);
   String? get ariaHidden;
-   set ariaHidden(String? value);
+  set ariaHidden(String? value);
   String? get ariaInvalid;
-   set ariaInvalid(String? value);
+  set ariaInvalid(String? value);
   String? get ariaKeyShortcuts;
-   set ariaKeyShortcuts(String? value);
+  set ariaKeyShortcuts(String? value);
   String? get ariaLabel;
-   set ariaLabel(String? value);
+  set ariaLabel(String? value);
   List<Element>? get ariaLabelledByElements;
-   set ariaLabelledByElements(List<Element>? value);
+  set ariaLabelledByElements(List<Element>? value);
   String? get ariaLevel;
-   set ariaLevel(String? value);
+  set ariaLevel(String? value);
   String? get ariaLive;
-   set ariaLive(String? value);
+  set ariaLive(String? value);
   String? get ariaModal;
-   set ariaModal(String? value);
+  set ariaModal(String? value);
   String? get ariaMultiLine;
-   set ariaMultiLine(String? value);
+  set ariaMultiLine(String? value);
   String? get ariaMultiSelectable;
-   set ariaMultiSelectable(String? value);
+  set ariaMultiSelectable(String? value);
   String? get ariaOrientation;
-   set ariaOrientation(String? value);
+  set ariaOrientation(String? value);
   List<Element>? get ariaOwnsElements;
-   set ariaOwnsElements(List<Element>? value);
+  set ariaOwnsElements(List<Element>? value);
   String? get ariaPlaceholder;
-   set ariaPlaceholder(String? value);
+  set ariaPlaceholder(String? value);
   String? get ariaPosInSet;
-   set ariaPosInSet(String? value);
+  set ariaPosInSet(String? value);
   String? get ariaPressed;
-   set ariaPressed(String? value);
+  set ariaPressed(String? value);
   String? get ariaReadOnly;
-   set ariaReadOnly(String? value);
+  set ariaReadOnly(String? value);
   String? get ariaRequired;
-   set ariaRequired(String? value);
+  set ariaRequired(String? value);
   String? get ariaRoleDescription;
-   set ariaRoleDescription(String? value);
+  set ariaRoleDescription(String? value);
   String? get ariaRowCount;
-   set ariaRowCount(String? value);
+  set ariaRowCount(String? value);
   String? get ariaRowIndex;
-   set ariaRowIndex(String? value);
+  set ariaRowIndex(String? value);
   String? get ariaRowIndexText;
-   set ariaRowIndexText(String? value);
+  set ariaRowIndexText(String? value);
   String? get ariaRowSpan;
-   set ariaRowSpan(String? value);
+  set ariaRowSpan(String? value);
   String? get ariaSelected;
-   set ariaSelected(String? value);
+  set ariaSelected(String? value);
   String? get ariaSetSize;
-   set ariaSetSize(String? value);
+  set ariaSetSize(String? value);
   String? get ariaSort;
-   set ariaSort(String? value);
+  set ariaSort(String? value);
   String? get ariaValueMax;
-   set ariaValueMax(String? value);
+  set ariaValueMax(String? value);
   String? get ariaValueMin;
-   set ariaValueMin(String? value);
+  set ariaValueMin(String? value);
   String? get ariaValueNow;
-   set ariaValueNow(String? value);
+  set ariaValueNow(String? value);
   String? get ariaValueText;
-   set ariaValueText(String? value);
+  set ariaValueText(String? value);
   Animation animate(Object? keyframes, [Object? options]);
   List<Animation> getAnimations([GetAnimationsOptions? options]);
   DOMTokenList get part_;
@@ -151,9 +161,9 @@ abstract interface class Element {
   void scrollTo(double x, double y);
   void scrollBy(double x, double y);
   double get scrollTop;
-   set scrollTop(double value);
+  set scrollTop(double value);
   double get scrollLeft;
-   set scrollLeft(double value);
+  set scrollLeft(double value);
   int get scrollWidth;
   int get scrollHeight;
   int get clientTop;
@@ -165,12 +175,12 @@ abstract interface class Element {
   String get localName;
   String get tagName;
   String get id;
-   set id(String value);
+  set id(String value);
   String get className;
-   set className(String value);
+  set className(String value);
   DOMTokenList get classList;
   String get slot;
-   set slot(String value);
+  set slot(String value);
   bool hasAttributes();
   NamedNodeMap get attributes;
   List<String> getAttributeNames();
@@ -199,16 +209,16 @@ abstract interface class Element {
   void insertAdjacentText(String where, String data);
   Future<void> requestFullscreen([FullscreenOptions? options]);
   EventHandler get onfullscreenchange;
-   set onfullscreenchange(EventHandler value);
+  set onfullscreenchange(EventHandler value);
   EventHandler get onfullscreenerror;
-   set onfullscreenerror(EventHandler value);
+  set onfullscreenerror(EventHandler value);
   void setHTMLUnsafe(Object html);
   String getHTML([GetHTMLOptions? options]);
   Object get innerHTML;
-   set innerHTML(Object value);
+  set innerHTML(Object value);
   Object get outerHTML;
-   set outerHTML(Object value);
-  void insertAdjacentHTML(String position, Object string);
+  set outerHTML(Object value);
+  void insertAdjacentHTML(String position, Object string_);
   void setPointerCapture(int pointerId);
   void releasePointerCapture(int pointerId);
   bool hasPointerCapture(int pointerId);
@@ -226,9 +236,7 @@ final class FocusableAreasOptionValue implements FocusableAreasOption {
   @override
   FocusableAreaSearchMode? mode;
 
-  FocusableAreasOptionValue({
-    this.mode,
-  });
+  FocusableAreasOptionValue({this.mode});
 }
 
 abstract interface class NavigationEventInit {
@@ -244,10 +252,7 @@ final class NavigationEventInitValue implements NavigationEventInit {
   @override
   EventTarget? relatedTarget;
 
-  NavigationEventInitValue({
-    this.dir,
-    this.relatedTarget,
-  });
+  NavigationEventInitValue({this.dir, this.relatedTarget});
 }
 
 typedef SpatialNavigationDirection = String;
@@ -259,15 +264,12 @@ abstract interface class SpatialNavigationSearchOptions {
   set container(Node? value);
 }
 
-final class SpatialNavigationSearchOptionsValue implements SpatialNavigationSearchOptions {
+final class SpatialNavigationSearchOptionsValue
+    implements SpatialNavigationSearchOptions {
   @override
   List<Node>? candidates;
   @override
   Node? container;
 
-  SpatialNavigationSearchOptionsValue({
-    this.candidates,
-    this.container,
-  });
+  SpatialNavigationSearchOptionsValue({this.candidates, this.container});
 }
-

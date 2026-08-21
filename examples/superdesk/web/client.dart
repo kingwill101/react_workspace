@@ -1,9 +1,7 @@
 import 'package:react_actions/react_actions.dart';
 import 'package:react_dom/react_dom.dart';
-import 'package:react_web/react_web.dart'
-    show HttpServerFunctionClient, installBrowserWebRuntime, registerBrowserAdapters;
-import 'package:superdesk/app.react.dart';
-import 'package:superdesk/react_components.g.dart';
+import 'package:superdesk/.generated/app.react.dart';
+import 'package:superdesk/.generated/react_components.g.dart';
 
 void main() {
   initReact();
@@ -13,9 +11,7 @@ void main() {
 
   // Server-function calls run through this client.
   runWithServerFunctionClient(
-    HttpServerFunctionClient(
-      endpoint: Uri.parse('/__react/actions'),
-    ),
+    HttpServerFunctionClient(endpoint: Uri.parse('/__react/actions')),
     () {
       final root = getRoot('app');
       final props = getInitialProps();

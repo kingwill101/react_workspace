@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: edit-context
 // ignore_for_file: type=lint
 
-import 'dom.dart';
-
 abstract interface class CharacterBoundsUpdateEventInit {
   int? get rangeStart;
   set rangeStart(int? value);
@@ -11,16 +9,14 @@ abstract interface class CharacterBoundsUpdateEventInit {
   set rangeEnd(int? value);
 }
 
-final class CharacterBoundsUpdateEventInitValue implements CharacterBoundsUpdateEventInit {
+final class CharacterBoundsUpdateEventInitValue
+    implements CharacterBoundsUpdateEventInit {
   @override
   int? rangeStart;
   @override
   int? rangeEnd;
 
-  CharacterBoundsUpdateEventInitValue({
-    this.rangeStart,
-    this.rangeEnd,
-  });
+  CharacterBoundsUpdateEventInitValue({this.rangeStart, this.rangeEnd});
 }
 
 abstract interface class EditContextInit {
@@ -40,11 +36,7 @@ final class EditContextInitValue implements EditContextInit {
   @override
   int? selectionEnd;
 
-  EditContextInitValue({
-    this.text,
-    this.selectionStart,
-    this.selectionEnd,
-  });
+  EditContextInitValue({this.text, this.selectionStart, this.selectionEnd});
 }
 
 abstract interface class TextFormatInit {
@@ -81,13 +73,12 @@ abstract interface class TextFormatUpdateEventInit {
   set textFormats(List<Object>? value);
 }
 
-final class TextFormatUpdateEventInitValue implements TextFormatUpdateEventInit {
+final class TextFormatUpdateEventInitValue
+    implements TextFormatUpdateEventInit {
   @override
   List<Object>? textFormats;
 
-  TextFormatUpdateEventInitValue({
-    this.textFormats,
-  });
+  TextFormatUpdateEventInitValue({this.textFormats});
 }
 
 abstract interface class TextUpdateEventInit {
@@ -137,4 +128,3 @@ final class TextUpdateEventInitValue implements TextUpdateEventInit {
 typedef UnderlineStyle = String;
 
 typedef UnderlineThickness = String;
-

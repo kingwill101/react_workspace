@@ -2,15 +2,14 @@
 // Neutral Web surface for spec: pointerevents
 // ignore_for_file: type=lint
 
-import 'pointerlock.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class PointerEvent {
-  factory PointerEvent(String type, [PointerEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<PointerEvent>(
-        'PointerEvent',
-        [type, eventInitDict],
-      );
+  factory PointerEvent(String type_, [PointerEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<PointerEvent>('PointerEvent', [
+        type_,
+        eventInitDict,
+      ]);
   int get pointerId;
   double get width;
   double get height;
@@ -103,4 +102,3 @@ final class PointerEventInitValue implements PointerEventInit {
     this.predictedEvents,
   });
 }
-

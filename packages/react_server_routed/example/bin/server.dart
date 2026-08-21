@@ -1,0 +1,76 @@
+import 'dart:io';
+import 'package:path/path.dart' as p;
+
+import 'package:react_server/react_server.dart';
+import 'package:routed_core/routed_core.dart';
+import 'package:routed_io/routed_io.dart';
+import 'package:react_server_routed/react_server_routed.dart';
+import 'package:react_server_routed_example/.generated/server_actions.g.dart';
+
+const _defaultRootComponent =
+    'package:react_server_routed_example/lib/app.dart#App';
+
+Future<void> main() async {
+  final port = int.tryParse(Platform.environment['PORT'] ?? '') ?? 8080;
+  final webDir = Directory('build/react').existsSync()
+      ? Directory('build/react')
+      : Directory('web');
+  final indexTemplate = File(
+    p.join(webDir.path, 'index.html'),
+  ).readAsStringSync();
+
+  final actionRegistry = ServerFunctionRegistry();
+  registerServerActions(registry: actionRegistry);
+
+  final ssrUrl = Platform.environment['REACT_SSR_URL'];
+  final ssr = ssrUrl == null
+      ? null
+      : ReactSsrClient(endpoint: Uri.parse(ssrUrl));
+  final app = RoutedReactApplication(
+    actionRegistry: actionRegistry,
+    staticHandler: (context) => _serveStatic(context, webDir),
+    indexTemplate: indexTemplate,
+    ssr: ssr,
+    rootComponent:
+        Platform.environment['REACT_ROOT_COMPONENT'] ?? _defaultRootComponent,
+    pageProps: (request) => {'title': 'Hello from SSR'},
+  );
+
+  final engine = Engine();
+  app.mount(engine);
+  await serveIo(engine, host: InternetAddress.anyIPv4.address, port: port);
+}
+
+Future<Response> _serveStatic(EngineContext context, Directory webDir) async {
+  final requested = context.path == '/'
+      ? 'index.html'
+      : context.path.substring(1);
+  final relative = p.normalize(requested);
+  if (relative == '..' ||
+      relative.startsWith('../') ||
+      p.isAbsolute(relative)) {
+    return context.string('Not found', statusCode: HttpStatus.notFound);
+  }
+
+  final file = File(p.join(webDir.path, relative));
+  if (!file.existsSync()) {
+    return context.string('Not found', statusCode: HttpStatus.notFound);
+  }
+
+  context.setHeader('content-type', _contentType(file.path));
+  context.setHeader('cache-control', 'no-cache');
+  context.response.writeBytes(await file.readAsBytes());
+  await context.close();
+  return context.response;
+}
+
+String _contentType(String path) => switch (p.extension(path).toLowerCase()) {
+  '.css' => 'text/css; charset=utf-8',
+  '.html' => 'text/html; charset=utf-8',
+  '.js' => 'text/javascript; charset=utf-8',
+  '.mjs' => 'text/javascript; charset=utf-8',
+  '.json' => 'application/json',
+  '.svg' => 'image/svg+xml',
+  '.wasm' => 'application/wasm',
+  _ => 'application/octet-stream',
+};

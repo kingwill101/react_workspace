@@ -2,15 +2,13 @@
 // Neutral Web surface for spec: webhid
 // ignore_for_file: type=lint
 
-import 'dom.dart';
-
 abstract interface class HIDCollectionInfo {
   int? get usagePage;
   set usagePage(int? value);
   int? get usage;
   set usage(int? value);
-  Object? get type;
-  set type(Object? value);
+  Object? get type_;
+  set type_(Object? value);
   List<HIDCollectionInfo>? get children;
   set children(List<HIDCollectionInfo>? value);
   List<HIDReportInfo>? get inputReports;
@@ -27,7 +25,7 @@ final class HIDCollectionInfoValue implements HIDCollectionInfo {
   @override
   int? usage;
   @override
-  Object? type;
+  Object? type_;
   @override
   List<HIDCollectionInfo>? children;
   @override
@@ -40,7 +38,7 @@ final class HIDCollectionInfoValue implements HIDCollectionInfo {
   HIDCollectionInfoValue({
     this.usagePage,
     this.usage,
-    this.type,
+    this.type_,
     this.children,
     this.inputReports,
     this.outputReports,
@@ -57,9 +55,7 @@ final class HIDConnectionEventInitValue implements HIDConnectionEventInit {
   @override
   Object device;
 
-  HIDConnectionEventInitValue({
-    required this.device,
-  });
+  HIDConnectionEventInitValue({required this.device});
 }
 
 abstract interface class HIDDeviceFilter {
@@ -104,10 +100,7 @@ final class HIDDeviceRequestOptionsValue implements HIDDeviceRequestOptions {
   @override
   List<HIDDeviceFilter>? exclusionFilters;
 
-  HIDDeviceRequestOptionsValue({
-    required this.filters,
-    this.exclusionFilters,
-  });
+  HIDDeviceRequestOptionsValue({required this.filters, this.exclusionFilters});
 }
 
 abstract interface class HIDInputReportEventInit {
@@ -147,10 +140,7 @@ final class HIDReportInfoValue implements HIDReportInfo {
   @override
   List<HIDReportItem>? items;
 
-  HIDReportInfoValue({
-    this.reportId,
-    this.items,
-  });
+  HIDReportInfoValue({this.reportId, this.items});
 }
 
 abstract interface class HIDReportItem {
@@ -303,4 +293,3 @@ final class HIDReportItemValue implements HIDReportItem {
 }
 
 typedef HIDUnitSystem = String;
-

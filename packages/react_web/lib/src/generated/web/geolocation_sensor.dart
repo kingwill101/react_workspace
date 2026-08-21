@@ -2,15 +2,12 @@
 // Neutral Web surface for spec: geolocation-sensor
 // ignore_for_file: type=lint
 
-import 'generic_sensor.dart';
-import 'hr_time.dart';
 import 'dom.dart';
+import 'hr_time.dart';
 
-abstract interface class GeolocationSensorOptions {
-}
+abstract interface class GeolocationSensorOptions {}
 
 final class GeolocationSensorOptionsValue implements GeolocationSensorOptions {
-
   GeolocationSensorOptionsValue();
 }
 
@@ -72,8 +69,5 @@ final class ReadOptionsValue implements ReadOptions {
   @override
   AbortSignal? signal;
 
-  ReadOptionsValue({
-    this.signal,
-  });
+  ReadOptionsValue({this.signal});
 }
-

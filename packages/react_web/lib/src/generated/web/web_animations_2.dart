@@ -2,42 +2,41 @@
 // Neutral Web surface for spec: web-animations-2
 // ignore_for_file: type=lint
 
-import 'css_typed_om.dart';
-import 'web_animations.dart';
-import 'html.dart';
-import 'dom.dart';
 import 'css_nav.dart';
+import 'css_typed_om.dart';
+import 'html.dart';
+import 'web_animations.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Animation {
   factory Animation([AnimationEffect? effect, AnimationTimeline? timeline]) =>
-      WebRuntime.current.createWebObject<Animation>(
-        'Animation',
-        [effect, timeline],
-      );
+      WebRuntime.current.createWebObject<Animation>('Animation', [
+        effect,
+        timeline,
+      ]);
   CSSNumberish? get startTime;
-   set startTime(CSSNumberish? value);
+  set startTime(CSSNumberish? value);
   CSSNumberish? get currentTime;
-   set currentTime(CSSNumberish? value);
+  set currentTime(CSSNumberish? value);
   String get id;
-   set id(String value);
+  set id(String value);
   AnimationEffect? get effect;
-   set effect(AnimationEffect? value);
+  set effect(AnimationEffect? value);
   AnimationTimeline? get timeline;
-   set timeline(AnimationTimeline? value);
+  set timeline(AnimationTimeline? value);
   double get playbackRate;
-   set playbackRate(double value);
+  set playbackRate(double value);
   AnimationPlayState get playState;
   AnimationReplaceState get replaceState;
   bool get pending;
   Future<Animation> get ready;
   Future<Animation> get finished;
   EventHandler get onfinish;
-   set onfinish(EventHandler value);
+  set onfinish(EventHandler value);
   EventHandler get oncancel;
-   set oncancel(EventHandler value);
+  set oncancel(EventHandler value);
   EventHandler get onremove;
-   set onremove(EventHandler value);
+  set onremove(EventHandler value);
   void cancel();
   void finish();
   void play();
@@ -55,11 +54,13 @@ abstract interface class AnimationEffect {
 }
 
 abstract interface class AnimationPlaybackEvent {
-  factory AnimationPlaybackEvent(String type, [AnimationPlaybackEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<AnimationPlaybackEvent>(
-        'AnimationPlaybackEvent',
-        [type, eventInitDict],
-      );
+  factory AnimationPlaybackEvent(
+    String type_, [
+    AnimationPlaybackEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<AnimationPlaybackEvent>(
+    'AnimationPlaybackEvent',
+    [type_, eventInitDict],
+  );
   CSSNumberish? get currentTime;
   CSSNumberish? get timelineTime;
 }
@@ -71,16 +72,14 @@ abstract interface class AnimationPlaybackEventInit {
   set timelineTime(CSSNumberish? value);
 }
 
-final class AnimationPlaybackEventInitValue implements AnimationPlaybackEventInit {
+final class AnimationPlaybackEventInitValue
+    implements AnimationPlaybackEventInit {
   @override
   CSSNumberish? currentTime;
   @override
   CSSNumberish? timelineTime;
 
-  AnimationPlaybackEventInitValue({
-    this.currentTime,
-    this.timelineTime,
-  });
+  AnimationPlaybackEventInitValue({this.currentTime, this.timelineTime});
 }
 
 abstract interface class AnimationTimeline {
@@ -126,7 +125,8 @@ final class ComputedEffectTimingValue implements ComputedEffectTiming {
   });
 }
 
-typedef EffectCallback = void Function(double? progress, Object currentTarget, Animation animation,);
+typedef EffectCallback =
+    void Function(double? progress, Object currentTarget, Animation animation);
 
 abstract interface class EffectTiming {
   double? get delay;
@@ -214,24 +214,25 @@ final class KeyframeAnimationOptionsValue implements KeyframeAnimationOptions {
 }
 
 abstract interface class KeyframeEffect {
-  factory KeyframeEffect(Element? target, Object? keyframes, [Object? options]) =>
-      WebRuntime.current.createWebObject<KeyframeEffect>(
-        'KeyframeEffect',
-        [target, keyframes, options],
-      );
-  factory KeyframeEffect.named1(KeyframeEffect source) =>
-      WebRuntime.current.createWebObject<KeyframeEffect>(
-        'KeyframeEffect',
-        [source],
-      );
+  factory KeyframeEffect(
+    Element? target,
+    Object? keyframes, [
+    Object? options,
+  ]) => WebRuntime.current.createWebObject<KeyframeEffect>('KeyframeEffect', [
+    target,
+    keyframes,
+    options,
+  ]);
+  factory KeyframeEffect.named1(KeyframeEffect source) => WebRuntime.current
+      .createWebObject<KeyframeEffect>('KeyframeEffect', [source]);
   IterationCompositeOperation get iterationComposite;
-   set iterationComposite(IterationCompositeOperation value);
+  set iterationComposite(IterationCompositeOperation value);
   Element? get target;
-   set target(Element? value);
+  set target(Element? value);
   Object get pseudoElement;
-   set pseudoElement(Object value);
+  set pseudoElement(Object value);
   CompositeOperation get composite;
-   set composite(CompositeOperation value);
+  set composite(CompositeOperation value);
   List<Object> getKeyframes();
   void setKeyframes(Object? keyframes);
 }
@@ -327,9 +328,5 @@ final class TimelineRangeOffsetValue implements TimelineRangeOffset {
   @override
   CSSNumericValue? offset;
 
-  TimelineRangeOffsetValue({
-    this.rangeName,
-    this.offset,
-  });
+  TimelineRangeOffsetValue({this.rangeName, this.offset});
 }
-

@@ -1,9 +1,9 @@
-import 'app.react.dart';
-import 'counter.react.dart';
+import '.generated/app.react.dart';
+import '.generated/counter.react.dart';
 import 'package:react_server/react_server.dart';
-import 'react_components.g.dart';
-import 'ssr_registry.g.dart';
-import 'todos/todos_ui.react.dart';
+import '.generated/react_components.g.dart';
+import '.generated/ssr_registry.g.dart';
+import '.generated/todos/todos_ui.react.dart';
 
 void main() {
   registerReactComponents();

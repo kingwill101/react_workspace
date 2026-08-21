@@ -2,9 +2,7 @@
 // Neutral Web surface for spec: webxr-hand-input
 // ignore_for_file: type=lint
 
-
-abstract interface class XRHand {
-}
+abstract interface class XRHand {}
 
 typedef XRHandJoint = String;
 
@@ -15,4 +13,3 @@ abstract interface class XRJointPose {
 abstract interface class XRJointSpace {
   XRHandJoint get jointName;
 }
-

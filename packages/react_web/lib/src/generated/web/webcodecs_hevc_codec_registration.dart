@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: webcodecs-hevc-codec-registration
 // ignore_for_file: type=lint
 
-
 typedef HevcBitstreamFormat = String;
 
 abstract interface class HevcEncoderConfig {
@@ -14,9 +13,7 @@ final class HevcEncoderConfigValue implements HevcEncoderConfig {
   @override
   HevcBitstreamFormat? format;
 
-  HevcEncoderConfigValue({
-    this.format,
-  });
+  HevcEncoderConfigValue({this.format});
 }
 
 abstract interface class VideoEncoderEncodeOptionsForHevc {
@@ -24,12 +21,10 @@ abstract interface class VideoEncoderEncodeOptionsForHevc {
   set quantizer(int? value);
 }
 
-final class VideoEncoderEncodeOptionsForHevcValue implements VideoEncoderEncodeOptionsForHevc {
+final class VideoEncoderEncodeOptionsForHevcValue
+    implements VideoEncoderEncodeOptionsForHevc {
   @override
   int? quantizer;
 
-  VideoEncoderEncodeOptionsForHevcValue({
-    this.quantizer,
-  });
+  VideoEncoderEncodeOptionsForHevcValue({this.quantizer});
 }
-

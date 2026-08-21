@@ -13,9 +13,7 @@ final class PermissionDescriptorValue implements PermissionDescriptor {
   @override
   String name;
 
-  PermissionDescriptorValue({
-    required this.name,
-  });
+  PermissionDescriptorValue({required this.name});
 }
 
 abstract interface class PermissionSetParameters {
@@ -31,10 +29,7 @@ final class PermissionSetParametersValue implements PermissionSetParameters {
   @override
   PermissionState state;
 
-  PermissionSetParametersValue({
-    required this.descriptor,
-    required this.state,
-  });
+  PermissionSetParametersValue({required this.descriptor, required this.state});
 }
 
 typedef PermissionState = String;
@@ -43,6 +38,5 @@ abstract interface class PermissionStatus {
   PermissionState get state;
   String get name;
   EventHandler get onchange;
-   set onchange(EventHandler value);
+  set onchange(EventHandler value);
 }
-

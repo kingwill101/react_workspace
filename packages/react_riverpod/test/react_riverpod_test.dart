@@ -50,11 +50,11 @@ final class CountNotifier extends Notifier<int> {
 }
 
 ReactRuntime _runtime(_VmBinding binding) => ReactRuntime(
-      target: ReactRenderTarget.test,
-      capabilities: ReactRuntimeCapabilities.browser,
-      binding: binding,
-      renderer: _VmRenderer(),
-    );
+  target: ReactRenderTarget.test,
+  capabilities: ReactRuntimeCapabilities.browser,
+  binding: binding,
+  renderer: _VmRenderer(),
+);
 
 final class _VmRenderer implements ReactRenderer {
   @override

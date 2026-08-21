@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'web_bluetooth.dart';
-import 'permissions.dart';
 
 abstract interface class BluetoothLEScanOptions {
   List<BluetoothLEScanFilterInit>? get filters;
@@ -38,7 +37,8 @@ abstract interface class BluetoothLEScanPermissionDescriptor {
   set acceptAllAdvertisements(bool? value);
 }
 
-final class BluetoothLEScanPermissionDescriptorValue implements BluetoothLEScanPermissionDescriptor {
+final class BluetoothLEScanPermissionDescriptorValue
+    implements BluetoothLEScanPermissionDescriptor {
   @override
   List<BluetoothLEScanFilterInit>? filters;
   @override
@@ -52,4 +52,3 @@ final class BluetoothLEScanPermissionDescriptorValue implements BluetoothLEScanP
     this.acceptAllAdvertisements,
   });
 }
-

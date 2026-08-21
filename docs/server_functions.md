@@ -1559,12 +1559,12 @@ For progressive enhancement without JavaScript, generate `<form action="/__react
     - Client compilation succeeds (`dart compile js -O0 examples/ssr/web/client.dart`)
     - SSR compilation succeeds (`dart compile js -O2 examples/ssr/lib/ssr.dart`)
 17. Test end-to-end (runtime) — ✅ complete
-    - `server_testing: 0.4.0` and `server_testing_shelf: 0.4.0`
+    - `server_testing: ^0.4.0` and `server_testing_shelf: ^0.4.0`
     - ephemeral HTTP server verification in `packages/react_web/test/server_function_integration_test.dart`
     - client → Shelf → registry → typed result/error coverage
-18. Add SSR + hydration + action integration test — ✅ complete
-    - opt-in browser test: `RUN_BROWSER_E2E=1 dart test examples/ssr/test/server_function_browser_test.dart`
-    - verifies SSR output, hydration, action loading, and checkbox mutation
+18. Add SSR + action integration test — ✅ complete
+    - native full-stack test: `dart test examples/ssr/test/server_function_full_stack_test.dart`
+    - verifies built SSR output plus generated list/toggle actions over the real Shelf adapter
 19. Document the pattern with optimistic updates, error handling, and auth — pending
 
 **Key fixes discovered during Phase 5 integration:**

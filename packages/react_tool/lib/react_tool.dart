@@ -10,6 +10,7 @@ export 'src/js_environment.dart'
     show JsDependencyConflict, JsEnvironmentException;
 export 'src/project_config.dart'
     show ReactForeignComponentConfig, ReactProjectConfig, ReactToolException;
+export 'src/react_versions.dart' show ReactVersionPolicy;
 export 'src/scaffold.dart' show InitCommand, ScaffoldGenerator;
 export 'src/ts_bindings.dart'
     show

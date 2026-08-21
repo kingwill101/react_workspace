@@ -4,123 +4,114 @@ sidebar_position: 3
 
 # Testing
 
-Testing in a full-stack React Dart environment presents unique challenges. You need to test components in the browser, validate Server-Side Rendering output, and ensure server functions operate securely. React Dart provides the `react_testing` package to orchestrate this seamlessly.
+Use `react_testing` and `server_testing` as the default test stack. Each
+harness isolates one layer, so most behavior can be verified without external
+browser automation.
 
-## The Testing Philosophy
-
-Because React Dart relies on generated Javascript, JS bundling, and foreign component interoperability, standard Dart unit tests running in the VM cannot accurately render components.
-
-Instead, React Dart testing spins up the actual build pipeline, compiles the tests, and executes them in a headless browser (for client tests) or an HTTP worker (for SSR tests).
-
-## Setting up `react_testing`
-
-Add `react_testing` and `test` to your `pubspec.yaml`:
+## Install
 
 ```yaml
 dev_dependencies:
-  test: ^1.24.0
-  react_testing:
-    path: packages/react_testing
+  react_testing: ^0.1.0
+  server_testing: ^0.4.0
+  test: ^1.31.2
 ```
 
-## Writing Client Component Tests
+Add the adapter that matches the application server:
 
-Client tests execute in a real browser environment. You can mount components, trigger events, and assert against the DOM.
+- Shelf: `server_testing_shelf`;
+- Routed: `routed_testing`, using the same Routed source and ref as the app.
 
-```dart
-// test/components/counter_test.dart
-@TestOn('browser')
-import 'package:test/test.dart';
-import 'package:react_testing/react_testing.dart';
-import 'package:my_app/components/counter.dart';
+## Component and hook tests
 
-void main() {
-  late ReactTestHarness harness;
-
-  setUpAll(() async {
-    // Start the harness, providing the project root.
-    // This orchestrates the internal build server.
-    harness = await ReactTestHarness.start(
-      projectRoot: Directory.current,
-      rootComponent: 'package:my_app/components/counter.dart#Counter',
-    );
-  });
-
-  tearDownAll(() => harness.close());
-
-  test('Counter increments when clicked', () async {
-    final page = await harness.renderClient();
-    
-    // Assert initial state
-    expect(await page.text('#count-display'), equals('0'));
-    
-    // Click the button
-    await page.click('button.increment');
-    
-    // Assert updated state
-    expect(await page.text('#count-display'), equals('1'));
-  });
-}
-```
-
-### Explanation
-
-1. **`@TestOn('browser')`**: Ensures this test file is recognized as a browser-only test.
-2. **`ReactTestHarness.start`**: This is the heavy lifter. It analyzes your project, runs `react_codegen`, compiles the requested component into an isolated bundle, and launches a headless server.
-3. **`harness.renderClient()`**: Mounts the specified `rootComponent` into a headless Chrome instance and returns a controller to interact with it.
-
-## Testing Server Functions
-
-Server functions can be tested independently as pure Dart functions in the Dart VM, without launching a browser. You just need to provide a mock `ServerFunctionContext`.
+`ReactComponentHarness` installs an in-memory React binding and renderer:
 
 ```dart
-// test/server/actions_test.dart
-import 'package:test/test.dart';
-import 'package:react_server/react_server.dart';
-import 'package:my_app/server/actions.dart';
+test('renders a portable host tree', () {
+  final harness = ReactComponentHarness();
+  final node = harness.run(
+    () => div(id: 'message', children: ['Hello']),
+  ) as HostNode;
 
-class MockContext implements ServerFunctionContext {
-  @override
-  T get<T>() {
-    if (T == Database) return MockDatabase() as T;
-    throw UnimplementedError();
-  }
-}
-
-void main() {
-  test('checkUsername returns true for existing user', () async {
-    final context = MockContext();
-    
-    final result = await checkUsername(context, username: 'admin');
-    expect(result, isTrue);
-  });
-}
-```
-
-## Testing SSR Output
-
-You can also test what your application outputs during Server-Side Rendering to ensure critical data is present in the initial HTML for SEO.
-
-```dart
-test('SSR renders correct title', () async {
-  final html = await harness.renderSsr(url: '/about');
-  
-  expect(html, contains('<title>About Us</title>'));
-  expect(html, contains('<h1 class="heading">About Our Company</h1>'));
+  harness.assertHostNode(node, namespace: 'web', name: 'div');
+  harness.assertText(node.children.single, 'Hello');
 });
 ```
 
-## Continuous Integration (CI)
+Use it for node trees, hook state, contexts, refs, events, and runtime
+capability checks.
 
-When running tests in CI environments (like GitHub Actions), ensure that the environment has Chrome/Chromium installed, as `react_testing` relies on it for browser tests.
+## Server functions
 
-```yaml
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: dart-lang/setup-dart@v1
-      - run: dart pub get
-      # The tests will automatically utilize the system Chromium
-      - run: dart test
+`ServerFunctionHarness` supports direct typed dispatch:
+
+```dart
+final harness = ServerFunctionHarness();
+harness.registry.register(greetRef, (args, context) => 'Hello ${args.name}');
+
+final result = await harness.dispatch(greetRef, (name: 'Ada'));
+expect(result, 'Hello Ada');
 ```
+
+For HTTP envelopes, authentication, body limits, content types, and contract
+mismatches, compose the registry into the real server application. Adapt that
+application with `ShelfRequestHandler`, `RoutedRequestHandler`, or the
+matching server-testing adapter and create a test client from the harness.
+
+## SSR
+
+Use `InMemorySsrHarness` for template/props substitution and
+`SsrTestHarness` for the worker protocol and failure handling.
+
+```dart
+final harness = SsrTestHarness();
+harness.mockRender('<main>SSR</main>', props: {'title': 'Test'});
+final ssr = await harness.start();
+
+final rendered = await ssr.render(component: 'test.Root', props: {});
+expect(rendered.html, '<main>SSR</main>');
+
+await harness.close();
+```
+
+## Built full stack
+
+`ReactTestHarness` runs the actual `react build` pipeline and starts the
+generated Node worker on a harness-allocated port. Compose its `ssrClient`,
+`indexTemplate`, and `outputDirectory` into the real application, then use
+the application's server-testing adapter.
+
+```dart
+final react = await ReactTestHarness.start(
+  projectRoot: Directory.current,
+);
+
+final app = createApplication(
+  ssr: react.ssrClient,
+  indexTemplate: react.indexTemplate,
+  staticRoot: react.outputDirectory,
+);
+final client = react.createClient(RoutedRequestHandler(app.handler));
+
+final response = await client.get('/deep/link');
+response.assertStatus(200).assertBodyContains('SSR');
+
+await client.close();
+await react.close();
+```
+
+Use `GeneratorFidelityHarness` for generated Web API completeness and host
+type coverage.
+
+## Verification order
+
+For maintained examples:
+
+1. `dart analyze --fatal-infos`;
+2. `dart test`;
+3. `ReactTestHarness` plus the actual server adapter;
+4. `dart run react_tool:react build` when production artifacts are explicitly
+   in scope.
+
+Browser automation is reserved for behavior the native harnesses cannot
+represent. When such a gap appears, prefer extending `react_testing` first.

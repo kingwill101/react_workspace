@@ -4,18 +4,16 @@
 
 import 'fileapi.dart';
 import 'hr_time.dart';
-import 'mediacapture_streams.dart';
 import 'html.dart';
+import 'mediacapture_streams.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef BitrateMode = String;
 
 abstract interface class BlobEvent {
-  factory BlobEvent(String type, BlobEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<BlobEvent>(
-        'BlobEvent',
-        [type, eventInitDict],
-      );
+  factory BlobEvent(String type_, BlobEventInit eventInitDict) => WebRuntime
+      .current
+      .createWebObject<BlobEvent>('BlobEvent', [type_, eventInitDict]);
   Blob get data;
   DOMHighResTimeStamp get timecode;
 }
@@ -33,33 +31,30 @@ final class BlobEventInitValue implements BlobEventInit {
   @override
   DOMHighResTimeStamp? timecode;
 
-  BlobEventInitValue({
-    required this.data,
-    this.timecode,
-  });
+  BlobEventInitValue({required this.data, this.timecode});
 }
 
 abstract interface class MediaRecorder {
   factory MediaRecorder(MediaStream stream, [MediaRecorderOptions? options]) =>
-      WebRuntime.current.createWebObject<MediaRecorder>(
-        'MediaRecorder',
-        [stream, options],
-      );
+      WebRuntime.current.createWebObject<MediaRecorder>('MediaRecorder', [
+        stream,
+        options,
+      ]);
   MediaStream get stream;
   String get mimeType;
   RecordingState get state;
   EventHandler get onstart;
-   set onstart(EventHandler value);
+  set onstart(EventHandler value);
   EventHandler get onstop;
-   set onstop(EventHandler value);
+  set onstop(EventHandler value);
   EventHandler get ondataavailable;
-   set ondataavailable(EventHandler value);
+  set ondataavailable(EventHandler value);
   EventHandler get onpause;
-   set onpause(EventHandler value);
+  set onpause(EventHandler value);
   EventHandler get onresume;
-   set onresume(EventHandler value);
+  set onresume(EventHandler value);
   EventHandler get onerror;
-   set onerror(EventHandler value);
+  set onerror(EventHandler value);
   int get videoBitsPerSecond;
   int get audioBitsPerSecond;
   void start([int? timeslice]);
@@ -114,4 +109,3 @@ final class MediaRecorderOptionsValue implements MediaRecorderOptions {
 }
 
 typedef RecordingState = String;
-

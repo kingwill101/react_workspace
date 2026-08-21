@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: gamepad-extensions
 // ignore_for_file: type=lint
 
-import 'hr_time.dart';
 import 'gamepad.dart';
+import 'hr_time.dart';
 
 abstract interface class Gamepad {
   String get id;
@@ -19,7 +19,9 @@ typedef GamepadHand = String;
 
 abstract interface class GamepadHapticActuator {
   Future<bool> pulse(double value, double duration);
-  Future<GamepadHapticsResult> playEffect(GamepadHapticEffectType type, [GamepadEffectParameters? params]);
+  Future<GamepadHapticsResult> playEffect(
+    GamepadHapticEffectType type_, [
+    GamepadEffectParameters? params,
+  ]);
   Future<GamepadHapticsResult> reset();
 }
-

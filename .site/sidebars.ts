@@ -15,6 +15,11 @@ const sidebars: SidebarsConfig = {
         'guides/ssr',
         'guides/client-only',
         'guides/server-functions',
+        'guides/component-ergonomics',
+        'guides/styling',
+        'guides/state-management',
+        'guides/foreign-components',
+        'guides/wrapper-packages',
         'guides/testing',
         'guides/deployment',
       ],
@@ -32,6 +37,11 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Comparison',
       items: ['comparison/ssr-gap-analysis'],
+    },
+    {
+      type: 'category',
+      label: 'Maintainers',
+      items: ['maintainers/maintenance'],
     },
   ],
 };

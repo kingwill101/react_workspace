@@ -3,8 +3,8 @@
 // ignore_for_file: type=lint
 
 import 'gamepad_extensions.dart';
-import 'webxr_hand_input.dart';
 import 'webxr.dart';
+import 'webxr_hand_input.dart';
 
 abstract interface class XRInputSource {
   Gamepad? get gamepad;
@@ -15,4 +15,3 @@ abstract interface class XRInputSource {
   XRSpace? get gripSpace;
   List<String> get profiles;
 }
-

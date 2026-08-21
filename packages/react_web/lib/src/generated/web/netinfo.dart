@@ -22,6 +22,5 @@ abstract interface class NetworkInformation {
   Megabit get downlink;
   Millisecond get rtt;
   EventHandler get onchange;
-   set onchange(EventHandler value);
+  set onchange(EventHandler value);
 }
-

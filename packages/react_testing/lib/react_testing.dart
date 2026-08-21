@@ -5,7 +5,7 @@ export 'src/assertions.dart';
 export 'src/component_harness.dart'
     show ReactComponentHarness, TestReactBinding, TestReactRenderer;
 export 'src/generator_harness.dart' show GeneratorFidelityHarness;
-export 'src/harness.dart' show ReactTestHarness, ReactTestHarnessActions;
+export 'src/harness.dart' show ReactTestHarness;
 export 'src/server_function_harness.dart'
     show
         FixedResponseClient,

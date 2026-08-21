@@ -2,16 +2,21 @@
 // Neutral Web surface for spec: webrtc-identity
 // ignore_for_file: type=lint
 
-import 'webrtc.dart';
-import 'html.dart';
-import 'webidl.dart';
-import 'webrtc_encoded_transform.dart';
 import 'capture_handle_identity.dart';
+import 'html.dart';
 import 'mediacapture_streams.dart';
+import 'webidl.dart';
+import 'webrtc.dart';
+import 'webrtc_encoded_transform.dart';
 import 'webrtc_priority.dart';
 import 'package:react_web/src/web_runtime.dart';
 
-typedef GenerateAssertionCallback = Future<RTCIdentityAssertionResult> Function(String contents, String origin, RTCIdentityProviderOptions options,);
+typedef GenerateAssertionCallback =
+    Future<RTCIdentityAssertionResult> Function(
+      String contents,
+      String origin,
+      RTCIdentityProviderOptions options,
+    );
 
 abstract interface class RTCConfiguration {
   String? get peerIdentity;
@@ -59,10 +64,7 @@ final class RTCConfigurationValue implements RTCConfiguration {
 
 abstract interface class RTCError {
   factory RTCError(RTCErrorInit init, [String? message]) =>
-      WebRuntime.current.createWebObject<RTCError>(
-        'RTCError',
-        [init, message],
-      );
+      WebRuntime.current.createWebObject<RTCError>('RTCError', [init, message]);
   int? get httpRequestStatusCode;
   RTCErrorDetailType get errorDetail;
   int? get sdpLineNumber;
@@ -119,16 +121,14 @@ abstract interface class RTCIdentityAssertionResult {
   set assertion(String value);
 }
 
-final class RTCIdentityAssertionResultValue implements RTCIdentityAssertionResult {
+final class RTCIdentityAssertionResultValue
+    implements RTCIdentityAssertionResult {
   @override
   RTCIdentityProviderDetails idp;
   @override
   String assertion;
 
-  RTCIdentityAssertionResultValue({
-    required this.idp,
-    required this.assertion,
-  });
+  RTCIdentityAssertionResultValue({required this.idp, required this.assertion});
 }
 
 abstract interface class RTCIdentityProvider {
@@ -157,16 +157,14 @@ abstract interface class RTCIdentityProviderDetails {
   set protocol(String? value);
 }
 
-final class RTCIdentityProviderDetailsValue implements RTCIdentityProviderDetails {
+final class RTCIdentityProviderDetailsValue
+    implements RTCIdentityProviderDetails {
   @override
   String domain;
   @override
   String? protocol;
 
-  RTCIdentityProviderDetailsValue({
-    required this.domain,
-    this.protocol,
-  });
+  RTCIdentityProviderDetailsValue({required this.domain, this.protocol});
 }
 
 abstract interface class RTCIdentityProviderOptions {
@@ -178,7 +176,8 @@ abstract interface class RTCIdentityProviderOptions {
   set peerIdentity(String? value);
 }
 
-final class RTCIdentityProviderOptionsValue implements RTCIdentityProviderOptions {
+final class RTCIdentityProviderOptionsValue
+    implements RTCIdentityProviderOptions {
   @override
   String? protocol;
   @override
@@ -200,7 +199,8 @@ abstract interface class RTCIdentityValidationResult {
   set contents(String value);
 }
 
-final class RTCIdentityValidationResultValue implements RTCIdentityValidationResult {
+final class RTCIdentityValidationResultValue
+    implements RTCIdentityValidationResult {
   @override
   String identity;
   @override
@@ -213,26 +213,46 @@ final class RTCIdentityValidationResultValue implements RTCIdentityValidationRes
 }
 
 abstract interface class RTCPeerConnection {
-  factory RTCPeerConnection([RTCConfiguration? configuration]) =>
-      WebRuntime.current.createWebObject<RTCPeerConnection>(
-        'RTCPeerConnection',
-        [configuration],
-      );
-  void setIdentityProvider(String provider, [RTCIdentityProviderOptions? options]);
+  factory RTCPeerConnection([RTCConfiguration? configuration]) => WebRuntime
+      .current
+      .createWebObject<RTCPeerConnection>('RTCPeerConnection', [configuration]);
+  void setIdentityProvider(
+    String provider, [
+    RTCIdentityProviderOptions? options,
+  ]);
   Future<String> getIdentityAssertion();
   Future<Object> get peerIdentity;
   String? get idpLoginUrl;
-  Future<void> createOffer(RTCSessionDescriptionCallback successCallback, RTCPeerConnectionErrorCallback failureCallback, [RTCOfferOptions? options]);
-  Future<void> createAnswer(RTCSessionDescriptionCallback successCallback, RTCPeerConnectionErrorCallback failureCallback);
-  Future<void> setLocalDescription(RTCLocalSessionDescriptionInit description, VoidFunction successCallback, RTCPeerConnectionErrorCallback failureCallback);
+  Future<void> createOffer(
+    RTCSessionDescriptionCallback successCallback,
+    RTCPeerConnectionErrorCallback failureCallback, [
+    RTCOfferOptions? options,
+  ]);
+  Future<void> createAnswer(
+    RTCSessionDescriptionCallback successCallback,
+    RTCPeerConnectionErrorCallback failureCallback,
+  );
+  Future<void> setLocalDescription(
+    RTCLocalSessionDescriptionInit description,
+    VoidFunction successCallback,
+    RTCPeerConnectionErrorCallback failureCallback,
+  );
   RTCSessionDescription? get localDescription;
   RTCSessionDescription? get currentLocalDescription;
   RTCSessionDescription? get pendingLocalDescription;
-  Future<void> setRemoteDescription(RTCSessionDescriptionInit description, VoidFunction successCallback, RTCPeerConnectionErrorCallback failureCallback);
+  Future<void> setRemoteDescription(
+    RTCSessionDescriptionInit description,
+    VoidFunction successCallback,
+    RTCPeerConnectionErrorCallback failureCallback,
+  );
   RTCSessionDescription? get remoteDescription;
   RTCSessionDescription? get currentRemoteDescription;
   RTCSessionDescription? get pendingRemoteDescription;
-  Future<void> addIceCandidate(RTCIceCandidateInit candidate, VoidFunction successCallback, RTCPeerConnectionErrorCallback failureCallback);
+  Future<void> addIceCandidate(
+    RTCIceCandidateInit candidate,
+    VoidFunction successCallback,
+    RTCPeerConnectionErrorCallback failureCallback,
+  );
   RTCSignalingState get signalingState;
   RTCIceGatheringState get iceGatheringState;
   RTCIceConnectionState get iceConnectionState;
@@ -243,33 +263,42 @@ abstract interface class RTCPeerConnection {
   void setConfiguration([RTCConfiguration? configuration]);
   void close();
   EventHandler get onnegotiationneeded;
-   set onnegotiationneeded(EventHandler value);
+  set onnegotiationneeded(EventHandler value);
   EventHandler get onicecandidate;
-   set onicecandidate(EventHandler value);
+  set onicecandidate(EventHandler value);
   EventHandler get onicecandidateerror;
-   set onicecandidateerror(EventHandler value);
+  set onicecandidateerror(EventHandler value);
   EventHandler get onsignalingstatechange;
-   set onsignalingstatechange(EventHandler value);
+  set onsignalingstatechange(EventHandler value);
   EventHandler get oniceconnectionstatechange;
-   set oniceconnectionstatechange(EventHandler value);
+  set oniceconnectionstatechange(EventHandler value);
   EventHandler get onicegatheringstatechange;
-   set onicegatheringstatechange(EventHandler value);
+  set onicegatheringstatechange(EventHandler value);
   EventHandler get onconnectionstatechange;
-   set onconnectionstatechange(EventHandler value);
+  set onconnectionstatechange(EventHandler value);
   List<RTCRtpSender> getSenders();
   List<RTCRtpReceiver> getReceivers();
   List<RTCRtpTransceiver> getTransceivers();
   RTCRtpSender addTrack(MediaStreamTrack track, [List<MediaStream>? streams]);
   void removeTrack(RTCRtpSender sender);
-  RTCRtpTransceiver addTransceiver(Object trackOrKind, [RTCRtpTransceiverInit? init]);
+  RTCRtpTransceiver addTransceiver(
+    Object trackOrKind, [
+    RTCRtpTransceiverInit? init,
+  ]);
   EventHandler get ontrack;
-   set ontrack(EventHandler value);
+  set ontrack(EventHandler value);
   RTCSctpTransport? get sctp;
-  RTCDataChannel createDataChannel(String label, [RTCDataChannelInit? dataChannelDict]);
+  RTCDataChannel createDataChannel(
+    String label, [
+    RTCDataChannelInit? dataChannelDict,
+  ]);
   EventHandler get ondatachannel;
-   set ondatachannel(EventHandler value);
+  set ondatachannel(EventHandler value);
   Future<RTCStatsReport> getStats([MediaStreamTrack? selector]);
 }
 
-typedef ValidateAssertionCallback = Future<RTCIdentityValidationResult> Function(String assertion, String origin,);
-
+typedef ValidateAssertionCallback =
+    Future<RTCIdentityValidationResult> Function(
+      String assertion,
+      String origin,
+    );

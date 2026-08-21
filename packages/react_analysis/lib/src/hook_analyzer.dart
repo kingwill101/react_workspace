@@ -27,9 +27,7 @@ final class ReactHookAnalyzer {
     return diagnostics;
   }
 
-  List<ReactDiagnostic> _analyzeFunctionDeclaration(
-    FunctionDeclaration decl,
-  ) {
+  List<ReactDiagnostic> _analyzeFunctionDeclaration(FunctionDeclaration decl) {
     final element = decl.declaredFragment?.element;
     final isComponent = element is ExecutableElement
         ? _isReactComponent(element)
@@ -84,7 +82,8 @@ final class ReactHookAnalyzer {
             message:
                 'Hook ${call.methodName} called outside a component or custom hook.',
             severity: ReactDiagnosticSeverity.error,
-            correction: 'Move the hook into a @ReactComponent or use* function.',
+            correction:
+                'Move the hook into a @ReactComponent or use* function.',
             node: call.node,
           ),
         );
@@ -102,7 +101,9 @@ final class ReactHookAnalyzer {
   }
 
   bool _isHookName(String name) =>
-      name.startsWith('use') && name.length > 3 && name[3].toUpperCase() == name[3];
+      name.startsWith('use') &&
+      name.length > 3 &&
+      name[3].toUpperCase() == name[3];
 
   List<ReactDiagnostic> _validateHookOrder(
     Block block, {
@@ -139,7 +140,8 @@ final class ReactHookAnalyzer {
               code: ReactDiagnosticCode.hookInLoop,
               message: 'Hook ${call.methodName} called inside a loop.',
               severity: ReactDiagnosticSeverity.error,
-              correction: 'Move hooks to the top level; loop over results instead.',
+              correction:
+                  'Move hooks to the top level; loop over results instead.',
               node: call.node,
             ),
           );
@@ -148,8 +150,7 @@ final class ReactHookAnalyzer {
           diagnostics.add(
             ReactDiagnostic(
               code: ReactDiagnosticCode.hookAfterEarlyReturn,
-              message:
-                  'Hook ${call.methodName} called after an early return.',
+              message: 'Hook ${call.methodName} called after an early return.',
               severity: ReactDiagnosticSeverity.error,
               correction:
                   'Move hooks above the return or guard the component earlier.',
@@ -160,9 +161,7 @@ final class ReactHookAnalyzer {
       }
       // Recurse into nested blocks (if/while/for) to find deeper violations.
       if (stmt is IfStatement) {
-        diagnostics.addAll(
-          _validateNested(stmt.thenStatement, enclosingName),
-        );
+        diagnostics.addAll(_validateNested(stmt.thenStatement, enclosingName));
         if (stmt.elseStatement != null) {
           diagnostics.addAll(
             _validateNested(stmt.elseStatement!, enclosingName),
@@ -182,7 +181,8 @@ final class ReactHookAnalyzer {
 
     // Custom hook name check.
     if (isCustomHook) {
-      final element = block.thisOrAncestorOfType<FunctionDeclaration>()
+      final element = block
+          .thisOrAncestorOfType<FunctionDeclaration>()
           ?.declaredFragment
           ?.element;
       if (element is ExecutableElement) {
@@ -203,10 +203,7 @@ final class ReactHookAnalyzer {
     return diagnostics;
   }
 
-  List<ReactDiagnostic> _validateNested(
-    Statement stmt,
-    String enclosingName,
-  ) {
+  List<ReactDiagnostic> _validateNested(Statement stmt, String enclosingName) {
     final collector = _HookCallCollector();
     stmt.visitChildren(collector);
     // Also check the statement itself if it's an expression containing a call.
@@ -220,7 +217,8 @@ final class ReactHookAnalyzer {
       diagnostics.add(
         ReactDiagnostic(
           code: ReactDiagnosticCode.hookInConditional,
-          message: 'Hook ${call.methodName} called inside a conditional branch.',
+          message:
+              'Hook ${call.methodName} called inside a conditional branch.',
           severity: ReactDiagnosticSeverity.error,
           correction: 'Move hooks to the top level of $enclosingName.',
           node: call.node,
@@ -282,7 +280,8 @@ final class ReactHookAnalyzer {
       final e = ann.element;
       if (e == null) continue;
       final name = e.displayName;
-      if (name == 'ReactComponent' || e.enclosingElement?.name == 'ReactComponent') {
+      if (name == 'ReactComponent' ||
+          e.enclosingElement?.name == 'ReactComponent') {
         return true;
       }
     }
@@ -293,17 +292,24 @@ final class ReactHookAnalyzer {
     for (final ann in element.metadata.annotations) {
       final e = ann.element;
       if (e == null) continue;
-      final isHook = e.displayName == 'ReactHook' || e.enclosingElement?.name == 'ReactHook';
-      final isRuntimeHook = e.enclosingElement?.name == 'ReactRuntimeSymbol' ||
+      final isHook =
+          e.displayName == 'ReactHook' ||
+          e.enclosingElement?.name == 'ReactHook';
+      final isRuntimeHook =
+          e.enclosingElement?.name == 'ReactRuntimeSymbol' ||
           e.displayName == 'ReactRuntimeSymbol';
       if (isHook) return true;
       if (isRuntimeHook) {
         final constant = ann.computeConstantValue();
-        final kind = constant?.getField('kind')?.getField('index')?.toIntValue();
+        final kind = constant
+            ?.getField('kind')
+            ?.getField('index')
+            ?.toIntValue();
         if (kind == 1) return true;
         if (kind == null) {
           // If kind not resolvable but runtimeKey present, treat as hook if name looks like hook.
-          final hasKey = constant?.getField('runtimeKey')?.toStringValue() != null;
+          final hasKey =
+              constant?.getField('runtimeKey')?.toStringValue() != null;
           if (hasKey) return true;
         }
         continue;
@@ -311,7 +317,9 @@ final class ReactHookAnalyzer {
     }
     // Fallback: name convention for custom hooks.
     final name = element.name ?? '';
-    return name.startsWith('use') && name.length > 3 && name[3].toUpperCase() == name[3];
+    return name.startsWith('use') &&
+        name.length > 3 &&
+        name[3].toUpperCase() == name[3];
   }
 }
 
@@ -362,18 +370,23 @@ final class _HookCallCollector extends RecursiveAstVisitor<void> {
       if (e == null) continue;
       final enclosing = e.enclosingElement?.name;
       if (enclosing == 'ReactHook' || e.displayName == 'ReactHook') return true;
-      if (enclosing == 'ReactRuntimeSymbol' || e.displayName == 'ReactRuntimeSymbol') {
+      if (enclosing == 'ReactRuntimeSymbol' ||
+          e.displayName == 'ReactRuntimeSymbol') {
         final constant = ann.computeConstantValue();
-        final kind = constant?.getField('kind')?.getField('index')?.toIntValue();
+        final kind = constant
+            ?.getField('kind')
+            ?.getField('index')
+            ?.toIntValue();
         if (kind == 1) return true; // hook
         // If kind unavailable but runtimeKey present, trust it as hook.
-        if (kind == null && constant?.getField('runtimeKey')?.toStringValue() != null) {
+        if (kind == null &&
+            constant?.getField('runtimeKey')?.toStringValue() != null) {
           return true;
         }
       }
     }
     // Fallback for user-defined custom hooks: name convention
-    final n = element.displayName ?? '';
+    final n = element.displayName;
     return _isHookName(n);
   }
 
@@ -384,7 +397,9 @@ final class _HookCallCollector extends RecursiveAstVisitor<void> {
   }
 
   bool _isHookName(String name) =>
-      name.startsWith('use') && name.length > 3 && name[3].toUpperCase() == name[3];
+      name.startsWith('use') &&
+      name.length > 3 &&
+      name[3].toUpperCase() == name[3];
 }
 
 extension AstNodeExtension on AstNode {

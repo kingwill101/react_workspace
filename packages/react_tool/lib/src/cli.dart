@@ -20,6 +20,7 @@ class ReactCommandRunner extends CommandRunner<void> {
     : super('react', 'Build and run React Dart applications.') {
     addCommand(DoctorCommand());
     addCommand(InitCommand());
+    addCommand(GenerateCommand());
     addCommand(BuildCommand());
     addCommand(CleanCommand());
     addCommand(ServeCommand());
@@ -27,6 +28,39 @@ class ReactCommandRunner extends CommandRunner<void> {
     addCommand(TsCommand());
     addCommand(AnalyzeCommand());
     addCommand(TestCommand());
+  }
+}
+
+/// `react generate` — runs only Dart code generation and source syncing.
+final class GenerateCommand extends Command<void> {
+  GenerateCommand() {
+    argParser.addFlag(
+      'sync-only',
+      defaultsTo: false,
+      help:
+          'Synchronize outputs from an existing workspace build without '
+          'running build_runner again.',
+    );
+  }
+
+  @override
+  String get name => 'generate';
+
+  @override
+  String get description =>
+      'Generate Dart sources into lib/.generated without building bundles.';
+
+  @override
+  Future<void> run() async {
+    final config = ReactProjectConfig.load();
+    final builder = ReactBuilder(config: config, release: false, log: line);
+    final syncOnly = option('sync-only') as bool? ?? false;
+    if (syncOnly) {
+      await builder.syncGeneratedSources();
+    } else {
+      await builder.generateSources();
+    }
+    info('Generated sources are ready in lib/.generated/.');
   }
 }
 
@@ -72,13 +106,23 @@ final class DoctorCommand extends Command<void> {
 
   void _reportAnalysis(ReactProjectConfig config) {
     final hasAnalysis = config.file('analysis_options.yaml').existsSync();
-    final hasAnalyzerPlugin = config.file('pubspec.yaml').readAsStringSync().contains('react_analyzer');
-    line('  analysis: ${hasAnalysis ? '✓ analysis_options.yaml' : '✗ missing'} ${hasAnalyzerPlugin ? '+ react_analyzer' : ''}');
+    final hasAnalyzerPlugin = config
+        .file('pubspec.yaml')
+        .readAsStringSync()
+        .contains('react_analyzer');
+    line(
+      '  analysis: ${hasAnalysis ? '✓ analysis_options.yaml' : '✗ missing'} ${hasAnalyzerPlugin ? '+ react_analyzer' : ''}',
+    );
     if (!hasAnalysis) {
-      info('    Run `dart run react_tool:react analyze` or add analysis_options.yaml for live diagnostics.');
+      info(
+        '    Run `dart run react_tool:react analyze` or add analysis_options.yaml for live diagnostics.',
+      );
     }
     // Check for react_analysis import usage
-    final hasReactAnalysisDep = config.file('pubspec.yaml').readAsStringSync().contains('react_analysis');
+    final hasReactAnalysisDep = config
+        .file('pubspec.yaml')
+        .readAsStringSync()
+        .contains('react_analysis');
     if (!hasReactAnalysisDep) {
       info('    Tip: add react_analysis for component/hook/SSR diagnostics.');
     }
@@ -88,10 +132,15 @@ final class DoctorCommand extends Command<void> {
     final hasTestDir = config.directory('test').existsSync();
     final pubspec = config.file('pubspec.yaml').readAsStringSync();
     final hasReactTesting = pubspec.contains('react_testing');
-    final hasTestPackage = pubspec.contains(' test:') || pubspec.contains('test:');
-    line('  testing: ${hasTestDir ? '✓ test/' : '✗ no test/'} ${hasReactTesting ? '+ react_testing' : ''} ${hasTestPackage ? '+ test' : ''}');
+    final hasTestPackage =
+        pubspec.contains(' test:') || pubspec.contains('test:');
+    line(
+      '  testing: ${hasTestDir ? '✓ test/' : '✗ no test/'} ${hasReactTesting ? '+ react_testing' : ''} ${hasTestPackage ? '+ test' : ''}',
+    );
     if (!hasTestDir || !hasReactTesting) {
-      info('    Run `dart test` — scaffold now includes react_testing examples (see test/app_test.dart).');
+      info(
+        '    Run `dart test` — scaffold now includes react_testing examples (see test/app_test.dart).',
+      );
     }
   }
 
@@ -130,7 +179,8 @@ final class BuildCommand extends Command<void> {
       ..addFlag(
         'server',
         defaultsTo: false,
-        help: 'Compile the server entrypoint to a native binary with '
+        help:
+            'Compile the server entrypoint to a native binary with '
             'dart compile exe.',
       )
       ..addFlag(
@@ -250,31 +300,36 @@ final class _TsBindCommand extends Command<void> {
       ..addOption(
         'output',
         abbr: 'o',
-        help: 'Where to write the generated file (default: '
+        help:
+            'Where to write the generated file (default: '
             'lib/<specifier>_bindings.g.dart).',
       )
       ..addOption(
         'prefix',
-        help: 'JS registration namespace (default: the specifier, camelized). '
+        help:
+            'JS registration namespace (default: the specifier, camelized). '
             'Prefixes the `prefix.Name` keys registered by the shim; Dart '
             'helpers always use the bare component name.',
       )
       ..addOption(
         'type-prefix',
-        help: 'Prefix for generated type names (classes, enums, typedefs). '
+        help:
+            'Prefix for generated type names (classes, enums, typedefs). '
             'Use when extracting a second module so its types do not collide '
             'with an already-generated file.',
       )
       ..addOption(
         'shim',
-        help: 'Also write a JS shim registering the bound components at this '
+        help:
+            'Also write a JS shim registering the bound components at this '
             'path (wire it into react.yaml under foreign.modules). When the '
             'extraction includes use* hooks the shim also registers the '
             '__reactDartHooks hook bridge.',
       )
       ..addOption(
         'hooks',
-        help: 'Also write a Dart hooks file for the extracted use* hooks at '
+        help:
+            'Also write a Dart hooks file for the extracted use* hooks at '
             'this path. Hooks run through the shim bridge during render and '
             'decode into typed values (maps, records, value classes).',
       )
@@ -284,7 +339,8 @@ final class _TsBindCommand extends Command<void> {
       )
       ..addOption(
         'namespace',
-        help: 'Namespace for hook bridge registration under '
+        help:
+            'Namespace for hook bridge registration under '
             'globalThis.__reactDartBindings[namespace]. '
             'When set, hooks register under '
             'globalThis.__reactDartBindings.<namespace> instead of '
@@ -302,7 +358,8 @@ final class _TsBindCommand extends Command<void> {
     final config = ReactProjectConfig.load();
     final builder = ReactBuilder(config: config, release: false, log: line);
 
-    final npmRoot = option('npm-root') as String? ??
+    final npmRoot =
+        option('npm-root') as String? ??
         (await builder.ensureJsEnvironment())?.npmRoot ??
         p.join('.dart_tool', 'react', 'js');
     final npmRootDir = Directory(npmRoot);
@@ -418,11 +475,12 @@ final class _TsBindCommand extends Command<void> {
       typePrefix: typePrefix ?? '',
     );
 
-    final output = outputPath ??
-        p.join('lib', '${lowerCamel(specifier)}_bindings.g.dart');
+    final output =
+        outputPath ?? p.join('lib', '${lowerCamel(specifier)}_bindings.g.dart');
     final outputFile = config.file(output);
     outputFile.parent.createSync(recursive: true);
     outputFile.writeAsStringSync(code);
+    final dartOutputs = <File>[outputFile];
 
     if (shimPath != null) {
       final shim = generateShim(
@@ -471,9 +529,20 @@ final class _TsBindCommand extends Command<void> {
       );
       hooksFile.parent.createSync(recursive: true);
       hooksFile.writeAsStringSync(hooks);
+      dartOutputs.add(hooksFile);
       info(
         'Wrote ${result.declarations.where((d) => d.kind == 'hook').length} '
         'hook(s) to ${hooksFile.path}',
+      );
+    }
+
+    final formatResult = await Process.run(Platform.resolvedExecutable, [
+      'format',
+      ...dartOutputs.map((file) => file.path),
+    ], workingDirectory: config.root.path);
+    if (formatResult.exitCode != 0) {
+      throw ReactToolException(
+        'Failed to format generated Dart bindings:\n${formatResult.stderr}',
       );
     }
 
@@ -515,11 +584,7 @@ final class AnalyzeCommand extends Command<void> {
         defaultsTo: false,
         help: 'Show info-level diagnostics.',
       )
-      ..addOption(
-        'path',
-        defaultsTo: '.',
-        help: 'Project root to analyze.',
-      );
+      ..addOption('path', defaultsTo: '.', help: 'Project root to analyze.');
   }
 
   @override
@@ -529,18 +594,17 @@ final class AnalyzeCommand extends Command<void> {
     final config = ReactProjectConfig.load(Directory(path));
     line('Analyzing ${config.root.path} with react_analysis…');
     // Delegate to dart analyze (react_analyzer rules run via plugin).
-    final result = await Process.run(
-      'dart',
-      ['analyze', if (verbose) '--verbose', '.'],
-      workingDirectory: config.root.path,
-    );
+    final result = await Process.run('dart', [
+      'analyze',
+      if (verbose) '--verbose',
+      '.',
+    ], workingDirectory: config.root.path);
     line(result.stdout.toString());
     if (result.stderr.toString().trim().isNotEmpty) {
       warn(result.stderr.toString());
     }
     // Run resolved DartUsageCollector for per-target manifest preview.
     try {
-      final dotReact = Directory(p.join(config.root.path, '.dart_tool', 'react'));
       final clientPath = config.clientEntrypoint != null
           ? p.join(config.root.path, config.clientEntrypoint!)
           : null;
@@ -551,24 +615,32 @@ final class AnalyzeCommand extends Command<void> {
         line('Usage preview (resolved Dart, fail-safe until complete):');
         if (clientPath != null && File(clientPath).existsSync()) {
           final collector = DartUsageCollector();
-          final res = await collector.collectEntrypointResolved(clientPath,
-              projectRoot: config.root.path);
+          final res = await collector.collectEntrypointResolved(
+            clientPath,
+            projectRoot: config.root.path,
+          );
           line(
-              '  client: ${config.pathFor(config.clientEntrypoint!)} → components: ${res.components} hooks: ${res.hooks} complete: ${res.complete} resolved: ${res.resolvedLibraries} unresolved: ${res.unresolvedLibraries}');
+            '  client: ${config.pathFor(config.clientEntrypoint!)} → components: ${res.components} hooks: ${res.hooks} complete: ${res.complete} resolved: ${res.resolvedLibraries} unresolved: ${res.unresolvedLibraries}',
+          );
         }
         if (ssrPath != null && File(ssrPath).existsSync()) {
           final collector = DartUsageCollector();
-          final res = await collector.collectEntrypointResolved(ssrPath,
-              projectRoot: config.root.path);
+          final res = await collector.collectEntrypointResolved(
+            ssrPath,
+            projectRoot: config.root.path,
+          );
           line(
-              '  ssr: ${config.pathFor(config.ssrEntrypoint!)} → components: ${res.components} hooks: ${res.hooks} complete: ${res.complete}');
+            '  ssr: ${config.pathFor(config.ssrEntrypoint!)} → components: ${res.components} hooks: ${res.hooks} complete: ${res.complete}',
+          );
         }
       }
     } catch (e) {
       warn('Usage preview failed: $e');
     }
     if (result.exitCode != 0) {
-      throw ReactToolException('Analysis found issues (exit ${result.exitCode}).');
+      throw ReactToolException(
+        'Analysis found issues (exit ${result.exitCode}).',
+      );
     }
     info('Analysis passed — no react_analysis diagnostics.');
   }
@@ -591,7 +663,7 @@ final class TestCommand extends Command<void> {
       )
       ..addOption(
         'path',
-        defaultsTo: '.',
+        defaultsTo: 'test',
         help: 'Test path to run (default: test).',
       );
   }
@@ -627,7 +699,9 @@ final class TestCommand extends Command<void> {
     // Hint about harnesses
     if (!config.file('test/app_test.dart').existsSync() &&
         !config.file('test/component_test.dart').existsSync()) {
-      info('Tip: scaffold includes test/app_test.dart using react_testing — see react_testing README.');
+      info(
+        'Tip: scaffold includes test/app_test.dart using react_testing — see react_testing README.',
+      );
     }
   }
 }
@@ -859,10 +933,7 @@ ContentType _contentType(String ext) {
       [script.path],
       workingDirectory: config.root.path,
       mode: ProcessStartMode.inheritStdio,
-      environment: {
-        ...Platform.environment,
-        'PORT': '$port',
-      },
+      environment: {...Platform.environment, 'PORT': '$port'},
     );
   }
 
@@ -993,8 +1064,9 @@ final class CleanCommand extends Command<void> {
   @override
   Future<void> run() async {
     final config = ReactProjectConfig.load();
+    final builder = ReactBuilder(config: config, release: false, log: line);
     final output = config.directory(config.outputDirectory);
-    var removed = false;
+    var removed = await builder.cleanGeneratedSources();
     if (output.existsSync()) {
       await output.delete(recursive: true);
       info('Removed ${output.path}');

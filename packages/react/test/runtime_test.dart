@@ -8,6 +8,7 @@ void main() {
       expect(caps.supportsEvents, isTrue);
       expect(caps.supportsRefs, isTrue);
       expect(caps.supportsEffects, isTrue);
+      expect(caps.supportsLayoutEffects, isTrue);
       expect(caps.supportsContext, isTrue);
       expect(caps.supportsSuspense, isTrue);
     });
@@ -17,6 +18,7 @@ void main() {
       expect(caps.supportsEvents, isFalse);
       expect(caps.supportsRefs, isFalse);
       expect(caps.supportsEffects, isFalse);
+      expect(caps.supportsLayoutEffects, isFalse);
       expect(caps.supportsContext, isTrue);
       expect(caps.supportsSuspense, isTrue);
     });
@@ -53,7 +55,13 @@ void main() {
     test('throws UnsupportedError with feature name', () {
       expect(
         () => unsupportedReactFeature('useMagic'),
-        throwsA(isA<UnsupportedError>().having((e) => e.message, 'message', contains('useMagic'))),
+        throwsA(
+          isA<UnsupportedError>().having(
+            (e) => e.message,
+            'message',
+            contains('useMagic'),
+          ),
+        ),
       );
     });
   });
@@ -101,11 +109,17 @@ void main() {
   group('ReactBinding defaults', () {
     test('unimplemented methods throw UnsupportedError', () {
       final binding = _FakeBinding();
-      expect(() => binding.useReducer((int s, int a) => s, 0, null), throwsUnsupportedError);
+      expect(
+        () => binding.useReducer((int s, int a) => s, 0, null),
+        throwsUnsupportedError,
+      );
       expect(() => binding.useMemo(() => 42, []), throwsUnsupportedError);
       expect(() => binding.useCallback(() {}, []), throwsUnsupportedError);
       expect(() => binding.useRef(0), throwsUnsupportedError);
-      expect(() => binding.useContext(const ReactContext(0)), throwsUnsupportedError);
+      expect(
+        () => binding.useContext(const ReactContext(0)),
+        throwsUnsupportedError,
+      );
       expect(() => binding.useId(), throwsUnsupportedError);
       expect(() => binding.useTransition(), throwsUnsupportedError);
       expect(() => binding.useDeferredValue(0, null), throwsUnsupportedError);
@@ -117,7 +131,10 @@ void main() {
         ),
         throwsUnsupportedError,
       );
-      expect(() => binding.useOptimistic(0, (int s, int a) => s), throwsUnsupportedError);
+      expect(
+        () => binding.useOptimistic(0, (int s, int a) => s),
+        throwsUnsupportedError,
+      );
       expect(
         () => binding.useActionState<String, String>((s, a) => s, 'init', null),
         throwsUnsupportedError,
@@ -139,14 +156,20 @@ void main() {
   group('StateSetter', () {
     test('direct update calls setter', () {
       var value = 0;
-      final setter = StateSetter<int>((v) => value = v, (fn) => value = fn(value));
+      final setter = StateSetter<int>(
+        (v) => value = v,
+        (fn) => value = fn(value),
+      );
       setter.call(42);
       expect(value, 42);
     });
 
     test('functional update calls updater', () {
       var value = 10;
-      final setter = StateSetter<int>((v) => value = v, (fn) => value = fn(value));
+      final setter = StateSetter<int>(
+        (v) => value = v,
+        (fn) => value = fn(value),
+      );
       setter.update((prev) => prev + 5);
       expect(value, 15);
     });

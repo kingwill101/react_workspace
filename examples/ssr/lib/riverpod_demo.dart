@@ -9,8 +9,9 @@ import 'package:riverpod/riverpod.dart';
 /// server markup and the hydrated client agree on the initial state.
 ///
 /// The app renders this inside `riverpodScope(riverpodContainer, ...)`.
-final riverpodCounter =
-    NotifierProvider<RiverpodCounterNotifier, int>(RiverpodCounterNotifier.new);
+final riverpodCounter = NotifierProvider<RiverpodCounterNotifier, int>(
+  RiverpodCounterNotifier.new,
+);
 
 final class RiverpodCounterNotifier extends Notifier<int> {
   @override

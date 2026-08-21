@@ -1,7 +1,7 @@
 import 'package:react_router/react_router.dart';
 import 'package:react_web/react_web.dart';
 
-import 'site_layout.react.dart';
+import '.generated/site_layout.react.dart';
 
 /// Root component: renders the site shell inside a router.
 ///

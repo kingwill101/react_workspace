@@ -43,8 +43,8 @@ final class ReactContext<T> {
   /// Creates a provider node for this context.
   ///
   /// See https://react.dev/reference/react/createContext#provider.
-  ReactNode provider(T value, List<ReactNode> children) =>
-      ContextProvider(this, value, children);
+  ReactNode provider(T value, ReactChildren children) =>
+      ContextProvider(this, value, normalizeChildren(children));
 }
 
 /// A provider node for [context].
@@ -146,8 +146,8 @@ ReactContext<T> createContext<T>(T defaultValue) => ReactContext(defaultValue);
 ReactNode provideContext<T>(
   ReactContext<T> context,
   T value,
-  List<ReactNode> children,
-) => ContextProvider(context, value, children);
+  ReactChildren children,
+) => ContextProvider(context, value, normalizeChildren(children));
 
 /// Describes a memoized component comparison.
 typedef PropsAreEqual<P> = bool Function(P previous, P next);
@@ -347,32 +347,37 @@ LazyComponent<P> lazy<P>(LazyComponentLoader<P> load) => LazyComponent(load);
 ///
 /// See https://react.dev/reference/react-dom/createPortal.
 ReactNode createPortal(
-  List<ReactNode> children,
+  ReactChildren children,
   Object container, {
   String? key,
-}) => Portal(children, container, key: key);
+}) => Portal(normalizeChildren(children), container, key: key);
 
 /// Creates a Suspense boundary node.
 ///
 /// See https://react.dev/reference/react/Suspense.
 ReactNode suspense({
   required ReactNode fallback,
-  required List<ReactNode> children,
-}) => Suspense(fallback: fallback, children: children);
+  required ReactChildren children,
+}) => Suspense(fallback: fallback, children: normalizeChildren(children));
 
 /// Creates a strict-mode boundary node.
 ///
 /// See https://react.dev/reference/react/StrictMode.
-ReactNode strictMode(List<ReactNode> children) => StrictMode(children);
+ReactNode strictMode(ReactChildren children) =>
+    StrictMode(normalizeChildren(children));
 
 /// Creates an error-boundary node.
 ///
 /// See https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary.
 ReactNode errorBoundary({
-  required List<ReactNode> children,
+  required ReactChildren children,
   required ReactNode fallback,
   void Function(Object error, StackTrace stack)? onError,
-}) => ErrorBoundary(children: children, fallback: fallback, onError: onError);
+}) => ErrorBoundary(
+  children: normalizeChildren(children),
+  fallback: fallback,
+  onError: onError,
+);
 
 /// A future-compatible action result for [useActionState].
 typedef Action<T, A> = FutureOr<T> Function(T previousState, A action);
@@ -496,9 +501,12 @@ String useId() => currentReactRuntime.binding.useId();
 
 /// Returns a deferred version of [value].
 ///
+/// When [initialValue] is omitted, React receives only [value]. Passing a
+/// non-null [initialValue] lets React use it for the initial render.
+///
 /// See https://react.dev/reference/react/useDeferredValue.
-T useDeferredValue<T>(T value, [Object? options]) =>
-    currentReactRuntime.binding.useDeferredValue(value, options);
+T useDeferredValue<T>(T value, [T? initialValue]) =>
+    currentReactRuntime.binding.useDeferredValue(value, initialValue);
 
 /// Subscribes to an external store with an SSR snapshot when provided.
 ///
@@ -515,6 +523,9 @@ T useSyncExternalStore<T>(
 
 /// Returns optimistic state and a dispatcher for optimistic actions.
 ///
+/// Requires a React 19 or newer runtime that exports `useOptimistic`. Calling
+/// this hook with an older runtime throws [UnsupportedError].
+///
 /// See https://react.dev/reference/react/useOptimistic.
 (T, void Function(A)) useOptimistic<T, A>(
   T state,
@@ -522,6 +533,9 @@ T useSyncExternalStore<T>(
 ) => currentReactRuntime.binding.useOptimistic(state, update);
 
 /// Returns action state and a dispatcher for async actions.
+///
+/// Requires a React 19 or newer runtime that exports `useActionState`. Calling
+/// this hook with an older runtime throws [UnsupportedError].
 ///
 /// See https://react.dev/reference/react/useActionState.
 (T, void Function(A)) useActionState<T, A>(

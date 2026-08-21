@@ -11,21 +11,19 @@ abstract interface class GenerateTestReportParameters {
   set group(String? value);
 }
 
-final class GenerateTestReportParametersValue implements GenerateTestReportParameters {
+final class GenerateTestReportParametersValue
+    implements GenerateTestReportParameters {
   @override
   String message;
   @override
   String? group;
 
-  GenerateTestReportParametersValue({
-    required this.message,
-    this.group,
-  });
+  GenerateTestReportParametersValue({required this.message, this.group});
 }
 
 abstract interface class Report {
   Object toJSON();
-  String get type;
+  String get type_;
   String get url;
   ReportBody? get body;
 }
@@ -37,17 +35,20 @@ abstract interface class ReportBody {
 typedef ReportList = List<Report>;
 
 abstract interface class ReportingObserver {
-  factory ReportingObserver(ReportingObserverCallback callback, [ReportingObserverOptions? options]) =>
-      WebRuntime.current.createWebObject<ReportingObserver>(
-        'ReportingObserver',
-        [callback, options],
-      );
+  factory ReportingObserver(
+    ReportingObserverCallback callback, [
+    ReportingObserverOptions? options,
+  ]) => WebRuntime.current.createWebObject<ReportingObserver>(
+    'ReportingObserver',
+    [callback, options],
+  );
   void observe();
   void disconnect();
   ReportList takeRecords();
 }
 
-typedef ReportingObserverCallback = void Function(List<Report> reports, ReportingObserver observer,);
+typedef ReportingObserverCallback =
+    void Function(List<Report> reports, ReportingObserver observer);
 
 abstract interface class ReportingObserverOptions {
   List<String>? get types;
@@ -62,9 +63,5 @@ final class ReportingObserverOptionsValue implements ReportingObserverOptions {
   @override
   bool? buffered;
 
-  ReportingObserverOptionsValue({
-    this.types,
-    this.buffered,
-  });
+  ReportingObserverOptionsValue({this.types, this.buffered});
 }
-

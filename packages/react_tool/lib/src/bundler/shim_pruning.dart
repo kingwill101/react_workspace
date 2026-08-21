@@ -53,8 +53,9 @@ final _hooksStartRe = RegExp(r'^const hooks = \{$');
 final _hookMemberRe = RegExp(r'^\s*(\w+):');
 final _hookCommentRe = RegExp(r'^// Hook bridge:');
 final _toPairsRe = RegExp(r'^const toPairs =');
-final _bindingsAssignRe =
-    RegExp(r'^globalThis\.__reactDartBindings\.([A-Za-z_$][\w$]*)\s*=\s*hooks');
+final _bindingsAssignRe = RegExp(
+  r'^globalThis\.__reactDartBindings\.([A-Za-z_$][\w$]*)\s*=\s*hooks',
+);
 final _legacyAssignRe = RegExp(r'^globalThis\.__reactDartHooks\s*=\s*hooks');
 
 /// Parses [source] into its registration surface, or null when [source] is
@@ -214,8 +215,11 @@ String pruneShim(
       .toSet();
   final usedHookNames = <String>{
     for (final name in shim.hookNames)
-      if (usedHooks.contains(shim.namespace == null ? name : '${shim.namespace}.$name'))
-        name,  };
+      if (usedHooks.contains(
+        shim.namespace == null ? name : '${shim.namespace}.$name',
+      ))
+        name,
+  };
 
   // Imports to keep: every used component's export plus every used hook.
   final keptExports = <String>[
@@ -250,8 +254,9 @@ String pruneShim(
   // blank line, registration loop, trailing blank) — verbatim. When no hook
   // is used the cut is the start of the hook bridge itself, so the comment,
   // `toPairs`, and the namespace assignment never reach the bundle.
-  final hooksCut =
-      usedHookNames.isEmpty && hooksSectionStart >= 0 ? hooksSectionStart : null;
+  final hooksCut = usedHookNames.isEmpty && hooksSectionStart >= 0
+      ? hooksSectionStart
+      : null;
   final tailStart =
       hooksCut ?? (hooksSectionStart >= 0 ? hooksSectionStart : lines.length);
   if (componentsEnd >= 0 && componentsEnd + 1 < tailStart) {
@@ -261,7 +266,9 @@ String pruneShim(
     buffer.addAll(lines.sublist(hooksSectionStart, hooksStart));
     buffer.add(lines[hooksStart]);
     buffer.addAll(
-      hookMembers.where((m) => usedHookNames.contains(m.name)).map((m) => m.line),
+      hookMembers
+          .where((m) => usedHookNames.contains(m.name))
+          .map((m) => m.line),
     );
     buffer.add(lines[hooksEnd]);
     buffer.addAll(lines.sublist(hooksEnd + 1));

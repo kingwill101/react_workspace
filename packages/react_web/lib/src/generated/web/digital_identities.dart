@@ -2,19 +2,17 @@
 // Neutral Web surface for spec: digital-identities
 // ignore_for_file: type=lint
 
-
 abstract interface class DigitalCredentialRequestOptions {
   List<IdentityRequestProvider>? get providers;
   set providers(List<IdentityRequestProvider>? value);
 }
 
-final class DigitalCredentialRequestOptionsValue implements DigitalCredentialRequestOptions {
+final class DigitalCredentialRequestOptionsValue
+    implements DigitalCredentialRequestOptions {
   @override
   List<IdentityRequestProvider>? providers;
 
-  DigitalCredentialRequestOptionsValue({
-    this.providers,
-  });
+  DigitalCredentialRequestOptionsValue({this.providers});
 }
 
 abstract interface class IdentityRequestProvider {
@@ -30,9 +28,5 @@ final class IdentityRequestProviderValue implements IdentityRequestProvider {
   @override
   Object request;
 
-  IdentityRequestProviderValue({
-    required this.protocol,
-    required this.request,
-  });
+  IdentityRequestProviderValue({required this.protocol, required this.request});
 }
-

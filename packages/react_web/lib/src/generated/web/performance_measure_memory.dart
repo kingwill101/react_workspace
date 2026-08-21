@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: performance-measure-memory
 // ignore_for_file: type=lint
 
-
 abstract interface class MemoryAttribution {
   String? get url;
   set url(String? value);
@@ -20,11 +19,7 @@ final class MemoryAttributionValue implements MemoryAttribution {
   @override
   String? scope;
 
-  MemoryAttributionValue({
-    this.url,
-    this.container,
-    this.scope,
-  });
+  MemoryAttributionValue({this.url, this.container, this.scope});
 }
 
 abstract interface class MemoryAttributionContainer {
@@ -34,16 +29,14 @@ abstract interface class MemoryAttributionContainer {
   set src(String? value);
 }
 
-final class MemoryAttributionContainerValue implements MemoryAttributionContainer {
+final class MemoryAttributionContainerValue
+    implements MemoryAttributionContainer {
   @override
   String? id;
   @override
   String? src;
 
-  MemoryAttributionContainerValue({
-    this.id,
-    this.src,
-  });
+  MemoryAttributionContainerValue({this.id, this.src});
 }
 
 abstract interface class MemoryBreakdownEntry {
@@ -63,11 +56,7 @@ final class MemoryBreakdownEntryValue implements MemoryBreakdownEntry {
   @override
   List<String>? types;
 
-  MemoryBreakdownEntryValue({
-    this.bytes,
-    this.attribution,
-    this.types,
-  });
+  MemoryBreakdownEntryValue({this.bytes, this.attribution, this.types});
 }
 
 abstract interface class MemoryMeasurement {
@@ -83,9 +72,5 @@ final class MemoryMeasurementValue implements MemoryMeasurement {
   @override
   List<MemoryBreakdownEntry>? breakdown;
 
-  MemoryMeasurementValue({
-    this.bytes,
-    this.breakdown,
-  });
+  MemoryMeasurementValue({this.bytes, this.breakdown});
 }
-

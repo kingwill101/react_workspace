@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: webcodecs-avc-codec-registration
 // ignore_for_file: type=lint
 
-import 'webcodecs_hevc_codec_registration.dart';
 import 'webcodecs.dart';
+import 'webcodecs_hevc_codec_registration.dart';
 
 typedef AvcBitstreamFormat = String;
 
@@ -16,9 +16,7 @@ final class AvcEncoderConfigValue implements AvcEncoderConfig {
   @override
   AvcBitstreamFormat? format;
 
-  AvcEncoderConfigValue({
-    this.format,
-  });
+  AvcEncoderConfigValue({this.format});
 }
 
 abstract interface class VideoEncoderConfig {
@@ -110,12 +108,10 @@ abstract interface class VideoEncoderEncodeOptionsForAvc {
   set quantizer(int? value);
 }
 
-final class VideoEncoderEncodeOptionsForAvcValue implements VideoEncoderEncodeOptionsForAvc {
+final class VideoEncoderEncodeOptionsForAvcValue
+    implements VideoEncoderEncodeOptionsForAvc {
   @override
   int? quantizer;
 
-  VideoEncoderEncodeOptionsForAvcValue({
-    this.quantizer,
-  });
+  VideoEncoderEncodeOptionsForAvcValue({this.quantizer});
 }
-

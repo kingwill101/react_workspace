@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:react_actions/react_actions.dart';
 import 'package:react_server/react_server.dart';
+import 'package:react_server_shelf/react_server_shelf.dart';
 import 'package:server_testing/server_testing.dart';
 import 'package:server_testing_shelf/server_testing_shelf.dart';
 import 'package:react_web/src/http_server_function_client.dart';
@@ -131,23 +132,22 @@ void main() {
     });
   }, handler: _handler());
 
-  serverTest(
-    'requireUser produces an authentication response',
-    (client, _) async {
-      final response = await client.postJson('/__react/actions', {
-        'protocol': 1,
-        'id': _privateRef.id.value,
-        'contract': _privateRef.contractHash,
-        'arguments': {'proceed': true},
-      });
+  serverTest('requireUser produces an authentication response', (
+    client,
+    _,
+  ) async {
+    final response = await client.postJson('/__react/actions', {
+      'protocol': 1,
+      'id': _privateRef.id.value,
+      'contract': _privateRef.contractHash,
+      'arguments': {'proceed': true},
+    });
 
-      response.assertStatus(HttpStatus.unauthorized).assertJsonContains({
-        'ok': false,
-        'error': {'code': 'unauthenticated'},
-      });
-    },
-    handler: _handler(authenticate: (_) => null),
-  );
+    response.assertStatus(HttpStatus.unauthorized).assertJsonContains({
+      'ok': false,
+      'error': {'code': 'unauthenticated'},
+    });
+  }, handler: _handler(authenticate: (_) => null));
 
   test(
     'client turns a structured server error into a remote exception',

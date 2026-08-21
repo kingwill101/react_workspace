@@ -2,9 +2,6 @@
 // Neutral Web surface for spec: webusb
 // ignore_for_file: type=lint
 
-import 'dom.dart';
-import 'permissions.dart';
-
 abstract interface class AllowedUSBDevice {
   Object get vendorId;
   set vendorId(Object value);
@@ -62,9 +59,7 @@ final class USBConnectionEventInitValue implements USBConnectionEventInit {
   @override
   Object device;
 
-  USBConnectionEventInitValue({
-    required this.device,
-  });
+  USBConnectionEventInitValue({required this.device});
 }
 
 abstract interface class USBControlTransferParameters {
@@ -80,7 +75,8 @@ abstract interface class USBControlTransferParameters {
   set index(int value);
 }
 
-final class USBControlTransferParametersValue implements USBControlTransferParameters {
+final class USBControlTransferParametersValue
+    implements USBControlTransferParameters {
   @override
   USBRequestType requestType;
   @override
@@ -153,10 +149,7 @@ final class USBDeviceRequestOptionsValue implements USBDeviceRequestOptions {
   @override
   List<USBDeviceFilter>? exclusionFilters;
 
-  USBDeviceRequestOptionsValue({
-    required this.filters,
-    this.exclusionFilters,
-  });
+  USBDeviceRequestOptionsValue({required this.filters, this.exclusionFilters});
 }
 
 typedef USBDirection = String;
@@ -176,10 +169,7 @@ final class USBPermissionDescriptorValue implements USBPermissionDescriptor {
   @override
   List<USBDeviceFilter>? exclusionFilters;
 
-  USBPermissionDescriptorValue({
-    this.filters,
-    this.exclusionFilters,
-  });
+  USBPermissionDescriptorValue({this.filters, this.exclusionFilters});
 }
 
 abstract interface class USBPermissionStorage {
@@ -191,9 +181,7 @@ final class USBPermissionStorageValue implements USBPermissionStorage {
   @override
   List<AllowedUSBDevice>? allowedDevices;
 
-  USBPermissionStorageValue({
-    this.allowedDevices,
-  });
+  USBPermissionStorageValue({this.allowedDevices});
 }
 
 typedef USBRecipient = String;
@@ -201,4 +189,3 @@ typedef USBRecipient = String;
 typedef USBRequestType = String;
 
 typedef USBTransferStatus = String;
-

@@ -2,15 +2,16 @@
 // Neutral Web surface for spec: css-transitions
 // ignore_for_file: type=lint
 
-import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class TransitionEvent {
-  factory TransitionEvent(Object type, [TransitionEventInit? transitionEventInitDict]) =>
-      WebRuntime.current.createWebObject<TransitionEvent>(
-        'TransitionEvent',
-        [type, transitionEventInitDict],
-      );
+  factory TransitionEvent(
+    Object type_, [
+    TransitionEventInit? transitionEventInitDict,
+  ]) => WebRuntime.current.createWebObject<TransitionEvent>('TransitionEvent', [
+    type_,
+    transitionEventInitDict,
+  ]);
   Object get propertyName;
   double get elapsedTime;
   Object get pseudoElement;
@@ -39,4 +40,3 @@ final class TransitionEventInitValue implements TransitionEventInit {
     this.pseudoElement,
   });
 }
-

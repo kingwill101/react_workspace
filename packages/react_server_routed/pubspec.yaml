@@ -1,0 +1,24 @@
+name: react_server_routed
+description: Routed application handlers for React Dart SSR and server actions.
+version: 0.1.0
+repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_server_routed
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  react_actions: ^0.1.0
+  react_server: ^0.1.0
+  routed_core: ^0.4.0
+
+dev_dependencies:
+  lints: ^6.1.0
+  test: ^1.31.2
+
+dependency_overrides:
+  routed_core:
+    git:
+      url: https://github.com/kingwill101/routed.git
+      ref: master
+      path: packages/routed_core

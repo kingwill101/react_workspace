@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: streams
 // ignore_for_file: type=lint
 
-import 'webidl.dart';
 import 'dom.dart';
+import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class ByteLengthQueuingStrategy {
@@ -17,11 +17,8 @@ abstract interface class ByteLengthQueuingStrategy {
 }
 
 abstract interface class CountQueuingStrategy {
-  factory CountQueuingStrategy(QueuingStrategyInit init) =>
-      WebRuntime.current.createWebObject<CountQueuingStrategy>(
-        'CountQueuingStrategy',
-        [init],
-      );
+  factory CountQueuingStrategy(QueuingStrategyInit init) => WebRuntime.current
+      .createWebObject<CountQueuingStrategy>('CountQueuingStrategy', [init]);
   double get highWaterMark;
   Function get size;
 }
@@ -44,10 +41,7 @@ final class QueuingStrategyValue implements QueuingStrategy {
   @override
   QueuingStrategySize? size;
 
-  QueuingStrategyValue({
-    this.highWaterMark,
-    this.size,
-  });
+  QueuingStrategyValue({this.highWaterMark, this.size});
 }
 
 abstract interface class QueuingStrategyInit {
@@ -59,12 +53,10 @@ final class QueuingStrategyInitValue implements QueuingStrategyInit {
   @override
   double highWaterMark;
 
-  QueuingStrategyInitValue({
-    required this.highWaterMark,
-  });
+  QueuingStrategyInitValue({required this.highWaterMark});
 }
 
-typedef QueuingStrategySize = double Function(Object chunk,);
+typedef QueuingStrategySize = double Function(Object chunk);
 
 abstract interface class ReadableByteStreamController {
   ReadableStreamBYOBRequest? get byobRequest;
@@ -75,15 +67,20 @@ abstract interface class ReadableByteStreamController {
 }
 
 abstract interface class ReadableStream {
-  factory ReadableStream([Object? underlyingSource, QueuingStrategy? strategy]) =>
-      WebRuntime.current.createWebObject<ReadableStream>(
-        'ReadableStream',
-        [underlyingSource, strategy],
-      );
+  factory ReadableStream([
+    Object? underlyingSource,
+    QueuingStrategy? strategy,
+  ]) => WebRuntime.current.createWebObject<ReadableStream>('ReadableStream', [
+    underlyingSource,
+    strategy,
+  ]);
   bool get locked;
   Future<void> cancel([Object? reason]);
   ReadableStreamReader getReader([ReadableStreamGetReaderOptions? options]);
-  ReadableStream pipeThrough(ReadableWritablePair transform, [StreamPipeOptions? options]);
+  ReadableStream pipeThrough(
+    ReadableWritablePair transform, [
+    StreamPipeOptions? options,
+  ]);
   Future<void> pipeTo(WritableStream destination, [StreamPipeOptions? options]);
   List<ReadableStream> tee();
 }
@@ -96,7 +93,10 @@ abstract interface class ReadableStreamBYOBReader {
       );
   Future<void> get closed;
   Future<void> cancel([Object? reason]);
-  Future<ReadableStreamReadResult> read(ArrayBufferView view, [ReadableStreamBYOBReaderReadOptions? options]);
+  Future<ReadableStreamReadResult> read(
+    ArrayBufferView view, [
+    ReadableStreamBYOBReaderReadOptions? options,
+  ]);
   void releaseLock();
 }
 
@@ -105,13 +105,12 @@ abstract interface class ReadableStreamBYOBReaderReadOptions {
   set min(int? value);
 }
 
-final class ReadableStreamBYOBReaderReadOptionsValue implements ReadableStreamBYOBReaderReadOptions {
+final class ReadableStreamBYOBReaderReadOptionsValue
+    implements ReadableStreamBYOBReaderReadOptions {
   @override
   int? min;
 
-  ReadableStreamBYOBReaderReadOptionsValue({
-    this.min,
-  });
+  ReadableStreamBYOBReaderReadOptionsValue({this.min});
 }
 
 abstract interface class ReadableStreamBYOBRequest {
@@ -151,13 +150,12 @@ abstract interface class ReadableStreamGetReaderOptions {
   set mode(ReadableStreamReaderMode? value);
 }
 
-final class ReadableStreamGetReaderOptionsValue implements ReadableStreamGetReaderOptions {
+final class ReadableStreamGetReaderOptionsValue
+    implements ReadableStreamGetReaderOptions {
   @override
   ReadableStreamReaderMode? mode;
 
-  ReadableStreamGetReaderOptionsValue({
-    this.mode,
-  });
+  ReadableStreamGetReaderOptionsValue({this.mode});
 }
 
 abstract interface class ReadableStreamIteratorOptions {
@@ -165,13 +163,12 @@ abstract interface class ReadableStreamIteratorOptions {
   set preventCancel(bool? value);
 }
 
-final class ReadableStreamIteratorOptionsValue implements ReadableStreamIteratorOptions {
+final class ReadableStreamIteratorOptionsValue
+    implements ReadableStreamIteratorOptions {
   @override
   bool? preventCancel;
 
-  ReadableStreamIteratorOptionsValue({
-    this.preventCancel,
-  });
+  ReadableStreamIteratorOptionsValue({this.preventCancel});
 }
 
 abstract interface class ReadableStreamReadResult {
@@ -187,10 +184,7 @@ final class ReadableStreamReadResultValue implements ReadableStreamReadResult {
   @override
   bool? done;
 
-  ReadableStreamReadResultValue({
-    this.value,
-    this.done,
-  });
+  ReadableStreamReadResultValue({this.value, this.done});
 }
 
 typedef ReadableStreamReader = Object;
@@ -212,10 +206,7 @@ final class ReadableWritablePairValue implements ReadableWritablePair {
   @override
   WritableStream writable;
 
-  ReadableWritablePairValue({
-    required this.readable,
-    required this.writable,
-  });
+  ReadableWritablePairValue({required this.readable, required this.writable});
 }
 
 abstract interface class StreamPipeOptions {
@@ -248,11 +239,15 @@ final class StreamPipeOptionsValue implements StreamPipeOptions {
 }
 
 abstract interface class TransformStream {
-  factory TransformStream([Object? transformer, QueuingStrategy? writableStrategy, QueuingStrategy? readableStrategy]) =>
-      WebRuntime.current.createWebObject<TransformStream>(
-        'TransformStream',
-        [transformer, writableStrategy, readableStrategy],
-      );
+  factory TransformStream([
+    Object? transformer,
+    QueuingStrategy? writableStrategy,
+    QueuingStrategy? readableStrategy,
+  ]) => WebRuntime.current.createWebObject<TransformStream>('TransformStream', [
+    transformer,
+    writableStrategy,
+    readableStrategy,
+  ]);
   ReadableStream get readable;
   WritableStream get writable;
 }
@@ -303,13 +298,19 @@ final class TransformerValue implements Transformer {
   });
 }
 
-typedef TransformerCancelCallback = Future<void> Function(Object reason,);
+typedef TransformerCancelCallback = Future<void> Function(Object reason);
 
-typedef TransformerFlushCallback = Future<void> Function(TransformStreamDefaultController controller,);
+typedef TransformerFlushCallback =
+    Future<void> Function(TransformStreamDefaultController controller);
 
-typedef TransformerStartCallback = Object Function(TransformStreamDefaultController controller,);
+typedef TransformerStartCallback =
+    Object Function(TransformStreamDefaultController controller);
 
-typedef TransformerTransformCallback = Future<void> Function(Object chunk, TransformStreamDefaultController controller,);
+typedef TransformerTransformCallback =
+    Future<void> Function(
+      Object chunk,
+      TransformStreamDefaultController controller,
+    );
 
 abstract interface class UnderlyingSink {
   UnderlyingSinkStartCallback? get start;
@@ -320,8 +321,8 @@ abstract interface class UnderlyingSink {
   set close(UnderlyingSinkCloseCallback? value);
   UnderlyingSinkAbortCallback? get abort;
   set abort(UnderlyingSinkAbortCallback? value);
-  Object? get type;
-  set type(Object? value);
+  Object? get type_;
+  set type_(Object? value);
 }
 
 final class UnderlyingSinkValue implements UnderlyingSink {
@@ -334,24 +335,29 @@ final class UnderlyingSinkValue implements UnderlyingSink {
   @override
   UnderlyingSinkAbortCallback? abort;
   @override
-  Object? type;
+  Object? type_;
 
   UnderlyingSinkValue({
     this.start,
     this.write,
     this.close,
     this.abort,
-    this.type,
+    this.type_,
   });
 }
 
-typedef UnderlyingSinkAbortCallback = Future<void> Function(Object reason,);
+typedef UnderlyingSinkAbortCallback = Future<void> Function(Object reason);
 
 typedef UnderlyingSinkCloseCallback = Future<void> Function();
 
-typedef UnderlyingSinkStartCallback = Object Function(WritableStreamDefaultController controller,);
+typedef UnderlyingSinkStartCallback =
+    Object Function(WritableStreamDefaultController controller);
 
-typedef UnderlyingSinkWriteCallback = Future<void> Function(Object chunk, WritableStreamDefaultController controller,);
+typedef UnderlyingSinkWriteCallback =
+    Future<void> Function(
+      Object chunk,
+      WritableStreamDefaultController controller,
+    );
 
 abstract interface class UnderlyingSource {
   UnderlyingSourceStartCallback? get start;
@@ -360,8 +366,8 @@ abstract interface class UnderlyingSource {
   set pull(UnderlyingSourcePullCallback? value);
   UnderlyingSourceCancelCallback? get cancel;
   set cancel(UnderlyingSourceCancelCallback? value);
-  ReadableStreamType? get type;
-  set type(ReadableStreamType? value);
+  ReadableStreamType? get type_;
+  set type_(ReadableStreamType? value);
   int? get autoAllocateChunkSize;
   set autoAllocateChunkSize(int? value);
 }
@@ -374,7 +380,7 @@ final class UnderlyingSourceValue implements UnderlyingSource {
   @override
   UnderlyingSourceCancelCallback? cancel;
   @override
-  ReadableStreamType? type;
+  ReadableStreamType? type_;
   @override
   int? autoAllocateChunkSize;
 
@@ -382,23 +388,25 @@ final class UnderlyingSourceValue implements UnderlyingSource {
     this.start,
     this.pull,
     this.cancel,
-    this.type,
+    this.type_,
     this.autoAllocateChunkSize,
   });
 }
 
-typedef UnderlyingSourceCancelCallback = Future<void> Function(Object reason,);
+typedef UnderlyingSourceCancelCallback = Future<void> Function(Object reason);
 
-typedef UnderlyingSourcePullCallback = Future<void> Function(ReadableStreamController controller,);
+typedef UnderlyingSourcePullCallback =
+    Future<void> Function(ReadableStreamController controller);
 
-typedef UnderlyingSourceStartCallback = Object Function(ReadableStreamController controller,);
+typedef UnderlyingSourceStartCallback =
+    Object Function(ReadableStreamController controller);
 
 abstract interface class WritableStream {
   factory WritableStream([Object? underlyingSink, QueuingStrategy? strategy]) =>
-      WebRuntime.current.createWebObject<WritableStream>(
-        'WritableStream',
-        [underlyingSink, strategy],
-      );
+      WebRuntime.current.createWebObject<WritableStream>('WritableStream', [
+        underlyingSink,
+        strategy,
+      ]);
   bool get locked;
   Future<void> abort([Object? reason]);
   Future<void> close();
@@ -424,4 +432,3 @@ abstract interface class WritableStreamDefaultWriter {
   void releaseLock();
   Future<void> write([Object? chunk]);
 }
-

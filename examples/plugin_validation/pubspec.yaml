@@ -8,14 +8,16 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  react: {path: ../../packages/react}
-  react_analysis: {path: ../../packages/react_analysis}
-  react_web: {path: ../../packages/react_web}
+  react: ^0.1.0
+  react_analysis: ^0.1.0
+  react_js: ^0.1.0
+  react_web: ^0.1.0
+  web: ^1.1.1
 
 dev_dependencies:
   analyzer: ">=7.0.0 <16.0.0"
   build_runner: ^2.15.3
   lints: ^6.0.0
-  react_analyzer: {path: ../../packages/react_analyzer}
-  react_codegen: {path: ../../packages/react_codegen}
+  react_analyzer: ^0.1.0
+  react_codegen: ^0.1.0
   test: ^1.31.2

@@ -2,16 +2,15 @@
 // Neutral Web surface for spec: IndexedDB
 // ignore_for_file: type=lint
 
-import 'html.dart';
-import 'webidl.dart';
-import 'dom.dart';
 import 'webcryptoapi.dart';
-import 'fetch.dart';
 import 'attribution_reporting_api.dart';
 import 'event_timing.dart';
+import 'fetch.dart';
+import 'html.dart';
 import 'scheduling_apis.dart';
 import 'service_workers.dart';
 import 'trusted_types.dart';
+import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class IDBCursor {
@@ -37,18 +36,25 @@ abstract interface class IDBDatabase {
   String get name;
   int get version;
   DOMStringList get objectStoreNames;
-  IDBTransaction transaction(Object storeNames, [IDBTransactionMode? mode, IDBTransactionOptions? options]);
+  IDBTransaction transaction(
+    Object storeNames, [
+    IDBTransactionMode? mode,
+    IDBTransactionOptions? options,
+  ]);
   void close();
-  IDBObjectStore createObjectStore(String name, [IDBObjectStoreParameters? options]);
+  IDBObjectStore createObjectStore(
+    String name, [
+    IDBObjectStoreParameters? options,
+  ]);
   void deleteObjectStore(String name);
   EventHandler get onabort;
-   set onabort(EventHandler value);
+  set onabort(EventHandler value);
   EventHandler get onclose;
-   set onclose(EventHandler value);
+  set onclose(EventHandler value);
   EventHandler get onerror;
-   set onerror(EventHandler value);
+  set onerror(EventHandler value);
   EventHandler get onversionchange;
-   set onversionchange(EventHandler value);
+  set onversionchange(EventHandler value);
 }
 
 abstract interface class IDBDatabaseInfo {
@@ -64,10 +70,7 @@ final class IDBDatabaseInfoValue implements IDBDatabaseInfo {
   @override
   int? version;
 
-  IDBDatabaseInfoValue({
-    this.name,
-    this.version,
-  });
+  IDBDatabaseInfoValue({this.name, this.version});
 }
 
 abstract interface class IDBFactory {
@@ -79,7 +82,7 @@ abstract interface class IDBFactory {
 
 abstract interface class IDBIndex {
   String get name;
-   set name(String value);
+  set name(String value);
   IDBObjectStore get objectStore;
   Object get keyPath;
   bool get multiEntry;
@@ -106,10 +109,7 @@ final class IDBIndexParametersValue implements IDBIndexParameters {
   @override
   bool? multiEntry;
 
-  IDBIndexParametersValue({
-    this.unique,
-    this.multiEntry,
-  });
+  IDBIndexParametersValue({this.unique, this.multiEntry});
 }
 
 abstract interface class IDBKeyRange {
@@ -122,7 +122,7 @@ abstract interface class IDBKeyRange {
 
 abstract interface class IDBObjectStore {
   String get name;
-   set name(String value);
+  set name(String value);
   Object get keyPath;
   DOMStringList get indexNames;
   IDBTransaction get transaction;
@@ -139,7 +139,11 @@ abstract interface class IDBObjectStore {
   IDBRequest openCursor([Object? query, IDBCursorDirection? direction]);
   IDBRequest openKeyCursor([Object? query, IDBCursorDirection? direction]);
   IDBIndex index(String name);
-  IDBIndex createIndex(String name, Object keyPath, [IDBIndexParameters? options]);
+  IDBIndex createIndex(
+    String name,
+    Object keyPath, [
+    IDBIndexParameters? options,
+  ]);
   void deleteIndex(String name);
 }
 
@@ -156,17 +160,14 @@ final class IDBObjectStoreParametersValue implements IDBObjectStoreParameters {
   @override
   bool? autoIncrement;
 
-  IDBObjectStoreParametersValue({
-    this.keyPath,
-    this.autoIncrement,
-  });
+  IDBObjectStoreParametersValue({this.keyPath, this.autoIncrement});
 }
 
 abstract interface class IDBOpenDBRequest {
   EventHandler get onblocked;
-   set onblocked(EventHandler value);
+  set onblocked(EventHandler value);
   EventHandler get onupgradeneeded;
-   set onupgradeneeded(EventHandler value);
+  set onupgradeneeded(EventHandler value);
 }
 
 abstract interface class IDBRequest {
@@ -176,9 +177,9 @@ abstract interface class IDBRequest {
   IDBTransaction? get transaction;
   IDBRequestReadyState get readyState;
   EventHandler get onsuccess;
-   set onsuccess(EventHandler value);
+  set onsuccess(EventHandler value);
   EventHandler get onerror;
-   set onerror(EventHandler value);
+  set onerror(EventHandler value);
 }
 
 typedef IDBRequestReadyState = String;
@@ -193,11 +194,11 @@ abstract interface class IDBTransaction {
   void commit();
   void abort();
   EventHandler get onabort;
-   set onabort(EventHandler value);
+  set onabort(EventHandler value);
   EventHandler get oncomplete;
-   set oncomplete(EventHandler value);
+  set oncomplete(EventHandler value);
   EventHandler get onerror;
-   set onerror(EventHandler value);
+  set onerror(EventHandler value);
 }
 
 typedef IDBTransactionDurability = String;
@@ -213,17 +214,17 @@ final class IDBTransactionOptionsValue implements IDBTransactionOptions {
   @override
   IDBTransactionDurability? durability;
 
-  IDBTransactionOptionsValue({
-    this.durability,
-  });
+  IDBTransactionOptionsValue({this.durability});
 }
 
 abstract interface class IDBVersionChangeEvent {
-  factory IDBVersionChangeEvent(String type, [IDBVersionChangeEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<IDBVersionChangeEvent>(
-        'IDBVersionChangeEvent',
-        [type, eventInitDict],
-      );
+  factory IDBVersionChangeEvent(
+    String type_, [
+    IDBVersionChangeEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<IDBVersionChangeEvent>(
+    'IDBVersionChangeEvent',
+    [type_, eventInitDict],
+  );
   int get oldVersion;
   int? get newVersion;
 }
@@ -235,16 +236,14 @@ abstract interface class IDBVersionChangeEventInit {
   set newVersion(int? value);
 }
 
-final class IDBVersionChangeEventInitValue implements IDBVersionChangeEventInit {
+final class IDBVersionChangeEventInitValue
+    implements IDBVersionChangeEventInit {
   @override
   int? oldVersion;
   @override
   int? newVersion;
 
-  IDBVersionChangeEventInitValue({
-    this.oldVersion,
-    this.newVersion,
-  });
+  IDBVersionChangeEventInitValue({this.oldVersion, this.newVersion});
 }
 
 abstract interface class WindowOrWorkerGlobalScope {
@@ -260,13 +259,23 @@ abstract interface class WindowOrWorkerGlobalScope {
   String atob(String data);
   int setTimeout(TimerHandler handler, [int? timeout, List<Object>? arguments]);
   void clearTimeout([int? id]);
-  int setInterval(TimerHandler handler, [int? timeout, List<Object>? arguments]);
+  int setInterval(
+    TimerHandler handler, [
+    int? timeout,
+    List<Object>? arguments,
+  ]);
   void clearInterval([int? id]);
   void queueMicrotask(VoidFunction callback);
-  Future<ImageBitmap> createImageBitmap(ImageBitmapSource image, int sx, int sy, int sw, int sh, [ImageBitmapOptions? options]);
+  Future<ImageBitmap> createImageBitmap(
+    ImageBitmapSource image,
+    int sx,
+    int sy,
+    int sw,
+    int sh, [
+    ImageBitmapOptions? options,
+  ]);
   Object structuredClone(Object value, [StructuredSerializeOptions? options]);
   Scheduler get scheduler;
   CacheStorage get caches;
   TrustedTypePolicyFactory get trustedTypes;
 }
-

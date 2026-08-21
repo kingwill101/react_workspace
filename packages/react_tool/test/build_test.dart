@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 
 import 'package:react_tool/react_tool.dart';
+import 'package:react_tool/src/bundler/esbuild_bundler.dart';
 import 'package:test/test.dart';
 
 /// Stub package manager: answers `npm view <spec> version` with a semver and
@@ -85,6 +86,12 @@ exit 0
 }
 
 void main() {
+  test('esbuild resolves managed packages from npmRoot/node_modules', () {
+    expect(esbuildNodePaths('/managed/js'), [
+      p.join('/managed/js', 'node_modules'),
+    ]);
+  });
+
   late Directory root;
 
   setUp(() async {
@@ -100,6 +107,7 @@ foreign:
     props:
       label: String
       disabled: bool?
+      onPressed: Function
 ''');
     await Directory('${root.path}/web').create(recursive: true);
     await File(
@@ -124,6 +132,94 @@ $accent: #336699;
     if (root.existsSync()) await root.delete(recursive: true);
   });
 
+  test(
+    'managed React version can be overridden for compatibility tests',
+    () async {
+      final config = ReactProjectConfig.load(root);
+      final builder = ReactBuilder(
+        config: config,
+        release: false,
+        managedReactVersion: '19.0.0',
+        log: (_) {},
+        npmCommand: await writeNpmStub(root),
+      );
+
+      await builder.ensureJsEnvironment();
+
+      final manifest =
+          jsonDecode(
+                await File(
+                  '${root.path}/.dart_tool/react/js/package.json',
+                ).readAsString(),
+              )
+              as Map<String, dynamic>;
+      final dependencies = manifest['dependencies'] as Map<String, dynamic>;
+      expect(dependencies['react'], '19.0.0');
+      expect(dependencies['react-dom'], '19.0.0');
+    },
+  );
+
+  test('removes synchronized generated sources', () async {
+    final generated = Directory('${root.path}/lib/.generated');
+    await generated.create(recursive: true);
+    await File('${generated.path}/app.react.dart').writeAsString('// output');
+    final logs = <String>[];
+    final builder = ReactBuilder(
+      config: ReactProjectConfig.load(root),
+      release: false,
+      log: logs.add,
+    );
+
+    expect(await builder.cleanGeneratedSources(), isTrue);
+    expect(generated.existsSync(), isFalse);
+    expect(logs.single, contains('lib/.generated'));
+    expect(await builder.cleanGeneratedSources(), isFalse);
+  });
+
+  test('synchronizes workspace build outputs and relocates imports', () async {
+    await Directory('${root.path}/lib').create(recursive: true);
+    await File(
+      '${root.path}/lib/app.dart',
+    ).writeAsString('const appTitle = \'sample\';\n');
+    final generated = Directory(
+      '${root.path}/.dart_tool/build/generated/sample/lib/pages',
+    );
+    await generated.create(recursive: true);
+    await File('${generated.path}/card.react.dart').writeAsString('''
+import '../app.dart';
+import 'package:sample/pages/card.action.g.dart';
+
+const generatedTitle = appTitle;
+''');
+    await File('${generated.path}/card.action.g.dart').writeAsString('''
+const actionName = 'card';
+''');
+    final logs = <String>[];
+    final builder = ReactBuilder(
+      config: ReactProjectConfig.load(root),
+      release: false,
+      log: logs.add,
+    );
+
+    await builder.syncGeneratedSources();
+
+    final synchronized = File(
+      '${root.path}/lib/.generated/pages/card.react.dart',
+    );
+    expect(synchronized.existsSync(), isTrue);
+    final content = await synchronized.readAsString();
+    expect(content, contains("import '../../app.dart';"));
+    expect(
+      content,
+      contains("import 'package:sample/.generated/pages/card.action.g.dart';"),
+    );
+    expect(
+      File('${root.path}/lib/.generated/pages/card.action.g.dart').existsSync(),
+      isTrue,
+    );
+    expect(logs, contains(contains('Synced 2 generated sources')));
+  });
+
   test('compiles configured Sass into the React output', () async {
     final config = ReactProjectConfig.load(root);
     final builder = ReactBuilder(
@@ -138,8 +234,8 @@ $accent: #336699;
     final index = await File(
       '${root.path}/build/react/index.html',
     ).readAsString();
-    expect(index, contains('href="theme.css"'));
-    expect(index, contains('href="card.module.css"'));
+    expect(index, contains('href="/theme.css"'));
+    expect(index, contains('href="/card.module.css"'));
 
     final css = await File('${root.path}/build/react/theme.css').readAsString();
     expect(css, contains('.card'));
@@ -185,40 +281,44 @@ $accent: #336699;
 
       final binary = Platform.isWindows ? 'server.exe' : 'server';
       final serverFile = File('${root.path}/build/react/$binary');
-      expect(serverFile.existsSync(), isTrue,
-          reason: 'expected server binary at build/react/$binary');
-      final manifest = jsonDecode(
-        await File(
-          '${root.path}/build/react/bundle_manifest.json',
-        ).readAsString(),
-      ) as Map<String, Object?>;
+      expect(
+        serverFile.existsSync(),
+        isTrue,
+        reason: 'expected server binary at build/react/$binary',
+      );
+      final manifest =
+          jsonDecode(
+                await File(
+                  '${root.path}/build/react/bundle_manifest.json',
+                ).readAsString(),
+              )
+              as Map<String, Object?>;
       expect(manifest['server'], {'binary': './$binary'});
     },
   );
 
-  test(
-    'skips the server compile when the entrypoint is missing',
-    () async {
-      final config = ReactProjectConfig.load(root);
-      final builder = ReactBuilder(
-        config: config,
-        release: false,
-        server: true,
-        log: (_) {},
-        npmCommand: await writeNpmStub(root),
-      );
+  test('skips the server compile when the entrypoint is missing', () async {
+    final config = ReactProjectConfig.load(root);
+    final builder = ReactBuilder(
+      config: config,
+      release: false,
+      server: true,
+      log: (_) {},
+      npmCommand: await writeNpmStub(root),
+    );
 
-      await builder.build();
+    await builder.build();
 
-      expect(File('${root.path}/build/react/server').existsSync(), isFalse);
-      final manifest = jsonDecode(
-        await File(
-          '${root.path}/build/react/bundle_manifest.json',
-        ).readAsString(),
-      ) as Map<String, Object?>;
-      expect(manifest.containsKey('server'), isFalse);
-    },
-  );
+    expect(File('${root.path}/build/react/server').existsSync(), isFalse);
+    final manifest =
+        jsonDecode(
+              await File(
+                '${root.path}/build/react/bundle_manifest.json',
+              ).readAsString(),
+            )
+            as Map<String, Object?>;
+    expect(manifest.containsKey('server'), isFalse);
+  });
 
   test(
     'bundles project foreign components into per-target aggregates',
@@ -242,10 +342,14 @@ $accent: #336699;
         expect(entry, contains("__reactDartRegisterComponent('Card'"));
       }
       final foreignBindings = await File(
-        '${root.path}/lib/foreign_components.g.dart',
+        '${root.path}/lib/.generated/foreign_components.g.dart',
       ).readAsString();
       expect(foreignBindings, contains('required String label'));
       expect(foreignBindings, contains('bool? disabled'));
+      expect(
+        foreignBindings,
+        contains('required react.ReactCallback onPressed'),
+      );
       expect(foreignBindings, contains("'Card'"));
       // The managed environment was provisioned, not the host package.json.
       expect(
@@ -279,9 +383,10 @@ react:
 ''');
       await Directory('${dep.path}/lib').create(recursive: true);
       await File('${dep.path}/lib/fake_router_shim.mjs').writeAsString('''
+import Widget from 'fake-widget-lib';
 globalThis.__reactDartRegisterComponent?.(
   'fakeRouter.Panel',
-  () => null,
+  Widget,
 );
 ''');
 
@@ -559,7 +664,11 @@ globalThis.ReactDOM = ReactDOM;
       final index = await File(
         '${root.path}/build/react/index.html',
       ).readAsString();
-      expect(index, contains('<script type="module" src="browser.entry.mjs">'));
+      expect(
+        index,
+        contains('<script type="module" src="/browser.entry.mjs">'),
+      );
+      expect(index, contains('href="/card.module.css"'));
       expect(index, isNot(contains('src="client.js"')));
       expect(index, isNot(contains('globalThis.React')));
       expect(index, contains('react@18.3.1'));
@@ -607,11 +716,13 @@ globalThis.ReactDOM = ReactDOM;
       expect(parsed.ssrEntry, 'ssr.entry.mjs');
       expect(parsed.ssr?.runtime, 'ssr_runtime.mjs');
 
-      final report = jsonDecode(
-            await File('${root.path}/build/react/bundle_report.json')
-                .readAsString(),
-          )
-          as Map;
+      final report =
+          jsonDecode(
+                await File(
+                  '${root.path}/build/react/bundle_report.json',
+                ).readAsString(),
+              )
+              as Map;
       expect(report['schema'], 1);
       expect(report['mode'], 'development');
       for (final target in ['browser', 'ssr']) {
@@ -694,10 +805,7 @@ foreign:
             as Map;
     for (final target in ['browser', 'ssr']) {
       final targetReport = report[target] as Map;
-      expect(
-        (targetReport['artifacts'] as int),
-        greaterThanOrEqualTo(1),
-      );
+      expect((targetReport['artifacts'] as int), greaterThanOrEqualTo(1));
       expect((targetReport['uncompressedBytes'] as int), greaterThan(0));
       expect(targetReport['retainedExports'], isEmpty);
     }

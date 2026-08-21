@@ -2,10 +2,9 @@
 // Neutral Web surface for spec: secure-payment-confirmation
 // ignore_for_file: type=lint
 
-import 'payment_request.dart';
-import 'webauthn.dart';
-import 'webidl.dart';
 import 'fido.dart';
+import 'payment_request.dart';
+import 'webidl.dart';
 
 abstract interface class AuthenticationExtensionsPaymentInputs {
   bool? get isPayment;
@@ -24,7 +23,8 @@ abstract interface class AuthenticationExtensionsPaymentInputs {
   set instrument(PaymentCredentialInstrument? value);
 }
 
-final class AuthenticationExtensionsPaymentInputsValue implements AuthenticationExtensionsPaymentInputs {
+final class AuthenticationExtensionsPaymentInputsValue
+    implements AuthenticationExtensionsPaymentInputs {
   @override
   bool? isPayment;
   @override
@@ -66,7 +66,8 @@ abstract interface class CollectedClientAdditionalPaymentData {
   set instrument(PaymentCredentialInstrument value);
 }
 
-final class CollectedClientAdditionalPaymentDataValue implements CollectedClientAdditionalPaymentData {
+final class CollectedClientAdditionalPaymentDataValue
+    implements CollectedClientAdditionalPaymentData {
   @override
   String rpId;
   @override
@@ -95,13 +96,12 @@ abstract interface class CollectedClientPaymentData {
   set payment(CollectedClientAdditionalPaymentData value);
 }
 
-final class CollectedClientPaymentDataValue implements CollectedClientPaymentData {
+final class CollectedClientPaymentDataValue
+    implements CollectedClientPaymentData {
   @override
   CollectedClientAdditionalPaymentData payment;
 
-  CollectedClientPaymentDataValue({
-    required this.payment,
-  });
+  CollectedClientPaymentDataValue({required this.payment});
 }
 
 abstract interface class PaymentCredentialInstrument {
@@ -113,7 +113,8 @@ abstract interface class PaymentCredentialInstrument {
   set iconMustBeShown(bool? value);
 }
 
-final class PaymentCredentialInstrumentValue implements PaymentCredentialInstrument {
+final class PaymentCredentialInstrumentValue
+    implements PaymentCredentialInstrument {
   @override
   String displayName;
   @override
@@ -151,7 +152,8 @@ abstract interface class SecurePaymentConfirmationRequest {
   set showOptOut(bool? value);
 }
 
-final class SecurePaymentConfirmationRequestValue implements SecurePaymentConfirmationRequest {
+final class SecurePaymentConfirmationRequestValue
+    implements SecurePaymentConfirmationRequest {
   @override
   BufferSource challenge;
   @override
@@ -186,4 +188,3 @@ final class SecurePaymentConfirmationRequestValue implements SecurePaymentConfir
     this.showOptOut,
   });
 }
-

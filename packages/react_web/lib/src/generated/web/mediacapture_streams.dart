@@ -2,11 +2,9 @@
 // Neutral Web surface for spec: mediacapture-streams
 // ignore_for_file: type=lint
 
-import 'permissions.dart';
-import 'dom.dart';
-import 'image_capture.dart';
 import 'capture_handle_identity.dart';
 import 'html.dart';
+import 'image_capture.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CameraDevicePermissionDescriptor {
@@ -14,13 +12,12 @@ abstract interface class CameraDevicePermissionDescriptor {
   set panTiltZoom(bool? value);
 }
 
-final class CameraDevicePermissionDescriptorValue implements CameraDevicePermissionDescriptor {
+final class CameraDevicePermissionDescriptorValue
+    implements CameraDevicePermissionDescriptor {
   @override
   bool? panTiltZoom;
 
-  CameraDevicePermissionDescriptorValue({
-    this.panTiltZoom,
-  });
+  CameraDevicePermissionDescriptorValue({this.panTiltZoom});
 }
 
 typedef ConstrainBoolean = Object;
@@ -32,16 +29,14 @@ abstract interface class ConstrainBooleanParameters {
   set ideal(bool? value);
 }
 
-final class ConstrainBooleanParametersValue implements ConstrainBooleanParameters {
+final class ConstrainBooleanParametersValue
+    implements ConstrainBooleanParameters {
   @override
   bool? exact;
   @override
   bool? ideal;
 
-  ConstrainBooleanParametersValue({
-    this.exact,
-    this.ideal,
-  });
+  ConstrainBooleanParametersValue({this.exact, this.ideal});
 }
 
 typedef ConstrainDOMString = Object;
@@ -53,16 +48,14 @@ abstract interface class ConstrainDOMStringParameters {
   set ideal(Object? value);
 }
 
-final class ConstrainDOMStringParametersValue implements ConstrainDOMStringParameters {
+final class ConstrainDOMStringParametersValue
+    implements ConstrainDOMStringParameters {
   @override
   Object? exact;
   @override
   Object? ideal;
 
-  ConstrainDOMStringParametersValue({
-    this.exact,
-    this.ideal,
-  });
+  ConstrainDOMStringParametersValue({this.exact, this.ideal});
 }
 
 typedef ConstrainDouble = Object;
@@ -80,10 +73,7 @@ final class ConstrainDoubleRangeValue implements ConstrainDoubleRange {
   @override
   double? ideal;
 
-  ConstrainDoubleRangeValue({
-    this.exact,
-    this.ideal,
-  });
+  ConstrainDoubleRangeValue({this.exact, this.ideal});
 }
 
 typedef ConstrainULong = Object;
@@ -101,10 +91,7 @@ final class ConstrainULongRangeValue implements ConstrainULongRange {
   @override
   int? ideal;
 
-  ConstrainULongRangeValue({
-    this.exact,
-    this.ideal,
-  });
+  ConstrainULongRangeValue({this.exact, this.ideal});
 }
 
 abstract interface class DeviceChangeEventInit {
@@ -116,9 +103,7 @@ final class DeviceChangeEventInitValue implements DeviceChangeEventInit {
   @override
   List<MediaDeviceInfo>? devices;
 
-  DeviceChangeEventInitValue({
-    this.devices,
-  });
+  DeviceChangeEventInitValue({this.devices});
 }
 
 abstract interface class DoubleRange {
@@ -134,10 +119,7 @@ final class DoubleRangeValue implements DoubleRange {
   @override
   double? min;
 
-  DoubleRangeValue({
-    this.max,
-    this.min,
-  });
+  DoubleRangeValue({this.max, this.min});
 }
 
 abstract interface class InputDeviceInfo {
@@ -156,20 +138,11 @@ typedef MediaDeviceKind = String;
 
 abstract interface class MediaStream {
   factory MediaStream() =>
-      WebRuntime.current.createWebObject<MediaStream>(
-        'MediaStream',
-        [],
-      );
+      WebRuntime.current.createWebObject<MediaStream>('MediaStream', []);
   factory MediaStream.named1(MediaStream stream) =>
-      WebRuntime.current.createWebObject<MediaStream>(
-        'MediaStream',
-        [stream],
-      );
+      WebRuntime.current.createWebObject<MediaStream>('MediaStream', [stream]);
   factory MediaStream.named2(List<MediaStreamTrack> tracks) =>
-      WebRuntime.current.createWebObject<MediaStream>(
-        'MediaStream',
-        [tracks],
-      );
+      WebRuntime.current.createWebObject<MediaStream>('MediaStream', [tracks]);
   String get id;
   List<MediaStreamTrack> getAudioTracks();
   List<MediaStreamTrack> getVideoTracks();
@@ -180,9 +153,9 @@ abstract interface class MediaStream {
   MediaStream clone();
   bool get active;
   EventHandler get onaddtrack;
-   set onaddtrack(EventHandler value);
+  set onaddtrack(EventHandler value);
   EventHandler get onremovetrack;
-   set onremovetrack(EventHandler value);
+  set onremovetrack(EventHandler value);
 }
 
 abstract interface class MediaStreamConstraints {
@@ -215,11 +188,13 @@ final class MediaStreamConstraintsValue implements MediaStreamConstraints {
 }
 
 abstract interface class MediaStreamTrackEvent {
-  factory MediaStreamTrackEvent(String type, MediaStreamTrackEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<MediaStreamTrackEvent>(
-        'MediaStreamTrackEvent',
-        [type, eventInitDict],
-      );
+  factory MediaStreamTrackEvent(
+    String type_,
+    MediaStreamTrackEventInit eventInitDict,
+  ) => WebRuntime.current.createWebObject<MediaStreamTrackEvent>(
+    'MediaStreamTrackEvent',
+    [type_, eventInitDict],
+  );
   MediaStreamTrack get track;
 }
 
@@ -228,13 +203,12 @@ abstract interface class MediaStreamTrackEventInit {
   set track(MediaStreamTrack value);
 }
 
-final class MediaStreamTrackEventInitValue implements MediaStreamTrackEventInit {
+final class MediaStreamTrackEventInitValue
+    implements MediaStreamTrackEventInit {
   @override
   MediaStreamTrack track;
 
-  MediaStreamTrackEventInitValue({
-    required this.track,
-  });
+  MediaStreamTrackEventInitValue({required this.track});
 }
 
 typedef MediaStreamTrackState = String;
@@ -248,9 +222,7 @@ final class MediaTrackConstraintsValue implements MediaTrackConstraints {
   @override
   List<MediaTrackConstraintSet>? advanced;
 
-  MediaTrackConstraintsValue({
-    this.advanced,
-  });
+  MediaTrackConstraintsValue({this.advanced});
 }
 
 abstract interface class OverconstrainedError {
@@ -275,13 +247,9 @@ final class ULongRangeValue implements ULongRange {
   @override
   int? min;
 
-  ULongRangeValue({
-    this.max,
-    this.min,
-  });
+  ULongRangeValue({this.max, this.min});
 }
 
 typedef VideoFacingModeEnum = String;
 
 typedef VideoResizeModeEnum = String;
-

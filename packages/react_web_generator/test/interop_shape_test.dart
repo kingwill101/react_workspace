@@ -40,13 +40,18 @@ void main() {
     });
 
     test('CallbackShape stores parameters and result', () {
-      const shape = CallbackShape([InterfaceShape('MessageEvent')], PrimitiveShape('void'));
+      const shape = CallbackShape([
+        InterfaceShape('MessageEvent'),
+      ], PrimitiveShape('void'));
       expect(shape.parameters, hasLength(1));
       expect(shape.result, isA<PrimitiveShape>());
     });
 
     test('UnionShape stores options', () {
-      const shape = UnionShape([PrimitiveShape('String'), PrimitiveShape('int')]);
+      const shape = UnionShape([
+        PrimitiveShape('String'),
+        PrimitiveShape('int'),
+      ]);
       expect(shape.options, hasLength(2));
     });
 
@@ -57,7 +62,10 @@ void main() {
     });
 
     test('RecordShape stores key and value', () {
-      const mapShape = RecordShape(PrimitiveShape('String'), PrimitiveShape('int'));
+      const mapShape = RecordShape(
+        PrimitiveShape('String'),
+        PrimitiveShape('int'),
+      );
       expect(mapShape.key, isA<PrimitiveShape>());
       expect(mapShape.value, isA<PrimitiveShape>());
     });

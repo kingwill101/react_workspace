@@ -1,55 +1,78 @@
-# React Dart Server & SSR (`react_server`)
+# react_server
 
-Server-side rendering (SSR) and server orchestration for React Dart.
+Transport-neutral SSR and server-function runtime for React Dart.
 
-## Ecosystem Role
-
-`react_server` provides the necessary glue to render your React Dart component tree into an HTML string on the server using React's native `ReactDOMServer`. It integrates with `react_js` to provide the server context, error boundary fallbacks, and server-side component registration required to bootstrap a full-stack Dart application.
+The package contains the server-function context and registry, the VM-side SSR
+worker client, and the Node-side React renderer. It has no Shelf or Routed
+dependency.
 
 ## Installation
 
-Add `react_server` to your `dependencies`:
+```yaml
+dependencies:
+  react_server: ^0.1.0
+```
+
+Choose a separate HTTP adapter:
 
 ```yaml
 dependencies:
-  react_server:
-    path: packages/react_server
+  react_server_routed: ^0.1.0
+  # or
+  react_server_shelf: ^0.1.0
 ```
 
-## How to Use
+## Server functions
 
-### Rendering Components
-
-Register your root rendering factory, which accepts the application properties and returns the root `ReactNode`:
+Create one registry and let generated code populate it:
 
 ```dart
+import 'package:my_app/.generated/server_actions.g.dart';
 import 'package:react_server/react_server.dart';
-import 'package:app/app.react.dart';
 
-void main() {
-  registerServerHandler((request) {
-    // Read route or session properties passed from the HTTP layer
-    final url = request['url'] as String;
-    return App(url: url);
-  });
+final actions = ServerFunctionRegistry();
+
+void registerActions() {
+  registerServerActions(registry: actions);
 }
 ```
 
-### SSR Invocation
+Each handler receives a `ServerFunctionContext` containing request metadata,
+authentication state, request headers, deadlines, and cancellation. Concrete
+server adapters translate their request type into this context.
 
-The `renderToString` method expands the `ReactNode` tree recursively and forwards it to `ReactDOMServer.renderToString`. Components are intelligently expanded via `React.createElement` so that standard React hooks (like `useContext` and `useMemo`) execute with full accuracy on the backend.
+## SSR worker client
+
+The Dart VM server communicates with the generated Node worker through
+`ReactSsrClient`:
 
 ```dart
-import 'package:react_server/react_server.dart';
-import 'package:app/app.react.dart';
+final ssr = ReactSsrClient(
+  endpoint: Uri.parse('http://127.0.0.1:3001/'),
+);
 
-String render(String url) {
-  return renderToString(App(url: url));
-}
+final document = await ssr.render(
+  component: 'package:my_app/lib/app.dart#App',
+  props: {'title': 'Dashboard'},
+);
 ```
 
-## Architecture Notes
+`ReactSsrDocument` contains rendered HTML and serialized props. The HTTP
+adapter injects both into the configured index template.
 
-- **Tree Expansion:** To render on the server, `react_server` traverses the `ReactNode` tree and expands component nodes dynamically. It registers generated components and foreign JS wrappers, passing mapped properties to JavaScript. 
-- **Error Boundaries:** React natively struggles to recover from render-time errors on the server without crashing the response. `react_server` tracks `ErrorBoundary` boundaries and provides a fallback mode. If a render fails, it catches the exception and gracefully retries rendering, substituting the failed component's boundary with its defined fallback tree.
-- **Server Function Context:** This package also defines `ServerFunctionContext`, which is injected into your `@serverFunction`s to access HTTP request headers, sessions, and response cookies.
+## Node renderer entrypoint
+
+The application's `lib/ssr.dart` is compiled to JavaScript. It imports hidden
+generated factories and registries, registers component builders, and calls
+`registerGlobalRenderer`. The generated Node runtime then invokes
+`renderToString` inside a real React render stack, preserving hooks, contexts,
+foreign components, suspense, refs, memoization, and error boundaries.
+
+## Package boundary
+
+- HTTP request/response handling belongs in `react_server_routed` or
+  `react_server_shelf`.
+- Protocol annotations and browser clients belong in `react_actions`.
+- Build and worker process orchestration belongs in `react_tool`.
+- Test fixtures belong in `react_testing` and compose with the selected
+  `server_testing` adapter.

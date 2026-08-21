@@ -1,178 +1,123 @@
 # react
 
-> Pure Dart AST representations of React trees, host elements, and hook primitives.
+Portable React node, component, hook, context, ref, and runtime contracts for
+Dart.
 
-The `react` package is the core foundation of the React Dart workspace. It provides platform-agnostic primitives to describe a UI component tree and manage component state. It contains **zero** `dart:js_interop` code or browser-specific dependencies, ensuring complete platform portability across Dart VM (SSR, testing, CLI) and JavaScript runtimes (browsers, Node.js).
-
----
-
-## Role in the Ecosystem
-
-This package defines:
-- **`ReactNode`**: The sealed class hierarchy representing all nodes in a React tree (`Component`, `HostNode`, `ForeignComponent`, `Text`, `Fragment`, `Empty`).
-- **`HostNode` & `HostType`**: Abstract platform-neutral representations of native host elements (such as HTML tags like `div`, `span`, `input`).
-- **Hook Primitives**: Standard React hooks (`useState`, `useEffect`, `useLayoutEffect`, `useMemo`, `useCallback`, `useRef`, `useContext`, `useReducer`, `useSyncExternalStore`).
-- **Annotations**: `@ReactComponent` (or `@React()`) used by `react_codegen` to analyze and generate component factories and JS interop bridges.
-
-Because `package:react` is pure Dart, component files can be compiled and executed on native Dart VM servers for Server-Side Rendering (SSR) as well as inside browser JavaScript engines without triggering platform compilation errors.
-
----
+`react` contains no `dart:js_interop` or server-framework dependency. The same
+component model can therefore be consumed by browser rendering, Node SSR,
+native tests, code generation, and tooling.
 
 ## Installation
 
-Declare a path dependency in your workspace package `pubspec.yaml`:
-
 ```yaml
 dependencies:
-  react:
-    path: ../../packages/react
+  react: ^0.1.0
 ```
 
----
+Web applications normally depend on `react_dom` instead. Its entrypoint
+re-exports this package together with the typed host-element API.
 
-## What is `HostNode` and Why Is It Important?
+## Components
 
-In React, the UI tree consists of user-defined functional components and **host elements** (native platform elements, such as `<div>`, `<span>`, `<button>`, `<input>`).
-
-In traditional web frameworks, host elements are tightly coupled to browser DOM types (`dart:html` or `package:web`). However, importing browser DOM types into component files breaks Dart VM compilation when running on non-browser targets (such as SSR servers, CLI tools, or native VM unit tests).
-
-`package:react` solves this by introducing **`HostNode<P>`**:
+Author components as functions with one named record parameter:
 
 ```dart
-final class HostNode<P extends Record> extends ReactNode {
-  final HostType hostType;
-  final P props;
-  final Object? key;
-  final List<ReactNode> children;
-}
-```
+import 'package:react_dom/react_dom.dart';
 
-### Why `HostNode` Matters for SSR and Cross-Platform React
-
-1. **Decoupling Abstract AST from Platform Renderers**
-   `HostNode` stores element tags (e.g. `'div'`, `'input'`) and props as pure Dart records without referencing JS objects or DOM elements. Renderer packages (`react_js`, `react_dom`, `react_server`) decide how to materialize a `HostNode`:
-   - On the web client (`react_js` / `react_dom`), `HostNode` is converted into a `React.createElement` JS object.
-   - On the SSR server (`react_server`), `HostNode` is rendered to pure HTML string markup.
-
-2. **Isomorphic Component Definitions**
-   Component code written with `HostNode` runs identically during server rendering and client hydration. The compiler never encounters `dart:js_interop` extension types in component source files.
-
-3. **Strict Contract Preservation**
-   `HostNode` enforces exact prop contracts and child node structures across server and client boundaries, preventing hydration mismatch errors.
-
----
-
-## Core API & Node Types
-
-Every React Dart component function returns a `ReactNode`:
-
-| Node Type | Purpose | Example |
-|---|---|---|
-| `Component<P>` | Dart component node with typed props record and `ComponentId`. | Output by `@ReactComponent` generated factories. |
-| `HostNode<P>` | Native platform element (HTML tag or native host component). | `div(...)`, `input(...)`, `button(...)` |
-| `ForeignComponent` | Component implemented in external JS/TS (e.g. TSX / Vite bundle). | `foreignComponent('DatePicker', props: {...})` |
-| `Text` | Primitive text string node. | `Text('Hello World')` |
-| `Fragment` | Logical grouping of nodes without an enclosing DOM element. | `Fragment([nodeA, nodeB])` |
-| `Empty` | Represents `null` or absent render output. | `Empty()` |
-
----
-
-## Defining Components with `@ReactComponent`
-
-Functional components are defined using the `@ReactComponent` annotation. A component receives a named Dart record containing its props:
-
-```dart
-import 'package:react/react.dart';
-
-import 'user_card.react.dart'; // Generated factory file
-
-@ReactComponent
+@reactComponent
 ReactNode UserCard(({
   required String name,
-  required String role,
-  String? avatarUrl,
+  String? role,
+  ReactChildren children,
 }) props) {
-  final (isHovered, setHovered) = useState<bool>(false);
+  final (expanded, setExpanded) = useState(false);
 
-  return HostNode(
-    const HostType('div'),
-    (
-      className: isHovered ? 'card hover' : 'card',
-      onMouseEnter: (_) => setHovered(true),
-      onMouseLeave: (_) => setHovered(false),
-    ),
+  return article(
+    className: classNames('user-card', {'expanded': expanded}),
     children: [
-      Text('${props.name} - ${props.role}'),
+      h2(key: 'name', children: [props.name]),
+      if (props.role case final role?) p(key: 'role', children: [role]),
+      button(
+        key: 'toggle',
+        type: 'button',
+        onClick: (_) => setExpanded(!expanded),
+        children: [expanded ? 'Collapse' : 'Expand'],
+      ),
+      ...props.children,
     ],
   );
 }
 ```
 
-*Note: In practice, web applications use `package:react_web` which provides convenient HTML factories like `div(...)` and `span(...)` built on top of `HostNode`.*
+Run `react generate`, `react build`, or `react serve`. The generated callable
+factory is synchronized to
+`package:my_app/.generated/user_card.react.dart` and is imported by callers,
+not by the authored component itself.
 
----
+Component factories accept a stable `key`, normalize `ReactChildren`, and
+provide a `.props()` builder for composition-heavy call sites.
 
-## React Hooks API
+## Node model
 
-`package:react` exports standard React hooks. At runtime, hooks delegate to the active `ReactRuntime` registered by `react_js` or `react_server`:
+Every render result is a `ReactNode`. The portable hierarchy includes:
 
-```dart
-import 'package:react/react.dart';
+| Type | Purpose |
+| --- | --- |
+| `Component<P>` | Invocation of a generated Dart component with typed record props. |
+| `HostNode<P>` | Portable host element emitted by typed `react_web` factories. |
+| `ForeignComponent` | Registered JavaScript or TypeScript React component. |
+| `Text` | Explicit text node. Strings and numbers are also normalized as children. |
+| `Fragment` | Keyable child group without a host wrapper. |
+| `Empty` | Deliberately absent output. |
+| `LazyNode`, `MemoizedNode`, `ForwardRefNode` | React lazy, memo, and ref-forwarding contracts. |
 
-@ReactComponent
-ReactNode Counter(({int initialCount}) props) {
-  final (count, setCount) = useState<int>(props.initialCount ?? 0);
+Application code should use the typed factories re-exported by `react_dom`
+rather than constructing `HostNode` records manually.
 
-  useEffect(() {
-    print('Count updated to: $count');
-    return () => print('Cleaning up effect');
-  }, [count]);
+## Children and props helpers
 
-  final handleIncrement = useCallback(() {
-    setCount(count + 1);
-  }, [count]);
+`ReactChildren` is `Iterable<Object?>`. `normalizeChildren` converts nested
+iterables, strings, numbers, booleans, nulls, and existing nodes into the
+portable tree.
 
-  return HostNode(
-    const HostType('button'),
-    (onClick: (_) => handleIncrement()),
-    children: [Text('Count: $count')],
-  );
-}
-```
+Web-facing helpers available through `react_dom` include:
 
-Available hooks:
-- `useState<T>(initial)` -> `(T value, void Function(T) setValue)`
-- `useEffect(effect, [deps])`
-- `useLayoutEffect(effect, [deps])`
-- `useMemo<T>(factory, [deps])`
-- `useCallback<T>(callback, [deps])`
-- `useRef<T>(initial)` -> `Ref<T>`
-- `useContext<T>(context)`
-- `useReducer<S, A>(reducer, initialState)`
-- `useSyncExternalStore<T>(subscribe, getSnapshot, [getServerSnapshot])`
+- `css(...)` for typed style maps;
+- `classNames(...)` for conditional class composition;
+- `dataAttributes(...)` and `aria(...)` for additional props;
+- generated `<Element>.props()` builders for large prop sets.
 
----
+## Hooks
 
-## Rendering Foreign JS/TSX Components
+The public hook surface delegates to the active `ReactBinding`:
 
-To render a third-party React component from JavaScript/TypeScript without manual interop boilerplate, use `foreignComponent`:
+- `useState`, `useReducer`, `useEffect`, and `useLayoutEffect`;
+- `useMemo`, `useCallback`, `useRef`, and `useImperativeHandle`;
+- `useContext`, `useSyncExternalStore`, `useTransition`, and
+  `useDeferredValue`;
+- React 18/19 APIs including `useId`, `useOptimistic`, and
+  `useActionState`.
 
-```dart
-foreignComponent(
-  'RadixDialog',
-  props: {
-    'open': isOpen,
-    'onOpenChange': (val) => setOpen(val),
-  },
-  children: [/* children nodes */],
-);
-```
+The workspace supports React 18 and 19. A hook missing from the active runtime
+throws a descriptive `UnsupportedError`; do not infer API support only from a
+successful npm installation.
 
----
+Hooks must run while a component is rendered and at the top level of a
+component or custom `use*` function. `react_analysis` and `react_analyzer`
+provide matching diagnostics.
 
-## Relationship to Other Workspace Packages
+## Runtime features
 
-- **`react_web`**: Builds on `package:react` by specializing `HostNode` into strongly-typed HTML element factories (`div`, `button`, `input`) and wrapping web/DOM APIs into portable representations.
-- **`react_js`**: Materializes `ReactNode` trees into JavaScript objects (`React.createElement`) on browser targets.
-- **`react_codegen`**: Analyzes `@ReactComponent` annotations and generates `.react.dart` factories and JS bridge bindings.
-- **`react_server`**: Renders `ReactNode` trees to HTML strings on Dart VM server targets for SSR.
+The package also defines portable contracts for contexts, providers, refs,
+error boundaries, suspense, strict mode, portals, memoization, lazy components,
+and runtime capability checks. Renderers implement those contracts in
+`react_js`, `react_server`, and `react_testing`.
+
+## Package boundaries
+
+- `react_dom`: recommended web component entrypoint and mount/hydrate APIs;
+- `react_web`: generated DOM/Web surface and SSR-compatible host shapes;
+- `react_js`: JavaScript renderer and hook binding;
+- `react_server`: transport-neutral SSR and server-function primitives;
+- `react_codegen`: component and server-function generation;
+- `react_testing`: native component/runtime harnesses.

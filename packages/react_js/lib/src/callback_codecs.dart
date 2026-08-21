@@ -71,14 +71,11 @@ JSAny? encodeReactValue(ReactValueSpec spec, Object? value) {
     ReactValueKind.number => (value as num).toDouble().toJS,
     ReactValueKind.boolean => (value as bool).toJS,
     ReactValueKind.reactNode => toReactJS(value as ReactNode),
-    ReactValueKind.hostValue =>
-      value is JSAny
-          ? value
-          : ReactCodecRegistry.encodeHostValue(
-              spec.hostNamespace!,
-              spec.typeId!,
-              value,
-            ),
+    ReactValueKind.hostValue => ReactCodecRegistry.encodeHostValue(
+      spec.hostNamespace!,
+      spec.typeId!,
+      value,
+    ),
     ReactValueKind.encodedObject => ReactCodecRegistry.encode(
       spec.codecId!,
       value,

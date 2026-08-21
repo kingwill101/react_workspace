@@ -16,7 +16,8 @@ import 'package:react_web_generator/src/complete/package_web_mappings.dart';
 import 'package:react_web_generator/src/bcd_filter.dart';
 
 const webApisJson = 'tool/web_idl/snapshots/web_apis.json';
-const reportPath = 'packages/react_web/lib/src/generated/completeness_report.json';
+const reportPath =
+    'packages/react_web/lib/src/generated/completeness_report.json';
 
 Future<void> main(List<String> args) async {
   final strict = args.contains('--strict');
@@ -32,15 +33,22 @@ Future<void> main(List<String> args) async {
   Map<String, Object?> report;
   int defsDropped;
   int membersDropped;
-  const manifestPath = 'packages/react_web/lib/src/generated/emitted_manifest.json';
+  const manifestPath =
+      'packages/react_web/lib/src/generated/emitted_manifest.json';
   if (File(manifestPath).existsSync()) {
     final manifest = EmittedManifest.fromFile(manifestPath);
-    final verifier = CompletenessVerifier.withManifest(model: model, manifest: manifest);
+    final verifier = CompletenessVerifier.withManifest(
+      model: model,
+      manifest: manifest,
+    );
     report = verifier.verifyAgainstManifest(manifest);
   } else {
     // Fallback for CI without prior generation — use isolated model copies to avoid identical check.
     final copy = mergeRawModel(
-      CompleteWebModelBuilder(webIdlPath: webApisJson, bcdFilter: BcdFilter.load()).loadRaw(),
+      CompleteWebModelBuilder(
+        webIdlPath: webApisJson,
+        bcdFilter: BcdFilter.load(),
+      ).loadRaw(),
     );
     final verifier = CompletenessVerifier(model: model, emittedModel: copy);
     report = verifier.verify();
@@ -68,7 +76,7 @@ Future<void> main(List<String> args) async {
   if (mappings != null) {
     final interfaceNames = <String>{
       for (final d in model.allDefinitions)
-        if (d.kindName == 'interface') d.name
+        if (d.kindName == 'interface') d.name,
     };
     missingMappings = mappings.missingTypes(interfaceNames).length;
   }
@@ -77,13 +85,20 @@ Future<void> main(List<String> args) async {
   final reportWriter = CompletenessVerifier(
     model: model,
     emittedModel: mergeRawModel(
-      CompleteWebModelBuilder(webIdlPath: webApisJson, bcdFilter: BcdFilter.load()).loadRaw(),
+      CompleteWebModelBuilder(
+        webIdlPath: webApisJson,
+        bcdFilter: BcdFilter.load(),
+      ).loadRaw(),
     ),
   );
   File(reportPath).writeAsStringSync(reportWriter.toJsonNice(report));
 
-  stdout.writeln('definitions: ${defs['emitted']}/${defs['source']} (dropped $defsDropped, opaque ${defs['opaque']})');
-  stdout.writeln('members: ${members['emitted']}/${members['source']} (dropped $membersDropped, opaque ${members['opaque']})');
+  stdout.writeln(
+    'definitions: ${defs['emitted']}/${defs['source']} (dropped $defsDropped, opaque ${defs['opaque']})',
+  );
+  stdout.writeln(
+    'members: ${members['emitted']}/${members['source']} (dropped $membersDropped, opaque ${members['opaque']})',
+  );
   stdout.writeln('duplicate names: ${duplicates.length}');
   if (mappings != null) {
     stdout.writeln('package:web missing mappings: $missingMappings');
@@ -99,7 +114,9 @@ Future<void> main(List<String> args) async {
     failed = true;
   }
   if (strict && missingMappings > 0) {
-    stdout.writeln('FAIL (strict): $missingMappings definitions missing a package:web mapping.');
+    stdout.writeln(
+      'FAIL (strict): $missingMappings definitions missing a package:web mapping.',
+    );
     stdout.writeln('  Pin package:web to the snapshot revision to resolve.');
     failed = true;
   }

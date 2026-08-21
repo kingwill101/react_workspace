@@ -7,10 +7,7 @@ import 'member.dart';
 
 List<ExtAttr> _extAttrs(Object? raw) {
   final list = raw as List<dynamic>? ?? [];
-  return list
-      .whereType<Map<String, dynamic>>()
-      .map(parseExtAttr)
-      .toList();
+  return list.whereType<Map<String, dynamic>>().map(parseExtAttr).toList();
 }
 
 String? _constValue(Object? value) {
@@ -86,9 +83,7 @@ List<IdlMember> parseMembers(Object? rawMembers) {
           ),
         );
       case 'constructor':
-        out.add(
-          IdlConstructor(parameters: parseArguments(m['arguments'])),
-        );
+        out.add(IdlConstructor(parameters: parseArguments(m['arguments'])));
       case 'const':
         out.add(
           IdlConstant(
@@ -110,8 +105,12 @@ List<IdlMember> parseMembers(Object? rawMembers) {
         final at = _iterableTypes(m['idlType']);
         out.add(
           IdlMaplike(
-            keyType: at.isNotEmpty ? at[0] : const NamedTypeRef(typeId: 'core.dynamic'),
-            valueType: at.length > 1 ? at[1] : const NamedTypeRef(typeId: 'core.dynamic'),
+            keyType: at.isNotEmpty
+                ? at[0]
+                : const NamedTypeRef(typeId: 'core.dynamic'),
+            valueType: at.length > 1
+                ? at[1]
+                : const NamedTypeRef(typeId: 'core.dynamic'),
             readonly: m['readonly'] as bool? ?? false,
           ),
         );
@@ -119,7 +118,9 @@ List<IdlMember> parseMembers(Object? rawMembers) {
         final at = _iterableTypes(m['idlType']);
         out.add(
           IdlSetlike(
-            valueType: at.isNotEmpty ? at[0] : const NamedTypeRef(typeId: 'core.dynamic'),
+            valueType: at.isNotEmpty
+                ? at[0]
+                : const NamedTypeRef(typeId: 'core.dynamic'),
             readonly: m['readonly'] as bool? ?? false,
           ),
         );

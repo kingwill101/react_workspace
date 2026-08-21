@@ -15,14 +15,9 @@ ReactNode App(({String title}) props) {
     },
     children: [
       h1(children: [Text(props.title)]),
+      p(style: const {'minHeight': '1.6em'}, children: [Text(message!)]),
       p(
-        style: const {'minHeight': '1.6em'},
-        children: [Text(message!)],
-      ),
-      p(
-        children: [
-          const Text('Edit lib/app.dart and rebuild to see changes.'),
-        ],
+        children: [const Text('Edit lib/app.dart and rebuild to see changes.')],
       ),
     ],
   );

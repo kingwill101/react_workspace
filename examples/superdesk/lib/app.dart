@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:react_web/react_web.dart';
-import 'package:react_web/web.dart' show HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement, MessageEvent;
+import 'package:react_web/web.dart'
+    show HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement, MessageEvent;
 
 import 'pages/dashboard.dart';
 import 'pages/resources.dart';
@@ -14,13 +15,14 @@ import 'pages/analytics.dart';
 import 'pages/live_board.dart';
 import 'pages/settings.dart';
 
-final _appId = 'superdesk';
-
 void _downloadJson(String filename, String content) {
   try {
     window.localStorage.setItem('superdesk_backup_export', content);
     final a = document.createElement('a');
-    a.setAttribute('href', 'data:application/json;charset=utf-8,${Uri.encodeComponent(content)}');
+    a.setAttribute(
+      'href',
+      'data:application/json;charset=utf-8,${Uri.encodeComponent(content)}',
+    );
     a.setAttribute('download', filename);
     (a as dynamic).click();
   } catch (_) {}
@@ -60,33 +62,53 @@ ReactNode App(({String title}) props) {
     }
     final savedResources = window.localStorage.getItem('superdesk_resources');
     if (savedResources != null) {
-      setResources(List<Map<String, dynamic>>.from(
-        (jsonDecode(savedResources) as List).map((e) => Map<String, dynamic>.from(e as Map)),
-      ));
+      setResources(
+        List<Map<String, dynamic>>.from(
+          (jsonDecode(savedResources) as List).map(
+            (e) => Map<String, dynamic>.from(e as Map),
+          ),
+        ),
+      );
     }
     final savedPhases = window.localStorage.getItem('superdesk_phases');
     if (savedPhases != null) {
-      setPhases(List<Map<String, dynamic>>.from(
-        (jsonDecode(savedPhases) as List).map((e) => Map<String, dynamic>.from(e as Map)),
-      ));
+      setPhases(
+        List<Map<String, dynamic>>.from(
+          (jsonDecode(savedPhases) as List).map(
+            (e) => Map<String, dynamic>.from(e as Map),
+          ),
+        ),
+      );
     }
     final savedUnits = window.localStorage.getItem('superdesk_units');
     if (savedUnits != null) {
-      setUnits(List<Map<String, dynamic>>.from(
-        (jsonDecode(savedUnits) as List).map((e) => Map<String, dynamic>.from(e as Map)),
-      ));
+      setUnits(
+        List<Map<String, dynamic>>.from(
+          (jsonDecode(savedUnits) as List).map(
+            (e) => Map<String, dynamic>.from(e as Map),
+          ),
+        ),
+      );
     }
     final savedSyllabuses = window.localStorage.getItem('superdesk_syllabuses');
     if (savedSyllabuses != null) {
-      setSyllabuses(List<Map<String, dynamic>>.from(
-        (jsonDecode(savedSyllabuses) as List).map((e) => Map<String, dynamic>.from(e as Map)),
-      ));
+      setSyllabuses(
+        List<Map<String, dynamic>>.from(
+          (jsonDecode(savedSyllabuses) as List).map(
+            (e) => Map<String, dynamic>.from(e as Map),
+          ),
+        ),
+      );
     }
     final savedClasses = window.localStorage.getItem('superdesk_classes');
     if (savedClasses != null) {
-      setClasses(List<Map<String, dynamic>>.from(
-        (jsonDecode(savedClasses) as List).map((e) => Map<String, dynamic>.from(e as Map)),
-      ));
+      setClasses(
+        List<Map<String, dynamic>>.from(
+          (jsonDecode(savedClasses) as List).map(
+            (e) => Map<String, dynamic>.from(e as Map),
+          ),
+        ),
+      );
     }
   }, []);
 
@@ -137,447 +159,680 @@ ReactNode App(({String title}) props) {
     };
   }, []);
 
-  final pages = [
-    'Dashboard', 'Resources', 'Marketplace', 'Syllabus', 'Classes',
-    'Builder', 'Arcade', 'Analytics', 'Live Board', 'Settings',
-  ];
-
   return html(
     lang: 'en',
     dir: 'ltr',
     style: {'fontFamily': 'Nunito, Fredoka, sans-serif'},
     children: [
-      head(children: [
-        meta(name: 'viewport', content: 'width=device-width, initial-scale=1.0'),
-        title(children: [Text('SUPERDESK v6')]),
-        link(href: 'https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap', rel: 'stylesheet'),
-        link(rel: 'stylesheet', href: 'styles.css'),
-      ]),
-      body(children: [
-        div(
-          className: 'min-h-screen bg-cream text-dark',
-          style: {'fontFamily': 'Nunito, Fredoka, sans-serif'},
-          children: [
-            if (user == null) ...[
-              div(
-                className: 'min-h-screen flex items-center justify-center p-4',
-                style: {'backgroundColor': '#FFFBF0'},
-                children: [
-                  div(
-                    className: 'w-full max-w-[420px] bg-white border-3 border-dark rounded-3xl shadow-chunky-lg p-8',
-                    children: [
-                      div(
-                        className: 'text-center mb-8',
-                        children: [
-                          div(className: 'text-[48px] leading-none mb-3', children: [Text('☀️')]),
-                          h1(
-                            className: 'text-[32px] font-black tracking-tight',
-                            style: {'fontFamily': 'Fredoka'},
-                            children: [Text('SUPERDESK')],
-                          ),
-                          p(
-                            className: 'text-[15px] font-bold text-gray-500 mt-1',
-                            children: [Text('The Super Toolkit for Language Teachers')],
-                          ),
-                        ],
-                      ),
-                      form(
-                        onSubmit: (e) {
-                          e.preventDefault();
-                          final name = email.isEmpty ? 'Rivera' : email.split('@').first;
-                          setUser({'email': email, 'name': name});
-                          setToast('Welcome back! ☀️');
-                        },
-                        children: [
-                          input(
-                            name: 'email',
-                            value: email,
-                            onChange: (e) => setEmail((e.target as HTMLInputElement).value),
-                            required_: true,
-                            placeholder: 'Email',
-                            className: 'w-full h-[48px] px-4 bg-white border-2 border-dark rounded-[16px] font-bold outline-none focus:shadow-[3px_3px_0px_#111]',
-                          ),
-                          input(
-                            name: 'password',
-                            type: 'password',
-                            value: password,
-                            onChange: (e) => setPassword((e.target as HTMLInputElement).value),
-                            required_: true,
-                            placeholder: 'Password',
-                            className: 'w-full h-[48px] px-4 bg-white border-2 border-dark rounded-[16px] font-bold outline-none focus:shadow-[3px_3px_0px_#111]',
-                          ),
-                          button(
-                            type: 'submit',
-                            className: 'w-full h-[52px] bg-dark text-white rounded-full font-black text-[16px] border-3 border-dark shadow-[0px_4px_0px_#111] active:translate-y-[2px] active:shadow-[0px_2px_0px_#111]',
-                            children: [Text('Continue')],
-                          ),
-                          button(
-                            type: 'button',
-                            onClick: (_) {
-                              setUser({'email': 'guest@superdesk', 'name': 'Rivera'});
-                              setToast('Demo mode ☀️');
-                            },
-                            className: 'w-full h-[48px] bg-white border-3 border-dark rounded-full font-black',
-                            children: [Text('Demo as Guest')],
-                          ),
-                        ],
-                      ),
-                      p(
-                        className: 'text-center text-[12px] font-bold text-gray-400 mt-6',
-                        children: [Text('Playful • Warm • Chunky • Teacher-friendly')],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ] else ...[
-              div(className: 'min-h-screen bg-cream text-dark', children: [
-                header(
-                  className: 'sticky top-0 z-30 bg-cream/90 backdrop-blur-xl border-b-3 border-dark',
+      head(
+        children: [
+          meta(
+            name: 'viewport',
+            content: 'width=device-width, initial-scale=1.0',
+          ),
+          title(children: [const Text('SUPERDESK v6')]),
+          link(
+            href:
+                'https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap',
+            rel: 'stylesheet',
+          ),
+          link(rel: 'stylesheet', href: 'styles.css'),
+        ],
+      ),
+      body(
+        children: [
+          div(
+            className: 'min-h-screen bg-cream text-dark',
+            style: {'fontFamily': 'Nunito, Fredoka, sans-serif'},
+            children: [
+              if (user == null) ...[
+                div(
+                  className:
+                      'min-h-screen flex items-center justify-center p-4',
+                  style: {'backgroundColor': '#FFFBF0'},
                   children: [
                     div(
-                      className: 'max-w-[1280px] mx-auto px-4 md:px-6 h-[72px] flex items-center justify-between gap-4',
+                      className:
+                          'w-full max-w-[420px] bg-white border-3 border-dark rounded-3xl shadow-chunky-lg p-8',
                       children: [
                         div(
-                          className: 'flex items-center gap-3',
+                          className: 'text-center mb-8',
                           children: [
                             div(
-                              className: 'w-[44px] h-[44px] bg-yellow-200 border-3 border-dark rounded-[14px] shadow-chunky grid place-items-center text-[20px]',
-                              children: [Text('☀️')],
+                              className: 'text-[48px] leading-none mb-3',
+                              children: [const Text('☀️')],
                             ),
+                            h1(
+                              className:
+                                  'text-[32px] font-black tracking-tight',
+                              style: {'fontFamily': 'Fredoka'},
+                              children: [const Text('SUPERDESK')],
+                            ),
+                            p(
+                              className:
+                                  'text-[15px] font-bold text-gray-500 mt-1',
+                              children: [
+                                const Text(
+                                  'The Super Toolkit for Language Teachers',
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        form(
+                          onSubmit: (e) {
+                            e.preventDefault();
+                            final name = email.isEmpty
+                                ? 'Rivera'
+                                : email.split('@').first;
+                            setUser({'email': email, 'name': name});
+                            setToast('Welcome back! ☀️');
+                          },
+                          children: [
+                            input(
+                              name: 'email',
+                              value: email,
+                              onChange: (e) => setEmail(
+                                (e.target as HTMLInputElement).value,
+                              ),
+                              required_: true,
+                              placeholder: 'Email',
+                              className:
+                                  'w-full h-[48px] px-4 bg-white border-2 border-dark rounded-[16px] font-bold outline-none focus:shadow-[3px_3px_0px_#111]',
+                            ),
+                            input(
+                              name: 'password',
+                              type: 'password',
+                              value: password,
+                              onChange: (e) => setPassword(
+                                (e.target as HTMLInputElement).value,
+                              ),
+                              required_: true,
+                              placeholder: 'Password',
+                              className:
+                                  'w-full h-[48px] px-4 bg-white border-2 border-dark rounded-[16px] font-bold outline-none focus:shadow-[3px_3px_0px_#111]',
+                            ),
+                            button(
+                              type: 'submit',
+                              className:
+                                  'w-full h-[52px] bg-dark text-white rounded-full font-black text-[16px] border-3 border-dark shadow-[0px_4px_0px_#111] active:translate-y-[2px] active:shadow-[0px_2px_0px_#111]',
+                              children: [const Text('Continue')],
+                            ),
+                            button(
+                              type: 'button',
+                              onClick: (_) {
+                                setUser({
+                                  'email': 'guest@superdesk',
+                                  'name': 'Rivera',
+                                });
+                                setToast('Demo mode ☀️');
+                              },
+                              className:
+                                  'w-full h-[48px] bg-white border-3 border-dark rounded-full font-black',
+                              children: [const Text('Demo as Guest')],
+                            ),
+                          ],
+                        ),
+                        p(
+                          className:
+                              'text-center text-[12px] font-bold text-gray-400 mt-6',
+                          children: [
+                            const Text(
+                              'Playful • Warm • Chunky • Teacher-friendly',
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ] else ...[
+                div(
+                  className: 'min-h-screen bg-cream text-dark',
+                  children: [
+                    header(
+                      className:
+                          'sticky top-0 z-30 bg-cream/90 backdrop-blur-xl border-b-3 border-dark',
+                      children: [
+                        div(
+                          className:
+                              'max-w-[1280px] mx-auto px-4 md:px-6 h-[72px] flex items-center justify-between gap-4',
+                          children: [
                             div(
-                              className: 'leading-tight',
+                              className: 'flex items-center gap-3',
                               children: [
                                 div(
-                                  className: 'font-black text-[20px]',
-                                  style: {'fontFamily': 'Fredoka'},
-                                  children: [Text('SUPERDESK')],
+                                  className:
+                                      'w-[44px] h-[44px] bg-yellow-200 border-3 border-dark rounded-[14px] shadow-chunky grid place-items-center text-[20px]',
+                                  children: [const Text('☀️')],
                                 ),
                                 div(
-                                  className: 'text-[10px] font-black uppercase tracking-widest',
-                                  children: [Text('v6 • Warm')],
+                                  className: 'leading-tight',
+                                  children: [
+                                    div(
+                                      className: 'font-black text-[20px]',
+                                      style: {'fontFamily': 'Fredoka'},
+                                      children: [const Text('SUPERDESK')],
+                                    ),
+                                    div(
+                                      className:
+                                          'text-[10px] font-black uppercase tracking-widest',
+                                      children: [const Text('v6 • Warm')],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            div(
+                              className:
+                                  'hidden lg:flex items-center gap-2 overflow-x-auto',
+                              children: [
+                                for (final item in [
+                                  {'k': 'Dashboard', 'icon': 'bookmark'},
+                                  {'k': 'Resources', 'icon': 'book-open'},
+                                  {'k': 'Marketplace', 'icon': 'store'},
+                                  {'k': 'Syllabus', 'icon': 'layers'},
+                                  {'k': 'Classes', 'icon': 'users'},
+                                  {'k': 'Builder', 'icon': 'hammer'},
+                                  {'k': 'Arcade', 'icon': 'gamepad'},
+                                  {'k': 'Analytics', 'icon': 'bar-chart-3'},
+                                  {'k': 'Live Board', 'icon': 'monitor'},
+                                ])
+                                  button(
+                                    key: item['k'],
+                                    onClick: (_) =>
+                                        setPage(item['k'] as String),
+                                    className:
+                                        'h-[40px] px-4 rounded-full border-2.5 border-dark font-black text-[13px] flex items-center gap-1.5 whitespace-nowrap transition-all ${page == item['k'] ? "bg-dark text-white shadow-[3px_3px_0px_#111]" : "bg-white hover:shadow-[3px_3px_0px_#111]"}',
+                                    children: [Text(item['k'] as String)],
+                                  ),
+                              ],
+                            ),
+                            div(
+                              className: 'flex items-center gap-2',
+                              children: [
+                                div(
+                                  className:
+                                      'hidden md:flex items-center gap-2 bg-white border-2.5 border-dark rounded-full h-[40px] px-3 shadow-[3px_3px_0px_#111]',
+                                  children: [
+                                    span(
+                                      className: 'text-[16px]',
+                                      children: [const Text('🔍')],
+                                    ),
+                                    input(
+                                      value: search,
+                                      onChange: (e) => setSearch(
+                                        (e.target as HTMLInputElement).value,
+                                      ),
+                                      placeholder: 'Search...',
+                                      className:
+                                          'bg-transparent outline-none w-[100px] font-bold text-[13px]',
+                                    ),
+                                  ],
+                                ),
+                                div(
+                                  className:
+                                      'w-[40px] h-[40px] rounded-full bg-pink-200 border-3 border-dark grid place-items-center font-black',
+                                  children: [const Text('R')],
                                 ),
                               ],
                             ),
                           ],
                         ),
                         div(
-                          className: 'hidden lg:flex items-center gap-2 overflow-x-auto',
+                          className:
+                              'lg:hidden px-3 pb-3 flex gap-2 overflow-x-auto scrollbar-none',
                           children: [
-                            for (final item in [
-                              {'k': 'Dashboard', 'icon': 'bookmark'},
-                              {'k': 'Resources', 'icon': 'book-open'},
-                              {'k': 'Marketplace', 'icon': 'store'},
-                              {'k': 'Syllabus', 'icon': 'layers'},
-                              {'k': 'Classes', 'icon': 'users'},
-                              {'k': 'Builder', 'icon': 'hammer'},
-                              {'k': 'Arcade', 'icon': 'gamepad'},
-                              {'k': 'Analytics', 'icon': 'bar-chart-3'},
-                              {'k': 'Live Board', 'icon': 'monitor'},
+                            for (final k in [
+                              'Dashboard',
+                              'Resources',
+                              'Marketplace',
+                              'Syllabus',
+                              'Classes',
+                              'Builder',
+                              'Arcade',
+                              'Analytics',
+                              'Live Board',
                             ])
                               button(
-                                key: item['k'],
-                                onClick: (_) => setPage(item['k'] as String),
-                                className: 'h-[40px] px-4 rounded-full border-2.5 border-dark font-black text-[13px] flex items-center gap-1.5 whitespace-nowrap transition-all ${page == item['k'] ? "bg-dark text-white shadow-[3px_3px_0px_#111]" : "bg-white hover:shadow-[3px_3px_0px_#111]"}',
-                                children: [Text(item['k'] as String)],
+                                key: k,
+                                onClick: (_) => setPage(k),
+                                className:
+                                    'h-[36px] px-4 rounded-full border-2 border-dark font-black text-[12px] whitespace-nowrap ${page == k ? "bg-dark text-white" : "bg-white"}',
+                                children: [Text(k)],
                               ),
                           ],
                         ),
-                        div(
-                          className: 'flex items-center gap-2',
-                          children: [
-                            div(
-                              className: 'hidden md:flex items-center gap-2 bg-white border-2.5 border-dark rounded-full h-[40px] px-3 shadow-[3px_3px_0px_#111]',
-                              children: [
-                                span(className: 'text-[16px]', children: [Text('🔍')]),
-                                input(
-                                  value: search,
-                                  onChange: (e) => setSearch((e.target as HTMLInputElement).value),
-                                  placeholder: 'Search...',
-                                  className: 'bg-transparent outline-none w-[100px] font-bold text-[13px]',
-                                ),
-                              ],
-                            ),
-                            div(
-                              className: 'w-[40px] h-[40px] rounded-full bg-pink-200 border-3 border-dark grid place-items-center font-black',
-                              children: [Text('R')],
-                            ),
-                          ],
-                        ),
                       ],
                     ),
-                    div(
-                      className: 'lg:hidden px-3 pb-3 flex gap-2 overflow-x-auto scrollbar-none',
+                    main(
+                      className: 'max-w-[1280px] mx-auto px-4 md:px-6 py-6',
                       children: [
-                        for (final k in ['Dashboard','Resources','Marketplace','Syllabus','Classes','Builder','Arcade','Analytics','Live Board'])
-                          button(
-                            key: k,
-                            onClick: (_) => setPage(k),
-                            className: 'h-[36px] px-4 rounded-full border-2 border-dark font-black text-[12px] whitespace-nowrap ${page == k ? "bg-dark text-white" : "bg-white"}',
-                            children: [Text(k)],
-                          ),
+                        if (page == 'Dashboard')
+                          DashboardPage((
+                            user: user,
+                            templates: _templates,
+                            lessons: _lessons,
+                            units: units,
+                            syllabuses: syllabuses,
+                            classes: classes,
+                            onNavigate: setPage.call,
+                            onToast: setToast.call,
+                          )),
+                        if (page == 'Resources')
+                          ResourcesPage((
+                            resources: resources,
+                            search: search,
+                            filter: filter,
+                            onFilter: setFilter.call,
+                            onSearch: setSearch.call,
+                            onAdd: () => setShowNewRes(true),
+                            onEdit: (r) => setEditingRes(r),
+                            onDelete: (r) => setResources(
+                              resources
+                                  .where((x) => x['id'] != r['id'])
+                                  .toList(),
+                            ),
+                            onDuplicate: (r) => setResources([
+                              ...resources,
+                              {
+                                ...r,
+                                'id':
+                                    'r${DateTime.now().millisecondsSinceEpoch}',
+                                'name': '${r['name']} Copy',
+                              },
+                            ]),
+                            onToast: setToast.call,
+                          )),
+                        if (page == 'Marketplace')
+                          MarketplacePage((onToast: setToast.call)),
+                        if (page == 'Syllabus')
+                          SyllabusPage((
+                            selectedSyllabus: selectedSyllabus,
+                            onSelect: setSelectedSyllabus.call,
+                            expandedUnits: expandedUnits,
+                            onToggle: (id) => setExpandedUnits(
+                              expandedUnits.contains(id)
+                                  ? expandedUnits.where((x) => x != id).toList()
+                                  : [...expandedUnits, id],
+                            ),
+                            units: units,
+                            syllabuses: syllabuses,
+                            classes: classes,
+                            onToast: setToast.call,
+                          )),
+                        if (page == 'Classes')
+                          ClassesPage((
+                            classes: classes,
+                            onToast: setToast.call,
+                          )),
+                        if (page == 'Builder')
+                          BuilderPage((
+                            lessonName: lessonName,
+                            onLessonName: setLessonName.call,
+                            phases: phases,
+                            onPhases: setPhases.call,
+                            resources: resources,
+                            templates: _templates,
+                            onToast: setToast.call,
+                          )),
+                        if (page == 'Arcade')
+                          ArcadePage((
+                            arcadeGame: arcadeGame,
+                            onGame: setArcadeGame.call,
+                            wordPopActive: wordPopActive,
+                            onWordPop: setWordPopActive.call,
+                            score: score,
+                            onScore: setScore.call,
+                            onToast: setToast.call,
+                          )),
+                        if (page == 'Analytics') AnalyticsPage((title: null)),
+                        if (page == 'Live Board')
+                          LiveBoardPage((
+                            phases: phases,
+                            liveJoined: liveJoined,
+                            liveCode: liveCode,
+                            onJoin: () {
+                              BroadcastChannel(
+                                'superdesk-live',
+                              ).postMessage(jsonEncode({'type': 'join'}));
+                              setToast(
+                                'Simulated join in other tab – open duplicate tab!',
+                              );
+                            },
+                            onToast: setToast.call,
+                          )),
+                        if (page == 'Settings')
+                          SettingsPage((
+                            user: user,
+                            onLogout: () {
+                              setUser(null);
+                              window.localStorage.removeItem('superdesk_user');
+                            },
+                            onReset: () {
+                              window.localStorage.clear();
+                              window.location.reload();
+                            },
+                            onExport: () {
+                              final data = jsonEncode({
+                                'user': user,
+                                'resources': resources,
+                                'units': units,
+                                'syllabuses': syllabuses,
+                                'classes': classes,
+                                'phases': phases,
+                              });
+                              _downloadJson('superdesk_backup.json', data);
+                              setToast('Settings exported ✨');
+                            },
+                            onImport: (jsonStr) {
+                              try {
+                                final data =
+                                    jsonDecode(jsonStr) as Map<String, dynamic>;
+                                if (data['user'] != null) {
+                                  setUser(data['user'] as Map<String, dynamic>);
+                                }
+                                if (data['resources'] != null) {
+                                  setResources(
+                                    List<Map<String, dynamic>>.from(
+                                      (data['resources'] as List).map(
+                                        (e) =>
+                                            Map<String, dynamic>.from(e as Map),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                if (data['units'] != null) {
+                                  setUnits(
+                                    List<Map<String, dynamic>>.from(
+                                      (data['units'] as List).map(
+                                        (e) =>
+                                            Map<String, dynamic>.from(e as Map),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                if (data['syllabuses'] != null) {
+                                  setSyllabuses(
+                                    List<Map<String, dynamic>>.from(
+                                      (data['syllabuses'] as List).map(
+                                        (e) =>
+                                            Map<String, dynamic>.from(e as Map),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                if (data['classes'] != null) {
+                                  setClasses(
+                                    List<Map<String, dynamic>>.from(
+                                      (data['classes'] as List).map(
+                                        (e) =>
+                                            Map<String, dynamic>.from(e as Map),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                if (data['phases'] != null) {
+                                  setPhases(
+                                    List<Map<String, dynamic>>.from(
+                                      (data['phases'] as List).map(
+                                        (e) =>
+                                            Map<String, dynamic>.from(e as Map),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                setToast('Settings imported ✨');
+                              } catch (e) {
+                                setToast('Import failed ❌');
+                              }
+                            },
+                            onToast: setToast.call,
+                          )),
                       ],
                     ),
-                  ],
-                ),
-                main(
-                  className: 'max-w-[1280px] mx-auto px-4 md:px-6 py-6',
-                  children: [
-                    if (page == 'Dashboard') DashboardPage((
-                      user: user,
-                      templates: _templates,
-                      lessons: _lessons,
-                      units: units,
-                      syllabuses: syllabuses,
-                      classes: classes,
-                      onNavigate: setPage.call,
-                      onToast: setToast.call,
-                    )),
-                    if (page == 'Resources') ResourcesPage((
-                      resources: resources,
-                      search: search,
-                      filter: filter,
-                      onFilter: setFilter.call,
-                      onSearch: setSearch.call,
-                      onAdd: () => setShowNewRes(true),
-                      onEdit: (r) => setEditingRes(r),
-                      onDelete: (r) => setResources(resources.where((x) => x['id'] != r['id']).toList()),
-                      onDuplicate: (r) => setResources([...resources, {...r, 'id': 'r${DateTime.now().millisecondsSinceEpoch}', 'name': '${r['name']} Copy'}]),
-                      onToast: setToast.call,
-                    )),
-                    if (page == 'Marketplace') MarketplacePage((onToast: setToast.call)),
-                    if (page == 'Syllabus') SyllabusPage((
-                      selectedSyllabus: selectedSyllabus,
-                      onSelect: setSelectedSyllabus.call,
-                      expandedUnits: expandedUnits,
-                      onToggle: (id) => setExpandedUnits(expandedUnits.contains(id) ? expandedUnits.where((x) => x != id).toList() : [...expandedUnits, id]),
-                      units: units,
-                      syllabuses: syllabuses,
-                      classes: classes,
-                      onToast: setToast.call,
-                    )),
-                    if (page == 'Classes') ClassesPage((classes: classes, onToast: setToast.call)),
-                    if (page == 'Builder') BuilderPage((
-                      lessonName: lessonName,
-                      onLessonName: setLessonName.call,
-                      phases: phases,
-                      onPhases: setPhases.call,
-                      resources: resources,
-                      templates: _templates,
-                      onToast: setToast.call,
-                    )),
-                    if (page == 'Arcade') ArcadePage((
-                      arcadeGame: arcadeGame,
-                      onGame: setArcadeGame.call,
-                      wordPopActive: wordPopActive,
-                      onWordPop: setWordPopActive.call,
-                      score: score,
-                      onScore: setScore.call,
-                      onToast: setToast.call,
-                    )),
-                    if (page == 'Analytics') AnalyticsPage((title: null)),
-                    if (page == 'Live Board') LiveBoardPage((
-                      phases: phases,
-                      liveJoined: liveJoined,
-                      liveCode: liveCode,
-                      onJoin: () {
-                        BroadcastChannel('superdesk-live').postMessage(jsonEncode({'type': 'join'}));
-                        setToast('Simulated join in other tab – open duplicate tab!');
-                      },
-                      onToast: setToast.call,
-                    )),
-                    if (page == 'Settings') SettingsPage((
-                      user: user,
-                      onLogout: () {
-                        setUser(null);
-                        window.localStorage.removeItem('superdesk_user');
-                      },
-                      onReset: () {
-                        window.localStorage.clear();
-                        window.location.reload();
-                      },
-                      onExport: () {
-                        final data = jsonEncode({
-                          'user': user,
-                          'resources': resources,
-                          'units': units,
-                          'syllabuses': syllabuses,
-                          'classes': classes,
-                          'phases': phases,
-                        });
-                        _downloadJson('superdesk_backup.json', data);
-                        setToast('Settings exported ✨');
-                      },
-                      onImport: (jsonStr) {
-                        try {
-                          final data = jsonDecode(jsonStr) as Map<String, dynamic>;
-                          if (data['user'] != null) setUser(data['user'] as Map<String, dynamic>);
-                          if (data['resources'] != null) setResources(List<Map<String, dynamic>>.from((data['resources'] as List).map((e) => Map<String, dynamic>.from(e as Map))));
-                          if (data['units'] != null) setUnits(List<Map<String, dynamic>>.from((data['units'] as List).map((e) => Map<String, dynamic>.from(e as Map))));
-                          if (data['syllabuses'] != null) setSyllabuses(List<Map<String, dynamic>>.from((data['syllabuses'] as List).map((e) => Map<String, dynamic>.from(e as Map))));
-                          if (data['classes'] != null) setClasses(List<Map<String, dynamic>>.from((data['classes'] as List).map((e) => Map<String, dynamic>.from(e as Map))));
-                          if (data['phases'] != null) setPhases(List<Map<String, dynamic>>.from((data['phases'] as List).map((e) => Map<String, dynamic>.from(e as Map))));
-                          setToast('Settings imported ✨');
-                        } catch (e) {
-                          setToast('Import failed ❌');
-                        }
-                      },
-                      onToast: setToast.call,
-                    )),
-                  ],
-                ),
-                if (showNewRes)
-                  div(
-                    className: 'fixed inset-0 bg-black/40 backdrop-blur-sm grid place-items-center z-50 p-4',
-                    children: [
+                    if (showNewRes)
                       div(
-                        className: 'w-full max-w-[440px] bg-cream border-3 border-dark rounded-[28px] shadow-chunky-lg p-6',
+                        className:
+                            'fixed inset-0 bg-black/40 backdrop-blur-sm grid place-items-center z-50 p-4',
                         children: [
                           div(
-                            className: 'flex items-center justify-between mb-4',
+                            className:
+                                'w-full max-w-[440px] bg-cream border-3 border-dark rounded-[28px] shadow-chunky-lg p-6',
                             children: [
-                              h3(
-                                className: 'font-black text-[18px]',
-                                style: {'fontFamily': 'Fredoka'},
-                                children: [Text('New Resource')],
-                              ),
-                              button(
-                                onClick: (_) => setShowNewRes(false),
-                                className: 'w-[32px] h-[32px] bg-white border-2 border-dark rounded-full grid place-items-center font-black',
-                                children: [Text('✕')],
-                              ),
-                            ],
-                          ),
-                          div(
-                            className: 'space-y-3',
-                            children: [
-                              input(
-                                value: newResName,
-                                onChange: (e) => setNewResName((e.target as HTMLInputElement).value),
-                                placeholder: 'Resource name',
-                                className: 'w-full h-[48px] bg-white border-2 border-dark rounded-[16px] px-4 font-bold outline-none',
-                              ),
-                              select(
-                                value: newResType,
-                                onChange: (e) => setNewResType((e.target as HTMLSelectElement).value),
-                                className: 'w-full h-[48px] bg-white border-2 border-dark rounded-[16px] px-4 font-black',
+                              div(
+                                className:
+                                    'flex items-center justify-between mb-4',
                                 children: [
-                                  option(value: 'vocab', children: [Text('Vocab Pack')]),
-                                  option(value: 'video', children: [Text('Video')]),
-                                  option(value: 'slides', children: [Text('Slides')]),
-                                  option(value: 'game', children: [Text('Game')]),
-                                  option(value: 'quiz', children: [Text('Quiz Bank')]),
-                                  option(value: 'image', children: [Text('Image Pack')]),
+                                  h3(
+                                    className: 'font-black text-[18px]',
+                                    style: {'fontFamily': 'Fredoka'},
+                                    children: [const Text('New Resource')],
+                                  ),
+                                  button(
+                                    onClick: (_) => setShowNewRes(false),
+                                    className:
+                                        'w-[32px] h-[32px] bg-white border-2 border-dark rounded-full grid place-items-center font-black',
+                                    children: [const Text('✕')],
+                                  ),
                                 ],
                               ),
-                              button(
-                                onClick: (_) {
-                                  if (newResName.trim().isEmpty) {
-                                    setToast('Name required');
-                                    return;
-                                  }
-                                  final newRes = {
-                                    'id': 'r${DateTime.now().millisecondsSinceEpoch}',
-                                    'name': newResName,
-                                    'type': newResType,
-                                    'desc': 'New resource draft',
-                                    'duration': '10 min',
-                                    'badge': 'New',
-                                    'color': '#FFF4E0',
-                                  };
-                                  setResources([newRes, ...resources]);
-                                  setShowNewRes(false);
-                                  setNewResName('');
-                                  setToast('Resource created ✨');
-                                },
-                                className: 'w-full h-[48px] bg-dark text-white rounded-full font-black border-3 border-dark shadow-chunky',
-                                children: [Text('Create Resource')],
+                              div(
+                                className: 'space-y-3',
+                                children: [
+                                  input(
+                                    value: newResName,
+                                    onChange: (e) => setNewResName(
+                                      (e.target as HTMLInputElement).value,
+                                    ),
+                                    placeholder: 'Resource name',
+                                    className:
+                                        'w-full h-[48px] bg-white border-2 border-dark rounded-[16px] px-4 font-bold outline-none',
+                                  ),
+                                  select(
+                                    value: newResType,
+                                    onChange: (e) => setNewResType(
+                                      (e.target as HTMLSelectElement).value,
+                                    ),
+                                    className:
+                                        'w-full h-[48px] bg-white border-2 border-dark rounded-[16px] px-4 font-black',
+                                    children: [
+                                      option(
+                                        value: 'vocab',
+                                        children: [const Text('Vocab Pack')],
+                                      ),
+                                      option(
+                                        value: 'video',
+                                        children: [const Text('Video')],
+                                      ),
+                                      option(
+                                        value: 'slides',
+                                        children: [const Text('Slides')],
+                                      ),
+                                      option(
+                                        value: 'game',
+                                        children: [const Text('Game')],
+                                      ),
+                                      option(
+                                        value: 'quiz',
+                                        children: [const Text('Quiz Bank')],
+                                      ),
+                                      option(
+                                        value: 'image',
+                                        children: [const Text('Image Pack')],
+                                      ),
+                                    ],
+                                  ),
+                                  button(
+                                    onClick: (_) {
+                                      if (newResName.trim().isEmpty) {
+                                        setToast('Name required');
+                                        return;
+                                      }
+                                      final newRes = {
+                                        'id':
+                                            'r${DateTime.now().millisecondsSinceEpoch}',
+                                        'name': newResName,
+                                        'type': newResType,
+                                        'desc': 'New resource draft',
+                                        'duration': '10 min',
+                                        'badge': 'New',
+                                        'color': '#FFF4E0',
+                                      };
+                                      setResources([newRes, ...resources]);
+                                      setShowNewRes(false);
+                                      setNewResName('');
+                                      setToast('Resource created ✨');
+                                    },
+                                    className:
+                                        'w-full h-[48px] bg-dark text-white rounded-full font-black border-3 border-dark shadow-chunky',
+                                    children: [const Text('Create Resource')],
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                if (editingRes != null)
-                  div(
-                    className: 'fixed inset-0 bg-black/40 backdrop-blur-sm grid place-items-center z-50 p-4',
-                    children: [
+                    if (editingRes != null)
                       div(
-                        className: 'w-full max-w-[480px] bg-white border-3 border-dark rounded-[28px] shadow-chunky-lg p-6',
+                        className:
+                            'fixed inset-0 bg-black/40 backdrop-blur-sm grid place-items-center z-50 p-4',
                         children: [
                           div(
-                            className: 'flex items-center justify-between mb-3',
+                            className:
+                                'w-full max-w-[480px] bg-white border-3 border-dark rounded-[28px] shadow-chunky-lg p-6',
                             children: [
-                              h3(
-                                className: 'font-black text-[18px]',
-                                style: {'fontFamily': 'Fredoka'},
-                                children: [Text('Edit ${editingRes!['name']}')],
+                              div(
+                                className:
+                                    'flex items-center justify-between mb-3',
+                                children: [
+                                  h3(
+                                    className: 'font-black text-[18px]',
+                                    style: {'fontFamily': 'Fredoka'},
+                                    children: [
+                                      Text('Edit ${editingRes['name']}'),
+                                    ],
+                                  ),
+                                  button(
+                                    onClick: (_) => setEditingRes(null),
+                                    className:
+                                        'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full grid place-items-center font-black',
+                                    children: [const Text('✕')],
+                                  ),
+                                ],
                               ),
-                              button(
-                                onClick: (_) => setEditingRes(null),
-                                className: 'w-[32px] h-[32px] bg-cream border-2 border-dark rounded-full grid place-items-center font-black',
-                                children: [Text('✕')],
+                              input(
+                                value: editingRes['name'] as String? ?? '',
+                                onChange: (e) => setEditingRes({
+                                  ...editingRes,
+                                  'name': (e.target as HTMLInputElement).value,
+                                }),
+                                className:
+                                    'w-full h-[44px] bg-cream border-2 border-dark rounded-[16px] px-3 font-black outline-none',
                               ),
-                            ],
-                          ),
-                          input(
-                            value: editingRes!['name'] as String? ?? '',
-                            onChange: (e) => setEditingRes({...editingRes!, 'name': (e.target as HTMLInputElement).value}),
-                            className: 'w-full h-[44px] bg-cream border-2 border-dark rounded-[16px] px-3 font-black outline-none',
-                          ),
-                          textarea(
-                            value: editingRes!['desc'] as String? ?? '',
-                            onChange: (e) => setEditingRes({...editingRes!, 'desc': (e.target as HTMLTextAreaElement).value}),
-                            className: 'w-full mt-3 h-[80px] bg-cream border-2 border-dark rounded-[16px] p-3 font-bold text-[13px] outline-none',
-                          ),
-                          div(
-                            className: 'flex gap-2 mt-4',
-                            children: [
-                              button(
-                                onClick: (_) {
-                                  setResources(resources.map((r) => r['id'] == editingRes!['id'] ? editingRes! : r).toList());
-                                  setEditingRes(null);
-                                  setToast('Saved ✨');
-                                },
-                                className: 'flex-1 h-[44px] bg-dark text-white rounded-full font-black',
-                                children: [Text('Save')],
+                              textarea(
+                                value: editingRes['desc'] as String? ?? '',
+                                onChange: (e) => setEditingRes({
+                                  ...editingRes,
+                                  'desc':
+                                      (e.target as HTMLTextAreaElement).value,
+                                }),
+                                className:
+                                    'w-full mt-3 h-[80px] bg-cream border-2 border-dark rounded-[16px] p-3 font-bold text-[13px] outline-none',
                               ),
-                              button(
-                                onClick: (_) => setEditingRes(null),
-                                className: 'h-[44px] px-5 bg-white border-2 border-dark rounded-full font-black',
-                                children: [Text('Cancel')],
+                              div(
+                                className: 'flex gap-2 mt-4',
+                                children: [
+                                  button(
+                                    onClick: (_) {
+                                      setResources(
+                                        resources
+                                            .map(
+                                              (r) => r['id'] == editingRes['id']
+                                                  ? editingRes
+                                                  : r,
+                                            )
+                                            .toList(),
+                                      );
+                                      setEditingRes(null);
+                                      setToast('Saved ✨');
+                                    },
+                                    className:
+                                        'flex-1 h-[44px] bg-dark text-white rounded-full font-black',
+                                    children: [const Text('Save')],
+                                  ),
+                                  button(
+                                    onClick: (_) => setEditingRes(null),
+                                    className:
+                                        'h-[44px] px-5 bg-white border-2 border-dark rounded-full font-black',
+                                    children: [const Text('Cancel')],
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                if (toast != null && toast!.isNotEmpty)
-                  div(
-                    className: 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-dark text-white px-5 py-3 rounded-full font-black text-[13px] shadow-[4px_4px_0px_#FFC9CE] z-50 border-2 border-white',
-                    children: [Text(toast)],
-                  ),
-              ]),
+                    if (toast != null && toast.isNotEmpty)
+                      div(
+                        className:
+                            'fixed bottom-6 left-1/2 -translate-x-1/2 bg-dark text-white px-5 py-3 rounded-full font-black text-[13px] shadow-[4px_4px_0px_#FFC9CE] z-50 border-2 border-white',
+                        children: [Text(toast)],
+                      ),
+                  ],
+                ),
+              ],
             ],
-          ],
-        ),
-      ]),
+          ),
+        ],
+      ),
     ],
   );
 }
 
 final _templates = [
-  {'id': 't1', 'title': 'Colors Bingo', 'desc': 'Students identify and match colors in a fun bingo format.', 'duration': '15 min', 'badge': 'Popular', 'color': '#FFE8A3'},
-  {'id': 't2', 'title': 'Vocabulary Flashcards', 'desc': 'Quick vocabulary review with image cards.', 'duration': '10 min', 'badge': 'Quick', 'color': '#C8F5D4'},
-  {'id': 't3', 'title': 'Story Builder', 'desc': 'Collaborative story creation with vocabulary prompts.', 'duration': '25 min', 'badge': 'Creative', 'color': '#FFC9CE'},
-  {'id': 't4', 'title': 'Listen & Repeat', 'desc': 'Audio pronunciation practice with shadow reading.', 'duration': '12 min', 'badge': 'Audio', 'color': '#C8E8FF'},
+  {
+    'id': 't1',
+    'title': 'Colors Bingo',
+    'desc': 'Students identify and match colors in a fun bingo format.',
+    'duration': '15 min',
+    'badge': 'Popular',
+    'color': '#FFE8A3',
+  },
+  {
+    'id': 't2',
+    'title': 'Vocabulary Flashcards',
+    'desc': 'Quick vocabulary review with image cards.',
+    'duration': '10 min',
+    'badge': 'Quick',
+    'color': '#C8F5D4',
+  },
+  {
+    'id': 't3',
+    'title': 'Story Builder',
+    'desc': 'Collaborative story creation with vocabulary prompts.',
+    'duration': '25 min',
+    'badge': 'Creative',
+    'color': '#FFC9CE',
+  },
+  {
+    'id': 't4',
+    'title': 'Listen & Repeat',
+    'desc': 'Audio pronunciation practice with shadow reading.',
+    'duration': '12 min',
+    'badge': 'Audio',
+    'color': '#C8E8FF',
+  },
 ];
 
 final _lessons = [
   {'id': 'l1', 'title': 'Colors and Shapes', 'date': 'Today', 'students': 24},
-  {'id': 'l2', 'title': 'Animals Vocabulary', 'date': 'Yesterday', 'students': 22},
+  {
+    'id': 'l2',
+    'title': 'Animals Vocabulary',
+    'date': 'Yesterday',
+    'students': 22,
+  },
   {'id': 'l3', 'title': 'Family Members', 'date': 'Mon', 'students': 25},
 ];
-

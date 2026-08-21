@@ -1,12 +1,7 @@
 import 'internal.dart';
 
 /// The kind of runtime symbol a Dart declaration bridges to.
-enum ReactRuntimeSymbolKind {
-  component,
-  hook,
-  function,
-  value,
-}
+enum ReactRuntimeSymbolKind { component, hook, function, value }
 
 /// Machine-readable bridge metadata added to generated declarations.
 ///
@@ -41,18 +36,9 @@ final class ClientOnly {
 const clientOnly = ClientOnly();
 
 /// Describes a Web API's realm exposure and SSR support.
-enum WebRealm {
-  window,
-  document,
-  worker,
-  shared,
-}
+enum WebRealm { window, document, worker, shared }
 
-enum WebSsrSupport {
-  available,
-  unavailable,
-  emulated,
-}
+enum WebSsrSupport { available, unavailable, emulated }
 
 final class WebApiRuntimeInfo {
   final String id;

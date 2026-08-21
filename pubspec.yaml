@@ -1,4 +1,5 @@
 name: react_workspace
+publish_to: none
 environment:
   sdk: ">=3.12.0 <4.0.0"
 workspace:
@@ -8,6 +9,7 @@ workspace:
   - packages/react_dom
   - packages/react_codegen
   - packages/react_server
+  - packages/react_server_shelf
   - packages/react_web
   - packages/react_web_generator
   - packages/react_tool
@@ -18,16 +20,18 @@ workspace:
   - packages/react_bloc
   - packages/react_analysis
   - packages/react_analyzer
+  - packages/react_server_routed
+  - packages/react_server_routed/example
   - examples/ssr
   - examples/plugin_validation
   - examples/client
   - examples/superdesk
 dependencies:
-  react_server: {path: packages/react_server}
-  react_tool: {path: packages/react_tool}
-  example: {path: examples/ssr}
-  client: {path: examples/client}
-  superdesk: {path: examples/superdesk}
+  react_server: ^0.1.0
+  react_tool: ^0.1.0
+  example: any
+  client: any
+  superdesk: any
   shelf: ^1.4.0
   shelf_static: ^1.1.3
   watcher: ^1.1.0

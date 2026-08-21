@@ -30,10 +30,13 @@ class BcdFilter {
       'data.json',
     );
     if (!File(bcdPath).existsSync()) {
-      throw StateError('BCD data not found at $bcdPath. '
-          'Ensure the submodule is initialized.');
+      throw StateError(
+        'BCD data not found at $bcdPath. '
+        'Ensure the submodule is initialized.',
+      );
     }
-    final data = jsonDecode(File(bcdPath).readAsStringSync()) as Map<String, dynamic>;
+    final data =
+        jsonDecode(File(bcdPath).readAsStringSync()) as Map<String, dynamic>;
     final filter = BcdFilter._(data);
     filter._buildCache();
     return filter;
@@ -83,7 +86,8 @@ class BcdFilter {
   }
 
   /// Whether the interface with [name] should be generated.
-  bool shouldGenerateInterface(String name) => _includedInterfaces.contains(name);
+  bool shouldGenerateInterface(String name) =>
+      _includedInterfaces.contains(name);
 
   /// Whether [name] is an interface that was excluded by BCD filtering
   /// (i.e. it appears in the BCD `api` section but does not pass the
@@ -109,7 +113,10 @@ class BcdFilter {
     if (memberName.startsWith('on') && memberName.length > 2) {
       final eventName = '${memberName.substring(2)}_event';
       for (final entry in _includedMembers.entries) {
-        if (entry.value.contains(memberName) || entry.value.contains(eventName)) return true;
+        if (entry.value.contains(memberName) ||
+            entry.value.contains(eventName)) {
+          return true;
+        }
       }
     }
     return false;

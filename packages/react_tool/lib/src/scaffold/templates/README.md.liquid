@@ -22,7 +22,15 @@ dart run react_tool:react serve
 
 The server runs on `http://localhost:8080` and the SSR worker on port
 `3001`. Server functions live in `lib/greeting.dart` and are called from
-the browser through the generated client (`lib/greeting.client.g.dart`).
+the browser through the generated client
+(`lib/.generated/greeting.client.g.dart`).
+
+For day-to-day iteration, focus on `lib/app.dart` and `lib/greeting.dart`.
+Generated output is in `lib/.generated/` and `build/react`.
+
+VS Code users get `.vscode/settings.json` preconfigured to hide generated and
+build artifacts (`.generated`, `build`, `.dart_tool`) from the Explorer by
+default.
 
 ## Test
 

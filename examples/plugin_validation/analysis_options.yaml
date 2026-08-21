@@ -1,4 +1,4 @@
-include: package:lints/recommended.yaml
+include: ../../analysis_options.yaml
 
 #plugins:
 #  react_analyzer:
@@ -16,4 +16,4 @@ analyzer:
 
 linter:
   rules:
-    - prefer_const_constructors
+    prefer_const_constructors: true

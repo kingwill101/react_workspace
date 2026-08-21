@@ -36,6 +36,7 @@ List<T> _decodeList<T>(JSArray raw, T Function(JSAny? item) decode) {
   }
   return result;
 }
+
 /// useLinkClickHandler(to: any, arg?: { target?: any; replace?: boolean; state?: any; preventScrollReset?: boolean; relative?: "route" | "path"; unstable_viewTransition?: boolean }) => (event: host value) => void
 ///
 /// See https://reactrouter.com/hooks/linkclickhandler.
@@ -48,10 +49,28 @@ external JSFunction _useLinkClickHandlerRaw(JSAny? a0, JSAny? a1);
   runtimeKey: 'reactRouter.useLinkClickHandler',
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
-void Function(Object? event) useLinkClickHandler(Object? to, {Object? target, bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_viewTransition}) {
-  final options = <String, Object?>{if (target != null) 'target': target, if (replace != null) 'replace': replace, if (state != null) 'state': state, if (preventScrollReset != null) 'preventScrollReset': preventScrollReset, if (relative != null) 'relative': relative.value, if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition};
+void Function(Object? event) useLinkClickHandler(
+  Object? to, {
+  Object? target,
+  bool? replace,
+  Object? state,
+  bool? preventScrollReset,
+  RelativeRoutingType? relative,
+  bool? unstable_viewTransition,
+}) {
+  final options = <String, Object?>{
+    if (target != null) 'target': target,
+    if (replace != null) 'replace': replace,
+    if (state != null) 'state': state,
+    if (preventScrollReset != null) 'preventScrollReset': preventScrollReset,
+    if (relative != null) 'relative': relative.value,
+    if (unstable_viewTransition != null)
+      'unstable_viewTransition': unstable_viewTransition,
+  };
   final fn = _useLinkClickHandlerRaw(to.jsify(), options.jsify());
-  return (Object? event) { fn.callAsFunction(null, event.jsify()); };
+  return (Object? event) {
+    fn.callAsFunction(null, event.jsify());
+  };
 }
 
 /// useSearchParams(defaultInit?: any) => unknown
@@ -66,9 +85,48 @@ external JSArray _useSearchParamsRaw(JSAny? a0);
   runtimeKey: 'reactRouter.useSearchParams',
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
-(Map<String, String>, void Function(Object? nextInit, {bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_flushSync, bool? unstable_viewTransition})) useSearchParams([Object? defaultInit]) {
+(
+  Map<String, String>,
+  void Function(
+    Object? nextInit, {
+    bool? replace,
+    Object? state,
+    bool? preventScrollReset,
+    RelativeRoutingType? relative,
+    bool? unstable_flushSync,
+    bool? unstable_viewTransition,
+  }),
+)
+useSearchParams([Object? defaultInit]) {
   final raw = _useSearchParamsRaw(defaultInit.jsify());
-  return (_decodePairs(raw[0] as JSArray), (Object? nextInit, {bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_flushSync, bool? unstable_viewTransition}) { (raw[1] as JSFunction).callAsFunction(null, nextInit.jsify(), <String, Object?>{if (replace != null) 'replace': replace, if (state != null) 'state': state, if (preventScrollReset != null) 'preventScrollReset': preventScrollReset, if (relative != null) 'relative': relative.value, if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync, if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition}.jsify()); });
+  return (
+    _decodePairs(raw[0] as JSArray),
+    (
+      Object? nextInit, {
+      bool? replace,
+      Object? state,
+      bool? preventScrollReset,
+      RelativeRoutingType? relative,
+      bool? unstable_flushSync,
+      bool? unstable_viewTransition,
+    }) {
+      (raw[1] as JSFunction).callAsFunction(
+        null,
+        nextInit.jsify(),
+        <String, Object?>{
+          if (replace != null) 'replace': replace,
+          if (state != null) 'state': state,
+          if (preventScrollReset != null)
+            'preventScrollReset': preventScrollReset,
+          if (relative != null) 'relative': relative.value,
+          if (unstable_flushSync != null)
+            'unstable_flushSync': unstable_flushSync,
+          if (unstable_viewTransition != null)
+            'unstable_viewTransition': unstable_viewTransition,
+        }.jsify(),
+      );
+    },
+  );
 }
 
 /// useSubmit() => (target: any, options: { method?: Record<string, unknown>; action?: string; encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; relative?: "route" | "path"; preventScrollReset?: boolean; unstable_flushSync?: boolean; replace?: boolean; state?: any; fetcherKey?: string; navigate?: boolean; unstable_viewTransition?: boolean }) => void
@@ -83,9 +141,57 @@ external JSFunction _useSubmitRaw();
   runtimeKey: 'reactRouter.useSubmit',
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
-void Function(Object? target, {Object? method, String? action, FormEncType? encType, RelativeRoutingType? relative, bool? preventScrollReset, bool? unstable_flushSync, bool? replace, Object? state, String? fetcherKey, bool? navigate, bool? unstable_viewTransition}) useSubmit() {
+void Function(
+  Object? target, {
+  Object? method,
+  String? action,
+  FormEncType? encType,
+  RelativeRoutingType? relative,
+  bool? preventScrollReset,
+  bool? unstable_flushSync,
+  bool? replace,
+  Object? state,
+  String? fetcherKey,
+  bool? navigate,
+  bool? unstable_viewTransition,
+})
+useSubmit() {
   final fn = _useSubmitRaw();
-  return (Object? target, {Object? method, String? action, FormEncType? encType, RelativeRoutingType? relative, bool? preventScrollReset, bool? unstable_flushSync, bool? replace, Object? state, String? fetcherKey, bool? navigate, bool? unstable_viewTransition}) { fn.callAsFunction(null, target.jsify(), <String, Object?>{if (method != null) 'method': method, if (action != null) 'action': action, if (encType != null) 'encType': encType.value, if (relative != null) 'relative': relative.value, if (preventScrollReset != null) 'preventScrollReset': preventScrollReset, if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync, if (replace != null) 'replace': replace, if (state != null) 'state': state, if (fetcherKey != null) 'fetcherKey': fetcherKey, if (navigate != null) 'navigate': navigate, if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition}.jsify()); };
+  return (
+    Object? target, {
+    Object? method,
+    String? action,
+    FormEncType? encType,
+    RelativeRoutingType? relative,
+    bool? preventScrollReset,
+    bool? unstable_flushSync,
+    bool? replace,
+    Object? state,
+    String? fetcherKey,
+    bool? navigate,
+    bool? unstable_viewTransition,
+  }) {
+    fn.callAsFunction(
+      null,
+      target.jsify(),
+      <String, Object?>{
+        if (method != null) 'method': method,
+        if (action != null) 'action': action,
+        if (encType != null) 'encType': encType.value,
+        if (relative != null) 'relative': relative.value,
+        if (preventScrollReset != null)
+          'preventScrollReset': preventScrollReset,
+        if (unstable_flushSync != null)
+          'unstable_flushSync': unstable_flushSync,
+        if (replace != null) 'replace': replace,
+        if (state != null) 'state': state,
+        if (fetcherKey != null) 'fetcherKey': fetcherKey,
+        if (navigate != null) 'navigate': navigate,
+        if (unstable_viewTransition != null)
+          'unstable_viewTransition': unstable_viewTransition,
+      }.jsify(),
+    );
+  };
 }
 
 /// useFormAction(action?: string, arg?: { relative?: "route" | "path" }) => string
@@ -101,7 +207,9 @@ external JSString _useFormActionRaw(JSAny? a0, JSAny? a1);
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
 String useFormAction(String? action, {RelativeRoutingType? relative}) {
-  final options = <String, Object?>{if (relative != null) 'relative': relative.value};
+  final options = <String, Object?>{
+    if (relative != null) 'relative': relative.value,
+  };
   return _useFormActionRaw(action.jsify(), options.jsify()).toDart;
 }
 
@@ -135,7 +243,10 @@ external JSArray _useFetchersRaw();
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
 List<FetchersReturnElement> useFetchers() {
-  return _decodeList(_useFetchersRaw(), (e) => FetchersReturnElement.fromJs(e as JSObject));
+  return _decodeList(
+    _useFetchersRaw(),
+    (e) => FetchersReturnElement.fromJs(e as JSObject),
+  );
 }
 
 /// useBeforeUnload(callback: (event: host value) => any, options?: { capture?: boolean }) => void
@@ -168,7 +279,9 @@ external JSString _useHrefRaw(JSAny? a0, JSAny? a1);
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
 String useHref(Object? to, {RelativeRoutingType? relative}) {
-  final options = <String, Object?>{if (relative != null) 'relative': relative.value};
+  final options = <String, Object?>{
+    if (relative != null) 'relative': relative.value,
+  };
   return _useHrefRaw(to.jsify(), options.jsify()).toDart;
 }
 
@@ -232,8 +345,22 @@ external JSObject _useMatchRaw(JSAny? a0);
   runtimeKey: 'reactRouter.useMatch',
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
-PathMatch useMatch({Path? path, bool? caseSensitive, bool? end, String? pathname, String? search, String? hash}) {
-  final options = <String, Object?>{if (path != null) 'path': path, if (caseSensitive != null) 'caseSensitive': caseSensitive, if (end != null) 'end': end, if (pathname != null) 'pathname': pathname, if (search != null) 'search': search, if (hash != null) 'hash': hash};
+PathMatch useMatch({
+  Path? path,
+  bool? caseSensitive,
+  bool? end,
+  String? pathname,
+  String? search,
+  String? hash,
+}) {
+  final options = <String, Object?>{
+    if (path != null) 'path': path,
+    if (caseSensitive != null) 'caseSensitive': caseSensitive,
+    if (end != null) 'end': end,
+    if (pathname != null) 'pathname': pathname,
+    if (search != null) 'search': search,
+    if (hash != null) 'hash': hash,
+  };
   return PathMatch.fromJs(_useMatchRaw(options.jsify()));
 }
 
@@ -249,9 +376,42 @@ external JSFunction _useNavigateRaw();
   runtimeKey: 'reactRouter.useNavigate',
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
-void Function(Object? to, {bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_flushSync, bool? unstable_viewTransition}) useNavigate() {
+void Function(
+  Object? to, {
+  bool? replace,
+  Object? state,
+  bool? preventScrollReset,
+  RelativeRoutingType? relative,
+  bool? unstable_flushSync,
+  bool? unstable_viewTransition,
+})
+useNavigate() {
   final fn = _useNavigateRaw();
-  return (Object? to, {bool? replace, Object? state, bool? preventScrollReset, RelativeRoutingType? relative, bool? unstable_flushSync, bool? unstable_viewTransition}) { fn.callAsFunction(null, to.jsify(), <String, Object?>{if (replace != null) 'replace': replace, if (state != null) 'state': state, if (preventScrollReset != null) 'preventScrollReset': preventScrollReset, if (relative != null) 'relative': relative.value, if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync, if (unstable_viewTransition != null) 'unstable_viewTransition': unstable_viewTransition}.jsify()); };
+  return (
+    Object? to, {
+    bool? replace,
+    Object? state,
+    bool? preventScrollReset,
+    RelativeRoutingType? relative,
+    bool? unstable_flushSync,
+    bool? unstable_viewTransition,
+  }) {
+    fn.callAsFunction(
+      null,
+      to.jsify(),
+      <String, Object?>{
+        if (replace != null) 'replace': replace,
+        if (state != null) 'state': state,
+        if (preventScrollReset != null)
+          'preventScrollReset': preventScrollReset,
+        if (relative != null) 'relative': relative.value,
+        if (unstable_flushSync != null)
+          'unstable_flushSync': unstable_flushSync,
+        if (unstable_viewTransition != null)
+          'unstable_viewTransition': unstable_viewTransition,
+      }.jsify(),
+    );
+  };
 }
 
 /// useOutletContext() => any
@@ -315,7 +475,9 @@ external JSObject _useResolvedPathRaw(JSAny? a0, JSAny? a1);
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
 Path useResolvedPath(Object? to, {RelativeRoutingType? relative}) {
-  final options = <String, Object?>{if (relative != null) 'relative': relative.value};
+  final options = <String, Object?>{
+    if (relative != null) 'relative': relative.value,
+  };
   return Path.fromJs(_useResolvedPathRaw(to.jsify(), options.jsify()));
 }
 
@@ -513,35 +675,39 @@ extension type _BlockerReturnJs(JSObject _) implements JSObject {
 /// proceed: () => void
 /// location: { pathname: string; search: string; hash: string; state: any; key: string }
 final class BlockerReturn {
-  BlockerReturn._(this._value, {
+  BlockerReturn._({
     required this.state,
     required this.reset,
     required this.proceed,
     required this.location,
   });
 
-  final _BlockerReturnJs _value;
-
   /// TS: "unblocked" | "blocked" | "proceeding"
   final BlockerReturnState state;
+
   /// TS: () => void
   final void Function() reset;
+
   /// TS: () => void
   final void Function() proceed;
+
   /// TS: { pathname: string; search: string; hash: string; state: any; key: string }
   final Location location;
 
   /// Decodes the shim's raw JS object.
   factory BlockerReturn.fromJs(JSObject js) {
     final v = _BlockerReturnJs(js);
-    return BlockerReturn._(v,
-      state: BlockerReturnState.fromValue((v.state as JSString).toDart),
-      reset: () { v.reset.callAsFunction(null); },
-      proceed: () { v.proceed.callAsFunction(null); },
-      location: Location.fromJs(v.location as JSObject),
+    return BlockerReturn._(
+      state: BlockerReturnState.fromValue(v.state.toDart),
+      reset: () {
+        v.reset.callAsFunction(null);
+      },
+      proceed: () {
+        v.proceed.callAsFunction(null);
+      },
+      location: Location.fromJs(v.location),
     );
   }
-
 }
 
 /// Typed JS interop extension for `FetcherReturn` hook return values.
@@ -573,7 +739,7 @@ extension type _FetcherReturnJs(JSObject _) implements JSObject {
 /// submit: (target: any, options: { method?: Record<string, unknown>; action?: string; encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; relative?: "route" | "path"; preventScrollReset?: boolean; unstable_flushSync?: boolean }) => void
 /// load: (href: string, opts: { unstable_flushSync?: boolean }) => void
 final class FetcherReturn {
-  FetcherReturn._(this._value, {
+  FetcherReturn._({
     required this.state,
     required this.formMethod,
     required this.formAction,
@@ -587,49 +753,98 @@ final class FetcherReturn {
     required this.load,
   });
 
-  final _FetcherReturnJs _value;
-
   /// TS: "idle" | "loading" | "submitting"
   final FetcherReturnState state;
+
   /// TS: Record<string, unknown>
   final Object? formMethod;
+
   /// TS: string
   final String formAction;
+
   /// TS: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"
   final FormEncType formEncType;
+
   /// TS: string
   final String text;
+
   /// TS: any
   final Object? formData;
+
   /// TS: Record<string, unknown>
   final Object? json;
+
   /// TS: any
   final Object? data;
+
   /// TS: { method?: Record<string, unknown>; encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain"; action?: string; relative?: "route" | "path"; preventScrollReset?: boolean; onSubmit?: any }
   final FetcherReturnForm Form;
+
   /// TS: (target: any, options: { method?: Record<string, unknown>; action?: string; encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; relative?: "route" | "path"; preventScrollReset?: boolean; unstable_flushSync?: boolean }) => void
-  final void Function(Object? target, {Object? method, String? action, FormEncType? encType, RelativeRoutingType? relative, bool? preventScrollReset, bool? unstable_flushSync}) submit;
+  final void Function(
+    Object? target, {
+    Object? method,
+    String? action,
+    FormEncType? encType,
+    RelativeRoutingType? relative,
+    bool? preventScrollReset,
+    bool? unstable_flushSync,
+  })
+  submit;
+
   /// TS: (href: string, opts: { unstable_flushSync?: boolean }) => void
   final void Function(String href, {bool? unstable_flushSync}) load;
 
   /// Decodes the shim's raw JS object.
   factory FetcherReturn.fromJs(JSObject js) {
     final v = _FetcherReturnJs(js);
-    return FetcherReturn._(v,
-      state: FetcherReturnState.fromValue((v.state as JSString).toDart),
+    return FetcherReturn._(
+      state: FetcherReturnState.fromValue(v.state.toDart),
       formMethod: v.formMethod,
-      formAction: (v.formAction as JSString).toDart,
-      formEncType: FormEncType.fromValue((v.formEncType as JSString).toDart),
-      text: (v.text as JSString).toDart,
+      formAction: v.formAction.toDart,
+      formEncType: FormEncType.fromValue(v.formEncType.toDart),
+      text: v.text.toDart,
       formData: v.formData,
       json: v.json,
       data: v.data,
-      Form: FetcherReturnForm.fromJs(v.Form as JSObject),
-      submit: (Object? target, {Object? method, String? action, FormEncType? encType, RelativeRoutingType? relative, bool? preventScrollReset, bool? unstable_flushSync}) { v.submit.callAsFunction(null, target.jsify(), <String, Object?>{if (method != null) 'method': method, if (action != null) 'action': action, if (encType != null) 'encType': encType.value, if (relative != null) 'relative': relative.value, if (preventScrollReset != null) 'preventScrollReset': preventScrollReset, if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync}.jsify()); },
-      load: (String href, {bool? unstable_flushSync}) { v.load.callAsFunction(null, href.toJS, <String, Object?>{if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync}.jsify()); },
+      Form: FetcherReturnForm.fromJs(v.Form),
+      submit:
+          (
+            Object? target, {
+            Object? method,
+            String? action,
+            FormEncType? encType,
+            RelativeRoutingType? relative,
+            bool? preventScrollReset,
+            bool? unstable_flushSync,
+          }) {
+            v.submit.callAsFunction(
+              null,
+              target.jsify(),
+              <String, Object?>{
+                if (method != null) 'method': method,
+                if (action != null) 'action': action,
+                if (encType != null) 'encType': encType.value,
+                if (relative != null) 'relative': relative.value,
+                if (preventScrollReset != null)
+                  'preventScrollReset': preventScrollReset,
+                if (unstable_flushSync != null)
+                  'unstable_flushSync': unstable_flushSync,
+              }.jsify(),
+            );
+          },
+      load: (String href, {bool? unstable_flushSync}) {
+        v.load.callAsFunction(
+          null,
+          href.toJS,
+          <String, Object?>{
+            if (unstable_flushSync != null)
+              'unstable_flushSync': unstable_flushSync,
+          }.jsify(),
+        );
+      },
     );
   }
-
 }
 
 /// Typed JS interop extension for `FetcherReturnForm` hook return values.
@@ -653,7 +868,7 @@ extension type _FetcherReturnFormJs(JSObject _) implements JSObject {
 /// action?: string; relative?: "route" | "path"; preventScrollReset?: boolean
 /// onSubmit?: any
 final class FetcherReturnForm {
-  FetcherReturnForm._(this._value, {
+  FetcherReturnForm._({
     required this.method,
     required this.encType,
     required this.action,
@@ -662,34 +877,42 @@ final class FetcherReturnForm {
     required this.onSubmit,
   });
 
-  final _FetcherReturnFormJs _value;
-
   /// TS: Record<string, unknown>
   final Object? method;
+
   /// TS: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain"
   final FetcherReturnFormEncType? encType;
+
   /// TS: string
   final String? action;
+
   /// TS: "route" | "path"
   final RelativeRoutingType? relative;
+
   /// TS: boolean
   final bool? preventScrollReset;
+
   /// TS: any
   final Object? onSubmit;
 
   /// Decodes the shim's raw JS object.
   factory FetcherReturnForm.fromJs(JSObject js) {
     final v = _FetcherReturnFormJs(js);
-    return FetcherReturnForm._(v,
+    return FetcherReturnForm._(
       method: v.method == null ? null : v.method,
-      encType: v.encType == null ? null : FetcherReturnFormEncType.fromValue((v.encType as JSString).toDart),
+      encType: v.encType == null
+          ? null
+          : FetcherReturnFormEncType.fromValue((v.encType as JSString).toDart),
       action: v.action == null ? null : (v.action as JSString).toDart,
-      relative: v.relative == null ? null : RelativeRoutingType.fromValue((v.relative as JSString).toDart),
-      preventScrollReset: v.preventScrollReset == null ? null : (v.preventScrollReset as JSBoolean).toDart,
+      relative: v.relative == null
+          ? null
+          : RelativeRoutingType.fromValue((v.relative as JSString).toDart),
+      preventScrollReset: v.preventScrollReset == null
+          ? null
+          : (v.preventScrollReset as JSBoolean).toDart,
       onSubmit: v.onSubmit == null ? null : v.onSubmit,
     );
   }
-
 }
 
 /// Typed JS interop extension for `FetchersReturnElement` hook return values.
@@ -706,7 +929,8 @@ extension type _FetchersReturnElementJs(JSObject _) implements JSObject {
   external JSAny? get formData;
   external JSObject get json;
   external JSAny? get data;
-  @JS('key') external JSString get elementKey;
+  @JS('key')
+  external JSString get elementKey;
 }
 
 /// Value class for `FetchersReturnElement` (decoded from the hook shim).
@@ -717,7 +941,7 @@ extension type _FetchersReturnElementJs(JSObject _) implements JSObject {
 /// text: string; formData: any; json: Record<string, unknown>; data: any
 /// key: string
 final class FetchersReturnElement {
-  FetchersReturnElement._(this._value, {
+  FetchersReturnElement._({
     required this.state,
     required this.formMethod,
     required this.formAction,
@@ -729,100 +953,48 @@ final class FetchersReturnElement {
     required this.elementKey,
   });
 
-  final _FetchersReturnElementJs _value;
-
   /// TS: "idle" | "loading" | "submitting"
   final FetcherReturnState state;
+
   /// TS: Record<string, unknown>
   final Object? formMethod;
+
   /// TS: string
   final String formAction;
+
   /// TS: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"
   final FormEncType formEncType;
+
   /// TS: string
   final String text;
+
   /// TS: any
   final Object? formData;
+
   /// TS: Record<string, unknown>
   final Object? json;
+
   /// TS: any
   final Object? data;
+
   /// TS: string
   final String elementKey;
 
   /// Decodes the shim's raw JS object.
   factory FetchersReturnElement.fromJs(JSObject js) {
     final v = _FetchersReturnElementJs(js);
-    return FetchersReturnElement._(v,
-      state: FetcherReturnState.fromValue((v.state as JSString).toDart),
+    return FetchersReturnElement._(
+      state: FetcherReturnState.fromValue(v.state.toDart),
       formMethod: v.formMethod,
-      formAction: (v.formAction as JSString).toDart,
-      formEncType: FormEncType.fromValue((v.formEncType as JSString).toDart),
-      text: (v.text as JSString).toDart,
+      formAction: v.formAction.toDart,
+      formEncType: FormEncType.fromValue(v.formEncType.toDart),
+      text: v.text.toDart,
       formData: v.formData,
       json: v.json,
       data: v.data,
-      elementKey: (v.elementKey as JSString).toDart,
+      elementKey: v.elementKey.toDart,
     );
   }
-
-}
-
-/// Typed JS interop extension for `Location` hook return values.
-///
-/// Direct property access on the raw JS object avoids the
-/// generic [[key, value]] pairs conversion used by
-/// `_pairsMap` (removed in this generation).
-extension type _LocationJs(JSObject _) implements JSObject {
-  external JSString get pathname;
-  external JSString get search;
-  external JSString get hash;
-  external JSAny? get state;
-  @JS('key') external JSString get elementKey;
-}
-
-/// Value class for `Location` (decoded from the hook shim).
-///
-/// pathname: string; search: string; hash: string; state: any; key: string
-final class Location {
-  Location._(this._value, {
-    required this.pathname,
-    required this.search,
-    required this.hash,
-    required this.state,
-    required this.elementKey,
-  });
-
-  final _LocationJs _value;
-
-  /// TS: string
-  final String pathname;
-  /// TS: string
-  final String search;
-  /// TS: string
-  final String hash;
-  /// TS: any
-  final Object? state;
-  /// TS: string
-  final String elementKey;
-
-  /// Decodes the shim's raw JS object.
-  factory Location.fromJs(JSObject js) {
-    final v = _LocationJs(js);
-    return Location._(v,
-      pathname: (v.pathname as JSString).toDart,
-      search: (v.search as JSString).toDart,
-      hash: (v.hash as JSString).toDart,
-      state: v.state,
-      elementKey: (v.elementKey as JSString).toDart,
-    );
-  }
-
-  /// The full path including the query string.
-  String get fullPath => '$pathname$search$hash';
-
-  @override
-  String toString() => fullPath;
 }
 
 /// Typed JS interop extension for `NavigationReturn` hook return values.
@@ -849,7 +1021,7 @@ extension type _NavigationReturnJs(JSObject _) implements JSObject {
 /// formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"
 /// formData: any; json: Record<string, unknown>; text: string
 final class NavigationReturn {
-  NavigationReturn._(this._value, {
+  NavigationReturn._({
     required this.state,
     required this.location,
     required this.formMethod,
@@ -860,40 +1032,44 @@ final class NavigationReturn {
     required this.text,
   });
 
-  final _NavigationReturnJs _value;
-
   /// TS: "idle" | "loading" | "submitting"
   final FetcherReturnState state;
+
   /// TS: { pathname: string; search: string; hash: string; state: any; key: string }
   final Location location;
+
   /// TS: Record<string, unknown>
   final Object? formMethod;
+
   /// TS: string
   final String formAction;
+
   /// TS: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"
   final FormEncType formEncType;
+
   /// TS: any
   final Object? formData;
+
   /// TS: Record<string, unknown>
   final Object? json;
+
   /// TS: string
   final String text;
 
   /// Decodes the shim's raw JS object.
   factory NavigationReturn.fromJs(JSObject js) {
     final v = _NavigationReturnJs(js);
-    return NavigationReturn._(v,
-      state: FetcherReturnState.fromValue((v.state as JSString).toDart),
-      location: Location.fromJs(v.location as JSObject),
+    return NavigationReturn._(
+      state: FetcherReturnState.fromValue(v.state.toDart),
+      location: Location.fromJs(v.location),
       formMethod: v.formMethod,
-      formAction: (v.formAction as JSString).toDart,
-      formEncType: FormEncType.fromValue((v.formEncType as JSString).toDart),
+      formAction: v.formAction.toDart,
+      formEncType: FormEncType.fromValue(v.formEncType.toDart),
       formData: v.formData,
       json: v.json,
-      text: (v.text as JSString).toDart,
+      text: v.text.toDart,
     );
   }
-
 }
 
 /// Typed JS interop extension for `RevalidatorReturn` hook return values.
@@ -910,79 +1086,24 @@ extension type _RevalidatorReturnJs(JSObject _) implements JSObject {
 ///
 /// revalidate: () => void; state: "idle" | "loading"
 final class RevalidatorReturn {
-  RevalidatorReturn._(this._value, {
-    required this.revalidate,
-    required this.state,
-  });
-
-  final _RevalidatorReturnJs _value;
+  RevalidatorReturn._({required this.revalidate, required this.state});
 
   /// TS: () => void
   final void Function() revalidate;
+
   /// TS: "idle" | "loading"
   final RevalidationState state;
 
   /// Decodes the shim's raw JS object.
   factory RevalidatorReturn.fromJs(JSObject js) {
     final v = _RevalidatorReturnJs(js);
-    return RevalidatorReturn._(v,
-      revalidate: () { v.revalidate.callAsFunction(null); },
-      state: RevalidationState.fromValue((v.state as JSString).toDart),
+    return RevalidatorReturn._(
+      revalidate: () {
+        v.revalidate.callAsFunction(null);
+      },
+      state: RevalidationState.fromValue(v.state.toDart),
     );
   }
-
-}
-
-/// Typed JS interop extension for `UIMatch` hook return values.
-///
-/// Direct property access on the raw JS object avoids the
-/// generic [[key, value]] pairs conversion used by
-/// `_pairsMap` (removed in this generation).
-extension type _UIMatchJs(JSObject _) implements JSObject {
-  external JSString get id;
-  external JSString get pathname;
-  external JSArray get params;
-  external JSAny? get data;
-  external JSAny? get handle;
-}
-
-/// Value class for `UIMatch` (decoded from the hook shim).
-///
-/// id: string; pathname: string; params: unknown; data: any; handle: any
-final class UIMatch {
-  UIMatch._(this._value, {
-    required this.id,
-    required this.pathname,
-    required this.params,
-    required this.data,
-    required this.handle,
-  });
-
-  final _UIMatchJs _value;
-
-  /// TS: string
-  final String id;
-  /// TS: string
-  final String pathname;
-  /// TS: unknown
-  final Map<String, String> params;
-  /// TS: any
-  final Object? data;
-  /// TS: any
-  final Object? handle;
-
-  /// Decodes the shim's raw JS object.
-  factory UIMatch.fromJs(JSObject js) {
-    final v = _UIMatchJs(js);
-    return UIMatch._(v,
-      id: (v.id as JSString).toDart,
-      pathname: (v.pathname as JSString).toDart,
-      params: _decodePairs(v.params as JSArray),
-      data: v.data,
-      handle: v.handle,
-    );
-  }
-
 }
 
 /// Literal union: "unblocked" | "blocked" | "proceeding"
@@ -990,13 +1111,15 @@ enum BlockerReturnState {
   unblocked('unblocked'),
   blocked('blocked'),
   proceeding('proceeding');
+
   const BlockerReturnState(this.value);
   final String value;
 
   /// Decodes a JS string value into this enum.
   static BlockerReturnState fromValue(String value) => values.firstWhere(
     (e) => e.value == value,
-    orElse: () => throw ArgumentError.value(value, 'value', 'Unknown BlockerReturnState'),
+    orElse: () =>
+        throw ArgumentError.value(value, 'value', 'Unknown BlockerReturnState'),
   );
 }
 
@@ -1005,13 +1128,18 @@ enum FetcherReturnFormEncType {
   applicationXWwwFormUrlencoded('application/x-www-form-urlencoded'),
   multipartFormData('multipart/form-data'),
   textPlain('text/plain');
+
   const FetcherReturnFormEncType(this.value);
   final String value;
 
   /// Decodes a JS string value into this enum.
   static FetcherReturnFormEncType fromValue(String value) => values.firstWhere(
     (e) => e.value == value,
-    orElse: () => throw ArgumentError.value(value, 'value', 'Unknown FetcherReturnFormEncType'),
+    orElse: () => throw ArgumentError.value(
+      value,
+      'value',
+      'Unknown FetcherReturnFormEncType',
+    ),
   );
 }
 
@@ -1020,13 +1148,15 @@ enum FetcherReturnState {
   idle('idle'),
   loading('loading'),
   submitting('submitting');
+
   const FetcherReturnState(this.value);
   final String value;
 
   /// Decodes a JS string value into this enum.
   static FetcherReturnState fromValue(String value) => values.firstWhere(
     (e) => e.value == value,
-    orElse: () => throw ArgumentError.value(value, 'value', 'Unknown FetcherReturnState'),
+    orElse: () =>
+        throw ArgumentError.value(value, 'value', 'Unknown FetcherReturnState'),
   );
 }
 
@@ -1034,13 +1164,14 @@ enum FetcherReturnState {
 enum RevalidationState {
   idle('idle'),
   loading('loading');
+
   const RevalidationState(this.value);
   final String value;
 
   /// Decodes a JS string value into this enum.
   static RevalidationState fromValue(String value) => values.firstWhere(
     (e) => e.value == value,
-    orElse: () => throw ArgumentError.value(value, 'value', 'Unknown RevalidationState'),
+    orElse: () =>
+        throw ArgumentError.value(value, 'value', 'Unknown RevalidationState'),
   );
 }
-

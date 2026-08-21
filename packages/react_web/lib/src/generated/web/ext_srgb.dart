@@ -2,7 +2,4 @@
 // Neutral Web surface for spec: EXT_sRGB
 // ignore_for_file: type=lint
 
-
-abstract interface class EXT_sRGB {
-}
-
+abstract interface class EXT_sRGB {}

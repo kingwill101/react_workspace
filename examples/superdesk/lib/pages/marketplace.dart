@@ -1,25 +1,49 @@
 import 'package:react_web/react_web.dart';
 
-
 @reactComponent
 ReactNode MarketplacePage(({Function(String) onToast}) props) {
   final items = [
-    {'name': 'Colors Bingo', 'author': 'Sarah M.', 'price': 'Free', 'badge': 'Popular', 'color': '#FFE8A3'},
-    {'name': 'Verb Conjugation', 'author': 'Carlos R.', 'price': '\$2.99', 'badge': 'New', 'color': '#C8E8FF'},
-    {'name': 'Food Vocabulary', 'author': 'Yuki T.', 'price': 'Free', 'badge': '', 'color': '#C8F5D4'},
-    {'name': 'Travel Phrases', 'author': 'Marie L.', 'price': '\$1.99', 'badge': 'Premium', 'color': '#FFC9CE'},
+    {
+      'name': 'Colors Bingo',
+      'author': 'Sarah M.',
+      'price': 'Free',
+      'badge': 'Popular',
+      'color': '#FFE8A3',
+    },
+    {
+      'name': 'Verb Conjugation',
+      'author': 'Carlos R.',
+      'price': '\$2.99',
+      'badge': 'New',
+      'color': '#C8E8FF',
+    },
+    {
+      'name': 'Food Vocabulary',
+      'author': 'Yuki T.',
+      'price': 'Free',
+      'badge': '',
+      'color': '#C8F5D4',
+    },
+    {
+      'name': 'Travel Phrases',
+      'author': 'Marie L.',
+      'price': '\$1.99',
+      'badge': 'Premium',
+      'color': '#FFC9CE',
+    },
   ];
 
   return div(
     className: 'space-y-5',
     children: [
       div(
-        className: 'bg-white border-3 border-dark rounded-[28px] shadow-[6px_6px_0px_#111] p-5',
+        className:
+            'bg-white border-3 border-dark rounded-[28px] shadow-[6px_6px_0px_#111] p-5',
         children: [
           h4(
             className: 'font-black mb-4',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('Lesson Marketplace')],
+            children: [const Text('Lesson Marketplace')],
           ),
           div(
             className: 'grid md:grid-cols-2 lg:grid-cols-4 gap-4',
@@ -27,7 +51,8 @@ ReactNode MarketplacePage(({Function(String) onToast}) props) {
               for (final item in items)
                 div(
                   key: item['name'] as String,
-                  className: 'bg-cream border-3 border-dark rounded-[20px] shadow-chunky p-4 flex flex-col gap-3',
+                  className:
+                      'bg-cream border-3 border-dark rounded-[20px] shadow-chunky p-4 flex flex-col gap-3',
                   style: {'background': item['color'] as String},
                   children: [
                     div(
@@ -39,7 +64,8 @@ ReactNode MarketplacePage(({Function(String) onToast}) props) {
                         ),
                         if (item['badge'] != null && item['badge']!.isNotEmpty)
                           span(
-                            className: 'text-[10px] font-black bg-white border-2 border-dark rounded-full px-2 py-0.5',
+                            className:
+                                'text-[10px] font-black bg-white border-2 border-dark rounded-full px-2 py-0.5',
                             children: [Text(item['badge'] as String)],
                           ),
                       ],
@@ -57,13 +83,15 @@ ReactNode MarketplacePage(({Function(String) onToast}) props) {
                         ),
                         button(
                           onClick: (_) => props.onToast('Cloned to library ✨'),
-                          className: 'h-[32px] px-3 bg-white border-2 border-dark rounded-full font-black text-[11px] flex items-center gap-1',
-                          children: [Text('Clone')],
+                          className:
+                              'h-[32px] px-3 bg-white border-2 border-dark rounded-full font-black text-[11px] flex items-center gap-1',
+                          children: [const Text('Clone')],
                         ),
                         button(
                           onClick: (_) => props.onToast('Added to cart! 🛒'),
-                          className: 'h-[32px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
-                          children: [Text('Add')],
+                          className:
+                              'h-[32px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
+                          children: [const Text('Add')],
                         ),
                       ],
                     ),

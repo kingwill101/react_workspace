@@ -3,7 +3,8 @@ import 'package:react_web/react_web.dart';
 import '../app_context.dart';
 import '../styles/todo.module.dart';
 import 'todos_contract.dart' show TodoItem;
-import 'todos_actions.client.g.dart' show listTodosAction, toggleTodoAction;
+import '../.generated/todos/todos_actions.client.g.dart'
+    show listTodosAction, toggleTodoAction;
 
 @reactComponent
 ReactNode TodoApp(({String title}) props) {

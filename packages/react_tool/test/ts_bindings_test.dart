@@ -200,7 +200,7 @@ void main() {
       );
       // Typed props (classes, enum, callback typedef).
       expect(code, contains('ReactNode greeting('));
-      expect(code, contains('  List<ReactNode> children = const [],'));
+      expect(code, contains('  ReactChildren children = const [],'));
       expect(code, contains('String? name,'));
       expect(code, contains('required num count,'));
       expect(code, contains('List<String>? items,'));
@@ -283,7 +283,7 @@ void main() {
         declarations: const [greetingDecl],
         commandLine: 'x',
       );
-      expect(code, contains('  List<ReactNode> children = const [],'));
+      expect(code, contains('  ReactChildren children = const [],'));
       expect(code, contains("if (badge != null) 'badge': badge,"));
       // children must NOT also appear in the props map.
       expect(
@@ -309,7 +309,7 @@ void main() {
         declarations: [decl],
         commandLine: 'x',
       );
-      expect(code, contains('  List<ReactNode> children = const [],'));
+      expect(code, contains('  ReactChildren children = const [],'));
       expect(code, contains('  children: children,'));
       expect(
         code.split("if (children != null) 'children': children,").length,
@@ -337,7 +337,13 @@ void main() {
         name: 'useThing',
         kind: 'hook',
         props: [],
-        params: [TsIrProp(name: 'key', required: true, type: TsIrType(kind: 'string'))],
+        params: [
+          TsIrProp(
+            name: 'key',
+            required: true,
+            type: TsIrType(kind: 'string'),
+          ),
+        ],
         returns: TsIrType(kind: 'string'),
       );
       final shim = generateShim(
@@ -391,7 +397,100 @@ void main() {
       expect(code, contains('external JSString get elementKey;'));
       // …but the extension getter must read the real JS property `key`.
       expect(code, contains("@JS('key') external JSString get elementKey;"));
-      expect(code, contains('elementKey: (v.elementKey as JSString).toDart,'));
+      expect(code, contains('elementKey: v.elementKey.toDart,'));
+      expect(code, isNot(contains('final _LocationJs _value;')));
+    });
+
+    test('function object returns emit nullable types and JS decoders', () {
+      const decl = TsIrDeclaration(
+        name: 'createThing',
+        kind: 'function',
+        props: [],
+        params: [],
+        returns: TsIrType(
+          kind: 'object',
+          members: [
+            TsIrProp(
+              name: 'id',
+              required: true,
+              type: TsIrType(kind: 'string'),
+            ),
+            TsIrProp(
+              name: 'state',
+              required: true,
+              type: TsIrType(kind: 'any'),
+            ),
+          ],
+        ),
+      );
+
+      final code = generateBindings(
+        specifier: 'fake-pkg',
+        declarations: const [decl],
+        commandLine: 'react ts bind fake-pkg createThing',
+      );
+
+      expect(code, contains('CreateThingReturn? createThing()'));
+      expect(code, contains('factory CreateThingReturn.fromJs(JSObject js)'));
+      expect(
+        code,
+        contains('return CreateThingReturn.fromJs(raw as JSObject);'),
+      );
+      expect(code, contains('required Object? this.state'));
+      expect(code, contains('state: rawState,'));
+      expect(code, isNot(contains('Object??')));
+    });
+
+    test('nested callbacks keep their positional TypeScript shape', () {
+      const options = TsIrType(
+        kind: 'object',
+        members: [
+          TsIrProp(
+            name: 'state',
+            required: false,
+            type: TsIrType(kind: 'any'),
+          ),
+        ],
+      );
+      const callback = TsIrType(
+        kind: 'function',
+        params: [
+          TsIrProp(
+            name: 'state',
+            required: true,
+            type: TsIrType(kind: 'any'),
+          ),
+          TsIrProp(name: 'opts', required: true, type: options),
+        ],
+        returns: TsIrType(kind: 'void'),
+      );
+      const decl = TsIrDeclaration(
+        name: 'createNavigator',
+        kind: 'function',
+        props: [],
+        params: [],
+        returns: TsIrType(
+          kind: 'object',
+          members: [
+            TsIrProp(name: 'push', required: true, type: callback),
+            TsIrProp(
+              name: '__ref',
+              required: false,
+              type: TsIrType(kind: 'string'),
+            ),
+          ],
+        ),
+      );
+
+      final code = generateBindings(
+        specifier: 'fake-pkg',
+        declarations: const [decl],
+        commandLine: 'react ts bind fake-pkg createNavigator',
+      );
+
+      expect(code, contains('void Function(Object? state, Object? opts)'));
+      expect(code, contains('String? this.privateRef'));
+      expect(code, isNot(contains('Object? state, {')));
     });
 
     test('typePrefix namespaces generated type names', () {

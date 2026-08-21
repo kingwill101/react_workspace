@@ -10,17 +10,24 @@ class InvalidReactComponentRule extends AnalysisRule {
   static const LintCode code = LintCode(
     'invalid_react_component',
     'Invalid @ReactComponent signature.',
-    correctionMessage: 'Fix the component signature to match the expected shape.',
+    correctionMessage:
+        'Fix the component signature to match the expected shape.',
   );
 
   InvalidReactComponentRule()
-      : super(name: 'invalid_react_component', description: 'Validates @ReactComponent signatures.');
+    : super(
+        name: 'invalid_react_component',
+        description: 'Validates @ReactComponent signatures.',
+      );
 
   @override
   LintCode get diagnosticCode => code;
 
   @override
-  void registerNodeProcessors(RuleVisitorRegistry registry, RuleContext context) {
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
     registry.addFunctionDeclaration(this, _Visitor(this, context));
   }
 }

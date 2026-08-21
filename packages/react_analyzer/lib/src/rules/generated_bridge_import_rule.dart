@@ -14,13 +14,19 @@ class GeneratedBridgeImportRule extends AnalysisRule {
   );
 
   GeneratedBridgeImportRule()
-      : super(name: 'generated_bridge_import', description: 'Flags *.react.g.dart imports.');
+    : super(
+        name: 'generated_bridge_import',
+        description: 'Flags *.react.g.dart imports.',
+      );
 
   @override
   LintCode get diagnosticCode => code;
 
   @override
-  void registerNodeProcessors(RuleVisitorRegistry registry, RuleContext context) {
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
     registry.addCompilationUnit(this, _Visitor(this, context));
   }
 }

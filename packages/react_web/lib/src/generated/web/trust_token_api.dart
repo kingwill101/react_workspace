@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: trust-token-api
 // ignore_for_file: type=lint
 
-
 typedef OperationType = String;
 
 abstract interface class PrivateToken {
@@ -37,4 +36,3 @@ final class PrivateTokenValue implements PrivateToken {
 typedef RefreshPolicy = String;
 
 typedef TokenVersion = String;
-

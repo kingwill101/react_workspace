@@ -6,6 +6,7 @@ import 'package:liquify/liquify.dart';
 import 'package:path/path.dart' as p;
 
 import 'project_config.dart';
+import 'react_versions.dart';
 
 const _templatesPackageUri = 'package:react_tool/src/scaffold/templates/';
 
@@ -16,6 +17,7 @@ const _ssrTemplateOutputs = <String, String>{
   'pubspec.yaml.liquid': 'pubspec.yaml',
   'analysis_options.yaml.liquid': 'analysis_options.yaml',
   '.gitignore.liquid': '.gitignore',
+  'vscode_settings.json.liquid': '.vscode/settings.json',
   'react.yaml.liquid': 'react.yaml',
   'package.json.liquid': 'package.json',
   'web/index.html.liquid': 'web/index.html',
@@ -37,6 +39,7 @@ const _clientTemplateOutputs = <String, String>{
   'pubspec.client.yaml.liquid': 'pubspec.yaml',
   'analysis_options.yaml.liquid': 'analysis_options.yaml',
   '.gitignore.liquid': '.gitignore',
+  'vscode_settings.json.liquid': '.vscode/settings.json',
   'react.client.yaml.liquid': 'react.yaml',
   'package.json.liquid': 'package.json',
   'web/index.client.html.liquid': 'web/index.html',
@@ -46,6 +49,30 @@ const _clientTemplateOutputs = <String, String>{
   'lib/greeting.client.dart.liquid': 'lib/greeting.dart',
   'README.client.md.liquid': 'README.md',
   'test/app_test.client.dart.liquid': 'test/app_test.dart',
+};
+
+const _routedTemplateOutputs = <String, String>{
+  ..._ssrTemplateOutputs,
+  'pubspec.routed.yaml.liquid': 'pubspec.yaml',
+  'bin/server.routed.dart.liquid': 'bin/server.dart',
+  'README.routed.md.liquid': 'README.md',
+};
+
+const _routedMinimalTemplateOutputs = <String, String>{
+  'pubspec.routed.yaml.liquid': 'pubspec.yaml',
+  'analysis_options.yaml.liquid': 'analysis_options.yaml',
+  '.gitignore.liquid': '.gitignore',
+  'vscode_settings.json.liquid': '.vscode/settings.json',
+  'react.yaml.liquid': 'react.yaml',
+  'package.json.liquid': 'package.json',
+  'web/index.html.liquid': 'web/index.html',
+  'web/styles.scss.liquid': 'web/styles.scss',
+  'web/client.dart.liquid': 'web/client.dart',
+  'lib/app.dart.liquid': 'lib/app.dart',
+  'lib/greeting.dart.liquid': 'lib/greeting.dart',
+  'lib/ssr.dart.liquid': 'lib/ssr.dart',
+  'bin/server.routed.dart.liquid': 'bin/server.dart',
+  'README.routed-minimal.md.liquid': 'README.md',
 };
 
 /// Generates a new React Dart project from Liquid templates.
@@ -58,7 +85,8 @@ final class ScaffoldGenerator {
   /// Renders every template into [target]. Throws [ReactToolException] if
   /// [target] already exists unless [force] is set.
   ///
-  /// [template] selects the scaffold variant: `'ssr'` (default) or `'client'`.
+  /// [template] selects the scaffold variant: `'ssr'` (default), `'client'`, or
+  /// `'routed'`, or `'routed-minimal'`.
   Future<void> generate({
     required String name,
     required String packagesPath,
@@ -77,11 +105,15 @@ final class ScaffoldGenerator {
       'name': name,
       'packagesPath': packagesPath,
       'title': _humanize(name),
+      'reactVersion': ReactVersionPolicy.managedVersion,
     };
 
-    final outputs = template == 'client'
-        ? _clientTemplateOutputs
-        : _ssrTemplateOutputs;
+    final outputs = switch (template) {
+      'client' => _clientTemplateOutputs,
+      'routed' => _routedTemplateOutputs,
+      'routed-minimal' => _routedMinimalTemplateOutputs,
+      _ => _ssrTemplateOutputs,
+    };
 
     for (final entry in outputs.entries) {
       final source = File(p.join(templatesDir.path, entry.key));
@@ -121,7 +153,7 @@ final class InitCommand extends Command<void> {
 
   @override
   String get description =>
-      'Scaffold a new React Dart project (SSR or client-only).';
+      'Scaffold a new React Dart project for SSR or client-only flows.';
 
   @override
   String get invocation => 'react init <project-name>';
@@ -132,15 +164,20 @@ final class InitCommand extends Command<void> {
       ..addOption(
         'packages',
         defaultsTo: '../packages',
-        help: 'Path to the react_* package directories referenced by the '
+        help:
+            'Path to the react_* package directories referenced by the '
             'generated pubspec (default: ../packages).',
       )
       ..addOption(
         'template',
         defaultsTo: 'ssr',
-        allowed: ['ssr', 'client'],
-        help: 'Scaffold template variant: "ssr" (default) includes SSR and '
-            'server functions; "client" scaffolds a client-only project.',
+        allowed: ['ssr', 'client', 'routed', 'routed-minimal'],
+        help:
+            'Scaffold template variant: "ssr" (default) includes SSR and '
+            'server functions; "client" scaffolds a client-only project; '
+            '"routed" scaffolds a Shelf-free SSR app using '
+            '`react_server_routed` and `routed_io`; '
+            '"routed-minimal" uses the same stack with fewer starter files.',
       )
       ..addFlag(
         'force',

@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: web-animations
 // ignore_for_file: type=lint
 
-import 'web_animations_2.dart';
 import 'hr_time.dart';
+import 'web_animations_2.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Animatable {
@@ -61,11 +61,7 @@ final class BaseKeyframeValue implements BaseKeyframe {
   @override
   CompositeOperationOrAuto? composite;
 
-  BaseKeyframeValue({
-    this.offset,
-    this.easing,
-    this.composite,
-  });
+  BaseKeyframeValue({this.offset, this.easing, this.composite});
 }
 
 abstract interface class BasePropertyIndexedKeyframe {
@@ -77,7 +73,8 @@ abstract interface class BasePropertyIndexedKeyframe {
   set composite(Object? value);
 }
 
-final class BasePropertyIndexedKeyframeValue implements BasePropertyIndexedKeyframe {
+final class BasePropertyIndexedKeyframeValue
+    implements BasePropertyIndexedKeyframe {
   @override
   Object? offset;
   @override
@@ -85,11 +82,7 @@ final class BasePropertyIndexedKeyframeValue implements BasePropertyIndexedKeyfr
   @override
   Object? composite;
 
-  BasePropertyIndexedKeyframeValue({
-    this.offset,
-    this.easing,
-    this.composite,
-  });
+  BasePropertyIndexedKeyframeValue({this.offset, this.easing, this.composite});
 }
 
 typedef CompositeOperation = String;
@@ -97,11 +90,9 @@ typedef CompositeOperation = String;
 typedef CompositeOperationOrAuto = String;
 
 abstract interface class DocumentTimeline {
-  factory DocumentTimeline([DocumentTimelineOptions? options]) =>
-      WebRuntime.current.createWebObject<DocumentTimeline>(
-        'DocumentTimeline',
-        [options],
-      );
+  factory DocumentTimeline([DocumentTimelineOptions? options]) => WebRuntime
+      .current
+      .createWebObject<DocumentTimeline>('DocumentTimeline', [options]);
 }
 
 abstract interface class DocumentTimelineOptions {
@@ -113,9 +104,7 @@ final class DocumentTimelineOptionsValue implements DocumentTimelineOptions {
   @override
   DOMHighResTimeStamp? originTime;
 
-  DocumentTimelineOptionsValue({
-    this.originTime,
-  });
+  DocumentTimelineOptionsValue({this.originTime});
 }
 
 typedef FillMode = String;
@@ -129,10 +118,7 @@ final class GetAnimationsOptionsValue implements GetAnimationsOptions {
   @override
   bool? subtree;
 
-  GetAnimationsOptionsValue({
-    this.subtree,
-  });
+  GetAnimationsOptionsValue({this.subtree});
 }
 
 typedef PlaybackDirection = String;
-

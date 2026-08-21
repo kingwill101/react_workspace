@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: wasm-js-api
 // ignore_for_file: type=lint
 
-
 abstract interface class GlobalDescriptor {
   ValueType get value;
   set value(ValueType value);
@@ -16,10 +15,7 @@ final class GlobalDescriptorValue implements GlobalDescriptor {
   @override
   bool? mutable;
 
-  GlobalDescriptorValue({
-    required this.value,
-    this.mutable,
-  });
+  GlobalDescriptorValue({required this.value, this.mutable});
 }
 
 typedef ImportExportKind = String;
@@ -37,10 +33,7 @@ final class MemoryDescriptorValue implements MemoryDescriptor {
   @override
   int? maximum;
 
-  MemoryDescriptorValue({
-    required this.initial,
-    this.maximum,
-  });
+  MemoryDescriptorValue({required this.initial, this.maximum});
 }
 
 abstract interface class ModuleExportDescriptor {
@@ -56,10 +49,7 @@ final class ModuleExportDescriptorValue implements ModuleExportDescriptor {
   @override
   ImportExportKind kind;
 
-  ModuleExportDescriptorValue({
-    required this.name,
-    required this.kind,
-  });
+  ModuleExportDescriptorValue({required this.name, required this.kind});
 }
 
 abstract interface class ModuleImportDescriptor {
@@ -121,7 +111,8 @@ abstract interface class WebAssemblyInstantiatedSource {
   set instance(Object value);
 }
 
-final class WebAssemblyInstantiatedSourceValue implements WebAssemblyInstantiatedSource {
+final class WebAssemblyInstantiatedSourceValue
+    implements WebAssemblyInstantiatedSource {
   @override
   Object module;
   @override
@@ -132,4 +123,3 @@ final class WebAssemblyInstantiatedSourceValue implements WebAssemblyInstantiate
     required this.instance,
   });
 }
-

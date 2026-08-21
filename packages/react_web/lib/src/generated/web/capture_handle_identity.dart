@@ -3,8 +3,8 @@
 // ignore_for_file: type=lint
 
 import 'html.dart';
-import 'mediacapture_streams.dart';
 import 'image_capture.dart';
+import 'mediacapture_streams.dart';
 
 abstract interface class CaptureHandle {
   String? get origin;
@@ -19,10 +19,7 @@ final class CaptureHandleValue implements CaptureHandle {
   @override
   String? handle;
 
-  CaptureHandleValue({
-    this.origin,
-    this.handle,
-  });
+  CaptureHandleValue({this.origin, this.handle});
 }
 
 abstract interface class CaptureHandleConfig {
@@ -54,15 +51,15 @@ abstract interface class MediaStreamTrack {
   String get id;
   String get label;
   bool get enabled;
-   set enabled(bool value);
+  set enabled(bool value);
   bool get muted;
   EventHandler get onmute;
-   set onmute(EventHandler value);
+  set onmute(EventHandler value);
   EventHandler get onunmute;
-   set onunmute(EventHandler value);
+  set onunmute(EventHandler value);
   MediaStreamTrackState get readyState;
   EventHandler get onended;
-   set onended(EventHandler value);
+  set onended(EventHandler value);
   MediaStreamTrack clone();
   void stop();
   MediaTrackCapabilities getCapabilities();
@@ -70,6 +67,5 @@ abstract interface class MediaStreamTrack {
   MediaTrackSettings getSettings();
   Future<void> applyConstraints([MediaTrackConstraints? constraints]);
   String get contentHint;
-   set contentHint(String value);
+  set contentHint(String value);
 }
-

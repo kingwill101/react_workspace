@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: encoding
 // ignore_for_file: type=lint
 
-import 'webidl.dart';
 import 'streams.dart';
+import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class TextDecodeOptions {
@@ -15,17 +15,15 @@ final class TextDecodeOptionsValue implements TextDecodeOptions {
   @override
   bool? stream;
 
-  TextDecodeOptionsValue({
-    this.stream,
-  });
+  TextDecodeOptionsValue({this.stream});
 }
 
 abstract interface class TextDecoder {
   factory TextDecoder([String? label, TextDecoderOptions? options]) =>
-      WebRuntime.current.createWebObject<TextDecoder>(
-        'TextDecoder',
-        [label, options],
-      );
+      WebRuntime.current.createWebObject<TextDecoder>('TextDecoder', [
+        label,
+        options,
+      ]);
   String get encoding;
   bool get fatal;
   bool get ignoreBOM;
@@ -51,10 +49,7 @@ final class TextDecoderOptionsValue implements TextDecoderOptions {
   @override
   bool? ignoreBOM;
 
-  TextDecoderOptionsValue({
-    this.fatal,
-    this.ignoreBOM,
-  });
+  TextDecoderOptionsValue({this.fatal, this.ignoreBOM});
 }
 
 abstract interface class TextDecoderStream {
@@ -72,10 +67,7 @@ abstract interface class TextDecoderStream {
 
 abstract interface class TextEncoder {
   factory TextEncoder() =>
-      WebRuntime.current.createWebObject<TextEncoder>(
-        'TextEncoder',
-        [],
-      );
+      WebRuntime.current.createWebObject<TextEncoder>('TextEncoder', []);
   String get encoding;
   Object encode([String? input]);
   TextEncoderEncodeIntoResult encodeInto(String source, Object destination);
@@ -92,26 +84,20 @@ abstract interface class TextEncoderEncodeIntoResult {
   set written(int? value);
 }
 
-final class TextEncoderEncodeIntoResultValue implements TextEncoderEncodeIntoResult {
+final class TextEncoderEncodeIntoResultValue
+    implements TextEncoderEncodeIntoResult {
   @override
   int? read;
   @override
   int? written;
 
-  TextEncoderEncodeIntoResultValue({
-    this.read,
-    this.written,
-  });
+  TextEncoderEncodeIntoResultValue({this.read, this.written});
 }
 
 abstract interface class TextEncoderStream {
-  factory TextEncoderStream() =>
-      WebRuntime.current.createWebObject<TextEncoderStream>(
-        'TextEncoderStream',
-        [],
-      );
+  factory TextEncoderStream() => WebRuntime.current
+      .createWebObject<TextEncoderStream>('TextEncoderStream', []);
   String get encoding;
   ReadableStream get readable;
   WritableStream get writable;
 }
-

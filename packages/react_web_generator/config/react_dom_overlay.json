@@ -16,9 +16,124 @@
     "role",
     "style"
   ],
+  "svgProps": {
+    "viewBox": "String",
+    "preserveAspectRatio": "String",
+    "xmlns": "String",
+    "xlinkHref": "String",
+    "d": "String",
+    "fill": "String",
+    "fillOpacity": "Object",
+    "fillRule": "String",
+    "stroke": "String",
+    "strokeWidth": "Object",
+    "strokeOpacity": "Object",
+    "strokeLinecap": "String",
+    "strokeLinejoin": "String",
+    "strokeMiterlimit": "Object",
+    "strokeDasharray": "Object",
+    "strokeDashoffset": "Object",
+    "clipPath": "String",
+    "clipRule": "String",
+    "mask": "String",
+    "filter": "String",
+    "opacity": "Object",
+    "color": "String",
+    "width": "Object",
+    "height": "Object",
+    "x": "Object",
+    "y": "Object",
+    "x1": "Object",
+    "y1": "Object",
+    "x2": "Object",
+    "y2": "Object",
+    "dx": "Object",
+    "dy": "Object",
+    "cx": "Object",
+    "cy": "Object",
+    "r": "Object",
+    "rx": "Object",
+    "ry": "Object",
+    "points": "String",
+    "pathLength": "Object",
+    "transform": "String",
+    "gradientTransform": "String",
+    "gradientUnits": "String",
+    "offset": "Object",
+    "stopColor": "String",
+    "stopOpacity": "Object",
+    "markerStart": "String",
+    "markerMid": "String",
+    "markerEnd": "String",
+    "textAnchor": "String",
+    "dominantBaseline": "String",
+    "fontFamily": "String",
+    "fontSize": "Object",
+    "fontWeight": "Object",
+    "letterSpacing": "Object",
+    "vectorEffect": "String",
+    "shapeRendering": "String",
+    "pointerEvents": "String"
+  },
+  "excludedProps": [
+    "accessKeyLabel",
+    "attributes",
+    "baseURI",
+    "childNodes",
+    "classList",
+    "firstChild",
+    "innerText",
+    "isConnected",
+    "lastChild",
+    "localName",
+    "namespaceURI",
+    "nextSibling",
+    "nodeName",
+    "nodeType",
+    "nodeValue",
+    "outerText",
+    "ownerDocument",
+    "parentElement",
+    "parentNode",
+    "prefix",
+    "previousSibling",
+    "shadowRoot",
+    "tagName",
+    "textContent"
+  ],
   "events": {
     "click": {
       "reactName": "onClick",
+      "eventType": "ReactMouseEvent",
+      "nativeType": "MouseEvent"
+    },
+    "dblclick": {
+      "reactName": "onDoubleClick",
+      "eventType": "ReactMouseEvent",
+      "nativeType": "MouseEvent"
+    },
+    "mousedown": {
+      "reactName": "onMouseDown",
+      "eventType": "ReactMouseEvent",
+      "nativeType": "MouseEvent"
+    },
+    "mouseup": {
+      "reactName": "onMouseUp",
+      "eventType": "ReactMouseEvent",
+      "nativeType": "MouseEvent"
+    },
+    "mousemove": {
+      "reactName": "onMouseMove",
+      "eventType": "ReactMouseEvent",
+      "nativeType": "MouseEvent"
+    },
+    "mouseenter": {
+      "reactName": "onMouseEnter",
+      "eventType": "ReactMouseEvent",
+      "nativeType": "MouseEvent"
+    },
+    "mouseleave": {
+      "reactName": "onMouseLeave",
       "eventType": "ReactMouseEvent",
       "nativeType": "MouseEvent"
     },
@@ -42,10 +157,65 @@
       "eventType": "ReactKeyboardEvent",
       "nativeType": "KeyboardEvent"
     },
+    "keyup": {
+      "reactName": "onKeyUp",
+      "eventType": "ReactKeyboardEvent",
+      "nativeType": "KeyboardEvent"
+    },
     "focus": {
       "reactName": "onFocus",
       "eventType": "ReactFocusEvent",
       "nativeType": "FocusEvent"
+    },
+    "blur": {
+      "reactName": "onBlur",
+      "eventType": "ReactFocusEvent",
+      "nativeType": "FocusEvent"
+    },
+    "pointerdown": {
+      "reactName": "onPointerDown",
+      "eventType": "ReactPointerEvent",
+      "nativeType": "PointerEvent"
+    },
+    "pointerup": {
+      "reactName": "onPointerUp",
+      "eventType": "ReactPointerEvent",
+      "nativeType": "PointerEvent"
+    },
+    "pointermove": {
+      "reactName": "onPointerMove",
+      "eventType": "ReactPointerEvent",
+      "nativeType": "PointerEvent"
+    },
+    "touchstart": {
+      "reactName": "onTouchStart",
+      "eventType": "ReactTouchEvent",
+      "nativeType": "TouchEvent"
+    },
+    "touchend": {
+      "reactName": "onTouchEnd",
+      "eventType": "ReactTouchEvent",
+      "nativeType": "TouchEvent"
+    },
+    "touchmove": {
+      "reactName": "onTouchMove",
+      "eventType": "ReactTouchEvent",
+      "nativeType": "TouchEvent"
+    },
+    "wheel": {
+      "reactName": "onWheel",
+      "eventType": "ReactWheelEvent",
+      "nativeType": "WheelEvent"
+    },
+    "drag": {
+      "reactName": "onDrag",
+      "eventType": "ReactDragEvent",
+      "nativeType": "DragEvent"
+    },
+    "drop": {
+      "reactName": "onDrop",
+      "eventType": "ReactDragEvent",
+      "nativeType": "DragEvent"
     }
   },
   "reactOnlyProps": [

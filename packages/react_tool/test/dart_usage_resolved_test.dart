@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:path/path.dart' as p;
 import 'package:react_tool/src/bundler/dart_usage.dart';
@@ -7,17 +8,30 @@ import 'package:test/test.dart';
 
 void main() {
   group('DartUsageCollector resolved', () {
+    late String reactPackagePath;
+
+    setUpAll(() async {
+      final library = await Isolate.resolvePackageUri(
+        Uri.parse('package:react/react.dart'),
+      );
+      if (library == null) {
+        throw StateError('Could not resolve package:react/react.dart.');
+      }
+      reactPackagePath = p.dirname(p.dirname(library.toFilePath()));
+    });
+
     test('finds hook via package: import with resolved context', () async {
       final temp = await Directory.systemTemp.createTemp('react_usage_');
       try {
         // Minimal pubspec for a package named test_app.
-        final pubspec = '''
+        final pubspec =
+            '''
 name: test_app
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''';
         await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
         await Directory(p.join(temp.path, 'lib')).create(recursive: true);
@@ -51,7 +65,10 @@ void main() { App(); }
 ''');
 
         // Generate package config so AnalysisContextCollection can resolve package:test_app
-        final pubGet = await Process.run('dart', ['pub', 'get'], workingDirectory: temp.path);
+        final pubGet = await Process.run('dart', [
+          'pub',
+          'get',
+        ], workingDirectory: temp.path);
         expect(pubGet.exitCode, 0, reason: pubGet.stderr.toString());
 
         final collector = DartUsageCollector();
@@ -60,12 +77,26 @@ void main() { App(); }
           projectRoot: temp.path,
         );
 
-        expect(result.hooks, contains('testPkg.useCustom'),
-            reason: 'hooks: ${result.hooks} complete: ${result.complete} unresolved: ${result.unresolvedLibraries}');
-        expect(result.complete, isTrue, reason: 'unresolved: ${result.unresolvedLibraries}');
+        expect(
+          result.hooks,
+          contains('testPkg.useCustom'),
+          reason:
+              'hooks: ${result.hooks} complete: ${result.complete} unresolved: ${result.unresolvedLibraries}',
+        );
+        expect(
+          result.complete,
+          isTrue,
+          reason: 'unresolved: ${result.unresolvedLibraries}',
+        );
         expect(result.resolvedLibraries, greaterThan(1));
-        expect(result.rawHookKeys.values.expand((e) => e), contains('testPkg.useCustom'));
-        expect(result.rawHookKeys.keys.any((k) => k.contains('app.dart')), isTrue);
+        expect(
+          result.rawHookKeys.values.expand((e) => e),
+          contains('testPkg.useCustom'),
+        );
+        expect(
+          result.rawHookKeys.keys.any((k) => k.contains('app.dart')),
+          isTrue,
+        );
       } finally {
         await temp.delete(recursive: true);
       }
@@ -84,9 +115,13 @@ import 'a.dart';
 import 'package:test_app/other.dart';
 ReactNode E() => A();
 ''');
-        await File(p.join(temp.path, 'pubspec.yaml')).writeAsString('name: test_app\n');
+        await File(
+          p.join(temp.path, 'pubspec.yaml'),
+        ).writeAsString('name: test_app\n');
         final collector = DartUsageCollector();
-        final legacy = collector.collectEntrypoint(p.join(temp.path, 'lib', 'entry.dart'));
+        final legacy = collector.collectEntrypoint(
+          p.join(temp.path, 'lib', 'entry.dart'),
+        );
         expect(legacy.complete, isFalse);
         expect(legacy.unresolvedLibraries, isNotEmpty);
       } finally {
@@ -98,55 +133,73 @@ ReactNode E() => A();
       // Simulate build.dart union logic.
       final semantic = ['testPkg.useCustom'];
       final js = ['reactRouter.useLocation', 'testPkg.useCustom'];
-      const complete = false;
-      final retained = complete ? semantic.toSet() : {...semantic, ...js}.toSet();
-      expect(retained, containsAll(['reactRouter.useLocation', 'testPkg.useCustom']));
-      final retainedComplete = true ? semantic.toSet() : {...semantic, ...js}.toSet();
+      final retained = {...semantic, ...js}.toSet();
+      expect(
+        retained,
+        containsAll(['reactRouter.useLocation', 'testPkg.useCustom']),
+      );
+      final retainedComplete = semantic.toSet();
       expect(retainedComplete, contains('testPkg.useCustom'));
       expect(retainedComplete, isNot(contains('reactRouter.useLocation')));
     });
 
-    test('writeUsageManifest via builder visits lib/app.dart from web/client.dart', () async {
-      final temp = await Directory.systemTemp.createTemp('react_usage_builder_');
-      try {
-        final pubspec = '''
+    test(
+      'writeUsageManifest via builder visits lib/app.dart from web/client.dart',
+      () async {
+        final temp = await Directory.systemTemp.createTemp(
+          'react_usage_builder_',
+        );
+        try {
+          final pubspec =
+              '''
 name: my_app
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''';
-        await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
-        await Directory(p.join(temp.path, 'lib')).create(recursive: true);
-        await Directory(p.join(temp.path, 'web')).create(recursive: true);
-        await File(p.join(temp.path, 'lib', 'app.dart')).writeAsString('''
+          await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
+          await Directory(p.join(temp.path, 'lib')).create(recursive: true);
+          await Directory(p.join(temp.path, 'web')).create(recursive: true);
+          await File(p.join(temp.path, 'lib', 'app.dart')).writeAsString('''
 import 'package:react/react.dart';
 ReactNode App() => foreignComponent('myApp.Header', props: {});
 ''');
-        await File(p.join(temp.path, 'web', 'client.dart')).writeAsString('''
+          await File(p.join(temp.path, 'web', 'client.dart')).writeAsString('''
 import 'package:my_app/app.dart';
 void main() { App(); }
 ''');
-        final pubGet = await Process.run('dart', ['pub', 'get'], workingDirectory: temp.path);
-        expect(pubGet.exitCode, 0, reason: pubGet.stderr.toString());
+          final pubGet = await Process.run('dart', [
+            'pub',
+            'get',
+          ], workingDirectory: temp.path);
+          expect(pubGet.exitCode, 0, reason: pubGet.stderr.toString());
 
-        // Simulate ReactBuilder's call: writeUsageManifest with projectRoot
-        final dotReact = Directory(p.join(temp.path, '.dart_tool', 'react'));
-        final result = await writeUsageManifest(
-          entryPath: p.join(temp.path, 'web', 'client.dart'),
-          target: 'browser',
-          dotDartToolReact: dotReact,
-          projectRoot: temp.path,
-        );
-        expect(result, isNotNull);
-        expect(result!.components, contains('myApp.Header'));
-        expect(result.complete, isTrue, reason: 'unresolved: ${result.unresolvedLibraries}');
-        expect(result.rawComponentKeys.keys.any((k) => k.contains('app.dart')), isTrue);
-      } finally {
-        await temp.delete(recursive: true);
-      }
-    });
+          // Simulate ReactBuilder's call: writeUsageManifest with projectRoot
+          final dotReact = Directory(p.join(temp.path, '.dart_tool', 'react'));
+          final result = await writeUsageManifest(
+            entryPath: p.join(temp.path, 'web', 'client.dart'),
+            target: 'browser',
+            dotDartToolReact: dotReact,
+            projectRoot: temp.path,
+          );
+          expect(result, isNotNull);
+          expect(result!.components, contains('myApp.Header'));
+          expect(
+            result.complete,
+            isTrue,
+            reason: 'unresolved: ${result.unresolvedLibraries}',
+          );
+          expect(
+            result.rawComponentKeys.keys.any((k) => k.contains('app.dart')),
+            isTrue,
+          );
+        } finally {
+          await temp.delete(recursive: true);
+        }
+      },
+    );
 
     test('shared package hook is found or completeness is false', () async {
       final temp = await Directory.systemTemp.createTemp('react_usage_shared_');
@@ -160,15 +213,17 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''');
-        await File(p.join(sharedDir.path, 'lib', 'widget.dart')).writeAsString('''
+        await File(p.join(sharedDir.path, 'lib', 'widget.dart')).writeAsString(
+          '''
 import 'package:react/react.dart';
 @ReactHook()
 @ReactRuntimeSymbol(kind: ReactRuntimeSymbolKind.hook, runtimeKey: 'reactRouter.useLocation', targets: {ReactRenderTarget.browser})
 String useLocation() => 'loc';
 ReactNode SharedWidget() { final loc = useLocation(); return Text(loc); }
-''');
+''',
+        );
         final appDir = Directory(p.join(temp.path, 'my_app'));
         await appDir.create(recursive: true);
         await Directory(p.join(appDir.path, 'lib')).create(recursive: true);
@@ -178,7 +233,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
   shared_widgets:
     path: ${p.join(sharedDir.path)}
 ''');
@@ -191,7 +246,10 @@ ReactNode App() => SharedWidget();
 import 'package:my_app/app.dart';
 void main() { App(); }
 ''');
-        final pubGet = await Process.run('dart', ['pub', 'get'], workingDirectory: appDir.path);
+        final pubGet = await Process.run('dart', [
+          'pub',
+          'get',
+        ], workingDirectory: appDir.path);
         expect(pubGet.exitCode, 0, reason: pubGet.stderr.toString());
 
         final collector = DartUsageCollector();
@@ -202,10 +260,17 @@ void main() { App(); }
         // Either the hook is found (if shared package was traversed) or completeness is false (safe union)
         final found = result.hooks.contains('reactRouter.useLocation');
         final incomplete = !result.complete;
-        expect(found || incomplete, isTrue,
-            reason: 'hooks: ${result.hooks} complete: ${result.complete} unresolved: ${result.unresolvedLibraries}');
+        expect(
+          found || incomplete,
+          isTrue,
+          reason:
+              'hooks: ${result.hooks} complete: ${result.complete} unresolved: ${result.unresolvedLibraries}',
+        );
         if (found) {
-          expect(result.rawHookKeys.values.expand((e) => e), contains('reactRouter.useLocation'));
+          expect(
+            result.rawHookKeys.values.expand((e) => e),
+            contains('reactRouter.useLocation'),
+          );
         }
       } finally {
         await temp.delete(recursive: true);
@@ -216,7 +281,9 @@ void main() { App(); }
       final temp = await Directory.systemTemp.createTemp('react_usage_hosted_');
       try {
         // Simulate a hosted dependency whose resolved path contains `.pub-cache`.
-        final hostedDir = Directory(p.join(temp.path, '.pub-cache', 'host', 'shared_widgets-1.0.0'));
+        final hostedDir = Directory(
+          p.join(temp.path, '.pub-cache', 'host', 'shared_widgets-1.0.0'),
+        );
         await hostedDir.create(recursive: true);
         await Directory(p.join(hostedDir.path, 'lib')).create(recursive: true);
         await File(p.join(hostedDir.path, 'pubspec.yaml')).writeAsString('''
@@ -225,15 +292,17 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''');
-        await File(p.join(hostedDir.path, 'lib', 'widget.dart')).writeAsString('''
+        await File(p.join(hostedDir.path, 'lib', 'widget.dart')).writeAsString(
+          '''
 import 'package:react/react.dart';
 @ReactHook()
 @ReactRuntimeSymbol(kind: ReactRuntimeSymbolKind.hook, runtimeKey: 'reactRouter.useLocation', targets: {ReactRenderTarget.browser})
 String useLocation() => 'loc';
 ReactNode SharedWidget() { final loc = useLocation(); return Text(loc); }
-''');
+''',
+        );
         final appDir = Directory(p.join(temp.path, 'my_app'));
         await appDir.create(recursive: true);
         await Directory(p.join(appDir.path, 'lib')).create(recursive: true);
@@ -243,7 +312,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
   shared_widgets:
     path: ${p.join(hostedDir.path)}
 ''');
@@ -256,7 +325,10 @@ ReactNode App() => SharedWidget();
 import 'package:my_app/app.dart';
 void main() { App(); }
 ''');
-        final pubGet = await Process.run('dart', ['pub', 'get'], workingDirectory: appDir.path);
+        final pubGet = await Process.run('dart', [
+          'pub',
+          'get',
+        ], workingDirectory: appDir.path);
         expect(pubGet.exitCode, 0, reason: pubGet.stderr.toString());
 
         final collector = DartUsageCollector();
@@ -264,74 +336,102 @@ void main() { App(); }
           p.join(appDir.path, 'lib', 'main.dart'),
           projectRoot: appDir.path,
         );
-        expect(result.complete, isFalse,
-            reason: 'hosted dep should force incomplete: ${result.unresolvedLibraries}');
-        expect(result.unresolvedLibraries.any((p) => p.contains('.pub-cache')), isTrue);
+        expect(
+          result.complete,
+          isFalse,
+          reason:
+              'hosted dep should force incomplete: ${result.unresolvedLibraries}',
+        );
+        expect(
+          result.unresolvedLibraries.any((p) => p.contains('.pub-cache')),
+          isTrue,
+        );
       } finally {
         await temp.delete(recursive: true);
       }
     });
 
-    test('component helper via @ReactRuntimeSymbol is collected without foreignComponent literal', () async {
-      final temp = await Directory.systemTemp.createTemp('react_usage_component_ann_');
-      try {
-        final pubspec = '''
+    test(
+      'component helper via @ReactRuntimeSymbol is collected without foreignComponent literal',
+      () async {
+        final temp = await Directory.systemTemp.createTemp(
+          'react_usage_component_ann_',
+        );
+        try {
+          final pubspec =
+              '''
 name: test_app
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''';
-        await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
-        await Directory(p.join(temp.path, 'lib')).create(recursive: true);
-        await Directory(p.join(temp.path, 'bin')).create(recursive: true);
+          await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
+          await Directory(p.join(temp.path, 'lib')).create(recursive: true);
+          await Directory(p.join(temp.path, 'bin')).create(recursive: true);
 
-        await File(p.join(temp.path, 'lib', 'generated.dart')).writeAsString('''
+          await File(p.join(temp.path, 'lib', 'generated.dart')).writeAsString(
+            '''
 import 'package:react/react.dart';
 @ReactRuntimeSymbol(kind: ReactRuntimeSymbolKind.component, runtimeKey: 'reactRouter.Link', targets: {ReactRenderTarget.browser})
 ReactNode link({required Object to, List<ReactNode> children = const []}) => foreignComponent('reactRouter.Link', props: {'to': to}, children: children);
-''');
+''',
+          );
 
-        await File(p.join(temp.path, 'lib', 'app.dart')).writeAsString('''
+          await File(p.join(temp.path, 'lib', 'app.dart')).writeAsString('''
 import 'package:test_app/generated.dart';
 import 'package:react/react.dart';
 ReactNode App() => link(to: '/');
 ''');
 
-        await File(p.join(temp.path, 'bin', 'main.dart')).writeAsString('''
+          await File(p.join(temp.path, 'bin', 'main.dart')).writeAsString('''
 import 'package:test_app/app.dart';
 void main() { App(); }
 ''');
 
-        final pubGet = await Process.run('dart', ['pub', 'get'], workingDirectory: temp.path);
-        expect(pubGet.exitCode, 0, reason: pubGet.stderr.toString());
+          final pubGet = await Process.run('dart', [
+            'pub',
+            'get',
+          ], workingDirectory: temp.path);
+          expect(pubGet.exitCode, 0, reason: pubGet.stderr.toString());
 
-        final collector = DartUsageCollector();
-        final result = await collector.collectEntrypointResolved(
-          p.join(temp.path, 'bin', 'main.dart'),
-          projectRoot: temp.path,
-        );
+          final collector = DartUsageCollector();
+          final result = await collector.collectEntrypointResolved(
+            p.join(temp.path, 'bin', 'main.dart'),
+            projectRoot: temp.path,
+          );
 
-        expect(result.components, contains('reactRouter.Link'),
-            reason: 'components: ${result.components} complete: ${result.complete}');
-        expect(result.complete, isTrue);
-        expect(result.rawComponentKeys.values.expand((e) => e), contains('reactRouter.Link'));
-      } finally {
-        await temp.delete(recursive: true);
-      }
-    });
+          expect(
+            result.components,
+            contains('reactRouter.Link'),
+            reason:
+                'components: ${result.components} complete: ${result.complete}',
+          );
+          expect(result.complete, isTrue);
+          expect(
+            result.rawComponentKeys.values.expand((e) => e),
+            contains('reactRouter.Link'),
+          );
+        } finally {
+          await temp.delete(recursive: true);
+        }
+      },
+    );
 
     test('writeUsageManifest provenance survives serialization', () async {
-      final temp = await Directory.systemTemp.createTemp('react_usage_manifest_');
+      final temp = await Directory.systemTemp.createTemp(
+        'react_usage_manifest_',
+      );
       try {
-        final pubspec = '''
+        final pubspec =
+            '''
 name: my_app
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''';
         await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
         await Directory(p.join(temp.path, 'lib')).create(recursive: true);
@@ -351,7 +451,10 @@ ReactNode App() { final v = useCustom(); return foreignComponent('myApp.Header',
 import 'package:my_app/app.dart';
 void main() { App(); }
 ''');
-        final pubGet = await Process.run('dart', ['pub', 'get'], workingDirectory: temp.path);
+        final pubGet = await Process.run('dart', [
+          'pub',
+          'get',
+        ], workingDirectory: temp.path);
         expect(pubGet.exitCode, 0, reason: pubGet.stderr.toString());
 
         final dotReact = Directory(p.join(temp.path, '.dart_tool', 'react'));
@@ -372,13 +475,29 @@ void main() { App(); }
         expect(jsonStr, contains('myApp.Header'));
         final decoded = jsonDecode(jsonStr) as Map<String, dynamic>;
         // Verify provenance survives serialization (not just in-memory).
-        expect((decoded['rawHookKeys'] as Map).values.expand((v) => (v as List)).toList(), contains('testPkg.useCustom'));
-        expect((decoded['rawComponentKeys'] as Map).values.expand((v) => (v as List)).toList(), contains('myApp.Header'));
+        expect(
+          (decoded['rawHookKeys'] as Map).values
+              .expand((v) => (v as List))
+              .toList(),
+          contains('testPkg.useCustom'),
+        );
+        expect(
+          (decoded['rawComponentKeys'] as Map).values
+              .expand((v) => (v as List))
+              .toList(),
+          contains('myApp.Header'),
+        );
         expect(decoded['rawHookKeys'].toString(), contains('app.dart'));
         expect(decoded['rawComponentKeys'].toString(), contains('app.dart'));
         // Also verify in-memory provenance.
-        expect(result.rawHookKeys.values.expand((e) => e), contains('testPkg.useCustom'));
-        expect(result.rawComponentKeys.values.expand((e) => e), contains('myApp.Header'));
+        expect(
+          result.rawHookKeys.values.expand((e) => e),
+          contains('testPkg.useCustom'),
+        );
+        expect(
+          result.rawComponentKeys.values.expand((e) => e),
+          contains('myApp.Header'),
+        );
       } finally {
         await temp.delete(recursive: true);
       }

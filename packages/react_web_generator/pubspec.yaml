@@ -1,12 +1,14 @@
 name: react_web_generator
+description: Web IDL generator for React Dart browser and SSR bindings.
+version: 0.1.0
+repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_web_generator
 resolution: workspace
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   package_config: ^3.0.0
   path: ^1.9.0
-  react:
-    path: ../react
-  web: 1.1.1
+  react: ^0.1.0
+  web: ^1.1.1
 dev_dependencies:
   test: ^1.31.2

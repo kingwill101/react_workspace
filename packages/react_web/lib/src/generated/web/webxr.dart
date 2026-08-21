@@ -2,28 +2,27 @@
 // Neutral Web surface for spec: webxr
 // ignore_for_file: type=lint
 
-import 'hr_time.dart';
-import 'webxr_gamepads_module.dart';
-import 'dom.dart';
-import 'permissions.dart';
 import 'geometry.dart';
+import 'hr_time.dart';
 import 'html.dart';
-import 'webgl1.dart';
-import 'webgl2.dart';
+import 'webxr_gamepads_module.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef XREye = String;
 
-typedef XRFrameRequestCallback = void Function(DOMHighResTimeStamp time, Object frame,);
+typedef XRFrameRequestCallback =
+    void Function(DOMHighResTimeStamp time, Object frame);
 
 typedef XRHandedness = String;
 
 abstract interface class XRInputSourceEvent {
-  factory XRInputSourceEvent(String type, XRInputSourceEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<XRInputSourceEvent>(
-        'XRInputSourceEvent',
-        [type, eventInitDict],
-      );
+  factory XRInputSourceEvent(
+    String type_,
+    XRInputSourceEventInit eventInitDict,
+  ) => WebRuntime.current.createWebObject<XRInputSourceEvent>(
+    'XRInputSourceEvent',
+    [type_, eventInitDict],
+  );
   Object get frame;
   XRInputSource get inputSource;
 }
@@ -41,18 +40,17 @@ final class XRInputSourceEventInitValue implements XRInputSourceEventInit {
   @override
   XRInputSource inputSource;
 
-  XRInputSourceEventInitValue({
-    required this.frame,
-    required this.inputSource,
-  });
+  XRInputSourceEventInitValue({required this.frame, required this.inputSource});
 }
 
 abstract interface class XRInputSourcesChangeEvent {
-  factory XRInputSourcesChangeEvent(String type, XRInputSourcesChangeEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<XRInputSourcesChangeEvent>(
-        'XRInputSourcesChangeEvent',
-        [type, eventInitDict],
-      );
+  factory XRInputSourcesChangeEvent(
+    String type_,
+    XRInputSourcesChangeEventInit eventInitDict,
+  ) => WebRuntime.current.createWebObject<XRInputSourcesChangeEvent>(
+    'XRInputSourcesChangeEvent',
+    [type_, eventInitDict],
+  );
   Object get session;
   List<XRInputSource> get added;
   List<XRInputSource> get removed;
@@ -67,7 +65,8 @@ abstract interface class XRInputSourcesChangeEventInit {
   set removed(List<XRInputSource> value);
 }
 
-final class XRInputSourcesChangeEventInitValue implements XRInputSourcesChangeEventInit {
+final class XRInputSourcesChangeEventInitValue
+    implements XRInputSourcesChangeEventInit {
   @override
   Object session;
   @override
@@ -116,15 +115,17 @@ abstract interface class XRPose {
 abstract interface class XRReferenceSpace {
   XRReferenceSpace getOffsetReferenceSpace(XRRigidTransform originOffset);
   EventHandler get onreset;
-   set onreset(EventHandler value);
+  set onreset(EventHandler value);
 }
 
 abstract interface class XRReferenceSpaceEvent {
-  factory XRReferenceSpaceEvent(String type, XRReferenceSpaceEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<XRReferenceSpaceEvent>(
-        'XRReferenceSpaceEvent',
-        [type, eventInitDict],
-      );
+  factory XRReferenceSpaceEvent(
+    String type_,
+    XRReferenceSpaceEventInit eventInitDict,
+  ) => WebRuntime.current.createWebObject<XRReferenceSpaceEvent>(
+    'XRReferenceSpaceEvent',
+    [type_, eventInitDict],
+  );
   XRReferenceSpace get referenceSpace;
   XRRigidTransform? get transform;
 }
@@ -136,7 +137,8 @@ abstract interface class XRReferenceSpaceEventInit {
   set transform(XRRigidTransform? value);
 }
 
-final class XRReferenceSpaceEventInitValue implements XRReferenceSpaceEventInit {
+final class XRReferenceSpaceEventInitValue
+    implements XRReferenceSpaceEventInit {
   @override
   XRReferenceSpace referenceSpace;
   @override
@@ -185,11 +187,13 @@ final class XRRenderStateInitValue implements XRRenderStateInit {
 }
 
 abstract interface class XRRigidTransform {
-  factory XRRigidTransform([DOMPointInit? position, DOMPointInit? orientation]) =>
-      WebRuntime.current.createWebObject<XRRigidTransform>(
-        'XRRigidTransform',
-        [position, orientation],
-      );
+  factory XRRigidTransform([
+    DOMPointInit? position,
+    DOMPointInit? orientation,
+  ]) => WebRuntime.current.createWebObject<XRRigidTransform>(
+    'XRRigidTransform',
+    [position, orientation],
+  );
   DOMPointReadOnly get position;
   DOMPointReadOnly get orientation;
   Object get matrix;
@@ -197,11 +201,11 @@ abstract interface class XRRigidTransform {
 }
 
 abstract interface class XRSessionEvent {
-  factory XRSessionEvent(String type, XRSessionEventInit eventInitDict) =>
-      WebRuntime.current.createWebObject<XRSessionEvent>(
-        'XRSessionEvent',
-        [type, eventInitDict],
-      );
+  factory XRSessionEvent(String type_, XRSessionEventInit eventInitDict) =>
+      WebRuntime.current.createWebObject<XRSessionEvent>('XRSessionEvent', [
+        type_,
+        eventInitDict,
+      ]);
   Object get session;
 }
 
@@ -214,9 +218,7 @@ final class XRSessionEventInitValue implements XRSessionEventInit {
   @override
   Object session;
 
-  XRSessionEventInitValue({
-    required this.session,
-  });
+  XRSessionEventInitValue({required this.session});
 }
 
 typedef XRSessionMode = String;
@@ -226,17 +228,15 @@ abstract interface class XRSessionSupportedPermissionDescriptor {
   set mode(XRSessionMode? value);
 }
 
-final class XRSessionSupportedPermissionDescriptorValue implements XRSessionSupportedPermissionDescriptor {
+final class XRSessionSupportedPermissionDescriptorValue
+    implements XRSessionSupportedPermissionDescriptor {
   @override
   XRSessionMode? mode;
 
-  XRSessionSupportedPermissionDescriptorValue({
-    this.mode,
-  });
+  XRSessionSupportedPermissionDescriptorValue({this.mode});
 }
 
-abstract interface class XRSpace {
-}
+abstract interface class XRSpace {}
 
 typedef XRTargetRayMode = String;
 
@@ -293,4 +293,3 @@ final class XRWebGLLayerInitValue implements XRWebGLLayerInit {
 }
 
 typedef XRWebGLRenderingContext = Object;
-

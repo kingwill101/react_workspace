@@ -2,128 +2,57 @@
 sidebar_position: 4
 ---
 
-# Client-Only Mode
+# Client-only applications
 
-While React Dart excels at full-stack Server-Side Rendering (SSR), there are times when you only want to build a Single Page Application (SPA) that runs entirely in the browser. You might be building an internal admin dashboard, a static site deployed to GitHub Pages, or an application that heavily relies on browser-only APIs.
+The `client` starter builds a static React application without a Dart server or
+Node SSR worker.
 
-React Dart provides a streamlined "Client-Only" mode that disables SSR and outputs a static directory ready for any basic HTTP server.
+## Scaffold
 
-## Scaffolding a Client-Only Project
-
-The easiest way to start is by using the CLI template:
-
-```bash
+```console
 dart run react_tool:react init my_client_app --template client
+cd my_client_app
+dart pub get
 ```
 
-This generates a project structure optimized for client-only development.
-
-## Configuring `react.yaml` for Client-Only
-
-If you are converting an existing SSR project to client-only, you simply need to remove the `ssr` and `server` entries from your `react.yaml`.
+Its `react.yaml` configures only the browser entrypoint and static output:
 
 ```yaml
-# react.yaml
-client: web/client.dart
+client:
+  entrypoint: web/client.dart
 static: web
 output: build/react
-
-# Notice the absence of 'ssr' and 'server' keys
 ```
 
-## The Client Entrypoint
+## Browser entrypoint
 
-In client-only mode, you don't hydrate an existing DOM tree rendered by the server. Instead, you create a root and render your application entirely from scratch.
-
-Update your `web/client.dart` to use `createRoot` instead of `hydrateRoot`:
+Mount an App factory into the empty HTML shell:
 
 ```dart
+import 'package:my_client_app/.generated/app.react.dart';
+import 'package:my_client_app/.generated/react_components.g.dart';
 import 'package:react_dom/react_dom.dart';
-import 'dart:html';
-import 'package:my_client_app/app.dart';
 
 void main() {
-  final rootElement = document.getElementById('root');
-  if (rootElement != null) {
-    // createRoot takes over an empty container
-    final root = createRoot(rootElement);
-    root.render(App());
-  }
+  initReact();
+  registerReactComponents();
+  mount(getRoot('app'), App(title: 'Client only'));
 }
 ```
 
-## Static HTML Shell
+`getRoot` and `mount` avoid direct `dart:html` or `dart:js_interop` code in
+the application entrypoint.
 
-Since there is no backend rendering HTML on the fly, your `web/index.html` serves as the hardcoded shell. The `react build` command will inject the necessary module imports.
+## Develop and build
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Client Only App</title>
-  <!-- Optional CSS -->
-  <link rel="stylesheet" href="/styles.css">
-</head>
-<body>
-  <div id="root"></div>
-  
-  <!-- react_tool will inject script tags here during build -->
-</body>
-</html>
-```
-
-## Development and Building
-
-Run the development server exactly as you would for an SSR project:
-
-```bash
+```console
 dart run react_tool:react serve --watch
-```
-
-The CLI detects the absence of server entrypoints, spins up a simple static file server, and compiles your Dart code to JavaScript on the fly.
-
-To build for production:
-
-```bash
 dart run react_tool:react build --release
 ```
 
-This populates `build/react/` with static assets:
-- `index.html` (with injected scripts)
-- `client.js`
-- `browser.entry.mjs`
-- Foreign JS bundles
-- Compiled CSS
+With no server entrypoint, `serve` starts the built-in static server.
+`build/react/` contains the rewritten `index.html`, client JavaScript,
+browser entry module, styles, static assets, and any foreign bundles.
 
-## Deployment
-
-Because the output is entirely static, you can deploy the contents of `build/react/` to any static hosting provider.
-
-### Example: GitHub Pages
-
-Simply copy the contents of `build/react/` to a `gh-pages` branch. Ensure that you have a `.nojekyll` file at the root to prevent GitHub from ignoring files that begin with an underscore.
-
-### Example: Firebase Hosting
-
-Initialize Firebase in your directory and point the hosting `public` folder to `build/react`.
-
-```json
-{
-  "hosting": {
-    "public": "build/react",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }
-}
-```
-Notice the rewrite rule: this is crucial for Single Page Applications using client-side routing, as it directs all requests back to `index.html`.
+Deploy that directory to static hosting. Client-side routers require a hosting
+fallback that serves `index.html` for document paths.

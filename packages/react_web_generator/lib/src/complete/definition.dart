@@ -6,6 +6,7 @@ import 'member.dart';
 
 sealed class WebIdlDefinition {
   final String name;
+
   /// Specification module this definition was declared in (a key of `idl`).
   final String spec;
   final List<ExtAttr> extAttrs;
@@ -24,6 +25,7 @@ sealed class WebIdlDefinition {
 final class IdlInterface extends WebIdlDefinition {
   final String? inheritance;
   final List<IdlMember> members;
+
   /// names of interface mixins pulled in via `X includes Y`.
   final List<String> includedMixins;
   final bool partial;
@@ -225,6 +227,7 @@ final class IdlCallbackInterface extends WebIdlDefinition {
 final class IdlIncludes extends WebIdlDefinition {
   /// The interface that includes the mixin.
   final String target;
+
   /// The mixin that gets included.
   final String includes;
 

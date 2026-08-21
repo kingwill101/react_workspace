@@ -17,4 +17,3 @@ abstract interface class SVGMaskElement {
   SVGAnimatedLength get width;
   SVGAnimatedLength get height;
 }
-

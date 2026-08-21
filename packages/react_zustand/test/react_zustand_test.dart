@@ -6,8 +6,7 @@ import 'package:test/test.dart';
 /// itself and expose exactly the hooks the externals in react_zustand.dart
 /// reference. This test pins that contract on the native VM (no JS interop).
 void main() {
-  final shim =
-      File('lib/react_zustand_shim.mjs').readAsStringSync();
+  final shim = File('lib/react_zustand_shim.mjs').readAsStringSync();
 
   test('shim imports zustand and registers the hook bridge', () {
     expect(shim, contains("from 'zustand'"));

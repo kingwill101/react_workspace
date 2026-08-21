@@ -2,16 +2,17 @@
 sidebar_position: 7
 ---
 
-# Foreign Components (JS/TS)
+# Foreign JavaScript and TypeScript components
 
-While React Dart allows you to write components in Dart, the React ecosystem is vast and built on JavaScript. React Dart makes it trivial to consume existing NPM packages, complex UI libraries (like Material UI or Radix), and custom JS/TS components without writing tedious `dart:js_interop` code.
+React Dart can render npm components and custom JS/TS modules through the same
+browser and SSR bundle graph. Use project configuration for app-local modules;
+create a wrapper package for reusable libraries.
 
-## Registering a Foreign Component
+## Project-local component
 
-To use a JavaScript or TypeScript component, you register it in your `react.yaml` under the `foreign.components` configuration.
+Declare the module and exported prop contract:
 
 ```yaml
-# react.yaml
 foreign:
   components:
     - name: DatePicker
@@ -19,80 +20,80 @@ foreign:
       export: default
       props:
         value: String
-        onChange: Function
+        onChange: ReactCallback
 ```
 
-### Configuration Details
-
-- **`name`**: The Dart name you will use to reference this component.
-- **`module`**: The path to the JS/TS file or the NPM package specifier.
-- **`export`**: The export name (e.g., `default` or a named export like `DatePicker`).
-- **`props`**: (Optional) A map of property names to Dart types. If provided, the code generator creates a typed helper in `lib/foreign_components.g.dart`.
-
-## Usage in Dart
-
-Once registered, the build system uses esbuild to bundle the JS file into `foreign/browser/bundle.mjs` and `foreign/ssr/bundle.mjs`.
-
-In your Dart code, you can use the generic `foreignComponent` function from `package:react/react.dart`:
+A build writes the typed helper to
+`lib/.generated/foreign_components.g.dart` and bundles the JavaScript module
+for browser and SSR targets.
 
 ```dart
-import 'package:react/react.dart';
+import 'package:my_app/.generated/foreign_components.g.dart';
+import 'package:react_dom/react_dom.dart';
 
-@React()
-ReactNode Form() {
-  return div(children: [
-    foreignComponent(
-      'DatePicker',
-      props: {
-        'value': '2024-01-01',
-        'onChange': allowInterop((e) => print(e)),
-      },
-    )
-  ]);
+@reactComponent
+ReactNode Form(({String value}) props) {
+  return datePicker(
+    value: props.value,
+    onChange: ReactCallback.one((next) {
+      print('Changed to $next');
+    }),
+  );
 }
 ```
 
-## Generated Typed Wrappers
+Ordinary supported Dart callbacks are encoded by the runtime. Do not import
+legacy `dart:js_util` or call `allowInterop` in component source.
 
-If you defined `props` in `react.yaml`, the `react_codegen` builder generates a strongly typed wrapper function.
+For exploratory or dynamic APIs, use the generic bridge:
 
 ```dart
-// Import the generated wrappers
-import 'package:my_app/foreign_components.g.dart';
-
-@React()
-ReactNode Form() {
-  return div(children: [
-    // Use the strongly typed wrapper
-    datePicker(
-      value: '2024-01-01',
-      onChange: allowInterop((e) => print('Changed: $e')),
-    )
-  ]);
-}
+foreignComponent(
+  'charts.LineChart',
+  props: {
+    'data': data,
+    'animated': true,
+    'onSelect': ReactCallback.one<Object?>((value) => select(value)),
+  },
+)
 ```
 
-## Consuming NPM Packages
+The key must match the name registered by the module or generated shim.
 
-You can use the exact same mechanism to wrap NPM packages.
+## Generate TypeScript bindings
 
-```yaml
-# react.yaml
-foreign:
-  components:
-    - name: LineChart
-      module: recharts
-      export: LineChart
+Provision the package's declared npm dependencies, then extract declarations:
+
+```console
+dart run react_tool:react js install
+dart run react_tool:react ts bind some-react-library \
+  --output lib/src/some_bindings.g.dart \
+  --shim lib/src/some_bindings_shim.mjs \
+  --hooks lib/src/some_hooks.g.dart \
+  --namespace someLibrary \
+  --prefix someLibrary
 ```
 
-For complex libraries, the community convention is to create a "wrapper package" (e.g., `react_router` or `react_recharts`). The wrapper package uses a JS shim to register the components globally, and provides Dart wrappers. See the **Wrapping third-party React packages** section in the main README for advanced wrapper patterns using `react.js` definitions in `pubspec.yaml`.
+The extractor maps component props, literal unions, interfaces, nested
+callbacks, hook parameters, and hook return values into typed Dart APIs. The
+shim imports only referenced exports and registers components plus an isolated
+hook/function bridge.
 
-## TypeScript Declarations Integration
+For deterministic wrapper maintenance, put the same options in a
+`react.js.bind` group and run `react ts bind` with no arguments. Commit and
+review wrapper outputs; application `lib/.generated/` output remains ignored.
 
-Instead of manually typing out `props` in `react.yaml`, React Dart CLI can automatically generate bindings from TypeScript declarations using `react ts bind`.
+## Wrapper package contract
 
-```bash
-dart run react_tool:react ts bind react-router-dom
-```
+A reusable package owns:
 
-This extracts the API surface from the NPM package and generates type-safe Dart wrappers automatically, saving you immense boilerplate. You define binding rules in `react.yaml` under `js.bind`.
+- a public Dart entrypoint;
+- generated or handwritten Dart bindings;
+- a JavaScript registration shim;
+- `react.js` npm dependencies, peers, externals, and target entries;
+- native harness tests and browser/SSR bundle tests.
+
+Keep `react` and `react-dom` as peers/externals so every wrapper shares one
+runtime instance. See [Build a Dart wrapper for a JavaScript
+package](./wrapper-packages) for the complete descriptor and the handwritten
+Zustand escape hatch.

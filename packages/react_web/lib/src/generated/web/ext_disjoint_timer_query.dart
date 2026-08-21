@@ -17,6 +17,4 @@ abstract interface class EXT_disjoint_timer_query {
 
 typedef GLuint64EXT = int;
 
-abstract interface class WebGLTimerQueryEXT {
-}
-
+abstract interface class WebGLTimerQueryEXT {}

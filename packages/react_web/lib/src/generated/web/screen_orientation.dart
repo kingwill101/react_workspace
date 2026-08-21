@@ -11,9 +11,8 @@ typedef OrientationType = String;
 abstract interface class ScreenOrientation {
   Future<void> lock(OrientationLockType orientation);
   void unlock();
-  OrientationType get type;
+  OrientationType get type_;
   int get angle;
   EventHandler get onchange;
-   set onchange(EventHandler value);
+  set onchange(EventHandler value);
 }
-

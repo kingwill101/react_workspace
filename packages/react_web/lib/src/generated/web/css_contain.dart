@@ -2,14 +2,16 @@
 // Neutral Web surface for spec: css-contain
 // ignore_for_file: type=lint
 
-import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class ContentVisibilityAutoStateChangeEvent {
-  factory ContentVisibilityAutoStateChangeEvent(String type, [ContentVisibilityAutoStateChangeEventInit? eventInitDict]) =>
+  factory ContentVisibilityAutoStateChangeEvent(
+    String type_, [
+    ContentVisibilityAutoStateChangeEventInit? eventInitDict,
+  ]) =>
       WebRuntime.current.createWebObject<ContentVisibilityAutoStateChangeEvent>(
         'ContentVisibilityAutoStateChangeEvent',
-        [type, eventInitDict],
+        [type_, eventInitDict],
       );
   bool get skipped;
 }
@@ -19,12 +21,10 @@ abstract interface class ContentVisibilityAutoStateChangeEventInit {
   set skipped(bool? value);
 }
 
-final class ContentVisibilityAutoStateChangeEventInitValue implements ContentVisibilityAutoStateChangeEventInit {
+final class ContentVisibilityAutoStateChangeEventInitValue
+    implements ContentVisibilityAutoStateChangeEventInit {
   @override
   bool? skipped;
 
-  ContentVisibilityAutoStateChangeEventInitValue({
-    this.skipped,
-  });
+  ContentVisibilityAutoStateChangeEventInitValue({this.skipped});
 }
-

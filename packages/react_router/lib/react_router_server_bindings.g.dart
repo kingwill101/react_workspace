@@ -5,8 +5,33 @@
 // ignore_for_file: type=lint
 
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:react/react.dart';
+
+// Shared decode helpers for hook return values.
+// Primitives and literals are decoded directly by the external's
+// return type; objects with known shape use generated extension
+// types (see below) for direct property access instead of
+// converting to/from [[key, value]] pairs. Record / URLSearchParams
+// types are still encoded as `[[k, v], ...]` pairs by the shim
+// (via `toPairs`) until the shim learns to pass raw JS objects.
+Map<String, String> _decodePairs(JSArray raw) {
+  final result = <String, String>{};
+  for (var i = 0; i < raw.length; i++) {
+    final entry = (raw[i] as JSArray);
+    result[(entry[0] as JSString).toDart] = (entry[1] as JSString).toDart;
+  }
+  return result;
+}
+
+List<T> _decodeList<T>(JSArray raw, T Function(JSAny? item) decode) {
+  final result = <T>[];
+  for (var i = 0; i < raw.length; i++) {
+    result.add(decode(raw[i]));
+  }
+  return result;
+}
 
 /// Typed helper for the `reactRouter.StaticRouter` foreign component.
 ///
@@ -21,10 +46,10 @@ import 'package:react/react.dart';
 )
 ReactNode staticRouter({
   String? key,
-  List<ReactNode> children = const [],
-    String? basename,
-    required Object location,
-    ServerFutureConfig? future,
+  ReactChildren children = const [],
+  String? basename,
+  required Object? location,
+  ServerFutureConfig? future,
 }) => foreignComponent(
   'reactRouter.StaticRouter',
   key: key,
@@ -50,10 +75,10 @@ ReactNode staticRouter({
 )
 ReactNode staticRouterProvider({
   String? key,
-    required ServerStaticHandlerContext context,
-    required ServerRemixRouter router,
-    bool? hydrate,
-    String? nonce,
+  required ServerStaticHandlerContext context,
+  required ServerRemixRouter router,
+  bool? hydrate,
+  String? nonce,
 }) => foreignComponent(
   'reactRouter.StaticRouterProvider',
   key: key,
@@ -75,10 +100,13 @@ ReactNode staticRouterProvider({
 )
 @JS('globalThis.__reactDartBindings.reactRouter.createStaticHandler')
 external JSAny? _createStaticHandlerRaw(JSAny? routes, JSAny? opts);
-ServerStaticHandler? createStaticHandler(List<ServerCreateStaticHandlerRoutes> routes, [Object? opts]) {
+ServerStaticHandler? createStaticHandler(
+  List<ServerCreateStaticHandlerRoutes> routes, [
+  Object? opts,
+]) {
   final raw = _createStaticHandlerRaw(routes.jsify(), opts.jsify());
   if (raw == null) return null;
-  return raw as ServerStaticHandler?;
+  return ServerStaticHandler.fromJs(raw as JSObject);
 }
 
 /// Typed helper for the `reactRouter.createStaticRouter` function.
@@ -90,18 +118,33 @@ ServerStaticHandler? createStaticHandler(List<ServerCreateStaticHandlerRoutes> r
   targets: {ReactRenderTarget.browser, ReactRenderTarget.server},
 )
 @JS('globalThis.__reactDartBindings.reactRouter.createStaticRouter')
-external JSAny? _createStaticRouterRaw(JSAny? routes, JSAny? context, JSAny? opts);
-ServerRemixRouter? createStaticRouter(List<ServerCreateStaticHandlerRoutes> routes, ServerStaticHandlerContext context, [ServerCreateStaticRouterOpts? opts]) {
-  final raw = _createStaticRouterRaw(routes.jsify(), context.jsify(), opts.jsify());
+external JSAny? _createStaticRouterRaw(
+  JSAny? routes,
+  JSAny? context,
+  JSAny? opts,
+);
+ServerRemixRouter? createStaticRouter(
+  List<ServerCreateStaticHandlerRoutes> routes,
+  ServerStaticHandlerContext context, [
+  ServerCreateStaticRouterOpts? opts,
+]) {
+  final raw = _createStaticRouterRaw(
+    routes.jsify(),
+    context.toJson().jsify(),
+    opts?.toJson().jsify(),
+  );
   if (raw == null) return null;
-  return raw as ServerRemixRouter?;
+  return ServerRemixRouter.fromJs(raw as JSObject);
 }
 
 /// TS: (request: any, opts: { requestContext?: unknown; skipLoaderErrorBubbling?: boolean; unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any }) => any
-typedef ServerCreateStaticHandlerReturnQueryCallback = Object? Function(Object? request, Object? opts);
+typedef ServerCreateStaticHandlerReturnQueryCallback =
+    Object? Function(Object? request, Object? opts);
 
 /// Wraps a [ServerCreateStaticHandlerReturnQueryCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticHandlerReturnQueryCallback(ServerCreateStaticHandlerReturnQueryCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticHandlerReturnQueryCallback(
+  ServerCreateStaticHandlerReturnQueryCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticHandlerReturnQueryCallback',
   signature: const (
     positional: [reactAny, reactAny],
@@ -113,11 +156,35 @@ ReactCallback serverCreateStaticHandlerReturnQueryCallback(ServerCreateStaticHan
   },
 );
 
+/// TS: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any
+typedef ServerCreateStaticHandlerReturnQueryOptsUnstableDataStrategyCallback =
+    Object? Function(Object? args);
+
+/// Wraps a [ServerCreateStaticHandlerReturnQueryOptsUnstableDataStrategyCallback] into a [ReactCallback] for prop encoding.
+ReactCallback
+serverCreateStaticHandlerReturnQueryOptsUnstableDataStrategyCallback(
+  ServerCreateStaticHandlerReturnQueryOptsUnstableDataStrategyCallback fn,
+) => ReactCallback(
+  debugName:
+      'ServerCreateStaticHandlerReturnQueryOptsUnstableDataStrategyCallback',
+  signature: const (
+    positional: [reactAny],
+    result: reactAny,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    return fn(arguments[0]);
+  },
+);
+
 /// TS: (request: any, opts: { routeId?: string; requestContext?: unknown; unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any }) => any
-typedef ServerCreateStaticHandlerReturnQueryRouteCallback = Object? Function(Object? request, Object? opts);
+typedef ServerCreateStaticHandlerReturnQueryRouteCallback =
+    Object? Function(Object? request, Object? opts);
 
 /// Wraps a [ServerCreateStaticHandlerReturnQueryRouteCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticHandlerReturnQueryRouteCallback(ServerCreateStaticHandlerReturnQueryRouteCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticHandlerReturnQueryRouteCallback(
+  ServerCreateStaticHandlerReturnQueryRouteCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticHandlerReturnQueryRouteCallback',
   signature: const (
     positional: [reactAny, reactAny],
@@ -130,10 +197,17 @@ ReactCallback serverCreateStaticHandlerReturnQueryRouteCallback(ServerCreateStat
 );
 
 /// TS: (savedScrollPositions: unknown, getScrollPosition: () => number, getKey: (location: { pathname: string; search: string; hash: string; state: any; key: string }, matches: { id: any; pathname: any; params: any; data: any; handle: any }[]) => string) => () => void
-typedef ServerCreateStaticRouterReturnEnableScrollRestorationCallback = Object? Function(Object? savedScrollPositions, Object? getScrollPosition, Object? getKey);
+typedef ServerCreateStaticRouterReturnEnableScrollRestorationCallback =
+    Object? Function(
+      Object? savedScrollPositions,
+      Object? getScrollPosition,
+      Object? getKey,
+    );
 
 /// Wraps a [ServerCreateStaticRouterReturnEnableScrollRestorationCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnEnableScrollRestorationCallback(ServerCreateStaticRouterReturnEnableScrollRestorationCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnEnableScrollRestorationCallback(
+  ServerCreateStaticRouterReturnEnableScrollRestorationCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnEnableScrollRestorationCallback',
   signature: const (
     positional: [reactAny, reactAny, reactAny],
@@ -145,11 +219,35 @@ ReactCallback serverCreateStaticRouterReturnEnableScrollRestorationCallback(Serv
   },
 );
 
+/// TS: (location: { pathname: string; search: string; hash: string; state: any; key: string }, matches: { id: any; pathname: any; params: any; data: any; handle: any }[]) => string
+typedef ServerCreateStaticRouterReturnEnableScrollRestorationGetKeyCallback =
+    String Function(Object? location, Object? matches);
+
+/// Wraps a [ServerCreateStaticRouterReturnEnableScrollRestorationGetKeyCallback] into a [ReactCallback] for prop encoding.
+ReactCallback
+serverCreateStaticRouterReturnEnableScrollRestorationGetKeyCallback(
+  ServerCreateStaticRouterReturnEnableScrollRestorationGetKeyCallback fn,
+) => ReactCallback(
+  debugName:
+      'ServerCreateStaticRouterReturnEnableScrollRestorationGetKeyCallback',
+  signature: const (
+    positional: [reactAny, reactAny],
+    result: reactAny,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    return fn(arguments[0], arguments[1]);
+  },
+);
+
 /// TS: (key: string, fn: (args: { currentLocation: { pathname: any; search: any; hash: any; state: any; key: any }; nextLocation: { pathname: any; search: any; hash: any; state: any; key: any }; historyAction: any }) => boolean) => { state: "unblocked" | "blocked" | "proceeding"; reset: () => void; proceed: () => void; location: { pathname: string; search: string; hash: string; state: any; key: string } }
-typedef ServerCreateStaticRouterReturnGetBlockerCallback = Object? Function(String elementKey, Object? fn);
+typedef ServerCreateStaticRouterReturnGetBlockerCallback =
+    Object? Function(String elementKey, Object? fn);
 
 /// Wraps a [ServerCreateStaticRouterReturnGetBlockerCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnGetBlockerCallback(ServerCreateStaticRouterReturnGetBlockerCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnGetBlockerCallback(
+  ServerCreateStaticRouterReturnGetBlockerCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnGetBlockerCallback',
   signature: const (
     positional: [reactString, reactAny],
@@ -161,11 +259,33 @@ ReactCallback serverCreateStaticRouterReturnGetBlockerCallback(ServerCreateStati
   },
 );
 
+/// TS: (args: { currentLocation: { pathname: any; search: any; hash: any; state: any; key: any }; nextLocation: { pathname: any; search: any; hash: any; state: any; key: any }; historyAction: any }) => boolean
+typedef ServerCreateStaticRouterReturnGetBlockerFnCallback =
+    bool Function(Object? args);
+
+/// Wraps a [ServerCreateStaticRouterReturnGetBlockerFnCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverCreateStaticRouterReturnGetBlockerFnCallback(
+  ServerCreateStaticRouterReturnGetBlockerFnCallback fn,
+) => ReactCallback(
+  debugName: 'ServerCreateStaticRouterReturnGetBlockerFnCallback',
+  signature: const (
+    positional: [reactAny],
+    result: reactAny,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    return fn(arguments[0]);
+  },
+);
+
 /// TS: (routes: { __ref: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any }; children?: any[]; index: true | false }[]) => void
-typedef ServerCreateStaticRouterReturnInternalSetRoutesCallback = void Function(Object? routes);
+typedef ServerCreateStaticRouterReturnInternalSetRoutesCallback =
+    void Function(Object? routes);
 
 /// Wraps a [ServerCreateStaticRouterReturnInternalSetRoutesCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnInternalSetRoutesCallback(ServerCreateStaticRouterReturnInternalSetRoutesCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnInternalSetRoutesCallback(
+  ServerCreateStaticRouterReturnInternalSetRoutesCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnInternalSetRoutesCallback',
   signature: const (
     positional: [reactAny],
@@ -179,10 +299,13 @@ ReactCallback serverCreateStaticRouterReturnInternalSetRoutesCallback(ServerCrea
 );
 
 /// TS: (routeId: string, children: { __ref: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any }; children?: any[]; index: true | false }[]) => void
-typedef ServerCreateStaticRouterReturnPatchRoutesCallback = void Function(String routeId, Object? children);
+typedef ServerCreateStaticRouterReturnPatchRoutesCallback =
+    void Function(String routeId, Object? children);
 
 /// Wraps a [ServerCreateStaticRouterReturnPatchRoutesCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnPatchRoutesCallback(ServerCreateStaticRouterReturnPatchRoutesCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnPatchRoutesCallback(
+  ServerCreateStaticRouterReturnPatchRoutesCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnPatchRoutesCallback',
   signature: const (
     positional: [reactString, reactAny],
@@ -199,23 +322,24 @@ ReactCallback serverCreateStaticRouterReturnPatchRoutesCallback(ServerCreateStat
 typedef ServerCreateStaticRouterReturnStateCallback = Object? Function();
 
 /// Wraps a [ServerCreateStaticRouterReturnStateCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnStateCallback(ServerCreateStaticRouterReturnStateCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnStateCallback(
+  ServerCreateStaticRouterReturnStateCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnStateCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
 );
 
 /// TS: (fn: (state: { historyAction: any; location: { pathname: any; search: any; hash: any; state: any; key: any }; matches: any[]; initialized: boolean; restoreScrollPosition: any; preventScrollReset: boolean; navigation: any; revalidation: any; loaderData: Record<string, unknown>; actionData: Record<string, unknown>; errors: Record<string, unknown>; fetchers: unknown; blockers: unknown }, opts: { deletedFetchers: any[]; unstable_viewTransitionOpts?: any; unstable_flushSync: boolean }) => void) => () => void
-typedef ServerCreateStaticRouterReturnSubscribeCallback = Object? Function(Object? fn);
+typedef ServerCreateStaticRouterReturnSubscribeCallback =
+    Object? Function(Object? fn);
 
 /// Wraps a [ServerCreateStaticRouterReturnSubscribeCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverCreateStaticRouterReturnSubscribeCallback(ServerCreateStaticRouterReturnSubscribeCallback fn) => ReactCallback(
+ReactCallback serverCreateStaticRouterReturnSubscribeCallback(
+  ServerCreateStaticRouterReturnSubscribeCallback fn,
+) => ReactCallback(
   debugName: 'ServerCreateStaticRouterReturnSubscribeCallback',
   signature: const (
     positional: [reactAny],
@@ -227,27 +351,48 @@ ReactCallback serverCreateStaticRouterReturnSubscribeCallback(ServerCreateStatic
   },
 );
 
+/// TS: (state: { historyAction: any; location: { pathname: any; search: any; hash: any; state: any; key: any }; matches: any[]; initialized: boolean; restoreScrollPosition: any; preventScrollReset: boolean; navigation: any; revalidation: any; loaderData: Record<string, unknown>; actionData: Record<string, unknown>; errors: Record<string, unknown>; fetchers: unknown; blockers: unknown }, opts: { deletedFetchers: any[]; unstable_viewTransitionOpts?: any; unstable_flushSync: boolean }) => void
+typedef ServerCreateStaticRouterReturnSubscribeFnCallback =
+    void Function(Object? state, Object? opts);
+
+/// Wraps a [ServerCreateStaticRouterReturnSubscribeFnCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverCreateStaticRouterReturnSubscribeFnCallback(
+  ServerCreateStaticRouterReturnSubscribeFnCallback fn,
+) => ReactCallback(
+  debugName: 'ServerCreateStaticRouterReturnSubscribeFnCallback',
+  signature: const (
+    positional: [reactAny, reactAny],
+    result: reactVoid,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    fn(arguments[0], arguments[1]);
+    return null;
+  },
+);
+
 /// TS: () => string
 typedef ServerStaticRouterProviderContextBasenameCallback = String Function();
 
 /// Wraps a [ServerStaticRouterProviderContextBasenameCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderContextBasenameCallback(ServerStaticRouterProviderContextBasenameCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderContextBasenameCallback(
+  ServerStaticRouterProviderContextBasenameCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderContextBasenameCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
 );
 
 /// TS: (location: { pathname: string; search: string; hash: string; state: any; key: string }) => string
-typedef ServerStaticRouterProviderRouterCreateHrefCallback = String Function(Object? location);
+typedef ServerStaticRouterProviderRouterCreateHrefCallback =
+    String Function(Object? location);
 
 /// Wraps a [ServerStaticRouterProviderRouterCreateHrefCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterCreateHrefCallback(ServerStaticRouterProviderRouterCreateHrefCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterCreateHrefCallback(
+  ServerStaticRouterProviderRouterCreateHrefCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterCreateHrefCallback',
   signature: const (
     positional: [reactAny],
@@ -260,10 +405,13 @@ ReactCallback serverStaticRouterProviderRouterCreateHrefCallback(ServerStaticRou
 );
 
 /// TS: (key: string) => void
-typedef ServerStaticRouterProviderRouterDeleteFetcherCallback = void Function(String elementKey);
+typedef ServerStaticRouterProviderRouterDeleteFetcherCallback =
+    void Function(String elementKey);
 
 /// Wraps a [ServerStaticRouterProviderRouterDeleteFetcherCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterDeleteFetcherCallback(ServerStaticRouterProviderRouterDeleteFetcherCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterDeleteFetcherCallback(
+  ServerStaticRouterProviderRouterDeleteFetcherCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterDeleteFetcherCallback',
   signature: const (
     positional: [reactString],
@@ -277,10 +425,17 @@ ReactCallback serverStaticRouterProviderRouterDeleteFetcherCallback(ServerStatic
 );
 
 /// TS: (savedScrollPositions: unknown, getScrollPosition: () => number, getKey: (location: { pathname: any; search: any; hash: any; state: any; key: any }, matches: { id: any; pathname: any; params: any; data: any; handle: any }[]) => string) => () => void
-typedef ServerStaticRouterProviderRouterEnableScrollRestorationCallback = Object? Function(Object? savedScrollPositions, Object? getScrollPosition, Object? getKey);
+typedef ServerStaticRouterProviderRouterEnableScrollRestorationCallback =
+    Object? Function(
+      Object? savedScrollPositions,
+      Object? getScrollPosition,
+      Object? getKey,
+    );
 
 /// Wraps a [ServerStaticRouterProviderRouterEnableScrollRestorationCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterEnableScrollRestorationCallback(ServerStaticRouterProviderRouterEnableScrollRestorationCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterEnableScrollRestorationCallback(
+  ServerStaticRouterProviderRouterEnableScrollRestorationCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterEnableScrollRestorationCallback',
   signature: const (
     positional: [reactAny, reactAny, reactAny],
@@ -292,11 +447,53 @@ ReactCallback serverStaticRouterProviderRouterEnableScrollRestorationCallback(Se
   },
 );
 
+/// TS: (location: { pathname: any; search: any; hash: any; state: any; key: any }, matches: { id: any; pathname: any; params: any; data: any; handle: any }[]) => string
+typedef ServerStaticRouterProviderRouterEnableScrollRestorationGetKeyCallback =
+    String Function(Object? location, Object? matches);
+
+/// Wraps a [ServerStaticRouterProviderRouterEnableScrollRestorationGetKeyCallback] into a [ReactCallback] for prop encoding.
+ReactCallback
+serverStaticRouterProviderRouterEnableScrollRestorationGetKeyCallback(
+  ServerStaticRouterProviderRouterEnableScrollRestorationGetKeyCallback fn,
+) => ReactCallback(
+  debugName:
+      'ServerStaticRouterProviderRouterEnableScrollRestorationGetKeyCallback',
+  signature: const (
+    positional: [reactAny, reactAny],
+    result: reactAny,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    return fn(arguments[0], arguments[1]);
+  },
+);
+
+/// TS: () => number
+typedef ServerStaticRouterProviderRouterEnableScrollRestorationGetScrollPositionCallback =
+    num Function();
+
+/// Wraps a [ServerStaticRouterProviderRouterEnableScrollRestorationGetScrollPositionCallback] into a [ReactCallback] for prop encoding.
+ReactCallback
+serverStaticRouterProviderRouterEnableScrollRestorationGetScrollPositionCallback(
+  ServerStaticRouterProviderRouterEnableScrollRestorationGetScrollPositionCallback
+  fn,
+) => ReactCallback(
+  debugName:
+      'ServerStaticRouterProviderRouterEnableScrollRestorationGetScrollPositionCallback',
+  signature: const (positional: [], result: reactAny, asynchronous: false),
+  invoke: (arguments) {
+    return fn();
+  },
+);
+
 /// TS: (to: any) => { pathname: string; search: string; hash: string }
-typedef ServerStaticRouterProviderRouterEncodeLocationCallback = Object? Function(Object? to);
+typedef ServerStaticRouterProviderRouterEncodeLocationCallback =
+    Object? Function(Object? to);
 
 /// Wraps a [ServerStaticRouterProviderRouterEncodeLocationCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterEncodeLocationCallback(ServerStaticRouterProviderRouterEncodeLocationCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterEncodeLocationCallback(
+  ServerStaticRouterProviderRouterEncodeLocationCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterEncodeLocationCallback',
   signature: const (
     positional: [reactAny],
@@ -309,10 +506,13 @@ ReactCallback serverStaticRouterProviderRouterEncodeLocationCallback(ServerStati
 );
 
 /// TS: (key: string, routeId: string, href: string, opts: { preventScrollReset?: boolean; relative?: "route" | "path"; unstable_flushSync?: boolean; __ref: { preventScrollReset?: any; relative?: any; unstable_flushSync?: any } }) => void
-typedef ServerStaticRouterProviderRouterFetchCallback = void Function(String elementKey, String routeId, String href, Object? opts);
+typedef ServerStaticRouterProviderRouterFetchCallback =
+    void Function(String elementKey, String routeId, String href, Object? opts);
 
 /// Wraps a [ServerStaticRouterProviderRouterFetchCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterFetchCallback(ServerStaticRouterProviderRouterFetchCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterFetchCallback(
+  ServerStaticRouterProviderRouterFetchCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterFetchCallback',
   signature: const (
     positional: [reactString, reactString, reactString, reactAny],
@@ -320,7 +520,12 @@ ReactCallback serverStaticRouterProviderRouterFetchCallback(ServerStaticRouterPr
     asynchronous: false,
   ),
   invoke: (arguments) {
-    fn(arguments[0] as String, arguments[1] as String, arguments[2] as String, arguments[3]);
+    fn(
+      arguments[0] as String,
+      arguments[1] as String,
+      arguments[2] as String,
+      arguments[3],
+    );
     return null;
   },
 );
@@ -329,23 +534,24 @@ ReactCallback serverStaticRouterProviderRouterFetchCallback(ServerStaticRouterPr
 typedef ServerStaticRouterProviderRouterFutureCallback = Object? Function();
 
 /// Wraps a [ServerStaticRouterProviderRouterFutureCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterFutureCallback(ServerStaticRouterProviderRouterFutureCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterFutureCallback(
+  ServerStaticRouterProviderRouterFutureCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterFutureCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
 );
 
 /// TS: (key: string, fn: (args: { currentLocation: any; nextLocation: any; historyAction: any }) => boolean) => { state: "unblocked" | "blocked" | "proceeding"; reset: () => void; proceed: () => void; location: { pathname: string; search: string; hash: string; state: any; key: string } }
-typedef ServerStaticRouterProviderRouterGetBlockerCallback = Object? Function(String elementKey, Object? fn);
+typedef ServerStaticRouterProviderRouterGetBlockerCallback =
+    Object? Function(String elementKey, Object? fn);
 
 /// Wraps a [ServerStaticRouterProviderRouterGetBlockerCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterGetBlockerCallback(ServerStaticRouterProviderRouterGetBlockerCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterGetBlockerCallback(
+  ServerStaticRouterProviderRouterGetBlockerCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterGetBlockerCallback',
   signature: const (
     positional: [reactString, reactAny],
@@ -357,11 +563,33 @@ ReactCallback serverStaticRouterProviderRouterGetBlockerCallback(ServerStaticRou
   },
 );
 
+/// TS: (args: { currentLocation: any; nextLocation: any; historyAction: any }) => boolean
+typedef ServerStaticRouterProviderRouterGetBlockerFnCallback =
+    bool Function(Object? args);
+
+/// Wraps a [ServerStaticRouterProviderRouterGetBlockerFnCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverStaticRouterProviderRouterGetBlockerFnCallback(
+  ServerStaticRouterProviderRouterGetBlockerFnCallback fn,
+) => ReactCallback(
+  debugName: 'ServerStaticRouterProviderRouterGetBlockerFnCallback',
+  signature: const (
+    positional: [reactAny],
+    result: reactAny,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    return fn(arguments[0]);
+  },
+);
+
 /// TS: (key: string) => { state: "idle" | "loading" | "submitting"; formMethod: Record<string, unknown>; formAction: string; formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; text: string; formData: any; json: Record<string, unknown>; data: any }
-typedef ServerStaticRouterProviderRouterGetFetcherCallback = Object? Function(String elementKey);
+typedef ServerStaticRouterProviderRouterGetFetcherCallback =
+    Object? Function(String elementKey);
 
 /// Wraps a [ServerStaticRouterProviderRouterGetFetcherCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterGetFetcherCallback(ServerStaticRouterProviderRouterGetFetcherCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterGetFetcherCallback(
+  ServerStaticRouterProviderRouterGetFetcherCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterGetFetcherCallback',
   signature: const (
     positional: [reactString],
@@ -374,10 +602,13 @@ ReactCallback serverStaticRouterProviderRouterGetFetcherCallback(ServerStaticRou
 );
 
 /// TS: (routes: { __ref: any; children?: any[]; index: true | false }[]) => void
-typedef ServerStaticRouterProviderRouterInternalSetRoutesCallback = void Function(Object? routes);
+typedef ServerStaticRouterProviderRouterInternalSetRoutesCallback =
+    void Function(Object? routes);
 
 /// Wraps a [ServerStaticRouterProviderRouterInternalSetRoutesCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterInternalSetRoutesCallback(ServerStaticRouterProviderRouterInternalSetRoutesCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterInternalSetRoutesCallback(
+  ServerStaticRouterProviderRouterInternalSetRoutesCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterInternalSetRoutesCallback',
   signature: const (
     positional: [reactAny],
@@ -391,10 +622,13 @@ ReactCallback serverStaticRouterProviderRouterInternalSetRoutesCallback(ServerSt
 );
 
 /// TS: (to: number) => any
-typedef ServerStaticRouterProviderRouterNavigateCallback = Object? Function(num to);
+typedef ServerStaticRouterProviderRouterNavigateCallback =
+    Object? Function(num to);
 
 /// Wraps a [ServerStaticRouterProviderRouterNavigateCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterNavigateCallback(ServerStaticRouterProviderRouterNavigateCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterNavigateCallback(
+  ServerStaticRouterProviderRouterNavigateCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterNavigateCallback',
   signature: const (
     positional: [reactAny],
@@ -407,10 +641,13 @@ ReactCallback serverStaticRouterProviderRouterNavigateCallback(ServerStaticRoute
 );
 
 /// TS: (routeId: string, children: { __ref: any; children?: any[]; index: true | false }[]) => void
-typedef ServerStaticRouterProviderRouterPatchRoutesCallback = void Function(String routeId, Object? children);
+typedef ServerStaticRouterProviderRouterPatchRoutesCallback =
+    void Function(String routeId, Object? children);
 
 /// Wraps a [ServerStaticRouterProviderRouterPatchRoutesCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterPatchRoutesCallback(ServerStaticRouterProviderRouterPatchRoutesCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterPatchRoutesCallback(
+  ServerStaticRouterProviderRouterPatchRoutesCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterPatchRoutesCallback',
   signature: const (
     positional: [reactString, reactAny],
@@ -423,34 +660,15 @@ ReactCallback serverStaticRouterProviderRouterPatchRoutesCallback(ServerStaticRo
   },
 );
 
-/// TS: () => void
-typedef ServerStaticRouterProviderRouterRevalidateCallback = void Function();
-
-/// Wraps a [ServerStaticRouterProviderRouterRevalidateCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterRevalidateCallback(ServerStaticRouterProviderRouterRevalidateCallback fn) => ReactCallback(
-  debugName: 'ServerStaticRouterProviderRouterRevalidateCallback',
-  signature: const (
-    positional: [],
-    result: reactVoid,
-    asynchronous: false,
-  ),
-  invoke: (arguments) {
-    fn();
-    return null;
-  },
-);
-
 /// TS: () => { __ref: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any; children?: any; index: any }; id: string; children?: any[] }[]
 typedef ServerStaticRouterProviderRouterRoutesCallback = Object? Function();
 
 /// Wraps a [ServerStaticRouterProviderRouterRoutesCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterRoutesCallback(ServerStaticRouterProviderRouterRoutesCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterRoutesCallback(
+  ServerStaticRouterProviderRouterRoutesCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterRoutesCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
@@ -460,23 +678,24 @@ ReactCallback serverStaticRouterProviderRouterRoutesCallback(ServerStaticRouterP
 typedef ServerStaticRouterProviderRouterStateCallback = Object? Function();
 
 /// Wraps a [ServerStaticRouterProviderRouterStateCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterStateCallback(ServerStaticRouterProviderRouterStateCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterStateCallback(
+  ServerStaticRouterProviderRouterStateCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterStateCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
 );
 
 /// TS: (fn: (state: { historyAction: any; location: any; matches: any; initialized: any; restoreScrollPosition: any; preventScrollReset: any; navigation: any; revalidation: any; loaderData: any; actionData: any; errors: any; fetchers: any; blockers: any }, opts: { deletedFetchers: any; unstable_viewTransitionOpts?: any; unstable_flushSync: any }) => void) => () => void
-typedef ServerStaticRouterProviderRouterSubscribeCallback = Object? Function(Object? fn);
+typedef ServerStaticRouterProviderRouterSubscribeCallback =
+    Object? Function(Object? fn);
 
 /// Wraps a [ServerStaticRouterProviderRouterSubscribeCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterSubscribeCallback(ServerStaticRouterProviderRouterSubscribeCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterSubscribeCallback(
+  ServerStaticRouterProviderRouterSubscribeCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterSubscribeCallback',
   signature: const (
     positional: [reactAny],
@@ -488,21 +707,175 @@ ReactCallback serverStaticRouterProviderRouterSubscribeCallback(ServerStaticRout
   },
 );
 
+/// TS: (state: { historyAction: any; location: any; matches: any; initialized: any; restoreScrollPosition: any; preventScrollReset: any; navigation: any; revalidation: any; loaderData: any; actionData: any; errors: any; fetchers: any; blockers: any }, opts: { deletedFetchers: any; unstable_viewTransitionOpts?: any; unstable_flushSync: any }) => void
+typedef ServerStaticRouterProviderRouterSubscribeFnCallback =
+    void Function(Object? state, Object? opts);
+
+/// Wraps a [ServerStaticRouterProviderRouterSubscribeFnCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverStaticRouterProviderRouterSubscribeFnCallback(
+  ServerStaticRouterProviderRouterSubscribeFnCallback fn,
+) => ReactCallback(
+  debugName: 'ServerStaticRouterProviderRouterSubscribeFnCallback',
+  signature: const (
+    positional: [reactAny, reactAny],
+    result: reactVoid,
+    asynchronous: false,
+  ),
+  invoke: (arguments) {
+    fn(arguments[0], arguments[1]);
+    return null;
+  },
+);
+
+/// TS: () => void
+typedef ServerStaticRouterProviderRouterSubscribeReturnCallback =
+    void Function();
+
+/// Wraps a [ServerStaticRouterProviderRouterSubscribeReturnCallback] into a [ReactCallback] for prop encoding.
+ReactCallback serverStaticRouterProviderRouterSubscribeReturnCallback(
+  ServerStaticRouterProviderRouterSubscribeReturnCallback fn,
+) => ReactCallback(
+  debugName: 'ServerStaticRouterProviderRouterSubscribeReturnCallback',
+  signature: const (positional: [], result: reactVoid, asynchronous: false),
+  invoke: (arguments) {
+    fn();
+    return null;
+  },
+);
+
 /// TS: () => any
 typedef ServerStaticRouterProviderRouterWindowCallback = Object? Function();
 
 /// Wraps a [ServerStaticRouterProviderRouterWindowCallback] into a [ReactCallback] for prop encoding.
-ReactCallback serverStaticRouterProviderRouterWindowCallback(ServerStaticRouterProviderRouterWindowCallback fn) => ReactCallback(
+ReactCallback serverStaticRouterProviderRouterWindowCallback(
+  ServerStaticRouterProviderRouterWindowCallback fn,
+) => ReactCallback(
   debugName: 'ServerStaticRouterProviderRouterWindowCallback',
-  signature: const (
-    positional: [],
-    result: reactAny,
-    asynchronous: false,
-  ),
+  signature: const (positional: [], result: reactAny, asynchronous: false),
   invoke: (arguments) {
     return fn();
   },
 );
+
+/// Literal union: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"
+enum ServerFormEncType {
+  applicationXWwwFormUrlencoded('application/x-www-form-urlencoded'),
+  multipartFormData('multipart/form-data'),
+  applicationJson('application/json'),
+  textPlain('text/plain');
+
+  const ServerFormEncType(this.value);
+  final String value;
+
+  /// Decodes a JS string value into this enum.
+  static ServerFormEncType fromValue(String value) => values.firstWhere(
+    (e) => e.value == value,
+    orElse: () =>
+        throw ArgumentError.value(value, 'value', 'Unknown ServerFormEncType'),
+  );
+}
+
+/// Literal union: "POP" | "PUSH" | "REPLACE"
+enum ServerHistoryAction {
+  pop('POP'),
+  push('PUSH'),
+  replace('REPLACE');
+
+  const ServerHistoryAction(this.value);
+  final String value;
+
+  /// Decodes a JS string value into this enum.
+  static ServerHistoryAction fromValue(String value) => values.firstWhere(
+    (e) => e.value == value,
+    orElse: () => throw ArgumentError.value(
+      value,
+      'value',
+      'Unknown ServerHistoryAction',
+    ),
+  );
+}
+
+/// Literal union: "route" | "path"
+enum ServerRelativeRoutingType {
+  route('route'),
+  path('path');
+
+  const ServerRelativeRoutingType(this.value);
+  final String value;
+
+  /// Decodes a JS string value into this enum.
+  static ServerRelativeRoutingType fromValue(String value) => values.firstWhere(
+    (e) => e.value == value,
+    orElse: () => throw ArgumentError.value(
+      value,
+      'value',
+      'Unknown ServerRelativeRoutingType',
+    ),
+  );
+}
+
+/// Literal union: "idle" | "loading"
+enum ServerRevalidationState {
+  idle('idle'),
+  loading('loading');
+
+  const ServerRevalidationState(this.value);
+  final String value;
+
+  /// Decodes a JS string value into this enum.
+  static ServerRevalidationState fromValue(String value) => values.firstWhere(
+    (e) => e.value == value,
+    orElse: () => throw ArgumentError.value(
+      value,
+      'value',
+      'Unknown ServerRevalidationState',
+    ),
+  );
+}
+
+/// Literal union: "unblocked" | "blocked" | "proceeding"
+enum ServerStaticRouterProviderRouterGetBlockerReturnState {
+  unblocked('unblocked'),
+  blocked('blocked'),
+  proceeding('proceeding');
+
+  const ServerStaticRouterProviderRouterGetBlockerReturnState(this.value);
+  final String value;
+
+  /// Decodes a JS string value into this enum.
+  static ServerStaticRouterProviderRouterGetBlockerReturnState fromValue(
+    String value,
+  ) => values.firstWhere(
+    (e) => e.value == value,
+    orElse: () => throw ArgumentError.value(
+      value,
+      'value',
+      'Unknown ServerStaticRouterProviderRouterGetBlockerReturnState',
+    ),
+  );
+}
+
+/// Literal union: "idle" | "loading" | "submitting"
+enum ServerStaticRouterProviderRouterStateReturnNavigationState {
+  idle('idle'),
+  loading('loading'),
+  submitting('submitting');
+
+  const ServerStaticRouterProviderRouterStateReturnNavigationState(this.value);
+  final String value;
+
+  /// Decodes a JS string value into this enum.
+  static ServerStaticRouterProviderRouterStateReturnNavigationState fromValue(
+    String value,
+  ) => values.firstWhere(
+    (e) => e.value == value,
+    orElse: () => throw ArgumentError.value(
+      value,
+      'value',
+      'Unknown ServerStaticRouterProviderRouterStateReturnNavigationState',
+    ),
+  );
+}
 
 /// Typed props for `AgnosticDataRouteMatch`.
 ///
@@ -512,7 +885,7 @@ class ServerAgnosticDataRouteMatch {
     required Object? this.params,
     required String this.pathname,
     required String this.pathnameBase,
-    required Object this.route,
+    required Object? this.route,
   });
 
   /// TS: unknown
@@ -525,7 +898,21 @@ class ServerAgnosticDataRouteMatch {
   final String pathnameBase;
 
   /// TS: any
-  final Object route;
+  final Object? route;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerAgnosticDataRouteMatch.fromJs(JSObject js) {
+    final rawParams = js.getProperty<JSAny?>('params'.toJS);
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawPathnameBase = js.getProperty<JSAny?>('pathnameBase'.toJS);
+    final rawRoute = js.getProperty<JSAny?>('route'.toJS);
+    return ServerAgnosticDataRouteMatch(
+      params: _decodePairs(rawParams as JSArray),
+      pathname: (rawPathname as JSString).toDart,
+      pathnameBase: (rawPathnameBase as JSString).toDart,
+      route: rawRoute,
+    );
+  }
 
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
@@ -542,13 +929,13 @@ class ServerAgnosticDataRouteMatch {
 /// id: string; children?: any[]
 class ServerCreateStaticHandlerReturnDataRoutes {
   const ServerCreateStaticHandlerReturnDataRoutes({
-    required ServerCreateStaticHandlerReturnDataRoutesRef this.__ref,
+    required ServerCreateStaticHandlerReturnDataRoutesRef this.privateRef,
     required String this.id,
     List<Object?>? this.children,
   });
 
   /// TS: { caseSensitive?: boolean; path?: string; id?: string; loader?: any; action?: any; hasErrorBoundary?: boolean; shouldRevalidate?: any; handle?: any; lazy?: any; children?: null; index: true }
-  final ServerCreateStaticHandlerReturnDataRoutesRef __ref;
+  final ServerCreateStaticHandlerReturnDataRoutesRef privateRef;
 
   /// TS: string
   final String id;
@@ -556,9 +943,25 @@ class ServerCreateStaticHandlerReturnDataRoutes {
   /// TS: any[]
   final List<Object?>? children;
 
+  /// Decodes this value from a JavaScript object.
+  factory ServerCreateStaticHandlerReturnDataRoutes.fromJs(JSObject js) {
+    final rawPrivateRef = js.getProperty<JSAny?>('__ref'.toJS);
+    final rawId = js.getProperty<JSAny?>('id'.toJS);
+    final rawChildren = js.getProperty<JSAny?>('children'.toJS);
+    return ServerCreateStaticHandlerReturnDataRoutes(
+      privateRef: ServerCreateStaticHandlerReturnDataRoutesRef.fromJs(
+        rawPrivateRef as JSObject,
+      ),
+      id: (rawId as JSString).toDart,
+      children: rawChildren == null || rawChildren.isUndefined
+          ? null
+          : _decodeList<Object?>(rawChildren as JSArray, (item) => item),
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
-    '__ref': __ref.toJson(),
+    '__ref': privateRef.toJson(),
     'id': id,
     if (children != null) 'children': children,
   };
@@ -617,6 +1020,48 @@ class ServerCreateStaticHandlerReturnDataRoutesRef {
   /// TS: true
   final bool index;
 
+  /// Decodes this value from a JavaScript object.
+  factory ServerCreateStaticHandlerReturnDataRoutesRef.fromJs(JSObject js) {
+    final rawCaseSensitive = js.getProperty<JSAny?>('caseSensitive'.toJS);
+    final rawPath = js.getProperty<JSAny?>('path'.toJS);
+    final rawId = js.getProperty<JSAny?>('id'.toJS);
+    final rawLoader = js.getProperty<JSAny?>('loader'.toJS);
+    final rawAction = js.getProperty<JSAny?>('action'.toJS);
+    final rawHasErrorBoundary = js.getProperty<JSAny?>('hasErrorBoundary'.toJS);
+    final rawShouldRevalidate = js.getProperty<JSAny?>('shouldRevalidate'.toJS);
+    final rawHandle = js.getProperty<JSAny?>('handle'.toJS);
+    final rawLazy = js.getProperty<JSAny?>('lazy'.toJS);
+    final rawChildren = js.getProperty<JSAny?>('children'.toJS);
+    final rawIndex = js.getProperty<JSAny?>('index'.toJS);
+    return ServerCreateStaticHandlerReturnDataRoutesRef(
+      caseSensitive: rawCaseSensitive == null || rawCaseSensitive.isUndefined
+          ? null
+          : (rawCaseSensitive as JSBoolean).toDart,
+      path: rawPath == null || rawPath.isUndefined
+          ? null
+          : (rawPath as JSString).toDart,
+      id: rawId == null || rawId.isUndefined
+          ? null
+          : (rawId as JSString).toDart,
+      loader: rawLoader == null || rawLoader.isUndefined ? null : rawLoader,
+      action: rawAction == null || rawAction.isUndefined ? null : rawAction,
+      hasErrorBoundary:
+          rawHasErrorBoundary == null || rawHasErrorBoundary.isUndefined
+          ? null
+          : (rawHasErrorBoundary as JSBoolean).toDart,
+      shouldRevalidate:
+          rawShouldRevalidate == null || rawShouldRevalidate.isUndefined
+          ? null
+          : rawShouldRevalidate,
+      handle: rawHandle == null || rawHandle.isUndefined ? null : rawHandle,
+      lazy: rawLazy == null || rawLazy.isUndefined ? null : rawLazy,
+      children: rawChildren == null || rawChildren.isUndefined
+          ? null
+          : rawChildren,
+      index: (rawIndex as JSBoolean).toDart,
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     if (caseSensitive != null) 'caseSensitive': caseSensitive,
@@ -630,6 +1075,117 @@ class ServerCreateStaticHandlerReturnDataRoutesRef {
     if (lazy != null) 'lazy': lazy,
     if (children != null) 'children': children,
     'index': index,
+  };
+}
+
+/// Typed props for `ServerCreateStaticHandlerReturnQueryOpts`.
+///
+/// requestContext?: unknown; skipLoaderErrorBubbling?: boolean
+/// unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any
+class ServerCreateStaticHandlerReturnQueryOpts {
+  const ServerCreateStaticHandlerReturnQueryOpts({
+    Object? this.requestContext,
+    bool? this.skipLoaderErrorBubbling,
+    ServerCreateStaticHandlerReturnQueryOptsUnstableDataStrategyCallback?
+    this.unstable_dataStrategy,
+  });
+
+  /// TS: unknown
+  final Object? requestContext;
+
+  /// TS: boolean
+  final bool? skipLoaderErrorBubbling;
+
+  /// TS: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any
+  final ServerCreateStaticHandlerReturnQueryOptsUnstableDataStrategyCallback?
+  unstable_dataStrategy;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerCreateStaticHandlerReturnQueryOpts.fromJs(JSObject js) {
+    final rawRequestContext = js.getProperty<JSAny?>('requestContext'.toJS);
+    final rawSkipLoaderErrorBubbling = js.getProperty<JSAny?>(
+      'skipLoaderErrorBubbling'.toJS,
+    );
+    final rawUnstableDataStrategy = js.getProperty<JSAny?>(
+      'unstable_dataStrategy'.toJS,
+    );
+    return ServerCreateStaticHandlerReturnQueryOpts(
+      requestContext: rawRequestContext == null || rawRequestContext.isUndefined
+          ? null
+          : rawRequestContext,
+      skipLoaderErrorBubbling:
+          rawSkipLoaderErrorBubbling == null ||
+              rawSkipLoaderErrorBubbling.isUndefined
+          ? null
+          : (rawSkipLoaderErrorBubbling as JSBoolean).toDart,
+      unstable_dataStrategy:
+          rawUnstableDataStrategy == null || rawUnstableDataStrategy.isUndefined
+          ? null
+          : (Object? args) => (rawUnstableDataStrategy as JSFunction)
+                .callAsFunction(null, args.jsify()),
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (requestContext != null) 'requestContext': requestContext,
+    if (skipLoaderErrorBubbling != null)
+      'skipLoaderErrorBubbling': skipLoaderErrorBubbling,
+    if (unstable_dataStrategy != null)
+      'unstable_dataStrategy': unstable_dataStrategy,
+  };
+}
+
+/// Typed props for `ServerCreateStaticHandlerReturnQueryRouteOpts`.
+///
+/// routeId?: string; requestContext?: unknown
+/// unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any
+class ServerCreateStaticHandlerReturnQueryRouteOpts {
+  const ServerCreateStaticHandlerReturnQueryRouteOpts({
+    String? this.routeId,
+    Object? this.requestContext,
+    ServerCreateStaticHandlerReturnQueryOptsUnstableDataStrategyCallback?
+    this.unstable_dataStrategy,
+  });
+
+  /// TS: string
+  final String? routeId;
+
+  /// TS: unknown
+  final Object? requestContext;
+
+  /// TS: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any
+  final ServerCreateStaticHandlerReturnQueryOptsUnstableDataStrategyCallback?
+  unstable_dataStrategy;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerCreateStaticHandlerReturnQueryRouteOpts.fromJs(JSObject js) {
+    final rawRouteId = js.getProperty<JSAny?>('routeId'.toJS);
+    final rawRequestContext = js.getProperty<JSAny?>('requestContext'.toJS);
+    final rawUnstableDataStrategy = js.getProperty<JSAny?>(
+      'unstable_dataStrategy'.toJS,
+    );
+    return ServerCreateStaticHandlerReturnQueryRouteOpts(
+      routeId: rawRouteId == null || rawRouteId.isUndefined
+          ? null
+          : (rawRouteId as JSString).toDart,
+      requestContext: rawRequestContext == null || rawRequestContext.isUndefined
+          ? null
+          : rawRequestContext,
+      unstable_dataStrategy:
+          rawUnstableDataStrategy == null || rawUnstableDataStrategy.isUndefined
+          ? null
+          : (Object? args) => (rawUnstableDataStrategy as JSFunction)
+                .callAsFunction(null, args.jsify()),
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (routeId != null) 'routeId': routeId,
+    if (requestContext != null) 'requestContext': requestContext,
+    if (unstable_dataStrategy != null)
+      'unstable_dataStrategy': unstable_dataStrategy,
   };
 }
 
@@ -713,6 +1269,75 @@ class ServerCreateStaticHandlerRoutes {
   /// TS: () => any
   final ServerStaticRouterProviderRouterWindowCallback? lazy;
 
+  /// Decodes this value from a JavaScript object.
+  factory ServerCreateStaticHandlerRoutes.fromJs(JSObject js) {
+    final rawCaseSensitive = js.getProperty<JSAny?>('caseSensitive'.toJS);
+    final rawPath = js.getProperty<JSAny?>('path'.toJS);
+    final rawId = js.getProperty<JSAny?>('id'.toJS);
+    final rawLoader = js.getProperty<JSAny?>('loader'.toJS);
+    final rawAction = js.getProperty<JSAny?>('action'.toJS);
+    final rawHasErrorBoundary = js.getProperty<JSAny?>('hasErrorBoundary'.toJS);
+    final rawShouldRevalidate = js.getProperty<JSAny?>('shouldRevalidate'.toJS);
+    final rawHandle = js.getProperty<JSAny?>('handle'.toJS);
+    final rawIndex = js.getProperty<JSAny?>('index'.toJS);
+    final rawChildren = js.getProperty<JSAny?>('children'.toJS);
+    final rawElement = js.getProperty<JSAny?>('element'.toJS);
+    final rawHydrateFallbackElement = js.getProperty<JSAny?>(
+      'hydrateFallbackElement'.toJS,
+    );
+    final rawErrorElement = js.getProperty<JSAny?>('errorElement'.toJS);
+    final rawComponent = js.getProperty<JSAny?>('Component'.toJS);
+    final rawHydrateFallback = js.getProperty<JSAny?>('HydrateFallback'.toJS);
+    final rawErrorBoundary = js.getProperty<JSAny?>('ErrorBoundary'.toJS);
+    final rawLazy = js.getProperty<JSAny?>('lazy'.toJS);
+    return ServerCreateStaticHandlerRoutes(
+      caseSensitive: rawCaseSensitive == null || rawCaseSensitive.isUndefined
+          ? null
+          : rawCaseSensitive,
+      path: rawPath == null || rawPath.isUndefined ? null : rawPath,
+      id: rawId == null || rawId.isUndefined ? null : rawId,
+      loader: rawLoader == null || rawLoader.isUndefined ? null : rawLoader,
+      action: rawAction == null || rawAction.isUndefined ? null : rawAction,
+      hasErrorBoundary:
+          rawHasErrorBoundary == null || rawHasErrorBoundary.isUndefined
+          ? null
+          : rawHasErrorBoundary,
+      shouldRevalidate:
+          rawShouldRevalidate == null || rawShouldRevalidate.isUndefined
+          ? null
+          : rawShouldRevalidate,
+      handle: rawHandle == null || rawHandle.isUndefined ? null : rawHandle,
+      index: (rawIndex as JSBoolean).toDart,
+      children: rawChildren == null || rawChildren.isUndefined
+          ? null
+          : _decodeList<Object?>(rawChildren as JSArray, (item) => item),
+      element: rawElement == null || rawElement.isUndefined
+          ? null
+          : OpaqueReactNode(rawElement),
+      hydrateFallbackElement:
+          rawHydrateFallbackElement == null ||
+              rawHydrateFallbackElement.isUndefined
+          ? null
+          : OpaqueReactNode(rawHydrateFallbackElement),
+      errorElement: rawErrorElement == null || rawErrorElement.isUndefined
+          ? null
+          : OpaqueReactNode(rawErrorElement),
+      Component: rawComponent == null || rawComponent.isUndefined
+          ? null
+          : rawComponent,
+      HydrateFallback:
+          rawHydrateFallback == null || rawHydrateFallback.isUndefined
+          ? null
+          : rawHydrateFallback,
+      ErrorBoundary: rawErrorBoundary == null || rawErrorBoundary.isUndefined
+          ? null
+          : rawErrorBoundary,
+      lazy: rawLazy == null || rawLazy.isUndefined
+          ? null
+          : () => (rawLazy as JSFunction).callAsFunction(null),
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     if (caseSensitive != null) 'caseSensitive': caseSensitive,
@@ -726,7 +1351,8 @@ class ServerCreateStaticHandlerRoutes {
     'index': index,
     if (children != null) 'children': children,
     if (element != null) 'element': element,
-    if (hydrateFallbackElement != null) 'hydrateFallbackElement': hydrateFallbackElement,
+    if (hydrateFallbackElement != null)
+      'hydrateFallbackElement': hydrateFallbackElement,
     if (errorElement != null) 'errorElement': errorElement,
     if (Component != null) 'Component': Component,
     if (HydrateFallback != null) 'HydrateFallback': HydrateFallback,
@@ -739,16 +1365,392 @@ class ServerCreateStaticHandlerRoutes {
 ///
 /// future?: { value?: any }
 class ServerCreateStaticRouterOpts {
-  const ServerCreateStaticRouterOpts({
-    ServerPick? this.future,
-  });
+  const ServerCreateStaticRouterOpts({ServerPick? this.future});
 
   /// TS: { value?: any }
   final ServerPick? future;
 
+  /// Decodes this value from a JavaScript object.
+  factory ServerCreateStaticRouterOpts.fromJs(JSObject js) {
+    final rawFuture = js.getProperty<JSAny?>('future'.toJS);
+    return ServerCreateStaticRouterOpts(
+      future: rawFuture == null || rawFuture.isUndefined
+          ? null
+          : ServerPick.fromJs(rawFuture as JSObject),
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     if (future != null) 'future': future!.toJson(),
+  };
+}
+
+/// Typed props for `ServerCreateStaticRouterReturnGetBlockerFnArgs`.
+///
+/// currentLocation: { pathname: any; search: any; hash: any; state: any; key: any }
+/// nextLocation: { pathname: any; search: any; hash: any; state: any; key: any }
+/// historyAction: any
+class ServerCreateStaticRouterReturnGetBlockerFnArgs {
+  const ServerCreateStaticRouterReturnGetBlockerFnArgs({
+    required ServerLocation this.currentLocation,
+    required ServerLocation this.nextLocation,
+    required Object? this.historyAction,
+  });
+
+  /// TS: { pathname: any; search: any; hash: any; state: any; key: any }
+  final ServerLocation currentLocation;
+
+  /// TS: { pathname: any; search: any; hash: any; state: any; key: any }
+  final ServerLocation nextLocation;
+
+  /// TS: any
+  final Object? historyAction;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerCreateStaticRouterReturnGetBlockerFnArgs.fromJs(JSObject js) {
+    final rawCurrentLocation = js.getProperty<JSAny?>('currentLocation'.toJS);
+    final rawNextLocation = js.getProperty<JSAny?>('nextLocation'.toJS);
+    final rawHistoryAction = js.getProperty<JSAny?>('historyAction'.toJS);
+    return ServerCreateStaticRouterReturnGetBlockerFnArgs(
+      currentLocation: ServerLocation.fromJs(rawCurrentLocation as JSObject),
+      nextLocation: ServerLocation.fromJs(rawNextLocation as JSObject),
+      historyAction: rawHistoryAction,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'currentLocation': currentLocation.toJson(),
+    'nextLocation': nextLocation.toJson(),
+    'historyAction': historyAction,
+  };
+}
+
+/// Typed props for `ServerCreateStaticRouterReturnPatchRoutesChildren`.
+///
+/// __ref: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any }
+/// children?: any[]; index: true | false
+class ServerCreateStaticRouterReturnPatchRoutesChildren {
+  const ServerCreateStaticRouterReturnPatchRoutesChildren({
+    required ServerCreateStaticRouterReturnPatchRoutesChildrenRef
+    this.privateRef,
+    List<Object?>? this.children,
+    required bool this.index,
+  });
+
+  /// TS: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any }
+  final ServerCreateStaticRouterReturnPatchRoutesChildrenRef privateRef;
+
+  /// TS: any[]
+  final List<Object?>? children;
+
+  /// TS: true | false
+  final bool index;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerCreateStaticRouterReturnPatchRoutesChildren.fromJs(
+    JSObject js,
+  ) {
+    final rawPrivateRef = js.getProperty<JSAny?>('__ref'.toJS);
+    final rawChildren = js.getProperty<JSAny?>('children'.toJS);
+    final rawIndex = js.getProperty<JSAny?>('index'.toJS);
+    return ServerCreateStaticRouterReturnPatchRoutesChildren(
+      privateRef: ServerCreateStaticRouterReturnPatchRoutesChildrenRef.fromJs(
+        rawPrivateRef as JSObject,
+      ),
+      children: rawChildren == null || rawChildren.isUndefined
+          ? null
+          : _decodeList<Object?>(rawChildren as JSArray, (item) => item),
+      index: (rawIndex as JSBoolean).toDart,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    '__ref': privateRef.toJson(),
+    if (children != null) 'children': children,
+    'index': index,
+  };
+}
+
+/// Typed props for `ServerCreateStaticRouterReturnPatchRoutesChildrenRef`.
+///
+/// caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any
+/// hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any
+class ServerCreateStaticRouterReturnPatchRoutesChildrenRef {
+  const ServerCreateStaticRouterReturnPatchRoutesChildrenRef({
+    Object? this.caseSensitive,
+    Object? this.path,
+    Object? this.id,
+    Object? this.loader,
+    Object? this.action,
+    Object? this.hasErrorBoundary,
+    Object? this.shouldRevalidate,
+    Object? this.handle,
+    Object? this.lazy,
+  });
+
+  /// TS: any
+  final Object? caseSensitive;
+
+  /// TS: any
+  final Object? path;
+
+  /// TS: any
+  final Object? id;
+
+  /// TS: any
+  final Object? loader;
+
+  /// TS: any
+  final Object? action;
+
+  /// TS: any
+  final Object? hasErrorBoundary;
+
+  /// TS: any
+  final Object? shouldRevalidate;
+
+  /// TS: any
+  final Object? handle;
+
+  /// TS: any
+  final Object? lazy;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerCreateStaticRouterReturnPatchRoutesChildrenRef.fromJs(
+    JSObject js,
+  ) {
+    final rawCaseSensitive = js.getProperty<JSAny?>('caseSensitive'.toJS);
+    final rawPath = js.getProperty<JSAny?>('path'.toJS);
+    final rawId = js.getProperty<JSAny?>('id'.toJS);
+    final rawLoader = js.getProperty<JSAny?>('loader'.toJS);
+    final rawAction = js.getProperty<JSAny?>('action'.toJS);
+    final rawHasErrorBoundary = js.getProperty<JSAny?>('hasErrorBoundary'.toJS);
+    final rawShouldRevalidate = js.getProperty<JSAny?>('shouldRevalidate'.toJS);
+    final rawHandle = js.getProperty<JSAny?>('handle'.toJS);
+    final rawLazy = js.getProperty<JSAny?>('lazy'.toJS);
+    return ServerCreateStaticRouterReturnPatchRoutesChildrenRef(
+      caseSensitive: rawCaseSensitive == null || rawCaseSensitive.isUndefined
+          ? null
+          : rawCaseSensitive,
+      path: rawPath == null || rawPath.isUndefined ? null : rawPath,
+      id: rawId == null || rawId.isUndefined ? null : rawId,
+      loader: rawLoader == null || rawLoader.isUndefined ? null : rawLoader,
+      action: rawAction == null || rawAction.isUndefined ? null : rawAction,
+      hasErrorBoundary:
+          rawHasErrorBoundary == null || rawHasErrorBoundary.isUndefined
+          ? null
+          : rawHasErrorBoundary,
+      shouldRevalidate:
+          rawShouldRevalidate == null || rawShouldRevalidate.isUndefined
+          ? null
+          : rawShouldRevalidate,
+      handle: rawHandle == null || rawHandle.isUndefined ? null : rawHandle,
+      lazy: rawLazy == null || rawLazy.isUndefined ? null : rawLazy,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (caseSensitive != null) 'caseSensitive': caseSensitive,
+    if (path != null) 'path': path,
+    if (id != null) 'id': id,
+    if (loader != null) 'loader': loader,
+    if (action != null) 'action': action,
+    if (hasErrorBoundary != null) 'hasErrorBoundary': hasErrorBoundary,
+    if (shouldRevalidate != null) 'shouldRevalidate': shouldRevalidate,
+    if (handle != null) 'handle': handle,
+    if (lazy != null) 'lazy': lazy,
+  };
+}
+
+/// Typed props for `ServerCreateStaticRouterReturnStateReturnNavigation`.
+///
+/// state: "idle" | "loading" | "submitting"
+/// location: { pathname: any; search: any; hash: any; state: any; key: any }
+/// formMethod: Record<string, unknown>; formAction: string; formEncType: any
+/// formData: any; json: any; text: string
+class ServerCreateStaticRouterReturnStateReturnNavigation {
+  const ServerCreateStaticRouterReturnStateReturnNavigation({
+    required ServerStaticRouterProviderRouterStateReturnNavigationState
+    this.state,
+    required ServerLocation this.location,
+    required Object this.formMethod,
+    required String this.formAction,
+    required Object? this.formEncType,
+    required Object? this.formData,
+    required Object? this.json,
+    required String this.text,
+  });
+
+  /// TS: "idle" | "loading" | "submitting"
+  final ServerStaticRouterProviderRouterStateReturnNavigationState state;
+
+  /// TS: { pathname: any; search: any; hash: any; state: any; key: any }
+  final ServerLocation location;
+
+  /// TS: Record<string, unknown>
+  final Object formMethod;
+
+  /// TS: string
+  final String formAction;
+
+  /// TS: any
+  final Object? formEncType;
+
+  /// TS: any
+  final Object? formData;
+
+  /// TS: any
+  final Object? json;
+
+  /// TS: string
+  final String text;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerCreateStaticRouterReturnStateReturnNavigation.fromJs(
+    JSObject js,
+  ) {
+    final rawState = js.getProperty<JSAny?>('state'.toJS);
+    final rawLocation = js.getProperty<JSAny?>('location'.toJS);
+    final rawFormMethod = js.getProperty<JSAny?>('formMethod'.toJS);
+    final rawFormAction = js.getProperty<JSAny?>('formAction'.toJS);
+    final rawFormEncType = js.getProperty<JSAny?>('formEncType'.toJS);
+    final rawFormData = js.getProperty<JSAny?>('formData'.toJS);
+    final rawJson = js.getProperty<JSAny?>('json'.toJS);
+    final rawText = js.getProperty<JSAny?>('text'.toJS);
+    return ServerCreateStaticRouterReturnStateReturnNavigation(
+      state:
+          ServerStaticRouterProviderRouterStateReturnNavigationState.fromValue(
+            (rawState as JSString).toDart,
+          ),
+      location: ServerLocation.fromJs(rawLocation as JSObject),
+      formMethod: rawFormMethod as Object,
+      formAction: (rawFormAction as JSString).toDart,
+      formEncType: rawFormEncType,
+      formData: rawFormData,
+      json: rawJson,
+      text: (rawText as JSString).toDart,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'state': state.value,
+    'location': location.toJson(),
+    'formMethod': formMethod,
+    'formAction': formAction,
+    'formEncType': formEncType,
+    'formData': formData,
+    'json': json,
+    'text': text,
+  };
+}
+
+/// Typed props for `ServerCreateStaticRouterReturnSubscribeFnOpts`.
+///
+/// deletedFetchers: any[]; unstable_viewTransitionOpts?: any
+/// unstable_flushSync: boolean
+class ServerCreateStaticRouterReturnSubscribeFnOpts {
+  const ServerCreateStaticRouterReturnSubscribeFnOpts({
+    required List<Object?> this.deletedFetchers,
+    Object? this.unstable_viewTransitionOpts,
+    required bool this.unstable_flushSync,
+  });
+
+  /// TS: any[]
+  final List<Object?> deletedFetchers;
+
+  /// TS: any
+  final Object? unstable_viewTransitionOpts;
+
+  /// TS: boolean
+  final bool unstable_flushSync;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerCreateStaticRouterReturnSubscribeFnOpts.fromJs(JSObject js) {
+    final rawDeletedFetchers = js.getProperty<JSAny?>('deletedFetchers'.toJS);
+    final rawUnstableViewTransitionOpts = js.getProperty<JSAny?>(
+      'unstable_viewTransitionOpts'.toJS,
+    );
+    final rawUnstableFlushSync = js.getProperty<JSAny?>(
+      'unstable_flushSync'.toJS,
+    );
+    return ServerCreateStaticRouterReturnSubscribeFnOpts(
+      deletedFetchers: _decodeList<Object?>(
+        rawDeletedFetchers as JSArray,
+        (item) => item,
+      ),
+      unstable_viewTransitionOpts:
+          rawUnstableViewTransitionOpts == null ||
+              rawUnstableViewTransitionOpts.isUndefined
+          ? null
+          : rawUnstableViewTransitionOpts,
+      unstable_flushSync: (rawUnstableFlushSync as JSBoolean).toDart,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'deletedFetchers': deletedFetchers,
+    if (unstable_viewTransitionOpts != null)
+      'unstable_viewTransitionOpts': unstable_viewTransitionOpts,
+    'unstable_flushSync': unstable_flushSync,
+  };
+}
+
+/// Typed props for `DataStrategyFunctionArgs`.
+///
+/// request: any; params: any; context?: any; matches: any; fetcherKey: any
+class ServerDataStrategyFunctionArgs {
+  const ServerDataStrategyFunctionArgs({
+    required Object? this.request,
+    required Object? this.params,
+    Object? this.context,
+    required Object? this.matches,
+    required Object? this.fetcherKey,
+  });
+
+  /// TS: any
+  final Object? request;
+
+  /// TS: any
+  final Object? params;
+
+  /// TS: any
+  final Object? context;
+
+  /// TS: any
+  final Object? matches;
+
+  /// TS: any
+  final Object? fetcherKey;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerDataStrategyFunctionArgs.fromJs(JSObject js) {
+    final rawRequest = js.getProperty<JSAny?>('request'.toJS);
+    final rawParams = js.getProperty<JSAny?>('params'.toJS);
+    final rawContext = js.getProperty<JSAny?>('context'.toJS);
+    final rawMatches = js.getProperty<JSAny?>('matches'.toJS);
+    final rawFetcherKey = js.getProperty<JSAny?>('fetcherKey'.toJS);
+    return ServerDataStrategyFunctionArgs(
+      request: rawRequest,
+      params: rawParams,
+      context: rawContext == null || rawContext.isUndefined ? null : rawContext,
+      matches: rawMatches,
+      fetcherKey: rawFetcherKey,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'request': request,
+    'params': params,
+    if (context != null) 'context': context,
+    'matches': matches,
+    'fetcherKey': fetcherKey,
   };
 }
 
@@ -785,14 +1787,67 @@ class ServerFutureConfig {
   /// TS: boolean
   final bool? v7_skipActionErrorRevalidation;
 
+  /// Decodes this value from a JavaScript object.
+  factory ServerFutureConfig.fromJs(JSObject js) {
+    final rawV7FetcherPersist = js.getProperty<JSAny?>(
+      'v7_fetcherPersist'.toJS,
+    );
+    final rawV7NormalizeFormMethod = js.getProperty<JSAny?>(
+      'v7_normalizeFormMethod'.toJS,
+    );
+    final rawV7PartialHydration = js.getProperty<JSAny?>(
+      'v7_partialHydration'.toJS,
+    );
+    final rawV7PrependBasename = js.getProperty<JSAny?>(
+      'v7_prependBasename'.toJS,
+    );
+    final rawV7RelativeSplatPath = js.getProperty<JSAny?>(
+      'v7_relativeSplatPath'.toJS,
+    );
+    final rawV7SkipActionErrorRevalidation = js.getProperty<JSAny?>(
+      'v7_skipActionErrorRevalidation'.toJS,
+    );
+    return ServerFutureConfig(
+      v7_fetcherPersist:
+          rawV7FetcherPersist == null || rawV7FetcherPersist.isUndefined
+          ? null
+          : (rawV7FetcherPersist as JSBoolean).toDart,
+      v7_normalizeFormMethod:
+          rawV7NormalizeFormMethod == null ||
+              rawV7NormalizeFormMethod.isUndefined
+          ? null
+          : (rawV7NormalizeFormMethod as JSBoolean).toDart,
+      v7_partialHydration:
+          rawV7PartialHydration == null || rawV7PartialHydration.isUndefined
+          ? null
+          : (rawV7PartialHydration as JSBoolean).toDart,
+      v7_prependBasename:
+          rawV7PrependBasename == null || rawV7PrependBasename.isUndefined
+          ? null
+          : (rawV7PrependBasename as JSBoolean).toDart,
+      v7_relativeSplatPath:
+          rawV7RelativeSplatPath == null || rawV7RelativeSplatPath.isUndefined
+          ? null
+          : (rawV7RelativeSplatPath as JSBoolean).toDart,
+      v7_skipActionErrorRevalidation:
+          rawV7SkipActionErrorRevalidation == null ||
+              rawV7SkipActionErrorRevalidation.isUndefined
+          ? null
+          : (rawV7SkipActionErrorRevalidation as JSBoolean).toDart,
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     if (v7_fetcherPersist != null) 'v7_fetcherPersist': v7_fetcherPersist,
-    if (v7_normalizeFormMethod != null) 'v7_normalizeFormMethod': v7_normalizeFormMethod,
+    if (v7_normalizeFormMethod != null)
+      'v7_normalizeFormMethod': v7_normalizeFormMethod,
     if (v7_partialHydration != null) 'v7_partialHydration': v7_partialHydration,
     if (v7_prependBasename != null) 'v7_prependBasename': v7_prependBasename,
-    if (v7_relativeSplatPath != null) 'v7_relativeSplatPath': v7_relativeSplatPath,
-    if (v7_skipActionErrorRevalidation != null) 'v7_skipActionErrorRevalidation': v7_skipActionErrorRevalidation,
+    if (v7_relativeSplatPath != null)
+      'v7_relativeSplatPath': v7_relativeSplatPath,
+    if (v7_skipActionErrorRevalidation != null)
+      'v7_skipActionErrorRevalidation': v7_skipActionErrorRevalidation,
   };
 }
 
@@ -804,7 +1859,7 @@ class ServerLocation {
     required String this.pathname,
     required String this.search,
     required String this.hash,
-    required Object this.state,
+    required Object? this.state,
     required String this.elementKey,
   });
 
@@ -818,10 +1873,26 @@ class ServerLocation {
   final String hash;
 
   /// TS: any
-  final Object state;
+  final Object? state;
 
   /// TS: string
   final String elementKey;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerLocation.fromJs(JSObject js) {
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawSearch = js.getProperty<JSAny?>('search'.toJS);
+    final rawHash = js.getProperty<JSAny?>('hash'.toJS);
+    final rawState = js.getProperty<JSAny?>('state'.toJS);
+    final rawElementKey = js.getProperty<JSAny?>('key'.toJS);
+    return ServerLocation(
+      pathname: (rawPathname as JSString).toDart,
+      search: (rawSearch as JSString).toDart,
+      hash: (rawHash as JSString).toDart,
+      state: rawState,
+      elementKey: (rawElementKey as JSString).toDart,
+    );
+  }
 
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
@@ -833,21 +1904,64 @@ class ServerLocation {
   };
 }
 
+/// Typed props for `Path`.
+///
+/// pathname: string; search: string; hash: string
+class ServerPath {
+  const ServerPath({
+    required String this.pathname,
+    required String this.search,
+    required String this.hash,
+  });
+
+  /// TS: string
+  final String pathname;
+
+  /// TS: string
+  final String search;
+
+  /// TS: string
+  final String hash;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerPath.fromJs(JSObject js) {
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawSearch = js.getProperty<JSAny?>('search'.toJS);
+    final rawHash = js.getProperty<JSAny?>('hash'.toJS);
+    return ServerPath(
+      pathname: (rawPathname as JSString).toDart,
+      search: (rawSearch as JSString).toDart,
+      hash: (rawHash as JSString).toDart,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'pathname': pathname,
+    'search': search,
+    'hash': hash,
+  };
+}
+
 /// Typed props for `Pick`.
 ///
 /// value?: any
 class ServerPick {
-  const ServerPick({
-    Object? this.value,
-  });
+  const ServerPick({Object? this.value});
 
   /// TS: any
   final Object? value;
 
+  /// Decodes this value from a JavaScript object.
+  factory ServerPick.fromJs(JSObject js) {
+    final rawValue = js.getProperty<JSAny?>('value'.toJS);
+    return ServerPick(
+      value: rawValue == null || rawValue.isUndefined ? null : rawValue,
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
-  Map<String, Object?> toJson() => {
-    if (value != null) 'value': value,
-  };
+  Map<String, Object?> toJson() => {if (value != null) 'value': value};
 }
 
 /// Typed props for `RemixRouter`.
@@ -880,21 +1994,29 @@ class ServerRemixRouter {
     required ServerStaticRouterProviderRouterWindowCallback this.window,
     required ServerStaticRouterProviderRouterWindowCallback this.initialize,
     required ServerStaticRouterProviderRouterSubscribeCallback this.subscribe,
-    required ServerStaticRouterProviderRouterEnableScrollRestorationCallback this.enableScrollRestoration,
+    required ServerStaticRouterProviderRouterEnableScrollRestorationCallback
+    this.enableScrollRestoration,
     required ServerStaticRouterProviderRouterNavigateCallback this.navigate,
     required ServerStaticRouterProviderRouterFetchCallback this.fetch,
-    required ServerStaticRouterProviderRouterRevalidateCallback this.revalidate,
+    required ServerStaticRouterProviderRouterSubscribeReturnCallback
+    this.revalidate,
     required ServerStaticRouterProviderRouterCreateHrefCallback this.createHref,
-    required ServerStaticRouterProviderRouterEncodeLocationCallback this.encodeLocation,
+    required ServerStaticRouterProviderRouterEncodeLocationCallback
+    this.encodeLocation,
     required ServerStaticRouterProviderRouterGetFetcherCallback this.getFetcher,
-    required ServerStaticRouterProviderRouterDeleteFetcherCallback this.deleteFetcher,
-    required ServerStaticRouterProviderRouterRevalidateCallback this.dispose,
+    required ServerStaticRouterProviderRouterDeleteFetcherCallback
+    this.deleteFetcher,
+    required ServerStaticRouterProviderRouterSubscribeReturnCallback
+    this.dispose,
     required ServerStaticRouterProviderRouterGetBlockerCallback this.getBlocker,
-    required ServerStaticRouterProviderRouterDeleteFetcherCallback this.deleteBlocker,
-    required ServerStaticRouterProviderRouterPatchRoutesCallback this.patchRoutes,
-    required ServerStaticRouterProviderRouterInternalSetRoutesCallback this._internalSetRoutes,
-    required Object? this._internalFetchControllers,
-    required Object? this._internalActiveDeferreds,
+    required ServerStaticRouterProviderRouterDeleteFetcherCallback
+    this.deleteBlocker,
+    required ServerStaticRouterProviderRouterPatchRoutesCallback
+    this.patchRoutes,
+    required ServerStaticRouterProviderRouterInternalSetRoutesCallback
+    this.privateInternalSetRoutes,
+    required Object? this.privateInternalFetchControllers,
+    required Object? this.privateInternalActiveDeferreds,
   });
 
   /// TS: () => string
@@ -919,7 +2041,8 @@ class ServerRemixRouter {
   final ServerStaticRouterProviderRouterSubscribeCallback subscribe;
 
   /// TS: (savedScrollPositions: unknown, getScrollPosition: () => number, getKey: (location: { pathname: any; search: any; hash: any; state: any; key: any }, matches: { id: any; pathname: any; params: any; data: any; handle: any }[]) => string) => () => void
-  final ServerStaticRouterProviderRouterEnableScrollRestorationCallback enableScrollRestoration;
+  final ServerStaticRouterProviderRouterEnableScrollRestorationCallback
+  enableScrollRestoration;
 
   /// TS: (to: number) => any
   final ServerStaticRouterProviderRouterNavigateCallback navigate;
@@ -928,7 +2051,7 @@ class ServerRemixRouter {
   final ServerStaticRouterProviderRouterFetchCallback fetch;
 
   /// TS: () => void
-  final ServerStaticRouterProviderRouterRevalidateCallback revalidate;
+  final ServerStaticRouterProviderRouterSubscribeReturnCallback revalidate;
 
   /// TS: (location: { pathname: string; search: string; hash: string; state: any; key: string }) => string
   final ServerStaticRouterProviderRouterCreateHrefCallback createHref;
@@ -943,7 +2066,7 @@ class ServerRemixRouter {
   final ServerStaticRouterProviderRouterDeleteFetcherCallback deleteFetcher;
 
   /// TS: () => void
-  final ServerStaticRouterProviderRouterRevalidateCallback dispose;
+  final ServerStaticRouterProviderRouterSubscribeReturnCallback dispose;
 
   /// TS: (key: string, fn: (args: { currentLocation: any; nextLocation: any; historyAction: any }) => boolean) => { state: "unblocked" | "blocked" | "proceeding"; reset: () => void; proceed: () => void; location: { pathname: string; search: string; hash: string; state: any; key: string } }
   final ServerStaticRouterProviderRouterGetBlockerCallback getBlocker;
@@ -955,13 +2078,150 @@ class ServerRemixRouter {
   final ServerStaticRouterProviderRouterPatchRoutesCallback patchRoutes;
 
   /// TS: (routes: { __ref: any; children?: any[]; index: true | false }[]) => void
-  final ServerStaticRouterProviderRouterInternalSetRoutesCallback _internalSetRoutes;
+  final ServerStaticRouterProviderRouterInternalSetRoutesCallback
+  privateInternalSetRoutes;
 
   /// TS: unknown
-  final Object? _internalFetchControllers;
+  final Object? privateInternalFetchControllers;
 
   /// TS: unknown
-  final Object? _internalActiveDeferreds;
+  final Object? privateInternalActiveDeferreds;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerRemixRouter.fromJs(JSObject js) {
+    final rawBasename = js.getProperty<JSAny?>('basename'.toJS);
+    final rawFuture = js.getProperty<JSAny?>('future'.toJS);
+    final rawState = js.getProperty<JSAny?>('state'.toJS);
+    final rawRoutes = js.getProperty<JSAny?>('routes'.toJS);
+    final rawWindow = js.getProperty<JSAny?>('window'.toJS);
+    final rawInitialize = js.getProperty<JSAny?>('initialize'.toJS);
+    final rawSubscribe = js.getProperty<JSAny?>('subscribe'.toJS);
+    final rawEnableScrollRestoration = js.getProperty<JSAny?>(
+      'enableScrollRestoration'.toJS,
+    );
+    final rawNavigate = js.getProperty<JSAny?>('navigate'.toJS);
+    final rawFetch = js.getProperty<JSAny?>('fetch'.toJS);
+    final rawRevalidate = js.getProperty<JSAny?>('revalidate'.toJS);
+    final rawCreateHref = js.getProperty<JSAny?>('createHref'.toJS);
+    final rawEncodeLocation = js.getProperty<JSAny?>('encodeLocation'.toJS);
+    final rawGetFetcher = js.getProperty<JSAny?>('getFetcher'.toJS);
+    final rawDeleteFetcher = js.getProperty<JSAny?>('deleteFetcher'.toJS);
+    final rawDispose = js.getProperty<JSAny?>('dispose'.toJS);
+    final rawGetBlocker = js.getProperty<JSAny?>('getBlocker'.toJS);
+    final rawDeleteBlocker = js.getProperty<JSAny?>('deleteBlocker'.toJS);
+    final rawPatchRoutes = js.getProperty<JSAny?>('patchRoutes'.toJS);
+    final rawPrivateInternalSetRoutes = js.getProperty<JSAny?>(
+      '_internalSetRoutes'.toJS,
+    );
+    final rawPrivateInternalFetchControllers = js.getProperty<JSAny?>(
+      '_internalFetchControllers'.toJS,
+    );
+    final rawPrivateInternalActiveDeferreds = js.getProperty<JSAny?>(
+      '_internalActiveDeferreds'.toJS,
+    );
+    return ServerRemixRouter(
+      basename: () =>
+          ((rawBasename as JSFunction).callAsFunction(null) as JSString).toDart,
+      future: () => ServerFutureConfig.fromJs(
+        (rawFuture as JSFunction).callAsFunction(null) as JSObject,
+      ),
+      state: () => ServerRouterState.fromJs(
+        (rawState as JSFunction).callAsFunction(null) as JSObject,
+      ),
+      routes: () => _decodeList<ServerStaticRouterProviderRouterRoutesReturn>(
+        (rawRoutes as JSFunction).callAsFunction(null) as JSArray,
+        (item) => ServerStaticRouterProviderRouterRoutesReturn.fromJs(
+          item as JSObject,
+        ),
+      ),
+      window: () => (rawWindow as JSFunction).callAsFunction(null),
+      initialize: () => (rawInitialize as JSFunction).callAsFunction(null),
+      subscribe: (Object? fn) => () {
+        ((rawSubscribe as JSFunction).callAsFunction(null, fn.jsify())
+                as JSFunction)
+            .callAsFunction(null);
+      },
+      enableScrollRestoration:
+          (
+            Object? savedScrollPositions,
+            Object? getScrollPosition,
+            Object? getKey,
+          ) => () {
+            ((rawEnableScrollRestoration as JSFunction).callAsFunction(
+                      null,
+                      savedScrollPositions.jsify(),
+                      getScrollPosition.jsify(),
+                      getKey.jsify(),
+                    )
+                    as JSFunction)
+                .callAsFunction(null);
+          },
+      navigate: (num to) =>
+          (rawNavigate as JSFunction).callAsFunction(null, to.toJS),
+      fetch: (String elementKey, String routeId, String href, Object? opts) {
+        (rawFetch as JSFunction).callAsFunction(
+          null,
+          elementKey.toJS,
+          routeId.toJS,
+          href.toJS,
+          opts.jsify(),
+        );
+      },
+      revalidate: () {
+        (rawRevalidate as JSFunction).callAsFunction(null);
+      },
+      createHref: (Object? location) =>
+          ((rawCreateHref as JSFunction).callAsFunction(null, location.jsify())
+                  as JSString)
+              .toDart,
+      encodeLocation: (Object? to) => ServerPath.fromJs(
+        (rawEncodeLocation as JSFunction).callAsFunction(null, to.jsify())
+            as JSObject,
+      ),
+      getFetcher: (String elementKey) =>
+          ServerStaticRouterProviderRouterGetFetcherReturn.fromJs(
+            (rawGetFetcher as JSFunction).callAsFunction(null, elementKey.toJS)
+                as JSObject,
+          ),
+      deleteFetcher: (String elementKey) {
+        (rawDeleteFetcher as JSFunction).callAsFunction(null, elementKey.toJS);
+      },
+      dispose: () {
+        (rawDispose as JSFunction).callAsFunction(null);
+      },
+      getBlocker: (String elementKey, Object? fn) =>
+          ServerStaticRouterProviderRouterGetBlockerReturn.fromJs(
+            (rawGetBlocker as JSFunction).callAsFunction(
+                  null,
+                  elementKey.toJS,
+                  fn.jsify(),
+                )
+                as JSObject,
+          ),
+      deleteBlocker: (String elementKey) {
+        (rawDeleteBlocker as JSFunction).callAsFunction(null, elementKey.toJS);
+      },
+      patchRoutes: (String routeId, Object? children) {
+        (rawPatchRoutes as JSFunction).callAsFunction(
+          null,
+          routeId.toJS,
+          children.jsify(),
+        );
+      },
+      privateInternalSetRoutes: (Object? routes) {
+        (rawPrivateInternalSetRoutes as JSFunction).callAsFunction(
+          null,
+          routes.jsify(),
+        );
+      },
+      privateInternalFetchControllers: _decodePairs(
+        rawPrivateInternalFetchControllers as JSArray,
+      ),
+      privateInternalActiveDeferreds: _decodePairs(
+        rawPrivateInternalActiveDeferreds as JSArray,
+      ),
+    );
+  }
 
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
@@ -984,9 +2244,140 @@ class ServerRemixRouter {
     'getBlocker': getBlocker,
     'deleteBlocker': deleteBlocker,
     'patchRoutes': patchRoutes,
-    '_internalSetRoutes': _internalSetRoutes,
-    '_internalFetchControllers': _internalFetchControllers,
-    '_internalActiveDeferreds': _internalActiveDeferreds,
+    '_internalSetRoutes': privateInternalSetRoutes,
+    '_internalFetchControllers': privateInternalFetchControllers,
+    '_internalActiveDeferreds': privateInternalActiveDeferreds,
+  };
+}
+
+/// Typed props for `RouterState`.
+///
+/// historyAction: "POP" | "PUSH" | "REPLACE"
+/// location: { pathname: string; search: string; hash: string; state: any; key: string }
+/// matches: { params: any; pathname: string; pathnameBase: string; route: any }[]
+/// initialized: boolean; restoreScrollPosition: any
+/// preventScrollReset: boolean
+/// navigation: { state: "idle" | "loading" | "submitting"; location: { pathname: any; search: any; hash: any; state: any; key: any }; formMethod: any; formAction: any; formEncType: any; formData: any; json: any; text: any }
+/// revalidation: "idle" | "loading"; loaderData: Record<string, unknown>
+/// actionData: Record<string, unknown>; errors: Record<string, unknown>
+/// fetchers: unknown; blockers: unknown
+class ServerRouterState {
+  const ServerRouterState({
+    required ServerHistoryAction this.historyAction,
+    required ServerLocation this.location,
+    required List<ServerAgnosticDataRouteMatch> this.matches,
+    required bool this.initialized,
+    required Object? this.restoreScrollPosition,
+    required bool this.preventScrollReset,
+    required ServerStaticRouterProviderRouterStateReturnNavigation
+    this.navigation,
+    required ServerRevalidationState this.revalidation,
+    required Object this.loaderData,
+    required Object this.actionData,
+    required Object this.errors,
+    required Object? this.fetchers,
+    required Object? this.blockers,
+  });
+
+  /// TS: "POP" | "PUSH" | "REPLACE"
+  final ServerHistoryAction historyAction;
+
+  /// TS: { pathname: string; search: string; hash: string; state: any; key: string }
+  final ServerLocation location;
+
+  /// TS: { params: any; pathname: string; pathnameBase: string; route: any }[]
+  final List<ServerAgnosticDataRouteMatch> matches;
+
+  /// TS: boolean
+  final bool initialized;
+
+  /// TS: any
+  final Object? restoreScrollPosition;
+
+  /// TS: boolean
+  final bool preventScrollReset;
+
+  /// TS: { state: "idle" | "loading" | "submitting"; location: { pathname: any; search: any; hash: any; state: any; key: any }; formMethod: any; formAction: any; formEncType: any; formData: any; json: any; text: any }
+  final ServerStaticRouterProviderRouterStateReturnNavigation navigation;
+
+  /// TS: "idle" | "loading"
+  final ServerRevalidationState revalidation;
+
+  /// TS: Record<string, unknown>
+  final Object loaderData;
+
+  /// TS: Record<string, unknown>
+  final Object actionData;
+
+  /// TS: Record<string, unknown>
+  final Object errors;
+
+  /// TS: unknown
+  final Object? fetchers;
+
+  /// TS: unknown
+  final Object? blockers;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerRouterState.fromJs(JSObject js) {
+    final rawHistoryAction = js.getProperty<JSAny?>('historyAction'.toJS);
+    final rawLocation = js.getProperty<JSAny?>('location'.toJS);
+    final rawMatches = js.getProperty<JSAny?>('matches'.toJS);
+    final rawInitialized = js.getProperty<JSAny?>('initialized'.toJS);
+    final rawRestoreScrollPosition = js.getProperty<JSAny?>(
+      'restoreScrollPosition'.toJS,
+    );
+    final rawPreventScrollReset = js.getProperty<JSAny?>(
+      'preventScrollReset'.toJS,
+    );
+    final rawNavigation = js.getProperty<JSAny?>('navigation'.toJS);
+    final rawRevalidation = js.getProperty<JSAny?>('revalidation'.toJS);
+    final rawLoaderData = js.getProperty<JSAny?>('loaderData'.toJS);
+    final rawActionData = js.getProperty<JSAny?>('actionData'.toJS);
+    final rawErrors = js.getProperty<JSAny?>('errors'.toJS);
+    final rawFetchers = js.getProperty<JSAny?>('fetchers'.toJS);
+    final rawBlockers = js.getProperty<JSAny?>('blockers'.toJS);
+    return ServerRouterState(
+      historyAction: ServerHistoryAction.fromValue(
+        (rawHistoryAction as JSString).toDart,
+      ),
+      location: ServerLocation.fromJs(rawLocation as JSObject),
+      matches: _decodeList<ServerAgnosticDataRouteMatch>(
+        rawMatches as JSArray,
+        (item) => ServerAgnosticDataRouteMatch.fromJs(item as JSObject),
+      ),
+      initialized: (rawInitialized as JSBoolean).toDart,
+      restoreScrollPosition: rawRestoreScrollPosition,
+      preventScrollReset: (rawPreventScrollReset as JSBoolean).toDart,
+      navigation: ServerStaticRouterProviderRouterStateReturnNavigation.fromJs(
+        rawNavigation as JSObject,
+      ),
+      revalidation: ServerRevalidationState.fromValue(
+        (rawRevalidation as JSString).toDart,
+      ),
+      loaderData: rawLoaderData as Object,
+      actionData: rawActionData as Object,
+      errors: rawErrors as Object,
+      fetchers: _decodePairs(rawFetchers as JSArray),
+      blockers: _decodePairs(rawBlockers as JSArray),
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'historyAction': historyAction.value,
+    'location': location.toJson(),
+    'matches': matches.map((e) => e.toJson()).toList(),
+    'initialized': initialized,
+    'restoreScrollPosition': restoreScrollPosition,
+    'preventScrollReset': preventScrollReset,
+    'navigation': navigation.toJson(),
+    'revalidation': revalidation.value,
+    'loaderData': loaderData,
+    'actionData': actionData,
+    'errors': errors,
+    'fetchers': fetchers,
+    'blockers': blockers,
   };
 }
 
@@ -1010,6 +2401,28 @@ class ServerStaticHandler {
 
   /// TS: (request: any, opts: { routeId?: string; requestContext?: unknown; unstable_dataStrategy?: (args: { request: any; params: any; context?: any; matches: any; fetcherKey: any }) => any }) => any
   final ServerCreateStaticHandlerReturnQueryRouteCallback queryRoute;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticHandler.fromJs(JSObject js) {
+    final rawDataRoutes = js.getProperty<JSAny?>('dataRoutes'.toJS);
+    final rawQuery = js.getProperty<JSAny?>('query'.toJS);
+    final rawQueryRoute = js.getProperty<JSAny?>('queryRoute'.toJS);
+    return ServerStaticHandler(
+      dataRoutes: _decodeList<ServerCreateStaticHandlerReturnDataRoutes>(
+        rawDataRoutes as JSArray,
+        (item) =>
+            ServerCreateStaticHandlerReturnDataRoutes.fromJs(item as JSObject),
+      ),
+      query: (Object? request, Object? opts) => (rawQuery as JSFunction)
+          .callAsFunction(null, request.jsify(), opts.jsify()),
+      queryRoute: (Object? request, Object? opts) =>
+          (rawQueryRoute as JSFunction).callAsFunction(
+            null,
+            request.jsify(),
+            opts.jsify(),
+          ),
+    );
+  }
 
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
@@ -1040,7 +2453,7 @@ class ServerStaticHandlerContext {
     required Object? this.loaderHeaders,
     required Object? this.actionHeaders,
     required Object? this.activeDeferreds,
-    String? this._deepestRenderedBoundaryId,
+    String? this.privateDeepestRenderedBoundaryId,
   });
 
   /// TS: () => string
@@ -1074,7 +2487,45 @@ class ServerStaticHandlerContext {
   final Object? activeDeferreds;
 
   /// TS: string
-  final String? _deepestRenderedBoundaryId;
+  final String? privateDeepestRenderedBoundaryId;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticHandlerContext.fromJs(JSObject js) {
+    final rawBasename = js.getProperty<JSAny?>('basename'.toJS);
+    final rawLocation = js.getProperty<JSAny?>('location'.toJS);
+    final rawMatches = js.getProperty<JSAny?>('matches'.toJS);
+    final rawLoaderData = js.getProperty<JSAny?>('loaderData'.toJS);
+    final rawActionData = js.getProperty<JSAny?>('actionData'.toJS);
+    final rawErrors = js.getProperty<JSAny?>('errors'.toJS);
+    final rawStatusCode = js.getProperty<JSAny?>('statusCode'.toJS);
+    final rawLoaderHeaders = js.getProperty<JSAny?>('loaderHeaders'.toJS);
+    final rawActionHeaders = js.getProperty<JSAny?>('actionHeaders'.toJS);
+    final rawActiveDeferreds = js.getProperty<JSAny?>('activeDeferreds'.toJS);
+    final rawPrivateDeepestRenderedBoundaryId = js.getProperty<JSAny?>(
+      '_deepestRenderedBoundaryId'.toJS,
+    );
+    return ServerStaticHandlerContext(
+      basename: () =>
+          ((rawBasename as JSFunction).callAsFunction(null) as JSString).toDart,
+      location: ServerLocation.fromJs(rawLocation as JSObject),
+      matches: _decodeList<ServerAgnosticDataRouteMatch>(
+        rawMatches as JSArray,
+        (item) => ServerAgnosticDataRouteMatch.fromJs(item as JSObject),
+      ),
+      loaderData: rawLoaderData as Object,
+      actionData: rawActionData as Object,
+      errors: rawErrors as Object,
+      statusCode: (rawStatusCode as JSNumber).toDartDouble,
+      loaderHeaders: _decodePairs(rawLoaderHeaders as JSArray),
+      actionHeaders: _decodePairs(rawActionHeaders as JSArray),
+      activeDeferreds: _decodePairs(rawActiveDeferreds as JSArray),
+      privateDeepestRenderedBoundaryId:
+          rawPrivateDeepestRenderedBoundaryId == null ||
+              rawPrivateDeepestRenderedBoundaryId.isUndefined
+          ? null
+          : (rawPrivateDeepestRenderedBoundaryId as JSString).toDart,
+    );
+  }
 
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
@@ -1088,7 +2539,733 @@ class ServerStaticHandlerContext {
     'loaderHeaders': loaderHeaders,
     'actionHeaders': actionHeaders,
     'activeDeferreds': activeDeferreds,
-    if (_deepestRenderedBoundaryId != null) '_deepestRenderedBoundaryId': _deepestRenderedBoundaryId,
+    if (privateDeepestRenderedBoundaryId != null)
+      '_deepestRenderedBoundaryId': privateDeepestRenderedBoundaryId,
   };
 }
 
+/// Typed props for `ServerStaticRouterProviderRouterCreateHrefLocation`.
+///
+/// pathname: string; search: string; hash: string; state: any; key: string
+class ServerStaticRouterProviderRouterCreateHrefLocation {
+  const ServerStaticRouterProviderRouterCreateHrefLocation({
+    required String this.pathname,
+    required String this.search,
+    required String this.hash,
+    required Object? this.state,
+    required String this.elementKey,
+  });
+
+  /// TS: string
+  final String pathname;
+
+  /// TS: string
+  final String search;
+
+  /// TS: string
+  final String hash;
+
+  /// TS: any
+  final Object? state;
+
+  /// TS: string
+  final String elementKey;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticRouterProviderRouterCreateHrefLocation.fromJs(
+    JSObject js,
+  ) {
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawSearch = js.getProperty<JSAny?>('search'.toJS);
+    final rawHash = js.getProperty<JSAny?>('hash'.toJS);
+    final rawState = js.getProperty<JSAny?>('state'.toJS);
+    final rawElementKey = js.getProperty<JSAny?>('key'.toJS);
+    return ServerStaticRouterProviderRouterCreateHrefLocation(
+      pathname: (rawPathname as JSString).toDart,
+      search: (rawSearch as JSString).toDart,
+      hash: (rawHash as JSString).toDart,
+      state: rawState,
+      elementKey: (rawElementKey as JSString).toDart,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'pathname': pathname,
+    'search': search,
+    'hash': hash,
+    'state': state,
+    'key': elementKey,
+  };
+}
+
+/// Typed props for `ServerStaticRouterProviderRouterFetchOpts`.
+///
+/// preventScrollReset?: boolean; relative?: "route" | "path"
+/// unstable_flushSync?: boolean
+/// __ref: { preventScrollReset?: any; relative?: any; unstable_flushSync?: any }
+class ServerStaticRouterProviderRouterFetchOpts {
+  const ServerStaticRouterProviderRouterFetchOpts({
+    bool? this.preventScrollReset,
+    ServerRelativeRoutingType? this.relative,
+    bool? this.unstable_flushSync,
+    required ServerStaticRouterProviderRouterFetchOptsRef this.privateRef,
+  });
+
+  /// TS: boolean
+  final bool? preventScrollReset;
+
+  /// TS: "route" | "path"
+  final ServerRelativeRoutingType? relative;
+
+  /// TS: boolean
+  final bool? unstable_flushSync;
+
+  /// TS: { preventScrollReset?: any; relative?: any; unstable_flushSync?: any }
+  final ServerStaticRouterProviderRouterFetchOptsRef privateRef;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticRouterProviderRouterFetchOpts.fromJs(JSObject js) {
+    final rawPreventScrollReset = js.getProperty<JSAny?>(
+      'preventScrollReset'.toJS,
+    );
+    final rawRelative = js.getProperty<JSAny?>('relative'.toJS);
+    final rawUnstableFlushSync = js.getProperty<JSAny?>(
+      'unstable_flushSync'.toJS,
+    );
+    final rawPrivateRef = js.getProperty<JSAny?>('__ref'.toJS);
+    return ServerStaticRouterProviderRouterFetchOpts(
+      preventScrollReset:
+          rawPreventScrollReset == null || rawPreventScrollReset.isUndefined
+          ? null
+          : (rawPreventScrollReset as JSBoolean).toDart,
+      relative: rawRelative == null || rawRelative.isUndefined
+          ? null
+          : ServerRelativeRoutingType.fromValue(
+              (rawRelative as JSString).toDart,
+            ),
+      unstable_flushSync:
+          rawUnstableFlushSync == null || rawUnstableFlushSync.isUndefined
+          ? null
+          : (rawUnstableFlushSync as JSBoolean).toDart,
+      privateRef: ServerStaticRouterProviderRouterFetchOptsRef.fromJs(
+        rawPrivateRef as JSObject,
+      ),
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (preventScrollReset != null) 'preventScrollReset': preventScrollReset,
+    if (relative != null) 'relative': relative!.value,
+    if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync,
+    '__ref': privateRef.toJson(),
+  };
+}
+
+/// Typed props for `ServerStaticRouterProviderRouterFetchOptsRef`.
+///
+/// preventScrollReset?: any; relative?: any; unstable_flushSync?: any
+class ServerStaticRouterProviderRouterFetchOptsRef {
+  const ServerStaticRouterProviderRouterFetchOptsRef({
+    Object? this.preventScrollReset,
+    Object? this.relative,
+    Object? this.unstable_flushSync,
+  });
+
+  /// TS: any
+  final Object? preventScrollReset;
+
+  /// TS: any
+  final Object? relative;
+
+  /// TS: any
+  final Object? unstable_flushSync;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticRouterProviderRouterFetchOptsRef.fromJs(JSObject js) {
+    final rawPreventScrollReset = js.getProperty<JSAny?>(
+      'preventScrollReset'.toJS,
+    );
+    final rawRelative = js.getProperty<JSAny?>('relative'.toJS);
+    final rawUnstableFlushSync = js.getProperty<JSAny?>(
+      'unstable_flushSync'.toJS,
+    );
+    return ServerStaticRouterProviderRouterFetchOptsRef(
+      preventScrollReset:
+          rawPreventScrollReset == null || rawPreventScrollReset.isUndefined
+          ? null
+          : rawPreventScrollReset,
+      relative: rawRelative == null || rawRelative.isUndefined
+          ? null
+          : rawRelative,
+      unstable_flushSync:
+          rawUnstableFlushSync == null || rawUnstableFlushSync.isUndefined
+          ? null
+          : rawUnstableFlushSync,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (preventScrollReset != null) 'preventScrollReset': preventScrollReset,
+    if (relative != null) 'relative': relative,
+    if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync,
+  };
+}
+
+/// Typed props for `ServerStaticRouterProviderRouterGetBlockerFnArgs`.
+///
+/// currentLocation: any; nextLocation: any; historyAction: any
+class ServerStaticRouterProviderRouterGetBlockerFnArgs {
+  const ServerStaticRouterProviderRouterGetBlockerFnArgs({
+    required Object? this.currentLocation,
+    required Object? this.nextLocation,
+    required Object? this.historyAction,
+  });
+
+  /// TS: any
+  final Object? currentLocation;
+
+  /// TS: any
+  final Object? nextLocation;
+
+  /// TS: any
+  final Object? historyAction;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticRouterProviderRouterGetBlockerFnArgs.fromJs(JSObject js) {
+    final rawCurrentLocation = js.getProperty<JSAny?>('currentLocation'.toJS);
+    final rawNextLocation = js.getProperty<JSAny?>('nextLocation'.toJS);
+    final rawHistoryAction = js.getProperty<JSAny?>('historyAction'.toJS);
+    return ServerStaticRouterProviderRouterGetBlockerFnArgs(
+      currentLocation: rawCurrentLocation,
+      nextLocation: rawNextLocation,
+      historyAction: rawHistoryAction,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'currentLocation': currentLocation,
+    'nextLocation': nextLocation,
+    'historyAction': historyAction,
+  };
+}
+
+/// Typed props for `ServerStaticRouterProviderRouterGetBlockerReturn`.
+///
+/// state: "unblocked" | "blocked" | "proceeding"; reset: () => void
+/// proceed: () => void
+/// location: { pathname: string; search: string; hash: string; state: any; key: string }
+class ServerStaticRouterProviderRouterGetBlockerReturn {
+  const ServerStaticRouterProviderRouterGetBlockerReturn({
+    required ServerStaticRouterProviderRouterGetBlockerReturnState this.state,
+    required ServerStaticRouterProviderRouterSubscribeReturnCallback this.reset,
+    required ServerStaticRouterProviderRouterSubscribeReturnCallback
+    this.proceed,
+    required ServerLocation this.location,
+  });
+
+  /// TS: "unblocked" | "blocked" | "proceeding"
+  final ServerStaticRouterProviderRouterGetBlockerReturnState state;
+
+  /// TS: () => void
+  final ServerStaticRouterProviderRouterSubscribeReturnCallback reset;
+
+  /// TS: () => void
+  final ServerStaticRouterProviderRouterSubscribeReturnCallback proceed;
+
+  /// TS: { pathname: string; search: string; hash: string; state: any; key: string }
+  final ServerLocation location;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticRouterProviderRouterGetBlockerReturn.fromJs(JSObject js) {
+    final rawState = js.getProperty<JSAny?>('state'.toJS);
+    final rawReset = js.getProperty<JSAny?>('reset'.toJS);
+    final rawProceed = js.getProperty<JSAny?>('proceed'.toJS);
+    final rawLocation = js.getProperty<JSAny?>('location'.toJS);
+    return ServerStaticRouterProviderRouterGetBlockerReturn(
+      state: ServerStaticRouterProviderRouterGetBlockerReturnState.fromValue(
+        (rawState as JSString).toDart,
+      ),
+      reset: () {
+        (rawReset as JSFunction).callAsFunction(null);
+      },
+      proceed: () {
+        (rawProceed as JSFunction).callAsFunction(null);
+      },
+      location: ServerLocation.fromJs(rawLocation as JSObject),
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'state': state.value,
+    'reset': reset,
+    'proceed': proceed,
+    'location': location.toJson(),
+  };
+}
+
+/// Typed props for `ServerStaticRouterProviderRouterGetFetcherReturn`.
+///
+/// state: "idle" | "loading" | "submitting"
+/// formMethod: Record<string, unknown>; formAction: string
+/// formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"
+/// text: string; formData: any; json: Record<string, unknown>; data: any
+class ServerStaticRouterProviderRouterGetFetcherReturn {
+  const ServerStaticRouterProviderRouterGetFetcherReturn({
+    required ServerStaticRouterProviderRouterStateReturnNavigationState
+    this.state,
+    required Object this.formMethod,
+    required String this.formAction,
+    required ServerFormEncType this.formEncType,
+    required String this.text,
+    required Object? this.formData,
+    required Object this.json,
+    required Object? this.data,
+  });
+
+  /// TS: "idle" | "loading" | "submitting"
+  final ServerStaticRouterProviderRouterStateReturnNavigationState state;
+
+  /// TS: Record<string, unknown>
+  final Object formMethod;
+
+  /// TS: string
+  final String formAction;
+
+  /// TS: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"
+  final ServerFormEncType formEncType;
+
+  /// TS: string
+  final String text;
+
+  /// TS: any
+  final Object? formData;
+
+  /// TS: Record<string, unknown>
+  final Object json;
+
+  /// TS: any
+  final Object? data;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticRouterProviderRouterGetFetcherReturn.fromJs(JSObject js) {
+    final rawState = js.getProperty<JSAny?>('state'.toJS);
+    final rawFormMethod = js.getProperty<JSAny?>('formMethod'.toJS);
+    final rawFormAction = js.getProperty<JSAny?>('formAction'.toJS);
+    final rawFormEncType = js.getProperty<JSAny?>('formEncType'.toJS);
+    final rawText = js.getProperty<JSAny?>('text'.toJS);
+    final rawFormData = js.getProperty<JSAny?>('formData'.toJS);
+    final rawJson = js.getProperty<JSAny?>('json'.toJS);
+    final rawData = js.getProperty<JSAny?>('data'.toJS);
+    return ServerStaticRouterProviderRouterGetFetcherReturn(
+      state:
+          ServerStaticRouterProviderRouterStateReturnNavigationState.fromValue(
+            (rawState as JSString).toDart,
+          ),
+      formMethod: rawFormMethod as Object,
+      formAction: (rawFormAction as JSString).toDart,
+      formEncType: ServerFormEncType.fromValue(
+        (rawFormEncType as JSString).toDart,
+      ),
+      text: (rawText as JSString).toDart,
+      formData: rawFormData,
+      json: rawJson as Object,
+      data: rawData,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'state': state.value,
+    'formMethod': formMethod,
+    'formAction': formAction,
+    'formEncType': formEncType.value,
+    'text': text,
+    'formData': formData,
+    'json': json,
+    'data': data,
+  };
+}
+
+/// Typed props for `ServerStaticRouterProviderRouterPatchRoutesChildren`.
+///
+/// __ref: any; children?: any[]; index: true | false
+class ServerStaticRouterProviderRouterPatchRoutesChildren {
+  const ServerStaticRouterProviderRouterPatchRoutesChildren({
+    required Object? this.privateRef,
+    List<Object?>? this.children,
+    required bool this.index,
+  });
+
+  /// TS: any
+  final Object? privateRef;
+
+  /// TS: any[]
+  final List<Object?>? children;
+
+  /// TS: true | false
+  final bool index;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticRouterProviderRouterPatchRoutesChildren.fromJs(
+    JSObject js,
+  ) {
+    final rawPrivateRef = js.getProperty<JSAny?>('__ref'.toJS);
+    final rawChildren = js.getProperty<JSAny?>('children'.toJS);
+    final rawIndex = js.getProperty<JSAny?>('index'.toJS);
+    return ServerStaticRouterProviderRouterPatchRoutesChildren(
+      privateRef: rawPrivateRef,
+      children: rawChildren == null || rawChildren.isUndefined
+          ? null
+          : _decodeList<Object?>(rawChildren as JSArray, (item) => item),
+      index: (rawIndex as JSBoolean).toDart,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    '__ref': privateRef,
+    if (children != null) 'children': children,
+    'index': index,
+  };
+}
+
+/// Typed props for `ServerStaticRouterProviderRouterRoutesReturn`.
+///
+/// __ref: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any; children?: any; index: any }
+/// id: string; children?: any[]
+class ServerStaticRouterProviderRouterRoutesReturn {
+  const ServerStaticRouterProviderRouterRoutesReturn({
+    required ServerStaticRouterProviderRouterRoutesReturnRef this.privateRef,
+    required String this.id,
+    List<Object?>? this.children,
+  });
+
+  /// TS: { caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any; hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any; children?: any; index: any }
+  final ServerStaticRouterProviderRouterRoutesReturnRef privateRef;
+
+  /// TS: string
+  final String id;
+
+  /// TS: any[]
+  final List<Object?>? children;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticRouterProviderRouterRoutesReturn.fromJs(JSObject js) {
+    final rawPrivateRef = js.getProperty<JSAny?>('__ref'.toJS);
+    final rawId = js.getProperty<JSAny?>('id'.toJS);
+    final rawChildren = js.getProperty<JSAny?>('children'.toJS);
+    return ServerStaticRouterProviderRouterRoutesReturn(
+      privateRef: ServerStaticRouterProviderRouterRoutesReturnRef.fromJs(
+        rawPrivateRef as JSObject,
+      ),
+      id: (rawId as JSString).toDart,
+      children: rawChildren == null || rawChildren.isUndefined
+          ? null
+          : _decodeList<Object?>(rawChildren as JSArray, (item) => item),
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    '__ref': privateRef.toJson(),
+    'id': id,
+    if (children != null) 'children': children,
+  };
+}
+
+/// Typed props for `ServerStaticRouterProviderRouterRoutesReturnRef`.
+///
+/// caseSensitive?: any; path?: any; id?: any; loader?: any; action?: any
+/// hasErrorBoundary?: any; shouldRevalidate?: any; handle?: any; lazy?: any
+/// children?: any; index: any
+class ServerStaticRouterProviderRouterRoutesReturnRef {
+  const ServerStaticRouterProviderRouterRoutesReturnRef({
+    Object? this.caseSensitive,
+    Object? this.path,
+    Object? this.id,
+    Object? this.loader,
+    Object? this.action,
+    Object? this.hasErrorBoundary,
+    Object? this.shouldRevalidate,
+    Object? this.handle,
+    Object? this.lazy,
+    Object? this.children,
+    required Object? this.index,
+  });
+
+  /// TS: any
+  final Object? caseSensitive;
+
+  /// TS: any
+  final Object? path;
+
+  /// TS: any
+  final Object? id;
+
+  /// TS: any
+  final Object? loader;
+
+  /// TS: any
+  final Object? action;
+
+  /// TS: any
+  final Object? hasErrorBoundary;
+
+  /// TS: any
+  final Object? shouldRevalidate;
+
+  /// TS: any
+  final Object? handle;
+
+  /// TS: any
+  final Object? lazy;
+
+  /// TS: any
+  final Object? children;
+
+  /// TS: any
+  final Object? index;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticRouterProviderRouterRoutesReturnRef.fromJs(JSObject js) {
+    final rawCaseSensitive = js.getProperty<JSAny?>('caseSensitive'.toJS);
+    final rawPath = js.getProperty<JSAny?>('path'.toJS);
+    final rawId = js.getProperty<JSAny?>('id'.toJS);
+    final rawLoader = js.getProperty<JSAny?>('loader'.toJS);
+    final rawAction = js.getProperty<JSAny?>('action'.toJS);
+    final rawHasErrorBoundary = js.getProperty<JSAny?>('hasErrorBoundary'.toJS);
+    final rawShouldRevalidate = js.getProperty<JSAny?>('shouldRevalidate'.toJS);
+    final rawHandle = js.getProperty<JSAny?>('handle'.toJS);
+    final rawLazy = js.getProperty<JSAny?>('lazy'.toJS);
+    final rawChildren = js.getProperty<JSAny?>('children'.toJS);
+    final rawIndex = js.getProperty<JSAny?>('index'.toJS);
+    return ServerStaticRouterProviderRouterRoutesReturnRef(
+      caseSensitive: rawCaseSensitive == null || rawCaseSensitive.isUndefined
+          ? null
+          : rawCaseSensitive,
+      path: rawPath == null || rawPath.isUndefined ? null : rawPath,
+      id: rawId == null || rawId.isUndefined ? null : rawId,
+      loader: rawLoader == null || rawLoader.isUndefined ? null : rawLoader,
+      action: rawAction == null || rawAction.isUndefined ? null : rawAction,
+      hasErrorBoundary:
+          rawHasErrorBoundary == null || rawHasErrorBoundary.isUndefined
+          ? null
+          : rawHasErrorBoundary,
+      shouldRevalidate:
+          rawShouldRevalidate == null || rawShouldRevalidate.isUndefined
+          ? null
+          : rawShouldRevalidate,
+      handle: rawHandle == null || rawHandle.isUndefined ? null : rawHandle,
+      lazy: rawLazy == null || rawLazy.isUndefined ? null : rawLazy,
+      children: rawChildren == null || rawChildren.isUndefined
+          ? null
+          : rawChildren,
+      index: rawIndex,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (caseSensitive != null) 'caseSensitive': caseSensitive,
+    if (path != null) 'path': path,
+    if (id != null) 'id': id,
+    if (loader != null) 'loader': loader,
+    if (action != null) 'action': action,
+    if (hasErrorBoundary != null) 'hasErrorBoundary': hasErrorBoundary,
+    if (shouldRevalidate != null) 'shouldRevalidate': shouldRevalidate,
+    if (handle != null) 'handle': handle,
+    if (lazy != null) 'lazy': lazy,
+    if (children != null) 'children': children,
+    'index': index,
+  };
+}
+
+/// Typed props for `ServerStaticRouterProviderRouterStateReturnNavigation`.
+///
+/// state: "idle" | "loading" | "submitting"
+/// location: { pathname: any; search: any; hash: any; state: any; key: any }
+/// formMethod: any; formAction: any; formEncType: any; formData: any; json: any
+/// text: any
+class ServerStaticRouterProviderRouterStateReturnNavigation {
+  const ServerStaticRouterProviderRouterStateReturnNavigation({
+    required ServerStaticRouterProviderRouterStateReturnNavigationState
+    this.state,
+    required ServerLocation this.location,
+    required Object? this.formMethod,
+    required Object? this.formAction,
+    required Object? this.formEncType,
+    required Object? this.formData,
+    required Object? this.json,
+    required Object? this.text,
+  });
+
+  /// TS: "idle" | "loading" | "submitting"
+  final ServerStaticRouterProviderRouterStateReturnNavigationState state;
+
+  /// TS: { pathname: any; search: any; hash: any; state: any; key: any }
+  final ServerLocation location;
+
+  /// TS: any
+  final Object? formMethod;
+
+  /// TS: any
+  final Object? formAction;
+
+  /// TS: any
+  final Object? formEncType;
+
+  /// TS: any
+  final Object? formData;
+
+  /// TS: any
+  final Object? json;
+
+  /// TS: any
+  final Object? text;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticRouterProviderRouterStateReturnNavigation.fromJs(
+    JSObject js,
+  ) {
+    final rawState = js.getProperty<JSAny?>('state'.toJS);
+    final rawLocation = js.getProperty<JSAny?>('location'.toJS);
+    final rawFormMethod = js.getProperty<JSAny?>('formMethod'.toJS);
+    final rawFormAction = js.getProperty<JSAny?>('formAction'.toJS);
+    final rawFormEncType = js.getProperty<JSAny?>('formEncType'.toJS);
+    final rawFormData = js.getProperty<JSAny?>('formData'.toJS);
+    final rawJson = js.getProperty<JSAny?>('json'.toJS);
+    final rawText = js.getProperty<JSAny?>('text'.toJS);
+    return ServerStaticRouterProviderRouterStateReturnNavigation(
+      state:
+          ServerStaticRouterProviderRouterStateReturnNavigationState.fromValue(
+            (rawState as JSString).toDart,
+          ),
+      location: ServerLocation.fromJs(rawLocation as JSObject),
+      formMethod: rawFormMethod,
+      formAction: rawFormAction,
+      formEncType: rawFormEncType,
+      formData: rawFormData,
+      json: rawJson,
+      text: rawText,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'state': state.value,
+    'location': location.toJson(),
+    'formMethod': formMethod,
+    'formAction': formAction,
+    'formEncType': formEncType,
+    'formData': formData,
+    'json': json,
+    'text': text,
+  };
+}
+
+/// Typed props for `ServerStaticRouterProviderRouterSubscribeFnOpts`.
+///
+/// deletedFetchers: any; unstable_viewTransitionOpts?: any
+/// unstable_flushSync: any
+class ServerStaticRouterProviderRouterSubscribeFnOpts {
+  const ServerStaticRouterProviderRouterSubscribeFnOpts({
+    required Object? this.deletedFetchers,
+    Object? this.unstable_viewTransitionOpts,
+    required Object? this.unstable_flushSync,
+  });
+
+  /// TS: any
+  final Object? deletedFetchers;
+
+  /// TS: any
+  final Object? unstable_viewTransitionOpts;
+
+  /// TS: any
+  final Object? unstable_flushSync;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerStaticRouterProviderRouterSubscribeFnOpts.fromJs(JSObject js) {
+    final rawDeletedFetchers = js.getProperty<JSAny?>('deletedFetchers'.toJS);
+    final rawUnstableViewTransitionOpts = js.getProperty<JSAny?>(
+      'unstable_viewTransitionOpts'.toJS,
+    );
+    final rawUnstableFlushSync = js.getProperty<JSAny?>(
+      'unstable_flushSync'.toJS,
+    );
+    return ServerStaticRouterProviderRouterSubscribeFnOpts(
+      deletedFetchers: rawDeletedFetchers,
+      unstable_viewTransitionOpts:
+          rawUnstableViewTransitionOpts == null ||
+              rawUnstableViewTransitionOpts.isUndefined
+          ? null
+          : rawUnstableViewTransitionOpts,
+      unstable_flushSync: rawUnstableFlushSync,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'deletedFetchers': deletedFetchers,
+    if (unstable_viewTransitionOpts != null)
+      'unstable_viewTransitionOpts': unstable_viewTransitionOpts,
+    'unstable_flushSync': unstable_flushSync,
+  };
+}
+
+/// Typed props for `UIMatch`.
+///
+/// id: any; pathname: any; params: any; data: any; handle: any
+class ServerUIMatch {
+  const ServerUIMatch({
+    required Object? this.id,
+    required Object? this.pathname,
+    required Object? this.params,
+    required Object? this.data,
+    required Object? this.handle,
+  });
+
+  /// TS: any
+  final Object? id;
+
+  /// TS: any
+  final Object? pathname;
+
+  /// TS: any
+  final Object? params;
+
+  /// TS: any
+  final Object? data;
+
+  /// TS: any
+  final Object? handle;
+
+  /// Decodes this value from a JavaScript object.
+  factory ServerUIMatch.fromJs(JSObject js) {
+    final rawId = js.getProperty<JSAny?>('id'.toJS);
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawParams = js.getProperty<JSAny?>('params'.toJS);
+    final rawData = js.getProperty<JSAny?>('data'.toJS);
+    final rawHandle = js.getProperty<JSAny?>('handle'.toJS);
+    return ServerUIMatch(
+      id: rawId,
+      pathname: rawPathname,
+      params: rawParams,
+      data: rawData,
+      handle: rawHandle,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'pathname': pathname,
+    'params': params,
+    'data': data,
+    'handle': handle,
+  };
+}

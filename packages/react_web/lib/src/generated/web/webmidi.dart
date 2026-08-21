@@ -2,26 +2,26 @@
 // Neutral Web surface for spec: webmidi
 // ignore_for_file: type=lint
 
-import 'html.dart';
-import 'dom.dart';
 import 'hr_time.dart';
-import 'permissions.dart';
+import 'html.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class MIDIAccess {
   MIDIInputMap get inputs;
   MIDIOutputMap get outputs;
   EventHandler get onstatechange;
-   set onstatechange(EventHandler value);
+  set onstatechange(EventHandler value);
   bool get sysexEnabled;
 }
 
 abstract interface class MIDIConnectionEvent {
-  factory MIDIConnectionEvent(String type, [MIDIConnectionEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<MIDIConnectionEvent>(
-        'MIDIConnectionEvent',
-        [type, eventInitDict],
-      );
+  factory MIDIConnectionEvent(
+    String type_, [
+    MIDIConnectionEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<MIDIConnectionEvent>(
+    'MIDIConnectionEvent',
+    [type_, eventInitDict],
+  );
   MIDIPort? get port;
 }
 
@@ -34,25 +34,24 @@ final class MIDIConnectionEventInitValue implements MIDIConnectionEventInit {
   @override
   MIDIPort? port;
 
-  MIDIConnectionEventInitValue({
-    this.port,
-  });
+  MIDIConnectionEventInitValue({this.port});
 }
 
 abstract interface class MIDIInput {
   EventHandler get onmidimessage;
-   set onmidimessage(EventHandler value);
+  set onmidimessage(EventHandler value);
 }
 
-abstract interface class MIDIInputMap {
-}
+abstract interface class MIDIInputMap {}
 
 abstract interface class MIDIMessageEvent {
-  factory MIDIMessageEvent(String type, [MIDIMessageEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<MIDIMessageEvent>(
-        'MIDIMessageEvent',
-        [type, eventInitDict],
-      );
+  factory MIDIMessageEvent(
+    String type_, [
+    MIDIMessageEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<MIDIMessageEvent>(
+    'MIDIMessageEvent',
+    [type_, eventInitDict],
+  );
   Object get data;
 }
 
@@ -65,9 +64,7 @@ final class MIDIMessageEventInitValue implements MIDIMessageEventInit {
   @override
   Object? data;
 
-  MIDIMessageEventInitValue({
-    this.data,
-  });
+  MIDIMessageEventInitValue({this.data});
 }
 
 abstract interface class MIDIOptions {
@@ -83,10 +80,7 @@ final class MIDIOptionsValue implements MIDIOptions {
   @override
   bool? software;
 
-  MIDIOptionsValue({
-    this.sysex,
-    this.software,
-  });
+  MIDIOptionsValue({this.sysex, this.software});
 }
 
 abstract interface class MIDIOutput {
@@ -94,19 +88,18 @@ abstract interface class MIDIOutput {
   void clear();
 }
 
-abstract interface class MIDIOutputMap {
-}
+abstract interface class MIDIOutputMap {}
 
 abstract interface class MIDIPort {
   String get id;
   String? get manufacturer;
   String? get name;
-  MIDIPortType get type;
+  MIDIPortType get type_;
   String? get version;
   MIDIPortDeviceState get state;
   MIDIPortConnectionState get connection;
   EventHandler get onstatechange;
-   set onstatechange(EventHandler value);
+  set onstatechange(EventHandler value);
   Future<MIDIPort> open();
   Future<MIDIPort> close();
 }
@@ -126,8 +119,5 @@ final class MidiPermissionDescriptorValue implements MidiPermissionDescriptor {
   @override
   bool? sysex;
 
-  MidiPermissionDescriptorValue({
-    this.sysex,
-  });
+  MidiPermissionDescriptorValue({this.sysex});
 }
-

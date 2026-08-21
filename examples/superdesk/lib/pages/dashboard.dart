@@ -1,16 +1,19 @@
 import 'package:react_web/react_web.dart';
 
 @reactComponent
-ReactNode DashboardPage(({
-  Map<String, dynamic>? user,
-  List<Map<String, dynamic>> templates,
-  List<Map<String, dynamic>> lessons,
-  List<Map<String, dynamic>> units,
-  List<Map<String, dynamic>> syllabuses,
-  List<Map<String, dynamic>> classes,
-  Function(String) onNavigate,
-  Function(String) onToast,
-}) props) {
+ReactNode DashboardPage(
+  ({
+    Map<String, dynamic>? user,
+    List<Map<String, dynamic>> templates,
+    List<Map<String, dynamic>> lessons,
+    List<Map<String, dynamic>> units,
+    List<Map<String, dynamic>> syllabuses,
+    List<Map<String, dynamic>> classes,
+    Function(String) onNavigate,
+    Function(String) onToast,
+  })
+  props,
+) {
   return div(
     className: 'space-y-6',
     children: [
@@ -20,13 +23,16 @@ ReactNode DashboardPage(({
           div(
             children: [
               h1(
-                className: 'text-[28px] md:text-[34px] font-black leading-tight',
+                className:
+                    'text-[28px] md:text-[34px] font-black leading-tight',
                 style: {'fontFamily': 'Fredoka'},
                 children: [Text('${props.user?['name']} ☀️')],
               ),
               p(
                 className: 'font-bold text-[#555]',
-                children: [Text('Good morning! Ready to build magical lessons?')],
+                children: [
+                  const Text('Good morning! Ready to build magical lessons?'),
+                ],
               ),
             ],
           ),
@@ -35,10 +41,11 @@ ReactNode DashboardPage(({
             children: [
               button(
                 onClick: (_) => props.onNavigate('Builder'),
-                className: 'h-[44px] px-5 bg-dark text-white rounded-full border-3 border-dark font-black shadow-[4px_4px_0px_#111] flex items-center gap-2',
+                className:
+                    'h-[44px] px-5 bg-dark text-white rounded-full border-3 border-dark font-black shadow-[4px_4px_0px_#111] flex items-center gap-2',
                 children: [
-                  span(className: 'text-[18px]', children: [Text('+')]),
-                  Text(' New Lesson'),
+                  span(className: 'text-[18px]', children: [const Text('+')]),
+                  const Text(' New Lesson'),
                 ],
               ),
             ],
@@ -53,10 +60,11 @@ ReactNode DashboardPage(({
               span(
                 className: 'text-[20px] font-black flex items-center gap-2',
                 style: {'fontFamily': 'Fredoka'},
-                children: [Text('✨ Lesson Templates')],
+                children: [const Text('✨ Lesson Templates')],
               ),
               span(
-                className: 'ml-auto text-[12px] font-black bg-dark text-white rounded-full px-3 py-1',
+                className:
+                    'ml-auto text-[12px] font-black bg-dark text-white rounded-full px-3 py-1',
                 children: [Text('${props.templates.length} templates')],
               ),
             ],
@@ -67,12 +75,14 @@ ReactNode DashboardPage(({
               for (final t in props.templates)
                 div(
                   key: t['id'] as String,
-                  className: 'min-w-[300px] max-w-[320px] border-3 border-dark rounded-[24px] shadow-chunky-lg p-4 flex flex-col gap-3',
+                  className:
+                      'min-w-[300px] max-w-[320px] border-3 border-dark rounded-[24px] shadow-chunky-lg p-4 flex flex-col gap-3',
                   style: {'background': t['color'] as String},
                   children: [
                     if (t['badge'] != null)
                       span(
-                        className: 'self-start bg-dark text-white text-[10px] font-black px-2.5 py-1 rounded-full tracking-widest',
+                        className:
+                            'self-start bg-dark text-white text-[10px] font-black px-2.5 py-1 rounded-full tracking-widest',
                         children: [Text(t['badge'] as String)],
                       ),
                     h3(
@@ -80,7 +90,8 @@ ReactNode DashboardPage(({
                       children: [Text(t['title'] as String)],
                     ),
                     p(
-                      className: 'text-[12px] font-bold text-[#333] leading-snug',
+                      className:
+                          'text-[12px] font-bold text-[#333] leading-snug',
                       children: [Text(t['desc'] as String)],
                     ),
                     div(
@@ -95,8 +106,9 @@ ReactNode DashboardPage(({
                             props.onNavigate('Builder');
                             props.onToast('Template loaded: ${t['title']} ✨');
                           },
-                          className: 'h-[32px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
-                          children: [Text('Use')],
+                          className:
+                              'h-[32px] px-4 bg-dark text-white rounded-full font-black text-[12px]',
+                          children: [const Text('Use')],
                         ),
                       ],
                     ),
@@ -111,7 +123,7 @@ ReactNode DashboardPage(({
           h3(
             className: 'font-black text-[18px] mb-4',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('Recent Lessons')],
+            children: [const Text('Recent Lessons')],
           ),
           div(
             className: 'space-y-3',
@@ -120,11 +132,13 @@ ReactNode DashboardPage(({
                 div(
                   key: l['id'] as String,
                   onClick: (_) => props.onNavigate('Builder'),
-                  className: 'bg-[#FFF4E0] border-2 border-dark rounded-[16px] p-3 flex items-center gap-3 cursor-pointer hover:shadow-[2px_2px_0px_#111] transition-shadow',
+                  className:
+                      'bg-[#FFF4E0] border-2 border-dark rounded-[16px] p-3 flex items-center gap-3 cursor-pointer hover:shadow-[2px_2px_0px_#111] transition-shadow',
                   children: [
                     div(
-                      className: 'w-[40px] h-[40px] bg-white border-2 border-dark rounded-[12px] grid place-items-center text-[20px]',
-                      children: [Text('📚')],
+                      className:
+                          'w-[40px] h-[40px] bg-white border-2 border-dark rounded-[12px] grid place-items-center text-[20px]',
+                      children: [const Text('📚')],
                     ),
                     div(
                       className: 'flex-1',
@@ -135,13 +149,15 @@ ReactNode DashboardPage(({
                         ),
                         p(
                           className: 'text-[11px] font-bold text-gray-500',
-                          children: [Text('${l['date']} • ${l['students']} students')],
+                          children: [
+                            Text('${l['date']} • ${l['students']} students'),
+                          ],
                         ),
                       ],
                     ),
                     span(
                       className: 'font-black text-[12px] text-gray-400',
-                      children: [Text('→')],
+                      children: [const Text('→')],
                     ),
                   ],
                 ),
@@ -154,7 +170,7 @@ ReactNode DashboardPage(({
           h3(
             className: 'font-black text-[18px]',
             style: {'fontFamily': 'Fredoka'},
-            children: [Text('My Units')],
+            children: [const Text('My Units')],
           ),
           div(
             className: 'grid md:grid-cols-3 gap-3',
@@ -162,9 +178,13 @@ ReactNode DashboardPage(({
               for (final u in props.units)
                 div(
                   key: u['id'] as String,
-                  className: 'bg-white border-3 border-dark rounded-[20px] p-3 flex items-center gap-3',
+                  className:
+                      'bg-white border-3 border-dark rounded-[20px] p-3 flex items-center gap-3',
                   children: [
-                    span(className: 'text-[28px]', children: [Text(u['emoji'] as String)]),
+                    span(
+                      className: 'text-[28px]',
+                      children: [Text(u['emoji'] as String)],
+                    ),
                     div(
                       className: 'flex-1',
                       children: [
@@ -185,18 +205,28 @@ ReactNode DashboardPage(({
         ],
       ),
       div(
-        className: 'bg-white border-3 border-dark rounded-[24px] shadow-chunky p-4 flex gap-3',
+        className:
+            'bg-white border-3 border-dark rounded-[24px] shadow-chunky p-4 flex gap-3',
         children: [
           div(
-            className: 'w-[44px] h-[44px] rounded-[12px] bg-cream border-2 border-dark grid place-items-center text-[18px]',
-            children: [Text('💡')],
+            className:
+                'w-[44px] h-[44px] rounded-[12px] bg-cream border-2 border-dark grid place-items-center text-[18px]',
+            children: [const Text('💡')],
           ),
           div(
             children: [
-              div(className: 'font-black text-[13px]', children: [Text('Promethean tip')]),
+              div(
+                className: 'font-black text-[13px]',
+                children: [const Text('Promethean tip')],
+              ),
               p(
-                className: 'text-[12px] font-bold text-gray-500 leading-snug mt-1',
-                children: [Text('Tap any widget in Live Board to enlarge menus — everything is tap-friendly for boards!')],
+                className:
+                    'text-[12px] font-bold text-gray-500 leading-snug mt-1',
+                children: [
+                  const Text(
+                    'Tap any widget in Live Board to enlarge menus — everything is tap-friendly for boards!',
+                  ),
+                ],
               ),
             ],
           ),

@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'image_resource.dart';
-import 'service_workers.dart';
 
 typedef ContentCategory = String;
 
@@ -55,8 +54,5 @@ final class ContentIndexEventInitValue implements ContentIndexEventInit {
   @override
   String id;
 
-  ContentIndexEventInitValue({
-    required this.id,
-  });
+  ContentIndexEventInitValue({required this.id});
 }
-

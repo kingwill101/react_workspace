@@ -46,10 +46,10 @@ void main() {
     });
 
     test('assertions helpers work on nodes', () {
-      final divNode = HostNode(
-        const HostType('web', 'div'),
-        const {'id': 'app'},
-        children: const [Text('hi')],
+      const divNode = HostNode(
+        HostType('web', 'div'),
+        {'id': 'app'},
+        children: [Text('hi')],
       );
       divNode.shouldBeHost('div');
       const Text('hi').shouldBeText('hi');

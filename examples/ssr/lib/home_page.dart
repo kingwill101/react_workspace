@@ -71,9 +71,11 @@ ReactNode HomePage(({String title}) props) {
                   ),
                 ],
               ),
-              link(to: '/state', className: 'card-link', children: [
-                const Text('Explore state →'),
-              ]),
+              link(
+                to: '/state',
+                className: 'card-link',
+                children: [const Text('Explore state →')],
+              ),
             ],
           ),
           section(
@@ -98,9 +100,11 @@ ReactNode HomePage(({String title}) props) {
                   ),
                 ],
               ),
-              link(to: '/router', className: 'card-link', children: [
-                const Text('Explore routing →'),
-              ]),
+              link(
+                to: '/router',
+                className: 'card-link',
+                children: [const Text('Explore routing →')],
+              ),
             ],
           ),
           section(
@@ -125,9 +129,11 @@ ReactNode HomePage(({String title}) props) {
                   ),
                 ],
               ),
-              link(to: '/about', className: 'card-link', children: [
-                const Text('Read about →'),
-              ]),
+              link(
+                to: '/about',
+                className: 'card-link',
+                children: [const Text('Read about →')],
+              ),
             ],
           ),
         ],

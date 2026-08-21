@@ -5,7 +5,8 @@ void main() {
   group('client build (react_testing InMemorySsrHarness)', () {
     test('renders SSR shell without needing build output', () {
       final harness = InMemorySsrHarness(
-        indexTemplate: '<html><body>{{SSR}}</body><script id="__props">{{PROPS}}</script></html>',
+        indexTemplate:
+            '<html><body>{{SSR}}</body><script id="__props">{{PROPS}}</script></html>',
       );
 
       const ssrHtml = '<div id="app">Hello from the client</div>';
@@ -23,17 +24,23 @@ void main() {
       expect(doc, contains('__props'));
     });
 
-    test('SsrTestHarness mocks SSR for client app (no app build required)', () async {
-      final harness = SsrTestHarness(
-        indexTemplate: '<div>{{SSR}}</div>',
-      );
-      harness.mockRender('<div>mocked client</div>', props: {'title': 'Mock'});
-      await harness.start(rootComponent: 'package:client/lib/app.dart#App');
-      final client = harness.createClient();
-      final response = await client.get('/');
-      response.assertStatus(200);
-      expect(response.body, contains('mocked client'));
-      await harness.close();
-    });
+    test(
+      'SsrTestHarness mocks SSR for client app (no app build required)',
+      () async {
+        final harness = SsrTestHarness();
+        harness.mockRender(
+          '<div>mocked client</div>',
+          props: {'title': 'Mock'},
+        );
+        final ssr = await harness.start();
+        final rendered = await ssr.render(
+          component: 'package:client/lib/app.dart#App',
+          props: const {},
+        );
+        expect(rendered.html, contains('mocked client'));
+        expect(rendered.props, {'title': 'Mock'});
+        await harness.close();
+      },
+    );
   });
 }

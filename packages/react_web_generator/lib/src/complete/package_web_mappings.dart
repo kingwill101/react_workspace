@@ -37,7 +37,9 @@ final class PackageWebMappings {
     final map = <String, String>{};
     final reExt = RegExp(r'^extension type (\w+)');
     final reTypedef = RegExp(r'^typedef (\w+)');
-    final reClass = RegExp(r'^abstract class (\w+)|^final class (\w+)|^class (\w+)|^mixin (\w+)|^extension (\w+)');
+    final reClass = RegExp(
+      r'^abstract class (\w+)|^final class (\w+)|^class (\w+)|^mixin (\w+)|^extension (\w+)',
+    );
 
     for (final file in webLib.listSync(recursive: true).whereType<File>()) {
       if (!file.path.endsWith('.dart')) continue;
@@ -53,7 +55,12 @@ final class PackageWebMappings {
           map.putIfAbsent(m[1]!, () => lib);
         }
         for (final m in reClass.allMatches(trimmed)) {
-          final name = m.group(1) ?? m.group(2) ?? m.group(3) ?? m.group(4) ?? m.group(5);
+          final name =
+              m.group(1) ??
+              m.group(2) ??
+              m.group(3) ??
+              m.group(4) ??
+              m.group(5);
           if (name != null) map.putIfAbsent(name, () => lib);
         }
       }

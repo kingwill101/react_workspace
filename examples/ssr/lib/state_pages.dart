@@ -3,12 +3,12 @@ import 'package:react_router/react_router.dart';
 import 'package:react_riverpod/react_riverpod.dart' show riverpodScope;
 import 'package:react_web/react_web.dart' hide link;
 
-import 'bloc_demo.react.dart';
+import '.generated/bloc_demo.react.dart';
 import 'bloc_demo.dart' show blocCounterBloc;
-import 'riverpod_demo.react.dart';
+import '.generated/riverpod_demo.react.dart';
 import 'riverpod_demo.dart' show riverpodContainer;
-import 'todos/todos_ui.react.dart';
-import 'zustand_demo.react.dart';
+import '.generated/todos/todos_ui.react.dart';
+import '.generated/zustand_demo.react.dart';
 
 /// `/state/*` section layout: heading, sub-navigation, and an `Outlet` that
 /// renders the matched child route.
@@ -40,21 +40,31 @@ ReactNode StateSection(({String title}) props) {
             end: true,
             children: [const Text('Overview')],
           ),
-          navLink(to: '/state/hooks', className: 'router-link', children: [
-            const Text('Hooks'),
-          ]),
-          navLink(to: '/state/zustand', className: 'router-link', children: [
-            const Text('Zustand'),
-          ]),
-          navLink(to: '/state/riverpod', className: 'router-link', children: [
-            const Text('Riverpod'),
-          ]),
-          navLink(to: '/state/bloc', className: 'router-link', children: [
-            const Text('Bloc'),
-          ]),
-          navLink(to: '/state/todos', className: 'router-link', children: [
-            const Text('Todos'),
-          ]),
+          navLink(
+            to: '/state/hooks',
+            className: 'router-link',
+            children: [const Text('Hooks')],
+          ),
+          navLink(
+            to: '/state/zustand',
+            className: 'router-link',
+            children: [const Text('Zustand')],
+          ),
+          navLink(
+            to: '/state/riverpod',
+            className: 'router-link',
+            children: [const Text('Riverpod')],
+          ),
+          navLink(
+            to: '/state/bloc',
+            className: 'router-link',
+            children: [const Text('Bloc')],
+          ),
+          navLink(
+            to: '/state/todos',
+            className: 'router-link',
+            children: [const Text('Todos')],
+          ),
         ],
       ),
       div(
@@ -99,9 +109,7 @@ ReactNode StateOverview(({String title}) props) {
             children: [
               link(to: '/state/hooks', children: [const Text('Hooks →')]),
               link(to: '/state/zustand', children: [const Text('Zustand →')]),
-              link(to: '/state/riverpod', children: [
-                const Text('Riverpod →'),
-              ]),
+              link(to: '/state/riverpod', children: [const Text('Riverpod →')]),
               link(to: '/state/bloc', children: [const Text('Bloc →')]),
               link(to: '/state/todos', children: [const Text('Todos →')]),
             ],
@@ -151,10 +159,9 @@ ReactNode RiverpodPage(({String title}) props) {
             children: [const Text('RIVERPOD NOTIFIER')],
           ),
           h2(key: 'title', children: [Text(props.title)]),
-          riverpodScope(
-            riverpodContainer,
-            [RiverpodDemo(hidden: true, key: 'riverpod')],
-          ),
+          riverpodScope(riverpodContainer, [
+            RiverpodDemo(hidden: true, key: 'riverpod'),
+          ]),
         ],
       ),
     ],
@@ -177,10 +184,7 @@ ReactNode BlocPage(({String title}) props) {
             children: [const Text('BLOC')],
           ),
           h2(key: 'title', children: [Text(props.title)]),
-          blocProvider(
-            blocCounterBloc,
-            [BlocDemo(hidden: true, key: 'bloc')],
-          ),
+          blocProvider(blocCounterBloc, [BlocDemo(hidden: true, key: 'bloc')]),
         ],
       ),
     ],

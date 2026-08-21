@@ -2,17 +2,16 @@
 // Neutral Web surface for spec: input-events
 // ignore_for_file: type=lint
 
-import 'html.dart';
 import 'dom.dart';
-import 'input_device_capabilities.dart';
+import 'html.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class InputEvent {
-  factory InputEvent(String type, [InputEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<InputEvent>(
-        'InputEvent',
-        [type, eventInitDict],
-      );
+  factory InputEvent(String type_, [InputEventInit? eventInitDict]) =>
+      WebRuntime.current.createWebObject<InputEvent>('InputEvent', [
+        type_,
+        eventInitDict,
+      ]);
   DataTransfer? get dataTransfer;
   List<StaticRange> getTargetRanges();
   String? get data;
@@ -53,4 +52,3 @@ final class InputEventInitValue implements InputEventInit {
     this.inputType,
   });
 }
-

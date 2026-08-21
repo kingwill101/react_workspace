@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: webrtc-ice
 // ignore_for_file: type=lint
 
-import 'webrtc.dart';
 import 'html.dart';
+import 'webrtc.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class RTCIceGatherOptions {
@@ -19,10 +19,7 @@ final class RTCIceGatherOptionsValue implements RTCIceGatherOptions {
   @override
   List<RTCIceServer>? iceServers;
 
-  RTCIceGatherOptionsValue({
-    this.gatherPolicy,
-    this.iceServers,
-  });
+  RTCIceGatherOptionsValue({this.gatherPolicy, this.iceServers});
 }
 
 abstract interface class RTCIceParameters {
@@ -42,23 +39,16 @@ final class RTCIceParametersValue implements RTCIceParameters {
   @override
   String? password;
 
-  RTCIceParametersValue({
-    this.iceLite,
-    this.usernameFragment,
-    this.password,
-  });
+  RTCIceParametersValue({this.iceLite, this.usernameFragment, this.password});
 }
 
 abstract interface class RTCIceTransport {
-  factory RTCIceTransport() =>
-      WebRuntime.current.createWebObject<RTCIceTransport>(
-        'RTCIceTransport',
-        [],
-      );
+  factory RTCIceTransport() => WebRuntime.current
+      .createWebObject<RTCIceTransport>('RTCIceTransport', []);
   EventHandler get onerror;
-   set onerror(EventHandler value);
+  set onerror(EventHandler value);
   EventHandler get onicecandidate;
-   set onicecandidate(EventHandler value);
+  set onicecandidate(EventHandler value);
   RTCIceRole get role;
   RTCIceTransportState get state;
   RTCIceGathererState get gatheringState;
@@ -68,10 +58,9 @@ abstract interface class RTCIceTransport {
   RTCIceParameters? getLocalParameters();
   RTCIceParameters? getRemoteParameters();
   EventHandler get onstatechange;
-   set onstatechange(EventHandler value);
+  set onstatechange(EventHandler value);
   EventHandler get ongatheringstatechange;
-   set ongatheringstatechange(EventHandler value);
+  set ongatheringstatechange(EventHandler value);
   EventHandler get onselectedcandidatepairchange;
-   set onselectedcandidatepairchange(EventHandler value);
+  set onselectedcandidatepairchange(EventHandler value);
 }
-

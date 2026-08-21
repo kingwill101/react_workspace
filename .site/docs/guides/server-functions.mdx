@@ -1,135 +1,110 @@
 ---
-sidebar_position: 2
+sidebar_position: 4
 ---
 
-# Server Functions
+# Server functions
 
-Server Functions are one of the most powerful features of React Dart. They allow you to write backend logic directly alongside your frontend code, calling Dart functions from the browser as seamlessly as if they were local.
+Server functions are typed RPC contracts generated from Dart source. The
+implementation runs on the Dart server; browser code calls a generated client
+proxy through the configured `ServerFunctionClient`.
 
-React Dart handles the heavy lifting: generating HTTP endpoints, creating secure contract hashes, wiring up serializers, and providing typed proxies for the client.
-
-## Defining a Server Function
-
-To create a server function, write a standard Dart function and annotate it with `@serverFunction` (from `package:react_actions`).
-
-### Requirements
-
-1. **Context Parameter**: The first parameter must be `ServerFunctionContext`. This provides request details, headers, and access to the dependency injection container.
-2. **Named Parameters**: All subsequent parameters must be required and named. Positional arguments are not supported.
-3. **Asynchronous**: The function must return a `Future<T>`.
-4. **Serializable Types**: Parameters and return types must be serializable (primitives, lists, maps, or classes annotated with `@serverData`).
+## Define the contract
 
 ```dart
 import 'package:react_actions/react_actions.dart';
 import 'package:react_server/react_server.dart';
 
-@serverFunction
-Future<bool> checkUsername(
-  ServerFunctionContext context, {
-  required String username,
-}) async {
-  // This code runs strictly on the server
-  final db = context.get<Database>();
-  return await db.users.exists(username);
-}
-```
-
-## Using Custom Data Types
-
-Often you need to pass complex objects between the client and server. Use the `@serverData` annotation to define data transfer objects (DTOs) that React Dart can serialize.
-
-```dart
 @serverData
 final class UserProfile {
   final String id;
   final String email;
-  final int age;
 
-  const UserProfile({
-    required this.id,
-    required this.email,
-    required this.age,
-  });
+  const UserProfile({required this.id, required this.email});
 }
 
 @serverFunction
-Future<UserProfile> getUserProfile(
+Future<UserProfile> loadProfile(
   ServerFunctionContext context, {
   required String userId,
 }) async {
-  // Fetch and return the data
-  return UserProfile(id: userId, email: 'user@example.com', age: 30);
+  final principal = context.principal;
+  // Authorize principal, then load durable data.
+  return UserProfile(id: userId, email: 'user@example.com');
 }
 ```
 
-**Constraints on `@serverData` classes:**
-- Must be a `final class`.
-- No type parameters or generics.
-- No inheritance (other than `Object`) or mixins.
-- All fields must be `final` and public.
-- Exactly one public generative constructor matching the fields.
+The context parameter is server-only. Generated browser proxies omit it.
+Function parameters are named; generated codecs support primitives, lists,
+maps, records, `DateTime`, `Uri`, and valid nested `@serverData` types.
 
-## Calling a Server Function from the Client
+## Generate
 
-When the `react_codegen` builder runs, it generates client proxies for your server functions. You can call them directly from your React components. Behind the scenes, React Dart performs a fetch request to the server, passing the serialized arguments.
+```console
+dart run react_tool:react generate
+```
+
+For `lib/profile_actions.dart`, outputs under `lib/.generated/` include:
+
+- `profile_actions.action.g.dart`: codecs and `ServerFunctionRef` values;
+- `profile_actions.client.g.dart`: browser-callable `*Action` proxies;
+- `profile_actions.registry.g.dart`: server dispatch registration;
+- `server_actions.g.dart`: aggregate registry wiring.
+
+## Call from a component
 
 ```dart
-import 'package:react/react.dart';
-import 'actions.dart'; // Import the file containing the @serverFunction
+import 'package:my_app/.generated/profile_actions.client.g.dart';
+import 'package:react_dom/react_dom.dart';
 
-@React()
-ReactNode ProfileView() {
+@reactComponent
+ReactNode ProfileView(({String userId}) props) {
   final (profile, setProfile) = useState<UserProfile?>(null);
-  final (loading, setLoading) = useState(false);
+  final (error, setError) = useState<String?>(null);
 
-  Future<void> loadProfile() async {
-    setLoading(true);
+  Future<void> load() async {
     try {
-      // Direct, type-safe call. The builder handles the RPC bridge.
-      final result = await getUserProfile(userId: '123');
-      setProfile(result);
-    } catch (e) {
-      print('Error loading profile: $e');
-    } finally {
-      setLoading(false);
+      setProfile(await loadProfileAction(userId: props.userId));
+    } catch (failure) {
+      setError(failure.toString());
     }
   }
 
-  return div(
-    children: [
-      button(onClick: (e) => loadProfile(), children: [Text('Load Profile')]),
-      if (loading) p(children: [Text('Loading...')]),
-      if (profile != null) p(children: [Text('Email: ${profile.email}')]),
-    ],
-  );
+  return section(children: [
+    button(key: 'load', type: 'button', onClick: (_) => load(), children: [
+      'Load profile',
+    ]),
+    if (profile case final value?)
+      p(key: 'profile', children: [value.email]),
+    if (error case final message?)
+      p(key: 'error', children: [message]),
+  ]);
 }
 ```
 
-Notice that on the client side, you *do not pass* the `ServerFunctionContext`. The generated proxy automatically handles omitting it and the backend injects it when the RPC call is received.
+The browser entrypoint installs `HttpServerFunctionClient` around the root
+render with `runWithServerFunctionClient`.
 
-## Registering Server Functions
-
-For the backend to know how to route incoming RPC calls, you must register your server functions. The builder generates a convenient `registerAll()` method.
-
-In your `bin/server.dart` (and `lib/ssr.dart`):
+## Register on the server
 
 ```dart
-import 'package:my_app/server/actions.dart' as actions;
+import 'package:my_app/.generated/server_actions.g.dart';
+import 'package:react_server/react_server.dart';
 
-void main() {
-  // Register the codecs and routing metadata
-  actions.registerAll();
-  
-  // ... start your server ...
-}
+final registry = ServerFunctionRegistry();
+registerServerActions(registry: registry);
 ```
 
-## Security and Cryptographic Hashes
+Pass that registry to `RoutedReactApplication` or `ReactServerApp`. The
+adapter handles the versioned request/response envelope, content type, contract
+hashes, body limits, authentication, cancellation, and structured failures.
 
-Security is a primary concern. Every `@serverFunction` generates a cryptographic hash based on its signature and types. When the client invokes the function, it sends this hash. The server validates the hash before execution.
+Throw `ServerFunctionFailure` for an intentional public error code and status.
+Unexpected exceptions are converted to safe remote failures; do not expose
+stack traces or secrets to clients.
 
-If an attacker tries to call an endpoint with modified payloads, or if the client is running a stale version that doesn't match the server's expected signature, the contract validation fails and the request is rejected with a `400 Bad Request` or `409 Conflict`.
+## Test
 
-## Error Handling
-
-If a server function throws an exception, it is caught by the React Dart RPC handler. The client proxy will then throw a `ServerFunctionException` containing the message. Always use try-catch blocks in your client components when calling server functions.
+Use `ServerFunctionHarness` for direct dispatch and codec behavior. For the
+HTTP envelope, compose the registry into the real server application and use
+its `server_testing` adapter. This tests the production transport without a
+fixed port or external browser automation.

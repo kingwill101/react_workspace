@@ -1,66 +1,75 @@
-# React Router
+# react_router
 
-Typed React Router bindings for `react-router-dom` v6 in the React Dart ecosystem.
-
-## Ecosystem Role
-Provides typed navigation, route matching, and SSR URL handling for React Dart apps. It utilizes the general purpose `foreignComponent` bridge for components and exposes typed `use*` hooks generated from TypeScript declarations.
+Generated typed bindings for `react-router-dom` 6.26.x components, functions,
+and hooks.
 
 ## Installation
-Add the package to your workspace:
+
 ```yaml
 dependencies:
-  react_router: path: ../react_router
+  react_router: ^0.0.1
 ```
 
-Ensure your `react.yaml` or pubspec's `react` section wraps the npm package appropriately, relying on the shipped shims.
+The package's `react.js` descriptor declares its npm dependency and browser/SSR
+shims. `react build` provisions and bundles them automatically; applications
+do not copy shims into `react.yaml`.
 
-## Core Usage
-
-### Routing Components
-Components are rendered through the generic foreign-component bridge (`foreignComponent`), exposed as typed helpers in `react_router.dart`:
+## Components
 
 ```dart
 import 'package:react_router/react_router.dart';
-import 'package:react/react.dart';
+import 'package:react_dom/react_dom.dart';
 
-ReactNode myApp() {
-  return browserRouter(
-    children: [
-      routes(
-        children: [
-          route(path: '/', element: Home()),
-          route(path: '/about', element: About()),
-        ],
-      )
-    ]
-  );
-}
+ReactNode appRoutes() => browserRouter(
+  children: [
+    routes(children: [
+      route(key: 'home', path: '/', element: Home()),
+      route(key: 'about', path: '/about', element: About()),
+    ]),
+  ],
+);
 ```
 
-### Typed Hooks
-The typed `use*` hooks import `dart:js_interop` and run only in JS targets (browser client and SSR worker). Import them explicitly:
+The generated API includes router providers, links, routes, outlets, navigation
+components, and typed value classes. `staticRouter` is the SSR counterpart for
+an explicitly static location.
+
+## Hooks
+
+Hook bindings import `dart:js_interop` and run only in JavaScript targets
+(browser or Node SSR worker), so they use a separate entrypoint:
 
 ```dart
 import 'package:react_router/react_router_hooks.dart';
-import 'package:react/react.dart';
+import 'package:react_dom/react_dom.dart';
 
-ReactNode profile() {
-  final params = useParams();
+@reactComponent
+ReactNode LocationView(({}) props) {
+  final location = useLocation();
   final navigate = useNavigate();
 
-  return div(
-    children: [
-      text('User ID: ${params['id']}'),
-      button(
-        onClick: (e) => navigate('/home'),
-        children: [text('Go Home')]
-      )
-    ]
+  return button(
+    type: 'button',
+    onClick: (_) => navigate('/home'),
+    children: [location.fullPath],
   );
 }
 ```
 
-## Architecture & Design Notes
-- **SSR Handling**: The library exports `react_router_server_bindings.g.dart` providing `staticRouter` (the SSR counterpart to `browserRouter`). 
-- **Type Safety**: Hooks run through the shim's `globalThis.__reactDartBindings.reactRouter` bridge during render and decode into typed values.
-- **JS Isolation**: Hooks are separated into `react_router_hooks.dart` because they rely on JS interop, ensuring pure VM (non-JS) tests and consumers don't break.
+`react_router.dart` remains VM-importable for portable component trees and
+tests. `ReactRouterLocation.fullPath` combines pathname, query, and fragment.
+
+## Regeneration
+
+The package declares two `react.js.bind` groups. From the package directory:
+
+```console
+dart run react_tool:react js install
+dart run react_tool:react ts bind
+dart format .
+dart analyze --fatal-infos
+dart test
+```
+
+Review generated Dart and JavaScript shim changes together. The server group
+uses a type prefix to avoid declarations that collide with the browser group.

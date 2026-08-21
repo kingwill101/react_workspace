@@ -1,0 +1,293 @@
+---
+sidebar_position: 8
+---
+
+# Build a Dart wrapper for a JavaScript package
+
+A wrapper package lets a Dart application add an npm-backed React component,
+hook, or utility by declaring one Dart dependency. The wrapper owns the npm
+version contract, JavaScript entry module, Dart API, and tests. Consumer
+applications should not need to copy shims or edit `react.yaml`.
+
+The normal workflow is generated: declare a `react.js.bind` group and run
+`react ts bind`. The CLI emits the Dart helpers, hook bindings, and JavaScript
+registration shim together. `react_router` is the canonical generated example.
+
+This guide also uses `react_zustand` to explain the manual escape hatch. Its
+shim is handwritten because the package exposes a purpose-built store facade
+instead of mirroring Zustand's TypeScript declarations.
+
+## Choose generated or handwritten bindings
+
+Use `react ts bind` by default when the npm package publishes useful TypeScript
+declarations. It generates:
+
+- typed Dart component helpers;
+- Dart value types for props and return values;
+- a self-registering JavaScript shim;
+- typed `use*` hook functions.
+
+The shim is generated when the binding group has a `shim:` output, or when an
+explicit command passes `--shim <path>`. `react build` consumes that generated
+file through `entries`; it does not rerun TypeScript extraction on every build.
+This keeps normal builds deterministic and makes generated changes reviewable.
+
+Write the bridge by hand only when the public Dart API intentionally differs from
+the npm API, the package has no suitable declarations, or a very small facade
+is clearer. `react_zustand` uses this approach: it exposes two selectors and
+one action instead of mirroring all of Zustand.
+
+## Generated package layout
+
+After `react ts bind`, a typical package contains authored entrypoints plus
+generated implementation files:
+
+```text
+react_router/
+├── lib/
+│   ├── react_router.dart
+│   ├── react_router_bindings.g.dart
+│   ├── react_router_bindings_shim.mjs
+│   └── react_router_hooks.g.dart
+├── test/
+├── README.md
+└── pubspec.yaml
+```
+
+## Manual package layout
+
+```text
+react_zustand/
+├── lib/
+│   ├── react_zustand.dart
+│   └── react_zustand_shim.mjs
+├── test/
+│   └── react_zustand_test.dart
+├── README.md
+└── pubspec.yaml
+```
+
+Keep the public Dart entrypoint under `lib/`. JavaScript files referenced by
+the wrapper descriptor must also be package-visible, normally under `lib/`.
+
+## Declare the JavaScript contract
+
+Add a `react.js` descriptor to the wrapper's `pubspec.yaml`:
+
+```yaml
+name: react_zustand
+version: 0.0.1
+
+react:
+  js:
+    schema: 1
+    entries:
+      shared: lib/react_zustand_shim.mjs
+    dependencies:
+      zustand: ^5.0.2
+    peers:
+      react: ">=18 <20"
+      react-dom: ">=18 <20"
+    externals:
+      - react
+      - react-dom
+```
+
+The fields have distinct responsibilities:
+
+| Field | Meaning |
+|---|---|
+| `schema` | Descriptor format. The current supported value is `1`. |
+| `entries.shared` | A module bundled into both browser and SSR targets. |
+| `entries.browser` | A browser-only module. |
+| `entries.ssr` | A Node SSR-worker module. |
+| `dependencies` | npm packages installed in the managed JS environment. |
+| `peers` | Host singletons and compatible version ranges. |
+| `externals` | Imports that stay outside the wrapper bundle. React should remain external so every wrapper uses one React instance. |
+| `prebuilt` | Optional browser/SSR bundles shipped by the wrapper. A prebuilt target does not install that target's npm dependencies. |
+
+`react_tool` discovers descriptors from the Dart package graph, merges their
+requirements, and rejects incompatible npm ranges with the wrapper names that
+declared them. Managed mode installs exact versions under
+`.dart_tool/react/js`; it does not modify the consumer's `package.json`.
+
+## Manual escape hatch: write a focused shim
+
+The Zustand shim creates one store and exposes a deliberately small bridge:
+
+```js
+import { create } from 'zustand';
+
+const useCounterStore = create((set) => ({
+  count: 0,
+  inc: () => set((state) => ({ count: state.count + 1 })),
+}));
+
+globalThis.__reactDartZustand = {
+  useCount: () => useCounterStore((state) => state.count),
+  useDoubled: () => useCounterStore((state) => state.count * 2),
+  inc: () => useCounterStore.getState().inc(),
+};
+```
+
+The global name is part of the wrapper's private ABI. Keep it package-specific
+and ensure every Dart `@JS` path matches it exactly. Prefer returning JS
+primitives or well-defined object shapes across the bridge.
+
+For foreign React components, register the component with the runtime instead
+of inventing another component registry:
+
+```js
+import { Widget } from 'some-react-library';
+
+globalThis.__reactDartRegisterComponent?.('someLibrary.Widget', Widget);
+```
+
+Dart can then render it through `foreignComponent` or a typed generated helper
+using the same key.
+
+## Expose the Dart API
+
+The matching Zustand entrypoint uses JS interop declarations:
+
+```dart
+/// Typed Zustand selectors and actions for React Dart.
+library;
+
+import 'dart:js_interop';
+
+/// Reads the current counter value and subscribes this component to changes.
+@JS('globalThis.__reactDartZustand.useCount')
+external int useCount();
+
+/// Reads the derived doubled counter value.
+@JS('globalThis.__reactDartZustand.useDoubled')
+external int useDoubled();
+
+/// Increments the counter outside the render cycle.
+@JS('globalThis.__reactDartZustand.inc')
+external void inc();
+```
+
+Document runtime limits at the library level. An entrypoint importing
+`dart:js_interop` runs in JavaScript targets—browser and Node SSR—not on the
+native Dart VM. If a package also needs portable models or contracts, export
+those from a separate VM-safe library.
+
+## Generate the wrapper from TypeScript
+
+For a package with TypeScript declarations, declare repeatable binding groups:
+
+```yaml
+react:
+  js:
+    schema: 1
+    bind:
+      - specifier: some-react-library
+        output: lib/src/some_bindings.g.dart
+        shim: lib/src/some_bindings_shim.mjs
+        hooks: lib/src/some_hooks.g.dart
+        namespace: someLibrary
+        prefix: someLibrary
+        exclude: [UnsupportedExport]
+    entries:
+      shared: lib/src/some_bindings_shim.mjs
+    dependencies:
+      some-react-library: ^2.0.0
+    peers:
+      react: ">=18 <20"
+      react-dom: ">=18 <20"
+    externals: [react, react-dom]
+```
+
+Then provision and generate. Because the binding group declares `shim:`, the
+second command generates the JavaScript shim automatically:
+
+```console
+dart run react_tool:react js install
+dart run react_tool:react ts bind
+```
+
+With no positional arguments, `ts bind` regenerates every `react.js.bind`
+group. During exploration, generate one group explicitly:
+
+```console
+dart run react_tool:react ts bind some-react-library \
+  --output lib/src/some_bindings.g.dart \
+  --shim lib/src/some_bindings_shim.mjs \
+  --hooks lib/src/some_hooks.g.dart \
+  --namespace someLibrary \
+  --prefix someLibrary
+```
+
+Use `--type-prefix` when two module entrypoints declare colliding type names.
+Use `--npm-root` only when declarations must be resolved from a nonstandard
+npm installation.
+
+Generated files are implementation artifacts. Export the stable helpers from
+a small authored entrypoint and regenerate them from the descriptor rather
+than hand-editing them.
+
+## Consume the wrapper
+
+The application adds only the Dart dependency:
+
+```yaml
+dependencies:
+  react_zustand: ^0.0.1
+```
+
+Then uses the wrapper from a component:
+
+```dart
+import 'package:react/react.dart';
+import 'package:react_dom/react_dom.dart';
+import 'package:react_zustand/react_zustand.dart';
+
+ReactNode counterView() {
+  final count = useCount();
+  final doubled = useDoubled();
+
+  return div(
+    children: [
+      Text('Count: $count; doubled: $doubled'),
+      button(onClick: (_) => inc(), children: const [Text('Increment')]),
+    ],
+  );
+}
+```
+
+`react build` discovers `react_zustand`, installs Zustand in the managed JS
+environment, and bundles its shared entry for browser and SSR. No application
+shim configuration is required.
+
+## Test the contract
+
+Test the narrowest layers first:
+
+1. Use ordinary Dart tests to pin the descriptor, shim registration names,
+   imports, and public API assumptions.
+2. Use `ReactComponentHarness` for portable component, hook, ref, and event
+   behavior.
+3. Use `ReactTestHarness` for the actual build output and Node SSR worker.
+4. Compose full-stack tests with the application's `server_testing` adapter.
+5. Reserve browser automation for behavior that requires a real browser and
+   cannot be represented by `react_testing`.
+
+The Zustand package's VM test reads `react_zustand_shim.mjs` and verifies the
+import, bridge name, hooks, action, and initial state. Generated wrappers
+should additionally test that regeneration is deterministic.
+
+## Wrapper release checklist
+
+- The package has a version, description, repository, README, LICENSE, and
+  CHANGELOG.
+- Every public Dart entrypoint has a library doc comment.
+- Public helpers explain runtime availability and failure behavior.
+- `entries` point to files included under `lib/`.
+- npm dependencies and peer ranges are intentionally bounded.
+- React and React DOM remain peers/externals unless shipping a deliberately
+  isolated runtime.
+- Browser and SSR support are declared separately when they differ.
+- Generated outputs can be reproduced with `react ts bind`.
+- `dart analyze`, `dart test`, and a representative `react build` pass.

@@ -60,7 +60,8 @@ final class ReactTypeReader {
     if (type is InterfaceType) {
       final rawName = type.element.name;
       final libUri = type.element.library.uri.toString();
-      final isReactWeb = libUri.contains('react_web') || libUri.contains('package:web');
+      final isReactWeb =
+          libUri.contains('react_web') || libUri.contains('package:web');
       final hostEntry = ReactTypes.webHostTypes[rawName];
       if (hostEntry != null && isReactWeb) {
         final (hostNamespace, typeId) = hostEntry;

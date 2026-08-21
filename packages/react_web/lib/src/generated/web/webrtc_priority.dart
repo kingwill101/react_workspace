@@ -2,11 +2,9 @@
 // Neutral Web surface for spec: webrtc-priority
 // ignore_for_file: type=lint
 
-import 'webrtc.dart';
 import 'html.dart';
+import 'webrtc.dart';
 import 'websockets.dart';
-import 'fileapi.dart';
-import 'webidl.dart';
 
 abstract interface class RTCDataChannel {
   String get label;
@@ -19,22 +17,22 @@ abstract interface class RTCDataChannel {
   RTCDataChannelState get readyState;
   int get bufferedAmount;
   int get bufferedAmountLowThreshold;
-   set bufferedAmountLowThreshold(int value);
+  set bufferedAmountLowThreshold(int value);
   EventHandler get onopen;
-   set onopen(EventHandler value);
+  set onopen(EventHandler value);
   EventHandler get onbufferedamountlow;
-   set onbufferedamountlow(EventHandler value);
+  set onbufferedamountlow(EventHandler value);
   EventHandler get onerror;
-   set onerror(EventHandler value);
+  set onerror(EventHandler value);
   EventHandler get onclosing;
-   set onclosing(EventHandler value);
+  set onclosing(EventHandler value);
   EventHandler get onclose;
-   set onclose(EventHandler value);
+  set onclose(EventHandler value);
   void close();
   EventHandler get onmessage;
-   set onmessage(EventHandler value);
+  set onmessage(EventHandler value);
   BinaryType get binaryType;
-   set binaryType(BinaryType value);
+  set binaryType(BinaryType value);
   void send(String data);
 }
 
@@ -127,4 +125,3 @@ final class RTCRtpEncodingParametersValue implements RTCRtpEncodingParameters {
     this.scaleResolutionDownBy,
   });
 }
-

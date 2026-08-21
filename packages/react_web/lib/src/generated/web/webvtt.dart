@@ -20,55 +20,49 @@ typedef PositionAlignSetting = String;
 typedef ScrollSetting = String;
 
 abstract interface class VTTCue {
-  factory VTTCue(double startTime, double endTime, String text) =>
-      WebRuntime.current.createWebObject<VTTCue>(
-        'VTTCue',
-        [startTime, endTime, text],
-      );
+  factory VTTCue(double startTime, double endTime, String text) => WebRuntime
+      .current
+      .createWebObject<VTTCue>('VTTCue', [startTime, endTime, text]);
   VTTRegion? get region;
-   set region(VTTRegion? value);
+  set region(VTTRegion? value);
   DirectionSetting get vertical;
-   set vertical(DirectionSetting value);
+  set vertical(DirectionSetting value);
   bool get snapToLines;
-   set snapToLines(bool value);
+  set snapToLines(bool value);
   LineAndPositionSetting get line;
-   set line(LineAndPositionSetting value);
+  set line(LineAndPositionSetting value);
   LineAlignSetting get lineAlign;
-   set lineAlign(LineAlignSetting value);
+  set lineAlign(LineAlignSetting value);
   LineAndPositionSetting get position;
-   set position(LineAndPositionSetting value);
+  set position(LineAndPositionSetting value);
   PositionAlignSetting get positionAlign;
-   set positionAlign(PositionAlignSetting value);
+  set positionAlign(PositionAlignSetting value);
   double get size;
-   set size(double value);
+  set size(double value);
   AlignSetting get align;
-   set align(AlignSetting value);
+  set align(AlignSetting value);
   String get text;
-   set text(String value);
+  set text(String value);
   DocumentFragment getCueAsHTML();
 }
 
 abstract interface class VTTRegion {
   factory VTTRegion() =>
-      WebRuntime.current.createWebObject<VTTRegion>(
-        'VTTRegion',
-        [],
-      );
+      WebRuntime.current.createWebObject<VTTRegion>('VTTRegion', []);
   String get id;
-   set id(String value);
+  set id(String value);
   double get width;
-   set width(double value);
+  set width(double value);
   int get lines;
-   set lines(int value);
+  set lines(int value);
   double get regionAnchorX;
-   set regionAnchorX(double value);
+  set regionAnchorX(double value);
   double get regionAnchorY;
-   set regionAnchorY(double value);
+  set regionAnchorY(double value);
   double get viewportAnchorX;
-   set viewportAnchorX(double value);
+  set viewportAnchorX(double value);
   double get viewportAnchorY;
-   set viewportAnchorY(double value);
+  set viewportAnchorY(double value);
   ScrollSetting get scroll;
-   set scroll(ScrollSetting value);
+  set scroll(ScrollSetting value);
 }
-

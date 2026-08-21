@@ -1,9 +1,13 @@
 name: react_dom
+description: DOM mounting and hydration APIs for React Dart applications.
+version: 0.1.0
+repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_dom
 resolution: workspace
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react:
-  react_js:
-    path: ../react_js
-  react_web: any
+  react: ^0.1.0
+  react_js: ^0.1.0
+  react_web: ^0.1.0
+dev_dependencies:
+  test: ^1.31.2

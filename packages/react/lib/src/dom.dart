@@ -6,13 +6,13 @@ const _buttonHost = HostType<Map<String, Object?>>('web', 'button');
 
 ReactNode div({
   Map<String, Object?> props = const {},
-  List<ReactNode> children = const [],
+  ReactChildren children = const [],
   String? key,
 }) {
   return HostNode<Map<String, Object?>>(
     _divHost,
     props,
-    children: children,
+    children: normalizeChildren(children),
     key: key,
   );
 }
@@ -21,7 +21,7 @@ ReactNode button({
   void Function()? onClick,
   bool? disabled,
   String? className,
-  List<ReactNode> children = const [],
+  ReactChildren children = const [],
   String? key,
 }) {
   return HostNode<Map<String, Object?>>(
@@ -43,7 +43,7 @@ ReactNode button({
       'disabled': ?disabled,
       'className': ?className,
     },
-    children: children,
+    children: normalizeChildren(children),
     key: key,
   );
 }

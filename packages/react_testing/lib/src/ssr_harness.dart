@@ -4,36 +4,24 @@ import 'dart:io';
 
 import 'package:react_server/react_server.dart';
 import 'package:server_testing/server_testing.dart';
-import 'package:server_testing_shelf/server_testing_shelf.dart';
-import 'package:shelf/shelf.dart';
 
 /// Harness for testing React SSR rendering in isolation.
 ///
-/// Provides helpers to create a mock SSR worker, build a [ReactServerApp]
-/// without needing a real Node process, and assert on the rendered
-/// document output. This complements [ReactTestHarness] for cases where
-/// the full build pipeline is not needed.
+/// Provides a mock SSR worker without selecting an HTTP server integration.
+/// Compose [client] with the Shelf, Routed, or other React server application
+/// under test, then adapt that application through its `server_testing`
+/// package.
 ///
 /// Example:
 /// ```dart
-/// final harness = SsrTestHarness(
-///   indexTemplate: '<html>{{SSR}}<script>{{PROPS}}</script></html>',
-/// );
+/// final harness = SsrTestHarness();
 /// harness.mockRender('<div>Hello</div>', props: {'title': 'Test'});
-///
-/// final client = harness.createClient();
-/// final response = await client.get('/');
-/// response.assertStatus(200).assertBodyContains('Hello');
+/// final ssr = await harness.start();
+/// final rendered = await ssr.render(component: 'test.Root', props: {});
 /// ```
 final class SsrTestHarness {
-  final String indexTemplate;
-  final String actionPath;
-  final ServerFunctionRegistry actionRegistry;
-  Object Function(Request request)? authenticate;
-
   HttpServer? _mockWorker;
   ReactSsrClient? _ssrClient;
-  ReactServerApp? _app;
 
   String _mockHtml = '<main>Mock SSR</main>';
   Map<String, dynamic> _mockProps = const {};
@@ -41,15 +29,11 @@ final class SsrTestHarness {
   bool _shouldFail = false;
 
   SsrTestHarness({
-    required this.indexTemplate,
-    this.actionPath = '/__react/actions',
-    ServerFunctionRegistry? actionRegistry,
-    this.authenticate,
     String mockHtml = '<main>Mock SSR</main>',
     Map<String, dynamic> mockProps = const {},
-  })  : actionRegistry = actionRegistry ?? ServerFunctionRegistry(),
-        _mockHtml = mockHtml,
-        _mockProps = mockProps;
+  }) : this._(mockHtml, mockProps);
+
+  SsrTestHarness._(this._mockHtml, this._mockProps);
 
   /// Configures the mock SSR worker to return [html] and [props].
   void mockRender(String html, {Map<String, dynamic> props = const {}}) {
@@ -65,11 +49,8 @@ final class SsrTestHarness {
     _mockStatus = status;
   }
 
-  /// Starts a mock SSR worker and builds the application.
-  Future<ReactServerApp> start({
-    String rootComponent = 'test.root',
-    Map<String, dynamic> Function(Request request)? pageProps,
-  }) async {
+  /// Starts the mock worker and returns its portable SSR client.
+  Future<ReactSsrClient> start() async {
     _mockWorker = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     _mockWorker!.listen((request) async {
       final response = request.response;
@@ -88,32 +69,18 @@ final class SsrTestHarness {
       endpoint: Uri.parse('http://127.0.0.1:${_mockWorker!.port}/'),
     );
 
-    _app = ReactServerApp(
-      actionRegistry: actionRegistry,
-      staticHandler: (request) => Response.ok('static:${request.url.path}'),
-      indexTemplate: indexTemplate,
-      ssr: _ssrClient,
-      rootComponent: rootComponent,
-      pageProps: pageProps ?? (_) => {'title': 'Test'},
-      authenticate: authenticate,
-    );
-
-    return _app!;
+    return _ssrClient!;
   }
 
-  /// Creates an in-memory test client for the current app.
-  TestClient createClient() {
-    if (_app == null) {
-      throw StateError('Call start() before createClient()');
-    }
-    return TestClient.inMemory(ShelfRequestHandler(_app!.handler));
-  }
+  /// The started SSR client.
+  ReactSsrClient get client =>
+      _ssrClient ?? (throw StateError('Call start() before accessing client'));
 
-  /// Returns the current app handler.
-  Handler get handler {
-    if (_app == null) throw StateError('Call start() before accessing handler');
-    return _app!.handler;
-  }
+  /// Creates a client using the server adapter selected by the test.
+  TestClient createClient(
+    RequestHandler handler, {
+    TransportMode mode = TransportMode.inMemory,
+  }) => TestClient(handler, mode: mode);
 
   Future<void> close() async {
     _ssrClient?.close();
@@ -139,7 +106,7 @@ extension SsrResponseAssertions on TestResponse {
 
   /// Asserts the response is HTML.
   TestResponse assertIsHtml() {
-    final contentType = headers['content-type']?.first ?? '';
+    final contentType = headerValue(HttpHeaders.contentTypeHeader);
     if (!contentType.contains('text/html')) {
       throw TestFailure('Expected HTML content-type but got "$contentType"');
     }

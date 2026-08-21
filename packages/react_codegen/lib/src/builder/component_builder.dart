@@ -36,7 +36,8 @@ final class ReactComponentBuilder implements Builder {
     if (path.contains('.react.') ||
         path.contains('.action.') ||
         path.contains('.client.') ||
-        path.contains('.registry.')) {
+        path.contains('.registry.') ||
+        path.split('/').contains('.generated')) {
       return;
     }
 

@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'payment_request.dart';
-import 'service_workers.dart';
 
 abstract interface class AddressErrors {
   String? get addressLine;
@@ -223,7 +222,8 @@ abstract interface class PaymentRequestDetailsUpdate {
   set shippingAddressErrors(AddressErrors? value);
 }
 
-final class PaymentRequestDetailsUpdateValue implements PaymentRequestDetailsUpdate {
+final class PaymentRequestDetailsUpdateValue
+    implements PaymentRequestDetailsUpdate {
   @override
   String? error;
   @override
@@ -326,4 +326,3 @@ final class PaymentShippingOptionValue implements PaymentShippingOption {
 }
 
 typedef PaymentShippingType = String;
-

@@ -55,6 +55,25 @@ void main() {
     expect(binding.listenerCalls, 2);
     expect(binding.snapshot(), 2);
   });
+
+  test(
+    'useBlocSelector exposes the selected external-store snapshot',
+    () async {
+      final bloc = CounterBloc();
+      addTearDown(bloc.close);
+      final binding = _VmBinding(bloc: bloc);
+      runWithReactRuntime(_runtime(binding), () {
+        final initial = useBlocSelector(bloc, (state) => 'count:$state');
+        expect(initial, 'count:0');
+        expect(binding.snapshot(), 'count:0');
+        bloc.add(_Increment());
+      });
+
+      await pumpEventQueue();
+      expect(binding.listenerCalls, 1);
+      expect(binding.snapshot(), 'count:1');
+    },
+  );
 }
 
 final class _Increment {}
@@ -66,11 +85,11 @@ final class CounterBloc extends Bloc<_Increment, int> {
 }
 
 ReactRuntime _runtime(_VmBinding binding) => ReactRuntime(
-      target: ReactRenderTarget.test,
-      capabilities: ReactRuntimeCapabilities.browser,
-      binding: binding,
-      renderer: _VmRenderer(),
-    );
+  target: ReactRenderTarget.test,
+  capabilities: ReactRuntimeCapabilities.browser,
+  binding: binding,
+  renderer: _VmRenderer(),
+);
 
 final class _VmRenderer implements ReactRenderer {
   @override

@@ -58,18 +58,22 @@ final class ServerClientImportAnalyzer {
         diagnostics.add(
           ReactDiagnostic(
             code: ReactDiagnosticCode.jsInteropInServer,
-            message: 'JS interop import `$uri` must not be used in server context (`$filePath`).',
+            message:
+                'JS interop import `$uri` must not be used in server context (`$filePath`).',
             severity: ReactDiagnosticSeverity.error,
-            correction: 'Move browser-only code to `web/` or a `@ClientOnly` component.',
+            correction:
+                'Move browser-only code to `web/` or a `@ClientOnly` component.',
           ),
         );
       } else if (_isBrowserPackageUri(uri)) {
         diagnostics.add(
           ReactDiagnostic(
             code: ReactDiagnosticCode.browserImportInServer,
-            message: 'Browser package import `$uri` must not be used in server context (`$filePath`).',
+            message:
+                'Browser package import `$uri` must not be used in server context (`$filePath`).',
             severity: ReactDiagnosticSeverity.warning,
-            correction: 'Use portable `package:react` or the public `*.react.dart` API.',
+            correction:
+                'Use portable `package:react` or the public `*.react.dart` API.',
           ),
         );
       }
@@ -82,9 +86,13 @@ final class ServerClientImportAnalyzer {
     if (normalized.contains('bin/')) return true;
     if (normalized.endsWith('lib/ssr.dart')) return true;
     if (normalized.contains('lib/ssr_registry')) return true;
-    if (normalized.contains('_server.dart') || normalized.endsWith('/server.dart')) return true;
+    if (normalized.contains('_server.dart') ||
+        normalized.endsWith('/server.dart')) {
+      return true;
+    }
     // Demo: `lib/import_errors.dart` simulates `bin/server.dart` server context
-    if (normalized.contains('import_errors.dart') && !normalized.contains('import_errors_client')) {
+    if (normalized.contains('import_errors.dart') &&
+        !normalized.contains('import_errors_client')) {
       return true;
     }
     // Any non-web, non-generated lib file importing js interop is also suspect
@@ -110,9 +118,15 @@ final class ServerClientImportAnalyzer {
   }
 
   String _publicApiFor(String uri) {
-    if (uri.endsWith('.react.g.dart')) return uri.replaceAll('.react.g.dart', '.react.dart');
-    if (uri.endsWith('.client.g.dart')) return uri.replaceAll('.client.g.dart', '.react.dart');
-    if (uri.endsWith('.registry.g.dart')) return 'react_components.g.dart (aggregate)';
+    if (uri.endsWith('.react.g.dart')) {
+      return uri.replaceAll('.react.g.dart', '.react.dart');
+    }
+    if (uri.endsWith('.client.g.dart')) {
+      return uri.replaceAll('.client.g.dart', '.react.dart');
+    }
+    if (uri.endsWith('.registry.g.dart')) {
+      return 'react_components.g.dart (aggregate)';
+    }
     return '*.react.dart';
   }
 
@@ -120,8 +134,11 @@ final class ServerClientImportAnalyzer {
       uri == 'dart:js_interop' || uri == 'dart:js_interop_unsafe';
 
   bool _isBrowserPackageUri(String uri) =>
-      uri.startsWith('package:react_js') ||
-      uri.startsWith('package:react_dom') ||
-      uri.startsWith('package:react_web') ||
-      uri.startsWith('package:web');
+      _isPackageUri(uri, 'react_js') ||
+      _isPackageUri(uri, 'react_dom') ||
+      _isPackageUri(uri, 'react_web') ||
+      _isPackageUri(uri, 'web');
+
+  bool _isPackageUri(String uri, String package) =>
+      uri == 'package:$package' || uri.startsWith('package:$package/');
 }

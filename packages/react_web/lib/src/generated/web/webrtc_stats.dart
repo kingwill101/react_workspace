@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: webrtc-stats
 // ignore_for_file: type=lint
 
-import 'webrtc.dart';
 import 'hr_time.dart';
+import 'webrtc.dart';
 
 abstract interface class RTCAudioPlayoutStats {
   String get kind;
@@ -677,10 +677,7 @@ final class RTCMediaSourceStatsValue implements RTCMediaSourceStats {
   @override
   String kind;
 
-  RTCMediaSourceStatsValue({
-    required this.trackIdentifier,
-    required this.kind,
-  });
+  RTCMediaSourceStatsValue({required this.trackIdentifier, required this.kind});
 }
 
 abstract interface class RTCOutboundRtpStreamStats {
@@ -746,7 +743,8 @@ abstract interface class RTCOutboundRtpStreamStats {
   set scalabilityMode(String? value);
 }
 
-final class RTCOutboundRtpStreamStatsValue implements RTCOutboundRtpStreamStats {
+final class RTCOutboundRtpStreamStatsValue
+    implements RTCOutboundRtpStreamStats {
   @override
   String? mid;
   @override
@@ -872,7 +870,8 @@ abstract interface class RTCReceivedRtpStreamStats {
   set jitter(double? value);
 }
 
-final class RTCReceivedRtpStreamStatsValue implements RTCReceivedRtpStreamStats {
+final class RTCReceivedRtpStreamStatsValue
+    implements RTCReceivedRtpStreamStats {
   @override
   int? packetsReceived;
   @override
@@ -900,7 +899,8 @@ abstract interface class RTCRemoteInboundRtpStreamStats {
   set roundTripTimeMeasurements(int? value);
 }
 
-final class RTCRemoteInboundRtpStreamStatsValue implements RTCRemoteInboundRtpStreamStats {
+final class RTCRemoteInboundRtpStreamStatsValue
+    implements RTCRemoteInboundRtpStreamStats {
   @override
   String? localId;
   @override
@@ -936,7 +936,8 @@ abstract interface class RTCRemoteOutboundRtpStreamStats {
   set roundTripTimeMeasurements(int? value);
 }
 
-final class RTCRemoteOutboundRtpStreamStatsValue implements RTCRemoteOutboundRtpStreamStats {
+final class RTCRemoteOutboundRtpStreamStatsValue
+    implements RTCRemoteOutboundRtpStreamStats {
   @override
   String? localId;
   @override
@@ -1002,10 +1003,7 @@ final class RTCSentRtpStreamStatsValue implements RTCSentRtpStreamStats {
   @override
   int? bytesSent;
 
-  RTCSentRtpStreamStatsValue({
-    this.packetsSent,
-    this.bytesSent,
-  });
+  RTCSentRtpStreamStatsValue({this.packetsSent, this.bytesSent});
 }
 
 typedef RTCStatsIceCandidatePairState = String;
@@ -1129,4 +1127,3 @@ final class RTCVideoSourceStatsValue implements RTCVideoSourceStats {
     this.framesPerSecond,
   });
 }
-

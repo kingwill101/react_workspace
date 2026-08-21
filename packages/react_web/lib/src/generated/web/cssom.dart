@@ -5,7 +5,6 @@
 import 'css_animations.dart';
 import 'css_nav.dart';
 import 'web_animations_2.dart';
-import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CSSGroupingRule {
@@ -29,7 +28,7 @@ abstract interface class CSSNamespaceRule {
 
 abstract interface class CSSPageRule {
   Object get selectorText;
-   set selectorText(Object value);
+  set selectorText(Object value);
   Object get style;
 }
 
@@ -40,7 +39,7 @@ abstract interface class CSSRuleList {
 
 abstract interface class CSSStyleDeclaration {
   Object get cssText;
-   set cssText(Object value);
+  set cssText(Object value);
   int get length;
   Object item(int index);
   Object getPropertyValue(Object property);
@@ -51,11 +50,8 @@ abstract interface class CSSStyleDeclaration {
 }
 
 abstract interface class CSSStyleSheet {
-  factory CSSStyleSheet([CSSStyleSheetInit? options]) =>
-      WebRuntime.current.createWebObject<CSSStyleSheet>(
-        'CSSStyleSheet',
-        [options],
-      );
+  factory CSSStyleSheet([CSSStyleSheetInit? options]) => WebRuntime.current
+      .createWebObject<CSSStyleSheet>('CSSStyleSheet', [options]);
   CSSRule? get ownerRule;
   CSSRuleList get cssRules;
   int insertRule(Object rule, [int? index]);
@@ -84,17 +80,13 @@ final class CSSStyleSheetInitValue implements CSSStyleSheetInit {
   @override
   bool? disabled;
 
-  CSSStyleSheetInitValue({
-    this.baseURL,
-    this.media,
-    this.disabled,
-  });
+  CSSStyleSheetInitValue({this.baseURL, this.media, this.disabled});
 }
 
 abstract interface class DocumentOrShadowRoot {
   StyleSheetList get styleSheets;
   List<CSSStyleSheet> get adoptedStyleSheets;
-   set adoptedStyleSheets(List<CSSStyleSheet> value);
+  set adoptedStyleSheets(List<CSSStyleSheet> value);
   Element? get fullscreenElement;
   Element? get activeElement;
   Element? get pictureInPictureElement;
@@ -108,7 +100,7 @@ abstract interface class LinkStyle {
 
 abstract interface class MediaList {
   Object get mediaText;
-   set mediaText(Object value);
+  set mediaText(Object value);
   int get length;
   Object item(int index);
   void appendMedium(Object medium);
@@ -116,18 +108,17 @@ abstract interface class MediaList {
 }
 
 abstract interface class StyleSheet {
-  Object get type;
+  Object get type_;
   String? get href;
   Object get ownerNode;
   CSSStyleSheet? get parentStyleSheet;
   String? get title;
   MediaList get media;
   bool get disabled;
-   set disabled(bool value);
+  set disabled(bool value);
 }
 
 abstract interface class StyleSheetList {
   CSSStyleSheet? item(int index);
   int get length;
 }
-

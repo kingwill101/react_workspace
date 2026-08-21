@@ -1,17 +1,26 @@
 import 'dart:io';
 
+import 'package:react_testing/react_testing.dart';
 import 'package:server_testing/server_testing.dart';
 
 import '_static_handler.dart';
 
 void main() {
-  final handler = StaticFileHandler(Directory('examples/client/build/react'));
+  late ReactTestHarness react;
+  final handler = StaticFileHandler(Directory('build/react'));
 
   setUpAll(() async {
+    react = await ReactTestHarness.start(
+      projectRoot: Directory.current,
+      ssr: false,
+    );
     await handler.startServer();
   });
 
-  tearDownAll(() => handler.close());
+  tearDownAll(() async {
+    await handler.close();
+    await react.close();
+  });
 
   serverTest('serves the home page at /', (client, _) async {
     final response = await client.get('/');
@@ -39,7 +48,10 @@ void main() {
     expect(response.body, contains('esm.sh/react-dom'));
   }, handler: handler);
 
-  serverTest('SPA fallback serves index.html for unknown paths', (client, _) async {
+  serverTest('SPA fallback serves index.html for unknown paths', (
+    client,
+    _,
+  ) async {
     final response = await client.get('/any/route');
     response.assertStatus(200);
     expect(response.body, contains('<div id="app"></div>'));

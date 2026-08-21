@@ -67,10 +67,7 @@ final class ProfilerSampleValue implements ProfilerSample {
   @override
   int? stackId;
 
-  ProfilerSampleValue({
-    required this.timestamp,
-    this.stackId,
-  });
+  ProfilerSampleValue({required this.timestamp, this.stackId});
 }
 
 abstract interface class ProfilerStack {
@@ -86,10 +83,7 @@ final class ProfilerStackValue implements ProfilerStack {
   @override
   int frameId;
 
-  ProfilerStackValue({
-    this.parentId,
-    required this.frameId,
-  });
+  ProfilerStackValue({this.parentId, required this.frameId});
 }
 
 abstract interface class ProfilerTrace {
@@ -120,4 +114,3 @@ final class ProfilerTraceValue implements ProfilerTrace {
     required this.samples,
   });
 }
-

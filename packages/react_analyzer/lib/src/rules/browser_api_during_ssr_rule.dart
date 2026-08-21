@@ -14,13 +14,19 @@ class BrowserApiDuringSsrRule extends AnalysisRule {
   );
 
   BrowserApiDuringSsrRule()
-      : super(name: 'browser_api_during_ssr', description: 'Flags browser APIs during SSR.');
+    : super(
+        name: 'browser_api_during_ssr',
+        description: 'Flags browser APIs during SSR.',
+      );
 
   @override
   LintCode get diagnosticCode => code;
 
   @override
-  void registerNodeProcessors(RuleVisitorRegistry registry, RuleContext context) {
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
     registry.addCompilationUnit(this, _Visitor(this, context));
   }
 }

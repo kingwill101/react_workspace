@@ -2,16 +2,15 @@
 // Neutral Web surface for spec: orientation-sensor
 // ignore_for_file: type=lint
 
-import 'generic_sensor.dart';
-import 'geometry.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AbsoluteOrientationSensor {
-  factory AbsoluteOrientationSensor([OrientationSensorOptions? sensorOptions]) =>
-      WebRuntime.current.createWebObject<AbsoluteOrientationSensor>(
-        'AbsoluteOrientationSensor',
-        [sensorOptions],
-      );
+  factory AbsoluteOrientationSensor([
+    OrientationSensorOptions? sensorOptions,
+  ]) => WebRuntime.current.createWebObject<AbsoluteOrientationSensor>(
+    'AbsoluteOrientationSensor',
+    [sensorOptions],
+  );
 }
 
 abstract interface class OrientationSensor {
@@ -30,18 +29,16 @@ final class OrientationSensorOptionsValue implements OrientationSensorOptions {
   @override
   OrientationSensorLocalCoordinateSystem? referenceFrame;
 
-  OrientationSensorOptionsValue({
-    this.referenceFrame,
-  });
+  OrientationSensorOptionsValue({this.referenceFrame});
 }
 
 abstract interface class RelativeOrientationSensor {
-  factory RelativeOrientationSensor([OrientationSensorOptions? sensorOptions]) =>
-      WebRuntime.current.createWebObject<RelativeOrientationSensor>(
-        'RelativeOrientationSensor',
-        [sensorOptions],
-      );
+  factory RelativeOrientationSensor([
+    OrientationSensorOptions? sensorOptions,
+  ]) => WebRuntime.current.createWebObject<RelativeOrientationSensor>(
+    'RelativeOrientationSensor',
+    [sensorOptions],
+  );
 }
 
 typedef RotationMatrixType = Object;
-

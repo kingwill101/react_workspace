@@ -21,11 +21,7 @@ final class AdRenderValue implements AdRender {
   @override
   String? height;
 
-  AdRenderValue({
-    required this.url,
-    this.width,
-    this.height,
-  });
+  AdRenderValue({required this.url, this.width, this.height});
 }
 
 abstract interface class AuctionAd {
@@ -247,16 +243,14 @@ abstract interface class AuctionAdInterestGroupKey {
   set name(String value);
 }
 
-final class AuctionAdInterestGroupKeyValue implements AuctionAdInterestGroupKey {
+final class AuctionAdInterestGroupKeyValue
+    implements AuctionAdInterestGroupKey {
   @override
   String owner;
   @override
   String name;
 
-  AuctionAdInterestGroupKeyValue({
-    required this.owner,
-    required this.name,
-  });
+  AuctionAdInterestGroupKeyValue({required this.owner, required this.name});
 }
 
 abstract interface class BiddingBrowserSignals {
@@ -340,7 +334,8 @@ abstract interface class DirectFromSellerSignalsForBuyer {
   set perBuyerSignals(Object? value);
 }
 
-final class DirectFromSellerSignalsForBuyerValue implements DirectFromSellerSignalsForBuyer {
+final class DirectFromSellerSignalsForBuyerValue
+    implements DirectFromSellerSignalsForBuyer {
   @override
   Object? auctionSignals;
   @override
@@ -359,7 +354,8 @@ abstract interface class DirectFromSellerSignalsForSeller {
   set sellerSignals(Object? value);
 }
 
-final class DirectFromSellerSignalsForSellerValue implements DirectFromSellerSignalsForSeller {
+final class DirectFromSellerSignalsForSellerValue
+    implements DirectFromSellerSignalsForSeller {
   @override
   Object? auctionSignals;
   @override
@@ -539,10 +535,7 @@ final class PreviousWinValue implements PreviousWin {
   @override
   String adJSON;
 
-  PreviousWinValue({
-    required this.timeDelta,
-    required this.adJSON,
-  });
+  PreviousWinValue({required this.timeDelta, required this.adJSON});
 }
 
 abstract interface class ReportResultBrowserSignals {
@@ -556,7 +549,8 @@ abstract interface class ReportResultBrowserSignals {
   set dataVersion(int? value);
 }
 
-final class ReportResultBrowserSignalsValue implements ReportResultBrowserSignals {
+final class ReportResultBrowserSignalsValue
+    implements ReportResultBrowserSignals {
   @override
   double desirability;
   @override
@@ -769,4 +763,3 @@ final class ScoringBrowserSignalsValue implements ScoringBrowserSignals {
     this.forDebuggingOnlyInCooldownOrLockout,
   });
 }
-

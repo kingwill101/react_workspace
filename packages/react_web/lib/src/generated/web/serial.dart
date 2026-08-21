@@ -166,4 +166,3 @@ final class SerialPortRequestOptionsValue implements SerialPortRequestOptions {
     this.allowedBluetoothServiceClassIds,
   });
 }
-

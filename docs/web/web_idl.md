@@ -328,86 +328,29 @@ This avoids tightly coupling the project to internal Dart generator implementati
 
 # 5. Upstream acquisition instructions
 
-Pin the upstream repository for reproducibility.
+The generated surface follows the exact published `package:web` version used
+by `react_web` and `react_web_generator`. The current target is `web: 1.1.1`,
+whose upstream source is the `web-v1.1.1` tag at commit
+`222164b5010cb0324d4132666f1d43750ffc6448`.
 
-The revision inspected for this plan is:
-
-```text
-12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431
-```
-
-## Clone the complete upstream source
+The source of truth is `tool/web_idl/pin.json`. The matching Dart web checkout
+is the tracked `third_party/web` submodule; do not create a second vendor clone.
 
 ```bash
-export DART_WEB_REV=12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431
-
-mkdir -p tool/vendor
-
-git clone \
-  https://github.com/dart-lang/web.git \
-  tool/vendor/dart_web
-
-git -C tool/vendor/dart_web \
-  checkout --detach "$DART_WEB_REV"
+git submodule update --init third_party/web
+dart run tool/web_idl/update.dart
+dart run tool/web_idl/generate_factories.dart
+dart run tool/web_idl/verify.dart --strict
 ```
 
-The checkout should remain excluded from the main repository:
+The update command validates the submodule commit and both exact `web`
+dependencies before reading the upstream lockfile. The workspace-owned
+`tool/web_idl/preparse.mjs` then normalizes the locked WebRef datasets into
+`tool/web_idl/snapshots/web_apis.json` and records their versions in
+`tool/web_idl/snapshots/provenance.json`.
 
-```gitignore
-/tool/vendor/dart_web/
-```
-
-## Generate the normalized Web IDL data
-
-Use a disposable upstream checkout because the official command regenerates files inside the upstream `web` package:
-
-```bash
-cd tool/vendor/dart_web
-
-dart pub get
-
-dart run \
-  web_generator/bin/update_idl_bindings.dart
-```
-
-The script automatically runs the Web IDL pre-parser when no explicit input files are provided.
-
-Locate the normalized output:
-
-```bash
-find .dart_tool \
-  -name web_apis.json \
-  -print
-```
-
-Copy it into this repository:
-
-```bash
-mkdir -p \
-  ../../react_workspace/tool/web_idl/snapshots
-
-cp \
-  .dart_tool/web_generator/web_apis.json \
-  ../../react_workspace/tool/web_idl/snapshots/web_apis.json
-```
-
-Also retain provenance:
-
-```json
-{
-  "dartWebRevision": "12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431",
-  "source": "dart-lang/web web_generator",
-  "generateAll": false
-}
-```
-
-Store that as:
-
-```text
-tool/web_idl/snapshots/provenance.json
-```
-
-Do not use `--generate-all` initially. The upstream option includes experimental and non-standard APIs.
+See the [maintainer guide](../../.site/docs/maintainers/maintenance.mdx) for the
+complete update, review, and validation checklist.
 
 ---
 
@@ -416,27 +359,14 @@ Do not use `--generate-all` initially. The upstream option includes experimental
 ## Main repositories
 
 * [Dart web repository](https://github.com/dart-lang/web)
-* [Pinned Dart web revision](https://github.com/dart-lang/web/tree/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431)
-* [Web generator at pinned revision](https://github.com/dart-lang/web/tree/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/web_generator)
-* [`js_interop_gen` at pinned revision](https://github.com/dart-lang/web/tree/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/js_interop_gen)
-* [`package:web` source at pinned revision](https://github.com/dart-lang/web/tree/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/web)
+* [Pinned Dart web revision](https://github.com/dart-lang/web/tree/222164b5010cb0324d4132666f1d43750ffc6448)
+* [Web generator at the pinned revision](https://github.com/dart-lang/web/tree/222164b5010cb0324d4132666f1d43750ffc6448/web_generator)
+* [`package:web` source at the pinned revision](https://github.com/dart-lang/web/tree/222164b5010cb0324d4132666f1d43750ffc6448/web)
 * [`package:web` on pub.dev](https://pub.dev/packages/web)
 
-## Generator entry points
-
-* [`update_idl_bindings.dart`](https://github.com/dart-lang/web/blob/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/web_generator/bin/update_idl_bindings.dart)
-* [Raw `update_idl_bindings.dart`](https://raw.githubusercontent.com/dart-lang/web/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/web_generator/bin/update_idl_bindings.dart)
-* [`preparse_idls.mjs`](https://github.com/dart-lang/web/blob/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/web_generator/bin/preparse_idls.mjs)
-* [Raw `preparse_idls.mjs`](https://raw.githubusercontent.com/dart-lang/web/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/web_generator/bin/preparse_idls.mjs)
-* [`web_generator/package.json`](https://github.com/dart-lang/web/blob/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/web_generator/package.json)
-* [Raw `web_generator/package.json`](https://raw.githubusercontent.com/dart-lang/web/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/web_generator/package.json)
-
-## Binding-generation internals to study
-
-* [`js_interop_gen/lib/src/dart_main.dart`](https://github.com/dart-lang/web/blob/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/js_interop_gen/lib/src/dart_main.dart)
-* [Raw `dart_main.dart`](https://raw.githubusercontent.com/dart-lang/web/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/js_interop_gen/lib/src/dart_main.dart)
-* [`generate_bindings.dart`](https://github.com/dart-lang/web/blob/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/js_interop_gen/lib/src/generate_bindings.dart)
-* [Raw `generate_bindings.dart`](https://raw.githubusercontent.com/dart-lang/web/12a9ca2ebc08f5a6f2d69aebc7daa1f5a2e6a431/js_interop_gen/lib/src/generate_bindings.dart)
+The workspace normalizer intentionally owns the stable handoff from the
+upstream locked datasets. It does not import Dart web's private generator
+libraries.
 
 ## Source datasets
 
@@ -1059,19 +989,21 @@ Move the handwritten `dom.dart` implementation behind `react_web` temporarily.
 Deliverables:
 
 ```text
+tool/web_idl/pin.json
 tool/web_idl/update.dart
+tool/web_idl/preparse.mjs
 tool/web_idl/snapshots/web_apis.json
 tool/web_idl/snapshots/provenance.json
 ```
 
 The update command must:
 
-1. Clone or update the pinned Dart web checkout.
-2. Check out the configured revision.
-3. Run the upstream generator.
-4. Copy the normalized JSON.
-5. Record source revisions.
-6. Refuse to leave an unrecorded snapshot change.
+1. Validate the tracked `third_party/web` submodule against `pin.json`.
+2. Validate the exact `package:web` dependency declarations.
+3. Install the WebRef datasets from the upstream lockfile.
+4. Normalize those datasets with the workspace pre-parser.
+5. Record the package, source, and dataset versions in provenance.
+6. Fail instead of silently selecting a different package or source revision.
 
 ## W1.4 — Build package:web symbol resolver
 

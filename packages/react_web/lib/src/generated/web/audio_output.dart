@@ -4,9 +4,9 @@
 
 import 'encrypted_media.dart';
 import 'html.dart';
+import 'image_capture.dart';
 import 'mediacapture_streams.dart';
 import 'remote_playback.dart';
-import 'image_capture.dart';
 import 'screen_capture.dart';
 
 abstract interface class AudioOutputOptions {
@@ -18,9 +18,7 @@ final class AudioOutputOptionsValue implements AudioOutputOptions {
   @override
   String? deviceId;
 
-  AudioOutputOptionsValue({
-    this.deviceId,
-  });
+  AudioOutputOptionsValue({this.deviceId});
 }
 
 abstract interface class HTMLMediaElement {
@@ -28,55 +26,55 @@ abstract interface class HTMLMediaElement {
   Future<void> setSinkId(String sinkId);
   MediaKeys? get mediaKeys;
   EventHandler get onencrypted;
-   set onencrypted(EventHandler value);
+  set onencrypted(EventHandler value);
   EventHandler get onwaitingforkey;
-   set onwaitingforkey(EventHandler value);
+  set onwaitingforkey(EventHandler value);
   Future<void> setMediaKeys(MediaKeys? mediaKeys);
   MediaError? get error;
   String get src;
-   set src(String value);
+  set src(String value);
   MediaProvider? get srcObject;
-   set srcObject(MediaProvider? value);
+  set srcObject(MediaProvider? value);
   String get currentSrc;
   String? get crossOrigin;
-   set crossOrigin(String? value);
+  set crossOrigin(String? value);
   int get networkState;
   String get preload;
-   set preload(String value);
+  set preload(String value);
   TimeRanges get buffered;
   void load();
-  CanPlayTypeResult canPlayType(String type);
+  CanPlayTypeResult canPlayType(String type_);
   int get readyState;
   bool get seeking;
   double get currentTime;
-   set currentTime(double value);
+  set currentTime(double value);
   void fastSeek(double time);
   double get duration;
   Object getStartDate();
   bool get paused;
   double get defaultPlaybackRate;
-   set defaultPlaybackRate(double value);
+  set defaultPlaybackRate(double value);
   double get playbackRate;
-   set playbackRate(double value);
+  set playbackRate(double value);
   bool get preservesPitch;
-   set preservesPitch(bool value);
+  set preservesPitch(bool value);
   TimeRanges get played;
   TimeRanges get seekable;
   bool get ended;
   bool get autoplay;
-   set autoplay(bool value);
+  set autoplay(bool value);
   bool get loop;
-   set loop(bool value);
+  set loop(bool value);
   Future<void> play();
   void pause();
   bool get controls;
-   set controls(bool value);
+  set controls(bool value);
   double get volume;
-   set volume(double value);
+  set volume(double value);
   bool get muted;
-   set muted(bool value);
+  set muted(bool value);
   bool get defaultMuted;
-   set defaultMuted(bool value);
+  set defaultMuted(bool value);
   AudioTrackList get audioTracks;
   VideoTrackList get videoTracks;
   TextTrackList get textTracks;
@@ -84,15 +82,14 @@ abstract interface class HTMLMediaElement {
   MediaStream captureStream();
   RemotePlayback get remote;
   bool get disableRemotePlayback;
-   set disableRemotePlayback(bool value);
+  set disableRemotePlayback(bool value);
 }
 
 abstract interface class MediaDevices {
   EventHandler get ondevicechange;
-   set ondevicechange(EventHandler value);
+  set ondevicechange(EventHandler value);
   Future<List<MediaDeviceInfo>> enumerateDevices();
   MediaTrackSupportedConstraints getSupportedConstraints();
   Future<MediaStream> getUserMedia([MediaStreamConstraints? constraints]);
   Future<MediaStream> getDisplayMedia([DisplayMediaStreamOptions? options]);
 }
-

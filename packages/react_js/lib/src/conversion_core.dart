@@ -28,6 +28,47 @@ JSAny? toReactJS(Object? v) => switch (v) {
 JSAny renderNode(ReactNode n) =>
     currentReactRuntime.renderer.render(n) as JSAny;
 
+/// Decodes React's native `props.children` value into portable child nodes.
+List<ReactNode> reactChildrenFromJS(JSObject props) {
+  final result = <ReactNode>[];
+
+  void append(JSAny? value) {
+    if (value == null || value.isUndefined) return;
+    if (value.isA<JSBoolean>()) return;
+    if (value.isA<JSString>()) {
+      result.add(Text((value as JSString).toDart));
+      return;
+    }
+    if (value.isA<JSNumber>()) {
+      result.add(Text('${(value as JSNumber).toDartDouble}'));
+      return;
+    }
+    if (value.isA<JSArray<JSAny?>>()) {
+      for (final child in (value as JSArray<JSAny?>).toDart) {
+        append(child);
+      }
+      return;
+    }
+    result.add(OpaqueReactNode(value));
+  }
+
+  append(props.getProperty('children'.toJS));
+  return result;
+}
+
+/// Decodes one required React child from a component props object.
+ReactNode requiredReactChildFromJS(JSObject props, {String? component}) {
+  final children = reactChildrenFromJS(props);
+  if (children.length != 1) {
+    final prefix = component ?? 'Component';
+    throw ArgumentError(
+      '$prefix requires exactly one ReactNode child, but received '
+      '${children.length}.',
+    );
+  }
+  return children.single;
+}
+
 // ═══════════════════════════════════════════
 // Safe property access — prevents dart2js -O2 from
 // inlining `getProperty` to `js.prop` which would
@@ -122,15 +163,18 @@ T fromJS<T>(JSAny? js) {
   if (T == num) return (js as JSNumber).toDartDouble as T;
   // JSArray implements List<E> but with a reified E that won't match
   // the expected List<TodoItem> etc. Convert to a plain list.
-  if (js is JSArray) {
+  if (js != null && js.isA<JSArray<JSAny?>>()) {
+    final array = js as JSArray<JSAny?>;
     final result = <Object?>[];
-    for (var i = 0; i < js.length; i++) {
-      result.add(fromJS<Object?>(js[i]));
+    for (var i = 0; i < array.length; i++) {
+      result.add(fromJS<Object?>(array[i]));
     }
-    return (result).cast<T>() as T;
+    return _castDart<T>(result);
   }
-  return js as T;
+  return _castDart<T>(js);
 }
+
+T _castDart<T>(Object? value) => value as T;
 
 // ═══════════════════════════════════════════
 // Internal helpers

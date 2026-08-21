@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: periodic-background-sync
 // ignore_for_file: type=lint
 
-import 'service_workers.dart';
-
 abstract interface class BackgroundSyncOptions {
   int? get minInterval;
   set minInterval(int? value);
@@ -13,9 +11,7 @@ final class BackgroundSyncOptionsValue implements BackgroundSyncOptions {
   @override
   int? minInterval;
 
-  BackgroundSyncOptionsValue({
-    this.minInterval,
-  });
+  BackgroundSyncOptionsValue({this.minInterval});
 }
 
 abstract interface class PeriodicSyncEventInit {
@@ -27,8 +23,5 @@ final class PeriodicSyncEventInitValue implements PeriodicSyncEventInit {
   @override
   String tag;
 
-  PeriodicSyncEventInitValue({
-    required this.tag,
-  });
+  PeriodicSyncEventInitValue({required this.tag});
 }
-

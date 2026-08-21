@@ -2,15 +2,16 @@
 // Neutral Web surface for spec: orientation-event
 // ignore_for_file: type=lint
 
-import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class DeviceMotionEvent {
-  factory DeviceMotionEvent(String type, [DeviceMotionEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<DeviceMotionEvent>(
-        'DeviceMotionEvent',
-        [type, eventInitDict],
-      );
+  factory DeviceMotionEvent(
+    String type_, [
+    DeviceMotionEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<DeviceMotionEvent>(
+    'DeviceMotionEvent',
+    [type_, eventInitDict],
+  );
   DeviceMotionEventAcceleration? get acceleration;
   DeviceMotionEventAcceleration? get accelerationIncludingGravity;
   DeviceMotionEventRotationRate? get rotationRate;
@@ -32,7 +33,8 @@ abstract interface class DeviceMotionEventAccelerationInit {
   set z(double? value);
 }
 
-final class DeviceMotionEventAccelerationInitValue implements DeviceMotionEventAccelerationInit {
+final class DeviceMotionEventAccelerationInitValue
+    implements DeviceMotionEventAccelerationInit {
   @override
   double? x;
   @override
@@ -40,11 +42,7 @@ final class DeviceMotionEventAccelerationInitValue implements DeviceMotionEventA
   @override
   double? z;
 
-  DeviceMotionEventAccelerationInitValue({
-    this.x,
-    this.y,
-    this.z,
-  });
+  DeviceMotionEventAccelerationInitValue({this.x, this.y, this.z});
 }
 
 abstract interface class DeviceMotionEventInit {
@@ -91,7 +89,8 @@ abstract interface class DeviceMotionEventRotationRateInit {
   set gamma(double? value);
 }
 
-final class DeviceMotionEventRotationRateInitValue implements DeviceMotionEventRotationRateInit {
+final class DeviceMotionEventRotationRateInitValue
+    implements DeviceMotionEventRotationRateInit {
   @override
   double? alpha;
   @override
@@ -99,19 +98,17 @@ final class DeviceMotionEventRotationRateInitValue implements DeviceMotionEventR
   @override
   double? gamma;
 
-  DeviceMotionEventRotationRateInitValue({
-    this.alpha,
-    this.beta,
-    this.gamma,
-  });
+  DeviceMotionEventRotationRateInitValue({this.alpha, this.beta, this.gamma});
 }
 
 abstract interface class DeviceOrientationEvent {
-  factory DeviceOrientationEvent(String type, [DeviceOrientationEventInit? eventInitDict]) =>
-      WebRuntime.current.createWebObject<DeviceOrientationEvent>(
-        'DeviceOrientationEvent',
-        [type, eventInitDict],
-      );
+  factory DeviceOrientationEvent(
+    String type_, [
+    DeviceOrientationEventInit? eventInitDict,
+  ]) => WebRuntime.current.createWebObject<DeviceOrientationEvent>(
+    'DeviceOrientationEvent',
+    [type_, eventInitDict],
+  );
   double? get alpha;
   double? get beta;
   double? get gamma;
@@ -129,7 +126,8 @@ abstract interface class DeviceOrientationEventInit {
   set absolute(bool? value);
 }
 
-final class DeviceOrientationEventInitValue implements DeviceOrientationEventInit {
+final class DeviceOrientationEventInitValue
+    implements DeviceOrientationEventInit {
   @override
   double? alpha;
   @override
@@ -146,4 +144,3 @@ final class DeviceOrientationEventInitValue implements DeviceOrientationEventIni
     this.absolute,
   });
 }
-
