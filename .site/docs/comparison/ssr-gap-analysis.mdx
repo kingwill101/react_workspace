@@ -12,6 +12,7 @@ owns ordinary API routes and middleware.
 
 - `@serverFunction` actions with codecs, contract hashes, and request context;
 - `renderToString` and opt-in `renderToPipeableStream` through the Node worker;
+- `react_tool prerender` for explicit routes or JSON route manifests;
 - deep-link SSR with `react_router` server bindings;
 - `ReactPageMetadata` for title, SEO, Open Graph, links, and JSON-LD;
 - `ReactDocumentCache` with TTL, bounds, tag invalidation, and stale-while-revalidate;
@@ -28,6 +29,7 @@ owns ordinary API routes and middleware.
 - partial prerendering beyond streaming SSR;
 - field-aware form validation and optimistic server-action helpers.
 
-The implementation order should be prerendering first, then ISR and PPR. The
-explicit Dart cache API should remain the foundation rather than introducing a
-source-transformed `use cache` directive prematurely.
+The next implementation order is deployment-specific ISR stores, then an
+explicit PPR slot contract. The explicit Dart cache API should remain the
+foundation rather than introducing a source-transformed `use cache` directive
+prematurely.

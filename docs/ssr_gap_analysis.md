@@ -12,6 +12,7 @@ capabilities supplied by the selected Dart server adapter.
 | Request-scoped server context | Supported | Authentication, headers, URI, deadlines, and cancellation. |
 | Buffered SSR | Supported | `ReactSsrClient.render` uses `renderToString` in the generated Node worker. |
 | Streaming SSR | Supported | Opt in with `streamingSsr: true`; uses `renderToPipeableStream` and progressively writes the document. |
+| Static prerendering | Supported | `react_tool prerender` renders explicit routes or a JSON route manifest into HTML files. |
 | Deep-link SSR | Supported | The application root can use `react_router` server bindings and static routing. |
 | Page metadata | Supported | `ReactPageMetadata` emits title, description, canonical, Open Graph, meta/link tags, and JSON-LD. |
 | Document caching | Supported | `ReactDocumentCache` provides TTL, bounded entries, tag invalidation, and stale-while-revalidate for buffered documents. |
@@ -27,9 +28,9 @@ capabilities supplied by the selected Dart server adapter.
 
 ### Static generation and prerendering
 
-`react_tool prerender` now renders a declared route set into static HTML. It
-writes extensionless routes as nested `index.html` files. A route manifest is
-still not generated automatically from the application.
+`react_tool prerender` renders explicit routes or a checked-in JSON route
+manifest into static HTML. It writes extensionless routes as nested
+`index.html` files. Routes are not inferred automatically from the application.
 
 ### Route-manifest ISR
 
