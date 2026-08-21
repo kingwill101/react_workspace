@@ -2,100 +2,81 @@
 sidebar_position: 8
 ---
 
-# State Management
+# State management
 
-Managing state in React Dart applications feels very similar to traditional React or Flutter, but leverages Dart's powerful ecosystem. Depending on the complexity of your application, you can use local hooks, Context, or integrate with popular Dart state management libraries.
+Use local hooks for component state and `useSyncExternalStore`-based adapters
+for external Dart stores. The same portable APIs can render in the browser,
+Node SSR worker, and native component harness.
 
-## 1. Local State with Hooks
-
-For component-level state, use the `useState` hook provided by `package:react`.
-
-```dart
-import 'package:react/react.dart';
-import 'counter.react.dart';
-
-@React()
-ReactNode Counter() {
-  final (count, setCount) = useState(0);
-
-  return div(children: [
-    h1(children: [Text('Count: $count')]),
-    button(
-      onClick: (e) => setCount(count + 1),
-      children: [Text('Increment')],
-    )
-  ]);
-}
-```
-
-State created with `useState` is strictly bound to the component instance.
-
-## 2. Global State via Prop Drilling
-
-For small applications, passing state down as props from a root component is often sufficient. Because Dart has a succinct syntax, prop drilling is less verbose than in some other languages.
-
-## 3. Integrating Dart State Libraries
-
-Because React Dart runs Dart code, you can use existing Dart state management patterns. The challenge is ensuring the React tree re-renders when the state changes.
-
-### Signals (e.g., `signals_dart`)
-
-Signals are highly compatible with React's functional model. You can create a custom hook to subscribe to a signal and trigger a re-render.
+## Local state
 
 ```dart
-import 'package:react/react.dart';
-import 'package:signals_dart/signals_dart.dart';
+import 'package:react_dom/react_dom.dart';
 
-// Create a global signal
-final counterSignal = signal(0);
+@reactComponent
+ReactNode Counter(({int initial}) props) {
+  final (count, setCount) = useState(props.initial);
 
-// A custom hook to bind a signal to React state
-T useSignal<T>(Signal<T> s) {
-  final (val, setVal) = useState(s.value);
-  
-  useEffect(() {
-    final cleanup = s.subscribe((newValue) => setVal(newValue));
-    return cleanup;
-  }, [s]);
-  
-  return val;
-}
-
-@React()
-ReactNode SignalCounter() {
-  final count = useSignal(counterSignal);
-  
   return button(
-    onClick: (_) => counterSignal.value++,
-    children: [Text('Signal Count: $count')],
+    type: 'button',
+    onClick: (_) => setCount(count + 1),
+    children: ['Count: $count'],
   );
 }
 ```
 
-### BLoC / Riverpod
+State belongs to the generated component identity and key. Keep hooks at the
+top level and use stable keys when rendering component lists.
 
-While you *can* use complex libraries like `bloc` or `riverpod`, it often requires writing adapter hooks similar to the `useSignal` example above to bridge the stream/provider emission into a `useState` update.
+## Derived and deferred values
 
-For example, with a Stream:
+Use `useMemo` for expensive derived values, `useDeferredValue` for
+lower-priority rendering, and `useTransition` when a state update may render a
+large subtree.
 
 ```dart
-T? useStream<T>(Stream<T> stream, {T? initialValue}) {
-  final (data, setData) = useState<T?>(initialValue);
-  
-  useEffect(() {
-    final sub = stream.listen(setData);
-    return sub.cancel;
-  }, [stream]);
-  
-  return data;
-}
+final filtered = useMemo(
+  () => items.where((item) => item.matches(query)).toList(),
+  [items, query],
+);
+final deferredItems = useDeferredValue(filtered);
 ```
 
-## Server State vs Client State
+## External Dart stores
 
-When using Server Functions (`@serverFunction`), remember that the server is stateless between requests.
+`useSyncExternalStore` is the primitive for subscriptions outside React:
 
-- **Client State**: UI toggles, form inputs, local caches. Managed via `useState`.
-- **Server State**: Database records, session data. Fetched via Server Functions and stored locally in client state while the user interacts with it.
+```dart
+final value = useSyncExternalStore<int>(
+  store.subscribe,
+  store.snapshot,
+  store.snapshot,
+);
+```
 
-If you need robust server-state caching (similar to React Query or SWR), you can build a custom hook that wraps your Server Function calls, handles `isLoading`/`error` states, and deduplicates requests.
+The third callback supplies an SSR snapshot. It must be deterministic relative
+to the initial browser snapshot to avoid hydration mismatches.
+
+The workspace provides typed adapters:
+
+- `react_bloc`: `BlocProvider`, `useBloc`, `useBlocState`, and
+  `useBlocSelector`;
+- `react_riverpod`: provider-container context and provider subscription
+  hooks;
+- `react_zustand`: a small npm-backed Zustand wrapper and reference for
+  handwritten JavaScript package bridges.
+
+## Context
+
+Use `createContext`, providers, and `useContext` for values scoped to a
+subtree. Context is appropriate for dependencies and configuration; use an
+external store when updates are frequent or selectors should isolate rebuilds.
+
+## Server state
+
+A server function performs authenticated I/O on the Dart server. Its generated
+client proxy returns a `Future`; store the result in local or external state
+and model loading/error transitions explicitly.
+
+Server memory is not browser state. Do not rely on module-level server
+variables for durable multi-instance persistence.

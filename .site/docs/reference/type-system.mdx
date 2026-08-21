@@ -2,79 +2,108 @@
 sidebar_position: 5
 ---
 
-# Type System
+# Type system
 
-React Dart is strongly typed. Because Dart and TypeScript/JavaScript handle types differently, React Dart provides specific primitives to construct the UI tree safely.
+React Dart represents UI as a portable, strongly typed `ReactNode` tree. Dart
+component source is shared by browser compilation, Node SSR, and native tests.
 
-## The `ReactNode` Tree
+## Nodes and children
 
-The core of the UI is the `ReactNode` class. Every component you write must return a `ReactNode`.
+The main node kinds are `Component`, `HostNode`, `ForeignComponent`,
+`Text`, `Fragment`, and `Empty`. Runtime features add lazy, memoized,
+forward-ref, context, suspense, portal, and error-boundary nodes.
 
-- **`Component<P>`**: A custom Dart component.
-- **`HostNode<P>`**: A native DOM element (e.g., `div`, `span`).
-- **`Text`**: A primitive string node. Note that unlike standard React where you can just write `<div>Hello</div>`, in Dart you must explicitly wrap strings: `div(children: [Text('Hello')])`.
-- **`Fragment`**: Used to return multiple children without a wrapping DOM node.
-
-## Props and Records
-
-When the code generator creates a component factory, it aggregates your custom named parameters into a Dart Record.
-
-For example, if you write:
-```dart
-@React()
-ReactNode Avatar({required String src, int size = 48}) { ... }
-```
-
-The internal `Component<P>` type parameter `P` becomes a Record: `({String src, int size})`. The generator handles the mapping between this record and the JavaScript `props` object.
-
-## HTML Elements
-
-React Dart provides typed builders for standard HTML elements. Instead of writing `<div className="foo">`, you write `div(className: 'foo')`.
-
-These builders accept strongly typed arguments for standard DOM attributes:
-- `String? className`
-- `Map<String, Object>? style`
-- `String? id`
-- `bool? disabled`
-
-### Callbacks and Events
-
-Event handlers are strongly typed.
+Host nodes are created through typed factories:
 
 ```dart
-button(
-  onClick: (event) {
-    // event is a typed synthetic event, not a raw dynamic JS object
-    print('Clicked!');
-  }
+div(
+  id: 'profile',
+  className: classNames('card', {'selected': selected}),
+  style: css(padding: 16),
+  children: [
+    'Hello ',
+    user.name,
+    if (user.admin) strong(children: ['admin']),
+  ],
 )
 ```
 
-## `ForeignComponent`
+`ReactChildren` accepts nested iterables, nodes, strings, numbers, booleans,
+and null. The runtime normalizes them before rendering, so explicit `Text`
+construction is optional.
 
-When integrating with JS/TS modules via `foreignComponent`, the props are passed as a `Map<String, Object?>`.
+## Component props
+
+An authored component accepts exactly one named record:
 
 ```dart
-foreignComponent(
-  'MyGraph',
-  props: {
-    'data': [1, 2, 3],
-    'animate': true,
-  }
+import 'package:react_dom/react_dom.dart';
+
+@reactComponent
+ReactNode Avatar(({
+  required String src,
+  int? size,
+  ReactChildren children,
+}) props) {
+  return figure(children: [
+    img(src: props.src, width: props.size, height: props.size),
+    ...props.children,
+  ]);
+}
+```
+
+Code generation preserves that record as the internal component contract and
+emits an ergonomic callable factory:
+
+```dart
+Avatar(src: '/ada.png', size: 48, key: 'ada')
+```
+
+It also emits `Avatar.props()` for builder-style composition. Required props
+are `late` builder fields and must be assigned before invocation.
+
+## Host props and events
+
+Generated HTML and SVG factories expose named Dart parameters for Web IDL and
+React event props. Event callbacks use typed synthetic events and portable host
+interfaces:
+
+```dart
+import 'package:react_web/web.dart' show HTMLInputElement;
+
+input(
+  value: query,
+  onChange: (event) {
+    final input = event.currentTarget as HTMLInputElement;
+    setQuery(input.value);
+  },
 )
 ```
 
-Because this map is passed to JavaScript, the values must be safe for JS interop. Primitives, Lists, and Maps are automatically converted. If you need to pass a Dart function to a foreign component, you must wrap it in `allowInterop` from `dart:js_util` to ensure JavaScript can invoke the Dart closure.
+Use `additionalProps` for uncommon attributes and the
+`dataAttributes(...)`/`aria(...)` helpers for structured custom
+props.
+
+## Styles
+
+React's `style` prop is a property map, never a serialized CSS string.
+`css(...)` builds that map and supports numeric values, CSS custom properties,
+and additional properties.
 
 ```dart
-import 'dart:js_util';
-
-foreignComponent(
-  'DatePicker',
-  props: {
-    'onChange': allowInterop((date) => print(date)),
-  }
-)
+div(style: css(maxWidth: 640, margin: '0 auto', opacity: 0.9))
 ```
 
-*(Note: If you use the generated wrappers defined by the `props` map in `react.yaml`, `allowInterop` is often handled for you, or the types strictly require it).*
+## Foreign values
+
+`foreignComponent` accepts `Map<String, Object?>` props. The React codec
+registry converts supported primitives, iterables, maps, records, callbacks,
+React nodes, and registered host values at the JavaScript boundary.
+
+Do not wrap callbacks with legacy `allowInterop` helpers. Typed host/generated
+callback parameters accept ordinary Dart closures. The generic
+`foreignComponent` map requires an explicit `ReactCallback` descriptor because
+it has no TypeScript signature to infer.
+
+For a stable external API, generate typed bindings with `react ts bind` and
+export those helpers from a wrapper package.

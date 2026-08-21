@@ -1,140 +1,113 @@
 ---
-sidebar_position: 1
+sidebar_position: 3
 ---
 
-# Server-Side Rendering (SSR)
+# Server-side rendering
 
-React Dart is built from the ground up to support Server-Side Rendering (SSR). SSR drastically improves time-to-first-byte (TTFB), enhances SEO, and provides a robust fallback for users with disabled or slow JavaScript.
+React Dart SSR uses a generated Node worker for React rendering and a Dart HTTP
+server for routing, authentication, assets, and server functions.
 
-## How SSR Works in React Dart
-
-In a traditional Dart web application, the browser downloads a large JavaScript bundle and renders the UI entirely on the client. React Dart takes a different approach:
-
-1. **Initial Request**: The user's browser requests a page from your Dart backend (`bin/server.dart`).
-2. **Worker Rendering**: The Dart backend forwards the request to an isolated JavaScript worker (`ssr_runtime.mjs`, compiled from `lib/ssr.dart`).
-3. **HTML Generation**: The worker uses React's `renderToString` (or similar streaming APIs) to render your Dart components into static HTML.
-4. **Response**: The Dart backend sends the HTML to the browser, which renders it instantly.
-5. **Hydration**: The browser downloads the client JavaScript bundle (`client.js`, compiled from `web/client.dart`). React takes over the static HTML and makes it interactive without throwing away the DOM nodes.
-
-## Setting Up SSR
-
-A functional SSR setup requires configuring both your server entrypoint and your SSR worker entrypoint.
-
-### The SSR Worker (`lib/ssr.dart`)
-
-This file is responsible for exporting a render function that the server will call. It must import your root component and register any actions/codecs.
-
-```dart
-import 'package:react_dom/server.dart';
-import 'package:my_app/app.dart';
-
-// Ensure actions are registered so server functions work during SSR
-import 'package:my_app/server/actions.dart' as actions;
-
-void main() {
-  actions.registerAll();
-  
-  // Register the rendering handler
-  registerSsrHandler((request) async {
-    final html = renderToString(App(url: request.url));
-    
-    return SsrResponse(
-      html: html,
-      head: '<title>My React Dart App</title>',
-    );
-  });
-}
+```text
+request
+  -> Dart server adapter
+  -> ReactSsrClient
+  -> Node worker + ReactDOMServer
+  -> HTML and serialized props
+  -> index template
+  -> browser hydrate
 ```
 
-### The Backend Server (`bin/server.dart`)
+## Configure entrypoints
 
-Your Dart server orchestrates the HTTP requests and manages the SSR worker pool. You can use any Dart HTTP framework, but we recommend `shelf`.
+```yaml
+client:
+  entrypoint: web/client.dart
+ssr:
+  entrypoint: lib/ssr.dart
+server:
+  entrypoint: bin/server.dart
+output: build/react
+```
+
+`react build` compiles the Dart client and SSR entrypoints, creates the Node
+runtime, and records their paths in `bundle_manifest.json`.
+
+## SSR entrypoint
+
+The generated starter registers the same component IDs used by the browser:
 
 ```dart
-import 'dart:io';
-import 'package:shelf/shelf.dart';
-import 'package:shelf/shelf_io.dart' as io;
 import 'package:react_server/react_server.dart';
 
-void main() async {
-  // Initialize the SSR worker pool
-  final renderer = await SsrRenderer.start(
-    manifestPath: 'build/react/bundle_manifest.json',
-  );
-
-  final handler = const Pipeline()
-      .addMiddleware(logRequests())
-      .addHandler((Request request) async {
-        // Handle static files first...
-        
-        // Render the page via the SSR worker
-        final renderResult = await renderer.render(request.url.toString());
-        
-        // Construct the final HTML page
-        final html = '''
-          <!DOCTYPE html>
-          <html>
-            <head>
-              ${renderResult.head}
-            </head>
-            <body>
-              <div id="root">${renderResult.html}</div>
-              <script type="module" src="/browser.entry.mjs"></script>
-            </body>
-          </html>
-        ''';
-        
-        return Response.ok(html, headers: {'content-type': 'text/html'});
-      });
-
-  final server = await io.serve(handler, 'localhost', 8080);
-  print('Serving at http://${server.address.host}:${server.port}');
-}
-```
-
-## Hydration on the Client
-
-Once the HTML is in the browser, your `web/client.dart` script must hydrate it.
-
-```dart
-import 'package:react_dom/react_dom.dart';
-import 'dart:html';
-import 'package:my_app/app.dart';
+import '.generated/app.react.dart';
+import '.generated/react_components.g.dart';
+import '.generated/ssr_registry.g.dart';
 
 void main() {
-  hydrateRoot(
-    document.getElementById('root')!,
-    App(),
+  registerReactComponents();
+  SsrComponentRegistry.register(
+    idApp.value,
+    (props) => App(title: props['title'] as String? ?? 'React Dart'),
   );
+  registerGlobalRenderer((id, props) => SsrComponentRegistry.build(id, props));
 }
 ```
 
-**Crucial Rule:** The initial render on the client *must exactly match* what the server rendered. If there is a mismatch (e.g., rendering a random number or a timestamp that differs between server and client), React will issue a hydration warning and performance will degrade.
+The worker executes a real React render stack, so hooks, contexts, suspense,
+foreign components, memoization, refs, and error boundaries use the same
+component contracts as the browser.
 
-## Avoiding SSR Incompatibilities
+## Server adapter
 
-When code runs on the server, there is no DOM. Avoid using `window`, `document`, or other browser-specific APIs directly in the body of your components.
+The Dart server creates `ReactSsrClient` from `REACT_SSR_URL` and passes it
+to either `RoutedReactApplication` or Shelf's `ReactServerApp`. The adapter
+selects page props, asks the worker to render the root component, and replaces
+`{{SSR}}` and `{{PROPS}}` in the index template.
 
-If you need to access the DOM, do it inside a `useEffect` hook, because effects *do not run* on the server.
+When no worker is configured, the adapters fall back to static/client-only
+serving.
+
+## Hydration
 
 ```dart
-@React()
-ReactNode MyComponent() {
-  // SAFE: This runs only on the client after hydration
-  useEffect(() {
-    print('Window width: ${window.innerWidth}');
-    return null; // optional cleanup
-  }, const []);
+import 'package:my_app/.generated/app.react.dart';
+import 'package:my_app/.generated/react_components.g.dart';
+import 'package:react_dom/react_dom.dart';
 
-  // UNSAFE: This will crash during SSR because `window` is undefined
-  // final width = window.innerWidth;
+void main() {
+  initReact();
+  registerReactComponents();
 
-  return div(children: [Text('Hello')]);
+  final root = getRoot('app');
+  final props = getInitialProps();
+  final app = App(title: props['title'] as String? ?? 'React Dart');
+
+  if (hasSSRContent(root)) {
+    hydrate(root, app);
+  } else {
+    mount(root, app);
+  }
 }
 ```
 
-You can use the `useLayoutEffect` hook as well, but note that React will warn you if you use it in SSR environments, as it is strictly synchronous client-side layout.
+The browser's first node tree and props must match the server output. Avoid
+request-time randomness, differing date formatting, or environment-dependent
+branches during the initial render.
 
-## Next Steps
+## Browser APIs
 
-With SSR established, the next powerful feature to learn is how to communicate back to the server securely. Proceed to [Server Functions](./server-functions.mdx).
+Portable Web types can appear in shared component signatures, but browser
+globals are unavailable during SSR. Read browser state in effects or isolate a
+subtree behind a client-only boundary. `react_analysis` detects direct browser
+and JS-interop leakage into server contexts.
+
+`useLayoutEffect` is a browser layout API; prefer `useEffect` unless the
+component genuinely needs synchronous post-layout work.
+
+## Test
+
+Use `InMemorySsrHarness` for template substitution, `SsrTestHarness` for
+worker protocol behavior, and `ReactTestHarness` with the application's real
+`server_testing` adapter for compiled SSR, assets, deep links, and server
+actions. Harness-allocated ports prevent accidental reuse of unrelated local
+processes.

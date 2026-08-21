@@ -2,73 +2,132 @@
 sidebar_position: 4
 ---
 
-# Code Generation (`react_codegen`)
+# Code generation
 
-React Dart relies heavily on Dart's `build_runner` ecosystem to bridge the gap between idiomatic Dart and the underlying React JS runtime. The `react_codegen` package is responsible for this magic.
+`react_codegen` turns annotated Dart functions into portable component
+factories, JavaScript bridges, SSR registries, and server-function contracts.
+Applications consume a small public generated surface while implementation
+details stay under `lib/.generated/`.
 
-## What Gets Generated?
+## Component source
 
-For every Dart file containing a component annotated with `@React()` (e.g., `button.dart`), the generator produces two files:
+A component is an authored function with one named record parameter:
 
-1. **`button.react.dart`**: The pure Dart component factory.
-2. **`button.react.g.dart`**: The JavaScript interop wrappers.
-
-### 1. The Pure Dart Factory (`.react.dart`)
-
-This file contains the function you actually import and call in your Dart code. It returns a pure `Component` node that lives in the portable `ReactNode` tree.
-
-**Source (`button.dart`):**
 ```dart
-@React()
-ReactNode Button({required String label, required Function onClick}) { ... }
-```
+import 'package:react_dom/react_dom.dart';
 
-**Generated (`button.react.dart`):**
-```dart
-// Auto-generated. Do not edit.
-Component Button({required String label, required Function onClick, String? key, List<ReactNode> children = const []}) {
-  return Component(
-    _idButton, 
-    (label: label, onClick: onClick), 
-    key: key, 
-    children: children,
+@reactComponent
+ReactNode Avatar(({
+  required String src,
+  String? label,
+  ReactChildren children,
+}) props) {
+  return figure(
+    children: [
+      img(src: props.src, alt: props.label ?? ''),
+      ...props.children,
+    ],
   );
 }
 ```
 
-Notice how it automatically injects `key` and `children` arguments, grouping the custom props into a record. This keeps the Dart tree pure and platform-agnostic.
+The shared analyzer validates the return type, record shape, children type,
+callback bridgeability, and generated component identity before emission.
 
-### 2. The JS Wrapper (`.react.g.dart`)
+## Generated component files
 
-This file contains the code that the `react_js` renderer uses to actually mount the component in the browser. It uses Dart 3 Extension Types (`@JS` interop) to define the exact shape of the JavaScript `props` object.
+For `lib/avatar.dart`, the cache builders produce:
+
+- `avatar.react.dart`: portable component ID, callable factory, and props
+  builder;
+- `avatar.react.g.dart`: browser registration and Dart/JavaScript prop codecs.
+
+Aggregate builders also produce:
+
+- `react_components.g.dart`: browser component registration;
+- `ssr_registry.g.dart`: server-rendering component identities;
+- `server_actions.g.dart`: server-function dispatch.
+
+`react_tool` copies these cache outputs into `lib/.generated/` and rewrites
+relative imports for that location. Entrypoints import the generated public
+surface with package URIs:
 
 ```dart
-// Auto-generated JS interop. Do not edit.
-@JS()
-extension type PropsJS._(JSObject _) implements JSObject {
-  external String get label;
-  external JSFunction get onClick;
-}
-
-// Registration function called internally by the React Dart runtime
-void registerButton() {
-  // Binds the Dart implementation to a JS proxy that React can call
-}
+import 'package:my_app/.generated/avatar.react.dart';
+import 'package:my_app/.generated/react_components.g.dart';
 ```
 
-## Server Function Generation
+Authored component files do not import their own generated factories. Browser
+and SSR entrypoints import factories and registries when assembling the app.
 
-When using `@serverFunction` from `package:react_actions`, the generator produces:
-- A client-side proxy that performs the HTTP `fetch`.
-- Cryptographic hashes of the function signature to ensure contract validity between client and server.
-- Serialization and deserialization codecs (using `dart:convert`) for the arguments and return types.
+## Factory and builder ergonomics
 
-## Running the Generator
+The generated factory supports direct named arguments:
 
-You rarely need to run `build_runner` directly. The `react_tool` commands (`react build` and `react serve`) automatically invoke the generator. 
-
-However, if you ever need to run it manually (e.g., to debug a generation issue), you can use standard Dart tooling:
-
-```bash
-dart run build_runner build -d
+```dart
+Avatar(
+  key: 'profile-avatar',
+  src: user.avatarUrl,
+  label: user.name,
+)
 ```
+
+It also exposes a mutable props builder for composition-heavy code:
+
+```dart
+final avatar = Avatar.props()
+  ..key = 'profile-avatar'
+  ..src = user.avatarUrl
+  ..label = user.name;
+
+return avatar();
+```
+
+Required values are `late` fields, so callers must initialize them before
+calling the builder. Children are normalized to portable `ReactNode` values
+for both browser rendering and SSR.
+
+## Server functions
+
+`@serverFunction` generation produces a stable function ID, typed argument and
+result codecs, a browser client proxy, and server dispatch registration.
+`@serverData` types receive nested codecs used by both ends of the contract.
+
+Generated server-function outputs remain transport-neutral. Shelf and Routed
+HTTP integration lives in `react_server_shelf` and `react_server_routed`
+respectively.
+
+## Running generation
+
+Use the React CLI for normal application development:
+
+```console
+dart run react_tool:react generate
+```
+
+`react build` and `react serve` invoke the same generation phase before
+compilation. Running `build_runner` directly is useful only while debugging a
+builder because its outputs stay in the build cache and are not synchronized
+into `lib/.generated/`.
+
+Generated output is disposable:
+
+- never hand-edit it;
+- ignore `lib/.generated/` in source control;
+- fix the reader, model, emitter, or scaffold template;
+- regenerate and run analysis/tests;
+- run generation twice when checking determinism.
+
+## Generator architecture
+
+The generators separate responsibilities deliberately:
+
+1. readers convert analyzer elements or TypeScript declarations into typed IR;
+2. registries deduplicate and name referenced types;
+3. emitters render one output concern;
+4. `react_tool` formats and synchronizes generated sources;
+5. fidelity and structure tests protect completeness and maintainability.
+
+A new feature should extend the model first and keep browser and SSR output
+derived from the same contract. Avoid target-specific string patches after
+emission.

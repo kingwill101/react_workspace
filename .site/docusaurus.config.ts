@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'React Dart',
-  tagline: 'Build React interfaces with Dart — SSR, server functions, and typed contracts.',
+  tagline: 'Typed React applications in Dart.',
   favicon: 'img/favicon.ico',
 
   future: {
@@ -51,7 +51,6 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/docusaurus-social-card.jpg',
     colorMode: {
       respectPrefersColorScheme: true,
     },
@@ -68,7 +67,16 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
+        {
+          to: '/docs/guides/wrapper-packages',
+          label: 'Wrapper guide',
+          position: 'left',
+        },
+        {
+          to: '/docs/reference/cli',
+          label: 'CLI',
+          position: 'left',
+        },
         {
           href: 'https://github.com/kingwill101/react_workspace',
           label: 'GitHub',
@@ -80,33 +88,45 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Start',
           items: [
             {
-              label: 'Intro',
-              to: '/docs/intro',
+              label: 'Quick start',
+              to: '/docs/getting-started/quick-start',
+            },
+            {
+              label: 'Project structure',
+              to: '/docs/getting-started/project-structure',
             },
           ],
         },
         {
-          title: 'Community',
+          title: 'Build',
           items: [
             {
-              label: 'GitHub',
-              href: 'https://github.com/kingwill101/react_workspace',
+              label: 'Server rendering',
+              to: '/docs/guides/ssr',
             },
             {
-              label: 'Issues',
-              href: 'https://github.com/kingwill101/react_workspace/issues',
+              label: 'Server functions',
+              to: '/docs/guides/server-functions',
+            },
+            {
+              label: 'Wrapper packages',
+              to: '/docs/guides/wrapper-packages',
             },
           ],
         },
         {
-          title: 'More',
+          title: 'Reference',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
+              label: 'CLI commands',
+              to: '/docs/reference/cli',
+            },
+            {
+              label: 'Configuration',
+              to: '/docs/reference/react-yaml',
             },
             {
               label: 'GitHub',
@@ -115,7 +135,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} React Dart. Built with Docusaurus.`,
+      copyright: `React Dart / ${new Date().getFullYear()} / MIT licensed`,
     },
     prism: {
       theme: prismThemes.github,

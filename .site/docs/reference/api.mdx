@@ -2,57 +2,82 @@
 sidebar_position: 1
 ---
 
-# API Reference
+# API overview
 
-This document provides a high-level overview of the core APIs exposed by the React Dart workspace packages.
+This is a package map, not a replacement for generated Dartdoc.
 
-## `package:react`
+## `react`
 
-The core package defines the component tree and essential hooks. It is platform-agnostic and contains no browser dependencies.
+Portable UI and runtime contracts:
 
-### Core Types
+- `ReactNode`, `Component`, `HostNode`, `ForeignComponent`, `Text`,
+  `Fragment`, and `Empty`;
+- `ReactChildren` and `normalizeChildren`;
+- `@reactComponent` / `ReactComponent`;
+- state, effect, memo, callback, ref, context, transition, external-store, and
+  React 18/19 hooks;
+- context providers, suspense, lazy, memo, forward-ref, portals, strict mode,
+  error boundaries, and runtime capability contracts.
 
-- `abstract class ReactNode`: The base class for all elements in the React tree.
-- `class Component<P>`: Represents a Dart component instance with `props`, `key`, and `children`.
-- `class HostNode<P>`: Represents a native host element (like an HTML `div` or `span`).
-- `class Text`: A text node.
-- `class Fragment`: Groups children without adding an extra DOM node.
+## `react_dom`
 
-### Hooks
+Recommended web component entrypoint. Re-exports `react` and `react_web`,
+then adds:
 
-- `(T, StateSetter<T>) useState<T>(T initial)`: Returns a stateful value and a function to update it.
-- `void useEffect(EffectCallback effect, [List<Object?>? deps])`: Accepts a function that contains imperative, possibly effectful code. Skips execution during SSR.
-- `void useLayoutEffect(EffectCallback effect, [List<Object?>? deps])`: Similar to `useEffect`, but fires synchronously after all DOM mutations.
+- `initReact()`;
+- `getRoot(id)` and `getInitialProps()`;
+- `hasSSRContent(root)`;
+- `mount(root, node)` and `hydrate(root, node)`.
 
-## `package:react_actions`
+## `react_web`
 
-Handles server-client RPC communication.
+Generated HTML/SVG factories, typed React synthetic events, portable Web API
+interfaces, SSR metadata, browser adapters, `css`, `classNames`,
+`dataAttributes`, `aria`, and the browser
+`HttpServerFunctionClient`.
 
-### Annotations
+The mirrored Web surface is pinned to `package:web 1.1.1`.
 
-- `@serverFunction`: Marks a top-level function as an RPC endpoint. The function must take `ServerFunctionContext` as its first argument and return a `Future`.
-- `@serverData`: Marks a `final class` as a serializable data transfer object (DTO). The class must have exactly one public generative constructor with named parameters matching its final fields.
+## `react_actions`
 
-## `package:react_server`
+- `@serverFunction` and `@serverData`;
+- `ServerFunctionId`, `ServerFunctionRef`, and JSON codec contracts;
+- `ServerFunctionClient` and `runWithServerFunctionClient`;
+- versioned request/response envelopes and structured failures.
 
-Server-side execution utilities for SSR and Server Functions.
+## `react_server`
 
-- `class ServerFunctionContext`: Passed to `@serverFunction`s. Provides access to DI via `get<T>()` and request metadata.
-- `class SsrRenderer`: Manages a pool of JS workers for rendering React components to HTML strings. Use `SsrRenderer.start(manifestPath: ...)` to initialize.
-- `class SsrResponse`: The returned data from an SSR render, containing `html` and `head` strings.
+- `ServerFunctionContext`, `CancellationToken`, and
+  `ServerFunctionRegistry`;
+- `ReactSsrClient` and `ReactSsrDocument` on the Dart VM;
+- `registerGlobalRenderer` and `renderToString` in the compiled Node SSR
+  entrypoint.
 
-## `package:react_dom`
+HTTP integration is intentionally absent.
 
-Browser-specific rendering and hydration.
+## Server adapters
 
-- `void hydrateRoot(Element container, ReactNode initialChildren)`: Hydrates a server-rendered HTML document, making it interactive.
-- `Root createRoot(Element container)`: Creates a React root for client-only rendering, bypassing SSR hydration.
+- `react_server_routed`: `RoutedReactApplication`,
+  `RoutedReactPageProps`, and `RoutedReactAuthentication`;
+- `react_server_shelf`: `ReactServerApp`, `ReactPageProps`, and
+  `createServerActionHandler`.
 
-## `package:react_testing`
+## `react_testing`
 
-Testing utilities.
+- `ReactComponentHarness`: portable trees, hooks, refs, contexts, and runtime
+  capabilities;
+- `ServerFunctionHarness`: direct dispatch and HTTP envelope assertions;
+- `SsrTestHarness` / `InMemorySsrHarness`: worker and document behavior;
+- `ReactTestHarness`: actual builds, generated assets, and Node SSR worker;
+- `GeneratorFidelityHarness`: generated Web surface completeness.
 
-- `class ReactTestHarness`: Orchestrates the testing build server.
-  - `start(...)`: Initializes the harness.
-  - `renderClient()`: Renders the component in a headless browser and returns a page controller.
-  - `renderSsr()`: Returns the raw HTML string as rendered by the SSR worker.
+The package depends on the `server_testing` base; applications choose the
+concrete server adapter.
+
+## Tooling
+
+- `react_codegen`: Dart component/action builders;
+- `react_tool`: scaffold, generate, build, serve, npm, TypeScript bindings,
+  analysis, and tests;
+- `react_analysis`: shared component/hook/SSR/import semantics;
+- `react_analyzer`: analysis-server diagnostics, fixes, and assists.

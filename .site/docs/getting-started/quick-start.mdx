@@ -2,94 +2,76 @@
 sidebar_position: 1
 ---
 
-# Quick Start
+# Quick start
 
-Get up and running with React Dart in minutes. This guide will show you how to scaffold a new project, understand the generated code, and start the development server.
+## Create an application
 
-## 1. Scaffold a New Project
+Choose a starter and fetch its dependencies:
 
-Use the `react` CLI to initialize a new React Dart project. This command creates a new directory with a pre-configured workspace, including the necessary `pubspec.yaml`, `react.yaml`, and sample source files.
-
-```bash
-dart run react_tool:react init my_react_app
+```console
+dart run react_tool:react init my_react_app --template routed-minimal
 cd my_react_app
-```
-
-*Note: If you have `react_tool` activated globally, you can simply run `react init my_react_app`.*
-
-## 2. Fetch Dependencies
-
-Before building or running the application, fetch the Dart dependencies using pub:
-
-```bash
 dart pub get
 ```
 
-This will download the `react`, `react_dom`, `react_tool`, and `react_codegen` packages required by your new project.
+Use `--template ssr` for Shelf-backed SSR, `routed` for the expanded Routed
+starter, or `client` for a browser-only app.
 
-## 3. Start the Development Server
+## Start development
 
-React Dart comes with a powerful development server that automatically handles building, serving, and watching your files for changes.
-
-```bash
+```console
 dart run react_tool:react serve --watch
 ```
 
-What happens when you run this command?
-1. **Code Generation**: `react_codegen` processes your `.dart` files, generating `.react.dart` (component factories) and `.react.g.dart` (JS wrappers).
-2. **Compilation**: The Dart compiler compiles your client code (`web/client.dart`) and your SSR worker (`lib/ssr.dart`) to JavaScript.
-3. **Bundling**: Foreign JavaScript dependencies (like React itself) are bundled via esbuild.
-4. **Serving**: A local Dart HTTP server starts up, handling requests, performing Server-Side Rendering (SSR), and serving static assets.
+The command generates hidden Dart sources, compiles styles and browser code,
+builds the Node SSR worker when configured, and starts the selected Dart
+server. The default application URL is `http://localhost:8080`.
 
-Open your browser to `http://localhost:8080` to see your running application!
+## Edit the root component
 
-## 4. Make a Change
-
-Open `lib/app.dart` in your IDE. You'll see a basic functional component. Let's modify it to add some state using the `useState` hook.
+Open `lib/app.dart`. Component source imports the portable DOM entrypoint; it
+does not import its own generated factory.
 
 ```dart
-import 'package:react/react.dart';
-import 'app.react.dart'; // The generated factory
+import 'package:react_dom/react_dom.dart';
 
-@React()
-ReactNode App() {
+@reactComponent
+ReactNode App(({String title}) props) {
   final (count, setCount) = useState(0);
 
-  return div(
+  return main(
+    className: classNames('app-shell'),
+    style: css(maxWidth: 640, margin: '0 auto', padding: 32),
     children: [
-      h1(children: [Text('Hello React Dart!')]),
-      p(children: [Text('You clicked $count times.')]),
+      h1(key: 'heading', children: [props.title]),
       button(
-        onClick: (e) => setCount(count + 1),
-        children: [Text('Click me')],
+        key: 'counter',
+        type: 'button',
+        onClick: (_) => setCount(count + 1),
+        children: ['Clicked $count times'],
       ),
     ],
   );
 }
 ```
 
-Because you ran `react serve --watch`, the CLI automatically detects the change, reruns code generation, recompiles the JavaScript bundles, and restarts the server. Refresh your browser to see the interactive counter!
+Stable keys keep list rendering warning-free in both browser and SSR output.
+The generated browser and SSR entrypoints already import the App factory from
+`lib/.generated/`.
 
-## 5. Build for Production
+## Validate
 
-When you are ready to deploy your application, use the `build` command with the `--release` flag. This minifies the output and applies production optimizations.
+Run narrow checks before a production build:
 
-```bash
+```console
+dart analyze --fatal-infos
+dart test
 dart run react_tool:react build --release
 ```
 
-All built artifacts will be placed in the `build/react/` directory, including:
-- Minified JavaScript bundles (`client.js`, `ssr.js`)
-- Compiled CSS from Sass
-- The `bundle_manifest.json`
-- Optimized foreign bundles
+Scaffold tests use `react_testing` and the chosen `server_testing` adapter, so
+they allocate their own ports and exercise the built application without an
+external browser script.
 
-You can then run the compiled server directly:
-
-```bash
-dart bin/server.dart
-```
-
-## Next Steps
-
-Congratulations on running your first React Dart app! Next, explore the [Project Structure](./project-structure.mdx) to understand how the files in your project are organized, or dive into [Server Functions](../guides/server-functions.mdx) to learn how to communicate with your backend.
+Production artifacts are written under `build/react/`. Deploy the Dart server
+with that directory and a Node runtime when SSR is enabled.

@@ -1,233 +1,192 @@
-# React Dart Workspace
+# React Dart workspace
 
-A modern, full-stack React framework and ecosystem for Dart (>=3.12.0). 
+A typed React component and full-stack application ecosystem for Dart 3.12+.
 
-React Dart brings the full power of React—including **Server-Side Rendering (SSR)**, **Hooks**, **Typed Server Functions**, and **Client-Side Hydration**—to Dart, maintaining strict type safety without sacrificing cross-platform portability.
+React Dart keeps the UI contract portable while using React itself for browser
+rendering and Node server-side rendering. Server functions, Web bindings,
+JavaScript wrappers, and HTTP integrations live in separate packages.
 
----
+## Architecture
 
-## Ecosystem Architecture
+```text
+authored Dart component
+        |
+        v
+react + react_dom portable node tree
+        |
+        +--> react_js --> browser ReactDOM
+        |
+        +--> react_server --> Node ReactDOMServer
+        |
+        +--> react_testing --> native in-memory harness
 
-The workspace is structured into decoupled, single-responsibility packages designed around a strict platform contract:
-
-```
-                      ┌──────────────────────────────┐
-                      │        package:react         │
-                      │  Pure Dart AST (ReactNode)   │
-                      │  Hooks & Sealed HostNode<P>  │
-                      └──────────────┬───────────────┘
-                                     │
-           ┌─────────────────────────┴─────────────────────────┐
-           ▼                                                   ▼
-┌──────────────────────┐                           ┌──────────────────────┐
-│  package:react_web   │                           │  package:react_js    │
-│  Portable Web & DOM  │                           │  JS Bridge & Codecs  │
-│  Wraps package:web   │                           │  React JS Renderer   │
-└──────────┬───────────┘                           └───────────┬──────────┘
-           │                                                   │
-           └─────────────────────────┬─────────────────────────┘
-                                     ▼
-                      ┌──────────────────────────────┐
-                      │    package:react_codegen     │
-                      │  build_runner Code Generator │
-                      └──────────────┬───────────────┘
-                                     │
-           ┌─────────────────────────┴─────────────────────────┐
-           ▼                                                   ▼
-┌──────────────────────┐                           ┌──────────────────────┐
-│ package:react_server │                           │  package:react_dom   │
-│  Dart VM / SSR Server│                           │  Browser Attach/Hydr │
-└──────────────────────┘                           └──────────────────────┘
+Dart HTTP server
+        |
+        +--> react_server_routed
+        |
+        +--> react_server_shelf
 ```
 
-### Core Architecture Principles
+The main boundaries are intentional:
 
-1. **Pure Dart Core (`package:react`)**
-   - The UI tree is described entirely in pure Dart using the sealed `ReactNode` hierarchy (`Component`, `HostNode`, `Text`, `Fragment`, `ForeignComponent`).
-   - No `dart:js_interop` or browser imports exist in `package:react`. Components can be compiled and executed on any Dart target (native Dart VM, server runtime, CLI, unit tests).
+- `react` owns portable nodes, hooks, refs, contexts, and runtime contracts.
+- `react_web` owns generated Web declarations and typed host factories.
+- `react_dom` is the recommended component import and browser mount/hydrate
+  entrypoint.
+- `react_js` owns JavaScript conversion and React hook implementations.
+- `react_server` owns transport-neutral SSR and server-function primitives.
+- Shelf and Routed dependencies stay in their dedicated adapters.
+- Generated application source stays under `lib/.generated/`.
 
-2. **Portable Web Abstraction (`package:react_web`)**
-   - `react_web` wraps `package:web` so all web/DOM APIs supported by `package:web` (e.g. `EventTarget`, `HTMLInputElement`, `ReactChangeEvent`, `Window`, `Document`) are exposed as **portable Dart representations**.
-   - On the client browser, these abstractions delegate directly to underlying JS interop types.
-   - On the server (SSR / Dart VM), these abstractions fall back to safe, portable implementations or server stubs.
-   - **Why this matters**: Application components import `react_web` rather than `package:web` or `dart:html` directly. This enables 100% code sharing between client-side hydration and server-side Dart VM rendering without breaking compiler rules or runtime constraints.
+## Packages
 
-3. **Explicit Host Representations (`HostNode` & `HostTypeRef`)**
-   - Host elements (HTML tags like `<div>`, `<input>`, `<button>`) are represented as `HostNode` in pure Dart.
-   - `react_codegen` uses `HostTypeRef` to recognize web host types (`ReactChangeEvent`, `HTMLInputElement`) and automatically generate codec calls (`ReactCodecRegistry.encodeHostValue` / `decodeHostValue`).
-   - Developers write clean, strongly-typed event handlers without needing manual `.toJS` or `dynamic` casting.
+| Package | Role |
+| --- | --- |
+| [`react`](packages/react/README.md) | Portable React nodes, hooks, contexts, refs, and runtime features. |
+| [`react_web`](packages/react_web/README.md) | Pinned Web API model, DOM/SVG factories, events, props, and adapters. |
+| [`react_dom`](packages/react_dom/README.md) | Combined component entrypoint, browser mounting, and hydration. |
+| [`react_js`](packages/react_js/README.md) | JavaScript renderer, hook binding, callbacks, and codecs. |
+| [`react_actions`](packages/react_actions/README.md) | Browser-safe server-function protocol and annotations. |
+| [`react_server`](packages/react_server/README.md) | Server-function registry, SSR worker client, and Node renderer. |
+| [`react_server_routed`](packages/react_server_routed/README.md) | Routed SSR, asset, and action integration. |
+| [`react_server_shelf`](packages/react_server_shelf/README.md) | Shelf SSR, asset, and action integration. |
+| [`react_codegen`](packages/react_codegen/README.md) | Component, bridge, registry, and action source generators. |
+| [`react_tool`](packages/react_tool/README.md) | Scaffold, generation, compilation, npm, TypeScript binding, and serving CLI. |
+| [`react_testing`](packages/react_testing/README.md) | Native component, action, SSR, build, and fidelity harnesses. |
+| [`react_analysis`](packages/react_analysis/README.md) | Shared component, hook, SSR, import, and usage semantics. |
+| [`react_analyzer`](packages/react_analyzer/README.md) | Analysis-server diagnostics, fixes, and assists. |
+| [`react_router`](packages/react_router/README.md) | Generated React Router components, functions, and hooks. |
+| [`react_bloc`](packages/react_bloc/README.md) | Portable Bloc context and external-store hooks. |
+| [`react_riverpod`](packages/react_riverpod/README.md) | Portable Riverpod scope and subscription hook. |
+| [`react_zustand`](packages/react_zustand/README.md) | Focused npm-backed Zustand wrapper. |
+| [`react_web_generator`](packages/react_web_generator/README.md) | Maintainable pinned Web IDL generation pipeline. |
 
-4. **Isomorphic Server Functions (`react_actions` & `react_server`)**
-   - Annotate functions with `@serverFunction` to make server-side logic callable directly from the browser with complete contract validation, serialization, and type safety.
+## Requirements
 
----
+- Dart SDK `>=3.12.0 <4.0.0`;
+- Node.js and npm for React dependencies, bundling, and the SSR worker;
+- the Rust toolchain required by `packages/react_tool/native/Cargo.toml` when
+  building the native TypeScript declaration extractor.
 
-## Workspace Packages
+The Web binding source is pinned to published `package:web 1.1.1`.
 
-| Package | Role & Description |
-|---|---|
-| [`react`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react/README.md) | Pure Dart React AST (`ReactNode`, `HostNode`, `Component`), hook primitives, `@ReactComponent` annotations. |
-| [`react_web`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_web/README.md) | Portable `package:web` wrappers (`HTMLInputElement`, `ReactChangeEvent`), DOM element factories (`div`, `span`), browser runtime adapters. |
-| [`react_js`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_js/README.md) | JavaScript interop binding layer, renderer dispatch, `ReactCallback` trampoline, and `ReactCodecRegistry`. |
-| [`react_dom`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_dom/README.md) | Client-side DOM mounting, attachment, and hydration entrypoints (`mount`, `hydrate`). |
-| [`react_codegen`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_codegen/README.md) | `build_runner` generator producing `.react.dart` factories, JS bridge implementations (`.react.g.dart`), and action codecs. |
-| [`react_tool`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_tool/README.md) | Unified CLI (`react build`, `react serve`, `react doctor`) for code generation, bundling, Sass processing, and dev server orchestration. |
-| [`react_actions`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_actions/README.md) | Client/server RPC protocol, `@serverFunction` / `@serverData` annotations, wire protocol format. |
-| [`react_server`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_server/README.md) | Server-Side Rendering (SSR) engine, Shelf HTTP handler, SSR component registry, and error boundaries. |
-| [`react_testing`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_testing/README.md) | In-memory and browser test harness (`ReactTestHarness`) for SSR, client, and action testing. |
-| [`react_router`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_router/README.md) | Typed React Router bindings (`MemoryRouter`, `useLocation`, `useNavigate`) supporting both client and SSR URL resolution. |
-| [`react_bloc`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_bloc/README.md) | State management bindings for `package:bloc` / `package:flutter_bloc` via `useSyncExternalStore`. |
-| [`react_riverpod`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_riverpod/README.md) | State management bindings for Riverpod providers in React Dart components. |
-| [`react_zustand`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_zustand/README.md) | Typed bindings for Zustand micro-state stores. |
-| [`react_web_generator`](file:///home/kingwill101/code/dart_packages/react_workspace/packages/react_web_generator/README.md) | Internal Web IDL generator that synthesizes `react_web` DOM interfaces from upstream W3C specs. |
+## Create an app
 
----
-
-## Quick Start
-
-### 1. Requirements & Workspace Setup
-
-- Dart SDK `>=3.12.0 <4.0.0`
-- Node.js (for esbuild bundling of third-party JS/TSX components)
-
-Install dependencies across the workspace:
-
-```bash
+```console
 dart pub get
-```
-
-### 2. Scaffold a New Project
-
-Use the `react_tool` CLI to scaffold an SSR, Routed-hosted SSR, or client-only project:
-
-```bash
-# SSR Project (Default)
-dart run react_tool:react init my_app
-
-# Routed Host Project (Shelf-free, SSR via `routed_io`)
-dart run react_tool:react init my_app --template routed
-
-# Routed Host Project with smaller starter surface (no tests/docker)
 dart run react_tool:react init my_app --template routed-minimal
-
-# Client-Only Static Project
-dart run react_tool:react init my_app --template client
-```
-
-Scaffolded projects are optimized for iteration:
-
-- Generated internals live in `lib/.generated/`, `build/`, and `.dart_tool/`.
-- Scaffolded `.vscode/settings.json` hides those paths by default in the Explorer/search.
-- Day-to-day edits are usually in `lib/app.dart` and `lib/greeting.dart`.
-
-### 3. Build & Run
-
-```bash
 cd my_app
 dart pub get
-
-# Check project health
-dart run react_tool:react doctor
-
-# Build assets, run codegen, compile JS & SSR bundles
-dart run react_tool:react build
-
-# Start dev server with watch mode
 dart run react_tool:react serve --watch
 ```
 
----
+Available templates:
 
-## React CLI (`react_tool`)
+- `ssr`: Shelf-backed SSR;
+- `routed`: expanded Shelf-free Routed SSR;
+- `routed-minimal`: smaller Routed starter;
+- `client`: static browser application.
 
-The `react_tool` CLI orchestrates the complete build and development lifecycle. It reads configuration from `react.yaml` or the `react:` key in `pubspec.yaml`.
+Scaffolded projects hide and ignore `lib/.generated/`, `build/`, and
+`.dart_tool/`. Day-to-day work is normally in `lib/app.dart`, feature files,
+and tests.
+
+## Author a component
+
+```dart
+import 'package:react_dom/react_dom.dart';
+
+@reactComponent
+ReactNode Counter(({int initial}) props) {
+  final (count, setCount) = useState(props.initial);
+
+  return button(
+    type: 'button',
+    className: classNames('counter'),
+    style: css(padding: '8px 12px'),
+    onClick: (_) => setCount(count + 1),
+    children: ['Count: $count'],
+  );
+}
+```
+
+Run generation without compiling bundles:
 
 ```console
-dart run react_tool:react doctor    # Diagnostics & environment verification
-dart run react_tool:react build     # Codegen + Sass compile + JS/SSR bundling
-dart run react_tool:react serve     # Serves native server & SSR worker
+dart run react_tool:react generate
 ```
 
-### Build Artifacts (`build/react/`)
+Workspace CI runs `build_runner build --workspace` once, then synchronizes
+each application with `react generate --sync-only`. The latter is intended for
+orchestration after a successful workspace build; normal application work
+should use `react generate`.
 
-```text
-build/react/
-├── browser.entry.mjs   # Sets React globals, loads client bundle
-├── ssr.entry.mjs       # Sets React globals, loads SSR worker bundle
-├── ssr_runtime.mjs     # HTTP SSR worker
-├── foreign/browser/    # ESM bundled foreign JS/TSX components
-├── foreign/ssr/        # SSR bundled foreign components
-├── client.js, ssr.js   # dart compile js output binaries
-└── index.html          # HTML template with import map
+Callers import the generated factory from
+`package:my_app/.generated/counter.react.dart`. Authored component files do
+not import their own generated output.
+
+## Build and validate
+
+```console
+./tool/ci.sh all
 ```
 
----
+The Dagger pipeline pins Dart, Node, Rust, Chromium, and ChromeDriver so this
+same command runs locally and in GitHub Actions. Its stages can also be run
+independently with `./tool/ci.sh quality`, `tests`, `docs`, or `browser`.
+Initialize `third_party/web` once before local runs; the script archives the
+pinned gitlink revision, so local modifications inside that submodule are
+never sent to Dagger.
+The browser stage uses `package:server_testing` in headless Chromium to prove
+SSR hydration, client events, and typed server-function calls in the maintained
+Shelf example. It does not use Playwright.
 
-## How Portability & Host Objects Enable SSR
+For a quick host-side development loop, run:
 
-In traditional web-focused Dart frameworks, UI code imports `package:web` or `dart:html` directly. However, `package:web` relies on `dart:js_interop` extension types that cannot execute on native Dart VM runtimes (such as server-side renderers, CLI tools, or VM unit tests).
-
-React Dart resolves this architectural challenge through a 3-layer portable model:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ Application Code (lib/components/my_widget.dart)            │
-│ Imports package:react_web (HTMLInputElement, ReactChangeEvent)│
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-               ┌───────────────┴───────────────┐
-               ▼                               ▼
-  Client Browser Runtime (JS)       Server SSR Runtime (VM)
-  ┌───────────────────────────┐   ┌───────────────────────────┐
-  │ Wraps package:web extension│   │ Portable Mock/Stub Class  │
-  │ types via JS Interop      │   │ Selective Server Support  │
-  └───────────────────────────┘   └───────────────────────────┘
+```console
+dart analyze --fatal-infos
+dart test <package-or-example>
+dart run react_tool:react build --release
 ```
 
-1. **`HostNode<P>` in `package:react`**: Defines element nodes (`div`, `span`, `input`) as pure Dart data objects.
-2. **`react_web` API Wrappers**: Exposes standard DOM interfaces (`HTMLInputElement`, `EventTarget`, `ReactChangeEvent`) as platform-neutral abstractions. Application code stays strongly typed without touching platform JS interop directly.
-3. **Automatic Codegen Wiring (`HostTypeRef`)**: `react_codegen` inspects component props and automatically generates codec calls (`ReactCodecRegistry.encodeHostValue` / `decodeHostValue`). Component event handlers accept strongly typed parameters like `ReactChangeEvent<HTMLInputElement>` without requiring manual `.toJS` conversions or `dynamic` casting.
+The build writes browser, SSR, CSS, static, foreign-module, manifest, and report
+artifacts under `build/react/`.
 
----
+Tests use `react_testing` on top of `server_testing`:
 
-## Foreign React / TSX Components
+- `ReactComponentHarness` for nodes, hooks, refs, events, and capabilities;
+- `ServerFunctionHarness` for dispatch, codecs, and HTTP envelopes;
+- `SsrTestHarness` / `InMemorySsrHarness` for worker and document behavior;
+- `ReactTestHarness` plus the application's actual server adapter for built
+  assets, deep links, SSR, and actions;
+- `GeneratorFidelityHarness` for Web surface completeness.
 
-React Dart applications can seamlessly render components written in JavaScript or TypeScript (React, MUI, Radix, Tailwind UI):
+Browser automation is reserved for behavior the native harnesses cannot model.
 
-1. **Configure in `react.yaml`**:
-   ```yaml
-   foreign:
-     - name: DatePicker
-       module: web/components/date_picker.tsx
-       export: default
-       props:
-         value: String
-         disabled: bool?
-   ```
+## JavaScript wrappers
 
-2. **Use in Dart**:
-   ```dart
-   import 'lib/foreign_components.g.dart';
+Reusable wrappers declare a `react.js` descriptor with npm dependencies,
+React peer ranges, externals, and browser/SSR entries. Generate typed bindings
+from published TypeScript declarations:
 
-   datePicker(
-     value: selectedDate,
-     disabled: false,
-   )
-   ```
+```console
+dart run react_tool:react js install
+dart run react_tool:react ts bind
+```
 
-`react build` uses `esbuild` to compile TSX/JS sources into two aggregate bundles (`foreign/browser/bundle.mjs` and `foreign/ssr/bundle.mjs`), ensuring single-instance React sharing across both targets.
+[`react_router`](packages/react_router/README.md) is the generated reference;
+[`react_zustand`](packages/react_zustand/README.md) demonstrates a deliberately
+small handwritten bridge.
 
----
+## Documentation
 
-## Documentation & Learning
-
-- **Interactive Site Documentation**: See [.site/docs/](file:///.site/docs/intro.mdx) for comprehensive guides on SSR, Server Functions, State Management, Styling, and Testing.
-- **Example Projects**:
-  - `examples/superdesk`: Full-featured admin dashboard demo featuring offline storage, resources editor, live canvas/arcade, and theme settings.
-  - `examples/ssr`: Reference server-side rendering application.
-
----
+- [Documentation site source](.site/docs/intro.mdx)
+- [CLI reference](.site/docs/reference/cli.mdx)
+- [Wrapper package guide](.site/docs/guides/wrapper-packages.mdx)
+- [Component ergonomics](.site/docs/guides/component-ergonomics.mdx)
+- [Testing guide](.site/docs/guides/testing.mdx)
+- [Maintainer guide](.site/docs/maintainers/maintenance.mdx)
 
 ## License
 
-MIT License. See individual package directories for license details.
+MIT. Each publishable package contains its own license and release metadata.
