@@ -145,6 +145,54 @@ native extraction, serialized IR, type registration, component emission, hook
 emission, and shim emission; structure and fidelity tests keep those phases
 reviewable and deterministic.
 
+### Foreign React Components
+
+Use `foreign.components` for local TypeScript/React components or components
+whose props are intentionally curated at the application boundary:
+
+```yaml
+foreign:
+  components:
+    - name: design.Button
+      module: web/components/ui/button.tsx
+      export: Button
+      props:
+        variant: String?
+        disabled: bool?
+        onClick: Function?
+    - name: design.Card
+      module: web/components/ui/card.tsx
+      export: Card
+      props:
+        className: String?
+```
+
+The component name is also its runtime registration key. Dotted names are
+useful for avoiding collisions between design systems, packages, and local
+components. They are kept unchanged at runtime while `react_tool` sanitizes
+the temporary JavaScript import names.
+
+Running either command generates the Dart wrappers in
+`lib/.generated/foreign_components.g.dart`:
+
+```console
+dart run react_tool:react generate
+dart run react_tool:react build
+```
+
+The generated wrappers use `foreignComponent`, and the build produces the
+browser and SSR registration bundles automatically. Application code can
+re-export the generated file through a small stable facade, for example:
+
+```dart
+export '.generated/foreign_components.g.dart';
+```
+
+This layer is deliberately not tied to shadcn. A shadcn component, a Radix
+component, a local design-system component, or an npm package can use the same
+manifest and bundling path. The source component remains ordinary React code;
+the manifest describes only the Dart-facing boundary.
+
 ## Architecture Notes
 
 - **Bundling:** `react_tool` utilizes either `esbuild` or `rolldown` to bundle foreign JS dependencies. It aggregates project-level modules and wrapper package shims into per-target bundles (`browser` and `ssr`).
