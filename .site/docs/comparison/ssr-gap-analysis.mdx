@@ -14,18 +14,18 @@ owns ordinary API routes and middleware.
 - `renderToString` and opt-in `renderToPipeableStream` through the Node worker;
 - deep-link SSR with `react_router` server bindings;
 - `ReactPageMetadata` for title, SEO, Open Graph, links, and JSON-LD;
-- `ReactDocumentCache` with TTL, bounds, and tag invalidation;
-- `useServerAction` for typed pending, result, error, and invocation state;
+- `ReactDocumentCache` with TTL, bounds, tag invalidation, and stale-while-revalidate;
+- `useServerAction` and `serverActionSubmit` for typed action/form state;
 - Routed and Shelf API handlers mounted alongside the React fallback.
 
 ## Remaining work
 
 - static route generation and a `react build --prerender` workflow;
-- persistent ISR and stale-while-revalidate behavior;
+- persistent ISR, route-manifest revalidation, and deploy-time cache storage;
 - partial prerendering beyond streaming SSR;
 - a portable post-response/background-work API;
 - typed cache-aware data loaders and deduplication;
-- higher-level form serialization and optimistic server-action helpers.
+- field-aware form validation and optimistic server-action helpers.
 
 The implementation order should be prerendering first, then ISR and PPR. The
 explicit Dart cache API should remain the foundation rather than introducing a
