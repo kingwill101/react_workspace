@@ -54,9 +54,9 @@ form, `serverActionSubmit` prevents navigation, converts the form to
 final action = useServerAction(saveProfile);
 
 form(
-  onSubmit: serverActionSubmit(
+  onSubmit: serverActionFormSubmit(
     action,
-    (data) => (name: data.get('name')?.toString() ?? ''),
+    (data) => (name: data.text('name') ?? ''),
   ),
   children: [
     button(type: 'submit', disabled: action.pending, children: ['Save']),

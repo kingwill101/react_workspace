@@ -55,6 +55,36 @@ final class OptimisticServerActionState<TArgs, TState, TResult> {
   final Future<TResult> Function(TArgs arguments) invoke;
 }
 
+/// Typed convenience accessors for a browser [FormData] payload.
+final class ServerActionFormData {
+  /// Wraps a browser form-data object.
+  const ServerActionFormData(this.data);
+
+  /// The underlying generated Web API value.
+  final FormData data;
+
+  /// Returns a text field, or `null` when the field is absent or a file.
+  String? text(String name) {
+    final value = data.get_(name);
+    return value is String ? value : null;
+  }
+
+  /// Returns all text values for a repeated field.
+  List<String> texts(String name) => [
+    for (final value in data.getAll(name))
+      if (value is String) value,
+  ];
+
+  /// Returns a parsed integer field.
+  int? integer(String name) => int.tryParse(text(name) ?? '');
+
+  /// Returns a parsed decimal field.
+  double? number(String name) => double.tryParse(text(name) ?? '');
+
+  /// Returns whether a checkbox-style field was submitted.
+  bool checked(String name) => data.has(name);
+}
+
 /// Binds a generated server function to React pending/result/error state.
 ///
 /// This is the ergonomic building block for buttons and form submit handlers:
@@ -164,6 +194,12 @@ void Function(ReactFormEvent) serverActionSubmit<TArgs, TResult>(
     unawaited(action.invoke(decode(FormData(form))));
   };
 }
+
+/// Creates a form submit handler using [ServerActionFormData] accessors.
+void Function(ReactFormEvent) serverActionFormSubmit<TArgs, TResult>(
+  ServerActionState<TArgs, TResult> action,
+  TArgs Function(ServerActionFormData data) decode,
+) => serverActionSubmit(action, (data) => decode(ServerActionFormData(data)));
 
 /// Extracts field messages from a structured server-action failure.
 ///

@@ -6,6 +6,22 @@ import 'package:react_web/src/web_runtime.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('ServerActionFormData decodes common fields', () {
+    final data = ServerActionFormData(
+      _FakeFormData({
+        'name': ['Ada'],
+        'age': ['37'],
+        'enabled': ['on'],
+      }),
+    );
+
+    expect(data.text('name'), 'Ada');
+    expect(data.integer('age'), 37);
+    expect(data.checked('enabled'), isTrue);
+    expect(data.texts('name'), ['Ada']);
+    expect(data.number('missing'), isNull);
+  });
+
   test('serverActionFieldErrors extracts structured field messages', () {
     const error = RemoteServerFunctionException(
       code: 'validation_failed',
@@ -145,4 +161,32 @@ class _FakeWebRuntime implements WebRuntime {
 
   @override
   void setNamespaceProperty(String namespace, String property, Object? value) {}
+}
+
+final class _FakeFormData implements FormData {
+  _FakeFormData(this._values);
+
+  final Map<String, List<String>> _values;
+
+  @override
+  void append(String name, Blob blobValue, [String? filename]) {}
+
+  @override
+  void delete(String name) => _values.remove(name);
+
+  @override
+  FormDataEntryValue? get_(String name) {
+    final values = _values[name];
+    return values == null || values.isEmpty ? null : values.first;
+  }
+
+  @override
+  List<FormDataEntryValue> getAll(String name) =>
+      List<FormDataEntryValue>.from(_values[name] ?? const <String>[]);
+
+  @override
+  bool has(String name) => _values.containsKey(name);
+
+  @override
+  void set_(String name, Blob blobValue, [String? filename]) {}
 }
