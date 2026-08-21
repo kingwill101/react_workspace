@@ -284,7 +284,8 @@ Future<Map<String, String>> inferForeignComponentProps({
 
 String _dartTypeForInferredProp(TsIrProp prop) {
   final base = switch (prop.type.kind) {
-    'string' || 'literal' => 'String',
+    'string' => 'String',
+    'literal' => _dartTypeForLiteralUnion(prop.type.literals ?? const []),
     'number' => 'num',
     'boolean' => 'bool',
     'reactNode' => 'ReactNode',
@@ -295,6 +296,23 @@ String _dartTypeForInferredProp(TsIrProp prop) {
   };
   return prop.required ? base : '$base?';
 }
+
+String _dartTypeForLiteralUnion(List<String> literals) {
+  if (literals.isEmpty) return 'Object';
+  if (literals.every((literal) => literal == 'true' || literal == 'false')) {
+    return 'bool';
+  }
+  if (literals.every((literal) => num.tryParse(literal) != null)) {
+    return 'num';
+  }
+  if (literals.every(_isStringLiteral)) return 'String';
+  return 'Object';
+}
+
+bool _isStringLiteral(String literal) =>
+    literal.length >= 2 &&
+    ((literal.startsWith('"') && literal.endsWith('"')) ||
+        (literal.startsWith("'") && literal.endsWith("'")));
 
 /// Adds one component to a structured `foreign.components` block.
 ///

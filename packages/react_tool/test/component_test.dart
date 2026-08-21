@@ -110,6 +110,10 @@ styles:
 export interface GreetingProps {
   name?: string;
   count: number;
+  variant?: "primary" | "secondary";
+  priority?: 1 | 2;
+  visible?: true | false;
+  mixed?: "a" | 1;
 }
 export declare function Greeting(props: GreetingProps): React.ReactElement;
 export interface RootProps {
@@ -138,7 +142,14 @@ export const Dialog: {
         exportName: 'Greeting',
       );
 
-      expect(inferred, {'name': 'String?', 'count': 'num'});
+      expect(inferred, {
+        'name': 'String?',
+        'count': 'num',
+        'variant': 'String?',
+        'priority': 'num?',
+        'visible': 'bool?',
+        'mixed': 'Object?',
+      });
 
       final nested = await inferForeignComponentProps(
         config: config,
