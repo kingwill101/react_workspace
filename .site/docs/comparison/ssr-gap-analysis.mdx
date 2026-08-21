@@ -1,111 +1,32 @@
-# SSR Features and Gaps — React Dart vs Next.js
-
-This document surveys the SSR landscape in Next.js (as the reference framework)
-and maps what React Dart already supports and what gaps remain.
-
+---
+sidebar_position: 4
 ---
 
-## What React Dart already has
+# SSR features and gaps
 
-| Feature | Next.js | React Dart |
-|---|---|---|
-| Typed server actions (`@serverFunction`) | Server Actions (async server functions) | ✅ `@serverFunction` over `/__react/actions` with contract hashes + codecs |
-| ServerFunctionContext | Server function context (cookies, headers) | ✅ `ServerFunctionContext` with auth hook |
-| SSR renderToString | `renderToString` / `renderToPipeableStream` | ✅ `renderToString` via node worker |
-| Per-route SSR deep links | File-system routing with SSR per route | ✅ `react_router` bindings + per-route SSR in the example |
-| Static generation (SSG) | `export const dynamic = 'force-static'` | ❌ Not yet |
-| Incremental Static Regeneration (ISR) | `revalidate` / `cacheLife` | ❌ Not yet |
-| Partial Prerendering (PPR) | PPR with `cacheLife` + Suspense | ❌ Not yet |
-| Streaming SSR | `renderToPipeableStream` + Suspense boundaries | ❌ Not yet (renderToString only) |
-| Route handlers | `route.ts` / `route.js` for API endpoints | ❌ Not yet |
-| Form actions / `useActionState` | Built-in form handling with optimistic UI | ❌ Not yet (server functions exist but no form integration) |
-| Caching + revalidation | `"use cache"`, `cacheLife()`, `cacheTag()`, `revalidateTag()` | ❌ Not yet |
-| `after()` post-response work | `after()` for analytics, cookies, etc. | ❌ Not yet |
-| Middleware / request proxy | `middleware.ts` runs before every request | ❌ Not yet |
-| Metadata / SEO DX | `generateMetadata` for `<head>` management | ❌ Not yet |
-| Build-time SSR bundle | Pre-built SSR bundle served by node worker | ✅ `ssr.entry.mjs` + `ssr_runtime.mjs` |
-| Contract-based server functions | Serialized with RSC-like protocol | ✅ Typed action classes with `@serverFunction` |
+React Dart now supports buffered and streaming SSR, page metadata, explicit
+document caching, and typed server-action state. The HTTP server adapter still
+owns ordinary API routes and middleware.
 
----
+## Supported today
 
-## Priority gaps to make SSR actually useful
+- `@serverFunction` actions with codecs, contract hashes, and request context;
+- `renderToString` and opt-in `renderToPipeableStream` through the Node worker;
+- deep-link SSR with `react_router` server bindings;
+- `ReactPageMetadata` for title, SEO, Open Graph, links, and JSON-LD;
+- `ReactDocumentCache` with TTL, bounds, and tag invalidation;
+- `useServerAction` for typed pending, result, error, and invocation state;
+- Routed and Shelf API handlers mounted alongside the React fallback.
 
-### 1. Streaming SSR (`renderToPipeableStream`)
-**Impact: High.** `renderToString` sends the full HTML in one shot. Streaming
-allows the shell to render immediately while nested Suspense boundaries fill in
-progressively. This is the single biggest UX differentiator Next.js has.
+## Remaining work
 
-### 2. Route handlers
-**Impact: High.** API routes (`/api/*`) are essential for any web app.
-React Dart has server functions (called from the browser) but no standalone
-route handlers for GET/POST endpoints that return JSON or files directly.
+- static route generation and a `react build --prerender` workflow;
+- persistent ISR and stale-while-revalidate behavior;
+- partial prerendering beyond streaming SSR;
+- a portable post-response/background-work API;
+- typed cache-aware data loaders and deduplication;
+- higher-level form serialization and optimistic server-action helpers.
 
-### 3. Form actions + `useActionState` + optimistic UI
-**Impact: High.** Server functions can be called from the client, but there's
-no built-in `<form action={serverAction}>` integration or `useActionState`
-hook for managing pending/optimistic state.
-
-### 4. Caching and revalidation
-**Impact: Medium.** No `cacheLife`, `cacheTag`, or `revalidateTag` support.
-Data fetching results cannot be cached at the server level, which limits
-performance for repeated renders.
-
-### 5. `"use cache"` directive
-**Impact: Medium.** React 19's `"use cache"` directive allows marking
-components/functions as cacheable. Not yet supported in React Dart.
-
-### 6. `after()` post-response work
-**Impact: Low-Medium.** No way to run code after the response is sent
-(analytics, logging, cache invalidation).
-
-### 7. Middleware / request proxy
-**Impact: Medium.** No request-level middleware for auth, redirects, or
-rewrites before the SSR render.
-
-### 8. ISR / PPR
-**Impact: Medium.** No incremental static regeneration or partial
-prerendering. Every page is either fully static or fully dynamic.
-
-### 9. Metadata / SEO
-**Impact: Low-Medium.** No structured way to generate `<meta>` tags,
-Open Graph, or JSON-LD per route.
-
----
-
-## Architecture notes
-
-### How React Dart's SSR works today
-
-1. `react_tool build` compiles `lib/ssr.dart` into an SSR JS bundle
-   (`build/react/ssr.entry.mjs`).
-2. `react_tool serve` starts a node process running `ssr_runtime.mjs`, which
-   listens on the SSR port and handles `renderToString` calls.
-3. The Dart server (`bin/server.dart`) receives HTTP requests, calls the SSR
-   worker for page renders, and returns the full HTML.
-4. Server functions are exposed at `/__react/actions` via a shelf handler
-   generated by `react_codegen`.
-
-### What a streaming SSR architecture would look like
-
-Replace `renderToString` with `renderToPipeableStream` in the node SSR worker.
-The worker would pipe HTML chunks to the HTTP response as they become available,
-with Suspense boundaries handled by the React server renderer's `onAllReady`
-callback.
-
-### What route handlers would look like
-
-A `routes/` directory with `route.ts`-style files that export handler functions
-(`GET`, `POST`, etc.) compiled to a JS route module. The SSR worker or a
-dedicated route handler process would dispatch incoming requests to the
-matching route module.
-
----
-
-## Summary
-
-React Dart has a solid foundation for SSR: typed server functions with contract
-hashing, a working SSR render pipeline, and per-route deep links. The biggest
-gaps are **streaming SSR** and **route handlers** — without these, the
-framework can only do full-page SSR (no streaming, no API routes). Adding
-those two features would make React Dart's SSR story competitive with
-Next.js's core offering.
+The implementation order should be prerendering first, then ISR and PPR. The
+explicit Dart cache API should remain the foundation rather than introducing a
+source-transformed `use cache` directive prematurely.
