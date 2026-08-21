@@ -8,11 +8,19 @@ The official build tool and CLI for React Dart applications.
 
 ## Installation
 
-Activate globally using pub:
+The React Dart packages are currently consumed from GitHub because they are
+not yet published to pub.dev. Activate the CLI from the repository ref:
 
 ```console
-dart pub global activate react_tool
+dart pub global activate --source git \
+  --git-ref master \
+  --git-path packages/react_tool \
+  https://github.com/kingwill101/react_workspace.git
 ```
+
+Use an immutable commit ref for reproducible external applications. Once the
+package is published, the hosted command becomes `dart pub global activate
+react_tool`.
 
 Alternatively, run it directly from your project via `dart run`:
 

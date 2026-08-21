@@ -20,8 +20,16 @@ It demonstrates the four pieces a custom wrapper owns:
 ## Installation
 ```yaml
 dependencies:
-  react_zustand: ^0.0.1
+  react_zustand:
+    git:
+      url: https://github.com/kingwill101/react_workspace.git
+      ref: master
+      path: packages/react_zustand
 ```
+
+Use the same GitHub ref for the other React Dart packages in the application
+until these packages are published. Pin a commit instead of `master` for
+reproducible builds.
 
 ## Core Usage
 

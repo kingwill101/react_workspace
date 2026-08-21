@@ -120,7 +120,11 @@ SSR paths. An application should only need a Dart dependency:
 
 ```yaml
 dependencies:
-  react_zustand: ^0.0.1
+  react_zustand:
+    git:
+      url: https://github.com/kingwill101/react_workspace.git
+      ref: master
+      path: packages/react_zustand
 ```
 
 ```dart

@@ -15,9 +15,64 @@ sidebar_position: 0
 The CLI keeps npm dependencies under `.dart_tool/react/js/`; it does not
 install React globally or modify an application's `package.json`.
 
+## Current pre-publication installation
+
+The React Dart packages are currently available from GitHub, not as released
+pub.dev versions. External applications must use a Git dependency with an
+explicit ref until the packages are published:
+
+```console
+dart pub global activate --source git \
+  --git-ref master \
+  --git-path packages/react_tool \
+  https://github.com/kingwill101/react_workspace.git
+```
+
+Application packages use the same repository/ref and the package path inside
+the repository:
+
+```yaml
+dependencies:
+  react:
+    git:
+      url: https://github.com/kingwill101/react_workspace.git
+      ref: master
+      path: packages/react
+  react_dom:
+    git:
+      url: https://github.com/kingwill101/react_workspace.git
+      ref: master
+      path: packages/react_dom
+```
+
+Repeat this shape for every React Dart package the application imports, using
+one ref consistently. Prefer an immutable commit ref for reproducible builds;
+`master` is the active development ref.
+
+Routed applications additionally use `routed_core`, `routed_io`, and
+`routed_testing` from the same ref in
+[`routed`](https://github.com/kingwill101/routed):
+
+```yaml
+dependencies:
+  routed_core:
+    git:
+      url: https://github.com/kingwill101/routed.git
+      ref: master
+      path: packages/routed_core
+  routed_io:
+    git:
+      url: https://github.com/kingwill101/routed.git
+      ref: master
+      path: packages/routed_io
+```
+
+The `routed_testing` adapter uses the same Git URL/ref with the path
+`packages/server_testing/routed_testing`.
+
 ## Install the CLI
 
-Once published, activate it globally:
+Once the package is published, the hosted installation becomes:
 
 ```console
 dart pub global activate react_tool

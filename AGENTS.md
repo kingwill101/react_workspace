@@ -1,5 +1,22 @@
 # React workspace agent guidance
 
+## Repository skills
+
+Before working on a matching task, read the focused repository skill:
+
+- `skills/react-dart-projects/SKILL.md` for scaffolding, unpublished Git refs,
+  package boundaries, and generated sources;
+- `skills/react-dart-testing/SKILL.md` for native harness selection and
+  Routed/Shelf adapter tests;
+- `skills/react-dart-wrappers/SKILL.md` for generated TypeScript bindings,
+  npm descriptors, and handwritten-shim exceptions.
+- `skills/react-dart-foreign-components/SKILL.md` for shadcn-style local TSX
+  export discovery, prop inference, wrapper generation, and bundle retention.
+
+React Dart packages are currently consumed from the GitHub repository with an
+explicit ref. Routed dependencies and Routed testing adapters likewise use the
+same ref from `https://github.com/kingwill101/routed.git` until publication.
+
 ## Use the native test stack first
 
 - Use `package:react_testing` and `package:server_testing` for React workspace validation. Do not reach for Playwright or another browser automation tool for behavior that these harnesses cover.

@@ -239,8 +239,16 @@ The application adds only the Dart dependency:
 
 ```yaml
 dependencies:
-  react_zustand: ^0.0.1
+  react_zustand:
+    git:
+      url: https://github.com/kingwill101/react_workspace.git
+      ref: master
+      path: packages/react_zustand
 ```
+
+Use the same Git repository/ref for every React Dart package in the
+application until the packages are published. Pin a commit rather than
+`master` for reproducible builds.
 
 Then uses the wrapper from a component:
 

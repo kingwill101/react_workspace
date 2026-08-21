@@ -28,15 +28,22 @@ Add `react_testing` to your `dev_dependencies`:
 
 ```yaml
 dev_dependencies:
-  react_testing: ^0.1.0
+  react_testing:
+    git:
+      url: https://github.com/kingwill101/react_workspace.git
+      ref: master
+      path: packages/react_testing
 ```
+
+The React Dart packages are currently consumed from GitHub refs until
+publication. Keep the same React workspace ref for all React Dart packages.
 
 Add the adapter for the server being tested alongside `server_testing`:
 
 ```yaml
 dev_dependencies:
   server_testing: ^0.4.0
-  # For Shelf:
+  # For Shelf (currently hosted):
   server_testing_shelf: ^0.4.0
   # For Routed, use the same source/ref as routed_core:
   routed_testing:

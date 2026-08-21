@@ -12,15 +12,23 @@ browser automation.
 
 ```yaml
 dev_dependencies:
-  react_testing: ^0.1.0
+  react_testing:
+    git:
+      url: https://github.com/kingwill101/react_workspace.git
+      ref: master
+      path: packages/react_testing
   server_testing: ^0.4.0
   test: ^1.31.2
 ```
 
 Add the adapter that matches the application server:
 
-- Shelf: `server_testing_shelf`;
-- Routed: `routed_testing`, using the same Routed source and ref as the app.
+- Shelf: the hosted `server_testing_shelf` package;
+- Routed: `routed_testing` from the same `routed` Git ref as `routed_core`.
+
+These packages are currently consumed from Git refs because they are not yet
+published to pub.dev. Replace `master` with an immutable commit for
+reproducible external applications.
 
 ## Component and hook tests
 

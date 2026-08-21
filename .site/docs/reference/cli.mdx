@@ -13,12 +13,26 @@ Run it from an application package:
 dart run react_tool:react <command>
 ```
 
-After global activation, the shorter `react <command>` form is equivalent:
+After publication, global activation makes the shorter `react <command>` form
+available:
 
 ```console
 dart pub global activate react_tool
 react doctor
 ```
+
+Until then, activate the CLI from the GitHub ref:
+
+```console
+dart pub global activate --source git \
+  --git-ref master \
+  --git-path packages/react_tool \
+  https://github.com/kingwill101/react_workspace.git
+```
+
+Use an immutable commit ref for reproducible external applications. The same
+GitHub ref is required for the React Dart package dependencies in the
+application's `pubspec.yaml`.
 
 ## Command overview
 
