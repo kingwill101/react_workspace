@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:artisanal/args.dart';
 
+import 'build.dart';
 import 'project_config.dart';
+import 'ts_bindings.dart';
 
 /// CLI commands for declaring local foreign React components.
 final class ComponentCommand extends Command<void> {
@@ -17,11 +21,17 @@ final class ComponentCommand extends Command<void> {
 
 final class _AddComponentCommand extends Command<void> {
   _AddComponentCommand() {
-    argParser.addOption(
-      'export',
-      defaultsTo: 'default',
-      help: 'The TypeScript export to register (default: default).',
-    );
+    argParser
+      ..addOption(
+        'export',
+        defaultsTo: 'default',
+        help: 'The TypeScript export to register (default: default).',
+      )
+      ..addFlag(
+        'infer',
+        defaultsTo: false,
+        help: 'Infer prop types from the local TypeScript declaration.',
+      );
   }
 
   @override
@@ -80,16 +90,33 @@ final class _AddComponentCommand extends Command<void> {
       props[propName] = type;
     }
 
+    final exportName = _validateScalar(
+      option('export') as String? ?? 'default',
+      'export name',
+    );
+    final infer = option('infer') as bool? ?? false;
+    if (infer) {
+      if (exportName == 'default') {
+        throw const ReactToolException(
+          '`--infer` currently requires a named export. Pass '
+          '`--export ComponentName`.',
+        );
+      }
+      final inferred = await _inferProps(
+        config: config,
+        module: module,
+        exportName: exportName,
+      );
+      for (final entry in inferred.entries) {
+        props.putIfAbsent(entry.key, () => entry.value);
+      }
+    }
+
     if (config.foreignComponents.any((component) => component.name == name)) {
       throw ReactToolException(
         'A foreign component named "$name" is already declared.',
       );
     }
-
-    final exportName = _validateScalar(
-      option('export') as String? ?? 'default',
-      'export name',
-    );
     final updated = addForeignComponentYaml(
       reactFile.readAsStringSync(),
       name: name,
@@ -101,6 +128,59 @@ final class _AddComponentCommand extends Command<void> {
     info('Declared $name from $module in ${reactFile.path}.');
     info('Run `dart run react_tool:react generate` to write the Dart wrapper.');
   }
+}
+
+Future<Map<String, String>> _inferProps({
+  required ReactProjectConfig config,
+  required String module,
+  required String exportName,
+}) async {
+  final moduleFile = config.file(module);
+  final npmRoot = Directory('${config.root.path}/node_modules').existsSync()
+      ? config.root.path
+      : (await ReactBuilder(
+          config: config,
+          release: false,
+          log: (_) {},
+        ).ensureJsEnvironment())?.npmRoot;
+  if (npmRoot == null) {
+    throw const ReactToolException(
+      'Cannot infer props without a Node dependency root. Run `npm install` '
+      'or `react js install` first.',
+    );
+  }
+
+  final result = await TsBindingExtractor(npmRoot).extract(
+    specifier: module,
+    names: [exportName],
+    entry: moduleFile.absolute.path,
+  );
+  final declaration = result.declarations.where(
+    (declaration) => declaration.name == exportName,
+  );
+  if (declaration.length != 1 || declaration.single.kind != 'component') {
+    throw ReactToolException(
+      'Export "$exportName" in $module is not an inferrable React component.',
+    );
+  }
+  return {
+    for (final prop in declaration.single.props)
+      prop.name: _dartTypeForInferredProp(prop),
+  };
+}
+
+String _dartTypeForInferredProp(TsIrProp prop) {
+  final base = switch (prop.type.kind) {
+    'string' || 'literal' => 'String',
+    'number' => 'num',
+    'boolean' => 'bool',
+    'reactNode' => 'ReactNode',
+    'function' || 'hostValue' => 'Function',
+    'array' || 'tuple' => 'List<Object?>',
+    'object' || 'record' => 'Map<String, Object?>',
+    _ => 'Object',
+  };
+  return prop.required ? base : '$base?';
 }
 
 /// Adds one component to a structured `foreign.components` block.

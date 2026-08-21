@@ -179,7 +179,19 @@ dart run react_tool:react component add design.Button \
 ```
 
 Use `--export Button` for a named export; the default export is assumed when
-the option is omitted.
+the option is omitted. Add `--infer` to derive the prop surface from a local
+TypeScript declaration. Inference currently requires a named export and a
+Node dependency root (`node_modules` or the managed JS environment):
+
+```console
+dart run react_tool:react component add design.Button \
+  web/components/ui/button.tsx --export Button --infer
+```
+
+Explicit `prop:type` values may be supplied alongside `--infer`; they take
+precedence over inferred values. Components need a declaration shape that the
+TypeScript extractor can inspect, such as `React.FC<Props>` or a typed
+component function.
 
 The component name is also its runtime registration key. Dotted names are
 useful for avoiding collisions between design systems, packages, and local

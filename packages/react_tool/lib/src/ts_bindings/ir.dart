@@ -192,11 +192,13 @@ final class TsBindingExtractor {
     required String specifier,
     required List<String> names,
     bool all = false,
+    String? entry,
   }) async {
     final request = jsonEncode({
       'specifier': specifier,
       'names': names,
       'all': all,
+      'entry': ?entry,
     });
     final requestC = request.toNativeUtf8();
     final rootC = npmRoot.toNativeUtf8();

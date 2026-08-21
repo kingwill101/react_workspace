@@ -98,6 +98,30 @@ void main() {
         ),
       );
     });
+
+    test('extracts a local TypeScript entry override', () async {
+      final local = File(p.join(npmRoot, 'button.d.ts'))
+        ..writeAsStringSync('''
+export interface ButtonProps {
+  label?: string;
+  onClick?: (event: MouseEvent) => void;
+}
+export const Button: React.FC<ButtonProps>;
+''');
+
+      final result = await TsBindingExtractor(npmRoot).extract(
+        specifier: './button.d.ts',
+        names: ['Button'],
+        entry: local.path,
+      );
+
+      final declaration = result.declarations.single;
+      expect(declaration.kind, 'component');
+      expect(
+        {for (final prop in declaration.props) prop.name},
+        {'label', 'onClick'},
+      );
+    });
   });
 
   group('generateBindings', () {
