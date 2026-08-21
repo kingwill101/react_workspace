@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:path/path.dart' as p;
 import 'package:react_tool/src/component.dart';
 import 'package:react_tool/src/project_config.dart';
 import 'package:test/test.dart';
@@ -92,5 +95,45 @@ styles:
 
     expect(updated, contains('styles:\n  entrypoints:'));
     expect(updated, contains("- 'web/components/dialog.css'"));
+  });
+
+  test('infers props from an installed npm component declaration', () async {
+    final root = await Directory.systemTemp.createTemp('react_component_');
+    try {
+      final package = Directory(p.join(root.path, 'node_modules', 'fake-pkg'))
+        ..createSync(recursive: true);
+      File(p.join(package.path, 'package.json')).writeAsStringSync(
+        '{"name":"fake-pkg","version":"1.0.0","types":"./index.d.ts"}',
+      );
+      File(p.join(package.path, 'index.d.ts')).writeAsStringSync('''
+export interface GreetingProps {
+  name?: string;
+  count: number;
+}
+export declare function Greeting(props: GreetingProps): React.ReactElement;
+''');
+
+      final config = ReactProjectConfig(
+        root: root,
+        packageName: 'fixture',
+        clientEntrypoint: null,
+        ssrEntrypoint: null,
+        serverEntrypoint: null,
+        staticDirectory: 'web',
+        outputDirectory: 'build/react',
+        styleEntrypoints: const [],
+        styleOutput: null,
+        foreignComponents: const [],
+      );
+      final inferred = await inferForeignComponentProps(
+        config: config,
+        module: 'fake-pkg',
+        exportName: 'Greeting',
+      );
+
+      expect(inferred, {'name': 'String?', 'count': 'num'});
+    } finally {
+      await root.delete(recursive: true);
+    }
   });
 }

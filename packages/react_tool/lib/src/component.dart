@@ -112,12 +112,6 @@ final class _AddComponentCommand extends Command<void> {
     );
     final infer = option('infer') as bool? ?? false;
     if (infer) {
-      if (!localModule) {
-        throw const ReactToolException(
-          '`--infer` currently supports local TypeScript modules. Add the '
-          'package first, then use an explicit prop surface for npm exports.',
-        );
-      }
       if (exportName == 'default') {
         throw const ReactToolException(
           '`--infer` currently requires a named export. Pass '
@@ -198,6 +192,7 @@ Future<Map<String, String>> inferForeignComponentProps({
   required String exportName,
 }) async {
   final moduleFile = config.file(module);
+  final localModule = moduleFile.existsSync();
   final npmRoot = Directory('${config.root.path}/node_modules').existsSync()
       ? config.root.path
       : (await ReactBuilder(
@@ -215,14 +210,16 @@ Future<Map<String, String>> inferForeignComponentProps({
   final result = await TsBindingExtractor(npmRoot).extract(
     specifier: module,
     names: [exportName],
-    entry: moduleFile.absolute.path,
+    entry: localModule ? moduleFile.absolute.path : null,
   );
   final declaration = result.declarations.where(
     (declaration) => declaration.name == exportName,
   );
   if (declaration.length != 1 || declaration.single.kind != 'component') {
     throw ReactToolException(
-      'Export "$exportName" in $module is not an inferrable React component.',
+      'Export "$exportName" in $module is not an inferrable React component. '
+      'For nested object exports such as `Dialog.Root`, provide explicit '
+      'props until the extractor supports member-path declarations.',
     );
   }
   return {

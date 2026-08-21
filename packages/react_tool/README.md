@@ -201,8 +201,9 @@ same build path as application styles.
 
 Use `--export Button` for a named export; the default export is assumed when
 the option is omitted. Add `--infer` to derive the prop surface from a local
-TypeScript declaration. Inference currently requires a named export and a
-Node dependency root (`node_modules` or the managed JS environment):
+TypeScript declaration or an installed npm package. Inference requires a
+named export and a Node dependency root (`node_modules` or the managed JS
+environment):
 
 ```console
 dart run react_tool:react component add design.Button \
@@ -229,9 +230,14 @@ dart run react_tool:react component add dialog.Root \
 ```
 
 Nested export paths such as `Dialog.Root` are resolved in the generated
-browser and SSR registration entries. Package prop inference remains separate
-from local source inference for now; provide an explicit prop surface when an
-npm package does not expose a directly inferable component declaration.
+browser and SSR registration entries. They currently need an explicit prop
+surface because the extractor does not yet model member-path component
+declarations. Simple named npm exports can use the same inference path:
+
+```console
+dart run react_tool:react component add router.MemoryRouter \
+  react-router-dom --export MemoryRouter --infer
+```
 
 Running either command generates the Dart wrappers in
 `lib/.generated/foreign_components.g.dart`:
