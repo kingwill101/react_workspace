@@ -85,7 +85,12 @@ foreign:
       export: LineChart
 ```
 
-For complex libraries, the community convention is to create a "wrapper package" (e.g., `react_router` or `react_recharts`). The wrapper package uses a JS shim to register the components globally, and provides Dart wrappers. See the **Wrapping third-party React packages** section in the main README for advanced wrapper patterns using `react.js` definitions in `pubspec.yaml`.
+For reusable libraries, create a wrapper package such as `react_router` or
+`react_zustand`. The package owns its `react.js` descriptor, npm requirements,
+shim, typed Dart API, and tests, so consumers add one Dart dependency without
+copying project configuration. See [Build a Dart wrapper for a JavaScript
+package](./wrapper-packages) for the complete generated and handwritten
+workflows.
 
 ## TypeScript Declarations Integration
 

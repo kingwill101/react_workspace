@@ -15,6 +15,8 @@ const sidebars: SidebarsConfig = {
         'guides/ssr',
         'guides/client-only',
         'guides/server-functions',
+        'guides/foreign-components',
+        'guides/wrapper-packages',
         'guides/testing',
         'guides/deployment',
       ],
