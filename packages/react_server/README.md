@@ -68,6 +68,30 @@ the selected HTTP adapter. The store receives the document TTL, stale-while-
 revalidate window, and cache tags, so a Redis, database, disk, or edge-KV
 implementation can preserve the same application contract.
 
+For a single-host deployment, `FileReactDocumentStore` provides a restart-safe
+JSON-on-disk implementation. `ReactRouteManifest` can supply route-specific
+TTL, stale windows, and tags:
+
+```dart
+final app = ReactServerApp(
+  // ...
+  documentStore: FileReactDocumentStore(Directory('var/react-cache')),
+  routeManifest: ReactRouteManifest.fromJson({
+    'routes': [
+      {
+        'pattern': '/news/:slug',
+        'ttlSeconds': 30,
+        'staleWhileRevalidateSeconds': 300,
+        'tags': ['news'],
+      },
+    ],
+  }),
+);
+```
+
+Use a database, Redis, or edge-KV implementation of `ReactDocumentStore` when
+the application runs on more than one host.
+
 `ReactDataCache` provides typed data caching with concurrent-load
 deduplication, stale-while-revalidate, and tag invalidation:
 

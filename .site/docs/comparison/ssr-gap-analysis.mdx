@@ -18,6 +18,7 @@ owns ordinary API routes and middleware.
 - `ReactPageMetadata` for title, SEO, Open Graph, links, and JSON-LD;
 - `ReactDocumentCache` with TTL, bounds, tag invalidation, and stale-while-revalidate;
 - `ReactDocumentStore` for persistent or distributed document storage;
+- `ReactRouteManifest` for route-specific ISR policies;
 - `ReactDataCache.getOrLoad<T>` for deduplicated typed data loading;
 - `useServerAction`, `serverActionSubmit`, and the React 19 optimistic-action helper;
 - structured field-error extraction from action failures;
@@ -26,12 +27,8 @@ owns ordinary API routes and middleware.
 
 ## Remaining work
 
-- automatic route manifests for the existing `react_tool prerender` workflow;
-- route-manifest ISR and deployment-specific store implementations;
-- deployment-specific ISR store implementations;
+- automatic route discovery for the existing `react_tool prerender` workflow;
 - generated schema-aware form validation and field decoder helpers.
 
-The next implementation order is deployment-specific ISR stores, then an
-explicit PPR slot contract. The explicit Dart cache API should remain the
-foundation rather than introducing a source-transformed `use cache` directive
-prematurely.
+The explicit Dart cache API should remain the foundation rather than
+introducing a source-transformed `use cache` directive prematurely.

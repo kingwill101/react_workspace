@@ -48,6 +48,7 @@ final class RoutedReactApplication {
     this.pageMetadata = _emptyPageMetadata,
     this.partialDocument,
     ReactDataCache? partialDataCache,
+    this.routeManifest,
     this.streamingSsr = false,
     this.documentCache,
     this.documentStore,
@@ -89,6 +90,9 @@ final class RoutedReactApplication {
 
   /// Cache used by [partialDocument] shells and regions.
   final ReactDataCache partialDataCache;
+
+  /// Optional route-level ISR policies.
+  final ReactRouteManifest? routeManifest;
 
   /// Whether document responses should be progressively streamed from React.
   ///
@@ -159,19 +163,38 @@ final class RoutedReactApplication {
       if (ssr == null || rootComponent == null) {
         return await staticHandler(context);
       }
+      final policy = routeManifest?.match(context.path);
       final key = cacheKey(context);
-      final tags = cacheTags(context);
+      final tags = <String>{...cacheTags(context), ...?policy?.tags};
+      final ttl = policy?.ttl ?? documentTtl;
+      final staleWindow = policy?.staleWhileRevalidate ?? staleWhileRevalidate;
       final cached = streamingSsr ? null : documentCache?.get(key);
       if (cached != null) return context.html(cached.html);
       final stale = streamingSsr ? null : documentCache?.getStale(key);
       if (stale != null) {
-        unawaited(_refreshDocument(context, key, tags));
+        unawaited(
+          _refreshDocument(
+            context,
+            key,
+            tags,
+            ttl: ttl,
+            staleWhileRevalidate: staleWindow,
+          ),
+        );
         return context.html(stale.html);
       }
       final stored = streamingSsr ? null : await documentStore?.read(key);
       if (stored != null) {
         if (stored.stale) {
-          unawaited(_refreshDocument(context, key, tags));
+          unawaited(
+            _refreshDocument(
+              context,
+              key,
+              tags,
+              ttl: ttl,
+              staleWhileRevalidate: staleWindow,
+            ),
+          );
         }
         return context.html(stored.html);
       }
@@ -191,14 +214,15 @@ final class RoutedReactApplication {
       documentCache?.put(
         key,
         html,
-        staleWhileRevalidate: staleWhileRevalidate,
+        ttl: ttl,
+        staleWhileRevalidate: staleWindow,
         tags: tags,
       );
       await documentStore?.write(
         key,
         html,
-        ttl: documentTtl,
-        staleWhileRevalidate: staleWhileRevalidate,
+        ttl: ttl,
+        staleWhileRevalidate: staleWindow,
         tags: tags,
       );
       return context.html(html);
@@ -210,8 +234,10 @@ final class RoutedReactApplication {
   Future<void> _refreshDocument(
     routed.EngineContext context,
     String key,
-    Iterable<String> tags,
-  ) async {
+    Iterable<String> tags, {
+    required Duration ttl,
+    required Duration staleWhileRevalidate,
+  }) async {
     try {
       final props = await pageProps(context);
       final metadata = await pageMetadata(context);
@@ -226,13 +252,14 @@ final class RoutedReactApplication {
       documentCache?.put(
         key,
         html,
+        ttl: ttl,
         staleWhileRevalidate: staleWhileRevalidate,
         tags: tags,
       );
       await documentStore?.write(
         key,
         html,
-        ttl: documentTtl,
+        ttl: ttl,
         staleWhileRevalidate: staleWhileRevalidate,
         tags: tags,
       );

@@ -18,6 +18,7 @@ capabilities supplied by the selected Dart server adapter.
 | Page metadata | Supported | `ReactPageMetadata` emits title, description, canonical, Open Graph, meta/link tags, and JSON-LD. |
 | Document caching | Supported | `ReactDocumentCache` provides TTL, bounded entries, tag invalidation, and stale-while-revalidate for buffered documents. |
 | Persistent document caching | Supported | `ReactDocumentStore` lets adapters use Redis, databases, disk, or edge KV storage with the same TTL/stale/tag contract. |
+| Route-manifest ISR | Supported | `ReactRouteManifest` applies route-specific TTL, stale windows, and tags; `FileReactDocumentStore` supplies a restart-safe single-host store. |
 | Typed data loading | Supported | `ReactDataCache.getOrLoad<T>` deduplicates concurrent loads and supports stale values and tags. |
 | Server-action form state | Supported | `react_web` provides typed pending/result/error state, `FormData` submission, field-error extraction, and a React 19 optimistic-action helper. |
 | Post-response work | Supported | `ReactAfterResponse` is available on `ServerFunctionContext` and is drained by the Routed/Shelf action handlers. |
@@ -32,13 +33,6 @@ capabilities supplied by the selected Dart server adapter.
 `react_tool prerender` renders explicit routes or a checked-in JSON route
 manifest into static HTML. It writes extensionless routes as nested
 `index.html` files. Routes are not inferred automatically from the application.
-
-### Route-manifest ISR
-
-`ReactDocumentCache` now provides request-time TTL caching and
-stale-while-revalidate, and `ReactDocumentStore` provides the persistence
-boundary. There is not yet a route-manifest ISR workflow or deployment-specific
-store implementation in this workspace.
 
 ### Higher-level form integration
 
@@ -69,6 +63,8 @@ edge runtime lifecycle.
 4. Routed/Shelf remain responsible for ordinary API routes, middleware,
    assets, and deployment-specific response handling.
 
-The next implementation targets are deployment-specific document stores and a
-schema-aware form package. `ReactPartialDocument` is intentionally explicit:
-arbitrary React stream chunks are not treated as cache-safe boundaries.
+The next implementation target is a schema-aware form package. Deployment
+specific stores remain application concerns: the workspace includes a
+restart-safe file store and the `ReactDocumentStore` contract for distributed
+backends. `ReactPartialDocument` is intentionally explicit: arbitrary React
+stream chunks are not treated as cache-safe boundaries.

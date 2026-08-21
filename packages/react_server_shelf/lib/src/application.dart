@@ -36,6 +36,9 @@ final class ReactServerApp {
 
   /// Cache used by [partialDocument] shells and regions.
   final ReactDataCache partialDataCache;
+
+  /// Optional route-level ISR policies.
+  final ReactRouteManifest? routeManifest;
   final bool streamingSsr;
   final ReactDocumentCache? documentCache;
   final ReactDocumentStore? documentStore;
@@ -56,6 +59,7 @@ final class ReactServerApp {
     this.pageMetadata = _emptyPageMetadata,
     this.partialDocument,
     ReactDataCache? partialDataCache,
+    this.routeManifest,
     this.streamingSsr = false,
     this.documentCache,
     this.documentStore,
@@ -98,19 +102,39 @@ final class ReactServerApp {
         if (ssr == null || rootComponent == null) {
           return await staticHandler(request);
         }
+        final policy = routeManifest?.match(request.url.path);
         final key = cacheKey(request);
-        final tags = cacheTags(request);
+        final tags = <String>{...cacheTags(request), ...?policy?.tags};
+        final ttl = policy?.ttl ?? documentTtl;
+        final staleWindow =
+            policy?.staleWhileRevalidate ?? staleWhileRevalidate;
         final cached = streamingSsr ? null : documentCache?.get(key);
         if (cached != null) return Response.ok(cached.html);
         final stale = streamingSsr ? null : documentCache?.getStale(key);
         if (stale != null) {
-          unawaited(_refreshDocument(request, key, tags));
+          unawaited(
+            _refreshDocument(
+              request,
+              key,
+              tags,
+              ttl: ttl,
+              staleWhileRevalidate: staleWindow,
+            ),
+          );
           return Response.ok(stale.html);
         }
         final stored = streamingSsr ? null : await documentStore?.read(key);
         if (stored != null) {
           if (stored.stale) {
-            unawaited(_refreshDocument(request, key, tags));
+            unawaited(
+              _refreshDocument(
+                request,
+                key,
+                tags,
+                ttl: ttl,
+                staleWhileRevalidate: staleWindow,
+              ),
+            );
           }
           return Response.ok(stored.html);
         }
@@ -133,14 +157,15 @@ final class ReactServerApp {
         documentCache?.put(
           key,
           html,
-          staleWhileRevalidate: staleWhileRevalidate,
+          ttl: ttl,
+          staleWhileRevalidate: staleWindow,
           tags: tags,
         );
         await documentStore?.write(
           key,
           html,
-          ttl: documentTtl,
-          staleWhileRevalidate: staleWhileRevalidate,
+          ttl: ttl,
+          staleWhileRevalidate: staleWindow,
           tags: tags,
         );
         return Response.ok(
@@ -158,8 +183,10 @@ final class ReactServerApp {
   Future<void> _refreshDocument(
     Request request,
     String key,
-    Iterable<String> tags,
-  ) async {
+    Iterable<String> tags, {
+    required Duration ttl,
+    required Duration staleWhileRevalidate,
+  }) async {
     try {
       final props = await pageProps(request);
       final metadata = await pageMetadata(request);
@@ -174,13 +201,14 @@ final class ReactServerApp {
       documentCache?.put(
         key,
         html,
+        ttl: ttl,
         staleWhileRevalidate: staleWhileRevalidate,
         tags: tags,
       );
       await documentStore?.write(
         key,
         html,
-        ttl: documentTtl,
+        ttl: ttl,
         staleWhileRevalidate: staleWhileRevalidate,
         tags: tags,
       );
