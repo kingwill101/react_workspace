@@ -178,6 +178,11 @@ dart run react_tool:react component add design.Button \
   variant:String? disabled:bool? onClick:Function?
 ```
 
+Use `--style web/components/button.css` to add a local stylesheet to the
+project's existing `styles.entrypoints` pipeline. Sass compilation, CSS
+Modules, output naming, and document stylesheet links continue to use the
+same build path as application styles.
+
 Use `--export Button` for a named export; the default export is assumed when
 the option is omitted. Add `--infer` to derive the prop surface from a local
 TypeScript declaration. Inference currently requires a named export and a

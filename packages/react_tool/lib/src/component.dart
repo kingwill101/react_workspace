@@ -37,6 +37,10 @@ final class _AddComponentCommand extends Command<void> {
         'version',
         defaultsTo: '*',
         help: 'npm version range for a bare package module (default: *).',
+      )
+      ..addOption(
+        'style',
+        help: 'Local CSS/Sass entrypoint to include with this component.',
       );
   }
 
@@ -130,7 +134,7 @@ final class _AddComponentCommand extends Command<void> {
         'A foreign component named "$name" is already declared.',
       );
     }
-    final updated = addForeignComponentYaml(
+    var updated = addForeignComponentYaml(
       reactFile.readAsStringSync(),
       name: name,
       module: module,
@@ -140,6 +144,16 @@ final class _AddComponentCommand extends Command<void> {
           ? const {}
           : {module: option('version') as String? ?? '*'},
     );
+    final style = option('style') as String?;
+    if (style != null) {
+      final styleFile = config.file(style);
+      if (!styleFile.existsSync()) {
+        throw ReactToolException(
+          'Component stylesheet does not exist: ${styleFile.path}',
+        );
+      }
+      updated = addStylesheetYaml(updated, style);
+    }
     reactFile.writeAsStringSync(updated);
     info('Declared $name from $module in ${reactFile.path}.');
     info('Run `dart run react_tool:react generate` to write the Dart wrapper.');
@@ -380,3 +394,47 @@ bool _isNpmSpecifier(String value) =>
     !value.contains('\\') &&
     !value.contains(':') &&
     p.extension(value).isEmpty;
+
+/// Adds a local stylesheet to the project's regular `styles.entrypoints`.
+///
+/// The updater preserves the existing style map and refuses shorthand forms
+/// that cannot be extended without guessing at the user's intent.
+String addStylesheetYaml(String source, String stylesheet) {
+  final lines = source.split('\n');
+  final scalar = _yamlScalar(stylesheet);
+  if (lines.any(
+    (line) => line.trim() == '- $scalar' || line.trim() == '- $stylesheet',
+  )) {
+    return source;
+  }
+
+  final stylesIndex = lines.indexWhere((line) => line.trimRight() == 'styles:');
+  if (stylesIndex < 0) {
+    final result = StringBuffer(source);
+    if (!source.endsWith('\n')) result.write('\n');
+    if (source.isNotEmpty) result.write('\n');
+    result.write('styles:\n  entrypoints:\n    - $scalar');
+    return result.toString();
+  }
+
+  final entrypointsIndex = _findSectionIndex(lines, stylesIndex, 'entrypoints');
+  if (entrypointsIndex >= 0) {
+    lines.insertAll(_blockEnd(lines, entrypointsIndex, 2), ['    - $scalar']);
+    return lines.join('\n');
+  }
+
+  final stylesEnd = _blockEnd(lines, stylesIndex, 0);
+  final next = stylesIndex + 1 < lines.length ? lines[stylesIndex + 1] : '';
+  if (next.trimLeft().startsWith('-')) {
+    lines.insert(stylesEnd, '  - $scalar');
+    return lines.join('\n');
+  }
+  if (next.trim().isEmpty || next.isEmpty) {
+    lines.insertAll(stylesEnd, ['  entrypoints:', '    - $scalar']);
+    return lines.join('\n');
+  }
+  throw const ReactToolException(
+    'The `styles:` value is a scalar and cannot accept another entrypoint. '
+    'Convert it to `styles:\n  entrypoints:` first.',
+  );
+}

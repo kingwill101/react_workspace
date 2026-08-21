@@ -68,4 +68,29 @@ foreign:
       throwsA(isA<ReactToolException>()),
     );
   });
+
+  test('adds a stylesheet to the normal style entrypoint pipeline', () {
+    const source = '''
+styles:
+  entrypoints:
+    - web/styles.css
+  output: styles.css
+''';
+
+    final updated = addStylesheetYaml(source, 'web/components/dialog.css');
+
+    expect(updated, contains('- web/styles.css'));
+    expect(updated, contains("- 'web/components/dialog.css'"));
+    expect(updated, contains('output: styles.css'));
+  });
+
+  test('creates a style entrypoint section when none exists', () {
+    final updated = addStylesheetYaml(
+      'client: web/client.dart\n',
+      'web/components/dialog.css',
+    );
+
+    expect(updated, contains('styles:\n  entrypoints:'));
+    expect(updated, contains("- 'web/components/dialog.css'"));
+  });
 }
