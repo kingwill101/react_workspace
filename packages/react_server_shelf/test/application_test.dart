@@ -7,6 +7,55 @@ import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('ReactServerApp reads and writes a persistent document store', () async {
+    final worker = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+    var renders = 0;
+    worker.listen((request) async {
+      renders++;
+      final response = request.response;
+      response.headers.contentType = ContentType.json;
+      response.write(
+        jsonEncode({
+          'html': '<main>render $renders</main>',
+          'props': <String, dynamic>{},
+        }),
+      );
+      await response.close();
+    });
+
+    final store = _MemoryDocumentStore();
+    final app = ReactServerApp(
+      actionRegistry: ServerFunctionRegistry(),
+      staticHandler: (request) => Response.ok('static'),
+      indexTemplate: '<div>{{SSR}}</div>',
+      ssr: ReactSsrClient(
+        endpoint: Uri.parse('http://127.0.0.1:${worker.port}/'),
+      ),
+      rootComponent: 'test.root',
+      documentStore: store,
+      documentTtl: const Duration(minutes: 5),
+      cacheTags: (request) => const ['homepage'],
+    );
+
+    final first = await app.handler(
+      Request('GET', Uri.parse('http://localhost/')),
+    );
+    final second = await app.handler(
+      Request('GET', Uri.parse('http://localhost/')),
+    );
+
+    expect(first.statusCode, 200);
+    expect(second.statusCode, 200);
+    expect(await first.readAsString(), contains('render 1'));
+    expect(await second.readAsString(), contains('render 1'));
+    expect(renders, 1);
+    expect(store.writes, 1);
+    expect(store.lastTags, contains('homepage'));
+
+    app.ssr!.close();
+    await worker.close(force: true);
+  });
+
   test('ReactServerApp renders a worker document into the template', () async {
     final worker = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     worker.listen((request) async {
@@ -92,4 +141,36 @@ void main() {
     ssr.close();
     await worker.close(force: true);
   });
+}
+
+final class _MemoryDocumentStore implements ReactDocumentStore {
+  ReactStoredDocument? document;
+  int writes = 0;
+  Set<String> lastTags = const {};
+
+  @override
+  Future<ReactStoredDocument?> read(String key) async => document;
+
+  @override
+  Future<void> write(
+    String key,
+    String html, {
+    required Duration ttl,
+    required Duration staleWhileRevalidate,
+    Iterable<String> tags = const <String>[],
+  }) async {
+    writes++;
+    lastTags = tags.toSet();
+    document = ReactStoredDocument(html: html, stale: false, tags: lastTags);
+  }
+
+  @override
+  Future<void> invalidate(String key) async {
+    document = null;
+  }
+
+  @override
+  Future<void> invalidateTag(String tag) async {
+    if (document?.tags.contains(tag) ?? false) document = null;
+  }
 }

@@ -60,6 +60,32 @@ final document = await ssr.render(
 `ReactSsrDocument` contains rendered HTML and serialized props. The HTTP
 adapter injects both into the configured index template.
 
+## Caching and lifecycle primitives
+
+`ReactDocumentCache` is an in-process document cache. When documents must be
+shared between processes or survive restarts, provide a `ReactDocumentStore` to
+the selected HTTP adapter. The store receives the document TTL, stale-while-
+revalidate window, and cache tags, so a Redis, database, disk, or edge-KV
+implementation can preserve the same application contract.
+
+`ReactDataCache` provides typed data caching with concurrent-load
+deduplication, stale-while-revalidate, and tag invalidation:
+
+```dart
+final data = ReactDataCache();
+final user = await data.getOrLoad<User>(
+  'user:$id',
+  () => loadUser(id),
+  ttl: const Duration(minutes: 5),
+  tags: ['user:$id'],
+);
+```
+
+Server functions can schedule non-critical work with
+`ServerFunctionContext.scheduleAfterResponse`. The Routed and Shelf adapters
+drain these callbacks after the action handler completes. Deployment-specific
+durable background-work guarantees remain the responsibility of the host.
+
 ## Node renderer entrypoint
 
 The application's `lib/ssr.dart` is compiled to JavaScript. It imports hidden

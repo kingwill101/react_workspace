@@ -15,16 +15,17 @@ owns ordinary API routes and middleware.
 - deep-link SSR with `react_router` server bindings;
 - `ReactPageMetadata` for title, SEO, Open Graph, links, and JSON-LD;
 - `ReactDocumentCache` with TTL, bounds, tag invalidation, and stale-while-revalidate;
+- `ReactDocumentStore` for persistent or distributed document storage;
+- `ReactDataCache.getOrLoad<T>` for deduplicated typed data loading;
 - `useServerAction` and `serverActionSubmit` for typed action/form state;
+- `ReactAfterResponse` for scheduled server-function post-response work;
 - Routed and Shelf API handlers mounted alongside the React fallback.
 
 ## Remaining work
 
-- static route generation and a `react build --prerender` workflow;
-- persistent ISR, route-manifest revalidation, and deploy-time cache storage;
+- automatic route manifests for the existing `react_tool prerender` workflow;
+- route-manifest ISR and deployment-specific store implementations;
 - partial prerendering beyond streaming SSR;
-- a portable post-response/background-work API;
-- typed cache-aware data loaders and deduplication;
 - field-aware form validation and optimistic server-action helpers.
 
 The implementation order should be prerendering first, then ISR and PPR. The
