@@ -169,8 +169,9 @@ foreign:
 ```
 
 The declaration can also be added interactively through the CLI. The command
-edits only the structured `foreign.components` section and preserves the rest
-of `react.yaml`:
+edits only the structured `foreign.components` section, preserves the rest of
+`react.yaml`, then generates the Dart wrapper and validates the normal
+browser/SSR build pipeline:
 
 ```console
 dart run react_tool:react component add design.Button \
@@ -189,7 +190,9 @@ It declares `web/components/ui/button.tsx` as `shadcn.Button`. Use
 `--directory`, `--namespace`, `--export`, and `--style` when the project uses
 different conventions. `--infer` is available for typed local components.
 The adapter writes the same `foreign.components` manifest consumed by the
-generic command; it does not add a shadcn-specific runtime or generator.
+generic command; it does not add a shadcn-specific runtime or generator. Pass
+`--no-validate` when you only want to update the manifest and generate source
+files.
 
 Use `--style web/components/button.css` to add a local stylesheet to the
 project's existing `styles.entrypoints` pipeline. Sass compilation, CSS

@@ -43,6 +43,11 @@ final class _AddShadcnComponentCommand extends Command<void> {
         help: 'Optional local CSS/Sass entrypoint for the component.',
       )
       ..addFlag(
+        'validate',
+        defaultsTo: true,
+        help: 'Generate the wrapper and validate the project bundle.',
+      )
+      ..addFlag(
         'infer',
         defaultsTo: false,
         help: 'Infer props from a typed local TypeScript declaration.',
@@ -134,7 +139,11 @@ final class _AddShadcnComponentCommand extends Command<void> {
     }
     reactFile.writeAsStringSync(updated);
     info('Declared $runtimeName from $module in ${reactFile.path}.');
-    info('Run `dart run react_tool:react generate` to write the Dart wrapper.');
+    await generateAndValidateForeignComponents(
+      config,
+      validate: option('validate') as bool? ?? true,
+      log: line,
+    );
   }
 }
 

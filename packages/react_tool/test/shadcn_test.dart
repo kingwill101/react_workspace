@@ -38,7 +38,7 @@ void main() {
 
       final runner = CommandRunner<void>('react', '')
         ..addCommand(ShadcnCommand());
-      await runner.run(['shadcn', 'add', 'button']);
+      await runner.run(['shadcn', 'add', '--no-validate', 'button']);
 
       final manifest = await File('${root.path}/react.yaml').readAsString();
       expect(manifest, contains("name: 'shadcn.Button'"));

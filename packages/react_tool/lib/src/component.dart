@@ -41,6 +41,11 @@ final class _AddComponentCommand extends Command<void> {
       ..addOption(
         'style',
         help: 'Local CSS/Sass entrypoint to include with this component.',
+      )
+      ..addFlag(
+        'validate',
+        defaultsTo: true,
+        help: 'Generate the wrapper and validate the project bundle.',
       );
   }
 
@@ -156,7 +161,28 @@ final class _AddComponentCommand extends Command<void> {
     }
     reactFile.writeAsStringSync(updated);
     info('Declared $name from $module in ${reactFile.path}.');
-    info('Run `dart run react_tool:react generate` to write the Dart wrapper.');
+    await generateAndValidateForeignComponents(
+      config,
+      validate: option('validate') as bool? ?? true,
+      log: line,
+    );
+  }
+}
+
+/// Generates project foreign-component wrappers and, by default, validates
+/// the browser/SSR bundle through the normal build pipeline.
+Future<void> generateAndValidateForeignComponents(
+  ReactProjectConfig config, {
+  required bool validate,
+  required void Function(String message) log,
+}) async {
+  final builder = ReactBuilder(config: config, release: false, log: log);
+  if (validate) {
+    await builder.build();
+    log('Generated wrappers and validated the React bundle.');
+  } else {
+    await builder.generateSources();
+    log('Generated sources are ready in lib/.generated/.');
   }
 }
 
