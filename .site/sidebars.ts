@@ -26,6 +26,15 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: 'Tutorials',
+      items: [
+        'tutorials/shadcn-components',
+        'tutorials/custom-dart-hooks',
+        'tutorials/server-actions',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Reference',
       items: [
         'reference/react-yaml',

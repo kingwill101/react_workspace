@@ -33,6 +33,9 @@ react doctor
 | `clean` | Remove React-owned build and generated outputs. |
 | `js install` | Provision the managed npm environment. |
 | `js sync` | Validate npm requirements in host-JS mode. |
+| `component list` | Enumerate public React component exports in a local TSX module. |
+| `component add` | Declare, infer, generate, and validate a local or npm component wrapper. |
+| `shadcn add` | Apply shadcn naming and directory conventions to `component add`. |
 | `ts bind` | Generate typed Dart bindings and registration shims from TypeScript. |
 | `analyze` | Run Dart analysis and print resolved React usage information. |
 | `test` | Run Dart tests, optionally with coverage. |
@@ -196,6 +199,35 @@ under `.dart_tool/react/js/`. It does not mutate the application's
 JavaScript project satisfies every wrapper dependency and peer range.
 
 ## TypeScript bindings
+
+### Foreign component workflow
+
+For local React components, enumerate exports first:
+
+```console
+dart run react_tool:react component list web/components/ui/field.tsx
+```
+
+Then declare the exports you want to use:
+
+```console
+dart run react_tool:react component add shadcn.Field \
+  web/components/ui/field.tsx --export Field --infer
+```
+
+Use `--no-validate` while adding several exports, then run one full build. Add
+explicit `name:type` arguments when TypeScript utility types such as
+`React.ComponentProps<"textarea">` are intentionally broad:
+
+```console
+dart run react_tool:react component add shadcn.Textarea \
+  web/components/ui/textarea.tsx \
+  'className:String?' 'placeholder:String?' 'rows:num?' \
+  --export Textarea --infer --no-validate
+```
+
+The generated wrappers are retained only when authored Dart code references
+them. This keeps the browser and SSR foreign bundles small.
 
 Explicit mode extracts selected exports, or discovers components and hooks when
 no names are supplied:

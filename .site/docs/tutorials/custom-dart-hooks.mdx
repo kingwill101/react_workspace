@@ -1,0 +1,118 @@
+---
+sidebar_position: 2
+---
+
+# Define a custom Dart hook
+
+React Dart custom hooks are ordinary Dart functions that call hook primitives
+such as `useState`, `useMemo`, or `useContext`. A hook is not a server action:
+it runs as part of the component render on the browser and during SSR.
+
+## 1. Define the data types
+
+Create `lib/language.dart`:
+
+```dart
+final class TranslationValues {
+  final String label;
+  final String placeholder;
+  final String description;
+
+  const TranslationValues({
+    required this.label,
+    required this.placeholder,
+    required this.description,
+  });
+}
+
+final class Translation {
+  final String dir;
+  final TranslationValues values;
+
+  const Translation({required this.dir, required this.values});
+}
+
+typedef Translations = Map<String, Translation>;
+```
+
+## 2. Wrap state in a hook
+
+The hook owns the selected language and returns the derived translation:
+
+```dart
+import 'package:react_dom/react_dom.dart';
+
+({String dir, TranslationValues t, void Function(String) setLanguage})
+useTranslation(
+  Translations translations, {
+  required String initialLanguage,
+}) {
+  final (language, setLanguage) = useState(initialLanguage);
+  final selected = translations[language]!;
+
+  return (
+    dir: selected.dir,
+    t: selected.values,
+    setLanguage: setLanguage,
+  );
+}
+```
+
+This is the Dart equivalent of a TypeScript hook such as:
+
+```tsx
+const { dir, t } = useTranslation(translations, "ar")
+```
+
+## 3. Use it from a component
+
+```dart
+@reactComponent
+ReactNode FeedbackForm(Object props) {
+  final translation = useTranslation(
+    const {
+      'en': Translation(
+        dir: 'ltr',
+        values: TranslationValues(
+          label: 'Feedback',
+          placeholder: 'Your feedback helps us improve...',
+          description: 'Share your thoughts about our service.',
+        ),
+      ),
+      'ar': Translation(
+        dir: 'rtl',
+        values: TranslationValues(
+          label: 'التعليقات',
+          placeholder: 'تعليقاتك تساعدنا على التحسين...',
+          description: 'شاركنا أفكارك حول الخدمة.',
+        ),
+      ),
+    },
+    initialLanguage: 'ar',
+  );
+
+  return div(
+    dir: translation.dir,
+    children: [
+      p(children: [translation.t.label]),
+      button(
+        onClick: (_) => translation.setLanguage(
+          translation.dir == 'rtl' ? 'en' : 'ar',
+        ),
+        children: ['Switch language'],
+      ),
+    ],
+  );
+}
+```
+
+## Hook rules
+
+- Call hooks only from components or other custom hooks.
+- Call them in the same order on every render.
+- Do not call a hook inside a loop, condition, callback, or event handler.
+- Keep SSR-safe initial state deterministic. The browser's first render must
+  agree with the SSR snapshot.
+
+Use `useMemo` when the derived value is expensive. For simple translation
+lookups, the direct map lookup shown above is enough.

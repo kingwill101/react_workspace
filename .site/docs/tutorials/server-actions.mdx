@@ -1,0 +1,104 @@
+---
+sidebar_position: 3
+---
+
+# Define a typed server action
+
+Use a server function when an interaction needs secrets, authentication,
+durable storage, or server-only I/O. A server function is different from a
+React callback and different from a custom hook.
+
+## 1. Define the server function
+
+Create `lib/feedback_actions.dart`:
+
+```dart
+import 'package:react_actions/react_actions.dart';
+import 'package:react_server/react_server.dart';
+
+@serverFunction
+Future<void> saveFeedback(
+  ServerFunctionContext context, {
+  required String message,
+  required String language,
+}) async {
+  if (message.trim().isEmpty) {
+    throw const ServerFunctionFailure(
+      code: 'empty_feedback',
+      message: 'Feedback cannot be empty.',
+      statusCode: 422,
+    );
+  }
+
+  // Validate context.principal, then write to a database or queue.
+}
+```
+
+The context is available only on the server. The browser proxy does not expose
+it.
+
+## 2. Generate the client and server glue
+
+```console
+dart run react_tool:react generate
+```
+
+For `feedback_actions.dart`, generation produces action codecs, a client proxy,
+and server registration files under `lib/.generated/`.
+
+## 3. Call it from a component
+
+```dart
+import 'package:react_dom/react_dom.dart';
+import '.generated/feedback_actions.client.g.dart';
+
+@reactComponent
+ReactNode FeedbackForm(Object props) {
+  final (message, setMessage) = useState('');
+  final (saving, setSaving) = useState(false);
+
+  Future<void> submit() async {
+    setSaving(true);
+    try {
+      await saveFeedbackAction(message: message, language: 'ar');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return button(
+    type: 'button',
+    disabled: saving,
+    onClick: (_) => submit(),
+    children: [saving ? 'Saving…' : 'Send feedback'],
+  );
+}
+```
+
+## 4. Register actions on the server
+
+The server entrypoint must register the generated aggregate:
+
+```dart
+final registry = ServerFunctionRegistry();
+registerServerActions(registry: registry);
+```
+
+Pass that registry to the Routed or Shelf server application. The browser
+entrypoint configures the matching client:
+
+```dart
+runWithServerFunctionClient(
+  HttpServerFunctionClient(endpoint: Uri.parse('/__react/actions')),
+  () => mountRoot(App),
+);
+```
+
+Client-only static examples do not have an action endpoint. Use a Routed or
+Shelf SSR starter when testing server functions.
+
+## 5. Test the contract
+
+Use `ServerFunctionHarness` for direct dispatch and codec tests. Use the
+selected `server_testing` adapter for the HTTP endpoint. The test should cover
+success, validation failures, authentication, and structured error codes.

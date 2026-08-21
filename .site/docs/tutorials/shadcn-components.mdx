@@ -1,0 +1,142 @@
+---
+sidebar_position: 1
+---
+
+# Add a shadcn component
+
+This tutorial starts with a normal shadcn component and ends with a typed Dart
+wrapper used from `app.dart`. The workflow works for shadcn, Radix, a local
+design system, or any other React component written in TypeScript.
+
+## 1. Prepare a client project
+
+Create a client project or open an existing one:
+
+```console
+dart run react_tool:react init client --template client
+cd client
+dart pub get
+npm install
+```
+
+The project needs a `components.json` and `tsconfig.json` for the shadcn CLI.
+The `react_tool` client example includes both files.
+
+## 2. Add the component with shadcn
+
+Run the normal JavaScript CLI:
+
+```console
+npx --yes shadcn@latest add textarea --yes
+```
+
+This creates a local module such as:
+
+```text
+web/components/ui/textarea.tsx
+```
+
+The source remains ordinary React/TypeScript. React Dart does not replace the
+component or require a second JavaScript implementation.
+
+## 3. Inspect public exports
+
+Before declaring a wrapper, enumerate the module's public React exports:
+
+```console
+dart run react_tool:react component list \
+  web/components/ui/textarea.tsx
+```
+
+Output:
+
+```text
+Public React exports in web/components/ui/textarea.tsx:
+  Textarea (component)
+```
+
+For compound components, the command lists every exported component. It also
+handles shadcn's common pattern of declaring a local function or constant and
+exporting it later with `export { ... }`.
+
+## 4. Declare and infer the wrapper
+
+Register the component and infer its TypeScript props:
+
+```console
+dart run react_tool:react component add shadcn.Textarea \
+  web/components/ui/textarea.tsx \
+  --export Textarea \
+  --infer
+```
+
+The command updates `react.yaml`, generates
+`lib/.generated/foreign_components.g.dart`, and validates the bundle. If the
+package is not already installed, npm dependencies are provisioned in the
+managed JavaScript environment.
+
+Inference is conservative. Add explicit props when a component uses a broad
+React utility type or an intrinsic host type that cannot be expanded:
+
+```yaml
+foreign:
+  components:
+    - name: shadcn.Textarea
+      module: web/components/ui/textarea.tsx
+      export: Textarea
+      props:
+        className: String?
+        placeholder: String?
+        disabled: bool?
+        rows: num?
+```
+
+Explicit props take precedence over inferred props.
+
+## 5. Use the generated wrapper
+
+Re-export the generated facade from `lib/shadcn.dart`:
+
+```dart
+export '.generated/foreign_components.g.dart';
+```
+
+Use it from a component:
+
+```dart
+import 'package:react_dom/react_dom.dart';
+
+import 'shadcn.dart';
+
+@reactComponent
+ReactNode FeedbackForm(Object props) {
+  return shadcnTextarea(
+    id: 'feedback',
+    placeholder: 'Your feedback helps us improve...',
+    rows: 4,
+  );
+}
+```
+
+The wrapper is a normal Dart function. The foreign bundle registers the
+matching runtime key, `shadcn.Textarea`, in both browser and SSR targets.
+
+## 6. Verify retention
+
+An unused declaration is intentionally removed from the foreign bundle. Use
+the component in authored Dart code, then build:
+
+```console
+dart analyze
+dart run react_tool:react build
+```
+
+`build/react/bundle_report.json` reports retained components. It should include
+`shadcn.Textarea` once the app renders it.
+
+## Compound components
+
+For a module that exports `Field`, `FieldLabel`, and `FieldDescription`, repeat
+the declaration step for each export, using explicit props where needed. The
+foreign bundler deduplicates the shared TSX module and registers each exported
+component once.

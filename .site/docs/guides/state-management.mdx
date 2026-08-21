@@ -42,6 +42,29 @@ final filtered = useMemo(
 final deferredItems = useDeferredValue(filtered);
 ```
 
+## Custom hooks
+
+A custom hook is an ordinary Dart function that calls hook primitives and
+returns a typed value. For example, a translation hook can own the selected
+language and expose direction plus translated strings:
+
+```dart
+({String dir, TranslationValues t, void Function(String) setLanguage})
+useTranslation(
+  Translations translations, {
+  required String initialLanguage,
+}) {
+  final (language, setLanguage) = useState(initialLanguage);
+  final selected = translations[language]!;
+  return (dir: selected.dir, t: selected.values, setLanguage: setLanguage);
+}
+```
+
+Custom hooks follow the same rules as React hooks: call them only from a
+component or another hook, never conditionally, and keep the initial state
+stable for SSR hydration. See [Define a custom Dart hook](../tutorials/custom-dart-hooks)
+for a complete implementation.
+
 ## External Dart stores
 
 `useSyncExternalStore` is the primitive for subscriptions outside React:
