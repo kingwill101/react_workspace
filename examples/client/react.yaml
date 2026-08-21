@@ -2,4 +2,9 @@ client:
   entrypoint: web/client.dart
 styles:
   entrypoints:
-    - web/styles.scss
+    - web/styles.generated.css
+  output: styles.css
+
+foreign:
+  modules:
+    - web/shadcn_bridge.ts

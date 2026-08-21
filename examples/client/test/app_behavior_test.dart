@@ -23,5 +23,6 @@ String _textContent(ReactNode node) => switch (node) {
   Text(:final value) => value,
   HostNode(:final children) ||
   Fragment(:final children) => children.map(_textContent).join(),
+  ForeignComponent(:final children) => children.map(_textContent).join(),
   _ => '',
 };

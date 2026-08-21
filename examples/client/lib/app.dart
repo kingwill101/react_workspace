@@ -1,23 +1,30 @@
 import 'package:react_web/react_web.dart';
 
+import 'shadcn.dart';
+
 /// Root component — client-only, no server functions.
 @reactComponent
 ReactNode App(({String title}) props) {
   final (message, setMessage) = useState<String?>('Hello from the client');
+  final (clicks, setClicks) = useState(0);
 
   return div(
-    style: const {
-      'fontFamily': 'system-ui, sans-serif',
-      'maxWidth': '640px',
-      'margin': '0 auto',
-      'padding': '48px 24px',
-      'textAlign': 'center',
-    },
     children: [
-      h1(children: [Text(props.title)]),
-      p(style: const {'minHeight': '1.6em'}, children: [Text(message!)]),
-      p(
-        children: [const Text('Edit lib/app.dart and rebuild to see changes.')],
+      shadcnCard(
+        className: 'mx-auto mt-16 max-w-lg p-6',
+        children: [
+          h1(children: [Text(props.title)]),
+          p(children: [Text(message!)]),
+          p(children: [Text('Pressed $clicks times')]),
+          shadcnButton(
+            size: 'lg',
+            onClick: ReactCallback.zero(() {
+              setClicks(clicks + 1);
+              setMessage('The click was handled by Dart.');
+            }),
+            children: [const Text('Try the shadcn Button')],
+          ),
+        ],
       ),
     ],
   );
