@@ -152,7 +152,7 @@ final class _AddShadcnComponentCommand extends Command<void> {
       action: () async {
         info('Declared $runtimeName from $module in ${reactFile.path}.');
         await generateAndValidateForeignComponents(
-          config,
+          ReactProjectConfig.load(config.root),
           validate: option('validate') as bool? ?? true,
           log: line,
         );

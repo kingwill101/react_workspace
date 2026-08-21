@@ -285,6 +285,12 @@ export declare function Greeting(props: GreetingProps): React.ReactElement;
       expect(manifest, contains("name: 'fake.Greeting'"));
       expect(manifest, contains("name: 'String?'"));
       expect(manifest, contains("count: 'num'"));
+      expect(
+        File(
+          p.join(root.path, 'lib', '.generated', 'foreign_components.g.dart'),
+        ).readAsStringSync(),
+        contains('fakeGreeting'),
+      );
     } finally {
       await root.delete(recursive: true);
     }

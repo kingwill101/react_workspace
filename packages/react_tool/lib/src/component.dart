@@ -236,7 +236,7 @@ final class _AddComponentCommand extends Command<void> {
       action: () async {
         info('Declared $name from $module in ${reactFile.path}.');
         await generateAndValidateForeignComponents(
-          config,
+          ReactProjectConfig.load(config.root),
           validate: option('validate') as bool? ?? true,
           log: line,
         );

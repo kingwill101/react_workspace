@@ -16,6 +16,10 @@ ReactNode App(({String title}) props) {
           h1(children: [Text(props.title)]),
           p(children: [Text(message!)]),
           p(children: [Text('Pressed $clicks times')]),
+          shadcnTextarea(
+            className: 'mt-4',
+            placeholder: 'Write a note...',
+          ),
           shadcnButton(
             size: 'lg',
             onClick: ReactCallback.zero(() {

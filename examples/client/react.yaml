@@ -21,3 +21,11 @@ foreign:
       export: Card
       props:
         className: String?
+
+    - name: 'shadcn.Textarea'
+      module: 'web/components/ui/textarea.tsx'
+      export: 'Textarea'
+      props:
+        className: String?
+        placeholder: String?
+        disabled: bool?
