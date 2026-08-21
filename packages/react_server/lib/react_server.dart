@@ -3,6 +3,7 @@ library;
 
 export 'src/context.dart';
 export 'src/cache.dart';
+export 'src/data_cache.dart';
 export 'src/metadata.dart';
 export 'src/registry.dart';
 export 'src/server.dart' if (dart.library.io) 'src/server_stub.dart';
