@@ -12,6 +12,11 @@ shadcn integration:
 The Button click is handled by a Dart callback, demonstrating the browser
 callback bridge as well.
 
+The example also includes a translated RTL feedback form. Its initial Arabic
+layout is rendered from Dart state and uses shadcn `Field`, `FieldLabel`,
+`Textarea`, and `FieldDescription` wrappers. The button toggles the form
+between Arabic/RTL and English/LTR.
+
 The `foreign.components` entries in `react.yaml` cause `react_tool` to import
 the TypeScript components and register them in both the browser and SSR
 foreign bundles. No hand-written JavaScript bridge is required.

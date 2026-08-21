@@ -369,7 +369,9 @@ fn collect_stmt(stmt: &Statement, out: &mut ParsedFile) {
             out.exported.push(d.id.name.as_str().to_string());
         }
         Statement::FunctionDeclaration(f) => {
-            extract_function(f, false, out);
+            // Keep local functions in the declaration store so a later
+            // `export { Component }` can promote them during discovery.
+            extract_function(f, true, out);
             if let Some(id) = &f.id {
                 out.exported.push(id.name.as_str().to_string());
             }

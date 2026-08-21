@@ -183,7 +183,11 @@ export const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLA
 const Textarea = React.forwardRef<HTMLTextAreaElement, React.ComponentProps<"textarea">>(
   (props, ref) => <textarea ref={ref} {...props} />,
 );
+function Field(props: React.ComponentProps<"div">) {
+  return <div {...props} />;
+}
 export { Textarea };
+export { Field };
 ''');
       final reExportedResult = await TsBindingExtractor(npmRoot).extract(
         specifier: './textarea.tsx',
@@ -193,7 +197,7 @@ export { Textarea };
       );
       expect(
         reExportedResult.declarations.map((declaration) => declaration.name),
-        ['Textarea'],
+        ['Textarea', 'Field'],
       );
     });
 

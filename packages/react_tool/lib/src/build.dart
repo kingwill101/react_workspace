@@ -722,7 +722,7 @@ final class ReactBuilder {
           name: component.name,
           export: component.exportName,
         ));
-        targetEntries.add(path);
+        if (!targetEntries.contains(path)) targetEntries.add(path);
       }
 
       // Wrapper entries per target (shared applies to both). Generated shims

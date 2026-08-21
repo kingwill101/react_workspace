@@ -29,3 +29,26 @@ foreign:
         className: String?
         placeholder: String?
         disabled: bool?
+        id: String?
+        dir: String?
+        rows: num?
+
+    - name: 'shadcn.Field'
+      module: 'web/components/ui/field.tsx'
+      export: 'Field'
+      props:
+        className: 'String?'
+        dir: 'String?'
+    - name: 'shadcn.FieldLabel'
+      module: 'web/components/ui/field.tsx'
+      export: 'FieldLabel'
+      props:
+        className: 'String?'
+        dir: 'String?'
+        htmlFor: 'String?'
+    - name: 'shadcn.FieldDescription'
+      module: 'web/components/ui/field.tsx'
+      export: 'FieldDescription'
+      props:
+        className: 'String?'
+        dir: 'String?'
