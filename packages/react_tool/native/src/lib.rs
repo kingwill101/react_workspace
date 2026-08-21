@@ -375,7 +375,10 @@ fn collect_stmt(stmt: &Statement, out: &mut ParsedFile) {
             }
         }
         Statement::VariableDeclaration(v) => {
-            extract_variable(v, false, out);
+            // Keep local variables in the declaration store so a later
+            // `export { Component }` can promote the declaration into the
+            // module's public surface during discovery.
+            extract_variable(v, true, out);
         }
         Statement::ImportDeclaration(i) => {
             // Record aliases from value and type imports alike

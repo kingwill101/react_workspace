@@ -177,6 +177,24 @@ export const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLA
         jsxDiscovered.declarations.map((declaration) => declaration.name),
         ['Table', 'TableHeader'],
       );
+
+      final reExported = File(p.join(npmRoot, 'textarea.tsx'))
+        ..writeAsStringSync('''
+const Textarea = React.forwardRef<HTMLTextAreaElement, React.ComponentProps<"textarea">>(
+  (props, ref) => <textarea ref={ref} {...props} />,
+);
+export { Textarea };
+''');
+      final reExportedResult = await TsBindingExtractor(npmRoot).extract(
+        specifier: './textarea.tsx',
+        names: const [],
+        all: true,
+        entry: reExported.path,
+      );
+      expect(
+        reExportedResult.declarations.map((declaration) => declaration.name),
+        ['Textarea'],
+      );
     });
 
     test('infers props from an object member component export', () async {
