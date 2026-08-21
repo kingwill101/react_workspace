@@ -30,18 +30,27 @@ void main() {
         '${root.path}/react.yaml',
       ).writeAsString('client: web/client.dart\n');
       await Directory('${root.path}/web/components/ui').create(recursive: true);
-      await File(
-        '${root.path}/web/components/ui/button.tsx',
-      ).writeAsString('export const Button = () => null;\n');
+      await Directory('${root.path}/node_modules').create(recursive: true);
+      await File('${root.path}/web/components/ui/button.tsx').writeAsString('''
+export interface ButtonProps {
+  label?: string;
+  disabled: boolean;
+}
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (props, ref) => null,
+);
+''');
 
       final runner = CommandRunner<void>('react', '')
         ..addCommand(ShadcnCommand(workingDirectory: root));
-      await runner.run(['shadcn', 'add', '--no-validate', 'button']);
+      await runner.run(['shadcn', 'add', '--infer', '--no-validate', 'button']);
 
       final manifest = await File('${root.path}/react.yaml').readAsString();
       expect(manifest, contains("name: 'shadcn.Button'"));
       expect(manifest, contains("module: 'web/components/ui/button.tsx'"));
       expect(manifest, contains("export: 'Button'"));
+      expect(manifest, contains("label: 'String?'"));
+      expect(manifest, contains("disabled: 'bool'"));
     } finally {
       await root.delete(recursive: true);
     }
