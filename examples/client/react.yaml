@@ -6,5 +6,18 @@ styles:
   output: styles.css
 
 foreign:
-  modules:
-    - web/shadcn_bridge.ts
+  components:
+    - name: shadcn.Button
+      module: web/components/ui/button.tsx
+      export: Button
+      props:
+        variant: String?
+        size: String?
+        className: String?
+        disabled: bool?
+        onClick: Function?
+    - name: shadcn.Card
+      module: web/components/ui/card.tsx
+      export: Card
+      props:
+        className: String?

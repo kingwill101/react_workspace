@@ -782,8 +782,13 @@ final class ReactBuilder {
             );
           continue;
         }
-        for (final r in registered) {
-          final local = '_foreign${r.name}';
+        for (var index = 0; index < registered.length; index++) {
+          final r = registered[index];
+          // Runtime keys may be namespaced (for example `shadcn.Button`),
+          // but the imported JavaScript binding must be a valid identifier.
+          // Keep the runtime key unchanged and sanitize only this local name.
+          final local =
+              '_foreign${r.name.replaceAll(RegExp(r'[^A-Za-z0-9_]'), '_')}_$index';
           if (r.export == null || r.export == 'default') {
             buffer
               ..writeln("import $local from ${jsonEncode(path)};")

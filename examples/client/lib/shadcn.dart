@@ -1,31 +1,6 @@
-import 'package:react/react.dart';
-
-/// Dart-facing wrapper around the local shadcn Button implementation.
-ReactNode shadcnButton({
-  String? variant,
-  String? size,
-  String? className,
-  bool? disabled,
-  ReactCallback? onClick,
-  ReactChildren children = const [],
-}) => foreignComponent(
-  'shadcn.Button',
-  props: {
-    'variant': ?variant,
-    'size': ?size,
-    'className': ?className,
-    'disabled': ?disabled,
-    'onClick': ?onClick,
-  },
-  children: children,
-);
-
-/// Dart-facing wrapper around the local shadcn Card implementation.
-ReactNode shadcnCard({
-  String? className,
-  ReactChildren children = const [],
-}) => foreignComponent(
-  'shadcn.Card',
-  props: {'className': ?className},
-  children: children,
-);
+// Public facade for the generated shadcn component wrappers.
+//
+// The wrappers are generated from the `foreign.components` entries in
+// `react.yaml`. Keep this file as the stable import path for application
+// code while allowing the generated implementation to change.
+export '.generated/foreign_components.g.dart';

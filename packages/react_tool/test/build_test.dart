@@ -108,6 +108,9 @@ foreign:
       label: String
       disabled: bool?
       onPressed: Function
+  - name: ui.Panel
+    module: web/panel.js
+    export: Panel
 ''');
     await Directory('${root.path}/web').create(recursive: true);
     await File(
@@ -126,6 +129,9 @@ $accent: #336699;
     await File(
       '${root.path}/web/card.js',
     ).writeAsString('export default function Card() {}\n');
+    await File(
+      '${root.path}/web/panel.js',
+    ).writeAsString('export function Panel() {}\n');
   });
 
   tearDown(() async {
@@ -340,6 +346,8 @@ const actionName = 'card';
         ).readAsString();
         expect(entry, contains("import _foreignDefault from \"$cardPath\";"));
         expect(entry, contains("__reactDartRegisterComponent('Card'"));
+        expect(entry, contains("ui.Panel"));
+        expect(entry, contains('_foreignui_Panel_0'));
       }
       final foreignBindings = await File(
         '${root.path}/lib/.generated/foreign_components.g.dart',

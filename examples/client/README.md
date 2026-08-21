@@ -4,12 +4,17 @@ A client-only React Dart application demonstrating the lowest-friction
 shadcn integration:
 
 - shadcn components remain local TypeScript/React source;
-- `web/shadcn_bridge.ts` registers stable foreign-component names;
-- `lib/shadcn.dart` provides small Dart-facing wrappers;
+- `react.yaml` declares the components and their Dart-facing props;
+- `lib/.generated/foreign_components.g.dart` contains generated Dart wrappers,
+  re-exported through `lib/shadcn.dart`;
 - Tailwind compiles the shadcn classes before the Dart build.
 
 The Button click is handled by a Dart callback, demonstrating the browser
 callback bridge as well.
+
+The `foreign.components` entries in `react.yaml` cause `react_tool` to import
+the TypeScript components and register them in both the browser and SSR
+foreign bundles. No hand-written JavaScript bridge is required.
 
 ## Setup
 
