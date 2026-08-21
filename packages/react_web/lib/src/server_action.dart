@@ -29,6 +29,32 @@ final class ServerActionState<TArgs, TResult> {
   final Future<TResult> Function(TArgs arguments) invoke;
 }
 
+/// The state returned by [useOptimisticServerAction].
+final class OptimisticServerActionState<TArgs, TState, TResult> {
+  const OptimisticServerActionState({
+    required this.state,
+    required this.pending,
+    required this.data,
+    required this.error,
+    required this.invoke,
+  });
+
+  /// The current optimistic state.
+  final TState state;
+
+  /// Whether the optimistic transition or server action is pending.
+  final bool pending;
+
+  /// The most recent successful server result.
+  final TResult? data;
+
+  /// The most recent invocation error, if any.
+  final Object? error;
+
+  /// Applies the optimistic update and invokes the server action.
+  final Future<TResult> Function(TArgs arguments) invoke;
+}
+
 /// Binds a generated server function to React pending/result/error state.
 ///
 /// This is the ergonomic building block for buttons and form submit handlers:
@@ -71,6 +97,57 @@ ServerActionState<TArgs, TResult> useServerAction<TArgs, TResult>(
   );
 }
 
+/// Binds a server action to React 19's optimistic state and transitions.
+///
+/// [optimisticUpdate] runs immediately when [invoke] is called. React keeps
+/// that state visible while the transition is pending and restores the
+/// previous state when the action settles. The server result and error remain
+/// available through [data] and [error], just as with [useServerAction].
+///
+/// This hook requires a React runtime that supports `useOptimistic` and
+/// `useTransition`.
+OptimisticServerActionState<TArgs, TState, TResult>
+useOptimisticServerAction<TArgs, TState, TResult>(
+  ServerFunctionRef<TArgs, TResult> ref,
+  TState initialState,
+  TState Function(TState state, TArgs arguments) optimisticUpdate,
+) {
+  final action = useServerAction(ref);
+  final (optimisticState, setOptimisticState) = useOptimistic<TState, TArgs>(
+    initialState,
+    optimisticUpdate,
+  );
+  final (transitionPending, startTransition) = useTransition();
+
+  Future<TResult> invoke(TArgs arguments) {
+    final result = Completer<TResult>();
+    try {
+      startTransition(() {
+        setOptimisticState(arguments);
+        action
+            .invoke(arguments)
+            .then(
+              result.complete,
+              onError: (Object error, StackTrace stack) {
+                result.completeError(error, stack);
+              },
+            );
+      });
+    } catch (error, stack) {
+      result.completeError(error, stack);
+    }
+    return result.future;
+  }
+
+  return OptimisticServerActionState(
+    state: optimisticState,
+    pending: transitionPending || action.pending,
+    data: action.data,
+    error: action.error,
+    invoke: invoke,
+  );
+}
+
 /// Creates a form submit handler for a [ServerActionState].
 ///
 /// [decode] converts the browser [FormData] into the generated action's typed
@@ -86,4 +163,26 @@ void Function(ReactFormEvent) serverActionSubmit<TArgs, TResult>(
     final form = event.currentTarget as HTMLFormElement;
     unawaited(action.invoke(decode(FormData(form))));
   };
+}
+
+/// Extracts field messages from a structured server-action failure.
+///
+/// Server functions can return field errors by throwing
+/// `ServerFunctionFailure(details: {'fieldErrors': {'email': 'Invalid'}})`.
+/// Unknown detail values are ignored, so this helper is safe to use for every
+/// action error.
+Map<String, String> serverActionFieldErrors(Object? error) {
+  if (error is! RemoteServerFunctionException) return const {};
+  final raw = error.details?['fieldErrors'];
+  if (raw is! Map) return const {};
+  return Map<String, String>.fromEntries(
+    raw.entries
+        .where((entry) => entry.key is String && entry.value is String)
+        .map(
+          (entry) => MapEntry<String, String>(
+            entry.key as String,
+            entry.value as String,
+          ),
+        ),
+  );
 }

@@ -44,6 +44,32 @@ builder for large or reusable prop sets.
 Use `classNames`, `css`, `dataAttributes`, and `aria` instead of
 manually assembling common prop maps.
 
+## Server-action forms
+
+`useServerAction` exposes typed pending, result, and error state. For a native
+form, `serverActionSubmit` prevents navigation, converts the form to
+`FormData`, and invokes the action once while it is pending:
+
+```dart
+final action = useServerAction(saveProfile);
+
+form(
+  onSubmit: serverActionSubmit(
+    action,
+    (data) => (name: data.get('name')?.toString() ?? ''),
+  ),
+  children: [
+    button(type: 'submit', disabled: action.pending, children: ['Save']),
+  ],
+);
+```
+
+For React 19 runtimes, `useOptimisticServerAction` applies an optimistic
+state update inside a transition while retaining the typed action result and
+error. Server functions may return field messages in
+`ServerFunctionFailure.details['fieldErrors']`; read them with
+`serverActionFieldErrors(action.error)`.
+
 ## Portable Web surface
 
 `package:react_web/web.dart` exports the generated browser API model.

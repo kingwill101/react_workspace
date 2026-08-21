@@ -1,9 +1,26 @@
 import 'package:react_web/src/generated/web/web.dart';
+import 'package:react_actions/react_actions.dart';
+import 'package:react_web/src/server_action.dart';
 import 'package:react_web/src/ssr_metadata.dart';
 import 'package:react_web/src/web_runtime.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('serverActionFieldErrors extracts structured field messages', () {
+    const error = RemoteServerFunctionException(
+      code: 'validation_failed',
+      message: 'Invalid form',
+      statusCode: 422,
+      details: {
+        'fieldErrors': {'email': 'Enter a valid email.'},
+        'ignored': 42,
+      },
+    );
+
+    expect(serverActionFieldErrors(error), {'email': 'Enter a valid email.'});
+    expect(serverActionFieldErrors(StateError('local')), isEmpty);
+  });
+
   group('UnsupportedWebApiError', () {
     test('message includes api name', () {
       final error = UnsupportedWebApiError('Storage.length');

@@ -18,7 +18,7 @@ capabilities supplied by the selected Dart server adapter.
 | Document caching | Supported | `ReactDocumentCache` provides TTL, bounded entries, tag invalidation, and stale-while-revalidate for buffered documents. |
 | Persistent document caching | Supported | `ReactDocumentStore` lets adapters use Redis, databases, disk, or edge KV storage with the same TTL/stale/tag contract. |
 | Typed data loading | Supported | `ReactDataCache.getOrLoad<T>` deduplicates concurrent loads and supports stale values and tags. |
-| Server-action pending state | Supported | `react_web` provides `useServerAction` and `serverActionSubmit` for typed state and form submission. |
+| Server-action form state | Supported | `react_web` provides typed pending/result/error state, `FormData` submission, field-error extraction, and a React 19 optimistic-action helper. |
 | Post-response work | Supported | `ReactAfterResponse` is available on `ServerFunctionContext` and is drained by the Routed/Shelf action handlers. |
 | API route handlers | Adapter-provided | Routed and Shelf applications can mount ordinary API handlers before the React fallback. There is no generated `route.ts` convention. |
 | Middleware and request proxy | Adapter-provided | Routed owns middleware and route ordering. React packages do not duplicate that layer. |
@@ -46,9 +46,10 @@ region model. Streaming SSR is now available, but it is not PPR.
 
 ### Higher-level form integration
 
-`useServerAction` and `serverActionSubmit` supply typed pending/result/error
-state and basic `FormData` decoding. A richer form state model with field
-validation, structured submission errors, and optimistic updates is still open.
+`useServerAction`, `serverActionSubmit`, `serverActionFieldErrors`, and
+`useOptimisticServerAction` cover typed submission, structured field errors, and
+React 19 optimistic updates. A higher-level schema/form-state package that
+generates field decoders and validation remains optional future work.
 
 ### React 19 cache directives
 
