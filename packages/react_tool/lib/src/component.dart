@@ -58,14 +58,16 @@ final class _AddComponentCommand extends Command<void> {
 
   @override
   String get invocation =>
-      'react component add <runtime-name> <module> [<prop:type> ...]';
+      'react component add <runtime-name> <module> [<prop:type> ...] '
+      '| <npm-module> --export <Export>';
 
   @override
   Future<void> run() async {
     final rest = argResults!.rest;
-    if (rest.length < 2) {
+    if (rest.isEmpty) {
       usageException(
-        'Expected a runtime name, module path, and optional prop:type values.',
+        'Expected a runtime name and module path, or one bare npm module '
+        'with --export.',
       );
     }
 
@@ -79,8 +81,34 @@ final class _AddComponentCommand extends Command<void> {
       );
     }
 
-    final name = _validateScalar(rest[0], 'runtime name');
-    final module = _validateScalar(rest[1], 'module path');
+    final exportName = _validateScalar(
+      option('export') as String? ?? 'default',
+      'export name',
+    );
+    final candidate = _validateScalar(rest.first, 'module path');
+    final candidateFile = config.file(candidate);
+    final shorthand =
+        rest.length == 1 &&
+        !candidateFile.existsSync() &&
+        _isNpmSpecifier(candidate);
+    if (rest.length < 2 && !shorthand) {
+      usageException(
+        'Expected a runtime name and module path, or one bare npm module '
+        'with --export.',
+      );
+    }
+    final module = _validateScalar(
+      shorthand ? candidate : rest[1],
+      'module path',
+    );
+    final name = _validateScalar(
+      shorthand
+          ? exportName == 'default'
+                ? _defaultNpmComponentName(module)
+                : exportName
+          : rest[0],
+      'runtime name',
+    );
     final moduleFile = config.file(module);
     final localModule = moduleFile.existsSync();
     if (!localModule && !_isNpmSpecifier(module)) {
@@ -90,7 +118,7 @@ final class _AddComponentCommand extends Command<void> {
     }
 
     final props = <String, String>{};
-    for (final raw in rest.skip(2)) {
+    for (final raw in rest.skip(shorthand ? 1 : 2)) {
       final separator = raw.indexOf(':');
       if (separator <= 0 || separator == raw.length - 1) {
         usageException('Invalid prop "$raw". Use <name>:<DartType>.');
@@ -106,10 +134,6 @@ final class _AddComponentCommand extends Command<void> {
       props[propName] = type;
     }
 
-    final exportName = _validateScalar(
-      option('export') as String? ?? 'default',
-      'export name',
-    );
     final infer = option('infer') as bool? ?? false;
     if (infer) {
       if (exportName == 'default') {
@@ -416,6 +440,13 @@ String _validateIdentifier(String value) {
   }
   return value;
 }
+
+String _defaultNpmComponentName(String module) => p
+    .basename(module)
+    .split(RegExp(r'[-_]'))
+    .where((part) => part.isNotEmpty)
+    .map((part) => part[0].toUpperCase() + part.substring(1))
+    .join();
 
 bool _isNpmSpecifier(String value) =>
     !value.startsWith('.') &&

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:artisanal/args.dart';
 import 'package:path/path.dart' as p;
 import 'package:react_tool/src/component.dart';
 import 'package:react_tool/src/project_config.dart';
@@ -146,6 +147,39 @@ export const Dialog: {
       );
       expect(nested, {'open': 'bool?'});
     } finally {
+      await root.delete(recursive: true);
+    }
+  });
+
+  test('supports npm shorthand with an export-derived runtime name', () async {
+    final root = await Directory.systemTemp.createTemp('react_component_');
+    final previous = Directory.current;
+    try {
+      Directory.current = root;
+      File(p.join(root.path, 'pubspec.yaml')).writeAsStringSync(
+        'name: fixture\nenvironment:\n  sdk: ">=3.12.0 <4.0.0"\n',
+      );
+      File(
+        p.join(root.path, 'react.yaml'),
+      ).writeAsStringSync('client: web/client.dart\n');
+
+      final runner = CommandRunner<void>('react', '')
+        ..addCommand(ComponentCommand());
+      await runner.run([
+        'component',
+        'add',
+        '@radix-ui/react-dialog',
+        '--export',
+        'Dialog.Root',
+        '--no-validate',
+      ]);
+
+      final manifest = File(p.join(root.path, 'react.yaml')).readAsStringSync();
+      expect(manifest, contains("name: 'Dialog.Root'"));
+      expect(manifest, contains("module: '@radix-ui/react-dialog'"));
+      expect(manifest, contains("'@radix-ui/react-dialog': '*'"));
+    } finally {
+      Directory.current = previous;
       await root.delete(recursive: true);
     }
   });

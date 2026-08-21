@@ -229,6 +229,13 @@ dart run react_tool:react component add dialog.Root \
   @radix-ui/react-dialog --export Dialog.Root --version '^1.0.0'
 ```
 
+For npm modules, the runtime name can be derived from the export and omitted:
+
+```console
+dart run react_tool:react component add \
+  @radix-ui/react-dialog --export Dialog.Root
+```
+
 Nested export paths such as `Dialog.Root` are resolved in the generated
 browser and SSR registration entries. If the package declares the namespace
 as a typed object whose member is a React component, the member props are
