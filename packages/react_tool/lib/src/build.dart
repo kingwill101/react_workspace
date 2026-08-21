@@ -1719,7 +1719,15 @@ http.createServer((req, res) => {
 function renderStreaming(renderRequest, res) {
   let started = false;
   let completed = false;
+  let allReady = false;
+  let pipeFinished = false;
   const send = event => res.write(JSON.stringify(event) + '\n');
+  const finish = () => {
+    if (completed || !allReady || !pipeFinished) return;
+    completed = true;
+    send({type: 'end', props: renderRequest.props});
+    res.end();
+  };
   const fail = error => {
     if (completed) return;
     completed = true;
@@ -1744,13 +1752,16 @@ function renderStreaming(renderRequest, res) {
             send({type: 'chunk', html: chunk.toString(encoding)});
             callback();
           },
+          final(callback) {
+            pipeFinished = true;
+            callback();
+            finish();
+          },
         }));
       },
       onAllReady() {
-        if (completed) return;
-        completed = true;
-        send({type: 'end', props: renderRequest.props});
-        res.end();
+        allReady = true;
+        finish();
       },
       onShellError: fail,
       onError: error => {
