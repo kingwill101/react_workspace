@@ -28,6 +28,7 @@ react doctor
 | `init` | Scaffold an SSR, client-only, or Routed application. |
 | `generate` | Generate Dart sources into `lib/.generated/` without compiling bundles. |
 | `build` | Generate sources and compile production artifacts. |
+| `prerender` | Render selected SSR routes into static HTML files. |
 | `serve` | Build, then run the application server and optional Node SSR worker. |
 | `clean` | Remove React-owned build and generated outputs. |
 | `js install` | Provision the managed npm environment. |
@@ -122,6 +123,21 @@ A full build can produce:
 - browser and SSR foreign-module bundles;
 - `bundle_manifest.json` and `bundle_report.json`;
 - an optional native server executable.
+
+## `react prerender`
+
+```console
+dart run react_tool:react prerender \
+  --routes /,/about,/docs/getting-started \
+  --output build/prerendered
+```
+
+`prerender` builds the project, starts the configured server and generated SSR
+worker, requests each route, and writes the returned HTML. `/` becomes
+`index.html`; extensionless routes become nested `index.html` files such as
+`about/index.html`. Routes cannot contain query strings, fragments, or parent
+directory traversal. This is explicit static generation and does not provide
+persistent ISR or stale-while-revalidate behavior.
 
 ## `react serve`
 

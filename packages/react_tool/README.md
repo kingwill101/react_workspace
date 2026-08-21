@@ -28,6 +28,7 @@ The CLI provides commands to manage the full lifecycle of a React Dart project:
 - `react init <project_name> [--template <ssr|client|routed|routed-minimal>]` - Scaffold a new project. `ssr` includes Shelf-based SSR defaults, `client` omits server code, and `routed` uses Routed (`react_server_routed` + `routed_io`) with no Shelf dependency; `routed-minimal` uses the same stack with reduced starter files.
 - `react generate` - Run Dart code generation and synchronize formatted sources into `lib/.generated/` without compiling bundles. Workspace orchestration may use `--sync-only` after one successful `build_runner build --workspace` invocation.
 - `react build [--watch] [--release] [--server]` - Generate code, compile client and SSR Dart bundles, compile Sass, bundle JS dependencies, and copy static assets.
+- `react prerender --routes /,/about [--output build/prerendered]` - Build the project, boot its real SSR server, and write selected routes as static HTML.
 - `react serve [--watch] [--release] [--no-ssr]` - Build the project and run the Dart server (and SSR worker if configured) locally.
 - `react clean` - Remove `build/react/`, `lib/.generated/`, and other React-owned generated outputs.
 - `react js install` - Install exact wrapper versions into `.dart_tool/react/js`.
@@ -66,6 +67,23 @@ During iteration, you usually edit only:
 - `lib/greeting.dart` for server functions
 
 That makes it easier to work around generated SSR/build churn while still shipping a complete full-stack example.
+
+### Prerendering
+
+Use `prerender` for a declared set of public routes:
+
+```console
+dart run react_tool:react prerender \
+  --routes /,/about,/docs/getting-started \
+  --output build/prerendered
+```
+
+The command builds the configured client and SSR bundles, starts the project's
+server with `REACT_SSR_URL`, requests each route, and writes `/` to
+`index.html` and extensionless routes such as `/about` to
+`about/index.html`. Routes must not contain query strings, fragments, or
+parent-directory traversal. This is explicit route generation; it does not
+turn request-time document caching into implicit ISR.
 
 Project-level foreign-component helpers are also written under
 `lib/.generated/`. Reusable wrapper packages are different: their generated

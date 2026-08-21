@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:artisanal/args.dart';
@@ -22,6 +23,7 @@ class ReactCommandRunner extends CommandRunner<void> {
     addCommand(InitCommand());
     addCommand(GenerateCommand());
     addCommand(BuildCommand());
+    addCommand(PrerenderCommand());
     addCommand(CleanCommand());
     addCommand(ServeCommand());
     addCommand(JsCommand());
@@ -214,6 +216,133 @@ final class BuildCommand extends Command<void> {
         }
       });
     }
+  }
+}
+
+/// `react prerender` — writes a set of SSR routes as static HTML files.
+final class PrerenderCommand extends Command<void> {
+  PrerenderCommand() {
+    argParser
+      ..addOption(
+        'routes',
+        defaultsTo: '/',
+        help: 'Comma-separated routes to render, for example /,/about.',
+      )
+      ..addOption(
+        'output',
+        defaultsTo: 'build/prerendered',
+        help: 'Directory receiving the generated HTML documents.',
+      )
+      ..addOption(
+        'port',
+        defaultsTo: '8081',
+        help: 'Temporary application server port.',
+      )
+      ..addOption(
+        'ssr-port',
+        defaultsTo: '3002',
+        help: 'Temporary SSR worker port.',
+      )
+      ..addFlag(
+        'release',
+        abbr: 'r',
+        defaultsTo: false,
+        help: 'Use release optimization for the generated bundles.',
+      );
+  }
+
+  @override
+  String get name => 'prerender';
+
+  @override
+  String get description =>
+      'Build the project and write selected SSR routes as static HTML.';
+
+  @override
+  Future<void> run() async {
+    final config = ReactProjectConfig.load();
+    final routes = _routes(option('routes') as String? ?? '/');
+    final output = option('output') as String? ?? 'build/prerendered';
+    final port = _parsePortValue('port', option('port') as String?);
+    final ssrPort = _parsePortValue('ssr-port', option('ssr-port') as String?);
+    final release = option('release') as bool? ?? false;
+    final builder = ReactBuilder(config: config, release: release, log: line);
+
+    if (config.serverEntrypoint == null ||
+        !config.file(config.serverEntrypoint!).existsSync()) {
+      throw ReactToolException(
+        'Prerendering requires a server entrypoint at '
+        '${config.serverEntrypoint ?? '(not configured)'}.',
+      );
+    }
+    await builder.build();
+
+    Process? worker;
+    Process? server;
+    final client = HttpClient();
+    try {
+      final manifest = BundleManifest.load(
+        config.directory(config.outputDirectory),
+      );
+      final workerFile = config.file(
+        '${config.outputDirectory}/${manifest.ssrEntry ?? 'ssr.entry.mjs'}',
+      );
+      if (!workerFile.existsSync()) {
+        throw ReactToolException(
+          'Prerendering requires an SSR bundle at ${workerFile.path}.',
+        );
+      }
+      worker = await Process.start(
+        'node',
+        [workerFile.path],
+        workingDirectory: config.root.path,
+        mode: ProcessStartMode.inheritStdio,
+        environment: {...Platform.environment, 'REACT_SSR_PORT': '$ssrPort'},
+      );
+      await _waitForPort(ssrPort);
+      server = await Process.start(
+        Platform.resolvedExecutable,
+        ['run', config.serverEntrypoint!],
+        workingDirectory: config.root.path,
+        mode: ProcessStartMode.inheritStdio,
+        environment: {
+          ...Platform.environment,
+          'PORT': '$port',
+          'REACT_SSR_URL': 'http://127.0.0.1:$ssrPort/',
+        },
+      );
+      await _waitForPort(port);
+
+      final outputDirectory = config.directory(output);
+      if (outputDirectory.existsSync()) {
+        await outputDirectory.delete(recursive: true);
+      }
+      outputDirectory.createSync(recursive: true);
+
+      for (final route in routes) {
+        final request = await client.getUrl(
+          Uri.parse('http://127.0.0.1:$port$route'),
+        );
+        final response = await request.close();
+        final body = await response.transform(utf8.decoder).join();
+        if (response.statusCode < 200 || response.statusCode >= 300) {
+          throw ReactToolException(
+            'Prerendering $route failed with HTTP ${response.statusCode}.',
+          );
+        }
+        final destination = _prerenderDestination(outputDirectory, route);
+        destination.parent.createSync(recursive: true);
+        await destination.writeAsString(body);
+        line('Prerendered $route → ${destination.path}');
+      }
+    } finally {
+      client.close(force: true);
+      await _stopProcess(server);
+      await _stopProcess(worker);
+    }
+    info(
+      'Prerendered ${routes.length} route(s) into ${config.pathFor(output)}.',
+    );
   }
 }
 
@@ -1052,6 +1181,49 @@ Future<void> _waitForPort(int port) async {
     }
   }
   throw ReactToolException('Timed out waiting for port $port.');
+}
+
+List<String> _routes(String value) {
+  final routes = value
+      .split(',')
+      .map((route) => route.trim())
+      .where((route) => route.isNotEmpty)
+      .map((route) => route.startsWith('/') ? route : '/$route')
+      .toList(growable: false);
+  if (routes.isEmpty) {
+    throw const ReactToolException('At least one prerender route is required.');
+  }
+  for (final route in routes) {
+    final uri = Uri.tryParse(route);
+    if (uri == null ||
+        uri.hasQuery ||
+        uri.hasFragment ||
+        route.contains('..')) {
+      throw ReactToolException(
+        'Invalid prerender route "$route". Routes must be paths without '
+        'query strings, fragments, or parent traversal.',
+      );
+    }
+  }
+  return routes;
+}
+
+int _parsePortValue(String name, String? raw) {
+  final value = int.tryParse(raw ?? '');
+  if (value == null || value < 1 || value > 65535) {
+    throw ReactToolException('Invalid --$name port.');
+  }
+  return value;
+}
+
+File _prerenderDestination(Directory output, String route) {
+  final path = route == '/' ? 'index.html' : route.substring(1);
+  final safe = path.endsWith('/')
+      ? '${path}index.html'
+      : path.split('/').last.contains('.')
+      ? path
+      : '$path/index.html';
+  return File(p.join(output.path, safe));
 }
 
 final class CleanCommand extends Command<void> {

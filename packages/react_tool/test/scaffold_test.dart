@@ -33,6 +33,15 @@ void main() {
     );
   });
 
+  test('prerender command exposes route and output options', () {
+    final command = PrerenderCommand();
+    expect(command.name, 'prerender');
+    expect(command.argParser.options['routes'], isNotNull);
+    expect(command.argParser.options['output'], isNotNull);
+    expect(command.argParser.options['port'], isNotNull);
+    expect(command.argParser.options['ssr-port'], isNotNull);
+  });
+
   test('generates the full project skeleton', () async {
     final target = Directory(p.join(root.path, 'my_app'));
     await ScaffoldGenerator().generate(
