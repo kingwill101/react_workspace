@@ -111,6 +111,12 @@ export interface GreetingProps {
   count: number;
 }
 export declare function Greeting(props: GreetingProps): React.ReactElement;
+export interface RootProps {
+  open?: boolean;
+}
+export const Dialog: {
+  Root: React.FC<RootProps>;
+};
 ''');
 
       final config = ReactProjectConfig(
@@ -132,6 +138,13 @@ export declare function Greeting(props: GreetingProps): React.ReactElement;
       );
 
       expect(inferred, {'name': 'String?', 'count': 'num'});
+
+      final nested = await inferForeignComponentProps(
+        config: config,
+        module: 'fake-pkg',
+        exportName: 'Dialog.Root',
+      );
+      expect(nested, {'open': 'bool?'});
     } finally {
       await root.delete(recursive: true);
     }

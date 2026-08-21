@@ -218,8 +218,8 @@ Future<Map<String, String>> inferForeignComponentProps({
   if (declaration.length != 1 || declaration.single.kind != 'component') {
     throw ReactToolException(
       'Export "$exportName" in $module is not an inferrable React component. '
-      'For nested object exports such as `Dialog.Root`, provide explicit '
-      'props until the extractor supports member-path declarations.',
+      'For package-specific member paths that are not declared as typed '
+      'object members, provide explicit props.',
     );
   }
   return {

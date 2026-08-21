@@ -230,9 +230,11 @@ dart run react_tool:react component add dialog.Root \
 ```
 
 Nested export paths such as `Dialog.Root` are resolved in the generated
-browser and SSR registration entries. They currently need an explicit prop
-surface because the extractor does not yet model member-path component
-declarations. Simple named npm exports can use the same inference path:
+browser and SSR registration entries. If the package declares the namespace
+as a typed object whose member is a React component, the member props are
+inferred as well. Package-specific namespace or re-export shapes that do not
+expose that object-member type still need explicit props. Simple named npm
+exports can use the same inference path:
 
 ```console
 dart run react_tool:react component add router.MemoryRouter \
