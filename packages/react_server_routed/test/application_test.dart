@@ -9,6 +9,51 @@ import 'package:test/test.dart';
 import 'package:react_server_routed/react_server_routed.dart';
 
 void main() {
+  test('composes independently cached partial regions', () async {
+    var shellRenders = 0;
+    var regionRenders = 0;
+    final app = RoutedReactApplication(
+      actionRegistry: ServerFunctionRegistry(),
+      staticHandler: (context) => context.string('static'),
+      indexTemplate: '',
+      partialDocument: (context) => ReactPartialDocument(
+        shellKey: 'routed-shell',
+        shell: () {
+          shellRenders++;
+          return '<!--react-partial:content--><main>shell</main>';
+        },
+        regions: [
+          ReactPartialRegion(
+            key: 'content',
+            ttl: Duration.zero,
+            render: () {
+              regionRenders++;
+              return '<section>region $regionRenders</section>';
+            },
+          ),
+        ],
+      ),
+    );
+
+    final firstContext = _context('GET', '/');
+    final first = await app.handler(firstContext.context);
+    await first.close();
+    final secondContext = _context('GET', '/');
+    final second = await app.handler(secondContext.context);
+    await second.close();
+
+    expect(
+      utf8.decode(firstContext.adapter.bytes),
+      contains('<section>region 1</section>'),
+    );
+    expect(
+      utf8.decode(secondContext.adapter.bytes),
+      contains('<section>region 2</section>'),
+    );
+    expect(shellRenders, 1);
+    expect(regionRenders, 2);
+  });
+
   test('renders a document through the SSR worker', () async {
     final worker = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     worker.listen((request) async {

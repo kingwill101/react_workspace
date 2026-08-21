@@ -86,6 +86,31 @@ Server functions can schedule non-critical work with
 drain these callbacks after the action handler completes. Deployment-specific
 durable background-work guarantees remain the responsibility of the host.
 
+## Partial prerendering
+
+Use `ReactPartialDocument` when a route has a cacheable shell and dynamic
+regions with different lifetimes. The shell must contain a marker for each
+region:
+
+```dart
+ReactPartialDocument(
+  shellKey: 'dashboard-shell',
+  shell: () => '<main><!--react-partial:summary--></main>',
+  regions: [
+    ReactPartialRegion(
+      key: 'summary',
+      ttl: const Duration(seconds: 15),
+      render: () => renderSummaryHtml(),
+    ),
+  ],
+);
+```
+
+Pass the descriptor through `partialDocument` on `ReactServerApp` or
+`RoutedReactApplication`. The adapters retain one `ReactDataCache` for the
+application and resolve the shell and every region independently. A short
+region TTL therefore does not invalidate the shell or unrelated regions.
+
 ## Node renderer entrypoint
 
 The application's `lib/ssr.dart` is compiled to JavaScript. It imports hidden

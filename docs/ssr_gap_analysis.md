@@ -13,6 +13,7 @@ capabilities supplied by the selected Dart server adapter.
 | Buffered SSR | Supported | `ReactSsrClient.render` uses `renderToString` in the generated Node worker. |
 | Streaming SSR | Supported | Opt in with `streamingSsr: true`; uses `renderToPipeableStream` and progressively writes the document. |
 | Static prerendering | Supported | `react_tool prerender` renders explicit routes or a JSON route manifest into HTML files. |
+| Partial prerendering | Supported | `ReactPartialDocument` gives shells and dynamic regions independent cache keys and revalidation policies in both HTTP adapters. |
 | Deep-link SSR | Supported | The application root can use `react_router` server bindings and static routing. |
 | Page metadata | Supported | `ReactPageMetadata` emits title, description, canonical, Open Graph, meta/link tags, and JSON-LD. |
 | Document caching | Supported | `ReactDocumentCache` provides TTL, bounded entries, tag invalidation, and stale-while-revalidate for buffered documents. |
@@ -38,11 +39,6 @@ manifest into static HTML. It writes extensionless routes as nested
 stale-while-revalidate, and `ReactDocumentStore` provides the persistence
 boundary. There is not yet a route-manifest ISR workflow or deployment-specific
 store implementation in this workspace.
-
-### Partial prerendering
-
-There is no route-level static shell plus independently revalidated dynamic
-region model. Streaming SSR is now available, but it is not PPR.
 
 ### Higher-level form integration
 
@@ -73,6 +69,6 @@ edge runtime lifecycle.
 4. Routed/Shelf remain responsible for ordinary API routes, middleware,
    assets, and deployment-specific response handling.
 
-The next implementation targets are a route manifest, deployment-specific
-document stores, and an explicit PPR slot contract. ISR and PPR should build on
-those contracts rather than being implicit behavior of the in-process cache.
+The next implementation targets are deployment-specific document stores and a
+schema-aware form package. `ReactPartialDocument` is intentionally explicit:
+arbitrary React stream chunks are not treated as cache-safe boundaries.

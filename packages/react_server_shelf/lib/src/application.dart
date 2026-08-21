@@ -16,6 +16,10 @@ typedef ReactCacheKey = String Function(Request request);
 
 typedef ReactCacheTags = Iterable<String> Function(Request request);
 
+/// Builds an optional partial-prerendered document for a document request.
+typedef ReactPartialDocumentBuilder =
+    FutureOr<ReactPartialDocument?> Function(Request request);
+
 /// Standard Shelf application host for React Dart applications.
 final class ReactServerApp {
   final ServerFunctionRegistry actionRegistry;
@@ -26,6 +30,12 @@ final class ReactServerApp {
   final String? rootComponent;
   final ReactPageProps pageProps;
   final ReactPageMetadataBuilder pageMetadata;
+
+  /// Builds a shell and independently cached dynamic regions for PPR.
+  final ReactPartialDocumentBuilder? partialDocument;
+
+  /// Cache used by [partialDocument] shells and regions.
+  final ReactDataCache partialDataCache;
   final bool streamingSsr;
   final ReactDocumentCache? documentCache;
   final ReactDocumentStore? documentStore;
@@ -35,7 +45,7 @@ final class ReactServerApp {
   final Duration documentTtl;
   final Object? Function(Request request)? authenticate;
 
-  const ReactServerApp({
+  ReactServerApp({
     required this.actionRegistry,
     required this.staticHandler,
     required this.indexTemplate,
@@ -44,6 +54,8 @@ final class ReactServerApp {
     this.rootComponent,
     this.pageProps = _emptyPageProps,
     this.pageMetadata = _emptyPageMetadata,
+    this.partialDocument,
+    ReactDataCache? partialDataCache,
     this.streamingSsr = false,
     this.documentCache,
     this.documentStore,
@@ -52,7 +64,7 @@ final class ReactServerApp {
     this.staleWhileRevalidate = Duration.zero,
     this.documentTtl = const Duration(minutes: 1),
     this.authenticate,
-  });
+  }) : partialDataCache = partialDataCache ?? ReactDataCache();
 
   Handler get handler {
     final actionHandler = createServerActionHandler(
@@ -68,11 +80,24 @@ final class ReactServerApp {
 
       final isDocument =
           request.method == 'GET' && _looksLikeDocument(request.url.path);
-      if (!isDocument || ssr == null || rootComponent == null) {
+      if (!isDocument ||
+          (ssr == null || rootComponent == null) && partialDocument == null) {
         return staticHandler(request);
       }
 
       try {
+        if (partialDocument != null) {
+          final partial = await partialDocument!(request);
+          if (partial != null) {
+            return Response.ok(
+              await partial.render(partialDataCache),
+              headers: {'content-type': 'text/html; charset=utf-8'},
+            );
+          }
+        }
+        if (ssr == null || rootComponent == null) {
+          return await staticHandler(request);
+        }
         final key = cacheKey(request);
         final tags = cacheTags(request);
         final cached = streamingSsr ? null : documentCache?.get(key);

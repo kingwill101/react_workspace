@@ -7,6 +7,48 @@ import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test(
+    'ReactServerApp composes independently cached partial regions',
+    () async {
+      var shellRenders = 0;
+      var regionRenders = 0;
+      final app = ReactServerApp(
+        actionRegistry: ServerFunctionRegistry(),
+        staticHandler: (request) => Response.ok('static'),
+        indexTemplate: '',
+        partialDocument: (request) => ReactPartialDocument(
+          shellKey: 'home-shell',
+          shell: () {
+            shellRenders++;
+            return '<html><!--react-partial:banner--><main>shell</main></html>';
+          },
+          regions: [
+            ReactPartialRegion(
+              key: 'banner',
+              ttl: Duration.zero,
+              render: () {
+                regionRenders++;
+                return '<aside>region $regionRenders</aside>';
+              },
+            ),
+          ],
+        ),
+      );
+
+      final first = await app.handler(
+        Request('GET', Uri.parse('http://localhost/')),
+      );
+      final second = await app.handler(
+        Request('GET', Uri.parse('http://localhost/')),
+      );
+
+      expect(await first.readAsString(), contains('<aside>region 1</aside>'));
+      expect(await second.readAsString(), contains('<aside>region 2</aside>'));
+      expect(shellRenders, 1);
+      expect(regionRenders, 2);
+    },
+  );
+
   test('ReactServerApp reads and writes a persistent document store', () async {
     final worker = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     var renders = 0;

@@ -24,6 +24,10 @@ typedef RoutedReactCacheKey = String Function(routed.EngineContext context);
 typedef RoutedReactCacheTags =
     Iterable<String> Function(routed.EngineContext context);
 
+/// Builds an optional partial-prerendered document for a document request.
+typedef RoutedReactPartialDocumentBuilder =
+    FutureOr<ReactPartialDocument?> Function(routed.EngineContext context);
+
 /// Composes React document and server-action handlers into a Routed handler.
 ///
 /// Non-document requests are delegated to [staticHandler]. Document requests
@@ -33,7 +37,7 @@ typedef RoutedReactCacheTags =
 /// [routed.EngineContext].
 final class RoutedReactApplication {
   /// Creates a Routed/React application handler composition.
-  const RoutedReactApplication({
+  RoutedReactApplication({
     required this.actionRegistry,
     required this.staticHandler,
     required this.indexTemplate,
@@ -42,6 +46,8 @@ final class RoutedReactApplication {
     this.rootComponent,
     this.pageProps = _emptyPageProps,
     this.pageMetadata = _emptyPageMetadata,
+    this.partialDocument,
+    ReactDataCache? partialDataCache,
     this.streamingSsr = false,
     this.documentCache,
     this.documentStore,
@@ -52,7 +58,7 @@ final class RoutedReactApplication {
     this.authenticate,
     this.requestTimeout = const Duration(seconds: 30),
     this.maxActionBodySize = 1024 * 1024,
-  });
+  }) : partialDataCache = partialDataCache ?? ReactDataCache();
 
   /// The registry used by the React server-action endpoint.
   final ServerFunctionRegistry actionRegistry;
@@ -77,6 +83,12 @@ final class RoutedReactApplication {
 
   /// Builds title, SEO, and link metadata for the document head.
   final RoutedReactPageMetadata pageMetadata;
+
+  /// Builds a shell and independently cached dynamic regions for PPR.
+  final RoutedReactPartialDocumentBuilder? partialDocument;
+
+  /// Cache used by [partialDocument] shells and regions.
+  final ReactDataCache partialDataCache;
 
   /// Whether document responses should be progressively streamed from React.
   ///
@@ -132,11 +144,21 @@ final class RoutedReactApplication {
 
     final isDocument =
         context.method == 'GET' && _looksLikeDocument(context.path);
-    if (!isDocument || ssr == null || rootComponent == null) {
+    if (!isDocument ||
+        (ssr == null || rootComponent == null) && partialDocument == null) {
       return staticHandler(context);
     }
 
     try {
+      if (partialDocument != null) {
+        final partial = await partialDocument!(context);
+        if (partial != null) {
+          return context.html(await partial.render(partialDataCache));
+        }
+      }
+      if (ssr == null || rootComponent == null) {
+        return await staticHandler(context);
+      }
       final key = cacheKey(context);
       final tags = cacheTags(context);
       final cached = streamingSsr ? null : documentCache?.get(key);

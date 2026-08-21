@@ -13,6 +13,7 @@ owns ordinary API routes and middleware.
 - `@serverFunction` actions with codecs, contract hashes, and request context;
 - `renderToString` and opt-in `renderToPipeableStream` through the Node worker;
 - `react_tool prerender` for explicit routes or JSON route manifests;
+- `ReactPartialDocument` for independently cached shells and dynamic regions;
 - deep-link SSR with `react_router` server bindings;
 - `ReactPageMetadata` for title, SEO, Open Graph, links, and JSON-LD;
 - `ReactDocumentCache` with TTL, bounds, tag invalidation, and stale-while-revalidate;
@@ -27,7 +28,7 @@ owns ordinary API routes and middleware.
 
 - automatic route manifests for the existing `react_tool prerender` workflow;
 - route-manifest ISR and deployment-specific store implementations;
-- partial prerendering beyond streaming SSR;
+- deployment-specific ISR store implementations;
 - generated schema-aware form validation and field decoder helpers.
 
 The next implementation order is deployment-specific ISR stores, then an
