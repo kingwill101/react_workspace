@@ -14,6 +14,8 @@ typedef ReactPageMetadataBuilder =
 
 typedef ReactCacheKey = String Function(Request request);
 
+typedef ReactCacheTags = Iterable<String> Function(Request request);
+
 /// Standard Shelf application host for React Dart applications.
 final class ReactServerApp {
   final ServerFunctionRegistry actionRegistry;
@@ -28,6 +30,7 @@ final class ReactServerApp {
   final ReactDocumentCache? documentCache;
   final ReactDocumentStore? documentStore;
   final ReactCacheKey cacheKey;
+  final ReactCacheTags cacheTags;
   final Duration staleWhileRevalidate;
   final Duration documentTtl;
   final Object? Function(Request request)? authenticate;
@@ -45,6 +48,7 @@ final class ReactServerApp {
     this.documentCache,
     this.documentStore,
     this.cacheKey = _defaultCacheKey,
+    this.cacheTags = _emptyCacheTags,
     this.staleWhileRevalidate = Duration.zero,
     this.documentTtl = const Duration(minutes: 1),
     this.authenticate,
@@ -70,17 +74,18 @@ final class ReactServerApp {
 
       try {
         final key = cacheKey(request);
+        final tags = cacheTags(request);
         final cached = streamingSsr ? null : documentCache?.get(key);
         if (cached != null) return Response.ok(cached.html);
         final stale = streamingSsr ? null : documentCache?.getStale(key);
         if (stale != null) {
-          unawaited(_refreshDocument(request, key));
+          unawaited(_refreshDocument(request, key, tags));
           return Response.ok(stale.html);
         }
         final stored = streamingSsr ? null : await documentStore?.read(key);
         if (stored != null) {
           if (stored.stale) {
-            unawaited(_refreshDocument(request, key));
+            unawaited(_refreshDocument(request, key, tags));
           }
           return Response.ok(stored.html);
         }
@@ -104,13 +109,14 @@ final class ReactServerApp {
           key,
           html,
           staleWhileRevalidate: staleWhileRevalidate,
+          tags: tags,
         );
         await documentStore?.write(
           key,
           html,
           ttl: documentTtl,
           staleWhileRevalidate: staleWhileRevalidate,
-          tags: const <String>[],
+          tags: tags,
         );
         return Response.ok(
           html,
@@ -124,7 +130,11 @@ final class ReactServerApp {
     };
   }
 
-  Future<void> _refreshDocument(Request request, String key) async {
+  Future<void> _refreshDocument(
+    Request request,
+    String key,
+    Iterable<String> tags,
+  ) async {
     try {
       final props = await pageProps(request);
       final metadata = await pageMetadata(request);
@@ -136,13 +146,18 @@ final class ReactServerApp {
       final html = template
           .replaceAll('{{SSR}}', rendered.html)
           .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
-      documentCache?.put(key, html, staleWhileRevalidate: staleWhileRevalidate);
+      documentCache?.put(
+        key,
+        html,
+        staleWhileRevalidate: staleWhileRevalidate,
+        tags: tags,
+      );
       await documentStore?.write(
         key,
         html,
         ttl: documentTtl,
         staleWhileRevalidate: staleWhileRevalidate,
-        tags: const <String>[],
+        tags: tags,
       );
     } catch (_) {
       // Keep serving the stale entry until the stale window closes.
@@ -176,6 +191,7 @@ final class ReactServerApp {
 FutureOr<Map<String, dynamic>> _emptyPageProps(Request request) => {};
 FutureOr<ReactPageMetadata?> _emptyPageMetadata(Request request) => null;
 String _defaultCacheKey(Request request) => request.url.toString();
+Iterable<String> _emptyCacheTags(Request request) => const <String>[];
 Object? _anonymous(Request request) => null;
 
 bool _looksLikeDocument(String path) {

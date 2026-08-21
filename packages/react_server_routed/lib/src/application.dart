@@ -20,6 +20,10 @@ typedef RoutedReactPageMetadata =
 /// Selects the cache key for a document request.
 typedef RoutedReactCacheKey = String Function(routed.EngineContext context);
 
+/// Supplies invalidation tags for a rendered document.
+typedef RoutedReactCacheTags =
+    Iterable<String> Function(routed.EngineContext context);
+
 /// Composes React document and server-action handlers into a Routed handler.
 ///
 /// Non-document requests are delegated to [staticHandler]. Document requests
@@ -42,6 +46,7 @@ final class RoutedReactApplication {
     this.documentCache,
     this.documentStore,
     this.cacheKey = _defaultCacheKey,
+    this.cacheTags = _emptyCacheTags,
     this.documentTtl = const Duration(minutes: 1),
     this.staleWhileRevalidate = Duration.zero,
     this.authenticate,
@@ -88,6 +93,9 @@ final class RoutedReactApplication {
   /// Selects a cache key when [documentCache] is enabled.
   final RoutedReactCacheKey cacheKey;
 
+  /// Supplies tags written to the memory and persistent document caches.
+  final RoutedReactCacheTags cacheTags;
+
   /// Lifetime written to [documentStore] entries.
   final Duration documentTtl;
 
@@ -130,17 +138,18 @@ final class RoutedReactApplication {
 
     try {
       final key = cacheKey(context);
+      final tags = cacheTags(context);
       final cached = streamingSsr ? null : documentCache?.get(key);
       if (cached != null) return context.html(cached.html);
       final stale = streamingSsr ? null : documentCache?.getStale(key);
       if (stale != null) {
-        unawaited(_refreshDocument(context, key));
+        unawaited(_refreshDocument(context, key, tags));
         return context.html(stale.html);
       }
       final stored = streamingSsr ? null : await documentStore?.read(key);
       if (stored != null) {
         if (stored.stale) {
-          unawaited(_refreshDocument(context, key));
+          unawaited(_refreshDocument(context, key, tags));
         }
         return context.html(stored.html);
       }
@@ -157,13 +166,18 @@ final class RoutedReactApplication {
       final html = template
           .replaceAll('{{SSR}}', rendered.html)
           .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
-      documentCache?.put(key, html, staleWhileRevalidate: staleWhileRevalidate);
+      documentCache?.put(
+        key,
+        html,
+        staleWhileRevalidate: staleWhileRevalidate,
+        tags: tags,
+      );
       await documentStore?.write(
         key,
         html,
         ttl: documentTtl,
         staleWhileRevalidate: staleWhileRevalidate,
-        tags: const <String>[],
+        tags: tags,
       );
       return context.html(html);
     } catch (error) {
@@ -174,6 +188,7 @@ final class RoutedReactApplication {
   Future<void> _refreshDocument(
     routed.EngineContext context,
     String key,
+    Iterable<String> tags,
   ) async {
     try {
       final props = await pageProps(context);
@@ -186,13 +201,18 @@ final class RoutedReactApplication {
       final html = template
           .replaceAll('{{SSR}}', rendered.html)
           .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
-      documentCache?.put(key, html, staleWhileRevalidate: staleWhileRevalidate);
+      documentCache?.put(
+        key,
+        html,
+        staleWhileRevalidate: staleWhileRevalidate,
+        tags: tags,
+      );
       await documentStore?.write(
         key,
         html,
         ttl: documentTtl,
         staleWhileRevalidate: staleWhileRevalidate,
-        tags: const <String>[],
+        tags: tags,
       );
     } catch (_) {
       // Keep serving the stale entry until the stale window closes.
@@ -480,4 +500,7 @@ final class RoutedReactApplication {
 
   static String _defaultCacheKey(routed.EngineContext context) =>
       context.request.uri.toString();
+
+  static Iterable<String> _emptyCacheTags(routed.EngineContext context) =>
+      const <String>[];
 }
