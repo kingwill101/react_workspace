@@ -31,7 +31,8 @@ The CLI provides commands to manage the full lifecycle of a React Dart project:
 - `react prerender --routes /,/about [--output build/prerendered]` - Build the project, boot its real SSR server, and write selected routes as static HTML.
 - `react serve [--watch] [--release] [--no-ssr]` - Build the project and run the Dart server (and SSR worker if configured) locally.
 - `react clean` - Remove `build/react/`, `lib/.generated/`, and other React-owned generated outputs.
-- `react component add <name> <module> [<prop:type> ...]` - Add a foreign React component declaration.
+- `react component add <name> <module> [<prop:type> ...] [--infer] [--style <path>]` - Add a local or npm foreign React component, generate its wrapper, and validate the bundle. Bare npm modules may omit `<name>` and derive it from `--export`; use `--no-validate` for declaration-only workflows.
+- `react shadcn add <component> [--infer] [--style <path>]` - Add a component from the conventional `web/components/ui` shadcn layout.
 - `react js install` - Install exact wrapper versions into `.dart_tool/react/js`.
 - `react js sync` - Validate that the host JS project satisfies every wrapper.
 - `react ts bind <specifier> [<names...>]` - Generate typed Dart bindings from TypeScript declarations for seamless interop with NPM packages.
