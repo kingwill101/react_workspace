@@ -26,8 +26,10 @@ final class ReactServerApp {
   final ReactPageMetadataBuilder pageMetadata;
   final bool streamingSsr;
   final ReactDocumentCache? documentCache;
+  final ReactDocumentStore? documentStore;
   final ReactCacheKey cacheKey;
   final Duration staleWhileRevalidate;
+  final Duration documentTtl;
   final Object? Function(Request request)? authenticate;
 
   const ReactServerApp({
@@ -41,8 +43,10 @@ final class ReactServerApp {
     this.pageMetadata = _emptyPageMetadata,
     this.streamingSsr = false,
     this.documentCache,
+    this.documentStore,
     this.cacheKey = _defaultCacheKey,
     this.staleWhileRevalidate = Duration.zero,
+    this.documentTtl = const Duration(minutes: 1),
     this.authenticate,
   });
 
@@ -73,6 +77,13 @@ final class ReactServerApp {
           unawaited(_refreshDocument(request, key));
           return Response.ok(stale.html);
         }
+        final stored = streamingSsr ? null : await documentStore?.read(key);
+        if (stored != null) {
+          if (stored.stale) {
+            unawaited(_refreshDocument(request, key));
+          }
+          return Response.ok(stored.html);
+        }
         final props = await pageProps(request);
         final metadata = await pageMetadata(request);
         final template = injectReactPageMetadata(indexTemplate, metadata);
@@ -93,6 +104,13 @@ final class ReactServerApp {
           key,
           html,
           staleWhileRevalidate: staleWhileRevalidate,
+        );
+        await documentStore?.write(
+          key,
+          html,
+          ttl: documentTtl,
+          staleWhileRevalidate: staleWhileRevalidate,
+          tags: const <String>[],
         );
         return Response.ok(
           html,
@@ -119,6 +137,13 @@ final class ReactServerApp {
           .replaceAll('{{SSR}}', rendered.html)
           .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
       documentCache?.put(key, html, staleWhileRevalidate: staleWhileRevalidate);
+      await documentStore?.write(
+        key,
+        html,
+        ttl: documentTtl,
+        staleWhileRevalidate: staleWhileRevalidate,
+        tags: const <String>[],
+      );
     } catch (_) {
       // Keep serving the stale entry until the stale window closes.
     }

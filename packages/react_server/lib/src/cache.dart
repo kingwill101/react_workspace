@@ -1,4 +1,7 @@
 /// A small in-process cache for rendered SSR documents.
+///
+/// Use [ReactDocumentStore] when entries must survive process restarts or be
+/// shared across instances.
 final class ReactDocumentCache {
   /// Creates a cache with a default lifetime for new entries.
   ReactDocumentCache({
@@ -72,6 +75,49 @@ final class ReactDocumentCache {
 
   /// Removes all cached documents.
   void clear() => _entries.clear();
+}
+
+/// Persistent or distributed storage for rendered SSR documents.
+///
+/// Implementations may use a database, Redis, disk, or an edge KV service.
+/// The store owns serialization and concurrency; adapters only depend on this
+/// small asynchronous contract.
+abstract interface class ReactDocumentStore {
+  /// Reads a document and reports whether it is inside its stale window.
+  Future<ReactStoredDocument?> read(String key);
+
+  /// Writes a document with its revalidation policy and invalidation tags.
+  Future<void> write(
+    String key,
+    String html, {
+    required Duration ttl,
+    required Duration staleWhileRevalidate,
+    Iterable<String> tags,
+  });
+
+  /// Invalidates one document.
+  Future<void> invalidate(String key);
+
+  /// Invalidates every document associated with [tag].
+  Future<void> invalidateTag(String tag);
+}
+
+/// A document returned by a [ReactDocumentStore].
+final class ReactStoredDocument {
+  const ReactStoredDocument({
+    required this.html,
+    required this.stale,
+    this.tags = const <String>{},
+  });
+
+  /// Complete HTML ready to send to the browser.
+  final String html;
+
+  /// Whether the document is expired but still eligible for stale serving.
+  final bool stale;
+
+  /// Invalidation tags associated with the document.
+  final Set<String> tags;
 }
 
 /// A cached SSR document and its invalidation tags.

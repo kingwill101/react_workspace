@@ -40,7 +40,9 @@ final class RoutedReactApplication {
     this.pageMetadata = _emptyPageMetadata,
     this.streamingSsr = false,
     this.documentCache,
+    this.documentStore,
     this.cacheKey = _defaultCacheKey,
+    this.documentTtl = const Duration(minutes: 1),
     this.staleWhileRevalidate = Duration.zero,
     this.authenticate,
     this.requestTimeout = const Duration(seconds: 30),
@@ -80,8 +82,14 @@ final class RoutedReactApplication {
   /// Optional in-process cache for completed, buffered documents.
   final ReactDocumentCache? documentCache;
 
+  /// Optional persistent or distributed document storage.
+  final ReactDocumentStore? documentStore;
+
   /// Selects a cache key when [documentCache] is enabled.
   final RoutedReactCacheKey cacheKey;
+
+  /// Lifetime written to [documentStore] entries.
+  final Duration documentTtl;
 
   /// How long expired documents may be served while refreshing in the
   /// background.
@@ -129,6 +137,13 @@ final class RoutedReactApplication {
         unawaited(_refreshDocument(context, key));
         return context.html(stale.html);
       }
+      final stored = streamingSsr ? null : await documentStore?.read(key);
+      if (stored != null) {
+        if (stored.stale) {
+          unawaited(_refreshDocument(context, key));
+        }
+        return context.html(stored.html);
+      }
       final props = await pageProps(context);
       final metadata = await pageMetadata(context);
       final template = injectReactPageMetadata(indexTemplate, metadata);
@@ -143,6 +158,13 @@ final class RoutedReactApplication {
           .replaceAll('{{SSR}}', rendered.html)
           .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
       documentCache?.put(key, html, staleWhileRevalidate: staleWhileRevalidate);
+      await documentStore?.write(
+        key,
+        html,
+        ttl: documentTtl,
+        staleWhileRevalidate: staleWhileRevalidate,
+        tags: const <String>[],
+      );
       return context.html(html);
     } catch (error) {
       return context.string('SSR rendering failed: $error', statusCode: 500);
@@ -165,6 +187,13 @@ final class RoutedReactApplication {
           .replaceAll('{{SSR}}', rendered.html)
           .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
       documentCache?.put(key, html, staleWhileRevalidate: staleWhileRevalidate);
+      await documentStore?.write(
+        key,
+        html,
+        ttl: documentTtl,
+        staleWhileRevalidate: staleWhileRevalidate,
+        tags: const <String>[],
+      );
     } catch (_) {
       // Keep serving the stale entry until the stale window closes.
     }
