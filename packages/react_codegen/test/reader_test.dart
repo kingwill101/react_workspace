@@ -15,17 +15,19 @@ void main() {
     expect(checker, isNotNull, reason: 'TypeChecker should be constructable');
   });
 
-  test('todos_actions.dart has @serverFunction', () async {
-    // Use the analyzer to resolve the todo actions file
+  test('package fixture has @serverFunction', () async {
     final result = await resolveFile(
-      path: File('examples/ssr/lib/todos/todos_actions.dart').absolute.path,
+      path: File('test/fixtures/todos_actions.dart').absolute.path,
     );
 
     expect(result, isA<ResolvedUnitResult>());
     final resolved = result as ResolvedUnitResult;
     final library = resolved.libraryElement;
 
-    final inputId = AssetId('example', 'lib/todos/todos_actions.dart');
+    final inputId = AssetId(
+      'react_codegen',
+      'test/fixtures/todos_actions.dart',
+    );
     final reader = ServerFunctionReader();
 
     final models = reader.read(library, inputId);

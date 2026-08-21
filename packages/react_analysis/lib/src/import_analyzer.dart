@@ -87,8 +87,9 @@ final class ServerClientImportAnalyzer {
     if (normalized.endsWith('lib/ssr.dart')) return true;
     if (normalized.contains('lib/ssr_registry')) return true;
     if (normalized.contains('_server.dart') ||
-        normalized.endsWith('/server.dart'))
+        normalized.endsWith('/server.dart')) {
       return true;
+    }
     // Demo: `lib/import_errors.dart` simulates `bin/server.dart` server context
     if (normalized.contains('import_errors.dart') &&
         !normalized.contains('import_errors_client')) {
@@ -117,12 +118,15 @@ final class ServerClientImportAnalyzer {
   }
 
   String _publicApiFor(String uri) {
-    if (uri.endsWith('.react.g.dart'))
+    if (uri.endsWith('.react.g.dart')) {
       return uri.replaceAll('.react.g.dart', '.react.dart');
-    if (uri.endsWith('.client.g.dart'))
+    }
+    if (uri.endsWith('.client.g.dart')) {
       return uri.replaceAll('.client.g.dart', '.react.dart');
-    if (uri.endsWith('.registry.g.dart'))
+    }
+    if (uri.endsWith('.registry.g.dart')) {
       return 'react_components.g.dart (aggregate)';
+    }
     return '*.react.dart';
   }
 
@@ -130,8 +134,11 @@ final class ServerClientImportAnalyzer {
       uri == 'dart:js_interop' || uri == 'dart:js_interop_unsafe';
 
   bool _isBrowserPackageUri(String uri) =>
-      uri.startsWith('package:react_js') ||
-      uri.startsWith('package:react_dom') ||
-      uri.startsWith('package:react_web') ||
-      uri.startsWith('package:web');
+      _isPackageUri(uri, 'react_js') ||
+      _isPackageUri(uri, 'react_dom') ||
+      _isPackageUri(uri, 'react_web') ||
+      _isPackageUri(uri, 'web');
+
+  bool _isPackageUri(String uri, String package) =>
+      uri == 'package:$package' || uri.startsWith('package:$package/');
 }

@@ -177,9 +177,7 @@ final class _SsrVisitor extends RecursiveAstVisitor<void> {
           e.enclosingElement?.name == 'WebApiRuntimeInfo') {
         final constant = ann.computeConstantValue();
         final id =
-            constant?.getField('id')?.toStringValue() ??
-            element.displayName ??
-            'unknown';
+            constant?.getField('id')?.toStringValue() ?? element.displayName;
         final ssrField = constant?.getField('ssr');
         final ssrIndex = ssrField?.getField('index')?.toIntValue();
         final ssr = switch (ssrIndex) {

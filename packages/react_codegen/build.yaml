@@ -1,12 +1,12 @@
 builders:
   component:
-    import: "package:react_codegen/builder.dart"
+    import: "package:react_codegen/react_codegen.dart"
     builder_factories: ["componentBuilder"]
     build_extensions: {".dart": [".react.dart", ".react.g.dart"]}
     auto_apply: dependents
     build_to: cache
   aggregate:
-    import: "package:react_codegen/builder.dart"
+    import: "package:react_codegen/react_codegen.dart"
     builder_factories: ["aggregateBuilder"]
     build_extensions:
       "$lib$": [
@@ -15,13 +15,13 @@ builders:
         "server_actions.g.dart"
       ]
     auto_apply: dependents
-    build_to: source
+    build_to: cache
     applies_builders:
       - "react_codegen|component"
       - "react_codegen|server_function"
   server_function:
-    import: "package:react_codegen/builder.dart"
+    import: "package:react_codegen/react_codegen.dart"
     builder_factories: ["serverFunctionBuilder"]
     build_extensions: {".dart": [".action.g.dart", ".client.g.dart", ".registry.g.dart"]}
     auto_apply: dependents
-    build_to: source
+    build_to: cache

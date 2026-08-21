@@ -386,7 +386,7 @@ final class _HookCallCollector extends RecursiveAstVisitor<void> {
       }
     }
     // Fallback for user-defined custom hooks: name convention
-    final n = element.displayName ?? '';
+    final n = element.displayName;
     return _isHookName(n);
   }
 

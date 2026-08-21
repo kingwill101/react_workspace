@@ -35,5 +35,8 @@ void main() {
     );
     expect(output, contains('final children = reactChildrenFromJS(js);'));
     expect(output, isNot(contains('props.children.jsify()')));
+    expect(output, startsWith('// GENERATED CODE — DO NOT EDIT'));
+    expect(output, contains('// ignore_for_file: type=lint'));
+    expect(output, isNot(contains('package:react_js/src/')));
   });
 }

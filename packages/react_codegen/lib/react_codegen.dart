@@ -1,3 +1,6 @@
+/// Build-runner entrypoints for React component and server-function codegen.
+library;
+
 import 'package:build/build.dart';
 
 import 'src/analyzer/component_reader.dart';
@@ -10,6 +13,7 @@ import 'src/builder/component_builder.dart';
 import 'src/builder/server_function_builder.dart';
 import 'src/aggregate.dart';
 
+/// Creates the per-library React component builder.
 Builder componentBuilder(BuilderOptions options) => const ReactComponentBuilder(
   ReactCompiler(
     reader: ReactComponentReader(typeReader: ReactTypeReader()),
@@ -18,7 +22,9 @@ Builder componentBuilder(BuilderOptions options) => const ReactComponentBuilder(
   ),
 );
 
+/// Creates the package-wide component and action registry builder.
 Builder aggregateBuilder(BuilderOptions options) => AggregateBuilder();
 
+/// Creates the per-library server-function builder.
 Builder serverFunctionBuilder(BuilderOptions options) =>
     const ServerFunctionBuilder();

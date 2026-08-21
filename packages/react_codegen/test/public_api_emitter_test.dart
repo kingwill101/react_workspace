@@ -43,6 +43,8 @@ void main() {
     expect(output, isNot(contains('ReactChildren children')));
     expect(output, contains('children: const []'));
     expect(output, contains('ReactNode call()'));
+    expect(output, startsWith('// GENERATED CODE — DO NOT EDIT'));
+    expect(output, contains('// ignore_for_file: type=lint'));
   });
 
   test('only exposes children when the authored component declares them', () {

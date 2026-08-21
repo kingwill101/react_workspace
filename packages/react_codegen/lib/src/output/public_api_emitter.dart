@@ -5,6 +5,9 @@ final class PublicApiEmitter {
 
   String emit(ReactLibraryModel model) {
     final buffer = StringBuffer()
+      ..writeln('// GENERATED CODE — DO NOT EDIT')
+      ..writeln('// ignore_for_file: type=lint')
+      ..writeln()
       ..writeln("import 'package:react/react.dart';")
       ..writeln();
 

@@ -19,8 +19,7 @@ dependencies:
   native_toolchain_rust: ^1.0.4+0
   package_config: ^3.0.0
   path: ^1.9.0
-  react_analysis:
-    path: ../react_analysis
+  react_analysis: ^0.1.0
   sass: ^1.102.0
   yaml: ^3.1.3
 

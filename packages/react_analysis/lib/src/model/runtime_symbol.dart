@@ -25,8 +25,13 @@ enum ReactRenderTarget { browser, server, test }
 /// ReactRouterLocation useLocation() => ...
 /// ```
 final class ReactRuntimeSymbol {
+  /// The kind of declaration exposed to React.
   final ReactRuntimeSymbolKind kind;
+
+  /// Stable lookup key used by generated runtime bridges.
   final String runtimeKey;
+
+  /// Render environments in which this symbol may be used.
   final Set<ReactRenderTarget> targets;
 
   const ReactRuntimeSymbol({
@@ -48,8 +53,13 @@ enum WebRealm { window, document, worker, shared }
 enum WebSsrSupport { available, unavailable, emulated }
 
 final class WebApiRuntimeInfo {
+  /// Stable Web API identifier.
   final String id;
+
+  /// JavaScript realms that expose the API.
   final Set<WebRealm> exposed;
+
+  /// Whether and how the API is available during server rendering.
   final WebSsrSupport ssr;
 
   const WebApiRuntimeInfo({
@@ -64,10 +74,19 @@ enum ReactDiagnosticSeverity { error, warning, info }
 
 /// A single analyzer diagnostic produced by react_analysis.
 final class ReactDiagnostic {
+  /// Stable machine-readable diagnostic identifier.
   final String code;
+
+  /// Human-readable explanation of the problem.
   final String message;
+
+  /// Importance assigned by the shared analyzer engine.
   final ReactDiagnosticSeverity severity;
+
+  /// Optional guidance for correcting the problem.
   final String? correction;
+
+  /// AST node associated with the diagnostic, when one is available.
   final AstNode? node;
 
   const ReactDiagnostic({

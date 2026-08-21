@@ -12,12 +12,12 @@ final class JsBridgeEmitter {
 
   String emit(ReactLibraryModel model) {
     final buffer = StringBuffer()
+      ..writeln('// GENERATED CODE — DO NOT EDIT')
+      ..writeln('// ignore_for_file: type=lint')
+      ..writeln()
       ..writeln("import 'dart:js_interop';")
       ..writeln("import 'dart:js_interop_unsafe';")
       ..writeln("import 'package:react_js/react_js.dart';")
-      ..writeln(
-        "import 'package:react_js/src/codec_registry.dart' show ReactCodecRegistry;",
-      )
       ..writeln("import '${model.inputFile}' as impl;");
     for (final component in model.components) {
       buffer.writeln("import '${model.reactFile}' show id${component.name};");

@@ -22,9 +22,8 @@ final class ReactComponentAnalyzer {
 
   /// Analyze a library's `@ReactComponent` declarations and return diagnostics.
   ///
-  /// [library] is the resolved library element. [unitDiagnostics] maps
-  /// compilation units to their diagnostics so call sites can attach
-  /// source ranges without re-resolving.
+  /// [library] is the resolved library element. Pass [seenComponentIds] when
+  /// analyzing several libraries that must share component identifiers.
   List<ReactDiagnostic> analyzeLibrary(
     LibraryElement library, {
     Set<String>? seenComponentIds,

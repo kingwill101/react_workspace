@@ -1,76 +1,81 @@
-# React Dart Code Generation (`react_codegen`)
+# react_codegen
 
-The `build_runner` code generator for React Dart. It generates pure functional components from `@ReactComponent` annotations and client/server bridges for `@serverFunction` and `@serverData`.
-
-## Ecosystem Role
-
-`react_codegen` is the engine that converts idiomatic Dart types and functions into React-compatible JavaScript interop calls without requiring users to write `dart:js_interop` manually. It ensures strong typing across the boundary and produces the necessary factory methods to instantiate React components efficiently.
+Build-runner generators for React Dart component factories, JavaScript bridges,
+SSR registries, and server-function contracts.
 
 ## Installation
-
-Add `react_codegen` and `build_runner` to your `dev_dependencies` in `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
   build_runner: ^2.4.0
-  react_codegen:
-    path: packages/react_codegen # Or use a version constraint if published
+  react_codegen: ^0.1.0
 ```
 
-## How to Use
+Application builds normally invoke codegen through `react_tool`.
 
-### Components
+## Components
 
-Annotate your component functions with `@ReactComponent`. The function must take exactly one record parameter with named fields.
+A component must return `ReactNode` and accept exactly one named record:
 
 ```dart
-import 'package:react/react.dart';
+import 'package:react_dom/react_dom.dart';
 
-@ReactComponent
-ReactNode Avatar({required String src, bool? round}) {
-  return img(src: src, className: round == true ? 'round' : 'square');
+@reactComponent
+ReactNode Avatar(({
+  required String src,
+  String? label,
+}) props) {
+  return img(src: props.src, alt: props.label ?? '');
 }
 ```
 
-Run `build_runner`:
+Generation emits two cache outputs for the source library:
 
-```bash
-dart run build_runner build
+- `avatar.react.dart`: component identity, callable `Avatar` factory, and
+  `Avatar.props()` builder;
+- `avatar.react.g.dart`: browser registration and prop codecs.
+
+Aggregate outputs register components for browser and SSR rendering. The CLI
+synchronizes all application-facing files into `lib/.generated/`.
+
+```console
+dart run react_tool:react generate
 ```
 
-This generates `avatar.react.dart` containing an `Avatar` factory that adds `key` and `children` props automatically, allowing you to use it in your application safely.
-
-### Server Functions (RPC)
-
-Annotate server-side business logic with `@serverFunction` and data transfer objects with `@serverData`.
+Callers import the factory through a package URI:
 
 ```dart
-import 'package:react_actions/react_actions.dart';
+import 'package:my_app/.generated/avatar.react.dart';
 
-@serverData
-final class ToggleResult {
-  final String id;
-  final bool completed;
-
-  const ToggleResult({required this.id, required this.completed});
-}
-
-@serverFunction
-Future<ToggleResult> toggleTodo(
-  ServerFunctionContext context, {
-  required String todoId,
-}) async {
-  // Database logic here...
-  return ToggleResult(id: todoId, completed: true);
-}
+final node = Avatar(src: '/avatar.png', label: 'Ada', key: 'ada');
 ```
 
-The generator produces:
-- A client-side proxy to invoke the function over HTTP.
-- Specialized codecs for serialization of `@serverData`, `List`, `Map`, `DateTime`, etc.
-- A registry to safely route requests on the server backend.
+## Server functions
 
-## Architecture & Generated Code
+`@serverFunction` and `@serverData` generation produces:
 
-- **Pure Functions:** For `@ReactComponent`, the original function remains untouched. The generated file provides a boundary-preserving factory function that returns a `Component` node, which delegates to your Dart implementation when React renders it.
-- **Server Actions:** For `@serverFunction`, the generator parses the arguments and return types. It generates typed arguments records, a serialization codec that conforms to the wire protocol defined in `react_actions`, and a client stub that uses `ServerFunctionClient`.
+- stable function and contract identifiers;
+- typed argument and result codecs;
+- a browser proxy using `ServerFunctionClient`;
+- server dispatch registration for `ServerFunctionRegistry`.
+
+The wire protocol belongs to `react_actions`; HTTP transport integration
+belongs to `react_server_routed` or `react_server_shelf`.
+
+## Architecture
+
+Generation is split into analyzer readers, typed models, and focused emitters.
+Readers own Dart semantic interpretation. Emitters consume models and never
+re-resolve source. Browser and server outputs derive from the same component or
+action contract.
+
+Generated sources are implementation details:
+
+- do not edit them;
+- change a reader, model, emitter, or annotated source;
+- regenerate and format;
+- analyze and run package tests;
+- run generation twice when checking deterministic output.
+
+Use direct `build_runner` commands only when debugging builders. Cache outputs
+are not synchronized into `lib/.generated/` until `react_tool` runs.
