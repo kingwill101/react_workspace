@@ -17,6 +17,7 @@ import 'bundler/shim_pruning.dart';
 import 'bundler/usage_scan.dart';
 import 'js_environment.dart';
 import 'project_config.dart';
+import 'react_versions.dart';
 import 'styles.dart';
 
 /// Directory under `lib/` reserved for source files produced by React codegen.
@@ -40,6 +41,12 @@ final class ReactBuilder {
   /// (defaults to `npm`; may be an absolute path for testing).
   final String npmCommand;
 
+  /// Overrides the managed React and React DOM version.
+  ///
+  /// This is primarily used by compatibility harnesses. Wrapper peer ranges
+  /// still take precedence when they select an installed version.
+  final String? managedReactVersion;
+
   JavaScriptBundler? _bundler;
 
   /// Per-target [BundleResult] from the latest build, keyed by `browser`/`ssr`.
@@ -51,13 +58,57 @@ final class ReactBuilder {
     this.server = false,
     this.log = print,
     this.npmCommand = 'npm',
+    this.managedReactVersion,
   });
 
   /// Provisions (or validates) the JS environment for wrapper packages.
   /// Public so `react js install` can surface provisioning errors early.
   Future<JsEnvironment?> ensureJsEnvironment() => _prepareJsEnvironment();
 
-  Future<void> build() async {
+  /// Runs Dart code generation and syncs every generated source into the
+  /// hidden `lib/.generated/` tree without compiling browser or SSR bundles.
+  Future<void> generateSources() async {
+    if (config.hasBuildRunner) {
+      await _runDart([
+        'run',
+        'build_runner',
+        'build',
+        if (_isWorkspaceRoot) '--workspace',
+      ]);
+    } else {
+      log('Skipping build_runner: build_runner is not declared.');
+    }
+    await syncGeneratedSources();
+  }
+
+  /// Synchronizes existing build-runner outputs into `lib/.generated/`.
+  ///
+  /// This is useful after one workspace-wide `build_runner build --workspace`
+  /// invocation: each application can expose its generated package imports
+  /// without compiling the same builders again.
+  Future<void> syncGeneratedSources() async {
+    await _syncGeneratedSources();
+  }
+
+  /// Removes the synchronized Dart sources owned by React code generation.
+  ///
+  /// Returns whether a generated source directory existed and was removed.
+  /// Build-runner's cache remains under `.dart_tool` and can be managed with
+  /// the standard Dart build commands.
+  Future<bool> cleanGeneratedSources() async {
+    final generated = config.directory(p.join('lib', generatedSourceDirectory));
+    if (!generated.existsSync()) return false;
+    await generated.delete(recursive: true);
+    log('Removed ${generated.path}');
+    return true;
+  }
+
+  /// Builds browser, SSR, style, asset, and foreign-module artifacts.
+  ///
+  /// Set [runCodegen] to false only when a successful build-runner invocation
+  /// has already populated the workspace cache. Existing outputs are still
+  /// synchronized into `lib/.generated/` before compilation.
+  Future<void> build({bool runCodegen = true}) async {
     final jsEnvironment = await _prepareJsEnvironment();
     _bundler = switch (jsEnvironment) {
       null => null,
@@ -71,18 +122,11 @@ final class ReactBuilder {
     // import them during the same build.
     await _compileStylesheets();
 
-    if (config.hasBuildRunner) {
-      await _runDart([
-        'run',
-        'build_runner',
-        'build',
-        if (_isWorkspaceRoot) '--workspace',
-      ]);
+    if (runCodegen) {
+      await generateSources();
     } else {
-      log('Skipping build_runner: build_runner is not declared.');
+      await syncGeneratedSources();
     }
-
-    await _syncGeneratedSources();
 
     final output = config.directory(config.outputDirectory);
     await output.create(recursive: true);
@@ -218,9 +262,9 @@ final class ReactBuilder {
       }
     }
 
-    // `react_codegen` intentionally writes server-function and aggregate
-    // outputs to source. Include those files in the same hidden boundary as
-    // the component outputs that arrive through build_runner's cache.
+    // Include legacy source outputs in the hidden boundary as well. Current
+    // react_codegen versions write every output to build_runner's cache, but
+    // this keeps migration from older generated trees self-cleaning.
     final libRoot = Directory(p.join(config.root.path, 'lib'));
     if (libRoot.existsSync()) {
       await for (final entity in libRoot.list(recursive: true)) {
@@ -260,6 +304,7 @@ final class ReactBuilder {
       await destination.writeAsString(relocated);
       copied++;
     }
+    await _runDart(['format', libTarget.path]);
     for (final sourceFile in sourceGeneratedFiles) {
       if (sourceFile.existsSync()) await sourceFile.delete();
     }
@@ -475,8 +520,10 @@ final class ReactBuilder {
     final links = <String>[];
     for (final stylesheet in config.styleEntrypoints) {
       final href = p.posix.joinAll(p.split(_stylesheetOutputName(stylesheet)));
-      final link = '<link rel="stylesheet" href="$href">';
-      if (!source.contains('href="$href"')) links.add(link);
+      final absoluteHref = '/$href';
+      source = source.replaceAll('href="$href"', 'href="$absoluteHref"');
+      final link = '<link rel="stylesheet" href="$absoluteHref">';
+      if (!source.contains('href="$absoluteHref"')) links.add(link);
     }
     if (links.isEmpty) return;
     final insertion = '${links.join('\n')}\n';
@@ -486,7 +533,7 @@ final class ReactBuilder {
     await index.writeAsString(source);
   }
 
-  /// Generates `lib/foreign_components.g.dart` from the project-level
+  /// Generates `lib/.generated/foreign_components.g.dart` from the project-level
   /// `foreign.components` list. Runs before the Dart entrypoints are compiled
   /// so they may import the generated helpers.
   Future<void> _writeForeignComponents(JsEnvironment? environment) async {
@@ -494,7 +541,11 @@ final class ReactBuilder {
     final hasProjectModules =
         config.foreignModules.isNotEmpty || config.foreignComponents.isNotEmpty;
     if (!hasProjectModules && wrappers.every((w) => w.isEmpty)) return;
-    final bindings = config.file('lib/foreign_components.g.dart');
+    final bindings = config.file(
+      p.join('lib', generatedSourceDirectory, 'foreign_components.g.dart'),
+    );
+    final legacyBindings = config.file('lib/foreign_components.g.dart');
+    if (legacyBindings.existsSync()) await legacyBindings.delete();
     if (config.foreignComponents.isEmpty) {
       if (bindings.existsSync()) await bindings.delete();
       return;
@@ -968,6 +1019,8 @@ final class ReactBuilder {
       host: config.jsHostMode,
       log: log,
       npmCommand: npmCommand,
+      managedReactVersion:
+          managedReactVersion ?? ReactVersionPolicy.managedVersion,
       bundlingBackend: config.bundlingBackend,
     );
     return builder.ensure(wrappers, required: needsEnvironment);
@@ -1030,9 +1083,7 @@ final class ReactBuilder {
       buffer.writeln('react.ReactNode $functionName({');
       for (final entry in component.props.entries) {
         final parameter = _foreignParameter(entry.key);
-        final type = entry.value
-            .replaceAll('ReactNode', 'react.ReactNode')
-            .replaceAll('ReactCallback', 'react.ReactCallback');
+        final type = _foreignDartType(entry.value);
         final required = !type.trim().endsWith('?');
         buffer.writeln('  ${required ? 'required ' : ''}$type $parameter,');
       }
@@ -1054,9 +1105,12 @@ final class ReactBuilder {
         ..writeln();
     }
 
-    final bindings = config.file('lib/foreign_components.g.dart');
+    final bindings = config.file(
+      p.join('lib', generatedSourceDirectory, 'foreign_components.g.dart'),
+    );
     await bindings.parent.create(recursive: true);
     await bindings.writeAsString(buffer.toString());
+    await _runDart(['format', bindings.path]);
     log('Generated ${bindings.path}');
   }
 
@@ -1066,13 +1120,27 @@ final class ReactBuilder {
         .where((word) => word.isNotEmpty)
         .toList();
     if (words.isEmpty) return '_component';
+    final first = words.first;
     final result =
-        words.first.toLowerCase() +
+        first[0].toLowerCase() +
+        first.substring(1) +
         words
             .skip(1)
             .map((word) => word[0].toUpperCase() + word.substring(1))
             .join();
     return RegExp(r'^[0-9]').hasMatch(result) ? '_$result' : result;
+  }
+
+  String _foreignDartType(String configuredType) {
+    final type = configuredType.trim();
+    final nullable = type.endsWith('?');
+    final base = nullable ? type.substring(0, type.length - 1).trim() : type;
+    if (base == 'Function') {
+      return nullable ? 'react.ReactCallback?' : 'react.ReactCallback';
+    }
+    return type
+        .replaceAll('ReactNode', 'react.ReactNode')
+        .replaceAll('ReactCallback', 'react.ReactCallback');
   }
 
   String _foreignParameter(String value) {
@@ -1161,6 +1229,7 @@ final class ReactBuilder {
     await _runDart([
       'compile',
       'js',
+      '--suppress-hints',
       optimization,
       '-o',
       outputPath,
@@ -1231,6 +1300,14 @@ final class ReactBuilder {
     if (!index.existsSync()) return;
     var source = await index.readAsString();
 
+    // Document routes may be arbitrarily deep. Keep runtime assets rooted at
+    // the application origin so `/state/todos` does not try to load them from
+    // `/state/`.
+    source = source.replaceAll(
+      'src="browser.entry.mjs"',
+      'src="/browser.entry.mjs"',
+    );
+
     // Pin the import map to the exact React version the environment resolved
     // so browser and SSR always share one instance.
     if (environment != null) {
@@ -1240,7 +1317,7 @@ final class ReactBuilder {
             'https://esm.sh/${match.group(1)}@${environment.reactVersion}',
       );
     }
-    if (source.contains('browser.entry.mjs')) {
+    if (source.contains('/browser.entry.mjs')) {
       await index.writeAsString(source);
       return;
     }
@@ -1251,18 +1328,18 @@ final class ReactBuilder {
     source = source
         .replaceAll(
           RegExp(
-            r'<script[^>]*src="callback_trampoline\.mjs"[^>]*>\s*</script>',
+            r'<script[^>]*src="/?callback_trampoline\.mjs"[^>]*>\s*</script>',
           ),
           '',
         )
         .replaceAll(
           RegExp(
-            r'<script[^>]*src="foreign/browser/bundle\.mjs"[^>]*>\s*</script>',
+            r'<script[^>]*src="/?foreign/browser/bundle\.mjs"[^>]*>\s*</script>',
           ),
           '',
         )
         .replaceAll(
-          RegExp(r'<script[^>]*src="client\.js"[^>]*>\s*</script>'),
+          RegExp(r'<script[^>]*src="/?client\.js"[^>]*>\s*</script>'),
           '',
         );
     source = source.replaceAllMapped(
@@ -1271,7 +1348,7 @@ final class ReactBuilder {
           match.group(1)!.contains('globalThis.React') ? '' : match.group(0)!,
     );
     const entryScript =
-        '<script type="module" src="browser.entry.mjs"></script>';
+        '<script type="module" src="/browser.entry.mjs"></script>';
     source = source.contains('</body>')
         ? source.replaceFirst('</body>', '$entryScript\n</body>')
         : '$source\n$entryScript';

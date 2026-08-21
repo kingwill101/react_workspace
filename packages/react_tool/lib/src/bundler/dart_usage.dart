@@ -161,8 +161,9 @@ final class DartUsageCollector {
           if (directive is ImportDirective) {
             final imported = directive.libraryImport?.importedLibrary;
             final path = imported?.firstFragment.source.fullName;
-            if (path == null || path.isEmpty || path.startsWith('dart:'))
+            if (path == null || path.isEmpty || path.startsWith('dart:')) {
               continue;
+            }
             if (!path.startsWith(root)) {
               if (!isFrameworkSkippable(path)) skipped.add(path);
               continue;
@@ -171,8 +172,9 @@ final class DartUsageCollector {
           } else if (directive is ExportDirective) {
             final exported = directive.libraryExport?.exportedLibrary;
             final path = exported?.firstFragment.source.fullName;
-            if (path == null || path.isEmpty || path.startsWith('dart:'))
+            if (path == null || path.isEmpty || path.startsWith('dart:')) {
               continue;
+            }
             if (!path.startsWith(root)) {
               if (!isFrameworkSkippable(path)) skipped.add(path);
               continue;

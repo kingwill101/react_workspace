@@ -15,6 +15,8 @@ import 'dart:io';
 import 'package:package_config/package_config.dart';
 import 'package:path/path.dart' as p;
 
+import 'react_versions.dart';
+
 /// The JavaScript contract of one wrapper package (`react.js` in pubspec).
 ///
 /// ```yaml
@@ -303,6 +305,9 @@ class JsEnvironmentBuilder {
   final void Function(String message) log;
   final String npmCommand;
 
+  /// React version installed when wrapper requirements do not select one.
+  final String managedReactVersion;
+
   /// Selected bundler backend (`esbuild` or `rolldown`); decides which bundler
   /// is installed into the managed environment.
   final String bundlingBackend;
@@ -314,6 +319,7 @@ class JsEnvironmentBuilder {
     this.host = false,
     this.log = print,
     this.npmCommand = 'npm',
+    this.managedReactVersion = ReactVersionPolicy.managedVersion,
     this.bundlingBackend = 'esbuild',
   });
 
@@ -426,7 +432,7 @@ class JsEnvironmentBuilder {
       installedVersions: versions,
       host: false,
       npmRoot: root.path,
-      reactVersion: versions['react'] ?? _frameworkReactFallback,
+      reactVersion: versions['react'] ?? managedReactVersion,
     );
   }
 
@@ -468,20 +474,17 @@ class JsEnvironmentBuilder {
       installedVersions: versions,
       host: true,
       npmRoot: hostRoot,
-      reactVersion: versions['react'] ?? _frameworkReactFallback,
+      reactVersion: versions['react'] ?? managedReactVersion,
     );
   }
-
-  /// The exact version the framework pins for react when nothing resolves it.
-  static const _frameworkReactFallback = '18.3.1';
 
   String _buildManifest(Map<String, String> exact) {
     final dependencies = {...exact};
     if (!dependencies.containsKey('react')) {
-      dependencies['react'] = _frameworkReactFallback;
+      dependencies['react'] = managedReactVersion;
     }
     if (!dependencies.containsKey('react-dom')) {
-      dependencies['react-dom'] = _frameworkReactFallback;
+      dependencies['react-dom'] = managedReactVersion;
     }
     final esbuild = _resolveExact('esbuild', [
       const NpmRequirement('esbuild', '>=0.20 <1', 'react_tool'),

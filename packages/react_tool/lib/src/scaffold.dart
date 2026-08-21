@@ -6,6 +6,7 @@ import 'package:liquify/liquify.dart';
 import 'package:path/path.dart' as p;
 
 import 'project_config.dart';
+import 'react_versions.dart';
 
 const _templatesPackageUri = 'package:react_tool/src/scaffold/templates/';
 
@@ -104,6 +105,7 @@ final class ScaffoldGenerator {
       'name': name,
       'packagesPath': packagesPath,
       'title': _humanize(name),
+      'reactVersion': ReactVersionPolicy.managedVersion,
     };
 
     final outputs = switch (template) {

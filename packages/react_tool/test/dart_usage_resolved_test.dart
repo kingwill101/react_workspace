@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:path/path.dart' as p;
 import 'package:react_tool/src/bundler/dart_usage.dart';
@@ -7,6 +8,18 @@ import 'package:test/test.dart';
 
 void main() {
   group('DartUsageCollector resolved', () {
+    late String reactPackagePath;
+
+    setUpAll(() async {
+      final library = await Isolate.resolvePackageUri(
+        Uri.parse('package:react/react.dart'),
+      );
+      if (library == null) {
+        throw StateError('Could not resolve package:react/react.dart.');
+      }
+      reactPackagePath = p.dirname(p.dirname(library.toFilePath()));
+    });
+
     test('finds hook via package: import with resolved context', () async {
       final temp = await Directory.systemTemp.createTemp('react_usage_');
       try {
@@ -18,7 +31,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''';
         await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
         await Directory(p.join(temp.path, 'lib')).create(recursive: true);
@@ -144,7 +157,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''';
           await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
           await Directory(p.join(temp.path, 'lib')).create(recursive: true);
@@ -200,7 +213,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''');
         await File(p.join(sharedDir.path, 'lib', 'widget.dart')).writeAsString(
           '''
@@ -220,7 +233,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
   shared_widgets:
     path: ${p.join(sharedDir.path)}
 ''');
@@ -279,7 +292,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''');
         await File(p.join(hostedDir.path, 'lib', 'widget.dart')).writeAsString(
           '''
@@ -299,7 +312,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
   shared_widgets:
     path: ${p.join(hostedDir.path)}
 ''');
@@ -352,7 +365,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''';
           await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
           await Directory(p.join(temp.path, 'lib')).create(recursive: true);
@@ -418,7 +431,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
   react:
-    path: ${p.absolute('packages/react')}
+    path: $reactPackagePath
 ''';
         await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
         await Directory(p.join(temp.path, 'lib')).create(recursive: true);

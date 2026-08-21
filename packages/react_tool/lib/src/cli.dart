@@ -20,6 +20,7 @@ class ReactCommandRunner extends CommandRunner<void> {
     : super('react', 'Build and run React Dart applications.') {
     addCommand(DoctorCommand());
     addCommand(InitCommand());
+    addCommand(GenerateCommand());
     addCommand(BuildCommand());
     addCommand(CleanCommand());
     addCommand(ServeCommand());
@@ -27,6 +28,39 @@ class ReactCommandRunner extends CommandRunner<void> {
     addCommand(TsCommand());
     addCommand(AnalyzeCommand());
     addCommand(TestCommand());
+  }
+}
+
+/// `react generate` — runs only Dart code generation and source syncing.
+final class GenerateCommand extends Command<void> {
+  GenerateCommand() {
+    argParser.addFlag(
+      'sync-only',
+      defaultsTo: false,
+      help:
+          'Synchronize outputs from an existing workspace build without '
+          'running build_runner again.',
+    );
+  }
+
+  @override
+  String get name => 'generate';
+
+  @override
+  String get description =>
+      'Generate Dart sources into lib/.generated without building bundles.';
+
+  @override
+  Future<void> run() async {
+    final config = ReactProjectConfig.load();
+    final builder = ReactBuilder(config: config, release: false, log: line);
+    final syncOnly = option('sync-only') as bool? ?? false;
+    if (syncOnly) {
+      await builder.syncGeneratedSources();
+    } else {
+      await builder.generateSources();
+    }
+    info('Generated sources are ready in lib/.generated/.');
   }
 }
 
@@ -446,6 +480,7 @@ final class _TsBindCommand extends Command<void> {
     final outputFile = config.file(output);
     outputFile.parent.createSync(recursive: true);
     outputFile.writeAsStringSync(code);
+    final dartOutputs = <File>[outputFile];
 
     if (shimPath != null) {
       final shim = generateShim(
@@ -494,9 +529,20 @@ final class _TsBindCommand extends Command<void> {
       );
       hooksFile.parent.createSync(recursive: true);
       hooksFile.writeAsStringSync(hooks);
+      dartOutputs.add(hooksFile);
       info(
         'Wrote ${result.declarations.where((d) => d.kind == 'hook').length} '
         'hook(s) to ${hooksFile.path}',
+      );
+    }
+
+    final formatResult = await Process.run(Platform.resolvedExecutable, [
+      'format',
+      ...dartOutputs.map((file) => file.path),
+    ], workingDirectory: config.root.path);
+    if (formatResult.exitCode != 0) {
+      throw ReactToolException(
+        'Failed to format generated Dart bindings:\n${formatResult.stderr}',
       );
     }
 
@@ -617,7 +663,7 @@ final class TestCommand extends Command<void> {
       )
       ..addOption(
         'path',
-        defaultsTo: '.',
+        defaultsTo: 'test',
         help: 'Test path to run (default: test).',
       );
   }
@@ -1018,8 +1064,9 @@ final class CleanCommand extends Command<void> {
   @override
   Future<void> run() async {
     final config = ReactProjectConfig.load();
+    final builder = ReactBuilder(config: config, release: false, log: line);
     final output = config.directory(config.outputDirectory);
-    var removed = false;
+    var removed = await builder.cleanGeneratedSources();
     if (output.existsSync()) {
       await output.delete(recursive: true);
       info('Removed ${output.path}');

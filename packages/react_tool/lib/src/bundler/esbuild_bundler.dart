@@ -9,6 +9,15 @@ import 'bundle_request.dart';
 import 'bundle_result.dart';
 import 'bundler.dart';
 
+/// Resolution roots passed to esbuild for packages installed in [npmRoot].
+///
+/// esbuild models these after `NODE_PATH`, whose entries directly contain
+/// packages. Node's `require.resolve(..., paths:)` has different semantics and
+/// receives [npmRoot] itself in the Node-target plugin below.
+List<String> esbuildNodePaths(String npmRoot) => [
+  p.join(npmRoot, 'node_modules'),
+];
+
 /// Bundles the foreign graph with the environment's esbuild.
 ///
 /// The esbuild driver is refreshed on every bundle because it is tool-owned
@@ -43,7 +52,11 @@ final class EsbuildBundler implements JavaScriptBundler {
       'sourcemap': request.sourceMaps ? 'linked' : false,
       'metafile': true,
       'logLevel': 'silent',
-      'nodePaths': [request.npmRoot],
+      // esbuild's nodePaths mirrors NODE_PATH and therefore expects the
+      // directory that directly contains packages, not the npm project root.
+      // Passing npmRoot only appeared to work when a separate workspace-level
+      // node_modules happened to contain the same wrapper dependencies.
+      'nodePaths': esbuildNodePaths(request.npmRoot),
     };
 
     final result = await Process.run(
