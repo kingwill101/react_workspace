@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'anonymous_iframe.dart';
-import 'dom.dart';
 
 abstract interface class DocumentPictureInPictureEventInit {
   Window get window;

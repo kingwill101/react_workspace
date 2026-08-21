@@ -2,9 +2,7 @@
 // Neutral Web surface for spec: css-font-loading
 // ignore_for_file: type=lint
 
-import 'webidl.dart';
 import 'html.dart';
-import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef BinaryData = Object;

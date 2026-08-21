@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: background-sync
 // ignore_for_file: type=lint
 
-import 'service_workers.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class SyncEvent {

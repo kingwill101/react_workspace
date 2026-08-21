@@ -2,14 +2,10 @@
 // Neutral Web surface for spec: webxr
 // ignore_for_file: type=lint
 
-import 'hr_time.dart';
-import 'webxr_gamepads_module.dart';
-import 'dom.dart';
-import 'permissions.dart';
 import 'geometry.dart';
+import 'hr_time.dart';
 import 'html.dart';
-import 'webgl1.dart';
-import 'webgl2.dart';
+import 'webxr_gamepads_module.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef XREye = String;

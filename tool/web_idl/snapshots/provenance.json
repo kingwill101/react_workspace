@@ -1,4 +1,5 @@
 {
+  "packageWebVersion": "1.1.1",
   "dartWebRevision": "web-v1.1.1",
   "dartWebCommit": "222164b5010cb0324d4132666f1d43750ffc6448",
   "webref": {
@@ -6,6 +7,7 @@
     "@webref/css": "6.12.15",
     "@webref/elements": "2.3.0"
   },
-  "source": "dart-lang/web web_generator (git submodule third_party/web @ web-v1.1.1)",
+  "source": "dart-lang/web web_generator data (third_party/web @ web-v1.1.1)",
+  "normalizer": "tool/web_idl/preparse.mjs",
   "generateAll": false
 }

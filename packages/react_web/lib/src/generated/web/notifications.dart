@@ -2,10 +2,9 @@
 // Neutral Web surface for spec: notifications
 // ignore_for_file: type=lint
 
-import 'html.dart';
-import 'service_workers.dart';
-import 'vibration.dart';
 import 'hr_time.dart';
+import 'html.dart';
+import 'vibration.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class GetNotificationOptions {

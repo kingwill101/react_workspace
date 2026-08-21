@@ -45,7 +45,6 @@ TypeRef parseIdlType(Object? raw) {
   final rawInner = raw['idlType'];
   final nullable = raw['nullable'] as bool? ?? false;
   final isUnion = raw['union'] as bool? ?? false;
-  final memberExtAttrs = (raw['extAttrs'] as List<dynamic>? ?? []);
 
   // Unions: idlType is a list of member types.
   if (isUnion && rawInner is List) {
@@ -106,11 +105,6 @@ TypeRef parseIdlType(Object? raw) {
       return NamedTypeRef(typeId: core, nullable: nullable);
     }
     return NamedTypeRef(typeId: 'web.$inner', nullable: nullable);
-    if (inner is Map) {
-      // Handle a nested idlType descriptor that is itself a list heading
-      // (common for generic-in-generic). Re-parse.
-      return parseIdlType(inner);
-    }
   }
 
   return NamedTypeRef(typeId: 'core.dynamic', nullable: nullable);

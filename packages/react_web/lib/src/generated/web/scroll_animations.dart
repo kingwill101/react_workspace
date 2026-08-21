@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'css_nav.dart';
-import 'css_typed_om.dart';
 
 typedef ScrollAxis = String;
 

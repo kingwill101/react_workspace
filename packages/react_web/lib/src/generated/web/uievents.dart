@@ -2,10 +2,8 @@
 // Neutral Web surface for spec: uievents
 // ignore_for_file: type=lint
 
-import 'input_device_capabilities.dart';
-import 'dom.dart';
 import 'anonymous_iframe.dart';
-import 'pointerlock.dart';
+import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CompositionEvent {

@@ -2,11 +2,11 @@
 // Neutral Web surface for spec: entries-api
 // ignore_for_file: type=lint
 
-import 'html.dart';
 import 'fileapi.dart';
-import 'webidl.dart';
 import 'css_nav.dart';
 import 'dom.dart';
+import 'html.dart';
+import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class DataTransferItem {

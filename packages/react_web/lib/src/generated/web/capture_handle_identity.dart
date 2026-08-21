@@ -3,8 +3,8 @@
 // ignore_for_file: type=lint
 
 import 'html.dart';
-import 'mediacapture_streams.dart';
 import 'image_capture.dart';
+import 'mediacapture_streams.dart';
 
 abstract interface class CaptureHandle {
   String? get origin;

@@ -1,153 +1,72 @@
 # react_web
 
-> Portable `package:web` wrappers, HTML element factories, and DOM event abstractions for React Dart.
+Portable Web API declarations, generated HTML/SVG factories, typed React
+events, SSR metadata, and browser adapters for React Dart.
 
-`react_web` provides the typed HTML element factories (like `div`, `span`, `input`, `button`) and DOM event definitions used to build web user interfaces in React Dart.
-
----
-
-## Role in the Ecosystem
-
-While `package:react` provides pure platform-agnostic UI node structures (`HostNode`), `react_web` specializes those structures for web applications.
-
-Crucially, `react_web` acts as a **portable wrapper around `package:web`**. It exposes the complete DOM API surface supported by `package:web` (`EventTarget`, `HTMLInputElement`, `HTMLSelectElement`, `ReactChangeEvent`, `MessageEvent`, `Window`, `Document`, etc.) wrapped in platform-neutral representations.
-
-```
-                      ┌──────────────────────────────┐
-                      │     package:react_web        │
-                      │  Portable Web Abstractions   │
-                      └──────────────┬───────────────┘
-                                     │
-           ┌─────────────────────────┴─────────────────────────┐
-           ▼                                                   ▼
-┌───────────────────────────┐                       ┌───────────────────────────┐
-│ Browser Client (Web JS)   │                       │ Server Runtime (Dart VM)  │
-│ Delegates to package:web  │                       │ Portable Stubs & Selective│
-│ & JS Interop Extension    │                       │ Server-Side DOM Support   │
-└───────────────────────────┘                       └───────────────────────────┘
-```
-
----
-
-## Why Portable `package:web` Wrappers Are Essential for SSR
-
-### The Problem with Direct `package:web` Imports
-`package:web` uses `dart:js_interop` extension types that bind directly to browser JavaScript globals (`window`, `document`, `HTMLInputElement`). If component files import `package:web` or `dart:html` directly:
-- The Dart VM compiler fails when building or running server-side code (SSR), because `dart:js_interop` extension types cannot execute on native Dart VM targets.
-- Universal component sharing between client and server becomes impossible.
-
-### The `react_web` Solution
-`react_web` wraps all `package:web` types into **portable representations**:
-
-1. **Client-Side (Web JS)**: Wrappers delegate directly to underlying `package:web` JS interop objects with zero overhead.
-2. **Server-Side (Dart VM / SSR)**: Wrappers map to safe, portable Dart stubs. Selective server-side support allows components to query headers, inspect document metadata, or evaluate layout constraints during SSR without crashing on missing browser globals.
-3. **Proper SSR Support**: Components (`.dart`) can be shared 100% between browser client-side hydration and server-side Dart VM rendering.
-
----
+Applications normally import `package:react_dom/react_dom.dart`, which
+re-exports this package together with the core React APIs.
 
 ## Installation
 
-Declare a path dependency in your workspace package `pubspec.yaml`:
-
 ```yaml
 dependencies:
-  react_web:
-    path: ../../packages/react_web
+  react_web: ^0.1.0
 ```
 
----
-
-## Core Features & Usage
-
-### 1. HTML Element Factories
-
-`react_web` exports functions matching standard HTML tags (`div`, `span`, `input`, `button`, `select`, `textarea`, `form`, `h1`–`h6`, `a`, `img`, `canvas`, etc.).
+## Typed host factories
 
 ```dart
-import 'package:react_web/react_web.dart';
+import 'package:react_dom/react_dom.dart';
 import 'package:react_web/web.dart' show HTMLInputElement;
 
-@ReactComponent
-ReactNode SearchBar(({
-  required String query,
-  required void Function(String) onQueryChange,
+@reactComponent
+ReactNode SearchField(({
+  required String value,
+  required void Function(String) onChanged,
 }) props) {
-  return div(
-    className: 'search-wrapper',
-    children: [
-      span(className: 'icon', children: [Text('🔍')]),
-      input(
-        type: 'text',
-        value: props.query,
-        placeholder: 'Search...',
-        className: 'search-input',
-        onChange: (event) {
-          // Strongly-typed access via Portable HTMLInputElement
-          final input = event.target as HTMLInputElement;
-          props.onQueryChange(input.value);
-        },
-      ),
-    ],
+  return input(
+    type: 'search',
+    value: props.value,
+    additionalProps: aria(label: 'Search'),
+    style: css(minWidth: 240),
+    onChange: (event) {
+      final input = event.currentTarget as HTMLInputElement;
+      props.onChanged(input.value);
+    },
   );
 }
 ```
 
-### 2. Strongly-Typed React Synthetic Events
+Factories expose generated Web attributes, React event props, `key`,
+`children`, `style`, and `additionalProps`. Each also has a `.props()`
+builder for large or reusable prop sets.
 
-When passing event listeners (`onChange`, `onClick`, `onKeyDown`, `onFocus`), handlers receive strongly-typed synthetic event wrappers:
+Use `classNames`, `css`, `dataAttributes`, and `aria` instead of
+manually assembling common prop maps.
 
-| Event Wrapper | Target / Context | Key Properties |
-|---|---|---|
-| `ReactChangeEvent<T>` | Inputs, selects, textareas | `target`, `currentTarget`, `preventDefault()` |
-| `ReactMouseEvent<T>` | Buttons, clickable divs | `clientX`, `clientY`, `button`, `altKey`, `ctrlKey` |
-| `ReactKeyboardEvent<T>` | Inputs, document listeners | `key`, `keyCode`, `altKey`, `ctrlKey`, `shiftKey` |
-| `ReactFocusEvent<T>` | Form elements | `relatedTarget`, `target` |
-| `ReactTouchEvent<T>` | Touch surfaces | `touches`, `targetTouches`, `changedTouches` |
+## Portable Web surface
 
-```dart
-button(
-  className: 'action-btn',
-  onClick: (ReactMouseEvent<HTMLButtonElement> event) {
-    event.preventDefault();
-    print('Click at position: ${event.clientX}, ${event.clientY}');
-  },
-  children: [Text('Submit')],
-);
-```
+`package:react_web/web.dart` exports the generated browser API model.
+Application-facing types are ordinary Dart interfaces and value classes, so
+they can appear in shared component signatures and native tests. Browser builds
+install adapters backed by the pinned `package:web` implementation; unavailable
+SSR operations expose explicit unsupported behavior rather than raw JS objects.
 
----
+The current generator target is exactly `package:web 1.1.1`.
 
-## Automatic Host Type Wiring & Zero `.toJS` Boilerplate
+## Browser setup
 
-`react_web` integrates directly with `react_codegen`'s `HostTypeRef` system. 
+`initReact()` from `react_dom` calls `registerBrowserAdapters()` and
+`installBrowserWebRuntime()`, then installs the JavaScript renderer and hook
+binding. Most applications should call only `initReact()`.
 
-When `react_codegen` inspects component props typed as `react_web` interfaces (e.g., `ReactChangeEvent<HTMLInputElement>`, `HTMLSelectElement`, `EventTarget`):
+Generator bridge code uses `ReactCodecRegistry` to encode/decode synthetic
+events and Web host values. Component code does not need `.toJS`, casts to
+raw JS objects, or direct `package:web` imports.
 
-1. **Automatic Codec Selection**: `react_codegen` recognizes these types as `HostTypeRef` host values.
-2. **`ReactCodecRegistry` Integration**: Generated JS bridge files (`.react.g.dart`) encode and decode parameters automatically using `ReactCodecRegistry.encodeHostValue` and `decodeHostValue`.
-3. **No Manual Conversion**: Application code requires **no manual `.toJS` calls** or `dynamic` casting.
+## Generation
 
-```dart
-// Handlers stay 100% strongly typed and portable:
-onChange: (e) => setSearch((e.target as HTMLInputElement).value)
-```
-
----
-
-## Browser Adapters & Runtime Setup
-
-`react_web` includes adapters that hook browser-specific runtimes into the React Dart environment:
-
-- `registerBrowserAdapters()`: Configures global networking, logging, and environment bindings.
-- `installBrowserWebRuntime()`: Registers host-value decoders for DOM elements and synthetic events into `ReactCodecRegistry`.
-
-These adapters are invoked automatically during client bootstrap by `react_dom` (`mount` / `hydrate`) and during SSR initialization by `react_server`.
-
----
-
-## Relationship to Other Packages
-
-- **`react`**: `react_web` specializes `package:react`'s abstract `HostNode` into typed HTML element factories.
-- **`react_js`**: Provides the underlying `ReactCodecRegistry` where `react_web` registers host encoders/decoders.
-- **`react_codegen`**: Analyzes `react_web` types (`HostTypeRef`) to generate bridge code automatically.
-- **`react_server`**: Renders `react_web` element trees to HTML strings during server-side rendering.
+The surface is generated from pinned Web IDL snapshots, Browser Compat Data,
+React overlays, and curated roots by `react_web_generator`. Do not hand-edit
+`lib/src/generated/`. See the workspace maintainer guide for pin updates,
+strict completeness verification, and determinism checks.

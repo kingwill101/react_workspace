@@ -1,0 +1,6 @@
+# `react_web` intentionally exposes Web types through both their generated
+# specification libraries and the aggregate `web` barrel. Prefer the barrel as
+# canonical even when Dartdoc's score is low because several specifications
+# contribute partial definitions to the same type.
+dartdoc:
+  ambiguousReexportScorerMinConfidence: 0.0

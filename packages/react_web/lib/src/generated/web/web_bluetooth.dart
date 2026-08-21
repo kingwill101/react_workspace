@@ -3,9 +3,8 @@
 // ignore_for_file: type=lint
 
 import 'dom.dart';
-import 'webidl.dart';
 import 'html.dart';
-import 'permissions.dart';
+import 'webidl.dart';
 
 abstract interface class AllowedBluetoothDevice {
   String get deviceId;

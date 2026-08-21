@@ -139,16 +139,14 @@ JSFunction? _handlerToJs(Object? value) {
 dynamic _convert(JSAny? value, String kind) {
   if (value == null || value.isNull || value.isUndefined) return null;
   if (kind == "promise" && value is JSPromise) {
-    return (value as JSPromise<JSAny?>).toDart;
+    return value.toDart;
   }
   if (kind == "list" && value is JSArray) {
-    return (value as JSArray<JSAny?>).toDart
-        .map((e) => _convert(e, "wrap"))
-        .toList();
+    return value.toDart.map((e) => _convert(e, "wrap")).toList();
   }
   if (kind == "map" && value is JSObject) {
     // record<K,V> → JS object with string keys; best-effort map view.
-    return _wrapObject(value as JSObject);
+    return _wrapObject(value);
   }
   return switch (kind) {
     'bool' => (value as JSBoolean).toDart,
@@ -158,23 +156,19 @@ dynamic _convert(JSAny? value, String kind) {
     'void' => null,
     'jsfunction' => value,
     'promise' =>
-      (value is JSPromise
-          ? (value as JSPromise<JSAny?>).toDart
-          : _wrapObject(value as JSObject)),
+      (value is JSPromise ? value.toDart : _wrapObject(value as JSObject)),
     'list' =>
       (value is JSArray
-          ? (value as JSArray<JSAny?>).toDart
-                .map((e) => _convert(e, 'wrap'))
-                .toList()
+          ? value.toDart.map((e) => _convert(e, 'wrap')).toList()
           : _wrapObject(value as JSObject)),
     'typedArray' => value,
     _ =>
       value is JSString
-          ? (value as JSString).toDart
+          ? value.toDart
           : value is JSBoolean
-          ? (value as JSBoolean).toDart
+          ? value.toDart
           : value is JSNumber
-          ? (value as JSNumber).toDartDouble
+          ? value.toDartDouble
           : _wrapObject(value as JSObject),
   };
 }

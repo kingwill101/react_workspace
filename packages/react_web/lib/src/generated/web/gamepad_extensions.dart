@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: gamepad-extensions
 // ignore_for_file: type=lint
 
-import 'hr_time.dart';
 import 'gamepad.dart';
+import 'hr_time.dart';
 
 abstract interface class Gamepad {
   String get id;

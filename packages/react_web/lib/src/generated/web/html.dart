@@ -2,41 +2,37 @@
 // Neutral Web surface for spec: html
 // ignore_for_file: type=lint
 
-import 'media_source.dart';
 import 'fileapi.dart';
-import 'webcodecs.dart';
-import 'geometry.dart';
-import 'css_nav.dart';
-import 'dom.dart';
-import 'svg.dart';
-import 'trusted_types.dart';
-import 'entries_api.dart';
-import 'pointerlock.dart';
-import 'xhr.dart';
-import 'cssom_view.dart';
-import 'hr_time.dart';
-import 'mediacapture_streams.dart';
-import 'cssom.dart';
-import 'media_playback_quality.dart';
-import 'picture_in_picture.dart';
-import 'video_rvfc.dart';
-import 'service_workers.dart';
-import 'webgl1.dart';
-import 'webgl2.dart';
-import 'css_view_transitions_2.dart';
-import 'webidl.dart';
-import 'css_font_loading.dart';
 import 'indexeddb.dart';
+import 'svg.dart';
 import 'webcryptoapi.dart';
-import 'fetch.dart';
 import 'attribution_reporting_api.dart';
+import 'css_font_loading.dart';
+import 'css_nav.dart';
+import 'css_view_transitions_2.dart';
+import 'cssom.dart';
+import 'cssom_view.dart';
+import 'dom.dart';
+import 'entries_api.dart';
 import 'event_timing.dart';
-import 'scheduling_apis.dart';
-import 'netinfo.dart';
+import 'fetch.dart';
 import 'fs.dart';
-import 'web_locks.dart';
+import 'geometry.dart';
+import 'hr_time.dart';
 import 'media_capabilities.dart';
+import 'media_playback_quality.dart';
+import 'media_source.dart';
+import 'mediacapture_streams.dart';
+import 'netinfo.dart';
 import 'permissions_request.dart';
+import 'picture_in_picture.dart';
+import 'scheduling_apis.dart';
+import 'service_workers.dart';
+import 'trusted_types.dart';
+import 'video_rvfc.dart';
+import 'web_locks.dart';
+import 'webidl.dart';
+import 'xhr.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AbstractWorker {

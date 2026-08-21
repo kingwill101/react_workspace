@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: css-animations
 // ignore_for_file: type=lint
 
-import 'dom.dart';
 import 'cssom.dart';
 import 'html.dart';
 import 'package:react_web/src/web_runtime.dart';

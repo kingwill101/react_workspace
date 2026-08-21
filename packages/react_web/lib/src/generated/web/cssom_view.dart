@@ -2,16 +2,14 @@
 // Neutral Web surface for spec: cssom-view
 // ignore_for_file: type=lint
 
-import 'dom.dart';
+import 'anonymous_iframe.dart';
 import 'css_nav.dart';
-import 'svg.dart';
-import 'geometry.dart';
 import 'css_typed_om.dart';
 import 'cssom.dart';
+import 'dom.dart';
+import 'geometry.dart';
 import 'html.dart';
 import 'pointerlock.dart';
-import 'anonymous_iframe.dart';
-import 'trusted_types.dart';
 import 'screen_orientation.dart';
 import 'package:react_web/src/web_runtime.dart';
 

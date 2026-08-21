@@ -14,6 +14,7 @@ import '../type_resolver.dart';
 final class NeutralSurfaceEmitter {
   final CompleteWebModel model;
   final NeutralTypeResolver _resolver;
+  final Set<String> _renderedTypeDependencies = {};
 
   NeutralSurfaceEmitter(this.model) : _resolver = NeutralTypeResolver(model);
 
@@ -51,7 +52,7 @@ final class NeutralSurfaceEmitter {
 
     for (final spec in specs.keys.toList()..sort()) {
       final defs = specs[spec]!..sort((a, b) => a.name.compareTo(b.name));
-      _emitSpec(dir, spec, defs, specs.keys.toList());
+      _emitSpec(dir, spec, defs);
     }
 
     _emitWebBarrel(dir, specs.keys.toList());
@@ -74,8 +75,9 @@ final class NeutralSurfaceEmitter {
           for (final m in flat) {
             if (m is IdlOperation) {
               final ex = ops[m.name];
-              if (ex == null || m.parameters.length > ex.parameters.length)
+              if (ex == null || m.parameters.length > ex.parameters.length) {
                 ops[m.name] = m;
+              }
             }
           }
           final seen = <String>{};
@@ -212,120 +214,66 @@ final class NeutralSurfaceEmitter {
 
   String _fileName(String spec) => specFileName(spec);
 
-  void _emitSpec(
-    Directory dir,
-    String spec,
-    List<WebIdlDefinition> defs,
-    List<String> allSpecs,
-  ) {
+  void _emitSpec(Directory dir, String spec, List<WebIdlDefinition> defs) {
+    _renderedTypeDependencies.clear();
+    final body = StringBuffer();
+    for (final d in defs) {
+      if (_reservedTypeNames.containsKey(d.name)) continue;
+      _emitDefinition(body, d);
+      body.writeln();
+    }
+
     final buf = StringBuffer();
     buf.writeln('// GENERATED CODE — DO NOT EDIT');
     buf.writeln('// Neutral Web surface for spec: $spec');
     buf.writeln('// ignore_for_file: type=lint');
     buf.writeln();
 
-    final importSpecs = _requiredSpecs(defs, allSpecs)..remove(spec);
+    final importSpecs =
+        <String>{
+            for (final name in _renderedTypeDependencies) model.specOf[name]!,
+          }.toList()
+          ..remove(spec)
+          ..sort();
     for (final s in importSpecs) {
       buf.writeln("import '${_fileName(s)}.dart';");
     }
-    if (defs.any(_hasConstructor) || defs.any((d) => d is IdlNamespace)) {
+    if (body.toString().contains('WebRuntime.')) {
       buf.writeln("import 'package:react_web/src/web_runtime.dart';");
     }
     buf.writeln();
-
-    for (final d in defs) {
-      if (_reservedTypeNames.containsKey(d.name)) continue;
-      _emitDefinition(buf, d);
-      buf.writeln();
-    }
+    buf.write(body);
 
     File(
       '${dir.path}/${_fileName(spec)}.dart',
     ).writeAsStringSync(buf.toString());
   }
 
-  Set<String> _requiredSpecs(
-    List<WebIdlDefinition> defs,
-    List<String> allSpecs,
-  ) {
-    final names = <String>{};
-    for (final d in defs) {
-      _collectRefs(d, names);
-    }
-    final out = <String>{};
-    for (final n in names) {
-      final spec = model.specOf[n];
-      if (spec != null) out.add(spec);
-    }
-    return out;
+  String _resolve(TypeRef ref) {
+    _recordRenderedTypeDependencies(ref);
+    return _resolver.resolve(ref);
   }
 
-  void _collectRefs(WebIdlDefinition d, Set<String> names) {
-    void ref(TypeRef t) {
-      switch (t) {
-        case NamedTypeRef():
-          final id = t.typeId;
-          if (id.startsWith('web.')) names.add(id.substring(4));
-          for (final a in t.arguments) {
-            ref(a);
+  void _recordRenderedTypeDependencies(TypeRef ref) {
+    switch (ref) {
+      case NamedTypeRef():
+        final id = ref.typeId;
+        if (id.startsWith('web.')) {
+          final name = id.substring(4);
+          if (!_reservedTypeNames.containsKey(name) &&
+              model.definitionByName(name) != null) {
+            _renderedTypeDependencies.add(name);
           }
-        case UnionTypeRef():
-          for (final o in t.options) {
-            ref(o);
-          }
-        case TypeParameterRef():
-          break;
-      }
-    }
-
-    // Flatten inherited + mixin members so every referenced type's module is
-    // imported (Dart imports are not transitive).
-    final members =
-        switch (d) {
-              IdlInterface() => flattenMembers(model, d),
-              IdlMixin() => d.members,
-              IdlNamespace() => d.members,
-              IdlCallbackInterface() => d.members,
-              IdlDictionary() => d.fields,
-              IdlCallback() => d.parameters,
-              IdlEnum() || IdlIncludes() || IdlTypedef() => const <Object>[],
-            }
-            as List;
-    for (final m in members) {
-      _refMember(m, ref);
-    }
-    if (d is IdlDictionary && d.inheritance != null) names.add(d.inheritance!);
-    if (d is IdlTypedef) ref(d.type);
-  }
-
-  void _refMember(Object m, void Function(TypeRef) ref) {
-    switch (m) {
-      case IdlAttribute():
-        ref(m.type);
-      case IdlOperation():
-        ref(m.returnType);
-        for (final p in m.parameters) {
-          ref(p.type);
         }
-      case IdlConstructor():
-        for (final p in m.parameters) {
-          ref(p.type);
+        for (final argument in ref.arguments) {
+          _recordRenderedTypeDependencies(argument);
         }
-      case IdlConstant():
-        ref(m.type);
-      case IdlIterable():
-        for (final t in m.types) {
-          ref(t);
-        }
-      case IdlMaplike():
-        ref(m.keyType);
-        ref(m.valueType);
-      case IdlSetlike():
-        ref(m.valueType);
-      case IdlField():
-        ref(m.type);
-      case IdlParameter():
-        ref(m.type);
+      case UnionTypeRef():
+        // NeutralTypeResolver lowers the entire union to Object, so none of
+        // its alternatives appear in the emitted signature.
+        break;
+      case TypeParameterRef():
+        break;
     }
   }
 
@@ -381,9 +329,6 @@ final class NeutralSurfaceEmitter {
       escapeIdentifier(params[i].name.isEmpty ? 'arg$i' : params[i].name),
   ].join(', ');
 
-  bool _hasConstructor(WebIdlDefinition d) =>
-      d is IdlInterface && d.members.any((m) => m is IdlConstructor);
-
   void _emitMixin(StringBuffer buf, IdlMixin d) {
     buf.writeln('abstract interface class ${d.name} {');
     _emitMembers(
@@ -395,15 +340,15 @@ final class NeutralSurfaceEmitter {
   }
 
   void _emitDictionary(StringBuffer buf, IdlDictionary d) {
-    String _dictType(IdlField f) {
-      var t = _resolver.resolve(f.type);
+    String dictionaryType(IdlField f) {
+      var t = _resolve(f.type);
       if (!f.required && !t.endsWith('?')) t = '$t?';
       return t;
     }
 
     buf.writeln('abstract interface class ${d.name} {');
     for (final f in d.fields) {
-      final t = _dictType(f);
+      final t = dictionaryType(f);
       final fn = escapeIdentifier(f.name);
       buf.writeln('  $t get $fn;');
       buf.writeln('  set $fn($t value);');
@@ -414,7 +359,7 @@ final class NeutralSurfaceEmitter {
     // arguments (e.g. StorageEventInit) without hand-writing JS objects.
     buf.writeln('final class ${d.name}Value implements ${d.name} {');
     for (final f in d.fields) {
-      final t = _dictType(f);
+      final t = dictionaryType(f);
       final fn = escapeIdentifier(f.name);
       buf.writeln('  @override');
       buf.writeln('  $t $fn;');
@@ -442,17 +387,17 @@ final class NeutralSurfaceEmitter {
   }
 
   void _emitTypedef(StringBuffer buf, IdlTypedef d) {
-    buf.writeln('typedef ${d.name} = ${_resolver.resolve(d.type)};');
+    buf.writeln('typedef ${d.name} = ${_resolve(d.type)};');
   }
 
   void _emitCallback(StringBuffer buf, IdlCallback d) {
-    final ret = _resolver.resolve(d.returnType);
+    final ret = _resolve(d.returnType);
     buf.write('typedef ${d.name} = $ret Function(');
     final parts = <String>[];
     for (var i = 0; i < d.parameters.length; i++) {
       final p = d.parameters[i];
       parts.add(
-        '${_resolver.resolve(p.type)} ${escapeIdentifier(p.name.isEmpty ? 'arg$i' : p.name)}',
+        '${_resolve(p.type)} ${escapeIdentifier(p.name.isEmpty ? 'arg$i' : p.name)}',
       );
     }
     if (parts.isNotEmpty) buf.write('${parts.join(', ')},');
@@ -486,7 +431,7 @@ final class NeutralSurfaceEmitter {
       if (m is IdlOperation) {
         if (!emitted.add(m.name)) continue;
         final op = ops[m.name]!;
-        final ret = _resolver.resolve(op.returnType);
+        final ret = _resolve(op.returnType);
         final paramNames = [
           for (var i = 0; i < op.parameters.length; i++)
             escapeIdentifier(
@@ -500,7 +445,7 @@ final class NeutralSurfaceEmitter {
           "      '${d.name}', '${op.name}', [${paramNames.join(', ')}]) as $ret;",
         );
       } else if (m is IdlAttribute) {
-        final t = _resolver.resolve((m as IdlAttribute).type);
+        final t = _resolve(m.type);
         final name = escapeIdentifier(m.name);
         buf.writeln('  static $t get $name =>');
         buf.writeln(
@@ -519,38 +464,9 @@ final class NeutralSurfaceEmitter {
     buf.writeln('}');
   }
 
-  void _emitStaticOperation(StringBuffer buf, IdlOperation m) {
-    final ret = _resolver.resolve(m.returnType);
-    final params = m.parameters;
-    final paramNames = [
-      for (var i = 0; i < params.length; i++)
-        escapeIdentifier(params[i].name.isEmpty ? 'arg$i' : params[i].name),
-    ];
-    buf.write('  static $ret ${escapeIdentifier(m.name)}(');
-    buf.write(_paramStrings(params));
-    // Dispatch via WebRuntime when installed (browser), otherwise throw
-    // clearly for SSR. The namespace name is not available here, so we
-    // close over it in _emitNamespace: emit a forwarder that captures it.
-    // For now emit a runtime-dispatched body that the SSR emitter will
-    // override with a throwing stub if needed.
-    buf.writeln(') => WebRuntime.current.invokeNamespace(');
-    // Placeholder — replaced by _emitNamespace with correct namespace.
-    buf.writeln(
-      "      '__ns__', '${m.name}', [${paramNames.join(', ')}]) as $ret;",
-    );
-  }
-
-  void _emitStaticAttribute(StringBuffer buf, IdlAttribute m) {
-    final t = _resolver.resolve(m.type);
-    buf.writeln('  static $t get ${escapeIdentifier(m.name)} =>');
-    buf.writeln(
-      "      WebRuntime.current.getNamespaceProperty('__ns__', '${m.name}') as $t;",
-    );
-  }
-
   void _emitStaticConstant(StringBuffer buf, IdlConstant m) {
     buf.writeln(
-      '  static const ${_resolver.resolve(m.type)} ${escapeIdentifier(m.name)} =',
+      '  static const ${_resolve(m.type)} ${escapeIdentifier(m.name)} =',
     );
     buf.writeln("      ${m.value ?? 'null'};");
   }
@@ -576,8 +492,9 @@ final class NeutralSurfaceEmitter {
     final ops = <String, IdlOperation>{};
     for (final m in members.whereType<IdlOperation>()) {
       final ex = ops[m.name];
-      if (ex == null || m.parameters.length > ex.parameters.length)
+      if (ex == null || m.parameters.length > ex.parameters.length) {
         ops[m.name] = m;
+      }
     }
     final usedNames = <String>{
       for (final m in emitOrder.where((m) => m is! IdlConstant))
@@ -623,6 +540,7 @@ final class NeutralSurfaceEmitter {
     // shadows the return type in its own signature, so it cannot be declared.
     // It is constructor-like and therefore omitted from the instance contract.
     if (m.name == ret) return;
+    _recordRenderedTypeDependencies(m.returnType);
     buf.write('$indent$ret $name(');
     buf.write(_paramStrings(m.parameters));
     buf.writeln(');');
@@ -634,7 +552,7 @@ final class NeutralSurfaceEmitter {
     for (var i = 0; i < params.length; i++) {
       final p = params[i];
       final name = escapeIdentifier(p.name.isEmpty ? 'arg$i' : p.name);
-      var t = _resolver.resolve(p.type);
+      var t = _resolve(p.type);
       if (p.variadic && !t.endsWith('List')) t = 'List<$t>';
       final s = '$t $name';
       if (!p.required || p.variadic) {
@@ -651,7 +569,7 @@ final class NeutralSurfaceEmitter {
   }
 
   void _emitAttribute(StringBuffer buf, IdlAttribute m, String indent) {
-    final t = _resolver.resolve(m.type);
+    final t = _resolve(m.type);
     final name = escapeIdentifier(m.name);
     buf.writeln('$indent$t get $name;');
     if (!m.readonly) {
@@ -665,12 +583,12 @@ final class NeutralSurfaceEmitter {
     String indent, {
     required String name,
   }) {
-    buf.writeln('$indent static const ${_resolver.resolve(m.type)} $name =');
+    buf.writeln('$indent static const ${_resolve(m.type)} $name =');
     buf.writeln('$indent    ${m.value ?? 'null'};');
   }
 
   void _emitIterable(StringBuffer buf, IdlIterable m, String indent) {
-    final names = m.types.map(_resolver.resolve).toList();
+    final names = m.types.map(_resolve).toList();
     if (m.types.length >= 2) {
       buf.writeln('$indent Iterable<(${names[0]}, ${names[1]})> get entries;');
       buf.writeln('$indent Iterable<${names[0]}> get keys;');
@@ -681,8 +599,8 @@ final class NeutralSurfaceEmitter {
   }
 
   void _emitMaplike(StringBuffer buf, IdlMaplike m, String indent) {
-    final k = _resolver.resolve(m.keyType);
-    final v = _resolver.resolve(m.valueType);
+    final k = _resolve(m.keyType);
+    final v = _resolve(m.valueType);
     buf.writeln('$indent Iterable<$k> get keys;');
     buf.writeln('$indent Iterable<$v> get values;');
     buf.writeln('$indent Iterable<MapEntry<$k, $v>> get entries;');
@@ -691,7 +609,7 @@ final class NeutralSurfaceEmitter {
   }
 
   void _emitSetlike(StringBuffer buf, IdlSetlike m, String indent) {
-    final v = _resolver.resolve(m.valueType);
+    final v = _resolve(m.valueType);
     buf.writeln('$indent Iterable<$v> get values;');
     buf.writeln('$indent bool has(Object value);');
   }

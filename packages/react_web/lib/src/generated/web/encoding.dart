@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: encoding
 // ignore_for_file: type=lint
 
-import 'webidl.dart';
 import 'streams.dart';
+import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class TextDecodeOptions {

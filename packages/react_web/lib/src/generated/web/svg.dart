@@ -3,19 +3,17 @@
 // ignore_for_file: type=lint
 
 import 'css_font_loading.dart';
-import 'geometry.dart';
-import 'cssom_view.dart';
 import 'css_nav.dart';
-import 'cssom.dart';
-import 'web_animations_2.dart';
-import 'dom.dart';
-import 'trusted_types.dart';
-import 'html.dart';
+import 'css_typed_om.dart';
 import 'css_view_transitions_2.dart';
-import 'css_view_transitions.dart';
+import 'cssom.dart';
+import 'cssom_view.dart';
+import 'dom.dart';
+import 'geometry.dart';
+import 'html.dart';
 import 'selection_api.dart';
 import 'web_animations.dart';
-import 'css_typed_om.dart';
+import 'web_animations_2.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Document {

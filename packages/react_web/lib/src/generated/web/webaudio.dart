@@ -3,11 +3,10 @@
 // ignore_for_file: type=lint
 
 import 'audio_output.dart';
-import 'mediacapture_streams.dart';
 import 'capture_handle_identity.dart';
-import 'dom.dart';
-import 'html.dart';
 import 'hr_time.dart';
+import 'html.dart';
+import 'mediacapture_streams.dart';
 import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 

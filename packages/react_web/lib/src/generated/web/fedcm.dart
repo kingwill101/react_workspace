@@ -2,29 +2,29 @@
 // Neutral Web surface for spec: FedCM
 // ignore_for_file: type=lint
 
-import 'credential_management.dart';
-import 'dom.dart';
-import 'digital_identities.dart';
-import 'web_otp.dart';
-import 'webauthn.dart';
-import 'html.dart';
-import 'netinfo.dart';
-import 'fs.dart';
-import 'web_locks.dart';
+import 'audio_output.dart';
 import 'battery_status.dart';
-import 'fetch.dart';
 import 'clipboard_apis.dart';
+import 'credential_management.dart';
+import 'digital_identities.dart';
+import 'dom.dart';
 import 'encrypted_media.dart';
+import 'fetch.dart';
+import 'fs.dart';
 import 'gamepad_extensions.dart';
 import 'geolocation.dart';
+import 'html.dart';
 import 'media_capabilities.dart';
-import 'audio_output.dart';
 import 'mediasession.dart';
+import 'netinfo.dart';
 import 'permissions_request.dart';
 import 'screen_wake_lock.dart';
 import 'service_workers.dart';
 import 'vibration.dart';
+import 'web_locks.dart';
+import 'web_otp.dart';
 import 'web_share.dart';
+import 'webauthn.dart';
 import 'webmidi.dart';
 
 abstract interface class CredentialRequestOptions {

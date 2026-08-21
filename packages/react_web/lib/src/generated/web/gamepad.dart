@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'gamepad_extensions.dart';
-import 'dom.dart';
 import 'html.dart';
 import 'package:react_web/src/web_runtime.dart';
 

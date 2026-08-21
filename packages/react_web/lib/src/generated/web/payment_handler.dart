@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'payment_request.dart';
-import 'service_workers.dart';
 
 abstract interface class AddressErrors {
   String? get addressLine;

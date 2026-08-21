@@ -9,7 +9,6 @@ library;
 import 'dart:io';
 
 import '../definition.dart';
-import '../members.dart';
 import '../member.dart';
 import '../members.dart';
 import '../model.dart';

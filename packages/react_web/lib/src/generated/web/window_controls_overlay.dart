@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'geometry.dart';
-import 'dom.dart';
 
 abstract interface class WindowControlsOverlayGeometryChangeEventInit {
   DOMRect get titlebarAreaRect;

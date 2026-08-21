@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'anonymous_iframe.dart';
-import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class InputDeviceCapabilitiesInit {

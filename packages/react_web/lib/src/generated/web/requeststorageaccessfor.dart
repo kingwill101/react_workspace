@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: requestStorageAccessFor
 // ignore_for_file: type=lint
 
-import 'permissions.dart';
-
 abstract interface class TopLevelStorageAccessPermissionDescriptor {
   String? get requestedOrigin;
   set requestedOrigin(String? value);

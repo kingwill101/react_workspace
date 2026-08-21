@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: orientation-sensor
 // ignore_for_file: type=lint
 
-import 'generic_sensor.dart';
-import 'geometry.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AbsoluteOrientationSensor {

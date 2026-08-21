@@ -2,12 +2,12 @@
 // Neutral Web surface for spec: background-fetch
 // ignore_for_file: type=lint
 
-import 'service_workers.dart';
-import 'image_resource.dart';
-import 'html.dart';
 import 'background_sync.dart';
+import 'html.dart';
+import 'image_resource.dart';
 import 'notifications.dart';
 import 'push_api.dart';
+import 'service_workers.dart';
 
 abstract interface class BackgroundFetchEventInit {
   Object get registration;

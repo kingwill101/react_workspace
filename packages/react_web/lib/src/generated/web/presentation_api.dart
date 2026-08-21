@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: presentation-api
 // ignore_for_file: type=lint
 
-import 'dom.dart';
-
 abstract interface class PresentationConnectionAvailableEventInit {
   Object get connection;
   set connection(Object value);

@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: edit-context
 // ignore_for_file: type=lint
 
-import 'dom.dart';
-
 abstract interface class CharacterBoundsUpdateEventInit {
   int? get rangeStart;
   set rangeStart(int? value);

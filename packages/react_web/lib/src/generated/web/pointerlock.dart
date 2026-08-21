@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'dom.dart';
-import 'uievents.dart';
 
 abstract interface class MouseEventInit {
   double? get movementX;

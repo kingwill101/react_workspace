@@ -3,9 +3,8 @@
 // ignore_for_file: type=lint
 
 import 'geometry.dart';
-import 'webxr.dart';
-import 'dom.dart';
 import 'webgl1.dart';
+import 'webxr.dart';
 
 abstract interface class XRCubeLayerInit {
   DOMPointReadOnly? get orientation;

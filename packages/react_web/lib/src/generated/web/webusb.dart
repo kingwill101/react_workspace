@@ -2,9 +2,6 @@
 // Neutral Web surface for spec: webusb
 // ignore_for_file: type=lint
 
-import 'dom.dart';
-import 'permissions.dart';
-
 abstract interface class AllowedUSBDevice {
   Object get vendorId;
   set vendorId(Object value);

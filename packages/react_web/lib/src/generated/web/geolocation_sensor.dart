@@ -2,9 +2,8 @@
 // Neutral Web surface for spec: geolocation-sensor
 // ignore_for_file: type=lint
 
-import 'generic_sensor.dart';
-import 'hr_time.dart';
 import 'dom.dart';
+import 'hr_time.dart';
 
 abstract interface class GeolocationSensorOptions {}
 

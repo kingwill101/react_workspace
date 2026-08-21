@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: css-typed-om
 // ignore_for_file: type=lint
 
-import 'geometry.dart';
 import 'cssom.dart';
+import 'geometry.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef CSSColorAngle = Object;

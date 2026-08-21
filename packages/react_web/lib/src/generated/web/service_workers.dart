@@ -2,13 +2,11 @@
 // Neutral Web surface for spec: service-workers
 // ignore_for_file: type=lint
 
-import 'fetch.dart';
-import 'page_lifecycle.dart';
-import 'dom.dart';
-import 'html.dart';
-import 'urlpattern.dart';
 import 'background_fetch.dart';
-import 'trusted_types.dart';
+import 'fetch.dart';
+import 'html.dart';
+import 'page_lifecycle.dart';
+import 'urlpattern.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Cache {

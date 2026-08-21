@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: captured-mouse-events
 // ignore_for_file: type=lint
 
-import 'dom.dart';
-
 abstract interface class CapturedMouseEventInit {
   int? get surfaceX;
   set surfaceX(int? value);

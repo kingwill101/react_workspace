@@ -113,8 +113,10 @@ class BcdFilter {
     if (memberName.startsWith('on') && memberName.length > 2) {
       final eventName = '${memberName.substring(2)}_event';
       for (final entry in _includedMembers.entries) {
-        if (entry.value.contains(memberName) || entry.value.contains(eventName))
+        if (entry.value.contains(memberName) ||
+            entry.value.contains(eventName)) {
           return true;
+        }
       }
     }
     return false;

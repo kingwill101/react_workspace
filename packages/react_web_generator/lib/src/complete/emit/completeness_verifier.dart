@@ -162,8 +162,9 @@ final class CompletenessVerifier {
       for (final mem in members) {
         if (mem is IdlOperation) {
           final ex = ops[mem.name];
-          if (ex == null || mem.parameters.length > ex.parameters.length)
+          if (ex == null || mem.parameters.length > ex.parameters.length) {
             ops[mem.name] = mem;
+          }
         }
       }
       final seen = <String>{};

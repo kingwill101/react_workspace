@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: pointerevents
 // ignore_for_file: type=lint
 
-import 'pointerlock.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class PointerEvent {

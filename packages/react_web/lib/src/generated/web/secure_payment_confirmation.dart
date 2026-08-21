@@ -2,10 +2,9 @@
 // Neutral Web surface for spec: secure-payment-confirmation
 // ignore_for_file: type=lint
 
-import 'payment_request.dart';
-import 'webauthn.dart';
-import 'webidl.dart';
 import 'fido.dart';
+import 'payment_request.dart';
+import 'webidl.dart';
 
 abstract interface class AuthenticationExtensionsPaymentInputs {
   bool? get isPayment;

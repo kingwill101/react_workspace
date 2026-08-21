@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: selection-api
 // ignore_for_file: type=lint
 
-import 'dom.dart';
 import 'cssom_view.dart';
+import 'dom.dart';
 
 abstract interface class Selection {
   Node? get anchorNode;

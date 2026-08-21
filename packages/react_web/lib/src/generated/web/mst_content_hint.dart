@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'webrtc_priority.dart';
-import 'webrtc.dart';
 
 typedef RTCDegradationPreference = String;
 

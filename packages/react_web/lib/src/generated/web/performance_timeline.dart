@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: performance-timeline
 // ignore_for_file: type=lint
 
-import 'hr_time.dart';
 import 'event_timing.dart';
+import 'hr_time.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class PerformanceEntry {

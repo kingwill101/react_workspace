@@ -2,11 +2,9 @@
 // Neutral Web surface for spec: push-api
 // ignore_for_file: type=lint
 
-import 'service_workers.dart';
-import 'permissions.dart';
 import 'fileapi.dart';
-import 'webidl.dart';
 import 'hr_time.dart';
+import 'permissions.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef PushEncryptionKeyName = String;

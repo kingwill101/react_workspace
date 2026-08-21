@@ -4,8 +4,8 @@
 
 import 'fileapi.dart';
 import 'hr_time.dart';
-import 'mediacapture_streams.dart';
 import 'html.dart';
+import 'mediacapture_streams.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef BitrateMode = String;

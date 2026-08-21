@@ -2,10 +2,8 @@
 // Neutral Web surface for spec: clipboard-apis
 // ignore_for_file: type=lint
 
-import 'html.dart';
-import 'dom.dart';
 import 'fileapi.dart';
-import 'permissions.dart';
+import 'html.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Clipboard {

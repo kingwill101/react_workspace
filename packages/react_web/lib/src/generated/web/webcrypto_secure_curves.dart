@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'webidl.dart';
-import 'webcryptoapi.dart';
 
 abstract interface class Ed448Params {
   BufferSource? get context;

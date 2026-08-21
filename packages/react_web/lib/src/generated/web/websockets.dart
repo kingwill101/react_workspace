@@ -2,10 +2,7 @@
 // Neutral Web surface for spec: websockets
 // ignore_for_file: type=lint
 
-import 'dom.dart';
 import 'html.dart';
-import 'webidl.dart';
-import 'fileapi.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef BinaryType = String;

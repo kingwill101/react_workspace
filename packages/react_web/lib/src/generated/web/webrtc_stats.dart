@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: webrtc-stats
 // ignore_for_file: type=lint
 
-import 'webrtc.dart';
 import 'hr_time.dart';
+import 'webrtc.dart';
 
 abstract interface class RTCAudioPlayoutStats {
   String get kind;

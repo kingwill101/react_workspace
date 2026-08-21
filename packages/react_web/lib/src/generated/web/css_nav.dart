@@ -2,17 +2,15 @@
 // Neutral Web surface for spec: css-nav
 // ignore_for_file: type=lint
 
-import 'cssom_view.dart';
-import 'geometry.dart';
-import 'dom.dart';
-import 'trusted_types.dart';
-import 'html.dart';
-import 'web_animations_2.dart';
-import 'web_animations.dart';
 import 'css_typed_om.dart';
+import 'cssom_view.dart';
+import 'dom.dart';
 import 'fullscreen.dart';
+import 'geometry.dart';
+import 'html.dart';
 import 'pointerlock.dart';
-import 'input_device_capabilities.dart';
+import 'web_animations.dart';
+import 'web_animations_2.dart';
 
 abstract interface class Element {
   Object get regionOverset;

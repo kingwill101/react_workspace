@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: css-transitions
 // ignore_for_file: type=lint
 
-import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class TransitionEvent {

@@ -5,7 +5,6 @@
 import 'css_animations.dart';
 import 'css_nav.dart';
 import 'web_animations_2.dart';
-import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CSSGroupingRule {

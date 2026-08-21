@@ -11,11 +11,9 @@ library;
 
 import 'dart:io';
 
-import '../complete/definition.dart';
 import '../complete/member.dart';
-import '../complete/members.dart';
 import '../complete/model.dart';
-import '../model/type_ref.dart';
+import 'browser_adapter_plan.dart';
 import 'react_event_defs.dart';
 
 final class BrowserAdapterEmitter {
@@ -26,246 +24,9 @@ final class BrowserAdapterEmitter {
   /// the `package:web` extension type.
   final Set<String> packageWebNames;
 
-  late final Set<String> _wrapperNames;
-  late final Map<String, String> _kinds;
-  late final Map<String, String> _jsNames;
+  late final BrowserAdapterPlan _plan = BrowserAdapterPlanner(model).build();
 
-  BrowserAdapterEmitter(this.model, {this.packageWebNames = const {}}) {
-    _compute();
-  }
-
-  static const _reservedTypeNames = <String>{
-    'Function',
-    'Object',
-    'String',
-    'int',
-    'double',
-    'bool',
-    'dynamic',
-    'void',
-    'num',
-    'Null',
-    'Never',
-    'Future',
-    'List',
-    'Map',
-    'Set',
-    'Iterable',
-    'Type',
-  };
-
-  /// Interface names that anchor the wrapper closure even though they are not
-  /// `HTML`/`SVG`/`MathML` prefixed.
-  static const _elementSeeds = <String>{
-    'EventTarget',
-    'Node',
-    'Element',
-    'HTMLElement',
-    'SVGElement',
-    'MathMLElement',
-    'Window',
-    'Document',
-    'Navigator',
-  };
-
-  /// Computes the wrapper set: element-like interfaces plus constructible
-  /// interfaces, plus the transitive closure of interface types they
-  /// reference. Constructible interfaces (e.g. [BroadcastChannel]) gain a
-  /// `Browser*` proxy and a JS constructor entry so the neutral factory
-  /// constructors dispatched through [WebRuntime] can instantiate them.
-  void _compute() {
-    final wrapNames = <String>{};
-    final queue = <String>[
-      for (final name in model.interfaces.keys)
-        if (_isElementLike(name) || _isConstructible(name)) name,
-    ];
-    while (queue.isNotEmpty) {
-      final name = queue.removeLast();
-      if (!wrapNames.add(name)) continue;
-      final iface = model.interfaces[name];
-      if (iface == null) continue;
-      for (final m in flattenMembers(model, iface)) {
-        for (final refName in _referencedTypeNames(m)) {
-          if (model.interfaces.containsKey(refName)) queue.add(refName);
-        }
-      }
-    }
-    _wrapperNames = wrapNames;
-
-    _kinds = {};
-    _jsNames = {};
-    for (final name in _wrapperNames.toList()..sort()) {
-      _collectMemberTable('Browser$name', model.interfaces[name]!);
-    }
-    for (final def in reactEventDefs) {
-      _collectEventTable(def);
-    }
-  }
-
-  bool _isElementLike(String name) =>
-      name.startsWith('HTML') ||
-      name.startsWith('SVG') ||
-      name.startsWith('MathML') ||
-      _elementSeeds.contains(name);
-
-  /// Whether the interface declares an IDL constructor and can therefore be
-  /// instantiated through the neutral factory + [WebRuntime] dispatch.
-  bool _isConstructible(String name) =>
-      model.interfaces[name]?.members.any((m) => m is IdlConstructor) ?? false;
-
-  /// Constructible interface names that get a JS constructor entry (the
-  /// primary IDL constructor; secondary named constructors are ignored).
-  late final List<String> _constructibleNames = [
-    for (final name in model.interfaces.keys)
-      if (_isConstructible(name) && !_reservedTypeNames.contains(name)) name,
-  ]..sort();
-
-  /// Callback-typedef names (e.g. `EventHandler`, `BlobCallback`): members
-  /// typed with these are JS functions and need the `jsfunction` kind.
-  late final Set<String> _callbackNames = () {
-    final names = <String>{for (final c in model.callbacks.values) c.name};
-    var changed = true;
-    while (changed) {
-      changed = false;
-      for (final t in model.typedefs.entries) {
-        if (names.contains(t.key)) continue;
-        final target = _typeName(t.value.type);
-        if (target != null && names.contains(target) && names.add(t.key)) {
-          changed = true;
-        }
-      }
-    }
-    return names;
-  }();
-
-  String? _typeName(TypeRef t) => switch (t) {
-    NamedTypeRef() =>
-      t.typeId.contains('.') ? t.typeId.split('.').last : t.typeId,
-    _ => null,
-  };
-
-  Iterable<String> _referencedTypeNames(IdlMember m) sync* {
-    switch (m) {
-      case IdlAttribute():
-        yield* _namesOf(m.type);
-      case IdlOperation():
-        yield* _namesOf(m.returnType);
-        for (final p in m.parameters) {
-          yield* _namesOf(p.type);
-        }
-      case IdlIterable():
-        for (final t in m.types) {
-          yield* _namesOf(t);
-        }
-      case IdlMaplike():
-        yield* _namesOf(m.keyType);
-        yield* _namesOf(m.valueType);
-      case IdlSetlike():
-        yield* _namesOf(m.valueType);
-      case IdlConstant():
-        yield* _namesOf(m.type);
-      case IdlConstructor() || IdlField():
-        break;
-    }
-  }
-
-  Iterable<String> _namesOf(TypeRef t) sync* {
-    switch (t) {
-      case NamedTypeRef():
-        final id = t.typeId;
-        if (id.startsWith('core.')) return;
-        final name = id.contains('.') ? id.substring(id.indexOf('.') + 1) : id;
-        yield name;
-        for (final a in t.arguments) {
-          yield* _namesOf(a);
-        }
-      case UnionTypeRef():
-        for (final o in t.options) {
-          yield* _namesOf(o);
-        }
-      case TypeParameterRef():
-        break;
-    }
-  }
-
-  void _collectMemberTable(String className, IdlInterface iface) {
-    for (final m in flattenMembers(model, iface)) {
-      switch (m) {
-        case IdlAttribute():
-          final dartName = escapeIdentifier(m.name);
-          _kinds['$className.$dartName'] = _kindOf(m.type);
-          if (dartName != m.name) _jsNames['$className.$dartName'] = m.name;
-        case IdlOperation():
-          if (m.name.isEmpty) continue;
-          final dartName = escapeIdentifier(m.name);
-          _kinds['$className.$dartName'] = _kindOf(m.returnType);
-          if (dartName != m.name) _jsNames['$className.$dartName'] = m.name;
-        default:
-          break;
-      }
-    }
-  }
-
-  void _collectEventTable(ReactEventDef def) {
-    final className = 'Browser${def.name}';
-    final base = reactEventDefs.first;
-    for (final m in [
-      ...base.members,
-      ...base.methods,
-      ...def.members,
-      ...def.methods,
-    ]) {
-      _kinds['$className.${m.name}'] = _kindFromReturnType(m.returnType);
-    }
-  }
-
-  String _kindOf(TypeRef ref) {
-    switch (ref) {
-      case NamedTypeRef():
-        final id = ref.typeId;
-        final name = id.contains('.') ? id.substring(id.indexOf('.') + 1) : id;
-        if (_callbackNames.contains(name)) return 'jsfunction';
-        // Broader IDL shape coverage.
-        if (name == 'Promise') return 'promise';
-        if (name == 'sequence' ||
-            name == 'FrozenArray' ||
-            name == 'ObservableArray')
-          return 'list';
-        if (name == 'record') return 'map';
-        if (name.endsWith('Array') &&
-            (name.startsWith('Int') ||
-                name.startsWith('Uint') ||
-                name.startsWith('Float') ||
-                name == 'ArrayBuffer' ||
-                name == 'SharedArrayBuffer'))
-          return 'typedArray';
-        return switch (name) {
-          'bool' => 'bool',
-          'int' => 'int',
-          'double' => 'double',
-          'num' => 'double',
-          'String' => 'string',
-          'void' => 'void',
-          _ => 'wrap',
-        };
-      case UnionTypeRef() || TypeParameterRef():
-        return 'wrap';
-    }
-  }
-
-  String _kindFromReturnType(String returnType) {
-    final clean = returnType.endsWith('?')
-        ? returnType.substring(0, returnType.length - 1)
-        : returnType;
-    return switch (clean) {
-      'bool' => 'bool',
-      'int' => 'int',
-      'double' => 'double',
-      'String' => 'string',
-      'void' => 'void',
-      _ => 'wrap',
-    };
-  }
+  BrowserAdapterEmitter(this.model, {this.packageWebNames = const {}});
 
   void emitToDirectory(String outputDir) {
     final buf = StringBuffer();
@@ -465,18 +226,18 @@ final class BrowserAdapterEmitter {
       '  if (value == null || value.isNull || value.isUndefined) return null;',
     );
     buf.writeln('  if (kind == "promise" && value is JSPromise) {');
-    buf.writeln('    return (value as JSPromise<JSAny?>).toDart;');
+    buf.writeln('    return value.toDart;');
     buf.writeln('  }');
     buf.writeln('  if (kind == "list" && value is JSArray) {');
     buf.writeln(
-      '    return (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, "wrap")).toList();',
+      '    return value.toDart.map((e) => _convert(e, "wrap")).toList();',
     );
     buf.writeln('  }');
     buf.writeln('  if (kind == "map" && value is JSObject) {');
     buf.writeln(
       '    // record<K,V> → JS object with string keys; best-effort map view.',
     );
-    buf.writeln('    return _wrapObject(value as JSObject);');
+    buf.writeln('    return _wrapObject(value);');
     buf.writeln('  }');
     buf.writeln('  return switch (kind) {');
     buf.writeln("    'bool' => (value as JSBoolean).toDart,");
@@ -486,18 +247,18 @@ final class BrowserAdapterEmitter {
     buf.writeln("    'void' => null,");
     buf.writeln("    'jsfunction' => value,");
     buf.writeln(
-      "    'promise' => (value is JSPromise ? (value as JSPromise<JSAny?>).toDart : _wrapObject(value as JSObject)),",
+      "    'promise' => (value is JSPromise ? value.toDart : _wrapObject(value as JSObject)),",
     );
     buf.writeln(
-      "    'list' => (value is JSArray ? (value as JSArray<JSAny?>).toDart.map((e) => _convert(e, 'wrap')).toList() : _wrapObject(value as JSObject)),",
+      "    'list' => (value is JSArray ? value.toDart.map((e) => _convert(e, 'wrap')).toList() : _wrapObject(value as JSObject)),",
     );
     buf.writeln("    'typedArray' => value,");
     buf.writeln('    _ => value is JSString');
-    buf.writeln('        ? (value as JSString).toDart');
+    buf.writeln('        ? value.toDart');
     buf.writeln('        : value is JSBoolean');
-    buf.writeln('            ? (value as JSBoolean).toDart');
+    buf.writeln('            ? value.toDart');
     buf.writeln('            : value is JSNumber');
-    buf.writeln('                ? (value as JSNumber).toDartDouble');
+    buf.writeln('                ? value.toDartDouble');
     buf.writeln('                : _wrapObject(value as JSObject),');
     buf.writeln('  };');
     buf.writeln('}');
@@ -528,79 +289,6 @@ final class BrowserAdapterEmitter {
     buf.writeln();
   }
 
-  /// Computes the `implements` list for the `Browser<Name>` wrapper:
-  /// the direct interface plus the transitive `inherits` chain, dropping
-  /// any ancestor whose declared members conflict with ones already covered
-  /// (the flat neutral surface lets ancestors disagree — e.g.
-  /// `SVGElement.className` returning `SVGAnimatedString` vs `Element.className`
-  /// returning `String` — which no single class can satisfy).
-  /// Mirrors the neutral surface's overload resolution: per interface,
-  /// operations sharing a name collapse to the declaration with the most
-  /// parameters (see `neutral_surface_emitter.dart`).
-  /// Resolved instance contract of [ifaceName] exactly as the neutral
-  /// surface emits it: flattened own + included mixin members, operations
-  /// sharing a name collapsed to the max-parameter declaration
-  /// (see `neutral_surface_emitter.dart`).
-  Map<String, IdlMember> _resolvedMembers(String ifaceName) {
-    final iface = model.interfaces[ifaceName];
-    if (iface == null) return const {};
-    final ops = <String, IdlOperation>{};
-    final seenNames = <String>{};
-    final out = <IdlMember>[];
-    for (final m in flattenMembers(model, iface)) {
-      if (m is IdlOperation) {
-        final existing = ops[m.name];
-        if (existing == null ||
-            m.parameters.length > existing.parameters.length) {
-          ops[m.name] = m;
-        }
-        if (seenNames.add(m.name)) out.add(m);
-      } else if (m is IdlAttribute) {
-        if (seenNames.add(m.name)) out.add(m);
-      }
-    }
-    return {for (final m in out) m.name: m is IdlOperation ? ops[m.name]! : m};
-  }
-
-  List<String> _implementsNames(String name) {
-    final out = <String>[name];
-    final covered = _resolvedMembers(name);
-    final seen = <String>{name};
-    var current = model.interfaces[name]?.inheritance;
-    while (current != null && seen.add(current)) {
-      final parent = model.interfaces[current];
-      if (parent == null || _reservedTypeNames.contains(current)) break;
-      final resolved = _resolvedMembers(current);
-      var conflicts = false;
-      for (final m in resolved.values) {
-        final prior = covered[m.name];
-        if (prior != null && _memberSignature(prior) != _memberSignature(m)) {
-          conflicts = true;
-          break;
-        }
-      }
-      if (conflicts) {
-        current = parent.inheritance;
-        continue;
-      }
-      out.add(current);
-      covered.addAll(resolved);
-      current = parent.inheritance;
-    }
-    return out;
-  }
-
-  /// Signature key for an IDL member, used to detect conflicting
-  /// declarations of the same name across implemented interfaces.
-  String _memberSignature(IdlMember m) {
-    return switch (m) {
-      IdlAttribute() => 'attr:${m.readonly}:${m.type}',
-      IdlOperation() =>
-        'op:${m.returnType}:${m.parameters.map((p) => '${p.name}:${p.type}').join(',')}',
-      _ => 'other',
-    };
-  }
-
   void _emitKindTable(StringBuffer buf) {
     buf.writeln(
       '/// Member kinds by `ClassName.member`, mirroring the neutral',
@@ -609,7 +297,7 @@ final class BrowserAdapterEmitter {
       '/// surface member types for [BrowserObjectAdapter] delegation.',
     );
     buf.writeln('const Map<String, String> _kinds = {');
-    final kinds = _kinds.entries.toList()
+    final kinds = _plan.memberKinds.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
     for (final e in kinds) {
       buf.writeln("  '${e.key}': '${e.value}',");
@@ -621,7 +309,7 @@ final class BrowserAdapterEmitter {
     );
     buf.writeln('/// differs from the actual JS name.');
     buf.writeln('const Map<String, String> _jsNames = {');
-    final jsNames = _jsNames.entries.toList()
+    final jsNames = _plan.jsNames.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
     for (final e in jsNames) {
       buf.writeln("  '${e.key}': '${e.value}',");
@@ -631,10 +319,10 @@ final class BrowserAdapterEmitter {
   }
 
   void _emitWrappers(StringBuffer buf) {
-    for (final name in _wrapperNames.toList()..sort()) {
-      if (_reservedTypeNames.contains(name)) continue;
+    for (final name in _plan.wrapperNames.toList()..sort()) {
+      if (_plan.isReserved(name)) continue;
       final hasWeb = packageWebNames.contains(name);
-      final implementsNames = _implementsNames(name);
+      final implementsNames = _plan.implementsNames(name);
       final ancestors = implementsNames.skip(1).toList();
       buf.writeln('final class Browser$name extends BrowserObjectAdapter');
       if (ancestors.isEmpty) {
@@ -655,8 +343,8 @@ final class BrowserAdapterEmitter {
 
     buf.writeln('final Map<String, BrowserObjectAdapter Function(JSObject)>');
     buf.writeln('    _wrapFactories = {');
-    for (final name in _wrapperNames.toList()..sort()) {
-      if (_reservedTypeNames.contains(name)) continue;
+    for (final name in _plan.wrapperNames.toList()..sort()) {
+      if (_plan.isReserved(name)) continue;
       buf.writeln("  '$name': (o) => Browser$name(o),");
     }
     buf.writeln('};');
@@ -672,7 +360,7 @@ final class BrowserAdapterEmitter {
       'final Map<String, BrowserObjectAdapter Function(List<Object?>)>',
     );
     buf.writeln('    _webConstructors = {');
-    for (final name in _constructibleNames) {
+    for (final name in _plan.constructibleNames) {
       buf.writeln("  '$name': (arguments) => Browser$name((globalContext");
       buf.writeln("      .getProperty('$name'.toJS) as JSFunction)");
       buf.writeln('      .callAsConstructorVarArgs<JSObject>([');
@@ -774,9 +462,9 @@ final class BrowserAdapterEmitter {
     );
     buf.writeln('/// synthetic events. Safe to call repeatedly.');
     buf.writeln('void registerBrowserAdapters() {');
-    for (final name in _wrapperNames.toList()..sort()) {
-      if (_reservedTypeNames.contains(name)) continue;
-      if (!_isElementLike(name)) continue;
+    for (final name in _plan.wrapperNames.toList()..sort()) {
+      if (_plan.isReserved(name)) continue;
+      if (!_plan.isElementLike(name)) continue;
       buf.writeln('  ReactCodecRegistry.registerHostValue(');
       buf.writeln("    'web', '$name',");
       buf.writeln('    decoder: (value) => Browser$name(value as JSObject),');

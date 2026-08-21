@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: webgl2
 // ignore_for_file: type=lint
 
-import 'webgl1.dart';
 import 'html.dart';
+import 'webgl1.dart';
 import 'webidl.dart';
 
 typedef GLint64 = int;

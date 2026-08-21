@@ -2,10 +2,10 @@
 // Neutral Web surface for spec: FileAPI
 // ignore_for_file: type=lint
 
-import 'streams.dart';
-import 'webidl.dart';
 import 'html.dart';
+import 'streams.dart';
 import 'url.dart';
+import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Blob {

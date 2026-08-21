@@ -5,7 +5,7 @@ import 'package:path/path.dart' as p;
 
 import 'web_dart_type.dart';
 
-/// Resolves IDL interface names to their [package:web] Dart types.
+/// Resolves IDL interface names to their `package:web` Dart types.
 ///
 /// Uses the `package_config.json` of the containing package to locate the
 /// installed `package:web`, then indexes all exported extension types so

@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: web-animations
 // ignore_for_file: type=lint
 
-import 'web_animations_2.dart';
 import 'hr_time.dart';
+import 'web_animations_2.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Animatable {

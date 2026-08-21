@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: accelerometer
 // ignore_for_file: type=lint
 
-import 'generic_sensor.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef AccelerometerLocalCoordinateSystem = String;

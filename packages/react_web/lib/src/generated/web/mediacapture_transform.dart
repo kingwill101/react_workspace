@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: mediacapture-transform
 // ignore_for_file: type=lint
 
-import 'streams.dart';
 import 'capture_handle_identity.dart';
+import 'streams.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class MediaStreamTrackProcessor {

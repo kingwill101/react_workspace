@@ -2,13 +2,12 @@
 // Neutral Web surface for spec: webcodecs
 // ignore_for_file: type=lint
 
-import 'webidl.dart';
-import 'webcodecs_aac_codec_registration.dart';
-import 'streams.dart';
-import 'html.dart';
-import 'webcodecs_avc_codec_registration.dart';
-import 'webcodecs_av1_codec_registration.dart';
 import 'geometry.dart';
+import 'html.dart';
+import 'webcodecs_aac_codec_registration.dart';
+import 'webcodecs_av1_codec_registration.dart';
+import 'webcodecs_avc_codec_registration.dart';
+import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef AlphaOption = String;

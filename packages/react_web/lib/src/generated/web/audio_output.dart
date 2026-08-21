@@ -4,9 +4,9 @@
 
 import 'encrypted_media.dart';
 import 'html.dart';
+import 'image_capture.dart';
 import 'mediacapture_streams.dart';
 import 'remote_playback.dart';
-import 'image_capture.dart';
 import 'screen_capture.dart';
 
 abstract interface class AudioOutputOptions {

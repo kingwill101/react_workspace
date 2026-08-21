@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: periodic-background-sync
 // ignore_for_file: type=lint
 
-import 'service_workers.dart';
-
 abstract interface class BackgroundSyncOptions {
   int? get minInterval;
   set minInterval(int? value);

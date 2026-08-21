@@ -2,10 +2,9 @@
 // Neutral Web surface for spec: credential-management
 // ignore_for_file: type=lint
 
+import 'fedcm.dart';
 import 'dom.dart';
 import 'webauthn.dart';
-import 'fedcm.dart';
-import 'html.dart';
 
 abstract interface class Credential {
   String get id;

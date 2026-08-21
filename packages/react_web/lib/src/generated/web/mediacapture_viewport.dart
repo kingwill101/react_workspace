@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: mediacapture-viewport
 // ignore_for_file: type=lint
 
-import 'mediacapture_streams.dart';
-
 abstract interface class ViewportMediaStreamConstraints {
   Object? get video;
   set video(Object? value);

@@ -2,12 +2,12 @@
 // Neutral Web surface for spec: webrtc-identity
 // ignore_for_file: type=lint
 
-import 'webrtc.dart';
-import 'html.dart';
-import 'webidl.dart';
-import 'webrtc_encoded_transform.dart';
 import 'capture_handle_identity.dart';
+import 'html.dart';
 import 'mediacapture_streams.dart';
+import 'webidl.dart';
+import 'webrtc.dart';
+import 'webrtc_encoded_transform.dart';
 import 'webrtc_priority.dart';
 import 'package:react_web/src/web_runtime.dart';
 

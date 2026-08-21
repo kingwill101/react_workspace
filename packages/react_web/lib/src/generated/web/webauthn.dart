@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: webauthn
 // ignore_for_file: type=lint
 
-import 'webidl.dart';
 import 'fido.dart';
+import 'webidl.dart';
 
 typedef AttestationConveyancePreference = String;
 

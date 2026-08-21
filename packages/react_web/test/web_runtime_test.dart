@@ -72,7 +72,7 @@ void main() {
 
   group('WebSsrBehavior', () {
     test('all behaviors are distinct', () {
-      final values = WebSsrBehavior.values;
+      const values = WebSsrBehavior.values;
       expect(values.toSet(), hasLength(values.length));
     });
 

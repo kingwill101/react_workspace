@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: webhid
 // ignore_for_file: type=lint
 
-import 'dom.dart';
-
 abstract interface class HIDCollectionInfo {
   int? get usagePage;
   set usagePage(int? value);

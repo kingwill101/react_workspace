@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'fs.dart';
-import 'permissions.dart';
 
 abstract interface class DirectoryPickerOptions {
   String? get id;

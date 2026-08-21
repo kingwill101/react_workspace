@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: magnetometer
 // ignore_for_file: type=lint
 
-import 'generic_sensor.dart';
-
 typedef MagnetometerLocalCoordinateSystem = String;
 
 abstract interface class MagnetometerSensorOptions {

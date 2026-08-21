@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: private-network-access
 // ignore_for_file: type=lint
 
-import 'permissions.dart';
-
 typedef IPAddressSpace = String;
 
 abstract interface class PrivateNetworkAccessPermissionDescriptor {

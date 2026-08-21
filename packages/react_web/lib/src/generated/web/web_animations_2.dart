@@ -2,11 +2,10 @@
 // Neutral Web surface for spec: web-animations-2
 // ignore_for_file: type=lint
 
-import 'css_typed_om.dart';
-import 'web_animations.dart';
-import 'html.dart';
-import 'dom.dart';
 import 'css_nav.dart';
+import 'css_typed_om.dart';
+import 'html.dart';
+import 'web_animations.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Animation {

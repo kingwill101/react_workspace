@@ -2,10 +2,8 @@
 // Neutral Web surface for spec: cookie-store
 // ignore_for_file: type=lint
 
-import 'dom.dart';
 import 'hr_time.dart';
 import 'html.dart';
-import 'service_workers.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CookieChangeEvent {

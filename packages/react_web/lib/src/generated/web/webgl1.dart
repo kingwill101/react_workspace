@@ -3,9 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'html.dart';
-import 'cssom_view.dart';
-import 'webcodecs.dart';
-import 'dom.dart';
 import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 

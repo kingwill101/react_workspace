@@ -269,7 +269,8 @@ CssStyle css({
   additionalProperties: additionalProperties,
 );
 
-/// Builds common `aria-*` properties for [additionalProps].
+/// Builds common `aria-*` properties for a host factory's
+/// `additionalProps` map.
 Map<String, Object?> aria({
   String? label,
   String? labelledBy,
@@ -314,7 +315,7 @@ Map<String, Object?> aria({
         entry.value,
 };
 
-/// Prefixes application values as `data-*` properties for [additionalProps].
+/// Prefixes application values for a host factory's `additionalProps` map.
 Map<String, Object?> dataAttributes(Map<String, Object?> attributes) => {
   for (final entry in attributes.entries)
     entry.key.startsWith('data-') ? entry.key : 'data-${entry.key}':

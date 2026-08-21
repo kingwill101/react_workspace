@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: screen-capture
 // ignore_for_file: type=lint
 
-import 'mediacapture_streams.dart';
-
 typedef CaptureStartFocusBehavior = String;
 
 typedef CursorCaptureConstraint = String;

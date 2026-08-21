@@ -2,9 +2,9 @@
 // Neutral Web surface for spec: webcodecs-aac-codec-registration
 // ignore_for_file: type=lint
 
+import 'mediastream_recording.dart';
 import 'webcodecs_flac_codec_registration.dart';
 import 'webcodecs_opus_codec_registration.dart';
-import 'mediastream_recording.dart';
 
 typedef AacBitstreamFormat = String;
 

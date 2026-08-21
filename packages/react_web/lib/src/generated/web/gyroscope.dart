@@ -2,7 +2,6 @@
 // Neutral Web surface for spec: gyroscope
 // ignore_for_file: type=lint
 
-import 'generic_sensor.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Gyroscope {

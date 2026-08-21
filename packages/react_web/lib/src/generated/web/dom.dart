@@ -2,15 +2,14 @@
 // Neutral Web surface for spec: dom
 // ignore_for_file: type=lint
 
-import 'html.dart';
-import 'css_nav.dart';
-import 'trusted_types.dart';
 import 'svg.dart';
-import 'hr_time.dart';
+import 'css_nav.dart';
 import 'cssom.dart';
-import 'web_animations_2.dart';
-import 'geometry.dart';
 import 'cssom_view.dart';
+import 'geometry.dart';
+import 'hr_time.dart';
+import 'html.dart';
+import 'web_animations_2.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AbortController {

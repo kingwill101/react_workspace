@@ -2,14 +2,14 @@
 // Neutral Web surface for spec: attribution-reporting-api
 // ignore_for_file: type=lint
 
-import 'fetch.dart';
-import 'referrer_policy.dart';
-import 'dom.dart';
-import 'private_network_access.dart';
-import 'trust_token_api.dart';
-import 'html.dart';
-import 'xhr.dart';
 import 'svg.dart';
+import 'dom.dart';
+import 'fetch.dart';
+import 'html.dart';
+import 'private_network_access.dart';
+import 'referrer_policy.dart';
+import 'trust_token_api.dart';
+import 'xhr.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class AttributionReportingRequestOptions {

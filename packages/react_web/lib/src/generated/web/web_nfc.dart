@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'dom.dart';
-import 'webidl.dart';
 
 abstract interface class NDEFMakeReadOnlyOptions {
   AbortSignal? get signal;

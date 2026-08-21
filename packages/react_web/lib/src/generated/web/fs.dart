@@ -2,10 +2,10 @@
 // Neutral Web surface for spec: fs
 // ignore_for_file: type=lint
 
-import 'file_system_access.dart';
 import 'fileapi.dart';
-import 'webidl.dart';
+import 'file_system_access.dart';
 import 'storage.dart';
+import 'webidl.dart';
 
 abstract interface class FileSystemCreateWritableOptions {
   bool? get keepExistingData;

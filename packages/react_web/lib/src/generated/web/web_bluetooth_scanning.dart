@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'web_bluetooth.dart';
-import 'permissions.dart';
 
 abstract interface class BluetoothLEScanOptions {
   List<BluetoothLEScanFilterInit>? get filters;

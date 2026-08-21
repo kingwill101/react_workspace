@@ -2,11 +2,9 @@
 // Neutral Web surface for spec: webrtc-priority
 // ignore_for_file: type=lint
 
-import 'webrtc.dart';
 import 'html.dart';
+import 'webrtc.dart';
 import 'websockets.dart';
-import 'fileapi.dart';
-import 'webidl.dart';
 
 abstract interface class RTCDataChannel {
   String get label;

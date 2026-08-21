@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: webtransport
 // ignore_for_file: type=lint
 
-import 'streams.dart';
 import 'hr_time.dart';
+import 'streams.dart';
 import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 

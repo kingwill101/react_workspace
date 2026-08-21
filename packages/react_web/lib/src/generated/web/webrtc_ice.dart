@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: webrtc-ice
 // ignore_for_file: type=lint
 
-import 'webrtc.dart';
 import 'html.dart';
+import 'webrtc.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class RTCIceGatherOptions {

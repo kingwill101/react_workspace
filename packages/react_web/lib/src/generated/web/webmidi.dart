@@ -2,10 +2,8 @@
 // Neutral Web surface for spec: webmidi
 // ignore_for_file: type=lint
 
-import 'html.dart';
-import 'dom.dart';
 import 'hr_time.dart';
-import 'permissions.dart';
+import 'html.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class MIDIAccess {

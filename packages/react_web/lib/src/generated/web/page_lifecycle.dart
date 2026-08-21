@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'service_workers.dart';
-import 'html.dart';
 
 abstract interface class Client {
   String get url;

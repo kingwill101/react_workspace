@@ -2,12 +2,12 @@
 // Neutral Web surface for spec: event-timing
 // ignore_for_file: type=lint
 
+import 'dom.dart';
 import 'hr_time.dart';
+import 'html.dart';
 import 'navigation_timing.dart';
 import 'performance_timeline.dart';
-import 'html.dart';
 import 'user_timing.dart';
-import 'dom.dart';
 
 abstract interface class EventCounts {}
 

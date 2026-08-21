@@ -2,14 +2,12 @@
 // Neutral Web surface for spec: fetch
 // ignore_for_file: type=lint
 
-import 'streams.dart';
 import 'fileapi.dart';
-import 'xhr.dart';
 import 'attribution_reporting_api.dart';
-import 'referrer_policy.dart';
 import 'dom.dart';
-import 'webidl.dart';
-import 'url.dart';
+import 'referrer_policy.dart';
+import 'streams.dart';
+import 'xhr.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class Body {

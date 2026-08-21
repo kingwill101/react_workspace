@@ -2,17 +2,16 @@
 // Neutral Web surface for spec: webrtc
 // ignore_for_file: type=lint
 
+import 'capture_handle_identity.dart';
 import 'hr_time.dart';
 import 'html.dart';
-import 'dom.dart';
-import 'webrtc_priority.dart';
-import 'webrtc_ice.dart';
-import 'webrtc_identity.dart';
+import 'mediacapture_streams.dart';
 import 'webidl.dart';
 import 'webrtc_encoded_transform.dart';
-import 'mediacapture_streams.dart';
+import 'webrtc_ice.dart';
+import 'webrtc_identity.dart';
+import 'webrtc_priority.dart';
 import 'webrtc_stats.dart';
-import 'capture_handle_identity.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class RTCAnswerOptions {}

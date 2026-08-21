@@ -2,16 +2,15 @@
 // Neutral Web surface for spec: IndexedDB
 // ignore_for_file: type=lint
 
-import 'html.dart';
-import 'webidl.dart';
-import 'dom.dart';
 import 'webcryptoapi.dart';
-import 'fetch.dart';
 import 'attribution_reporting_api.dart';
 import 'event_timing.dart';
+import 'fetch.dart';
+import 'html.dart';
 import 'scheduling_apis.dart';
 import 'service_workers.dart';
 import 'trusted_types.dart';
+import 'webidl.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class IDBCursor {

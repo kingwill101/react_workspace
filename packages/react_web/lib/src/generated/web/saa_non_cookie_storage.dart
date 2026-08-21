@@ -2,14 +2,12 @@
 // Neutral Web surface for spec: saa-non-cookie-storage
 // ignore_for_file: type=lint
 
-import 'html.dart';
 import 'indexeddb.dart';
-import 'web_locks.dart';
-import 'service_workers.dart';
 import 'fs.dart';
+import 'html.dart';
+import 'service_workers.dart';
 import 'storage.dart';
-import 'fileapi.dart';
-import 'media_source.dart';
+import 'web_locks.dart';
 
 typedef SameSiteCookiesType = String;
 

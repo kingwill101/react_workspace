@@ -3,8 +3,8 @@
 // ignore_for_file: type=lint
 
 import 'svg.dart';
-import 'html.dart';
 import 'anonymous_iframe.dart';
+import 'html.dart';
 
 abstract interface class SVGAnimateElement {}
 

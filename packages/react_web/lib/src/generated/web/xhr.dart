@@ -2,10 +2,9 @@
 // Neutral Web surface for spec: xhr
 // ignore_for_file: type=lint
 
-import 'html.dart';
-import 'cssom_view.dart';
 import 'fileapi.dart';
-import 'dom.dart';
+import 'cssom_view.dart';
+import 'html.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class FormData {

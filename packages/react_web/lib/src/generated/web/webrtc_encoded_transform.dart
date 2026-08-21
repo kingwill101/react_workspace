@@ -3,13 +3,12 @@
 // ignore_for_file: type=lint
 
 import 'capture_handle_identity.dart';
-import 'webrtc.dart';
 import 'hr_time.dart';
 import 'html.dart';
-import 'streams.dart';
-import 'mst_content_hint.dart';
 import 'mediacapture_streams.dart';
-import 'dom.dart';
+import 'mst_content_hint.dart';
+import 'streams.dart';
+import 'webrtc.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef CryptoKeyID = Object;

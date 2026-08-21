@@ -2,11 +2,9 @@
 // Neutral Web surface for spec: mediacapture-streams
 // ignore_for_file: type=lint
 
-import 'permissions.dart';
-import 'dom.dart';
-import 'image_capture.dart';
 import 'capture_handle_identity.dart';
 import 'html.dart';
+import 'image_capture.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class CameraDevicePermissionDescriptor {

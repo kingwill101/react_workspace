@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'html.dart';
-import 'dom.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 typedef PaymentComplete = String;

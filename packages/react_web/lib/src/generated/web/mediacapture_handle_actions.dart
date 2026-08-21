@@ -2,8 +2,6 @@
 // Neutral Web surface for spec: mediacapture-handle-actions
 // ignore_for_file: type=lint
 
-import 'dom.dart';
-
 typedef CaptureAction = String;
 
 abstract interface class CaptureActionEventInit {

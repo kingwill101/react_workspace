@@ -2,9 +2,8 @@
 // Neutral Web surface for spec: input-events
 // ignore_for_file: type=lint
 
-import 'html.dart';
 import 'dom.dart';
-import 'input_device_capabilities.dart';
+import 'html.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class InputEvent {

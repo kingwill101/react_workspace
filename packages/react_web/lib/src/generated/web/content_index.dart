@@ -3,7 +3,6 @@
 // ignore_for_file: type=lint
 
 import 'image_resource.dart';
-import 'service_workers.dart';
 
 typedef ContentCategory = String;
 

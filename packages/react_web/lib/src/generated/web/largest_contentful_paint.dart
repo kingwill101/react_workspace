@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: largest-contentful-paint
 // ignore_for_file: type=lint
 
-import 'hr_time.dart';
 import 'css_nav.dart';
+import 'hr_time.dart';
 
 abstract interface class LargestContentfulPaint {
   DOMHighResTimeStamp get renderTime;

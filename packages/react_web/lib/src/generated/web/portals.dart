@@ -2,9 +2,6 @@
 // Neutral Web surface for spec: portals
 // ignore_for_file: type=lint
 
-import 'dom.dart';
-import 'html.dart';
-
 abstract interface class PortalActivateEventInit {
   Object? get data;
   set data(Object? value);

@@ -3,9 +3,8 @@
 // ignore_for_file: type=lint
 
 import 'css_nav.dart';
-import 'svg.dart';
-import 'hr_time.dart';
 import 'geometry.dart';
+import 'hr_time.dart';
 import 'package:react_web/src/web_runtime.dart';
 
 abstract interface class IntersectionObserver {

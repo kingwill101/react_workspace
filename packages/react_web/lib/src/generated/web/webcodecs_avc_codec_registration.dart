@@ -2,8 +2,8 @@
 // Neutral Web surface for spec: webcodecs-avc-codec-registration
 // ignore_for_file: type=lint
 
-import 'webcodecs_hevc_codec_registration.dart';
 import 'webcodecs.dart';
+import 'webcodecs_hevc_codec_registration.dart';
 
 typedef AvcBitstreamFormat = String;
 
