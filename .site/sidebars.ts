@@ -6,7 +6,11 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Getting Started',
-      items: ['getting-started/quick-start', 'getting-started/project-structure'],
+      items: [
+        'getting-started/installation',
+        'getting-started/quick-start',
+        'getting-started/project-structure',
+      ],
     },
     {
       type: 'category',
@@ -39,6 +43,8 @@ const sidebars: SidebarsConfig = {
       items: [
         'reference/react-yaml',
         'reference/cli',
+        'reference/codegen',
+        'reference/type-system',
         'reference/api',
       ],
     },
