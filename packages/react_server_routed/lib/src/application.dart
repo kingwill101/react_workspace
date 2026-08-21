@@ -17,6 +17,9 @@ typedef RoutedReactAuthentication =
 typedef RoutedReactPageMetadata =
     FutureOr<ReactPageMetadata?> Function(routed.EngineContext context);
 
+/// Selects the cache key for a document request.
+typedef RoutedReactCacheKey = String Function(routed.EngineContext context);
+
 /// Composes React document and server-action handlers into a Routed handler.
 ///
 /// Non-document requests are delegated to [staticHandler]. Document requests
@@ -36,6 +39,8 @@ final class RoutedReactApplication {
     this.pageProps = _emptyPageProps,
     this.pageMetadata = _emptyPageMetadata,
     this.streamingSsr = false,
+    this.documentCache,
+    this.cacheKey = _defaultCacheKey,
     this.authenticate,
     this.requestTimeout = const Duration(seconds: 30),
     this.maxActionBodySize = 1024 * 1024,
@@ -71,6 +76,12 @@ final class RoutedReactApplication {
   /// requires an index template containing the `{{SSR}}` marker.
   final bool streamingSsr;
 
+  /// Optional in-process cache for completed, buffered documents.
+  final ReactDocumentCache? documentCache;
+
+  /// Selects a cache key when [documentCache] is enabled.
+  final RoutedReactCacheKey cacheKey;
+
   /// Resolves the principal used by server actions.
   final RoutedReactAuthentication? authenticate;
 
@@ -105,6 +116,9 @@ final class RoutedReactApplication {
     }
 
     try {
+      final key = cacheKey(context);
+      final cached = streamingSsr ? null : documentCache?.get(key);
+      if (cached != null) return context.html(cached.html);
       final props = await pageProps(context);
       final metadata = await pageMetadata(context);
       final template = injectReactPageMetadata(indexTemplate, metadata);
@@ -118,6 +132,7 @@ final class RoutedReactApplication {
       final html = template
           .replaceAll('{{SSR}}', rendered.html)
           .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
+      documentCache?.put(key, html);
       return context.html(html);
     } catch (error) {
       return context.string('SSR rendering failed: $error', statusCode: 500);
@@ -398,4 +413,7 @@ final class RoutedReactApplication {
   static FutureOr<ReactPageMetadata?> _emptyPageMetadata(
     routed.EngineContext context,
   ) => null;
+
+  static String _defaultCacheKey(routed.EngineContext context) =>
+      context.request.uri.toString();
 }

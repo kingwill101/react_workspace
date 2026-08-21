@@ -5,5 +5,6 @@ export 'src/application.dart'
     show
         RoutedReactApplication,
         RoutedReactAuthentication,
+        RoutedReactCacheKey,
         RoutedReactPageMetadata,
         RoutedReactPageProps;

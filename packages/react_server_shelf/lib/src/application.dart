@@ -12,6 +12,8 @@ typedef ReactPageProps =
 typedef ReactPageMetadataBuilder =
     FutureOr<ReactPageMetadata?> Function(Request request);
 
+typedef ReactCacheKey = String Function(Request request);
+
 /// Standard Shelf application host for React Dart applications.
 final class ReactServerApp {
   final ServerFunctionRegistry actionRegistry;
@@ -23,6 +25,8 @@ final class ReactServerApp {
   final ReactPageProps pageProps;
   final ReactPageMetadataBuilder pageMetadata;
   final bool streamingSsr;
+  final ReactDocumentCache? documentCache;
+  final ReactCacheKey cacheKey;
   final Object? Function(Request request)? authenticate;
 
   const ReactServerApp({
@@ -35,6 +39,8 @@ final class ReactServerApp {
     this.pageProps = _emptyPageProps,
     this.pageMetadata = _emptyPageMetadata,
     this.streamingSsr = false,
+    this.documentCache,
+    this.cacheKey = _defaultCacheKey,
     this.authenticate,
   });
 
@@ -57,6 +63,9 @@ final class ReactServerApp {
       }
 
       try {
+        final key = cacheKey(request);
+        final cached = streamingSsr ? null : documentCache?.get(key);
+        if (cached != null) return Response.ok(cached.html);
         final props = await pageProps(request);
         final metadata = await pageMetadata(request);
         final template = injectReactPageMetadata(indexTemplate, metadata);
@@ -73,6 +82,7 @@ final class ReactServerApp {
         final html = template
             .replaceAll('{{SSR}}', rendered.html)
             .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
+        documentCache?.put(key, html);
         return Response.ok(
           html,
           headers: {'content-type': 'text/html; charset=utf-8'},
@@ -111,6 +121,7 @@ final class ReactServerApp {
 
 FutureOr<Map<String, dynamic>> _emptyPageProps(Request request) => {};
 FutureOr<ReactPageMetadata?> _emptyPageMetadata(Request request) => null;
+String _defaultCacheKey(Request request) => request.url.toString();
 Object? _anonymous(Request request) => null;
 
 bool _looksLikeDocument(String path) {

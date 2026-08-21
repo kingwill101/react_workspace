@@ -1,0 +1,73 @@
+/// A small in-process cache for rendered SSR documents.
+final class ReactDocumentCache {
+  /// Creates a cache with a default lifetime for new entries.
+  ReactDocumentCache({
+    this.defaultTtl = const Duration(minutes: 1),
+    this.maxEntries = 256,
+  }) : assert(!defaultTtl.isNegative),
+       assert(maxEntries > 0);
+
+  /// Default lifetime assigned by [put].
+  final Duration defaultTtl;
+
+  /// Maximum number of documents retained in the cache.
+  final int maxEntries;
+
+  final _entries = <String, _CacheEntry>{};
+
+  /// Returns a live entry, or `null` when absent or expired.
+  ReactCachedDocument? get(String key) {
+    final entry = _entries[key];
+    if (entry == null) return null;
+    if (entry.expiresAt.isBefore(DateTime.now())) {
+      _entries.remove(key);
+      return null;
+    }
+    return entry.document;
+  }
+
+  /// Stores a rendered document under [key].
+  void put(
+    String key,
+    String html, {
+    Duration? ttl,
+    Iterable<String> tags = const <String>[],
+  }) {
+    while (_entries.length >= maxEntries && !_entries.containsKey(key)) {
+      _entries.remove(_entries.keys.first);
+    }
+    _entries[key] = _CacheEntry(
+      document: ReactCachedDocument(html: html, tags: tags.toSet()),
+      expiresAt: DateTime.now().add(ttl ?? defaultTtl),
+    );
+  }
+
+  /// Removes every entry associated with [tag].
+  void invalidateTag(String tag) {
+    _entries.removeWhere((_, entry) => entry.document.tags.contains(tag));
+  }
+
+  /// Removes one cached document.
+  void invalidate(String key) => _entries.remove(key);
+
+  /// Removes all cached documents.
+  void clear() => _entries.clear();
+}
+
+/// A cached SSR document and its invalidation tags.
+final class ReactCachedDocument {
+  const ReactCachedDocument({required this.html, required this.tags});
+
+  /// Complete HTML ready to send to the browser.
+  final String html;
+
+  /// Tags that can invalidate this document.
+  final Set<String> tags;
+}
+
+final class _CacheEntry {
+  const _CacheEntry({required this.document, required this.expiresAt});
+
+  final ReactCachedDocument document;
+  final DateTime expiresAt;
+}
