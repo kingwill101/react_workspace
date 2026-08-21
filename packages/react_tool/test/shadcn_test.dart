@@ -22,9 +22,7 @@ void main() {
 
   test('declares a local component through the CLI adapter', () async {
     final root = await Directory.systemTemp.createTemp('react_tool_shadcn_');
-    final previous = Directory.current;
     try {
-      Directory.current = root;
       await File('${root.path}/pubspec.yaml').writeAsString(
         'name: shadcn_fixture\nenvironment:\n  sdk: ">=3.12.0 <4.0.0"\n',
       );
@@ -37,7 +35,7 @@ void main() {
       ).writeAsString('export const Button = () => null;\n');
 
       final runner = CommandRunner<void>('react', '')
-        ..addCommand(ShadcnCommand());
+        ..addCommand(ShadcnCommand(workingDirectory: root));
       await runner.run(['shadcn', 'add', '--no-validate', 'button']);
 
       final manifest = await File('${root.path}/react.yaml').readAsString();
@@ -45,7 +43,6 @@ void main() {
       expect(manifest, contains("module: 'web/components/ui/button.tsx'"));
       expect(manifest, contains("export: 'Button'"));
     } finally {
-      Directory.current = previous;
       await root.delete(recursive: true);
     }
   });

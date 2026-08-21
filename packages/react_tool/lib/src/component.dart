@@ -9,9 +9,12 @@ import 'ts_bindings.dart';
 
 /// CLI commands for declaring foreign React components.
 final class ComponentCommand extends Command<void> {
-  ComponentCommand() {
-    addSubcommand(_AddComponentCommand());
+  ComponentCommand({Directory? workingDirectory})
+    : _workingDirectory = workingDirectory ?? Directory.current {
+    addSubcommand(_AddComponentCommand(_workingDirectory));
   }
+
+  final Directory _workingDirectory;
 
   @override
   String get name => 'component';
@@ -21,7 +24,7 @@ final class ComponentCommand extends Command<void> {
 }
 
 final class _AddComponentCommand extends Command<void> {
-  _AddComponentCommand() {
+  _AddComponentCommand(this._workingDirectory) {
     argParser
       ..addOption(
         'export',
@@ -49,6 +52,8 @@ final class _AddComponentCommand extends Command<void> {
       );
   }
 
+  final Directory _workingDirectory;
+
   @override
   String get name => 'add';
 
@@ -71,7 +76,7 @@ final class _AddComponentCommand extends Command<void> {
       );
     }
 
-    final config = ReactProjectConfig.load();
+    final config = ReactProjectConfig.load(_workingDirectory);
     final reactFile = config.file('react.yaml');
     if (!reactFile.existsSync()) {
       throw const ReactToolException(

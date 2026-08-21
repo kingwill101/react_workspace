@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:artisanal/args.dart';
 import 'package:path/path.dart' as p;
 import 'package:react_tool/src/component.dart';
 import 'package:react_tool/src/project_config.dart';
@@ -177,4 +178,38 @@ export const Dialog: {
       await root.delete(recursive: true);
     }
   });
+
+  test(
+    'component command supports npm shorthand without changing cwd',
+    () async {
+      final root = await Directory.systemTemp.createTemp('react_component_');
+      try {
+        File(p.join(root.path, 'pubspec.yaml')).writeAsStringSync(
+          'name: fixture\nenvironment:\n  sdk: ">=3.12.0 <4.0.0"\n',
+        );
+        File(
+          p.join(root.path, 'react.yaml'),
+        ).writeAsStringSync('client: web/client.dart\n');
+
+        final runner = CommandRunner<void>('react', '')
+          ..addCommand(ComponentCommand(workingDirectory: root));
+        await runner.run([
+          'component',
+          'add',
+          '@radix-ui/react-dialog',
+          '--export',
+          'Dialog.Root',
+          '--no-validate',
+        ]);
+
+        final manifest = File(
+          p.join(root.path, 'react.yaml'),
+        ).readAsStringSync();
+        expect(manifest, contains("name: 'Dialog.Root'"));
+        expect(manifest, contains("module: '@radix-ui/react-dialog'"));
+      } finally {
+        await root.delete(recursive: true);
+      }
+    },
+  );
 }

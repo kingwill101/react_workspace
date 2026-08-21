@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:artisanal/args.dart';
 import 'package:path/path.dart' as p;
 
@@ -10,9 +12,12 @@ import 'project_config.dart';
 /// export, and runtime-name defaults. The resulting declaration is still a
 /// normal `foreign.components` entry.
 final class ShadcnCommand extends Command<void> {
-  ShadcnCommand() {
-    addSubcommand(_AddShadcnComponentCommand());
+  ShadcnCommand({Directory? workingDirectory})
+    : _workingDirectory = workingDirectory ?? Directory.current {
+    addSubcommand(_AddShadcnComponentCommand(_workingDirectory));
   }
+
+  final Directory _workingDirectory;
 
   @override
   String get name => 'shadcn';
@@ -22,7 +27,7 @@ final class ShadcnCommand extends Command<void> {
 }
 
 final class _AddShadcnComponentCommand extends Command<void> {
-  _AddShadcnComponentCommand() {
+  _AddShadcnComponentCommand(this._workingDirectory) {
     argParser
       ..addOption(
         'directory',
@@ -54,6 +59,8 @@ final class _AddShadcnComponentCommand extends Command<void> {
       );
   }
 
+  final Directory _workingDirectory;
+
   @override
   String get name => 'add';
 
@@ -71,7 +78,7 @@ final class _AddShadcnComponentCommand extends Command<void> {
       usageException('Expected one shadcn component name, such as `button`.');
     }
 
-    final config = ReactProjectConfig.load();
+    final config = ReactProjectConfig.load(_workingDirectory);
     final reactFile = config.file('react.yaml');
     if (!reactFile.existsSync()) {
       throw const ReactToolException(
