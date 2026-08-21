@@ -1,14 +1,14 @@
 include: package:lints/recommended.yaml
 
-plugins:
-  react_analyzer:
-    path: packages/react_analyzer
-
 analyzer:
   exclude:
+    - "**/.generated/**"
     - tool/vendor/**
     - third_party/**
 linter:
   rules:
-    - prefer_const_constructors
-    - prefer_const_declarations
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    # React components are values and intentionally use JSX-style PascalCase
+    # names (`App`, `Greeting`, ...).
+    non_constant_identifier_names: false
