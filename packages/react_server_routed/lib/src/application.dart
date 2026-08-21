@@ -13,6 +13,10 @@ typedef RoutedReactPageProps =
 typedef RoutedReactAuthentication =
     Object? Function(routed.EngineContext context);
 
+/// Builds page metadata for an SSR document request.
+typedef RoutedReactPageMetadata =
+    FutureOr<ReactPageMetadata?> Function(routed.EngineContext context);
+
 /// Composes React document and server-action handlers into a Routed handler.
 ///
 /// Non-document requests are delegated to [staticHandler]. Document requests
@@ -30,6 +34,7 @@ final class RoutedReactApplication {
     this.ssr,
     this.rootComponent,
     this.pageProps = _emptyPageProps,
+    this.pageMetadata = _emptyPageMetadata,
     this.streamingSsr = false,
     this.authenticate,
     this.requestTimeout = const Duration(seconds: 30),
@@ -56,6 +61,9 @@ final class RoutedReactApplication {
 
   /// Builds the props passed to the SSR root component.
   final RoutedReactPageProps pageProps;
+
+  /// Builds title, SEO, and link metadata for the document head.
+  final RoutedReactPageMetadata pageMetadata;
 
   /// Whether document responses should be progressively streamed from React.
   ///
@@ -98,14 +106,16 @@ final class RoutedReactApplication {
 
     try {
       final props = await pageProps(context);
+      final metadata = await pageMetadata(context);
+      final template = injectReactPageMetadata(indexTemplate, metadata);
       if (streamingSsr) {
-        return await _handleStreamingDocument(context, props);
+        return await _handleStreamingDocument(context, props, template);
       }
       final rendered = await ssr!.render(
         component: rootComponent!,
         props: props,
       );
-      final html = indexTemplate
+      final html = template
           .replaceAll('{{SSR}}', rendered.html)
           .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
       return context.html(html);
@@ -117,15 +127,16 @@ final class RoutedReactApplication {
   Future<routed.Response> _handleStreamingDocument(
     routed.EngineContext context,
     Map<String, dynamic> props,
+    String template,
   ) async {
-    final marker = indexTemplate.indexOf('{{SSR}}');
+    final marker = template.indexOf('{{SSR}}');
     if (marker < 0) {
       final rendered = await ssr!.render(
         component: rootComponent!,
         props: props,
       );
       return context.html(
-        indexTemplate
+        template
             .replaceAll('{{SSR}}', rendered.html)
             .replaceAll('{{PROPS}}', jsonEncode(rendered.props)),
       );
@@ -133,7 +144,7 @@ final class RoutedReactApplication {
 
     context.response.headers.set('content-type', 'text/html; charset=utf-8');
     await context.response.addStream(
-      _documentStream(props, marker).map(utf8.encode),
+      _documentStream(props, marker, template).map(utf8.encode),
     );
     return context.response;
   }
@@ -141,9 +152,10 @@ final class RoutedReactApplication {
   Stream<String> _documentStream(
     Map<String, dynamic> props,
     int marker,
+    String template,
   ) async* {
-    final before = indexTemplate.substring(0, marker);
-    final after = indexTemplate.substring(marker + '{{SSR}}'.length);
+    final before = template.substring(0, marker);
+    final after = template.substring(marker + '{{SSR}}'.length);
     yield before.replaceAll('{{PROPS}}', jsonEncode(props));
 
     var finalProps = props;
@@ -382,4 +394,8 @@ final class RoutedReactApplication {
   static FutureOr<Map<String, dynamic>> _emptyPageProps(
     routed.EngineContext context,
   ) => {};
+
+  static FutureOr<ReactPageMetadata?> _emptyPageMetadata(
+    routed.EngineContext context,
+  ) => null;
 }

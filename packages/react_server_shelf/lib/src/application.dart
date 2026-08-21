@@ -9,6 +9,9 @@ import 'shelf_handler.dart';
 typedef ReactPageProps =
     FutureOr<Map<String, dynamic>> Function(Request request);
 
+typedef ReactPageMetadataBuilder =
+    FutureOr<ReactPageMetadata?> Function(Request request);
+
 /// Standard Shelf application host for React Dart applications.
 final class ReactServerApp {
   final ServerFunctionRegistry actionRegistry;
@@ -18,6 +21,7 @@ final class ReactServerApp {
   final ReactSsrClient? ssr;
   final String? rootComponent;
   final ReactPageProps pageProps;
+  final ReactPageMetadataBuilder pageMetadata;
   final bool streamingSsr;
   final Object? Function(Request request)? authenticate;
 
@@ -29,6 +33,7 @@ final class ReactServerApp {
     this.ssr,
     this.rootComponent,
     this.pageProps = _emptyPageProps,
+    this.pageMetadata = _emptyPageMetadata,
     this.streamingSsr = false,
     this.authenticate,
   });
@@ -53,9 +58,11 @@ final class ReactServerApp {
 
       try {
         final props = await pageProps(request);
-        if (streamingSsr && indexTemplate.contains('{{SSR}}')) {
+        final metadata = await pageMetadata(request);
+        final template = injectReactPageMetadata(indexTemplate, metadata);
+        if (streamingSsr && template.contains('{{SSR}}')) {
           return Response.ok(
-            _documentStream(props),
+            _documentStream(props, template),
             headers: {'content-type': 'text/html; charset=utf-8'},
           );
         }
@@ -63,7 +70,7 @@ final class ReactServerApp {
           component: rootComponent!,
           props: props,
         );
-        final html = indexTemplate
+        final html = template
             .replaceAll('{{SSR}}', rendered.html)
             .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
         return Response.ok(
@@ -78,10 +85,13 @@ final class ReactServerApp {
     };
   }
 
-  Stream<List<int>> _documentStream(Map<String, dynamic> props) async* {
-    final marker = indexTemplate.indexOf('{{SSR}}');
-    final before = indexTemplate.substring(0, marker);
-    final after = indexTemplate.substring(marker + '{{SSR}}'.length);
+  Stream<List<int>> _documentStream(
+    Map<String, dynamic> props,
+    String template,
+  ) async* {
+    final marker = template.indexOf('{{SSR}}');
+    final before = template.substring(0, marker);
+    final after = template.substring(marker + '{{SSR}}'.length);
     yield utf8.encode(before.replaceAll('{{PROPS}}', jsonEncode(props)));
 
     var finalProps = props;
@@ -100,6 +110,7 @@ final class ReactServerApp {
 }
 
 FutureOr<Map<String, dynamic>> _emptyPageProps(Request request) => {};
+FutureOr<ReactPageMetadata?> _emptyPageMetadata(Request request) => null;
 Object? _anonymous(Request request) => null;
 
 bool _looksLikeDocument(String path) {
