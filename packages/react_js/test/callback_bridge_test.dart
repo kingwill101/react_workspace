@@ -69,4 +69,23 @@ void main() {
       expect(callbackToJS(callback), isNotNull);
     });
   });
+
+  test('host callback results use the registered encoder', () {
+    ReactCodecRegistry.registerHostValue(
+      'test',
+      'HostValue',
+      encoder: (value) => (value as String).toJS,
+    );
+
+    const spec = (
+      kind: ReactValueKind.hostValue,
+      nullable: false,
+      hostNamespace: 'test',
+      typeId: 'HostValue',
+      codecId: null,
+    );
+    final encoded = encodeReactValue(spec, 'encoded') as JSString;
+
+    expect(encoded.toDart, 'encoded');
+  });
 }

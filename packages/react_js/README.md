@@ -19,8 +19,7 @@ This package is part of the React Dart workspace. Depending on it usually happen
 
 ```yaml
 dependencies:
-  react_js:
-    path: ../../packages/react_js
+  react_js: ^0.1.0
 ```
 
 ## Architecture & Core Concepts

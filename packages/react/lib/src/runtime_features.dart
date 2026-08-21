@@ -501,9 +501,12 @@ String useId() => currentReactRuntime.binding.useId();
 
 /// Returns a deferred version of [value].
 ///
+/// When [initialValue] is omitted, React receives only [value]. Passing a
+/// non-null [initialValue] lets React use it for the initial render.
+///
 /// See https://react.dev/reference/react/useDeferredValue.
-T useDeferredValue<T>(T value, [Object? options]) =>
-    currentReactRuntime.binding.useDeferredValue(value, options);
+T useDeferredValue<T>(T value, [T? initialValue]) =>
+    currentReactRuntime.binding.useDeferredValue(value, initialValue);
 
 /// Subscribes to an external store with an SSR snapshot when provided.
 ///
@@ -520,6 +523,9 @@ T useSyncExternalStore<T>(
 
 /// Returns optimistic state and a dispatcher for optimistic actions.
 ///
+/// Requires a React 19 or newer runtime that exports `useOptimistic`. Calling
+/// this hook with an older runtime throws [UnsupportedError].
+///
 /// See https://react.dev/reference/react/useOptimistic.
 (T, void Function(A)) useOptimistic<T, A>(
   T state,
@@ -527,6 +533,9 @@ T useSyncExternalStore<T>(
 ) => currentReactRuntime.binding.useOptimistic(state, update);
 
 /// Returns action state and a dispatcher for async actions.
+///
+/// Requires a React 19 or newer runtime that exports `useActionState`. Calling
+/// this hook with an older runtime throws [UnsupportedError].
 ///
 /// See https://react.dev/reference/react/useActionState.
 (T, void Function(A)) useActionState<T, A>(

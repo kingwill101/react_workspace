@@ -72,4 +72,15 @@ void main() {
         link(to: '/x', relative: RelativeRoutingType.path) as ForeignComponent;
     expect(linkNode.props['relative'], 'path');
   });
+
+  test('Location.fullPath joins the path, query, and fragment', () {
+    const location = Location(
+      pathname: '/items',
+      search: '?page=2',
+      hash: '#details',
+      state: <String, Object?>{},
+      elementKey: 'entry',
+    );
+    expect(location.fullPath, '/items?page=2#details');
+  });
 }

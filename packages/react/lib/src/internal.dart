@@ -69,7 +69,7 @@ abstract class ReactBinding {
       unsupportedReactFeature('useTransition');
 
   /// Returns a deferred value.
-  T useDeferredValue<T>(T value, Object? options) =>
+  T useDeferredValue<T>(T value, Object? initialValue) =>
       unsupportedReactFeature('useDeferredValue');
 
   /// Subscribes to an external store.

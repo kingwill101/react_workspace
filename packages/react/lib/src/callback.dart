@@ -177,6 +177,58 @@ final class ReactRefProp {
 /// );
 /// ```
 final class ReactCallback {
+  /// Wraps a no-argument callback that returns no value.
+  static ReactCallback zero(void Function() callback, {String? debugName}) =>
+      ReactCallback(
+        debugName: debugName,
+        signature: const (
+          positional: [],
+          result: reactVoid,
+          asynchronous: false,
+        ),
+        invoke: (_) {
+          callback();
+          return null;
+        },
+      );
+
+  /// Wraps a one-argument callback that returns no value.
+  ///
+  /// [argument] tells the renderer how to decode the incoming JavaScript
+  /// value before it is cast to [T]. It defaults to a nullable arbitrary
+  /// value, which is suitable for exploratory foreign-component APIs.
+  static ReactCallback one<T>(
+    void Function(T value) callback, {
+    ReactValueSpec argument = reactAny,
+    String? debugName,
+  }) => ReactCallback(
+    debugName: debugName,
+    signature: (positional: [argument], result: reactVoid, asynchronous: false),
+    invoke: (arguments) {
+      callback(arguments[0] as T);
+      return null;
+    },
+  );
+
+  /// Wraps a two-argument callback that returns no value.
+  static ReactCallback two<A, B>(
+    void Function(A first, B second) callback, {
+    ReactValueSpec first = reactAny,
+    ReactValueSpec second = reactAny,
+    String? debugName,
+  }) => ReactCallback(
+    debugName: debugName,
+    signature: (
+      positional: [first, second],
+      result: reactVoid,
+      asynchronous: false,
+    ),
+    invoke: (arguments) {
+      callback(arguments[0] as A, arguments[1] as B);
+      return null;
+    },
+  );
+
   /// Signature metadata for argument decoding and result encoding.
   final ReactCallbackSignature signature;
 

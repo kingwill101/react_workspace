@@ -93,7 +93,7 @@ void main() {
         },
       );
 
-      final result = callback.invoke([7]);
+      final result = callback.invoke([7]) as Future<int>;
       expect(result, isA<Future<int>>());
       expect(await result, 7);
     });
@@ -143,6 +143,43 @@ void main() {
       );
 
       expect(callback.invoke([]), isNull);
+    });
+  });
+
+  group('ReactCallback convenience factories', () {
+    test('zero invokes a void callback', () {
+      var calls = 0;
+      final callback = ReactCallback.zero(() => calls++);
+
+      expect(callback.signature.positional, isEmpty);
+      expect(callback.invoke(const []), isNull);
+      expect(calls, 1);
+    });
+
+    test('one forwards its decoded argument and metadata', () {
+      String? received;
+      final callback = ReactCallback.one<String>(
+        (value) => received = value,
+        argument: reactString,
+        debugName: 'picker.onChange',
+      );
+
+      callback.invoke(const ['2026-08-20']);
+      expect(received, '2026-08-20');
+      expect(callback.signature.positional, [reactString]);
+      expect(callback.debugName, 'picker.onChange');
+    });
+
+    test('two forwards both decoded arguments', () {
+      Object? received;
+      final callback = ReactCallback.two<int, String>(
+        (count, label) => received = (count, label),
+        first: reactInt,
+        second: reactString,
+      );
+
+      callback.invoke(const [2, 'items']);
+      expect(received, (2, 'items'));
     });
   });
 }

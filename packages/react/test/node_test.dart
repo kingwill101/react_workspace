@@ -31,10 +31,10 @@ void main() {
 
     test('HostNode stores type, props, children, key', () {
       const type = HostType<Map<String, Object?>>('web', 'div');
-      final node = HostNode(
+      const node = HostNode(
         type,
         {'id': 'a'},
-        children: const [Text('hi')],
+        children: [Text('hi')],
         key: 'k',
       );
       expect(node.type, type);
@@ -67,7 +67,7 @@ void main() {
 
     test('Component stores id and props', () {
       const id = ComponentId('app#MyComp');
-      final node = Component<String>(id, 'props', children: const [Text('c')]);
+      const node = Component<String>(id, 'props', children: [Text('c')]);
       expect(node.id.value, 'app#MyComp');
       expect(node.props, 'props');
       expect(node.children, hasLength(1));

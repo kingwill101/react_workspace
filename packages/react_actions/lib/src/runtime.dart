@@ -30,9 +30,7 @@ ServerFunctionClient get currentServerFunctionClient {
 /// void main() {
 ///   runWithServerFunctionClient(
 ///     HttpServerFunctionClient(endpoint: Uri.parse('/__react/actions')),
-///     () {
-///       hydrateRoot('#app', App());
-///     },
+///     startReactApplication,
 ///   );
 /// }
 /// ```

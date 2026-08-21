@@ -3,7 +3,7 @@ import 'ref.dart';
 /// Transport abstraction for invoking server functions from the browser.
 ///
 /// The concrete implementation depends on the environment:
-/// - Browser: [HttpServerFunctionClient] via `package:http`
+/// - Browser: `HttpServerFunctionClient` from `package:react_web`
 /// - Test: mock client
 abstract class ServerFunctionClient {
   /// Invokes the function identified by [ref] with [arguments].

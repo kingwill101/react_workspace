@@ -675,15 +675,12 @@ extension type _BlockerReturnJs(JSObject _) implements JSObject {
 /// proceed: () => void
 /// location: { pathname: string; search: string; hash: string; state: any; key: string }
 final class BlockerReturn {
-  BlockerReturn._(
-    this._value, {
+  BlockerReturn._({
     required this.state,
     required this.reset,
     required this.proceed,
     required this.location,
   });
-
-  final _BlockerReturnJs _value;
 
   /// TS: "unblocked" | "blocked" | "proceeding"
   final BlockerReturnState state;
@@ -701,15 +698,14 @@ final class BlockerReturn {
   factory BlockerReturn.fromJs(JSObject js) {
     final v = _BlockerReturnJs(js);
     return BlockerReturn._(
-      v,
-      state: BlockerReturnState.fromValue((v.state as JSString).toDart),
+      state: BlockerReturnState.fromValue(v.state.toDart),
       reset: () {
         v.reset.callAsFunction(null);
       },
       proceed: () {
         v.proceed.callAsFunction(null);
       },
-      location: Location.fromJs(v.location as JSObject),
+      location: Location.fromJs(v.location),
     );
   }
 }
@@ -743,8 +739,7 @@ extension type _FetcherReturnJs(JSObject _) implements JSObject {
 /// submit: (target: any, options: { method?: Record<string, unknown>; action?: string; encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"; relative?: "route" | "path"; preventScrollReset?: boolean; unstable_flushSync?: boolean }) => void
 /// load: (href: string, opts: { unstable_flushSync?: boolean }) => void
 final class FetcherReturn {
-  FetcherReturn._(
-    this._value, {
+  FetcherReturn._({
     required this.state,
     required this.formMethod,
     required this.formAction,
@@ -757,8 +752,6 @@ final class FetcherReturn {
     required this.submit,
     required this.load,
   });
-
-  final _FetcherReturnJs _value;
 
   /// TS: "idle" | "loading" | "submitting"
   final FetcherReturnState state;
@@ -806,16 +799,15 @@ final class FetcherReturn {
   factory FetcherReturn.fromJs(JSObject js) {
     final v = _FetcherReturnJs(js);
     return FetcherReturn._(
-      v,
-      state: FetcherReturnState.fromValue((v.state as JSString).toDart),
+      state: FetcherReturnState.fromValue(v.state.toDart),
       formMethod: v.formMethod,
-      formAction: (v.formAction as JSString).toDart,
-      formEncType: FormEncType.fromValue((v.formEncType as JSString).toDart),
-      text: (v.text as JSString).toDart,
+      formAction: v.formAction.toDart,
+      formEncType: FormEncType.fromValue(v.formEncType.toDart),
+      text: v.text.toDart,
       formData: v.formData,
       json: v.json,
       data: v.data,
-      Form: FetcherReturnForm.fromJs(v.Form as JSObject),
+      Form: FetcherReturnForm.fromJs(v.Form),
       submit:
           (
             Object? target, {
@@ -876,8 +868,7 @@ extension type _FetcherReturnFormJs(JSObject _) implements JSObject {
 /// action?: string; relative?: "route" | "path"; preventScrollReset?: boolean
 /// onSubmit?: any
 final class FetcherReturnForm {
-  FetcherReturnForm._(
-    this._value, {
+  FetcherReturnForm._({
     required this.method,
     required this.encType,
     required this.action,
@@ -885,8 +876,6 @@ final class FetcherReturnForm {
     required this.preventScrollReset,
     required this.onSubmit,
   });
-
-  final _FetcherReturnFormJs _value;
 
   /// TS: Record<string, unknown>
   final Object? method;
@@ -910,7 +899,6 @@ final class FetcherReturnForm {
   factory FetcherReturnForm.fromJs(JSObject js) {
     final v = _FetcherReturnFormJs(js);
     return FetcherReturnForm._(
-      v,
       method: v.method == null ? null : v.method,
       encType: v.encType == null
           ? null
@@ -953,8 +941,7 @@ extension type _FetchersReturnElementJs(JSObject _) implements JSObject {
 /// text: string; formData: any; json: Record<string, unknown>; data: any
 /// key: string
 final class FetchersReturnElement {
-  FetchersReturnElement._(
-    this._value, {
+  FetchersReturnElement._({
     required this.state,
     required this.formMethod,
     required this.formAction,
@@ -965,8 +952,6 @@ final class FetchersReturnElement {
     required this.data,
     required this.elementKey,
   });
-
-  final _FetchersReturnElementJs _value;
 
   /// TS: "idle" | "loading" | "submitting"
   final FetcherReturnState state;
@@ -999,82 +984,17 @@ final class FetchersReturnElement {
   factory FetchersReturnElement.fromJs(JSObject js) {
     final v = _FetchersReturnElementJs(js);
     return FetchersReturnElement._(
-      v,
-      state: FetcherReturnState.fromValue((v.state as JSString).toDart),
+      state: FetcherReturnState.fromValue(v.state.toDart),
       formMethod: v.formMethod,
-      formAction: (v.formAction as JSString).toDart,
-      formEncType: FormEncType.fromValue((v.formEncType as JSString).toDart),
-      text: (v.text as JSString).toDart,
+      formAction: v.formAction.toDart,
+      formEncType: FormEncType.fromValue(v.formEncType.toDart),
+      text: v.text.toDart,
       formData: v.formData,
       json: v.json,
       data: v.data,
-      elementKey: (v.elementKey as JSString).toDart,
+      elementKey: v.elementKey.toDart,
     );
   }
-}
-
-/// Typed JS interop extension for `Location` hook return values.
-///
-/// Direct property access on the raw JS object avoids the
-/// generic [[key, value]] pairs conversion used by
-/// `_pairsMap` (removed in this generation).
-extension type _LocationJs(JSObject _) implements JSObject {
-  external JSString get pathname;
-  external JSString get search;
-  external JSString get hash;
-  external JSAny? get state;
-  @JS('key')
-  external JSString get elementKey;
-}
-
-/// Value class for `Location` (decoded from the hook shim).
-///
-/// pathname: string; search: string; hash: string; state: any; key: string
-final class Location {
-  Location._(
-    this._value, {
-    required this.pathname,
-    required this.search,
-    required this.hash,
-    required this.state,
-    required this.elementKey,
-  });
-
-  final _LocationJs _value;
-
-  /// TS: string
-  final String pathname;
-
-  /// TS: string
-  final String search;
-
-  /// TS: string
-  final String hash;
-
-  /// TS: any
-  final Object? state;
-
-  /// TS: string
-  final String elementKey;
-
-  /// Decodes the shim's raw JS object.
-  factory Location.fromJs(JSObject js) {
-    final v = _LocationJs(js);
-    return Location._(
-      v,
-      pathname: (v.pathname as JSString).toDart,
-      search: (v.search as JSString).toDart,
-      hash: (v.hash as JSString).toDart,
-      state: v.state,
-      elementKey: (v.elementKey as JSString).toDart,
-    );
-  }
-
-  /// The full path including the query string.
-  String get fullPath => '$pathname$search$hash';
-
-  @override
-  String toString() => fullPath;
 }
 
 /// Typed JS interop extension for `NavigationReturn` hook return values.
@@ -1101,8 +1021,7 @@ extension type _NavigationReturnJs(JSObject _) implements JSObject {
 /// formEncType: "application/x-www-form-urlencoded" | "multipart/form-data" | "application/json" | "text/plain"
 /// formData: any; json: Record<string, unknown>; text: string
 final class NavigationReturn {
-  NavigationReturn._(
-    this._value, {
+  NavigationReturn._({
     required this.state,
     required this.location,
     required this.formMethod,
@@ -1112,8 +1031,6 @@ final class NavigationReturn {
     required this.json,
     required this.text,
   });
-
-  final _NavigationReturnJs _value;
 
   /// TS: "idle" | "loading" | "submitting"
   final FetcherReturnState state;
@@ -1143,15 +1060,14 @@ final class NavigationReturn {
   factory NavigationReturn.fromJs(JSObject js) {
     final v = _NavigationReturnJs(js);
     return NavigationReturn._(
-      v,
-      state: FetcherReturnState.fromValue((v.state as JSString).toDart),
-      location: Location.fromJs(v.location as JSObject),
+      state: FetcherReturnState.fromValue(v.state.toDart),
+      location: Location.fromJs(v.location),
       formMethod: v.formMethod,
-      formAction: (v.formAction as JSString).toDart,
-      formEncType: FormEncType.fromValue((v.formEncType as JSString).toDart),
+      formAction: v.formAction.toDart,
+      formEncType: FormEncType.fromValue(v.formEncType.toDart),
       formData: v.formData,
       json: v.json,
-      text: (v.text as JSString).toDart,
+      text: v.text.toDart,
     );
   }
 }
@@ -1170,13 +1086,7 @@ extension type _RevalidatorReturnJs(JSObject _) implements JSObject {
 ///
 /// revalidate: () => void; state: "idle" | "loading"
 final class RevalidatorReturn {
-  RevalidatorReturn._(
-    this._value, {
-    required this.revalidate,
-    required this.state,
-  });
-
-  final _RevalidatorReturnJs _value;
+  RevalidatorReturn._({required this.revalidate, required this.state});
 
   /// TS: () => void
   final void Function() revalidate;
@@ -1188,68 +1098,10 @@ final class RevalidatorReturn {
   factory RevalidatorReturn.fromJs(JSObject js) {
     final v = _RevalidatorReturnJs(js);
     return RevalidatorReturn._(
-      v,
       revalidate: () {
         v.revalidate.callAsFunction(null);
       },
-      state: RevalidationState.fromValue((v.state as JSString).toDart),
-    );
-  }
-}
-
-/// Typed JS interop extension for `UIMatch` hook return values.
-///
-/// Direct property access on the raw JS object avoids the
-/// generic [[key, value]] pairs conversion used by
-/// `_pairsMap` (removed in this generation).
-extension type _UIMatchJs(JSObject _) implements JSObject {
-  external JSString get id;
-  external JSString get pathname;
-  external JSArray get params;
-  external JSAny? get data;
-  external JSAny? get handle;
-}
-
-/// Value class for `UIMatch` (decoded from the hook shim).
-///
-/// id: string; pathname: string; params: unknown; data: any; handle: any
-final class UIMatch {
-  UIMatch._(
-    this._value, {
-    required this.id,
-    required this.pathname,
-    required this.params,
-    required this.data,
-    required this.handle,
-  });
-
-  final _UIMatchJs _value;
-
-  /// TS: string
-  final String id;
-
-  /// TS: string
-  final String pathname;
-
-  /// TS: unknown
-  final Map<String, String> params;
-
-  /// TS: any
-  final Object? data;
-
-  /// TS: any
-  final Object? handle;
-
-  /// Decodes the shim's raw JS object.
-  factory UIMatch.fromJs(JSObject js) {
-    final v = _UIMatchJs(js);
-    return UIMatch._(
-      v,
-      id: (v.id as JSString).toDart,
-      pathname: (v.pathname as JSString).toDart,
-      params: _decodePairs(v.params as JSArray),
-      data: v.data,
-      handle: v.handle,
+      state: RevalidationState.fromValue(v.state.toDart),
     );
   }
 }

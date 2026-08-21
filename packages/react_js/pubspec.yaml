@@ -6,6 +6,6 @@ resolution: workspace
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react: {path: ../react}
+  react: ^0.1.0
 dev_dependencies:
   test: ^1.31.2

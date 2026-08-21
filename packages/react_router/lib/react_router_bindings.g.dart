@@ -5,8 +5,33 @@
 // ignore_for_file: type=lint
 
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:react/react.dart';
+
+// Shared decode helpers for hook return values.
+// Primitives and literals are decoded directly by the external's
+// return type; objects with known shape use generated extension
+// types (see below) for direct property access instead of
+// converting to/from [[key, value]] pairs. Record / URLSearchParams
+// types are still encoded as `[[k, v], ...]` pairs by the shim
+// (via `toPairs`) until the shim learns to pass raw JS objects.
+Map<String, String> _decodePairs(JSArray raw) {
+  final result = <String, String>{};
+  for (var i = 0; i < raw.length; i++) {
+    final entry = (raw[i] as JSArray);
+    result[(entry[0] as JSString).toDart] = (entry[1] as JSString).toDart;
+  }
+  return result;
+}
+
+List<T> _decodeList<T>(JSArray raw, T Function(JSAny? item) decode) {
+  final result = <T>[];
+  for (var i = 0; i < raw.length; i++) {
+    result.add(decode(raw[i]));
+  }
+  return result;
+}
 
 /// Typed helper for the `reactRouter.createBrowserRouter` function.
 ///
@@ -22,9 +47,9 @@ Object? createBrowserRouter(
   List<CreateBrowserRouterRoutes> routes, [
   DOMRouterOpts? opts,
 ]) {
-  final raw = _createBrowserRouterRaw(routes.jsify(), opts.jsify());
+  final raw = _createBrowserRouterRaw(routes.jsify(), opts?.toJson().jsify());
   if (raw == null) return null;
-  return raw as Object?;
+  return raw;
 }
 
 /// Typed helper for the `reactRouter.createHashRouter` function.
@@ -41,9 +66,9 @@ Object? createHashRouter(
   List<CreateBrowserRouterRoutes> routes, [
   DOMRouterOpts? opts,
 ]) {
-  final raw = _createHashRouterRaw(routes.jsify(), opts.jsify());
+  final raw = _createHashRouterRaw(routes.jsify(), opts?.toJson().jsify());
   if (raw == null) return null;
-  return raw as Object?;
+  return raw;
 }
 
 /// Typed helper for the `reactRouter.RouterProvider` foreign component.
@@ -86,7 +111,7 @@ ReactNode routerProvider({
 )
 ReactNode browserRouter({
   String? key,
-  List<ReactNode> children = const [],
+  ReactChildren children = const [],
   String? basename,
   FutureConfig? future,
   Object? window,
@@ -115,7 +140,7 @@ ReactNode browserRouter({
 )
 ReactNode hashRouter({
   String? key,
-  List<ReactNode> children = const [],
+  ReactChildren children = const [],
   String? basename,
   FutureConfig? future,
   Object? window,
@@ -148,7 +173,7 @@ ReactNode hashRouter({
 )
 ReactNode link({
   String? key,
-  List<ReactNode> children = const [],
+  ReactChildren children = const [],
   String? className,
   Object? style,
   String? id,
@@ -167,7 +192,7 @@ ReactNode link({
   Object? state,
   bool? preventScrollReset,
   RelativeRoutingType? relative,
-  required Object to,
+  required Object? to,
   bool? unstable_viewTransition,
 }) => foreignComponent(
   'reactRouter.Link',
@@ -216,7 +241,7 @@ ReactNode link({
 )
 ReactNode navLink({
   String? key,
-  List<ReactNode> children = const [],
+  ReactChildren children = const [],
   String? className,
   Object? style,
   String? id,
@@ -235,7 +260,7 @@ ReactNode navLink({
   Object? state,
   bool? preventScrollReset,
   RelativeRoutingType? relative,
-  required Object to,
+  required Object? to,
   bool? unstable_viewTransition,
   bool? caseSensitive,
   bool? end,
@@ -359,9 +384,9 @@ Object? createMemoryRouter(
   List<CreateBrowserRouterRoutes> routes, [
   CreateMemoryRouterOpts? opts,
 ]) {
-  final raw = _createMemoryRouterRaw(routes.jsify(), opts.jsify());
+  final raw = _createMemoryRouterRaw(routes.jsify(), opts?.toJson().jsify());
   if (raw == null) return null;
-  return raw as Object?;
+  return raw;
 }
 
 /// Typed helper for the `reactRouter.createSearchParams` function.
@@ -374,10 +399,10 @@ Object? createMemoryRouter(
 )
 @JS('globalThis.__reactDartBindings.reactRouter.createSearchParams')
 external JSAny? _createSearchParamsRaw(JSAny? init);
-Object? createSearchParams([Object? init]) {
+Map<String, String>? createSearchParams([Object? init]) {
   final raw = _createSearchParamsRaw(init.jsify());
   if (raw == null) return null;
-  return raw as Object?;
+  return _decodePairs(raw as JSArray);
 }
 
 /// Typed helper for the `reactRouter.MemoryRouter` foreign component.
@@ -394,7 +419,7 @@ Object? createSearchParams([Object? init]) {
 )
 ReactNode memoryRouter({
   String? key,
-  List<ReactNode> children = const [],
+  ReactChildren children = const [],
   String? basename,
   List<Object?>? initialEntries,
   num? initialIndex,
@@ -423,7 +448,7 @@ ReactNode memoryRouter({
 )
 ReactNode navigate({
   String? key,
-  required Object to,
+  required Object? to,
   bool? replace,
   Object? state,
   RelativeRoutingType? relative,
@@ -471,7 +496,7 @@ ReactNode outlet({String? key, Object? context}) => foreignComponent(
 )
 ReactNode route({
   String? key,
-  List<ReactNode> children = const [],
+  ReactChildren children = const [],
   Object? caseSensitive,
   Object? path,
   Object? id,
@@ -530,9 +555,9 @@ ReactNode route({
 )
 ReactNode router({
   String? key,
-  List<ReactNode> children = const [],
+  ReactChildren children = const [],
   String? basename,
-  required Object location,
+  required Object? location,
   NavigationType? navigationType,
   required Navigator navigator,
   bool? static,
@@ -563,7 +588,7 @@ ReactNode router({
 )
 ReactNode routes({
   String? key,
-  List<ReactNode> children = const [],
+  ReactChildren children = const [],
   Object? location,
 }) => foreignComponent(
   'reactRouter.Routes',
@@ -584,9 +609,9 @@ ReactNode routes({
 )
 ReactNode await({
   String? key,
-  required List<ReactNode> children,
+  required ReactChildren children,
   ReactNode? errorElement,
-  required Object resolve,
+  required Object? resolve,
 }) => foreignComponent(
   'reactRouter.Await',
   key: key,
@@ -611,7 +636,7 @@ external JSAny? _createRoutesFromChildrenRaw(
   JSAny? parentPath,
 );
 List<CreateBrowserRouterRoutes>? createRoutesFromChildren(
-  ReactNode children, [
+  Object? children, [
   List<num>? parentPath,
 ]) {
   final raw = _createRoutesFromChildrenRaw(
@@ -619,7 +644,10 @@ List<CreateBrowserRouterRoutes>? createRoutesFromChildren(
     parentPath.jsify(),
   );
   if (raw == null) return null;
-  return raw as List<CreateBrowserRouterRoutes>?;
+  return _decodeList<CreateBrowserRouterRoutes>(
+    raw as JSArray,
+    (e) => CreateBrowserRouterRoutes.fromJs(e as JSObject),
+  );
 }
 
 /// Typed helper for the `reactRouter.renderMatches` function.
@@ -635,7 +663,7 @@ external JSAny? _renderMatchesRaw(JSAny? matches);
 Object? renderMatches(List<RouteMatch> matches) {
   final raw = _renderMatchesRaw(matches.jsify());
   if (raw == null) return null;
-  return raw as Object?;
+  return raw;
 }
 
 /// Typed helper for the `reactRouter.matchRoutes` function.
@@ -654,7 +682,7 @@ external JSAny? _matchRoutesRaw(
 );
 List<AgnosticRouteMatch>? matchRoutes(
   List<Object?> routes,
-  Object locationArg, [
+  Object? locationArg, [
   String? basename,
 ]) {
   final raw = _matchRoutesRaw(
@@ -663,7 +691,10 @@ List<AgnosticRouteMatch>? matchRoutes(
     basename.jsify(),
   );
   if (raw == null) return null;
-  return raw as List<AgnosticRouteMatch>?;
+  return _decodeList<AgnosticRouteMatch>(
+    raw as JSArray,
+    (e) => AgnosticRouteMatch.fromJs(e as JSObject),
+  );
 }
 
 /// Typed helper for the `reactRouter.generatePath` function.
@@ -676,10 +707,10 @@ List<AgnosticRouteMatch>? matchRoutes(
 )
 @JS('globalThis.__reactDartBindings.reactRouter.generatePath')
 external JSAny? _generatePathRaw(JSAny? originalPath, JSAny? params);
-String? generatePath(Path originalPath, [Object? params]) {
-  final raw = _generatePathRaw(originalPath.jsify(), params.jsify());
+String? generatePath(Path originalPath, [Map<String, String>? params]) {
+  final raw = _generatePathRaw(originalPath.toJson().jsify(), params.jsify());
   if (raw == null) return null;
-  return raw as String?;
+  return (raw as JSString).toDart;
 }
 
 /// Typed helper for the `reactRouter.matchPath` function.
@@ -693,9 +724,9 @@ String? generatePath(Path originalPath, [Object? params]) {
 @JS('globalThis.__reactDartBindings.reactRouter.matchPath')
 external JSAny? _matchPathRaw(JSAny? pattern, JSAny? pathname);
 PathMatch? matchPath(MatchPathPattern pattern, String pathname) {
-  final raw = _matchPathRaw(pattern.jsify(), pathname.jsify());
+  final raw = _matchPathRaw(pattern.toJson().jsify(), pathname.jsify());
   if (raw == null) return null;
-  return raw as PathMatch?;
+  return PathMatch.fromJs(raw as JSObject);
 }
 
 /// Typed helper for the `reactRouter.resolvePath` function.
@@ -708,10 +739,10 @@ PathMatch? matchPath(MatchPathPattern pattern, String pathname) {
 )
 @JS('globalThis.__reactDartBindings.reactRouter.resolvePath')
 external JSAny? _resolvePathRaw(JSAny? to, JSAny? fromPathname);
-Path? resolvePath(Object to, [String? fromPathname]) {
+Path? resolvePath(Object? to, [String? fromPathname]) {
   final raw = _resolvePathRaw(to.jsify(), fromPathname.jsify());
   if (raw == null) return null;
-  return raw as Path?;
+  return Path.fromJs(raw as JSObject);
 }
 
 /// Typed helper for the `reactRouter.isRouteErrorResponse` function.
@@ -724,10 +755,10 @@ Path? resolvePath(Object to, [String? fromPathname]) {
 )
 @JS('globalThis.__reactDartBindings.reactRouter.isRouteErrorResponse')
 external JSAny? _isRouteErrorResponseRaw(JSAny? error);
-Object? isRouteErrorResponse(Object error) {
+Object? isRouteErrorResponse(Object? error) {
   final raw = _isRouteErrorResponseRaw(error.jsify());
   if (raw == null) return null;
-  return raw as Object?;
+  return raw;
 }
 
 /// Typed helper for the `reactRouter.createPath` function.
@@ -741,9 +772,9 @@ Object? isRouteErrorResponse(Object error) {
 @JS('globalThis.__reactDartBindings.reactRouter.createPath')
 external JSAny? _createPathRaw(JSAny? arg);
 String? createPath(Path arg) {
-  final raw = _createPathRaw(arg.jsify());
+  final raw = _createPathRaw(arg.toJson().jsify());
   if (raw == null) return null;
-  return raw as String?;
+  return (raw as JSString).toDart;
 }
 
 /// Typed helper for the `reactRouter.parsePath` function.
@@ -759,7 +790,7 @@ external JSAny? _parsePathRaw(JSAny? path);
 Path? parsePath(String path) {
   final raw = _parsePathRaw(path.jsify());
   if (raw == null) return null;
-  return raw as Path?;
+  return Path.fromJs(raw as JSObject);
 }
 
 /// TS: () => any
@@ -929,7 +960,7 @@ class AgnosticRouteMatch {
     required Object? this.params,
     required String this.pathname,
     required String this.pathnameBase,
-    required Object this.route,
+    required Object? this.route,
   });
 
   /// TS: unknown
@@ -942,7 +973,21 @@ class AgnosticRouteMatch {
   final String pathnameBase;
 
   /// TS: any
-  final Object route;
+  final Object? route;
+
+  /// Decodes this value from a JavaScript object.
+  factory AgnosticRouteMatch.fromJs(JSObject js) {
+    final rawParams = js.getProperty<JSAny?>('params'.toJS);
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawPathnameBase = js.getProperty<JSAny?>('pathnameBase'.toJS);
+    final rawRoute = js.getProperty<JSAny?>('route'.toJS);
+    return AgnosticRouteMatch(
+      params: _decodePairs(rawParams as JSArray),
+      pathname: (rawPathname as JSString).toDart,
+      pathnameBase: (rawPathnameBase as JSString).toDart,
+      route: rawRoute,
+    );
+  }
 
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
@@ -1033,6 +1078,75 @@ class CreateBrowserRouterRoutes {
   /// TS: () => any
   final CreateBrowserRouterRoutesLazyCallback? lazy;
 
+  /// Decodes this value from a JavaScript object.
+  factory CreateBrowserRouterRoutes.fromJs(JSObject js) {
+    final rawCaseSensitive = js.getProperty<JSAny?>('caseSensitive'.toJS);
+    final rawPath = js.getProperty<JSAny?>('path'.toJS);
+    final rawId = js.getProperty<JSAny?>('id'.toJS);
+    final rawLoader = js.getProperty<JSAny?>('loader'.toJS);
+    final rawAction = js.getProperty<JSAny?>('action'.toJS);
+    final rawHasErrorBoundary = js.getProperty<JSAny?>('hasErrorBoundary'.toJS);
+    final rawShouldRevalidate = js.getProperty<JSAny?>('shouldRevalidate'.toJS);
+    final rawHandle = js.getProperty<JSAny?>('handle'.toJS);
+    final rawIndex = js.getProperty<JSAny?>('index'.toJS);
+    final rawChildren = js.getProperty<JSAny?>('children'.toJS);
+    final rawElement = js.getProperty<JSAny?>('element'.toJS);
+    final rawHydrateFallbackElement = js.getProperty<JSAny?>(
+      'hydrateFallbackElement'.toJS,
+    );
+    final rawErrorElement = js.getProperty<JSAny?>('errorElement'.toJS);
+    final rawComponent = js.getProperty<JSAny?>('Component'.toJS);
+    final rawHydrateFallback = js.getProperty<JSAny?>('HydrateFallback'.toJS);
+    final rawErrorBoundary = js.getProperty<JSAny?>('ErrorBoundary'.toJS);
+    final rawLazy = js.getProperty<JSAny?>('lazy'.toJS);
+    return CreateBrowserRouterRoutes(
+      caseSensitive: rawCaseSensitive == null || rawCaseSensitive.isUndefined
+          ? null
+          : rawCaseSensitive,
+      path: rawPath == null || rawPath.isUndefined ? null : rawPath,
+      id: rawId == null || rawId.isUndefined ? null : rawId,
+      loader: rawLoader == null || rawLoader.isUndefined ? null : rawLoader,
+      action: rawAction == null || rawAction.isUndefined ? null : rawAction,
+      hasErrorBoundary:
+          rawHasErrorBoundary == null || rawHasErrorBoundary.isUndefined
+          ? null
+          : rawHasErrorBoundary,
+      shouldRevalidate:
+          rawShouldRevalidate == null || rawShouldRevalidate.isUndefined
+          ? null
+          : rawShouldRevalidate,
+      handle: rawHandle == null || rawHandle.isUndefined ? null : rawHandle,
+      index: (rawIndex as JSBoolean).toDart,
+      children: rawChildren == null || rawChildren.isUndefined
+          ? null
+          : _decodeList<Object?>(rawChildren as JSArray, (item) => item),
+      element: rawElement == null || rawElement.isUndefined
+          ? null
+          : OpaqueReactNode(rawElement),
+      hydrateFallbackElement:
+          rawHydrateFallbackElement == null ||
+              rawHydrateFallbackElement.isUndefined
+          ? null
+          : OpaqueReactNode(rawHydrateFallbackElement),
+      errorElement: rawErrorElement == null || rawErrorElement.isUndefined
+          ? null
+          : OpaqueReactNode(rawErrorElement),
+      Component: rawComponent == null || rawComponent.isUndefined
+          ? null
+          : rawComponent,
+      HydrateFallback:
+          rawHydrateFallback == null || rawHydrateFallback.isUndefined
+          ? null
+          : rawHydrateFallback,
+      ErrorBoundary: rawErrorBoundary == null || rawErrorBoundary.isUndefined
+          ? null
+          : rawErrorBoundary,
+      lazy: rawLazy == null || rawLazy.isUndefined
+          ? null
+          : () => (rawLazy as JSFunction).callAsFunction(null),
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     if (caseSensitive != null) 'caseSensitive': caseSensitive,
@@ -1093,6 +1207,47 @@ class CreateMemoryRouterOpts {
   /// TS: Record<string, unknown>
   final Object? unstable_patchRoutesOnNavigation;
 
+  /// Decodes this value from a JavaScript object.
+  factory CreateMemoryRouterOpts.fromJs(JSObject js) {
+    final rawBasename = js.getProperty<JSAny?>('basename'.toJS);
+    final rawFuture = js.getProperty<JSAny?>('future'.toJS);
+    final rawHydrationData = js.getProperty<JSAny?>('hydrationData'.toJS);
+    final rawInitialEntries = js.getProperty<JSAny?>('initialEntries'.toJS);
+    final rawInitialIndex = js.getProperty<JSAny?>('initialIndex'.toJS);
+    final rawUnstableDataStrategy = js.getProperty<JSAny?>(
+      'unstable_dataStrategy'.toJS,
+    );
+    final rawUnstablePatchRoutesOnNavigation = js.getProperty<JSAny?>(
+      'unstable_patchRoutesOnNavigation'.toJS,
+    );
+    return CreateMemoryRouterOpts(
+      basename: rawBasename == null || rawBasename.isUndefined
+          ? null
+          : (rawBasename as JSString).toDart,
+      future: rawFuture == null || rawFuture.isUndefined
+          ? null
+          : Omit.fromJs(rawFuture as JSObject),
+      hydrationData: rawHydrationData == null || rawHydrationData.isUndefined
+          ? null
+          : Pick.fromJs(rawHydrationData as JSObject),
+      initialEntries: rawInitialEntries == null || rawInitialEntries.isUndefined
+          ? null
+          : _decodeList<Object?>(rawInitialEntries as JSArray, (item) => item),
+      initialIndex: rawInitialIndex == null || rawInitialIndex.isUndefined
+          ? null
+          : (rawInitialIndex as JSNumber).toDartDouble,
+      unstable_dataStrategy:
+          rawUnstableDataStrategy == null || rawUnstableDataStrategy.isUndefined
+          ? null
+          : rawUnstableDataStrategy,
+      unstable_patchRoutesOnNavigation:
+          rawUnstablePatchRoutesOnNavigation == null ||
+              rawUnstablePatchRoutesOnNavigation.isUndefined
+          ? null
+          : rawUnstablePatchRoutesOnNavigation as Object,
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     if (basename != null) 'basename': basename,
@@ -1140,6 +1295,41 @@ class DOMRouterOpts {
   /// TS: any
   final Object? window;
 
+  /// Decodes this value from a JavaScript object.
+  factory DOMRouterOpts.fromJs(JSObject js) {
+    final rawBasename = js.getProperty<JSAny?>('basename'.toJS);
+    final rawFuture = js.getProperty<JSAny?>('future'.toJS);
+    final rawHydrationData = js.getProperty<JSAny?>('hydrationData'.toJS);
+    final rawUnstableDataStrategy = js.getProperty<JSAny?>(
+      'unstable_dataStrategy'.toJS,
+    );
+    final rawUnstablePatchRoutesOnNavigation = js.getProperty<JSAny?>(
+      'unstable_patchRoutesOnNavigation'.toJS,
+    );
+    final rawWindow = js.getProperty<JSAny?>('window'.toJS);
+    return DOMRouterOpts(
+      basename: rawBasename == null || rawBasename.isUndefined
+          ? null
+          : (rawBasename as JSString).toDart,
+      future: rawFuture == null || rawFuture.isUndefined
+          ? null
+          : Omit.fromJs(rawFuture as JSObject),
+      hydrationData: rawHydrationData == null || rawHydrationData.isUndefined
+          ? null
+          : Pick.fromJs(rawHydrationData as JSObject),
+      unstable_dataStrategy:
+          rawUnstableDataStrategy == null || rawUnstableDataStrategy.isUndefined
+          ? null
+          : rawUnstableDataStrategy,
+      unstable_patchRoutesOnNavigation:
+          rawUnstablePatchRoutesOnNavigation == null ||
+              rawUnstablePatchRoutesOnNavigation.isUndefined
+          ? null
+          : rawUnstablePatchRoutesOnNavigation as Object,
+      window: rawWindow == null || rawWindow.isUndefined ? null : rawWindow,
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     if (basename != null) 'basename': basename,
@@ -1168,11 +1358,84 @@ class FutureConfig {
   /// TS: boolean
   final bool? v7_startTransition;
 
+  /// Decodes this value from a JavaScript object.
+  factory FutureConfig.fromJs(JSObject js) {
+    final rawV7RelativeSplatPath = js.getProperty<JSAny?>(
+      'v7_relativeSplatPath'.toJS,
+    );
+    final rawV7StartTransition = js.getProperty<JSAny?>(
+      'v7_startTransition'.toJS,
+    );
+    return FutureConfig(
+      v7_relativeSplatPath:
+          rawV7RelativeSplatPath == null || rawV7RelativeSplatPath.isUndefined
+          ? null
+          : (rawV7RelativeSplatPath as JSBoolean).toDart,
+      v7_startTransition:
+          rawV7StartTransition == null || rawV7StartTransition.isUndefined
+          ? null
+          : (rawV7StartTransition as JSBoolean).toDart,
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     if (v7_relativeSplatPath != null)
       'v7_relativeSplatPath': v7_relativeSplatPath,
     if (v7_startTransition != null) 'v7_startTransition': v7_startTransition,
+  };
+}
+
+/// Typed props for `Location`.
+///
+/// pathname: string; search: string; hash: string; state: any; key: string
+class Location {
+  const Location({
+    required String this.pathname,
+    required String this.search,
+    required String this.hash,
+    required Object? this.state,
+    required String this.elementKey,
+  });
+
+  /// TS: string
+  final String pathname;
+
+  /// TS: string
+  final String search;
+
+  /// TS: string
+  final String hash;
+
+  /// TS: any
+  final Object? state;
+
+  /// TS: string
+  final String elementKey;
+
+  /// Decodes this value from a JavaScript object.
+  factory Location.fromJs(JSObject js) {
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawSearch = js.getProperty<JSAny?>('search'.toJS);
+    final rawHash = js.getProperty<JSAny?>('hash'.toJS);
+    final rawState = js.getProperty<JSAny?>('state'.toJS);
+    final rawElementKey = js.getProperty<JSAny?>('key'.toJS);
+    return Location(
+      pathname: (rawPathname as JSString).toDart,
+      search: (rawSearch as JSString).toDart,
+      hash: (rawHash as JSString).toDart,
+      state: rawState,
+      elementKey: (rawElementKey as JSString).toDart,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'pathname': pathname,
+    'search': search,
+    'hash': hash,
+    'state': state,
+    'key': elementKey,
   };
 }
 
@@ -1209,6 +1472,28 @@ class MatchPathPattern {
   /// TS: string
   final String hash;
 
+  /// Decodes this value from a JavaScript object.
+  factory MatchPathPattern.fromJs(JSObject js) {
+    final rawPath = js.getProperty<JSAny?>('path'.toJS);
+    final rawCaseSensitive = js.getProperty<JSAny?>('caseSensitive'.toJS);
+    final rawEnd = js.getProperty<JSAny?>('end'.toJS);
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawSearch = js.getProperty<JSAny?>('search'.toJS);
+    final rawHash = js.getProperty<JSAny?>('hash'.toJS);
+    return MatchPathPattern(
+      path: Path.fromJs(rawPath as JSObject),
+      caseSensitive: rawCaseSensitive == null || rawCaseSensitive.isUndefined
+          ? null
+          : (rawCaseSensitive as JSBoolean).toDart,
+      end: rawEnd == null || rawEnd.isUndefined
+          ? null
+          : (rawEnd as JSBoolean).toDart,
+      pathname: (rawPathname as JSString).toDart,
+      search: (rawSearch as JSString).toDart,
+      hash: (rawHash as JSString).toDart,
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     'path': path.toJson(),
@@ -1217,6 +1502,89 @@ class MatchPathPattern {
     'pathname': pathname,
     'search': search,
     'hash': hash,
+  };
+}
+
+/// Typed props for `NavigateOptions`.
+///
+/// replace?: boolean; state?: any; preventScrollReset?: boolean
+/// relative?: "route" | "path"; unstable_flushSync?: boolean
+/// unstable_viewTransition?: boolean
+class NavigateOptions {
+  const NavigateOptions({
+    bool? this.replace,
+    Object? this.state,
+    bool? this.preventScrollReset,
+    RelativeRoutingType? this.relative,
+    bool? this.unstable_flushSync,
+    bool? this.unstable_viewTransition,
+  });
+
+  /// TS: boolean
+  final bool? replace;
+
+  /// TS: any
+  final Object? state;
+
+  /// TS: boolean
+  final bool? preventScrollReset;
+
+  /// TS: "route" | "path"
+  final RelativeRoutingType? relative;
+
+  /// TS: boolean
+  final bool? unstable_flushSync;
+
+  /// TS: boolean
+  final bool? unstable_viewTransition;
+
+  /// Decodes this value from a JavaScript object.
+  factory NavigateOptions.fromJs(JSObject js) {
+    final rawReplace = js.getProperty<JSAny?>('replace'.toJS);
+    final rawState = js.getProperty<JSAny?>('state'.toJS);
+    final rawPreventScrollReset = js.getProperty<JSAny?>(
+      'preventScrollReset'.toJS,
+    );
+    final rawRelative = js.getProperty<JSAny?>('relative'.toJS);
+    final rawUnstableFlushSync = js.getProperty<JSAny?>(
+      'unstable_flushSync'.toJS,
+    );
+    final rawUnstableViewTransition = js.getProperty<JSAny?>(
+      'unstable_viewTransition'.toJS,
+    );
+    return NavigateOptions(
+      replace: rawReplace == null || rawReplace.isUndefined
+          ? null
+          : (rawReplace as JSBoolean).toDart,
+      state: rawState == null || rawState.isUndefined ? null : rawState,
+      preventScrollReset:
+          rawPreventScrollReset == null || rawPreventScrollReset.isUndefined
+          ? null
+          : (rawPreventScrollReset as JSBoolean).toDart,
+      relative: rawRelative == null || rawRelative.isUndefined
+          ? null
+          : RelativeRoutingType.fromValue((rawRelative as JSString).toDart),
+      unstable_flushSync:
+          rawUnstableFlushSync == null || rawUnstableFlushSync.isUndefined
+          ? null
+          : (rawUnstableFlushSync as JSBoolean).toDart,
+      unstable_viewTransition:
+          rawUnstableViewTransition == null ||
+              rawUnstableViewTransition.isUndefined
+          ? null
+          : (rawUnstableViewTransition as JSBoolean).toDart,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    if (replace != null) 'replace': replace,
+    if (state != null) 'state': state,
+    if (preventScrollReset != null) 'preventScrollReset': preventScrollReset,
+    if (relative != null) 'relative': relative!.value,
+    if (unstable_flushSync != null) 'unstable_flushSync': unstable_flushSync,
+    if (unstable_viewTransition != null)
+      'unstable_viewTransition': unstable_viewTransition,
   };
 }
 
@@ -1251,6 +1619,46 @@ class Navigator {
   /// TS: (to: any, state: any, opts: { replace?: boolean; state?: any; preventScrollReset?: boolean; relative?: "route" | "path"; unstable_flushSync?: boolean; unstable_viewTransition?: boolean }) => void
   final RouterNavigatorPushCallback replace;
 
+  /// Decodes this value from a JavaScript object.
+  factory Navigator.fromJs(JSObject js) {
+    final rawCreateHref = js.getProperty<JSAny?>('createHref'.toJS);
+    final rawEncodeLocation = js.getProperty<JSAny?>('encodeLocation'.toJS);
+    final rawGo = js.getProperty<JSAny?>('go'.toJS);
+    final rawPush = js.getProperty<JSAny?>('push'.toJS);
+    final rawReplace = js.getProperty<JSAny?>('replace'.toJS);
+    return Navigator(
+      createHref: (Object? to) =>
+          ((rawCreateHref as JSFunction).callAsFunction(null, to.jsify())
+                  as JSString)
+              .toDart,
+      encodeLocation: rawEncodeLocation == null || rawEncodeLocation.isUndefined
+          ? null
+          : (Object? to) => Path.fromJs(
+              (rawEncodeLocation as JSFunction).callAsFunction(null, to.jsify())
+                  as JSObject,
+            ),
+      go: (num delta) {
+        (rawGo as JSFunction).callAsFunction(null, delta.toJS);
+      },
+      push: (Object? to, Object? state, Object? opts) {
+        (rawPush as JSFunction).callAsFunction(
+          null,
+          to.jsify(),
+          state.jsify(),
+          opts.jsify(),
+        );
+      },
+      replace: (Object? to, Object? state, Object? opts) {
+        (rawReplace as JSFunction).callAsFunction(
+          null,
+          to.jsify(),
+          state.jsify(),
+          opts.jsify(),
+        );
+      },
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
     'createHref': createHref,
@@ -1270,6 +1678,14 @@ class Omit {
   /// TS: any
   final Object? value;
 
+  /// Decodes this value from a JavaScript object.
+  factory Omit.fromJs(JSObject js) {
+    final rawValue = js.getProperty<JSAny?>('value'.toJS);
+    return Omit(
+      value: rawValue == null || rawValue.isUndefined ? null : rawValue,
+    );
+  }
+
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {if (value != null) 'value': value};
 }
@@ -1277,12 +1693,6 @@ class Omit {
 /// Typed props for `Path`.
 ///
 /// pathname: string; search: string; hash: string
-extension type _PathJs(JSObject _) implements JSObject {
-  external JSString get pathname;
-  external JSString get search;
-  external JSString get hash;
-}
-
 class Path {
   const Path({
     required String this.pathname,
@@ -1299,13 +1709,15 @@ class Path {
   /// TS: string
   final String hash;
 
-  /// Decodes the shim's raw JS object.
+  /// Decodes this value from a JavaScript object.
   factory Path.fromJs(JSObject js) {
-    final v = _PathJs(js);
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawSearch = js.getProperty<JSAny?>('search'.toJS);
+    final rawHash = js.getProperty<JSAny?>('hash'.toJS);
     return Path(
-      pathname: v.pathname.toDart,
-      search: v.search.toDart,
-      hash: v.hash.toDart,
+      pathname: (rawPathname as JSString).toDart,
+      search: (rawSearch as JSString).toDart,
+      hash: (rawHash as JSString).toDart,
     );
   }
 
@@ -1315,13 +1727,6 @@ class Path {
     'search': search,
     'hash': hash,
   };
-}
-
-extension type _PathMatchJs(JSObject _) implements JSObject {
-  external JSAny? get params;
-  external JSString get pathname;
-  external JSString get pathnameBase;
-  external JSObject get pattern;
 }
 
 /// Typed props for `PathMatch`.
@@ -1348,14 +1753,17 @@ class PathMatch {
   /// TS: { path: { pathname: string; search: string; hash: string }; caseSensitive?: boolean; end?: boolean }
   final PathPattern pattern;
 
-  /// Decodes the shim's raw JS object.
+  /// Decodes this value from a JavaScript object.
   factory PathMatch.fromJs(JSObject js) {
-    final v = _PathMatchJs(js);
+    final rawParams = js.getProperty<JSAny?>('params'.toJS);
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawPathnameBase = js.getProperty<JSAny?>('pathnameBase'.toJS);
+    final rawPattern = js.getProperty<JSAny?>('pattern'.toJS);
     return PathMatch(
-      params: v.params,
-      pathname: v.pathname.toDart,
-      pathnameBase: v.pathnameBase.toDart,
-      pattern: PathPattern.fromJs(v.pattern),
+      params: _decodePairs(rawParams as JSArray),
+      pathname: (rawPathname as JSString).toDart,
+      pathnameBase: (rawPathnameBase as JSString).toDart,
+      pattern: PathPattern.fromJs(rawPattern as JSObject),
     );
   }
 
@@ -1388,13 +1796,19 @@ class PathPattern {
   /// TS: boolean
   final bool? end;
 
-  /// Decodes the shim's raw JS object.
+  /// Decodes this value from a JavaScript object.
   factory PathPattern.fromJs(JSObject js) {
-    final v = _PathPatternJs(js);
+    final rawPath = js.getProperty<JSAny?>('path'.toJS);
+    final rawCaseSensitive = js.getProperty<JSAny?>('caseSensitive'.toJS);
+    final rawEnd = js.getProperty<JSAny?>('end'.toJS);
     return PathPattern(
-      path: Path.fromJs(v.path),
-      caseSensitive: v.caseSensitive?.toDart,
-      end: v.end?.toDart,
+      path: Path.fromJs(rawPath as JSObject),
+      caseSensitive: rawCaseSensitive == null || rawCaseSensitive.isUndefined
+          ? null
+          : (rawCaseSensitive as JSBoolean).toDart,
+      end: rawEnd == null || rawEnd.isUndefined
+          ? null
+          : (rawEnd as JSBoolean).toDart,
     );
   }
 
@@ -1406,12 +1820,6 @@ class PathPattern {
   };
 }
 
-extension type _PathPatternJs(JSObject _) implements JSObject {
-  external _PathJs get path;
-  external JSBoolean? get caseSensitive;
-  external JSBoolean? get end;
-}
-
 /// Typed props for `Pick`.
 ///
 /// value?: any
@@ -1420,6 +1828,14 @@ class Pick {
 
   /// TS: any
   final Object? value;
+
+  /// Decodes this value from a JavaScript object.
+  factory Pick.fromJs(JSObject js) {
+    final rawValue = js.getProperty<JSAny?>('value'.toJS);
+    return Pick(
+      value: rawValue == null || rawValue.isUndefined ? null : rawValue,
+    );
+  }
 
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {if (value != null) 'value': value};
@@ -1433,7 +1849,7 @@ class RouteMatch {
     required Object? this.params,
     required String this.pathname,
     required String this.pathnameBase,
-    required Object this.route,
+    required Object? this.route,
   });
 
   /// TS: unknown
@@ -1446,7 +1862,21 @@ class RouteMatch {
   final String pathnameBase;
 
   /// TS: any
-  final Object route;
+  final Object? route;
+
+  /// Decodes this value from a JavaScript object.
+  factory RouteMatch.fromJs(JSObject js) {
+    final rawParams = js.getProperty<JSAny?>('params'.toJS);
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawPathnameBase = js.getProperty<JSAny?>('pathnameBase'.toJS);
+    final rawRoute = js.getProperty<JSAny?>('route'.toJS);
+    return RouteMatch(
+      params: _decodePairs(rawParams as JSArray),
+      pathname: (rawPathname as JSString).toDart,
+      pathnameBase: (rawPathnameBase as JSString).toDart,
+      route: rawRoute,
+    );
+  }
 
   /// JSON-safe map for prop encoding through the JS bridge.
   Map<String, Object?> toJson() => {
@@ -1454,5 +1884,58 @@ class RouteMatch {
     'pathname': pathname,
     'pathnameBase': pathnameBase,
     'route': route,
+  };
+}
+
+/// Typed props for `UIMatch`.
+///
+/// id: string; pathname: string; params: unknown; data: any; handle: any
+class UIMatch {
+  const UIMatch({
+    required String this.id,
+    required String this.pathname,
+    required Object? this.params,
+    required Object? this.data,
+    required Object? this.handle,
+  });
+
+  /// TS: string
+  final String id;
+
+  /// TS: string
+  final String pathname;
+
+  /// TS: unknown
+  final Object? params;
+
+  /// TS: any
+  final Object? data;
+
+  /// TS: any
+  final Object? handle;
+
+  /// Decodes this value from a JavaScript object.
+  factory UIMatch.fromJs(JSObject js) {
+    final rawId = js.getProperty<JSAny?>('id'.toJS);
+    final rawPathname = js.getProperty<JSAny?>('pathname'.toJS);
+    final rawParams = js.getProperty<JSAny?>('params'.toJS);
+    final rawData = js.getProperty<JSAny?>('data'.toJS);
+    final rawHandle = js.getProperty<JSAny?>('handle'.toJS);
+    return UIMatch(
+      id: (rawId as JSString).toDart,
+      pathname: (rawPathname as JSString).toDart,
+      params: _decodePairs(rawParams as JSArray),
+      data: rawData,
+      handle: rawHandle,
+    );
+  }
+
+  /// JSON-safe map for prop encoding through the JS bridge.
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'pathname': pathname,
+    'params': params,
+    'data': data,
+    'handle': handle,
   };
 }

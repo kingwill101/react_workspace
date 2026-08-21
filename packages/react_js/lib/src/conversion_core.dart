@@ -60,7 +60,7 @@ List<ReactNode> reactChildrenFromJS(JSObject props) {
 ReactNode requiredReactChildFromJS(JSObject props, {String? component}) {
   final children = reactChildrenFromJS(props);
   if (children.length != 1) {
-    final prefix = component == null ? 'Component' : component;
+    final prefix = component ?? 'Component';
     throw ArgumentError(
       '$prefix requires exactly one ReactNode child, but received '
       '${children.length}.',
@@ -163,15 +163,18 @@ T fromJS<T>(JSAny? js) {
   if (T == num) return (js as JSNumber).toDartDouble as T;
   // JSArray implements List<E> but with a reified E that won't match
   // the expected List<TodoItem> etc. Convert to a plain list.
-  if (js is JSArray) {
+  if (js != null && js.isA<JSArray<JSAny?>>()) {
+    final array = js as JSArray<JSAny?>;
     final result = <Object?>[];
-    for (var i = 0; i < js.length; i++) {
-      result.add(fromJS<Object?>(js[i]));
+    for (var i = 0; i < array.length; i++) {
+      result.add(fromJS<Object?>(array[i]));
     }
-    return (result).cast<T>() as T;
+    return _castDart<T>(result);
   }
-  return js as T;
+  return _castDart<T>(js);
 }
+
+T _castDart<T>(Object? value) => value as T;
 
 // ═══════════════════════════════════════════
 // Internal helpers
