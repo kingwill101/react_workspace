@@ -212,4 +212,48 @@ export const Dialog: {
       }
     },
   );
+
+  test('component command infers props from an npm module', () async {
+    final root = await Directory.systemTemp.createTemp('react_component_');
+    try {
+      File(p.join(root.path, 'pubspec.yaml')).writeAsStringSync(
+        'name: fixture\nenvironment:\n  sdk: ">=3.12.0 <4.0.0"\n',
+      );
+      File(
+        p.join(root.path, 'react.yaml'),
+      ).writeAsStringSync('client: web/client.dart\n');
+      final package = Directory(p.join(root.path, 'node_modules', 'fake-pkg'))
+        ..createSync(recursive: true);
+      File(p.join(package.path, 'package.json')).writeAsStringSync(
+        '{"name":"fake-pkg","version":"1.0.0","types":"./index.d.ts"}',
+      );
+      File(p.join(package.path, 'index.d.ts')).writeAsStringSync('''
+export interface GreetingProps {
+  name?: string;
+  count: number;
+}
+export declare function Greeting(props: GreetingProps): React.ReactElement;
+''');
+
+      final runner = CommandRunner<void>('react', '')
+        ..addCommand(ComponentCommand(workingDirectory: root));
+      await runner.run([
+        'component',
+        'add',
+        'fake.Greeting',
+        'fake-pkg',
+        '--export',
+        'Greeting',
+        '--infer',
+        '--no-validate',
+      ]);
+
+      final manifest = File(p.join(root.path, 'react.yaml')).readAsStringSync();
+      expect(manifest, contains("name: 'fake.Greeting'"));
+      expect(manifest, contains("name: 'String?'"));
+      expect(manifest, contains("count: 'num'"));
+    } finally {
+      await root.delete(recursive: true);
+    }
+  });
 }
