@@ -18,6 +18,7 @@ final class ReactServerApp {
   final ReactSsrClient? ssr;
   final String? rootComponent;
   final ReactPageProps pageProps;
+  final bool streamingSsr;
   final Object? Function(Request request)? authenticate;
 
   const ReactServerApp({
@@ -28,6 +29,7 @@ final class ReactServerApp {
     this.ssr,
     this.rootComponent,
     this.pageProps = _emptyPageProps,
+    this.streamingSsr = false,
     this.authenticate,
   });
 
@@ -51,6 +53,12 @@ final class ReactServerApp {
 
       try {
         final props = await pageProps(request);
+        if (streamingSsr && indexTemplate.contains('{{SSR}}')) {
+          return Response.ok(
+            _documentStream(props),
+            headers: {'content-type': 'text/html; charset=utf-8'},
+          );
+        }
         final rendered = await ssr!.render(
           component: rootComponent!,
           props: props,
@@ -68,6 +76,26 @@ final class ReactServerApp {
         );
       }
     };
+  }
+
+  Stream<List<int>> _documentStream(Map<String, dynamic> props) async* {
+    final marker = indexTemplate.indexOf('{{SSR}}');
+    final before = indexTemplate.substring(0, marker);
+    final after = indexTemplate.substring(marker + '{{SSR}}'.length);
+    yield utf8.encode(before.replaceAll('{{PROPS}}', jsonEncode(props)));
+
+    var finalProps = props;
+    await for (final chunk in ssr!.renderStream(
+      component: rootComponent!,
+      props: props,
+    )) {
+      if (chunk.done) {
+        finalProps = chunk.props;
+      } else if (chunk.html.isNotEmpty) {
+        yield utf8.encode(chunk.html);
+      }
+    }
+    yield utf8.encode(after.replaceAll('{{PROPS}}', jsonEncode(finalProps)));
   }
 }
 

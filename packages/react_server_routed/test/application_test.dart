@@ -63,6 +63,43 @@ void main() {
     expect(utf8.decode(testContext.adapter.bytes), 'asset');
   });
 
+  test('streams a document through the Routed response adapter', () async {
+    final worker = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+    worker.listen((request) async {
+      final response = request.response;
+      response.headers.contentType = ContentType('application', 'x-ndjson');
+      response.write('{"type":"start"}\n');
+      response.write('{"type":"chunk","html":"<main>"}\n');
+      await response.flush();
+      response.write('{"type":"chunk","html":"streamed</main>"}\n');
+      response.write('{"type":"end","props":{"title":"Stream"}}\n');
+      await response.close();
+    });
+
+    final ssr = ReactSsrClient(
+      endpoint: Uri.parse('http://127.0.0.1:${worker.port}/'),
+    );
+    final app = RoutedReactApplication(
+      actionRegistry: ServerFunctionRegistry(),
+      staticHandler: (context) => context.string('static'),
+      indexTemplate: '<html><body>{{SSR}}</body><script>{{PROPS}}</script>',
+      ssr: ssr,
+      rootComponent: 'app.Root',
+      streamingSsr: true,
+    );
+
+    final testContext = _context('GET', '/stream');
+    final response = await app.handler(testContext.context);
+    await response.close();
+
+    final body = utf8.decode(testContext.adapter.bytes);
+    expect(body, contains('<main>streamed</main>'));
+    expect(body, contains('"title":"Stream"'));
+
+    ssr.close();
+    await worker.close(force: true);
+  });
+
   test('mounts the composed handler on a Routed engine', () async {
     final app = RoutedReactApplication(
       actionRegistry: ServerFunctionRegistry(),

@@ -56,4 +56,40 @@ void main() {
     );
     expect(await response.readAsString(), 'asset:client.js');
   });
+
+  test('ReactServerApp streams the document when enabled', () async {
+    final worker = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+    worker.listen((request) async {
+      final response = request.response;
+      response.headers.contentType = ContentType('application', 'x-ndjson');
+      response.write('{"type":"start"}\n');
+      response.write('{"type":"chunk","html":"<main>"}\n');
+      await response.flush();
+      response.write('{"type":"chunk","html":"streamed</main>"}\n');
+      response.write('{"type":"end","props":{"title":"Stream"}}\n');
+      await response.close();
+    });
+
+    final ssr = ReactSsrClient(
+      endpoint: Uri.parse('http://127.0.0.1:${worker.port}/'),
+    );
+    final app = ReactServerApp(
+      actionRegistry: ServerFunctionRegistry(),
+      staticHandler: (request) => Response.ok('static'),
+      indexTemplate: '<html><body>{{SSR}}</body><script>{{PROPS}}</script>',
+      ssr: ssr,
+      rootComponent: 'test.root',
+      streamingSsr: true,
+    );
+
+    final response = await app.handler(
+      Request('GET', Uri.parse('http://localhost/')),
+    );
+    final body = await response.readAsString();
+    expect(body, contains('<main>streamed</main>'));
+    expect(body, contains('"title":"Stream"'));
+
+    ssr.close();
+    await worker.close(force: true);
+  });
 }

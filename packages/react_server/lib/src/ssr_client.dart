@@ -9,6 +9,30 @@ final class ReactSsrDocument {
   const ReactSsrDocument({required this.html, required this.props});
 }
 
+/// A chunk emitted by the generated streaming SSR worker.
+final class ReactSsrStreamChunk {
+  const ReactSsrStreamChunk._({
+    this.html = '',
+    this.props = const <String, dynamic>{},
+    this.done = false,
+  });
+
+  /// An HTML chunk. Empty for the terminal event.
+  final String html;
+
+  /// Serialized props included by the terminal event.
+  final Map<String, dynamic> props;
+
+  /// Whether this is the terminal event.
+  final bool done;
+
+  factory ReactSsrStreamChunk.html(String html) =>
+      ReactSsrStreamChunk._(html: html);
+
+  factory ReactSsrStreamChunk.complete(Map<String, dynamic> props) =>
+      ReactSsrStreamChunk._(props: props, done: true);
+}
+
 /// Native client for the generated Node SSR worker.
 final class ReactSsrClient {
   final Uri endpoint;
@@ -45,6 +69,65 @@ final class ReactSsrClient {
           ? Map<String, dynamic>.from(rawProps)
           : <String, dynamic>{},
     );
+  }
+
+  /// Streams HTML chunks from the generated Node SSR worker.
+  ///
+  /// The worker emits the shell as soon as React's streaming renderer is
+  /// ready, followed by progressively rendered HTML and a terminal chunk
+  /// containing the serialized props. The stream must be consumed to release
+  /// the underlying HTTP response.
+  Stream<ReactSsrStreamChunk> renderStream({
+    required String component,
+    required Map<String, dynamic> props,
+  }) async* {
+    final request = await _client.postUrl(endpoint);
+    request.headers.contentType = ContentType.json;
+    request.write(
+      jsonEncode({'component': component, 'props': props, 'mode': 'stream'}),
+    );
+    final response = await request.close();
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      final body = await response.transform(utf8.decoder).join();
+      throw HttpException(
+        'SSR worker returned HTTP ${response.statusCode}: $body',
+        uri: endpoint,
+      );
+    }
+
+    await for (final line
+        in response.transform(utf8.decoder).transform(const LineSplitter())) {
+      if (line.isEmpty) continue;
+      final decoded = jsonDecode(line);
+      if (decoded is! Map || decoded['type'] is! String) {
+        throw const FormatException('Invalid streaming SSR response.');
+      }
+      switch (decoded['type']) {
+        case 'start':
+          continue;
+        case 'chunk':
+          final html = decoded['html'];
+          if (html is! String) {
+            throw const FormatException('Invalid streaming SSR HTML chunk.');
+          }
+          yield ReactSsrStreamChunk.html(html);
+        case 'end':
+          final rawProps = decoded['props'];
+          yield ReactSsrStreamChunk.complete(
+            rawProps is Map
+                ? Map<String, dynamic>.from(rawProps)
+                : <String, dynamic>{},
+          );
+        case 'error':
+          throw HttpException(
+            'SSR worker stream failed: ${decoded['error'] ?? 'unknown error'}',
+            uri: endpoint,
+          );
+        default:
+          throw const FormatException('Unknown streaming SSR event.');
+      }
+    }
   }
 
   void close() => _client.close(force: true);

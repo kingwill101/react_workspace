@@ -30,6 +30,7 @@ final class RoutedReactApplication {
     this.ssr,
     this.rootComponent,
     this.pageProps = _emptyPageProps,
+    this.streamingSsr = false,
     this.authenticate,
     this.requestTimeout = const Duration(seconds: 30),
     this.maxActionBodySize = 1024 * 1024,
@@ -55,6 +56,12 @@ final class RoutedReactApplication {
 
   /// Builds the props passed to the SSR root component.
   final RoutedReactPageProps pageProps;
+
+  /// Whether document responses should be progressively streamed from React.
+  ///
+  /// Buffered rendering remains the default for compatibility. Streaming
+  /// requires an index template containing the `{{SSR}}` marker.
+  final bool streamingSsr;
 
   /// Resolves the principal used by server actions.
   final RoutedReactAuthentication? authenticate;
@@ -91,6 +98,9 @@ final class RoutedReactApplication {
 
     try {
       final props = await pageProps(context);
+      if (streamingSsr) {
+        return await _handleStreamingDocument(context, props);
+      }
       final rendered = await ssr!.render(
         component: rootComponent!,
         props: props,
@@ -102,6 +112,52 @@ final class RoutedReactApplication {
     } catch (error) {
       return context.string('SSR rendering failed: $error', statusCode: 500);
     }
+  }
+
+  Future<routed.Response> _handleStreamingDocument(
+    routed.EngineContext context,
+    Map<String, dynamic> props,
+  ) async {
+    final marker = indexTemplate.indexOf('{{SSR}}');
+    if (marker < 0) {
+      final rendered = await ssr!.render(
+        component: rootComponent!,
+        props: props,
+      );
+      return context.html(
+        indexTemplate
+            .replaceAll('{{SSR}}', rendered.html)
+            .replaceAll('{{PROPS}}', jsonEncode(rendered.props)),
+      );
+    }
+
+    context.response.headers.set('content-type', 'text/html; charset=utf-8');
+    await context.response.addStream(
+      _documentStream(props, marker).map(utf8.encode),
+    );
+    return context.response;
+  }
+
+  Stream<String> _documentStream(
+    Map<String, dynamic> props,
+    int marker,
+  ) async* {
+    final before = indexTemplate.substring(0, marker);
+    final after = indexTemplate.substring(marker + '{{SSR}}'.length);
+    yield before.replaceAll('{{PROPS}}', jsonEncode(props));
+
+    var finalProps = props;
+    await for (final chunk in ssr!.renderStream(
+      component: rootComponent!,
+      props: props,
+    )) {
+      if (chunk.done) {
+        finalProps = chunk.props;
+      } else if (chunk.html.isNotEmpty) {
+        yield chunk.html;
+      }
+    }
+    yield after.replaceAll('{{PROPS}}', jsonEncode(finalProps));
   }
 
   Future<routed.Response> _handleAction(routed.EngineContext context) async {

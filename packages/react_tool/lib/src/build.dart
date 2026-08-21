@@ -1670,6 +1670,7 @@ await import('./ssr_runtime.mjs');
 ''';
 
 const _ssrRuntime = r'''import http from 'node:http';
+import { Writable } from 'node:stream';
 
 const port = Number(process.env.REACT_SSR_PORT ?? 3001);
 
@@ -1683,6 +1684,10 @@ http.createServer((req, res) => {
         id: request.component ?? request.id,
         props: request.props ?? {},
       };
+      if (request.mode === 'stream') {
+        renderStreaming(renderRequest, res);
+        return;
+      }
       let html;
       try {
         const element = globalThis.__REACT_RENDER__(renderRequest);
@@ -1710,4 +1715,50 @@ http.createServer((req, res) => {
     }
   });
 }).listen(port, () => console.log(`React SSR worker :${port}`));
+
+function renderStreaming(renderRequest, res) {
+  let started = false;
+  let completed = false;
+  const send = event => res.write(JSON.stringify(event) + '\n');
+  const fail = error => {
+    if (completed) return;
+    completed = true;
+    if (!started) {
+      res.writeHead(500, {'content-type': 'application/json'});
+      res.end(JSON.stringify({error: String(error?.message ?? error)}));
+      return;
+    }
+    send({type: 'error', error: String(error?.message ?? error)});
+    res.end();
+  };
+
+  try {
+    const element = globalThis.__REACT_RENDER__(renderRequest);
+    const stream = globalThis.ReactDOMServer.renderToPipeableStream(element, {
+      onShellReady() {
+        started = true;
+        res.writeHead(200, {'content-type': 'application/x-ndjson'});
+        send({type: 'start'});
+        stream.pipe(new Writable({
+          write(chunk, encoding, callback) {
+            send({type: 'chunk', html: chunk.toString(encoding)});
+            callback();
+          },
+        }));
+      },
+      onAllReady() {
+        if (completed) return;
+        completed = true;
+        send({type: 'end', props: renderRequest.props});
+        res.end();
+      },
+      onShellError: fail,
+      onError: error => {
+        if (started) console.error(error);
+      },
+    });
+  } catch (error) {
+    fail(error);
+  }
+}
 ''';
