@@ -27,6 +27,7 @@ final class ReactServerApp {
   final bool streamingSsr;
   final ReactDocumentCache? documentCache;
   final ReactCacheKey cacheKey;
+  final Duration staleWhileRevalidate;
   final Object? Function(Request request)? authenticate;
 
   const ReactServerApp({
@@ -41,6 +42,7 @@ final class ReactServerApp {
     this.streamingSsr = false,
     this.documentCache,
     this.cacheKey = _defaultCacheKey,
+    this.staleWhileRevalidate = Duration.zero,
     this.authenticate,
   });
 
@@ -66,6 +68,11 @@ final class ReactServerApp {
         final key = cacheKey(request);
         final cached = streamingSsr ? null : documentCache?.get(key);
         if (cached != null) return Response.ok(cached.html);
+        final stale = streamingSsr ? null : documentCache?.getStale(key);
+        if (stale != null) {
+          unawaited(_refreshDocument(request, key));
+          return Response.ok(stale.html);
+        }
         final props = await pageProps(request);
         final metadata = await pageMetadata(request);
         final template = injectReactPageMetadata(indexTemplate, metadata);
@@ -82,7 +89,11 @@ final class ReactServerApp {
         final html = template
             .replaceAll('{{SSR}}', rendered.html)
             .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
-        documentCache?.put(key, html);
+        documentCache?.put(
+          key,
+          html,
+          staleWhileRevalidate: staleWhileRevalidate,
+        );
         return Response.ok(
           html,
           headers: {'content-type': 'text/html; charset=utf-8'},
@@ -93,6 +104,24 @@ final class ReactServerApp {
         );
       }
     };
+  }
+
+  Future<void> _refreshDocument(Request request, String key) async {
+    try {
+      final props = await pageProps(request);
+      final metadata = await pageMetadata(request);
+      final template = injectReactPageMetadata(indexTemplate, metadata);
+      final rendered = await ssr!.render(
+        component: rootComponent!,
+        props: props,
+      );
+      final html = template
+          .replaceAll('{{SSR}}', rendered.html)
+          .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
+      documentCache?.put(key, html, staleWhileRevalidate: staleWhileRevalidate);
+    } catch (_) {
+      // Keep serving the stale entry until the stale window closes.
+    }
   }
 
   Stream<List<int>> _documentStream(

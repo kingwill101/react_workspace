@@ -41,6 +41,7 @@ final class RoutedReactApplication {
     this.streamingSsr = false,
     this.documentCache,
     this.cacheKey = _defaultCacheKey,
+    this.staleWhileRevalidate = Duration.zero,
     this.authenticate,
     this.requestTimeout = const Duration(seconds: 30),
     this.maxActionBodySize = 1024 * 1024,
@@ -82,6 +83,10 @@ final class RoutedReactApplication {
   /// Selects a cache key when [documentCache] is enabled.
   final RoutedReactCacheKey cacheKey;
 
+  /// How long expired documents may be served while refreshing in the
+  /// background.
+  final Duration staleWhileRevalidate;
+
   /// Resolves the principal used by server actions.
   final RoutedReactAuthentication? authenticate;
 
@@ -119,6 +124,11 @@ final class RoutedReactApplication {
       final key = cacheKey(context);
       final cached = streamingSsr ? null : documentCache?.get(key);
       if (cached != null) return context.html(cached.html);
+      final stale = streamingSsr ? null : documentCache?.getStale(key);
+      if (stale != null) {
+        unawaited(_refreshDocument(context, key));
+        return context.html(stale.html);
+      }
       final props = await pageProps(context);
       final metadata = await pageMetadata(context);
       final template = injectReactPageMetadata(indexTemplate, metadata);
@@ -132,10 +142,31 @@ final class RoutedReactApplication {
       final html = template
           .replaceAll('{{SSR}}', rendered.html)
           .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
-      documentCache?.put(key, html);
+      documentCache?.put(key, html, staleWhileRevalidate: staleWhileRevalidate);
       return context.html(html);
     } catch (error) {
       return context.string('SSR rendering failed: $error', statusCode: 500);
+    }
+  }
+
+  Future<void> _refreshDocument(
+    routed.EngineContext context,
+    String key,
+  ) async {
+    try {
+      final props = await pageProps(context);
+      final metadata = await pageMetadata(context);
+      final template = injectReactPageMetadata(indexTemplate, metadata);
+      final rendered = await ssr!.render(
+        component: rootComponent!,
+        props: props,
+      );
+      final html = template
+          .replaceAll('{{SSR}}', rendered.html)
+          .replaceAll('{{PROPS}}', jsonEncode(rendered.props));
+      documentCache?.put(key, html, staleWhileRevalidate: staleWhileRevalidate);
+    } catch (_) {
+      // Keep serving the stale entry until the stale window closes.
     }
   }
 

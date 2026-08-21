@@ -16,4 +16,16 @@ void main() {
     await Future<void>.delayed(const Duration(milliseconds: 1));
     expect(cache.get('short'), isNull);
   });
+
+  test('keeps a stale document during the revalidation window', () async {
+    final cache = ReactDocumentCache(defaultTtl: Duration.zero);
+    cache.put(
+      'home',
+      'stale html',
+      staleWhileRevalidate: const Duration(seconds: 1),
+    );
+
+    expect(cache.get('home'), isNull);
+    expect(cache.getStale('home')?.html, 'stale html');
+  });
 }

@@ -17,13 +17,29 @@ final class ReactDocumentCache {
 
   /// Returns a live entry, or `null` when absent or expired.
   ReactCachedDocument? get(String key) {
+    return _read(key, allowStale: false);
+  }
+
+  /// Returns an expired document while it remains inside its stale window.
+  ReactCachedDocument? getStale(String key) =>
+      _read(key, allowStale: true, staleOnly: true);
+
+  ReactCachedDocument? _read(
+    String key, {
+    required bool allowStale,
+    bool staleOnly = false,
+  }) {
     final entry = _entries[key];
     if (entry == null) return null;
-    if (entry.expiresAt.isBefore(DateTime.now())) {
-      _entries.remove(key);
-      return null;
+    final now = DateTime.now();
+    if (entry.expiresAt.isAfter(now)) {
+      return staleOnly ? null : entry.document;
     }
-    return entry.document;
+    if (entry.staleUntil.isAfter(now)) {
+      return allowStale ? entry.document : null;
+    }
+    _entries.remove(key);
+    return null;
   }
 
   /// Stores a rendered document under [key].
@@ -31,6 +47,7 @@ final class ReactDocumentCache {
     String key,
     String html, {
     Duration? ttl,
+    Duration staleWhileRevalidate = Duration.zero,
     Iterable<String> tags = const <String>[],
   }) {
     while (_entries.length >= maxEntries && !_entries.containsKey(key)) {
@@ -39,6 +56,9 @@ final class ReactDocumentCache {
     _entries[key] = _CacheEntry(
       document: ReactCachedDocument(html: html, tags: tags.toSet()),
       expiresAt: DateTime.now().add(ttl ?? defaultTtl),
+      staleUntil: DateTime.now().add(
+        (ttl ?? defaultTtl) + staleWhileRevalidate,
+      ),
     );
   }
 
@@ -66,8 +86,13 @@ final class ReactCachedDocument {
 }
 
 final class _CacheEntry {
-  const _CacheEntry({required this.document, required this.expiresAt});
+  const _CacheEntry({
+    required this.document,
+    required this.expiresAt,
+    required this.staleUntil,
+  });
 
   final ReactCachedDocument document;
   final DateTime expiresAt;
+  final DateTime staleUntil;
 }
