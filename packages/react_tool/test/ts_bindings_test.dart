@@ -122,6 +122,32 @@ export const Button: React.FC<ButtonProps>;
         {'label', 'onClick'},
       );
     });
+
+    test('infers props from a forwardRef initializer', () async {
+      final local = File(p.join(npmRoot, 'forward_ref.tsx'))
+        ..writeAsStringSync('''
+export interface ButtonProps {
+  label?: string;
+  disabled: boolean;
+}
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (props, ref) => null,
+);
+''');
+
+      final result = await TsBindingExtractor(npmRoot).extract(
+        specifier: './forward_ref.tsx',
+        names: ['Button'],
+        entry: local.path,
+      );
+
+      final declaration = result.declarations.single;
+      expect(declaration.kind, 'component');
+      expect(
+        {for (final prop in declaration.props) prop.name},
+        {'label', 'disabled'},
+      );
+    });
   });
 
   group('generateBindings', () {

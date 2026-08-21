@@ -29,8 +29,8 @@ pub extern "C" fn tsb_extract(request_json: *const c_char, npm_root: *const c_ch
     let result = (|| -> Result<serde_json::Value, String> {
         let request = unsafe_cstr(request_json)?;
         let npm_root = unsafe_cstr(npm_root)?;
-        let req: serde_json::Value = serde_json::from_str(request)
-            .map_err(|e| format!("invalid request JSON: {e}"))?;
+        let req: serde_json::Value =
+            serde_json::from_str(request).map_err(|e| format!("invalid request JSON: {e}"))?;
         let specifier = req
             .get("specifier")
             .and_then(|v| v.as_str())
@@ -47,10 +47,7 @@ pub extern "C" fn tsb_extract(request_json: *const c_char, npm_root: *const c_ch
         if names.is_empty() && !all {
             return Err("empty names".into());
         }
-        let entry = req
-            .get("entry")
-            .and_then(|v| v.as_str())
-            .map(PathBuf::from);
+        let entry = req.get("entry").and_then(|v| v.as_str()).map(PathBuf::from);
         let ir = extract(&specifier, &names, Path::new(npm_root), entry, all)?;
         Ok(serde_json::json!({ "ok": ir }))
     })();
@@ -160,7 +157,10 @@ enum TyExpr {
     Array(Box<TyExpr>),
     Object(Vec<TsProp>),
     Partial(Box<TyExpr>),
-    Function { params: Vec<TsProp>, returns: Box<TyExpr> },
+    Function {
+        params: Vec<TsProp>,
+        returns: Box<TyExpr>,
+    },
     Union(Vec<TyExpr>),
     Literal(String),
     /// `Record<K, V>` (or an index-signature object) — a string-keyed map;
@@ -172,22 +172,39 @@ enum TyExpr {
     Tuple(Vec<TyExpr>),
     /// `T["k"]` (key = Some) or `T[keyof T]` (key = None). Resolved at
     /// serialization time against the declaration store.
-    IndexedAccess { object: Box<TyExpr>, key: Option<String> },
+    IndexedAccess {
+        object: Box<TyExpr>,
+        key: Option<String>,
+    },
     Other,
 }
 
 #[derive(Clone)]
 enum TsDecl {
-    Interface { props: Vec<TsProp>, extends: Vec<Heritage> },
-    Alias { ty: TyExpr },
+    Interface {
+        props: Vec<TsProp>,
+        extends: Vec<Heritage>,
+    },
+    Alias {
+        ty: TyExpr,
+    },
     /// A renderable component. `returns` carries the declared return type
     /// (when available) so discovery can tell components from plain
     /// functions by their return type.
-    Component { props: Option<TyExpr>, returns: Option<TyExpr> },
+    Component {
+        props: Option<TyExpr>,
+        returns: Option<TyExpr>,
+    },
     /// A `use*` function: formal params + return type.
-    Hook { params: Vec<TsProp>, returns: TyExpr },
+    Hook {
+        params: Vec<TsProp>,
+        returns: TyExpr,
+    },
     /// A plain function (not a component nor a hook) — e.g. `renderMatches`.
-    Function { params: Vec<TsProp>, returns: TyExpr },
+    Function {
+        params: Vec<TsProp>,
+        returns: TyExpr,
+    },
 }
 
 #[derive(Default)]
@@ -247,8 +264,21 @@ struct ParsedFile {
 // ---------------------------------------------------------------------------
 
 const BUILTINS: &[&str] = &[
-    "string", "number", "boolean", "any", "unknown", "void", "never", "null",
-    "undefined", "bigint", "symbol", "object", "function", "true", "false",
+    "string",
+    "number",
+    "boolean",
+    "any",
+    "unknown",
+    "void",
+    "never",
+    "null",
+    "undefined",
+    "bigint",
+    "symbol",
+    "object",
+    "function",
+    "true",
+    "false",
 ];
 
 fn parse_dts<'a>(allocator: &'a Allocator, source: &'a str) -> Option<ParsedFile> {
@@ -398,10 +428,9 @@ fn decl_name(decl: &Declaration) -> Option<String> {
         Declaration::TSTypeAliasDeclaration(d) => Some(d.id.name.as_str().to_string()),
         Declaration::TSEnumDeclaration(e) => Some(e.id.name.as_str().to_string()),
         Declaration::FunctionDeclaration(f) => f.id.as_ref().map(|id| id.name.as_str().to_string()),
-        Declaration::VariableDeclaration(v) => v
-            .declarations
-            .first()
-            .and_then(|d| binding_name(&d.id)),
+        Declaration::VariableDeclaration(v) => {
+            v.declarations.first().and_then(|d| binding_name(&d.id))
+        }
         _ => None,
     }
 }
@@ -426,7 +455,8 @@ fn extract_enum(e: &TSEnumDeclaration, out: &mut ParsedFile) {
     } else {
         TyExpr::Union(literals)
     };
-    out.decls.push((e.id.name.as_str().to_string(), TsDecl::Alias { ty }));
+    out.decls
+        .push((e.id.name.as_str().to_string(), TsDecl::Alias { ty }));
 }
 
 /// The literal value of a member initializer expression (`"POP"`, `0`, …).
@@ -476,10 +506,7 @@ fn extract_interface(i: &TSInterfaceDeclaration, out: &mut ParsedFile) {
     }
     let props = props_from_signatures(&i.body.body);
     let extends = i.extends.iter().filter_map(heritage).collect();
-    out.decls.push((
-        name,
-        TsDecl::Interface { props, extends },
-    ));
+    out.decls.push((name, TsDecl::Interface { props, extends }));
 }
 
 /// One `extends` / `implements` clause entry, e.g. `Omit<LinkProps, "href">`
@@ -511,10 +538,8 @@ fn heritage(h: &TSInterfaceHeritage) -> Option<Heritage> {
 
 fn extract_type_alias(a: &TSTypeAliasDeclaration, out: &mut ParsedFile) {
     let ty = ty_to_expr(&a.type_annotation);
-    out.decls.push((
-        a.id.name.as_str().to_string(),
-        TsDecl::Alias { ty },
-    ));
+    out.decls
+        .push((a.id.name.as_str().to_string(), TsDecl::Alias { ty }));
 }
 
 fn extract_function(f: &Function, exported: bool, out: &mut ParsedFile) {
@@ -531,11 +556,14 @@ fn extract_function(f: &Function, exported: bool, out: &mut ParsedFile) {
                     .as_ref()
                     .map(|ta| ty_to_expr(&ta.type_annotation))
                     .unwrap_or(TyExpr::Prim("void"));
-                out.decls.push((
-                    name.to_string(),
-                    TsDecl::Hook { params, returns },
-                ));
-            } else if name.chars().next().map(|c| c.is_uppercase()).unwrap_or(false) {
+                out.decls
+                    .push((name.to_string(), TsDecl::Hook { params, returns }));
+            } else if name
+                .chars()
+                .next()
+                .map(|c| c.is_uppercase())
+                .unwrap_or(false)
+            {
                 // PascalCase → component (e.g. `Link`, `RouterProvider`)
                 let props = f.params.items.first().and_then(|p| {
                     p.type_annotation
@@ -546,10 +574,8 @@ fn extract_function(f: &Function, exported: bool, out: &mut ParsedFile) {
                     .return_type
                     .as_ref()
                     .map(|ta| ty_to_expr(&ta.type_annotation));
-                out.decls.push((
-                    name.to_string(),
-                    TsDecl::Component { props, returns },
-                ));
+                out.decls
+                    .push((name.to_string(), TsDecl::Component { props, returns }));
             } else {
                 // lowerCamel → plain function (e.g. `renderMatches`)
                 let params = formal_params(&f.params);
@@ -558,10 +584,8 @@ fn extract_function(f: &Function, exported: bool, out: &mut ParsedFile) {
                     .as_ref()
                     .map(|ta| ty_to_expr(&ta.type_annotation))
                     .unwrap_or(TyExpr::Prim("void"));
-                out.decls.push((
-                    name.to_string(),
-                    TsDecl::Function { params, returns },
-                ));
+                out.decls
+                    .push((name.to_string(), TsDecl::Function { params, returns }));
             }
         }
     }
@@ -577,7 +601,10 @@ fn extract_variable(v: &VariableDeclaration, exported: bool, out: &mut ParsedFil
                     if let Some(props) = component_props_from_annotation(ty) {
                         out.decls.push((
                             name,
-                            TsDecl::Component { props: Some(props), returns: None },
+                            TsDecl::Component {
+                                props: Some(props),
+                                returns: None,
+                            },
                         ));
                         continue;
                     }
@@ -587,31 +614,64 @@ fn extract_variable(v: &VariableDeclaration, exported: bool, out: &mut ParsedFil
                         inner = &p.type_annotation;
                     }
                     if let TSType::TSFunctionType(f) = inner {
-                        if name.chars().next().map(|c| c.is_uppercase()).unwrap_or(false) {
+                        if name
+                            .chars()
+                            .next()
+                            .map(|c| c.is_uppercase())
+                            .unwrap_or(false)
+                        {
                             let props = f.params.items.first().and_then(|p| {
                                 p.type_annotation
                                     .as_ref()
                                     .map(|ta| ty_to_expr(&ta.type_annotation))
                             });
-                            let returns =
-                                Some(ty_to_expr(&f.return_type.type_annotation));
-                            out.decls.push((
-                                name.clone(),
-                                TsDecl::Component { props, returns },
-                            ));
+                            let returns = Some(ty_to_expr(&f.return_type.type_annotation));
+                            out.decls
+                                .push((name.clone(), TsDecl::Component { props, returns }));
                         } else {
                             let params = formal_params(&f.params);
                             let returns = ty_to_expr(&f.return_type.type_annotation);
-                            out.decls.push((
-                                name.clone(),
-                                TsDecl::Function { params, returns },
-                            ));
+                            out.decls
+                                .push((name.clone(), TsDecl::Function { params, returns }));
                         }
+                    }
+                }
+            }
+            // `const Button = React.forwardRef<Element, ButtonProps>(...)`
+            // carries its props in the second generic argument rather than a
+            // variable annotation. Preserve that common local React shape for
+            // component inference.
+            if d.type_annotation.is_none() {
+                if let Some(props) = d.init.as_ref().and_then(forward_ref_props) {
+                    if let Some(name) = binding_name(&d.id) {
+                        out.decls.push((
+                            name,
+                            TsDecl::Component {
+                                props: Some(props),
+                                returns: None,
+                            },
+                        ));
                     }
                 }
             }
         }
     }
+}
+
+fn forward_ref_props(expr: &Expression) -> Option<TyExpr> {
+    let Expression::CallExpression(call) = expr else {
+        return None;
+    };
+    let Expression::StaticMemberExpression(member) = &call.callee else {
+        return None;
+    };
+    if member.property.name.as_str() != "forwardRef" {
+        return None;
+    }
+    call.type_arguments
+        .as_ref()
+        .and_then(|args| args.params.get(1))
+        .map(ty_to_expr)
 }
 
 fn binding_name(pattern: &BindingPattern) -> Option<String> {
@@ -623,12 +683,18 @@ fn binding_name(pattern: &BindingPattern) -> Option<String> {
 
 /// `const X: React.FC<Props>` / `FC<Props>` / `ComponentType<Props>` / etc.
 fn component_props_from_annotation(ty: &TSType) -> Option<TyExpr> {
-    let TSType::TSTypeReference(r) = ty else { return None };
+    let TSType::TSTypeReference(r) = ty else {
+        return None;
+    };
     let base = type_name_base(&r.type_name);
     let matches = matches!(
         base.as_str(),
-        "FC" | "FunctionComponent" | "ComponentType" | "ExoticComponent"
-            | "ForwardRefExoticComponent" | "MemoExoticComponent" | "LazyExoticComponent"
+        "FC" | "FunctionComponent"
+            | "ComponentType"
+            | "ExoticComponent"
+            | "ForwardRefExoticComponent"
+            | "MemoExoticComponent"
+            | "LazyExoticComponent"
     );
     if !matches {
         return None;
@@ -650,7 +716,11 @@ fn props_from_signatures(sigs: &[TSSignature]) -> Vec<TsProp> {
                         .as_ref()
                         .map(|ta| ty_to_expr(&ta.type_annotation))
                         .unwrap_or(TyExpr::Other);
-                    props.push(TsProp { name, optional: p.optional, ty });
+                    props.push(TsProp {
+                        name,
+                        optional: p.optional,
+                        ty,
+                    });
                 }
             }
             TSSignature::TSMethodSignature(m) => {
@@ -685,7 +755,10 @@ fn function_expr<'a>(
         .as_ref()
         .map(|ta| ty_to_expr(&ta.type_annotation))
         .unwrap_or(TyExpr::Prim("void"));
-    TyExpr::Function { params: ps, returns: Box::new(ret) }
+    TyExpr::Function {
+        params: ps,
+        returns: Box::new(ret),
+    }
 }
 
 fn formal_params(params: &FormalParameters) -> Vec<TsProp> {
@@ -702,7 +775,11 @@ fn formal_params(params: &FormalParameters) -> Vec<TsProp> {
                 .as_ref()
                 .map(|ta| ty_to_expr(&ta.type_annotation))
                 .unwrap_or(TyExpr::Event);
-            TsProp { name, optional: p.optional, ty }
+            TsProp {
+                name,
+                optional: p.optional,
+                ty,
+            }
         })
         .collect()
 }
@@ -1009,8 +1086,13 @@ fn type_ref_to_expr(r: &TSTypeReference) -> TyExpr {
             return TyExpr::Record(Box::new(value.unwrap_or(TyExpr::Prim("any"))));
         }
         "URLSearchParams" => return TyExpr::UrlSearchParams,
-        "FC" | "FunctionComponent" | "ComponentType" | "ExoticComponent"
-        | "ForwardRefExoticComponent" | "MemoExoticComponent" | "LazyExoticComponent" => {
+        "FC"
+        | "FunctionComponent"
+        | "ComponentType"
+        | "ExoticComponent"
+        | "ForwardRefExoticComponent"
+        | "MemoExoticComponent"
+        | "LazyExoticComponent" => {
             return first().unwrap_or(TyExpr::Other);
         }
         _ => {}
@@ -1049,8 +1131,7 @@ fn is_node_return(
             }
             if seen.insert(name.clone()) {
                 let resolved = store.resolve_alias(name);
-                let is_node =
-                    matches!(store.decls.get(resolved), Some(TsDecl::Alias { ty })
+                let is_node = matches!(store.decls.get(resolved), Some(TsDecl::Alias { ty })
                         if is_node_return(ty, store, seen, depth + 1));
                 seen.remove(name);
                 is_node
@@ -1095,11 +1176,7 @@ fn make_resolver(npm_root: &Path) -> Resolver {
     Resolver::new(opts)
 }
 
-fn resolve_import(
-    resolver: &Resolver,
-    from_file: &Path,
-    specifier: &str,
-) -> Option<PathBuf> {
+fn resolve_import(resolver: &Resolver, from_file: &Path, specifier: &str) -> Option<PathBuf> {
     match resolver.resolve_dts(from_file, specifier) {
         Ok(res) => Some(resolution_path(&res)),
         Err(_) => None,
@@ -1183,8 +1260,7 @@ fn extract(
     } else {
         let pkg_dir = find_package_dir(npm_root, specifier)
             .ok_or_else(|| format!("package not found in npm root: {specifier}"))?;
-        types_entry(&pkg_dir)
-            .ok_or_else(|| format!("no .d.ts types entry for {specifier}"))?
+        types_entry(&pkg_dir).ok_or_else(|| format!("no .d.ts types entry for {specifier}"))?
     };
     if !entry.is_file() {
         return Err(format!("types entry not found: {}", entry.display()));
@@ -1230,7 +1306,10 @@ fn extract(
             }
         }
         for (local, imported) in &parsed.aliases {
-            store.aliases.entry(local.clone()).or_insert(imported.clone());
+            store
+                .aliases
+                .entry(local.clone())
+                .or_insert(imported.clone());
         }
         for follow in &parsed.follows {
             if let Some(path) = resolve_import(&resolver, &file, &follow.source) {
@@ -1320,7 +1399,10 @@ fn extract(
             };
             // Functions that don't return a React node are not components
             // (e.g. `createBrowserRouter(): RemixRouter`).
-            if let TsDecl::Component { returns: Some(ty), .. } = decl {
+            if let TsDecl::Component {
+                returns: Some(ty), ..
+            } = decl
+            {
                 if !is_node_return(ty, &store, &mut HashSet::new(), 0) {
                     skipped.push(name.clone());
                     continue;
@@ -1426,11 +1508,7 @@ fn serialize_decl(
 /// references (interfaces/aliases/other components) through the store with
 /// cycle guarding. Unions of object types are merged; non-object types
 /// collapse to a single `value` prop.
-fn props_for_expr(
-    ty: &TyExpr,
-    store: &DeclStore,
-    visiting: &mut HashSet<String>,
-) -> Vec<TsProp> {
+fn props_for_expr(ty: &TyExpr, store: &DeclStore, visiting: &mut HashSet<String>) -> Vec<TsProp> {
     match ty {
         TyExpr::Object(ps) => {
             // `__ref` markers come from intersections of named types
@@ -1483,7 +1561,10 @@ fn props_for_expr(
             merged
         }
         TyExpr::Partial(inner) => props_for_expr(inner, store, visiting),
-        TyExpr::IndexedAccess { object, key: Some(k) } => props_of(object, store, visiting)
+        TyExpr::IndexedAccess {
+            object,
+            key: Some(k),
+        } => props_of(object, store, visiting)
             .into_iter()
             .filter(|p| p.name == *k)
             .collect(),
@@ -1579,16 +1660,19 @@ fn merge_ty(a: &TyExpr, b: &TyExpr) -> TyExpr {
     match (a, b) {
         (a, b) if is_null(a) => b.clone(),
         (a, b) if is_null(b) => a.clone(),
-        (TyExpr::Literal(x), TyExpr::Literal(y)) => TyExpr::Union(vec![
-            TyExpr::Literal(x.clone()),
-            TyExpr::Literal(y.clone()),
-        ]),
-        (TyExpr::Union(us), TyExpr::Literal(l)) if us.iter().all(|m| matches!(m, TyExpr::Literal(_))) => {
+        (TyExpr::Literal(x), TyExpr::Literal(y)) => {
+            TyExpr::Union(vec![TyExpr::Literal(x.clone()), TyExpr::Literal(y.clone())])
+        }
+        (TyExpr::Union(us), TyExpr::Literal(l))
+            if us.iter().all(|m| matches!(m, TyExpr::Literal(_))) =>
+        {
             let mut v = us.clone();
             v.push(TyExpr::Literal(l.clone()));
             TyExpr::Union(v)
         }
-        (TyExpr::Literal(l), TyExpr::Union(us)) if us.iter().all(|m| matches!(m, TyExpr::Literal(_))) => {
+        (TyExpr::Literal(l), TyExpr::Union(us))
+            if us.iter().all(|m| matches!(m, TyExpr::Literal(_))) =>
+        {
             let mut v = us.clone();
             v.insert(0, TyExpr::Literal(l.clone()));
             TyExpr::Union(v)
@@ -1598,11 +1682,7 @@ fn merge_ty(a: &TyExpr, b: &TyExpr) -> TyExpr {
 }
 
 /// Members an interface inherits from one `extends` clause entry.
-fn inherited_props(
-    h: &Heritage,
-    store: &DeclStore,
-    visiting: &mut HashSet<String>,
-) -> Vec<TsProp> {
+fn inherited_props(h: &Heritage, store: &DeclStore, visiting: &mut HashSet<String>) -> Vec<TsProp> {
     let keys = |args: &[TyExpr]| -> HashSet<String> {
         args.iter()
             .filter_map(|a| match a {
@@ -1634,7 +1714,9 @@ fn inherited_props(
 /// table for `*HTMLAttributes` types that live in @types/react (which the
 /// managed environment does not install).
 fn base_members(ty: &TyExpr, store: &DeclStore, visiting: &mut HashSet<String>) -> Vec<TsProp> {
-    let TyExpr::Named(n) = ty else { return Vec::new() };
+    let TyExpr::Named(n) = ty else {
+        return Vec::new();
+    };
     let resolved = store.resolve_alias(n);
     if visiting.contains(resolved) {
         return Vec::new();
@@ -1659,7 +1741,11 @@ fn dom_attribute_members(base: &str) -> Vec<TsProp> {
     }
     let mut v = Vec::new();
     let mut push = |name: &str, ty: TyExpr| {
-        v.push(TsProp { name: name.to_string(), optional: true, ty });
+        v.push(TsProp {
+            name: name.to_string(),
+            optional: true,
+            ty,
+        });
     };
     push("children", TyExpr::ReactNode);
     push("className", TyExpr::Prim("string"));
@@ -1826,13 +1912,12 @@ fn serialize_ty(
                     literals: Some(literals),
                     ..Default::default()
                 }
-            } else if members
-                .iter()
-                .all(|m| matches!(
+            } else if members.iter().all(|m| {
+                matches!(
                     m,
                     TyExpr::Prim("string") | TyExpr::Prim("number") | TyExpr::Prim("boolean")
-                ))
-            {
+                )
+            }) {
                 IrType {
                     kind: "union".into(),
                     members: Some(
@@ -1918,10 +2003,7 @@ fn serialize_ty(
 fn is_objectish(ty: &TyExpr) -> bool {
     matches!(
         ty,
-        TyExpr::Named(_)
-            | TyExpr::Object(_)
-            | TyExpr::Partial(_)
-            | TyExpr::IndexedAccess { .. }
+        TyExpr::Named(_) | TyExpr::Object(_) | TyExpr::Partial(_) | TyExpr::IndexedAccess { .. }
     )
 }
 
@@ -1962,7 +2044,10 @@ fn props_of(ty: &TyExpr, store: &DeclStore, visiting: &mut HashSet<String>) -> V
                 p
             })
             .collect(),
-        TyExpr::IndexedAccess { object, key: Some(k) } => props_of(object, store, visiting)
+        TyExpr::IndexedAccess {
+            object,
+            key: Some(k),
+        } => props_of(object, store, visiting)
             .into_iter()
             .filter(|p| p.name == *k)
             .collect(),
@@ -2024,8 +2109,14 @@ mod tests {
     #[test]
     fn extracts_memory_router_props_from_react_router_dom() {
         let root = npm_root();
-        if !root.join("node_modules/react-router-dom/package.json").is_file() {
-            eprintln!("skipping: react-router-dom not installed at {}", root.display());
+        if !root
+            .join("node_modules/react-router-dom/package.json")
+            .is_file()
+        {
+            eprintln!(
+                "skipping: react-router-dom not installed at {}",
+                root.display()
+            );
             return;
         }
         let names = vec!["MemoryRouter".to_string(), "Route".to_string()];
@@ -2045,10 +2136,7 @@ mod tests {
             let required = p["required"].as_bool().unwrap();
             let kind = p["ty"]["kind"].as_str().unwrap();
             assert!(!required, "all MemoryRouterProps are optional: {p:?}");
-            assert!(
-                !matches!(kind, "null"),
-                "no null kinds leaked: {p:?}"
-            );
+            assert!(!matches!(kind, "null"), "no null kinds leaked: {p:?}");
         }
         // initialEntries: InitialEntry[] → array
         let entries = props
@@ -2075,7 +2163,10 @@ mod tests {
     #[test]
     fn extracts_interface_and_type_alias() {
         let root = npm_root();
-        if !root.join("node_modules/react-router-dom/package.json").is_file() {
+        if !root
+            .join("node_modules/react-router-dom/package.json")
+            .is_file()
+        {
             return;
         }
         let names = vec!["MemoryRouterProps".to_string()];
@@ -2087,13 +2178,22 @@ mod tests {
     #[test]
     fn extracts_link_via_forward_ref_exotic_component() {
         let root = npm_root();
-        if !root.join("node_modules/react-router-dom/package.json").is_file() {
+        if !root
+            .join("node_modules/react-router-dom/package.json")
+            .is_file()
+        {
             return;
         }
         // Link is `export declare const Link: React.ForwardRefExoticComponent<...>`
         // — requires the rightmost-segment base-name resolution.
-        let out = extract("react-router-dom", &["Link".to_string()], &root, None, false)
-            .expect("extract");
+        let out = extract(
+            "react-router-dom",
+            &["Link".to_string()],
+            &root,
+            None,
+            false,
+        )
+        .expect("extract");
         let d = &out["declarations"][0];
         assert_eq!(d["name"], "Link");
         assert_eq!(d["kind"], "component");
@@ -2110,7 +2210,10 @@ mod tests {
     #[test]
     fn extracts_static_router_from_server_subpath() {
         let root = npm_root();
-        if !root.join("node_modules/react-router-dom/package.json").is_file() {
+        if !root
+            .join("node_modules/react-router-dom/package.json")
+            .is_file()
+        {
             return;
         }
         // StaticRouter is exported from `react-router-dom/server`, not the
@@ -2134,7 +2237,10 @@ mod tests {
     #[test]
     fn missing_name_is_an_error() {
         let root = npm_root();
-        if !root.join("node_modules/react-router-dom/package.json").is_file() {
+        if !root
+            .join("node_modules/react-router-dom/package.json")
+            .is_file()
+        {
             return;
         }
         let names = vec!["DoesNotExist".to_string()];
@@ -2145,29 +2251,33 @@ mod tests {
     #[test]
     fn discovers_components_and_hooks_without_a_name_list() {
         let root = npm_root();
-        if !root.join("node_modules/react-router-dom/package.json").is_file() {
+        if !root
+            .join("node_modules/react-router-dom/package.json")
+            .is_file()
+        {
             return;
         }
         let out = extract("react-router-dom", &[], &root, None, true).expect("discover");
         let decls = out["declarations"].as_array().unwrap();
         let skipped = out["skipped"].as_array().unwrap();
-        let names: Vec<&str> = decls
-            .iter()
-            .map(|d| d["name"].as_str().unwrap())
-            .collect();
+        let names: Vec<&str> = decls.iter().map(|d| d["name"].as_str().unwrap()).collect();
 
         // Renderable components discovered through the public surface.
-        for want in ["BrowserRouter", "MemoryRouter", "Routes", "Route", "Link", "NavLink"] {
+        for want in [
+            "BrowserRouter",
+            "MemoryRouter",
+            "Routes",
+            "Route",
+            "Link",
+            "NavLink",
+        ] {
             assert!(names.contains(&want), "missing {want} in {names:?}");
         }
         // Hooks discovered alongside components.
         assert!(names.contains(&"useSearchParams"), "names: {names:?}");
         // Functions that don't return a React node are filtered out, not
         // emitted as components.
-        let skipped_names: Vec<&str> = skipped
-            .iter()
-            .filter_map(|s| s.as_str())
-            .collect();
+        let skipped_names: Vec<&str> = skipped.iter().filter_map(|s| s.as_str()).collect();
         assert!(
             skipped_names.contains(&"createBrowserRouter"),
             "expected createBrowserRouter skipped, got {skipped_names:?}"
@@ -2207,35 +2317,63 @@ mod hook_tests {
     #[test]
     fn extracts_use_params_as_record() {
         let root = npm_root();
-        if !root.join("node_modules/react-router-dom/package.json").is_file() {
-            eprintln!("skipping: react-router-dom not installed at {}", root.display());
+        if !root
+            .join("node_modules/react-router-dom/package.json")
+            .is_file()
+        {
+            eprintln!(
+                "skipping: react-router-dom not installed at {}",
+                root.display()
+            );
             return;
         }
-        let out = extract("react-router-dom", &["useParams".to_string()], &root, None, false).expect("extract");
+        let out = extract(
+            "react-router-dom",
+            &["useParams".to_string()],
+            &root,
+            None,
+            false,
+        )
+        .expect("extract");
         let decls = out["declarations"].as_array().unwrap();
         assert_eq!(decls.len(), 1);
         let decl = &decls[0];
         assert_eq!(decl["kind"], "hook");
         let returns = &decl["returns"];
         eprintln!("useParams returns: {returns}");
-        let nav = extract("react-router-dom", &["useNavigation".to_string()], &root, None, false).expect("nav");
+        let nav = extract(
+            "react-router-dom",
+            &["useNavigation".to_string()],
+            &root,
+            None,
+            false,
+        )
+        .expect("nav");
         eprintln!("useNavigation: {}", nav["declarations"][0]["returns"]);
     }
 
     #[test]
     fn extracts_hook_shape() {
         let root = npm_root();
-        if !root.join("node_modules/react-router-dom/package.json").is_file() {
+        if !root
+            .join("node_modules/react-router-dom/package.json")
+            .is_file()
+        {
             eprintln!("skipping");
             return;
         }
         let out = extract(
             "react-router-dom",
-            &["useLocation".to_string(), "useNavigate".to_string(), "useSearchParams".to_string()],
+            &[
+                "useLocation".to_string(),
+                "useNavigate".to_string(),
+                "useSearchParams".to_string(),
+            ],
             &root,
             None,
             false,
-        ).expect("extract");
+        )
+        .expect("extract");
         let decls = out["declarations"].as_array().unwrap();
         for d in decls {
             eprintln!("{}: {}", d["name"], d["kind"]);
