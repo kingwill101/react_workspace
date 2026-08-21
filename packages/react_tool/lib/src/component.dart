@@ -104,7 +104,7 @@ final class _AddComponentCommand extends Command<void> {
     final name = _validateScalar(
       shorthand
           ? exportName == 'default'
-                ? _defaultNpmComponentName(module)
+                ? defaultNpmComponentName(module)
                 : exportName
           : rest[0],
       'runtime name',
@@ -157,8 +157,9 @@ final class _AddComponentCommand extends Command<void> {
         'A foreign component named "$name" is already declared.',
       );
     }
+    final original = reactFile.readAsStringSync();
     var updated = addForeignComponentYaml(
-      reactFile.readAsStringSync(),
+      original,
       name: name,
       module: module,
       exportName: exportName,
@@ -177,13 +178,18 @@ final class _AddComponentCommand extends Command<void> {
       }
       updated = addStylesheetYaml(updated, style);
     }
-    reactFile.writeAsStringSync(updated);
-    info('Declared $name from $module in ${reactFile.path}.');
-    await generateAndValidateForeignComponents(
-      config,
-      validate: option('validate') as bool? ?? true,
-      log: line,
-    );
+    try {
+      reactFile.writeAsStringSync(updated);
+      info('Declared $name from $module in ${reactFile.path}.');
+      await generateAndValidateForeignComponents(
+        config,
+        validate: option('validate') as bool? ?? true,
+        log: line,
+      );
+    } catch (_) {
+      reactFile.writeAsStringSync(original);
+      rethrow;
+    }
   }
 }
 
@@ -441,7 +447,8 @@ String _validateIdentifier(String value) {
   return value;
 }
 
-String _defaultNpmComponentName(String module) => p
+/// Derives a stable runtime name for the npm shorthand form of `component add`.
+String defaultNpmComponentName(String module) => p
     .basename(module)
     .split(RegExp(r'[-_]'))
     .where((part) => part.isNotEmpty)
