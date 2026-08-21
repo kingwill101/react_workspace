@@ -1,0 +1,58 @@
+import 'package:react_tool/src/component.dart';
+import 'package:react_tool/src/project_config.dart';
+import 'package:test/test.dart';
+
+void main() {
+  test('adds a component to an existing structured foreign block', () {
+    const source = '''
+client: web/client.dart
+foreign:
+  components:
+    - name: design.Button
+      module: web/button.tsx
+      export: Button
+  modules:
+    - web/legacy.mjs
+''';
+
+    final updated = addForeignComponentYaml(
+      source,
+      name: 'design.Card',
+      module: 'web/card.tsx',
+      exportName: 'Card',
+      props: {'className': 'String?', 'onClick': 'Function?'},
+    );
+
+    expect(
+      updated.indexOf("name: 'design.Card'"),
+      lessThan(updated.indexOf('modules:')),
+    );
+    expect(updated, contains("className: 'String?'"));
+    expect(updated, contains("onClick: 'Function?'"));
+  });
+
+  test('adds a new foreign block without disturbing other configuration', () {
+    final updated = addForeignComponentYaml(
+      'client: web/client.dart\n',
+      name: 'design.Button',
+      module: 'web/button.tsx',
+      exportName: 'Button',
+    );
+
+    expect(updated, startsWith('client: web/client.dart\n'));
+    expect(updated, contains('foreign:\n  components:'));
+    expect(updated, contains("name: 'design.Button'"));
+  });
+
+  test('rejects the legacy list-shaped foreign block', () {
+    expect(
+      () => addForeignComponentYaml(
+        'foreign:\n  - name: Old\n    module: web/old.js\n',
+        name: 'New',
+        module: 'web/new.js',
+        exportName: 'default',
+      ),
+      throwsA(isA<ReactToolException>()),
+    );
+  });
+}

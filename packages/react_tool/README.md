@@ -31,6 +31,7 @@ The CLI provides commands to manage the full lifecycle of a React Dart project:
 - `react prerender --routes /,/about [--output build/prerendered]` - Build the project, boot its real SSR server, and write selected routes as static HTML.
 - `react serve [--watch] [--release] [--no-ssr]` - Build the project and run the Dart server (and SSR worker if configured) locally.
 - `react clean` - Remove `build/react/`, `lib/.generated/`, and other React-owned generated outputs.
+- `react component add <name> <module> [<prop:type> ...]` - Add a local foreign React component declaration.
 - `react js install` - Install exact wrapper versions into `.dart_tool/react/js`.
 - `react js sync` - Validate that the host JS project satisfies every wrapper.
 - `react ts bind <specifier> [<names...>]` - Generate typed Dart bindings from TypeScript declarations for seamless interop with NPM packages.
@@ -166,6 +167,19 @@ foreign:
       props:
         className: String?
 ```
+
+The declaration can also be added interactively through the CLI. The command
+edits only the structured `foreign.components` section and preserves the rest
+of `react.yaml`:
+
+```console
+dart run react_tool:react component add design.Button \
+  web/components/ui/button.tsx \
+  variant:String? disabled:bool? onClick:Function?
+```
+
+Use `--export Button` for a named export; the default export is assumed when
+the option is omitted.
 
 The component name is also its runtime registration key. Dotted names are
 useful for avoiding collisions between design systems, packages, and local

@@ -7,6 +7,7 @@ import 'package:path/path.dart' as p;
 import 'build.dart';
 import 'bundler/dart_usage.dart';
 import 'bundler/bundle_manifest.dart';
+import 'component.dart';
 import 'project_config.dart';
 import 'scaffold.dart';
 import 'ts_bindings.dart';
@@ -26,6 +27,7 @@ class ReactCommandRunner extends CommandRunner<void> {
     addCommand(PrerenderCommand());
     addCommand(CleanCommand());
     addCommand(ServeCommand());
+    addCommand(ComponentCommand());
     addCommand(JsCommand());
     addCommand(TsCommand());
     addCommand(AnalyzeCommand());
