@@ -236,11 +236,13 @@ Future<void> generateAndValidateForeignComponents(
 }
 
 /// Infers Dart-facing prop types for a named component in a local TypeScript
-/// module.
+/// module or npm package.
 ///
 /// The module must expose a typed component declaration that the TypeScript
 /// extractor can identify. This is intentionally shared by the generic and
 /// convenience component commands so there is one inference path to maintain.
+/// Missing npm packages are provisioned into the managed JS environment using
+/// [npmVersion].
 Future<Map<String, String>> inferForeignComponentProps({
   required ReactProjectConfig config,
   required String module,
@@ -263,8 +265,7 @@ Future<Map<String, String>> inferForeignComponentProps({
             ?.npmRoot;
   if (npmRoot == null) {
     throw const ReactToolException(
-      'Cannot infer props without a Node dependency root. Run `npm install` '
-      'or `react js install` first.',
+      'Cannot infer props without a Node dependency root.',
     );
   }
 

@@ -202,9 +202,10 @@ same build path as application styles.
 
 Use `--export Button` for a named export; the default export is assumed when
 the option is omitted. Add `--infer` to derive the prop surface from a local
-TypeScript declaration or an installed npm package. Inference requires a
-named export and a Node dependency root (`node_modules` or the managed JS
-environment):
+TypeScript declaration or an npm package. Inference requires a named export.
+For an npm package that is not already available in the project, `react_tool`
+provisions it in the managed JS environment automatically. Use `--version` to
+choose the npm range; it defaults to `*`:
 
 ```console
 dart run react_tool:react component add design.Button \
@@ -229,6 +230,11 @@ environment used by the foreign bundler:
 dart run react_tool:react component add dialog.Root \
   @radix-ui/react-dialog --export Dialog.Root --version '^1.0.0'
 ```
+
+The same dependency and version are used during `--infer`, so a first run can
+resolve, inspect, and declare a package in one command. Local TypeScript
+modules still need to be reachable from the project or managed Node
+environment.
 
 For npm modules, the runtime name can be derived from the export and omitted:
 
