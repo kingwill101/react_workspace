@@ -151,6 +151,7 @@ final class _AddComponentCommand extends Command<void> {
         config: config,
         module: module,
         exportName: exportName,
+        npmVersion: option('version') as String? ?? '*',
       );
       for (final entry in inferred.entries) {
         props.putIfAbsent(entry.key, () => entry.value);
@@ -244,16 +245,22 @@ Future<Map<String, String>> inferForeignComponentProps({
   required ReactProjectConfig config,
   required String module,
   required String exportName,
+  String npmVersion = '*',
 }) async {
   final moduleFile = config.file(module);
   final localModule = moduleFile.existsSync();
-  final npmRoot = Directory('${config.root.path}/node_modules').existsSync()
+  final projectNpmRoot = Directory('${config.root.path}/node_modules');
+  final packageInstalled = Directory(
+    p.join(projectNpmRoot.path, module),
+  ).existsSync();
+  final npmRoot = localModule || packageInstalled
       ? config.root.path
       : (await ReactBuilder(
-          config: config,
-          release: false,
-          log: (_) {},
-        ).ensureJsEnvironment())?.npmRoot;
+              config: config,
+              release: false,
+              log: (_) {},
+            ).ensureJsEnvironment(additionalDependencies: {module: npmVersion}))
+            ?.npmRoot;
   if (npmRoot == null) {
     throw const ReactToolException(
       'Cannot infer props without a Node dependency root. Run `npm install` '

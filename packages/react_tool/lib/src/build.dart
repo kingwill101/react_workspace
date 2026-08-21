@@ -63,7 +63,9 @@ final class ReactBuilder {
 
   /// Provisions (or validates) the JS environment for wrapper packages.
   /// Public so `react js install` can surface provisioning errors early.
-  Future<JsEnvironment?> ensureJsEnvironment() => _prepareJsEnvironment();
+  Future<JsEnvironment?> ensureJsEnvironment({
+    Map<String, String> additionalDependencies = const {},
+  }) => _prepareJsEnvironment(additionalDependencies: additionalDependencies);
 
   /// Runs Dart code generation and syncs every generated source into the
   /// hidden `lib/.generated/` tree without compiling browser or SSR bundles.
@@ -1016,12 +1018,15 @@ final class ReactBuilder {
   /// Provisions the managed JS environment (or validates the host one) for
   /// the wrapper packages in the dependency graph. Also required when the
   /// project declares foreign modules/components directly.
-  Future<JsEnvironment?> _prepareJsEnvironment() async {
+  Future<JsEnvironment?> _prepareJsEnvironment({
+    Map<String, String> additionalDependencies = const {},
+  }) async {
     final wrappers = await _discoverWrappers();
     final needsEnvironment =
         config.foreignComponents.isNotEmpty ||
         config.foreignModules.isNotEmpty ||
         config.foreignDependencies.isNotEmpty ||
+        additionalDependencies.isNotEmpty ||
         // The SSR bootstrap always imports React and ReactDOM/server, so the
         // worker needs a JS environment even without foreign modules.
         config.ssrEntrypoint != null ||
@@ -1038,7 +1043,11 @@ final class ReactBuilder {
           managedReactVersion ?? ReactVersionPolicy.managedVersion,
       bundlingBackend: config.bundlingBackend,
     );
-    final allWrappers = config.foreignDependencies.isEmpty
+    final projectDependencies = {
+      ...config.foreignDependencies,
+      ...additionalDependencies,
+    };
+    final allWrappers = projectDependencies.isEmpty
         ? wrappers
         : [
             ...wrappers,
@@ -1048,7 +1057,7 @@ final class ReactBuilder {
               // participate in requirement collection without making it a
               // wrapper entry for the foreign bundler.
               entries: {'shared': ''},
-              dependencies: config.foreignDependencies,
+              dependencies: projectDependencies,
             ),
           ];
     return builder.ensure(allWrappers, required: needsEnvironment);

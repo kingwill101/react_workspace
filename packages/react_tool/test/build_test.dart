@@ -171,6 +171,32 @@ $accent: #336699;
     },
   );
 
+  test('managed environment accepts temporary npm dependencies', () async {
+    final config = ReactProjectConfig.load(root);
+    final builder = ReactBuilder(
+      config: config,
+      release: false,
+      log: (_) {},
+      npmCommand: await writeNpmStub(root),
+    );
+
+    await builder.ensureJsEnvironment(
+      additionalDependencies: {'component-library': '^2.0.0'},
+    );
+
+    final manifest =
+        jsonDecode(
+              await File(
+                '${root.path}/.dart_tool/react/js/package.json',
+              ).readAsString(),
+            )
+            as Map<String, dynamic>;
+    expect(
+      (manifest['dependencies'] as Map<String, dynamic>)['component-library'],
+      '2.1.0',
+    );
+  });
+
   test('removes synchronized generated sources', () async {
     final generated = Directory('${root.path}/lib/.generated');
     await generated.create(recursive: true);
