@@ -9,6 +9,7 @@ import 'package:path/path.dart' as p;
 import 'package:react_server/react_server.dart';
 import 'package:react_server_routed/react_server_routed.dart';
 import 'package:react_testing/react_testing.dart';
+import 'package:react_tool/react_tool.dart' show ReactVersionPolicy;
 import 'package:routed_core/routed_core.dart';
 import 'package:routed_testing/routed_testing.dart';
 import 'package:server_testing/server_testing.dart';
@@ -19,7 +20,10 @@ void main() {
 
   setUpAll(() async {
     final packageRoot = await _resolveProjectRootFromTestHarness();
-    final testHarness = await ReactTestHarness.start(projectRoot: packageRoot);
+    final testHarness = await ReactTestHarness.start(
+      projectRoot: packageRoot,
+      reactVersion: ReactVersionPolicy.compatibilityBaselines.last,
+    );
     harness = testHarness;
     final registry = ServerFunctionRegistry();
     registerServerActions(registry: registry);

@@ -7,13 +7,14 @@ final _memoizedComponents = <String, Map<Object?, JSAny>>{};
 final _forwardRefComponents = <Function, JSAny>{};
 final _lazyComponents = <Function, JSAny>{};
 
+/// Registers the component factory used by the generated Node SSR worker.
 ///
-/// The [factory] receives a component [id] and [props], and returns a
-/// [ReactNode] tree.  The tree is expanded to JS React elements via
-/// [React.createElement], producing a tree that
-/// [ReactDOMServer.renderToString] can serialize.
+/// The [factory] receives a component `id` and `props`, and returns a
+/// [ReactNode] tree. The tree is expanded to JavaScript React elements via
+/// `React.createElement`, producing a tree that
+/// `ReactDOMServer.renderToString` can serialize.
 ///
-/// Component nodes are emitted as [React.createElement(comp, toJSProps)]
+/// Component nodes are emitted as `React.createElement(comp, toJSProps)`
 /// so that React sets up the proper hooks context during rendering.
 /// Intrinsic, Text, Fragment, and Empty nodes are expanded inline.
 void registerGlobalRenderer(

@@ -28,17 +28,16 @@ Add `react_testing` to your `dev_dependencies`:
 
 ```yaml
 dev_dependencies:
-  react_testing:
-    path: packages/react_testing
+  react_testing: ^0.1.0
 ```
 
 Add the adapter for the server being tested alongside `server_testing`:
 
 ```yaml
 dev_dependencies:
-  server_testing: 0.4.0
+  server_testing: ^0.4.0
   # For Shelf:
-  server_testing_shelf: 0.4.0
+  server_testing_shelf: ^0.4.0
   # For Routed, use the same source/ref as routed_core:
   routed_testing:
     git:

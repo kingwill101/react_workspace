@@ -8,10 +8,8 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  react_actions:
-    path: ../react_actions
-  react_server:
-    path: ../react_server
+  react_actions: ^0.1.0
+  react_server: ^0.1.0
   routed_core: ^0.4.0
 
 dev_dependencies:

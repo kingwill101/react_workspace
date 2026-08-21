@@ -28,29 +28,40 @@ final class ReactTestHarness {
 
   /// Builds [projectRoot] and starts its generated SSR worker.
   ///
+  /// [reactVersion] overrides the managed React and React DOM version so the
+  /// same project can be exercised at each supported compatibility boundary.
+  ///
   /// [buildTimeout] covers the complete code-generation, browser compilation,
   /// SSR compilation, and bundling pipeline.
+  ///
+  /// [runCodegen] may be disabled by an orchestrator that has already run a
+  /// workspace-wide build and synchronized its generated sources.
   static Future<ReactTestHarness> start({
     required Directory projectRoot,
     bool release = false,
     bool ssr = true,
-    Duration buildTimeout = const Duration(minutes: 5),
+    bool runCodegen = true,
+    String? reactVersion,
+    Duration buildTimeout = const Duration(minutes: 10),
   }) async {
     final config = ReactProjectConfig.load(projectRoot);
     final buildLogs = <String>[];
     try {
       await ReactBuilder(
-        config: config,
-        release: release,
-        log: (m) => buildLogs.add(m),
-      ).build().timeout(
-        buildTimeout,
-        onTimeout: () => throw ReactToolException(
-          'Timed out building ${projectRoot.path} after '
-          '${buildTimeout.inSeconds}s.\n'
-          'Logs:\n${buildLogs.take(50).join('\n')}',
-        ),
-      );
+            config: config,
+            release: release,
+            managedReactVersion: reactVersion,
+            log: (m) => buildLogs.add(m),
+          )
+          .build(runCodegen: runCodegen)
+          .timeout(
+            buildTimeout,
+            onTimeout: () => throw ReactToolException(
+              'Timed out building ${projectRoot.path} after '
+              '${buildTimeout.inSeconds}s.\n'
+              'Logs:\n${buildLogs.take(50).join('\n')}',
+            ),
+          );
     } catch (e) {
       throw ReactToolException(
         'Failed to build ${projectRoot.path}: $e\n'
