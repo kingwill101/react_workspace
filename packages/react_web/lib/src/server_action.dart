@@ -1,5 +1,11 @@
+import 'dart:async';
+
 import 'package:react/react.dart';
 import 'package:react_actions/react_actions.dart';
+
+import 'generated/react_events.dart';
+import 'generated/web/html.dart';
+import 'generated/web/xhr.dart';
 
 /// The state and invoker returned by [useServerAction].
 final class ServerActionState<TArgs, TResult> {
@@ -63,4 +69,21 @@ ServerActionState<TArgs, TResult> useServerAction<TArgs, TResult>(
     error: error,
     invoke: invoke,
   );
+}
+
+/// Creates a form submit handler for a [ServerActionState].
+///
+/// [decode] converts the browser [FormData] into the generated action's typed
+/// argument record. The handler prevents native navigation and ignores a
+/// second submit while the action is pending.
+void Function(ReactFormEvent) serverActionSubmit<TArgs, TResult>(
+  ServerActionState<TArgs, TResult> action,
+  TArgs Function(FormData data) decode,
+) {
+  return (event) {
+    event.preventDefault();
+    if (action.pending) return;
+    final form = event.currentTarget as HTMLFormElement;
+    unawaited(action.invoke(decode(FormData(form))));
+  };
 }
