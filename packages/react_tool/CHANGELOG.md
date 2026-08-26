@@ -2,6 +2,7 @@
 
 - Keeps hook-only native build dependencies out of the runtime dependency list.
 - Classifies the native hook toolchain as development-only dependencies.
+- Documents the intentional hook-only imports for static analysis.
 
 ## 0.1.0
 
