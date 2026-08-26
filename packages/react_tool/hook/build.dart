@@ -1,7 +1,3 @@
-// These packages are intentionally dev dependencies: they are consumed only
-// by the package build hook and are not part of react_tool's runtime API.
-// ignore_for_file: depend_on_referenced_packages
-
 import 'dart:io';
 
 import 'package:code_assets/code_assets.dart';
