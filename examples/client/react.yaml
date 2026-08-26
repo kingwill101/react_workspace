@@ -6,6 +6,15 @@ styles:
   output: styles.css
 
 foreign:
+  # The managed JS environment is intentionally independent of the example's
+  # optional npm install. Declare runtime imports used by local TSX sources so
+  # clean builds and CI provision the same dependency graph.
+  dependencies:
+    '@radix-ui/react-label': '^2.1.15'
+    '@radix-ui/react-separator': '^1.1.15'
+    'class-variance-authority': '^0.7.1'
+    clsx: '^2.1.1'
+    'tailwind-merge': '^3.6.0'
   components:
     - name: shadcn.Button
       module: web/components/ui/button.tsx
