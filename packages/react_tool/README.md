@@ -28,6 +28,31 @@ Alternatively, run it directly from your project via `dart run`:
 dart run react_tool:react doctor
 ```
 
+### Native extractor prebuilts
+
+`react_tool` uses `native_prebuilt` for its Rust/Oxc TypeScript extractor. A
+published package first resolves the verified native artifact from the
+`react_tool-native-v*` GitHub release and falls back to compiling `native/`
+when no matching artifact is available. Workspace checkouts always compile the
+current Rust source so local changes are exercised.
+
+The release metadata lives in `native_prebuilt.yaml` and the generated
+manifest is `lib/src/hook/react_tool_prebuilts.g.dart`. Once the release exists,
+verify its downloaded artifact metadata with:
+
+```console
+dart pub get
+dart test
+dart run native_prebuilt manifest verify \
+  --config packages/react_tool/native_prebuilt.yaml \
+  --output packages/react_tool/lib/src/hook/react_tool_prebuilts.g.dart
+```
+
+The repository workflow `.github/workflows/react_tool_prebuilt.yml` builds the
+Linux x64 artifact, verifies pull requests, and can publish a tagged GitHub
+release through `workflow_dispatch`. The generated manifest must be committed
+after the first release so consumers can use the verified artifact.
+
 ## CLI Commands
 
 The CLI provides commands to manage the full lifecycle of a React Dart project:

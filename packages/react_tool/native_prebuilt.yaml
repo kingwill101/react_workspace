@@ -1,0 +1,13 @@
+schema: 1
+package: react_tool
+asset_name: src/ts_bindings.g.dart
+library_stem: react_ts_bindings
+release:
+  provider: github
+  repository: kingwill101/react_workspace
+  tag: react_tool-native-v0.1.0
+artifacts:
+  linux-x64:
+    archive: react_tool-linux-x64.tar.gz
+    payload:
+      type: dynamic_library
