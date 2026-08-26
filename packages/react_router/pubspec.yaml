@@ -1,6 +1,7 @@
 name: react_router
 description: Typed React Router bindings for React Dart applications.
 version: 0.0.1
+publish_to: none
 repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_router
 resolution: workspace
 environment:

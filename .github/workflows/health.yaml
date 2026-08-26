@@ -1,0 +1,35 @@
+name: Health
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  health:
+    uses: dart-lang/ecosystem/.github/workflows/health.yaml@main
+    with:
+      sdk: stable
+      checks: "version,changelog,license,breaking,do-not-submit,leaking,unused-dependencies"
+      # `version` is documented by older Firehose releases but is not a
+      # supported health check in the current reusable workflow.
+      fail_on: "changelog,do-not-submit,unused-dependencies"
+      warn_on: "license,breaking,leaking"
+      ignore_packages: >-
+        packages/react_analysis,
+        packages/react_analyzer,
+        packages/react_bloc,
+        packages/react_codegen,
+        packages/react_router,
+        packages/react_server_routed,
+        packages/react_server_shelf,
+        packages/react_testing,
+        packages/react_tool,
+        packages/react_web_generator,
+        packages/react_zustand,
+        packages/react_riverpod,
+        examples/**,
+        tool/vendor/**,
+        third_party/**
+    permissions:
+      pull-requests: write
