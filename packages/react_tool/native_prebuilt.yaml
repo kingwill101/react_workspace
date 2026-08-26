@@ -1,0 +1,33 @@
+schema: 2
+package: react_tool
+asset_name: src/ts_bindings.g.dart
+library_stem: react_ts_bindings
+release:
+  provider: github
+  repository: kingwill101/react_workspace
+  tag: react_tool-native-v0.1.0
+source:
+  type: local
+  paths:
+    - .
+build:
+  recipes:
+    - target:
+        os: linux
+        architecture: x64
+      steps:
+        - id: cargo-build
+          type: command
+          working_directory: .
+          commands:
+            - [cargo, build, --release, --manifest-path, native/Cargo.toml]
+        - id: export
+          type: export_artifact
+          artifact: react_ts_bindings
+          kind: dynamic_library
+          primary: native/target/release/libreact_ts_bindings.so
+artifacts:
+  linux-x64:
+    archive: react_tool-linux-x64.tar.gz
+    payload:
+      type: dynamic_library

@@ -1,0 +1,116 @@
+name: react_tool native prebuilts
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: GitHub Release tag for the native artifact
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  CONFIG: packages/react_tool/native_prebuilt.yaml
+  MANIFEST_OUTPUT: packages/react_tool/lib/src/hook/react_tool_prebuilts.g.dart
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: true
+      - uses: dart-lang/setup-dart@v1
+      - name: Install Rust build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential pkg-config
+      - run: dart pub get
+      - name: Build and test react_tool from source
+        working-directory: packages/react_tool
+        run: dart test
+      - name: Build and stage native library
+        working-directory: packages/react_tool
+        run: dart run native_prebuilt build --target linux-x64 --from-source --output ../../built-library
+      - uses: actions/upload-artifact@v6
+        with:
+          name: linux-x64-built-library
+          path: built-library/
+          if-no-files-found: error
+
+  verify:
+    if: github.event_name == 'pull_request'
+    needs: build-linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dart-lang/setup-dart@v1
+      - uses: actions/download-artifact@v7
+        with:
+          name: linux-x64-built-library
+          path: built-library/
+      - run: dart pub get
+      - name: Prepare manifest validation config
+        run: |
+          cp "$CONFIG" "$RUNNER_TEMP/native_prebuilt.yaml"
+          sed -i '/^source:/,/^build:/{ /^build:/!d; }' "$RUNNER_TEMP/native_prebuilt.yaml"
+      - name: Verify native prebuilt manifest
+        run: |
+          dart run native_prebuilt manifest update \
+            --config "$RUNNER_TEMP/native_prebuilt.yaml" \
+            --output "$RUNNER_TEMP/react_tool_prebuilts.g.dart" \
+            --built-library-dir built-library
+          dart run native_prebuilt manifest verify \
+            --config "$RUNNER_TEMP/native_prebuilt.yaml" \
+            --output "$RUNNER_TEMP/react_tool_prebuilts.g.dart" \
+            --built-library-dir built-library
+
+  release:
+    if: github.event_name == 'workflow_dispatch'
+    needs: build-linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: dart-lang/setup-dart@v1
+      - uses: actions/download-artifact@v7
+        with:
+          name: linux-x64-built-library
+          path: built-library/
+      - run: dart pub get
+      - name: Prepare manifest generation config
+        run: |
+          cp "$CONFIG" "$RUNNER_TEMP/native_prebuilt.yaml"
+          sed -i '/^source:/,/^build:/{ /^build:/!d; }' "$RUNNER_TEMP/native_prebuilt.yaml"
+      - name: Generate manifest and release archive
+        run: |
+          dart run native_prebuilt manifest update \
+            --config "$RUNNER_TEMP/native_prebuilt.yaml" \
+            --output "$MANIFEST_OUTPUT" \
+            --built-library-dir built-library \
+            --release-assets-dir release-assets \
+            --tag "${{ inputs.tag }}"
+          dart run native_prebuilt manifest verify \
+            --config "$RUNNER_TEMP/native_prebuilt.yaml" \
+            --output "$MANIFEST_OUTPUT" \
+            --built-library-dir built-library \
+            --release-assets-dir release-assets \
+            --tag "${{ inputs.tag }}"
+      - uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ inputs.tag }}
+          target_commitish: ${{ github.sha }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: release-assets/*
+      - name: Commit generated manifest
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "$MANIFEST_OUTPUT"
+          git diff --cached --quiet || git commit -m "chore: update react_tool native prebuilt manifest [skip ci]"
+          git push
