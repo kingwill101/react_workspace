@@ -87,13 +87,15 @@ final class ReactBuilder {
     await _writeForeignComponents(null);
   }
 
-  /// Synchronizes existing build-runner outputs into `lib/.generated/`.
+  /// Synchronizes existing generated outputs into `lib/.generated/`.
   ///
   /// This is useful after one workspace-wide `build_runner build --workspace`
-  /// invocation: each application can expose its generated package imports
-  /// without compiling the same builders again.
+  /// invocation: each application can expose its generated package imports and
+  /// project-level foreign component wrappers without compiling the same
+  /// builders again.
   Future<void> syncGeneratedSources() async {
     await _syncGeneratedSources();
+    await _writeForeignComponents(null);
   }
 
   /// Removes the synchronized Dart sources owned by React code generation.

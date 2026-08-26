@@ -275,6 +275,11 @@ const actionName = 'card';
       File('${root.path}/lib/.generated/pages/card.action.g.dart').existsSync(),
       isTrue,
     );
+    final foreignBindings = File(
+      '${root.path}/lib/.generated/foreign_components.g.dart',
+    );
+    expect(foreignBindings.existsSync(), isTrue);
+    expect(await foreignBindings.readAsString(), contains('ReactNode card'));
     expect(logs, contains(contains('Synced 2 generated sources')));
   });
 
