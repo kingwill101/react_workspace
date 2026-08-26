@@ -281,11 +281,7 @@ const BUILTINS: &[&str] = &[
     "false",
 ];
 
-fn parse_dts<'a>(
-    allocator: &'a Allocator,
-    source: &'a str,
-    tsx: bool,
-) -> Option<ParsedFile> {
+fn parse_dts<'a>(allocator: &'a Allocator, source: &'a str, tsx: bool) -> Option<ParsedFile> {
     let source_type = if tsx {
         SourceType::tsx()
     } else {
