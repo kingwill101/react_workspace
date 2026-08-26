@@ -26,9 +26,14 @@ from pub.dev.
 The following packages are currently deferred because they are tooling,
 testing, framework integrations, or still experimental:
 
-`react_analysis`, `react_analyzer`, `react_bloc`, `react_codegen`,
-`react_router`, `react_server_routed`, `react_testing`,
-`react_tool`, `react_web_generator`, `react_zustand`, and `react_riverpod`.
+`react_analyzer`, `react_bloc`, `react_codegen`, `react_router`,
+`react_server_routed`, `react_testing`, `react_web_generator`, `react_zustand`,
+and `react_riverpod`.
+
+`react_analysis` and `react_tool` are the next tooling wave. Publish
+`react_analysis` before `react_tool`, because the CLI depends on its analyzer
+engine. The CLI's Rust/Oxc native asset is released separately through the
+`react_tool native prebuilts` workflow.
 
 Deferred packages currently declare `publish_to: none`. To prepare one for a
 future release, remove that marker, add it to the approved publish set, and
