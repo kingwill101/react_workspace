@@ -1638,7 +1638,6 @@ fn props_for_expr(ty: &TyExpr, store: &DeclStore, visiting: &mut HashSet<String>
         | TyExpr::Record(_)
         | TyExpr::UrlSearchParams
         | TyExpr::Tuple(_)
-        | TyExpr::IndexedAccess { .. }
         | TyExpr::Other => vec![TsProp {
             name: "value".into(),
             optional: false,
