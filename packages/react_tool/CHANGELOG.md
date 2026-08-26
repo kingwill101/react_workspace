@@ -1,6 +1,7 @@
 ## 0.1.1
 
 - Keeps hook-only native build dependencies out of the runtime dependency list.
+- Classifies the native hook toolchain as development-only dependencies.
 
 ## 0.1.0
 
