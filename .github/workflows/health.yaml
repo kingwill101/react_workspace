@@ -11,7 +11,9 @@ jobs:
     with:
       sdk: stable
       checks: "version,changelog,license,breaking,do-not-submit,leaking,unused-dependencies"
-      fail_on: "version,changelog,do-not-submit,unused-dependencies"
+      # `version` is documented by older Firehose releases but is not a
+      # supported health check in the current reusable workflow.
+      fail_on: "changelog,do-not-submit,unused-dependencies"
       warn_on: "license,breaking,leaking"
       ignore_packages: >-
         packages/react_analysis,
@@ -29,4 +31,3 @@ jobs:
         examples/**
     permissions:
       pull-requests: write
-
