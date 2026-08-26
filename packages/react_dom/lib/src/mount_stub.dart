@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 /// Browser mounting is unavailable in VM and SSR/test builds.
 void initReact() {

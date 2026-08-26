@@ -11,7 +11,7 @@ class BrowserImportInServerRule extends AnalysisRule {
     'browser_import_in_server',
     'Browser package import must not be used in server context.',
     correctionMessage:
-        'Use portable package:react or the public *.react.dart API.',
+        'Use portable package:react_core or the public *.react.dart API.',
   );
 
   BrowserImportInServerRule()

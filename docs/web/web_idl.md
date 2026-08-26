@@ -15,13 +15,13 @@ Typed package:web events and refs
 
 SSR is part of the generator model and acceptance tests from the beginning. It is not a follow-up feature.
 
-Artisanal is **not part of this milestone**. The only Artisanal-related requirement is that no decision pollutes `package:react` with browser-specific types or assumptions.
+Artisanal is **not part of this milestone**. The only Artisanal-related requirement is that no decision pollutes `package:react_core` with browser-specific types or assumptions.
 
 ---
 
 # 1. Architectural boundaries
 
-## `package:react`
+## `package:react_core`
 
 Renderer-neutral core:
 
@@ -66,7 +66,7 @@ Dependencies:
 ```yaml
 dependencies:
   react:
-    path: ../react
+    path: ../react_core
   web: <pinned-compatible-version>
 ```
 
@@ -1175,9 +1175,9 @@ concurrent SSR isolation
 
 Milestone W1 is complete when all of these are true:
 
-1. `packages/react/lib/src/dom.dart` is no longer the authoritative handwritten DOM API.
+1. `packages/react_core/lib/src/dom.dart` is no longer the authoritative handwritten DOM API.
 2. `button`, `input`, `form`, and the remaining allowlisted elements are generated.
-3. `package:react` has no `package:web` or JS interop dependency.
+3. `package:react_core` has no `package:web` or JS interop dependency.
 4. Event handlers expose React event types with typed `package:web` `currentTarget` and `nativeEvent`.
 5. Refs expose the corresponding `package:web` element type.
 6. The same generated host model is consumed by browser and server renderers.

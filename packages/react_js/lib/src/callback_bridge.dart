@@ -1,6 +1,6 @@
 import 'dart:js_interop';
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'callback_codecs.dart';
 
 @JS('__dartReactCallbacks.create')

@@ -580,7 +580,7 @@ abstract class ServerFunctionClient {
 Rather than a separate `ServerFunctionRuntime` zone, the action client lives inside the existing `ReactRuntime`:
 
 ```dart
-// In package:react (or react_actions with a bridge)
+// In package:react_core (or react_actions with a bridge)
 
 final class ReactRuntime {
   final ReactBinding binding;

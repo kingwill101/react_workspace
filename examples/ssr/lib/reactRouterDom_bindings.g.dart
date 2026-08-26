@@ -4,7 +4,7 @@
 // (extracted from /run/media/kingwill101/disk2/code/code/dart_packages/react_workspace/.dart_tool/react/js/node_modules/react-router-dom/./dist/index.d.ts)
 // ignore_for_file: type=lint
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 /// Typed helper for the `reactRouterDom.MemoryRouter` foreign component.
 ///

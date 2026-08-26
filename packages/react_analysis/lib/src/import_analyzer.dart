@@ -73,7 +73,7 @@ final class ServerClientImportAnalyzer {
                 'Browser package import `$uri` must not be used in server context (`$filePath`).',
             severity: ReactDiagnosticSeverity.warning,
             correction:
-                'Use portable `package:react` or the public `*.react.dart` API.',
+                'Use portable `package:react_core` or the public `*.react.dart` API.',
           ),
         );
       }

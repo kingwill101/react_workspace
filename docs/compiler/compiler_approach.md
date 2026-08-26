@@ -21,7 +21,7 @@ Dart’s `.toJS` wrapper depends on the function’s **static signature**, inclu
 Create:
 
 ```text
-packages/react/lib/src/callback.dart
+packages/react_core/lib/src/callback.dart
 ```
 
 ```dart
@@ -148,7 +148,7 @@ final class ReactCallback {
 Export it:
 
 ```dart
-// packages/react/lib/react.dart
+// packages/react_core/lib/react.dart
 
 export 'src/annotations.dart';
 export 'src/callback.dart';
@@ -158,7 +158,7 @@ export 'src/internal.dart';
 export 'src/node.dart';
 ```
 
-`package:react` remains pure Dart.
+`package:react_core` remains pure Dart.
 
 ---
 
@@ -218,7 +218,7 @@ packages/react_js/lib/src/callback_bridge.dart
 ```dart
 import 'dart:js_interop';
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 typedef ReactValueEncoder =
     JSAny? Function(Object? value);
@@ -474,7 +474,7 @@ with:
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 import 'callback_bridge.dart';
 
@@ -557,7 +557,7 @@ Also export the bridge:
 ```dart
 // packages/react_js/lib/react_js.dart
 
-export 'package:react/react.dart';
+export 'package:react_core/react.dart';
 
 export 'src/binding.dart';
 export 'src/callback_bridge.dart';
@@ -575,7 +575,7 @@ Application code should not manually construct descriptors for ordinary DOM even
 Create:
 
 ```text
-packages/react/lib/src/dom.dart
+packages/react_core/lib/src/dom.dart
 ```
 
 ```dart
@@ -638,7 +638,7 @@ export 'src/dom.dart';
 Then `counter.dart` becomes:
 
 ```dart
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 @reactComponent
 ReactNode Counter(
@@ -962,7 +962,7 @@ final class ReactComponentReader {
 
   final TypeChecker _checker =
       const TypeChecker.fromUrl(
-    'package:react/src/annotations.dart#ReactComponent',
+    'package:react_core/src/annotations.dart#ReactComponent',
   );
 
   ReactComponentReader({

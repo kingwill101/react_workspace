@@ -5,7 +5,7 @@
 // ignore_for_file: type=lint
 
 import 'dart:js_interop';
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'react_router_bindings.g.dart';
 
 // Hook bindings for `react-router-dom`. Each hook is only available

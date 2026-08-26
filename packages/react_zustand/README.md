@@ -36,7 +36,7 @@ reproducible builds.
 The underlying store is created inside the bundled JS shim (`react_zustand_shim.mjs`). This package provides the `@JS` externals to read it from Dart.
 
 ```dart
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:react_dom/react_dom.dart';
 import 'package:react_zustand/react_zustand.dart';
 

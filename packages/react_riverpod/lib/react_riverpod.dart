@@ -8,7 +8,7 @@
 // Docs: https://riverpod.dev (core package: package:riverpod)
 library;
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:riverpod/misc.dart';
 import 'package:riverpod/riverpod.dart';
 

@@ -373,7 +373,7 @@ The shared generated file should become:
 ```dart
 // GENERATED CODE — DO NOT EDIT
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:react_web/src/events.dart';
 import 'package:react_web/src/types/html.dart';
 

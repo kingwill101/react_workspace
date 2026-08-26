@@ -1112,7 +1112,7 @@ final class ReactBuilder {
   Future<void> _writeForeignBindings() async {
     final buffer = StringBuffer()
       ..writeln('// GENERATED CODE - DO NOT MODIFY BY HAND.')
-      ..writeln("import 'package:react/react.dart' as react;")
+      ..writeln("import 'package:react_core/react.dart' as react;")
       ..writeln();
 
     for (final component in config.foreignComponents) {

@@ -10,7 +10,7 @@
 library;
 
 import 'package:bloc/bloc.dart';
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 /// React context carrying the nearest bloc instance.
 ///

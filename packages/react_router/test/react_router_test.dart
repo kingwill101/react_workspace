@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:react_router/react_router.dart';
 import 'package:test/test.dart';
 

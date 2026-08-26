@@ -10,7 +10,7 @@ The public API must:
 
 - produce the workspace's portable `ReactNode` tree;
 - work with browser rendering, Node SSR, and `react_testing`;
-- keep Web and JavaScript types out of `package:react`;
+- keep Web and JavaScript types out of `package:react_core`;
 - allow generated DOM and foreign-component wrappers to share conventions;
 - preserve typed Dart props without requiring callers to read string-key maps;
 - remain compatible with generated sources and server actions.

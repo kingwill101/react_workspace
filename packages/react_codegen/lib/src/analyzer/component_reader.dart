@@ -12,7 +12,7 @@ import 'type_reader.dart';
 final class ReactComponentReader {
   final ReactTypeReader typeReader;
   static const _checker = TypeChecker.fromUrl(
-    'package:react/src/annotations.dart#ReactComponent',
+    'package:react_core/src/annotations.dart#ReactComponent',
   );
 
   const ReactComponentReader({required this.typeReader});

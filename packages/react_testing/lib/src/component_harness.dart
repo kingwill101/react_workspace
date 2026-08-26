@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 /// A test React runtime that captures renders and supports hook testing
 /// without requiring `dart:js_interop` or a browser.

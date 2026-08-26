@@ -54,7 +54,7 @@ Dart’s `Function.toJS` requires the function’s static signature to be known,
 The application still looks like:
 
 ```dart
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 @reactComponent
 ReactNode Counter(CounterProps props) {
@@ -76,7 +76,7 @@ ReactNode Counter(CounterProps props) {
 Add:
 
 ```text
-packages/react/lib/src/callback.dart
+packages/react_core/lib/src/callback.dart
 ```
 
 ## Value kinds
@@ -283,7 +283,7 @@ In `react_js`:
 ```dart
 import 'dart:js_interop';
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 @JS('__dartReactCallbacks.create')
 external JSFunction _createCallback(
@@ -307,7 +307,7 @@ packages/react_js/lib/src/callback_bridge.dart
 ```dart
 import 'dart:js_interop';
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 JSAny? _dispatchReactCallback(
   ExternalDartReference<ReactCallback> reference,
@@ -711,7 +711,7 @@ button(
 
 # 9. Keep browser events abstract
 
-`package:react` should not expose `JSObject`.
+`package:react_core` should not expose `JSObject`.
 
 Define a pure-Dart contract:
 
@@ -1367,7 +1367,7 @@ The JS interop API is designed to provide a shared abstraction for JavaScript an
 Application code remains pure and ordinary:
 
 ```dart
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 @reactComponent
 ReactNode Counter(

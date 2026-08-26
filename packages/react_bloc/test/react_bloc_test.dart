@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:react_bloc/react_bloc.dart';
 import 'package:test/test.dart';
 

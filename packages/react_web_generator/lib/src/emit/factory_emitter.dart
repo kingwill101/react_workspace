@@ -12,7 +12,7 @@ final class FactoryEmitter {
     buf.writeln('// ignore_for_file: type=lint');
     buf.writeln();
 
-    buf.writeln("import 'package:react/react.dart';");
+    buf.writeln("import 'package:react_core/react.dart';");
     buf.writeln("import 'package:react_web/src/generated/react_events.dart';");
     buf.writeln("import 'package:react_web/src/generated/web/web.dart';");
     buf.writeln();

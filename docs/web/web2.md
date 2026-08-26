@@ -15,7 +15,7 @@ react_js / react_server
 
 Currently, `Intrinsic` embeds the web concept directly into core through a `tag` string.  That should be replaced with a renderer-neutral `HostNode`.
 
-# 1. What remains in `package:react`
+# 1. What remains in `package:react_core`
 
 ```dart
 sealed class ReactNode {
@@ -156,7 +156,7 @@ ReactNode button({
 }
 ```
 
-Nothing from that factory needs to be declared in `package:react`.
+Nothing from that factory needs to be declared in `package:react_core`.
 
 # 3. How application code imports it
 
@@ -191,7 +191,7 @@ ReactNode Counter(({int initial}) props) {
 ```dart
 library;
 
-export 'package:react/react.dart';
+export 'package:react_core/react.dart';
 
 export 'src/events.dart';
 export 'src/generated/html.dart';
@@ -224,7 +224,7 @@ package:web-compatible refs
 Renderer-neutral code can continue to import:
 
 ```dart
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 ```
 
 # 4. Remove the handwritten DOM API from core
@@ -232,7 +232,7 @@ import 'package:react/react.dart';
 This file should eventually be removed:
 
 ```text
-packages/react/lib/src/dom.dart
+packages/react_core/lib/src/dom.dart
 ```
 
 And this export should be removed:
@@ -453,7 +453,7 @@ style
 children
 ```
 
-Instead of placing large metadata objects inside `package:react`, the generated values can carry generic core wrappers:
+Instead of placing large metadata objects inside `package:react_core`, the generated values can carry generic core wrappers:
 
 ```dart
 sealed class ReactHostPropValue {
@@ -698,7 +698,7 @@ Its barrel would look roughly like:
 ```dart
 library;
 
-export 'package:react/react.dart';
+export 'package:react_core/react.dart';
 
 export 'src/events/events.dart';
 export 'src/generated/html.dart';
@@ -715,7 +715,7 @@ import 'package:react_web/react_web.dart';
 instead of importing both:
 
 ```dart
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:react_web/react_web.dart';
 ```
 
@@ -723,7 +723,7 @@ import 'package:react_web/react_web.dart';
 
 | Code                                         | Import                                   |
 | -------------------------------------------- | ---------------------------------------- |
-| Renderer-neutral component logic             | `package:react/react.dart`               |
+| Renderer-neutral component logic             | `package:react_core/react.dart`               |
 | Web components shared between client and SSR | `package:react_web/react_web.dart`       |
 | Browser bootstrap                            | `package:react_dom/react_dom.dart`       |
 | SSR bootstrap                                | `package:react_server/react_server.dart` |
@@ -754,7 +754,7 @@ The SSR renderer never invokes that ref. It sees the generated ref metadata and 
 A package containing no web host nodes can still import only core:
 
 ```dart
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 @reactComponent
 ReactNode Conditional(

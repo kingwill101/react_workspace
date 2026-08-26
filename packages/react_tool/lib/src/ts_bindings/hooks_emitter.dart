@@ -63,7 +63,7 @@ String generateHooks({
     ..writeln('// ignore_for_file: type=lint')
     ..writeln()
     ..writeln("import 'dart:js_interop';")
-    ..writeln("import 'package:react/react.dart';");
+    ..writeln("import 'package:react_core/react.dart';");
   if (bindingsImport != null) {
     buffer.writeln("import '$bindingsImport';");
   }

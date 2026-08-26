@@ -91,7 +91,7 @@ time. The second run must be clean.
 ## Architecture & Design Notes
 
 - **Data Driven**: Relies on standardized Web IDL and BCD to ensure the React Dart DOM representations are accurate, up-to-date, and strictly typed.
-- **Ecosystem Foundation**: The output of this package is fundamental to `packages/react` and `packages/react_dom`, providing the core HTML/SVG elements that developers use every day.
+- **Ecosystem Foundation**: The output of this package is fundamental to `packages/react_core` and `packages/react_dom`, providing the core HTML/SVG elements that developers use every day.
 - **Separation of Concerns**: Maintains discrete emitters for different targets (browser adapters, SSR metadata, neutral surface) ensuring the generated interfaces are appropriately optimized for their runtime environments.
 - **Output Parity**: Structural refactors must reproduce every owned generated
   file byte-for-byte. Capture hashes before a refactor and compare all outputs

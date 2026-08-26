@@ -2,11 +2,11 @@
 
 > JavaScript bindings and renderer for React Dart.
 
-The `react_js` package acts as the bridge between the pure Dart UI tree (defined in `package:react`) and the actual React JavaScript library. It uses modern `dart:js_interop` to translate Dart's `ReactNode`s into JavaScript React elements.
+The `react_js` package acts as the bridge between the pure Dart UI tree (defined in `package:react_core`) and the actual React JavaScript library. It uses modern `dart:js_interop` to translate Dart's `ReactNode`s into JavaScript React elements.
 
 ## Role in the Ecosystem
 
-While `package:react` provides the cross-platform data structures, `react_js` provides the engine that executes them in a browser or Node/Edge JS environment. 
+While `package:react_core` provides the cross-platform data structures, `react_js` provides the engine that executes them in a browser or Node/Edge JS environment.
 
 It exposes:
 - **`JsRenderer`**: An exhaustive switch that traverses the `ReactNode` tree and emits JS React elements (`React.createElement`).

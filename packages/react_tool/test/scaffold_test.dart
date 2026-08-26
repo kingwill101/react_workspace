@@ -138,7 +138,7 @@ void main() {
 
     final pubspec = read('pubspec.yaml');
     expect(pubspec, contains('name: my_app'));
-    expect(pubspec, contains('react: {path: ../packages/react}'));
+    expect(pubspec, contains('react_core: {path: ../packages/react_core}'));
     expect(
       pubspec,
       contains('react_codegen: {path: ../packages/react_codegen}'),
@@ -177,7 +177,7 @@ void main() {
 
     final app = read('lib/app.dart');
     expect(app, contains("import 'package:react_dom/react_dom.dart';"));
-    expect(app, isNot(contains("import 'package:react/react.dart';")));
+    expect(app, isNot(contains("import 'package:react_core/react.dart';")));
     expect(app, contains("fontFamily: 'system-ui, sans-serif'"));
     expect(app, contains("children: [props.title]"));
     expect(app, contains("dataAttributes({'app': 'react-dart'})"));
@@ -411,7 +411,7 @@ void main() {
         p.join(root.path, 'client_app', 'lib', 'app.dart'),
       ).readAsString();
       expect(appSource, contains("import 'package:react_dom/react_dom.dart';"));
-      expect(appSource, isNot(contains("import 'package:react/react.dart';")));
+      expect(appSource, isNot(contains("import 'package:react_core/react.dart';")));
       final reactYaml = await File(
         p.join(root.path, 'client_app', 'react.yaml'),
       ).readAsString();

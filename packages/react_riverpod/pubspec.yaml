@@ -9,7 +9,7 @@ environment:
 # Dart and reaches React through the portable useSyncExternalStore/context
 # hooks, so nothing needs to be bundled or installed by react build.
 dependencies:
-  react: ^0.1.0
+  react_core: ^0.1.0
   riverpod: ^3.4.2
 dev_dependencies:
   test: ^1.31.2

@@ -1,6 +1,6 @@
 import 'dart:js_interop';
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:react_js/src/codec_registry.dart' show ReactCodecRegistry;
 import 'package:react_js/src/conversion_core.dart';
 

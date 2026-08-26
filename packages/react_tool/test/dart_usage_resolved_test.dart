@@ -12,10 +12,10 @@ void main() {
 
     setUpAll(() async {
       final library = await Isolate.resolvePackageUri(
-        Uri.parse('package:react/react.dart'),
+        Uri.parse('package:react_core/react.dart'),
       );
       if (library == null) {
-        throw StateError('Could not resolve package:react/react.dart.');
+        throw StateError('Could not resolve package:react_core/react.dart.');
       }
       reactPackagePath = p.dirname(p.dirname(library.toFilePath()));
     });
@@ -30,7 +30,7 @@ name: test_app
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react:
+  react_core:
     path: $reactPackagePath
 ''';
         await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
@@ -38,7 +38,7 @@ dependencies:
         await Directory(p.join(temp.path, 'bin')).create(recursive: true);
 
         await File(p.join(temp.path, 'lib', 'hooks.dart')).writeAsString('''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 @ReactHook()
 @ReactRuntimeSymbol(
@@ -51,7 +51,7 @@ String useCustom() => 'hi';
 
         await File(p.join(temp.path, 'lib', 'app.dart')).writeAsString('''
 import 'package:test_app/hooks.dart';
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 ReactNode App() {
   final v = useCustom();
@@ -107,7 +107,7 @@ void main() { App(); }
       try {
         await Directory(p.join(temp.path, 'lib')).create(recursive: true);
         await File(p.join(temp.path, 'lib', 'a.dart')).writeAsString('''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 ReactNode A() => foreignComponent('ns.Comp', props: {});
 ''');
         await File(p.join(temp.path, 'lib', 'entry.dart')).writeAsString('''
@@ -156,14 +156,14 @@ name: my_app
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react:
+  react_core:
     path: $reactPackagePath
 ''';
           await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
           await Directory(p.join(temp.path, 'lib')).create(recursive: true);
           await Directory(p.join(temp.path, 'web')).create(recursive: true);
           await File(p.join(temp.path, 'lib', 'app.dart')).writeAsString('''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 ReactNode App() => foreignComponent('myApp.Header', props: {});
 ''');
           await File(p.join(temp.path, 'web', 'client.dart')).writeAsString('''
@@ -212,12 +212,12 @@ name: shared_widgets
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react:
+  react_core:
     path: $reactPackagePath
 ''');
         await File(p.join(sharedDir.path, 'lib', 'widget.dart')).writeAsString(
           '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 @ReactHook()
 @ReactRuntimeSymbol(kind: ReactRuntimeSymbolKind.hook, runtimeKey: 'reactRouter.useLocation', targets: {ReactRenderTarget.browser})
 String useLocation() => 'loc';
@@ -232,14 +232,14 @@ name: my_app
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react:
+  react_core:
     path: $reactPackagePath
   shared_widgets:
     path: ${p.join(sharedDir.path)}
 ''');
         await File(p.join(appDir.path, 'lib', 'app.dart')).writeAsString('''
 import 'package:shared_widgets/widget.dart';
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 ReactNode App() => SharedWidget();
 ''');
         await File(p.join(appDir.path, 'lib', 'main.dart')).writeAsString('''
@@ -291,12 +291,12 @@ name: shared_widgets
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react:
+  react_core:
     path: $reactPackagePath
 ''');
         await File(p.join(hostedDir.path, 'lib', 'widget.dart')).writeAsString(
           '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 @ReactHook()
 @ReactRuntimeSymbol(kind: ReactRuntimeSymbolKind.hook, runtimeKey: 'reactRouter.useLocation', targets: {ReactRenderTarget.browser})
 String useLocation() => 'loc';
@@ -311,14 +311,14 @@ name: my_app
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react:
+  react_core:
     path: $reactPackagePath
   shared_widgets:
     path: ${p.join(hostedDir.path)}
 ''');
         await File(p.join(appDir.path, 'lib', 'app.dart')).writeAsString('''
 import 'package:shared_widgets/widget.dart';
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 ReactNode App() => SharedWidget();
 ''');
         await File(p.join(appDir.path, 'lib', 'main.dart')).writeAsString('''
@@ -364,7 +364,7 @@ name: test_app
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react:
+  react_core:
     path: $reactPackagePath
 ''';
           await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
@@ -373,7 +373,7 @@ dependencies:
 
           await File(p.join(temp.path, 'lib', 'generated.dart')).writeAsString(
             '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 @ReactRuntimeSymbol(kind: ReactRuntimeSymbolKind.component, runtimeKey: 'reactRouter.Link', targets: {ReactRenderTarget.browser})
 ReactNode link({required Object to, List<ReactNode> children = const []}) => foreignComponent('reactRouter.Link', props: {'to': to}, children: children);
 ''',
@@ -381,7 +381,7 @@ ReactNode link({required Object to, List<ReactNode> children = const []}) => for
 
           await File(p.join(temp.path, 'lib', 'app.dart')).writeAsString('''
 import 'package:test_app/generated.dart';
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 ReactNode App() => link(to: '/');
 ''');
 
@@ -430,21 +430,21 @@ name: my_app
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react:
+  react_core:
     path: $reactPackagePath
 ''';
         await File(p.join(temp.path, 'pubspec.yaml')).writeAsString(pubspec);
         await Directory(p.join(temp.path, 'lib')).create(recursive: true);
         await Directory(p.join(temp.path, 'web')).create(recursive: true);
         await File(p.join(temp.path, 'lib', 'hooks.dart')).writeAsString('''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 @ReactHook()
 @ReactRuntimeSymbol(kind: ReactRuntimeSymbolKind.hook, runtimeKey: 'testPkg.useCustom', targets: {ReactRenderTarget.browser})
 String useCustom() => 'hi';
 ''');
         await File(p.join(temp.path, 'lib', 'app.dart')).writeAsString('''
 import 'package:my_app/hooks.dart';
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 ReactNode App() { final v = useCustom(); return foreignComponent('myApp.Header', props: {}); }
 ''');
         await File(p.join(temp.path, 'web', 'client.dart')).writeAsString('''

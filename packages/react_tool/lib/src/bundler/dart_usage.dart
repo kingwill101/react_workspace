@@ -139,7 +139,7 @@ final class DartUsageCollector {
       // contain user code like shared_widgets that uses reactRouter hooks.
       return path.contains('/.dart_tool/') ||
           path.contains('/dart-sdk/') ||
-          path.contains('packages/react/') ||
+          path.contains('packages/react_core/') ||
           path.contains('packages/react_analysis/') ||
           path.contains('packages/react_tool/') ||
           path.contains('packages/analyzer/');

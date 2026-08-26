@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 // ignore_for_file: unused_local_variable
 

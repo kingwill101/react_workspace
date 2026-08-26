@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 /// Shared accent context used by the example application.
 final appAccentContext = createContext<String>('#7257ff');

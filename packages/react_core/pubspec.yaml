@@ -1,7 +1,7 @@
-name: react
+name: react_core
 description: Platform-agnostic React component, node, and hook primitives for Dart.
 version: 0.1.0
-repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react
+repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_core
 resolution: workspace
 environment:
   sdk: ">=3.12.0 <4.0.0"

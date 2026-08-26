@@ -219,7 +219,7 @@ The neutral generator now creates dictionary value classes, but many of those va
 
 ## 6. Web API SSR metadata is still host-element metadata
 
-Moving `WebApiRuntimeInfo` into the public `package:react` surface was correct, and generated factories such as `div()` now carry the annotation.
+Moving `WebApiRuntimeInfo` into the public `package:react_core` surface was correct, and generated factories such as `div()` now carry the annotation.
 
 But the complete Web IDL emitter still does not annotate actual APIs such as:
 

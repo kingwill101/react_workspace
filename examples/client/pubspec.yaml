@@ -7,7 +7,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  react: ^0.1.0
+  react_core: ^0.1.0
   react_js: ^0.1.0
   react_dom: ^0.1.0
   react_web: ^0.1.0

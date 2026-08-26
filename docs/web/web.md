@@ -1,9 +1,9 @@
-`package:react` should **not define web-specific callback interfaces** such as `MouseEvent`, `HTMLButtonElement`, or `SyntheticEvent`.
+`package:react_core` should **not define web-specific callback interfaces** such as `MouseEvent`, `HTMLButtonElement`, or `SyntheticEvent`.
 
 It should define the renderer-neutral machinery needed to transport and invoke callbacks. The generated `react_web` package then uses that machinery to expose ordinary Dart callbacks whose arguments are typed with `package:web`.
 
 ```text
-package:react
+package:react_core
     generic callback descriptor
     generic value metadata
     generic ref callback typedef
@@ -21,7 +21,7 @@ package:react_js
 
 # 1. Correct the current core model
 
-The current `package:react` contains:
+The current `package:react_core` contains:
 
 ```dart
 ReactValueKind.syntheticEvent
@@ -125,7 +125,7 @@ final class ReactCallback {
 
 This contains no `package:web` or JS interop types.
 
-# 3. Generic ref callback in `package:react`
+# 3. Generic ref callback in `package:react_core`
 
 A ref callback is generic enough to live in core:
 
@@ -134,7 +134,7 @@ typedef ReactRefCallback<T> =
     void Function(T? value);
 ```
 
-This does not make `package:react` web-specific.
+This does not make `package:react_core` web-specific.
 
 Web can instantiate it as:
 
@@ -171,7 +171,7 @@ The generated web package imports:
 ```dart
 import 'dart:js_interop';
 import 'package:web/web.dart' as web;
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 ```
 
 `package:web` represents browser interfaces as extension types over JavaScript objects. For example, its generated `UIEvent` is an extension type implementing `Event` and `JSObject`.

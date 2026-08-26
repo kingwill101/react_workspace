@@ -188,7 +188,7 @@ class AggregateBuilder implements Builder {
       ..writeln('// GENERATED CODE — DO NOT EDIT')
       ..writeln('// ignore_for_file: type=lint')
       ..writeln();
-    buf.writeln("import 'package:react/react.dart';");
+    buf.writeln("import 'package:react_core/react.dart';");
     for (final imp in idImports) {
       buf.writeln(imp);
     }

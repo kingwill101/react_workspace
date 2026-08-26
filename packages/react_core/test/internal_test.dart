@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:test/test.dart';
 
 void main() {

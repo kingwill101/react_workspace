@@ -27,7 +27,7 @@ String generateBindings({
     buffer.writeln("import 'dart:js_interop_unsafe';");
     buffer.writeln();
   }
-  buffer.writeln("import 'package:react/react.dart';");
+  buffer.writeln("import 'package:react_core/react.dart';");
   buffer.writeln();
   if (hasFunction) {
     // Reuse the typed hook decoder helpers for function return values.

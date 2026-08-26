@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:react_actions/react_actions.dart';
 
 import 'generated/react_events.dart';

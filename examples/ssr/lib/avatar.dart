@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 @reactComponent
 ReactNode Avatar(({String src, int size}) props) =>

@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 /// Valid component — single named-record param, returns ReactNode.
 /// Plugin: no `invalid_react_component`. Generator: emits `.react.dart` pair.

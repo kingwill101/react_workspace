@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:react_riverpod/react_riverpod.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:test/test.dart';

@@ -8,7 +8,7 @@ final class PublicApiEmitter {
       ..writeln('// GENERATED CODE — DO NOT EDIT')
       ..writeln('// ignore_for_file: type=lint')
       ..writeln()
-      ..writeln("import 'package:react/react.dart';")
+      ..writeln("import 'package:react_core/react.dart';")
       ..writeln();
 
     for (final component in model.components) {

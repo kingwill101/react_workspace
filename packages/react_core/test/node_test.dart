@@ -1,5 +1,5 @@
-import 'package:react/react.dart';
-import 'package:react/src/dom.dart' as dom;
+import 'package:react_core/react.dart';
+import 'package:react_core/src/dom.dart' as dom;
 import 'package:test/test.dart';
 
 void main() {

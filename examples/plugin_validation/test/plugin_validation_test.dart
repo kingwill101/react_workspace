@@ -6,7 +6,7 @@ void main() {
   group('ReactComponentAnalyzer — invalid_component', () {
     test('valid component produces no diagnostics', () {
       const code = '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 @ReactComponent()
 ReactNode Ok(({String name}) props) => Text(props.name);
 ''';
@@ -18,7 +18,7 @@ ReactNode Ok(({String name}) props) => Text(props.name);
 
     test('hook analyzer flags conditional', () async {
       const code = '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 @ReactComponent()
 ReactNode C() {
   if (true) { final s = useState(0); }
@@ -37,7 +37,7 @@ ReactNode C() {
   group('ReactHookAnalyzer — invalid_hook_call', () {
     test('detects hook in conditional', () {
       const code = '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 @ReactComponent()
 ReactNode HookInConditional(({bool flag}) props) {
   if (flag) { final s = useState(0); }
@@ -54,7 +54,7 @@ ReactNode HookInConditional(({bool flag}) props) {
 
     test('detects hook outside component', () {
       const code = '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 void notAComponent() { final s = useState(0); }
 ''';
       final unit = parseString(content: code).unit;
@@ -67,7 +67,7 @@ void notAComponent() { final s = useState(0); }
 
     test('allows hook at top level of component', () {
       const code = '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 @ReactComponent()
 ReactNode Ok() {
   final s = useState(0);
@@ -86,7 +86,7 @@ ReactNode Ok() {
   group('ReactSsrAnalyzer — browser_api_during_ssr', () {
     test('flags window.localStorage during render', () {
       const code = '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 @ReactComponent()
 ReactNode SsrBad() {
   final t = window.localStorage.getItem('theme');
@@ -103,7 +103,7 @@ ReactNode SsrBad() {
 
     test('allows same API inside useEffect', () {
       const code = '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 @ReactComponent()
 ReactNode SsrGood() {
   useEffect(() { final t = window.localStorage.getItem('theme'); }, const []);
@@ -117,7 +117,7 @@ ReactNode SsrGood() {
 
     test('allows when @ClientOnly present (annotation check)', () {
       const code = '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 @ReactComponent()
 @ClientOnly()
 ReactNode SsrClientOnly() {
@@ -136,7 +136,7 @@ ReactNode SsrClientOnly() {
   group('ReactRuntimeUsageCollector', () {
     test('collects foreignComponent keys', () {
       const code = '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 ReactNode App() => foreignComponent('reactRouter.Route', props: {});
 ''';
       final unit = parseString(content: code).unit;
@@ -147,7 +147,7 @@ ReactNode App() => foreignComponent('reactRouter.Route', props: {});
     test('collects via Dart entry walk', () {
       // usage_demo.dart shows expected manifest; collector itself tested above.
       const code = '''
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 ReactNode App() {
   final a = foreignComponent('reactRouter.Link', props: {});
   final b = foreignComponent('reactRouter.Route', props: {});

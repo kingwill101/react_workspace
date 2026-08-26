@@ -1,9 +1,9 @@
-# react
+# react_core
 
 Portable React node, component, hook, context, ref, and runtime contracts for
 Dart.
 
-`react` contains no `dart:js_interop` or server-framework dependency. The same
+`react_core` contains no `dart:js_interop` or server-framework dependency. The same
 component model can therefore be consumed by browser rendering, Node SSR,
 native tests, code generation, and tooling.
 
@@ -11,7 +11,7 @@ native tests, code generation, and tooling.
 
 ```yaml
 dependencies:
-  react: ^0.1.0
+  react_core: ^0.1.0
 ```
 
 Web applications normally depend on `react_dom` instead. Its entrypoint

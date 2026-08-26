@@ -1,7 +1,7 @@
 import 'package:client/app.dart';
 import 'package:client/greeting.dart';
 import 'package:client/shadcn.dart';
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:react_testing/react_testing.dart';
 import 'package:test/test.dart';
 

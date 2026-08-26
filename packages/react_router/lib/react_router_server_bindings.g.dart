@@ -7,7 +7,7 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 // Shared decode helpers for hook return values.
 // Primitives and literals are decoded directly by the external's

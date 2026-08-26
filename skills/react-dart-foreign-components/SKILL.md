@@ -26,11 +26,11 @@ external application should use:
 
 ```yaml
 dependencies:
-  react:
+  react_core:
     git:
       url: https://github.com/kingwill101/react_workspace.git
       ref: master
-      path: packages/react
+      path: packages/react_core
   react_dom:
     git:
       url: https://github.com/kingwill101/react_workspace.git

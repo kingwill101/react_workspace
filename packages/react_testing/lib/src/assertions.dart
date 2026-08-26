@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 /// Assertion helpers for React Dart tests.
 ///

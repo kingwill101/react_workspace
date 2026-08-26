@@ -1,7 +1,7 @@
 // GENERATED CODE — DO NOT EDIT
 // ignore_for_file: type=lint
 
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 import 'package:react_web/src/ssr_metadata.dart';
 
 @WebApiRuntimeInfo(

@@ -42,7 +42,7 @@ The main boundaries are intentional:
 
 | Package | Role |
 | --- | --- |
-| [`react`](packages/react/README.md) | Portable React nodes, hooks, contexts, refs, and runtime features. |
+| [`react_core`](packages/react_core/README.md) | Portable React nodes, hooks, contexts, refs, and runtime features. |
 | [`react_web`](packages/react_web/README.md) | Pinned Web API model, DOM/SVG factories, events, props, and adapters. |
 | [`react_dom`](packages/react_dom/README.md) | Combined component entrypoint, browser mounting, and hydration. |
 | [`react_js`](packages/react_js/README.md) | JavaScript renderer, hook binding, callbacks, and codecs. |

@@ -1,4 +1,4 @@
-import 'package:react/react.dart';
+import 'package:react_core/react.dart';
 
 /// Semantic usage demo — scanned by `react_analysis` instead of JS regex.
 ///
