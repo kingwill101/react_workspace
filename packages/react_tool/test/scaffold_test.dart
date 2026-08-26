@@ -411,7 +411,10 @@ void main() {
         p.join(root.path, 'client_app', 'lib', 'app.dart'),
       ).readAsString();
       expect(appSource, contains("import 'package:react_dom/react_dom.dart';"));
-      expect(appSource, isNot(contains("import 'package:react_core/react.dart';")));
+      expect(
+        appSource,
+        isNot(contains("import 'package:react_core/react.dart';")),
+      );
       final reactYaml = await File(
         p.join(root.path, 'client_app', 'react.yaml'),
       ).readAsString();
