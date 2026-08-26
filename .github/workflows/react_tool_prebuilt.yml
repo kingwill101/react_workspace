@@ -59,9 +59,13 @@ jobs:
           sed -i '/^source:/,/^build:/{ /^build:/!d; }' "$RUNNER_TEMP/native_prebuilt.yaml"
       - name: Verify native prebuilt manifest
         run: |
+          dart run native_prebuilt manifest update \
+            --config "$RUNNER_TEMP/native_prebuilt.yaml" \
+            --output "$RUNNER_TEMP/react_tool_prebuilts.g.dart" \
+            --built-library-dir built-library
           dart run native_prebuilt manifest verify \
             --config "$RUNNER_TEMP/native_prebuilt.yaml" \
-            --output "$MANIFEST_OUTPUT" \
+            --output "$RUNNER_TEMP/react_tool_prebuilts.g.dart" \
             --built-library-dir built-library
 
   release:
