@@ -325,6 +325,9 @@ export const Dialog: {
       );
       // Typed props (classes, enum, callback typedef).
       expect(code, contains('ReactNode greeting('));
+      expect(code, contains('final class GreetingPropsBuilder'));
+      expect(code, contains('GreetingPropsBuilder greetingProps()'));
+      expect(code, contains('ReactNode call([ReactChildren? childValues])'));
       expect(code, contains('  ReactChildren children = const [],'));
       expect(code, contains('String? name,'));
       expect(code, contains('required num count,'));

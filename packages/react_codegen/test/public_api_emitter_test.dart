@@ -35,7 +35,9 @@ void main() {
     );
 
     expect(output, contains('const Card = _CardFactory();'));
+    expect(output, contains('const CardMetadata = ReactComponentMetadata'));
     expect(output, contains('final class _CardFactory'));
+    expect(output, contains('ReactComponentMetadata get metadata'));
     expect(output, contains('ReactNode call({'));
     expect(output, contains('CardPropsBuilder props()'));
     expect(output, contains('late String title;'));

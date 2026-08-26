@@ -1,6 +1,8 @@
 export 'src/annotations.dart';
 export 'src/callback.dart';
 export 'src/children.dart';
+export 'src/component_api.dart';
+export 'src/css.dart';
 export 'src/dom.dart';
 export 'src/runtime_symbol.dart';
 export 'src/component_id.dart';

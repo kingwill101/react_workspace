@@ -167,6 +167,52 @@ if (compact) props.style = css(padding: '6px 10px');
 return props([saving ? 'Shipping…' : 'Ship it']);
 ```
 
+For renderer-neutral libraries, `joinClassNames` provides the same basic
+conditional class composition without importing `react_web`:
+
+```dart
+final classes = joinClassNames(
+  'card',
+  {'card--selected': selected},
+  extraClasses,
+);
+```
+
+## Compose conditional and repeated children
+
+The portable `when`, `unless`, and `each` helpers keep collection literals
+readable and work during SSR:
+
+```dart
+return ul(children: [
+  when(items.isEmpty, emptyState()),
+  unless(items.isEmpty, resultsHeader()),
+  ...each(items, (item, index) => li(
+        key: item.id,
+        children: [item.label],
+      )),
+]);
+```
+
+## Use state with a named controller
+
+The tuple form remains available when React parity is useful:
+
+```dart
+final (count, setCount) = useState(0);
+```
+
+For larger components, `useStateController` makes the value/setter pair
+self-documenting:
+
+```dart
+final count = useStateController(0);
+return button(
+  onClick: (_) => count.set(count.value + 1),
+  children: ['Count: ${count.value}'],
+);
+```
+
 Generated Dart components follow the same pattern. The callable component
 factory handles the common case, while `.props()` returns its typed builder:
 

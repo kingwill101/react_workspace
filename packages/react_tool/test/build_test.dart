@@ -230,6 +230,8 @@ $accent: #336699;
     final source = await bindings.readAsString();
     expect(source, contains('ReactNode uiPanel'));
     expect(source, contains("'ui.Panel'"));
+    expect(source, contains('UiPanelPropsBuilder uiPanelProps()'));
+    expect(source, contains('final class UiPanelPropsBuilder'));
   });
 
   test('synchronizes workspace build outputs and relocates imports', () async {

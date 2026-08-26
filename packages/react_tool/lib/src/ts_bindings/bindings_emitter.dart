@@ -269,7 +269,49 @@ void _emitDeclaration(
       if (hasChildren) {
         buffer.writeln('  children: children,');
       }
-      buffer.writeln(');');
+      buffer
+        ..writeln(');')
+        ..writeln();
+
+      final builderName = '${_pascalIdentifier(functionName)}PropsBuilder';
+      buffer.writeln('/// Mutable typed builder for `$foreignName`.');
+      buffer.writeln('final class $builderName {');
+      for (final prop in propParams) {
+        final dartName = _safeParamName(prop.name);
+        final type = _nullableType(
+          _dartType(prop.type, registry),
+          prop.required,
+        );
+        buffer.writeln('  ${prop.required ? 'late ' : ''}$type $dartName;');
+      }
+      buffer
+        ..writeln('  String? key;')
+        ..writeln(
+          hasChildren
+              ? '  ${childrenRequired ? 'late ' : ''}ReactChildren children;'
+              : '',
+        )
+        ..writeln()
+        ..writeln(
+          hasChildren
+              ? '  ReactNode call([ReactChildren? childValues]) {'
+              : '  ReactNode call() {',
+        )
+        ..writeln('    return $functionName(');
+      for (final prop in propParams) {
+        final dartName = _safeParamName(prop.name);
+        buffer.writeln('      $dartName: $dartName,');
+      }
+      buffer
+        ..writeln('      key: key,')
+        ..writeln(hasChildren ? '      children: childValues ?? children,' : '')
+        ..writeln('    );')
+        ..writeln('  }')
+        ..writeln('}')
+        ..writeln();
+      buffer.writeln(
+        '$builderName ${_lowerCamel(functionName)}Props() => $builderName();',
+      );
     case 'interface':
       // Registers the class; the second pass emits all classes once.
       registry.declarationClass(declaration.name, declaration.props);
@@ -296,6 +338,12 @@ void _emitDeclaration(
       }
   }
 }
+
+String _pascalIdentifier(String value) =>
+    value.isEmpty ? 'Component' : value[0].toUpperCase() + value.substring(1);
+
+String _lowerCamel(String value) =>
+    value.isEmpty ? value : value[0].toLowerCase() + value.substring(1);
 
 /// Walks a type tree registering classes, enums, and callback typedefs.
 void _collectTypes(

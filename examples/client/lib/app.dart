@@ -5,10 +5,10 @@ import 'shadcn.dart';
 /// Root component — client-only, no server functions.
 @reactComponent
 ReactNode App(({String title}) props) {
-  final (message, setMessage) = useState<String?>('Hello from the client');
-  final (clicks, setClicks) = useState(0);
-  final (language, setLanguage) = useState<String>('ar');
-  final arabic = language == 'ar';
+  final message = useStateController<String?>('Hello from the client');
+  final clicks = useStateController(0);
+  final language = useStateController<String>('ar');
+  final arabic = language.value == 'ar';
   final direction = arabic ? 'rtl' : 'ltr';
   final label = arabic ? 'التعليقات' : 'Feedback';
   final placeholder = arabic
@@ -17,6 +17,12 @@ ReactNode App(({String title}) props) {
   final description = arabic
       ? 'شاركنا أفكارك حول الخدمة.'
       : 'Share your thoughts about our service.';
+  final feedbackField = shadcnTextareaProps()
+    ..id = 'feedback'
+    ..className = 'min-h-24'
+    ..placeholder = placeholder
+    ..dir = direction
+    ..rows = 4;
 
   return div(
     children: [
@@ -24,8 +30,8 @@ ReactNode App(({String title}) props) {
         className: 'mx-auto mt-16 max-w-lg p-6',
         children: [
           h1(children: [Text(props.title)]),
-          p(children: [Text(message!)]),
-          p(children: [Text('Pressed $clicks times')]),
+          p(children: [Text(message.value!)]),
+          p(children: [Text('Pressed ${clicks.value} times')]),
           shadcnField(
             className: 'mt-4 w-full max-w-xs',
             dir: direction,
@@ -35,13 +41,7 @@ ReactNode App(({String title}) props) {
                 dir: direction,
                 children: [Text(label)],
               ),
-              shadcnTextarea(
-                id: 'feedback',
-                className: 'min-h-24',
-                placeholder: placeholder,
-                dir: direction,
-                rows: 4,
-              ),
+              feedbackField(),
               shadcnFieldDescription(
                 dir: direction,
                 children: [Text(description)],
@@ -51,9 +51,9 @@ ReactNode App(({String title}) props) {
           shadcnButton(
             size: 'lg',
             onClick: ReactCallback.zero(() {
-              setClicks(clicks + 1);
-              setMessage('The click was handled by Dart.');
-              setLanguage(arabic ? 'en' : 'ar');
+              clicks.set(clicks.value + 1);
+              message.set('The click was handled by Dart.');
+              language.set(arabic ? 'en' : 'ar');
             }),
             children: [
               Text(arabic ? 'Switch to English' : 'التبديل إلى العربية'),

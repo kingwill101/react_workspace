@@ -159,6 +159,59 @@ void main() {
     });
   });
 
+  group('ergonomic APIs', () {
+    test('conditional and repeated children remain portable', () {
+      final children = normalizeChildren([
+        when(true, text('shown')),
+        unless(true, text('hidden')),
+        ...each([1, 2], (value, index) => text('$index:$value')),
+      ]);
+
+      expect(children.map((child) => (child as Text).value), [
+        'shown',
+        '0:1',
+        '1:2',
+      ]);
+    });
+
+    test('css handles strings, maps, iterables, and empty values', () {
+      expect(
+        joinClassNames(
+          'button',
+          {'active': true, 'disabled': false},
+          ['rounded', null],
+        ),
+        'button active rounded',
+      );
+    });
+
+    test('component factory creates a keyed component node', () {
+      final factory = component<String>(
+        const ComponentId('example#Greeting'),
+        metadata: const ReactComponentMetadata(
+          name: 'Greeting',
+          propsType: 'String',
+        ),
+      );
+      final node = factory('hello', children: ['world'], key: 'greeting');
+
+      expect(node, isA<Component<String>>());
+      final componentNode = node as Component<String>;
+      expect(componentNode.id.value, 'example#Greeting');
+      expect(componentNode.props, 'hello');
+      expect(componentNode.key, 'greeting');
+      expect(componentNode.children.single, isA<Text>());
+      expect(factory.metadata?.name, 'Greeting');
+    });
+
+    test('state controller preserves value and setter', () {
+      final setter = StateSetter<int>((_) {}, (_) {});
+      final state = StateController(1, setter);
+      expect(state.value, 1);
+      expect(state.set, same(setter));
+    });
+  });
+
   group('ReactValueKind', () {
     test('constants are distinct', () {
       expect(reactVoid.kind, ReactValueKind.void_);

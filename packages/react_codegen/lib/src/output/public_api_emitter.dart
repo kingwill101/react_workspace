@@ -16,11 +16,18 @@ final class PublicApiEmitter {
         ..writeln(
           "const id${component.name} = ComponentId('${component.componentId}');",
         )
+        ..writeln(
+          "const ${component.name}Metadata = ReactComponentMetadata(name: '${component.name}');",
+        )
         ..writeln();
       buffer.writeln('const ${component.name} = _${component.name}Factory();');
       buffer.writeln();
       buffer.writeln('final class _${component.name}Factory {');
       buffer.writeln('  const _${component.name}Factory();');
+      buffer.writeln();
+      buffer.writeln(
+        '  ReactComponentMetadata get metadata => ${component.name}Metadata;',
+      );
       buffer.writeln();
       buffer.writeln('  ReactNode call({');
       buffer.writeln('  ${_params(component)}');

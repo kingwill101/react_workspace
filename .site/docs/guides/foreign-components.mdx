@@ -79,6 +79,22 @@ callbacks, hook parameters, and hook return values into typed Dart APIs. The
 shim imports only referenced exports and registers components plus an isolated
 hook/function bridge.
 
+Generated component bindings expose both direct calls and typed props builders:
+
+```dart
+final textarea = textareaProps()
+  ..id = 'feedback'
+  ..placeholder = 'Tell us what you think'
+  ..rows = 4;
+
+return textarea();
+```
+
+The builder form is generated for project-local foreign declarations and for
+`react ts bind` output. It produces the same `ForeignComponent` node as the
+direct helper, so it remains compatible with browser rendering, SSR, and
+`react_testing`.
+
 For deterministic wrapper maintenance, put the same options in a
 `react.js.bind` group and run `react ts bind` with no arguments. Commit and
 review wrapper outputs; application `lib/.generated/` output remains ignored.

@@ -57,6 +57,38 @@ not by the authored component itself.
 Component factories accept a stable `key`, normalize `ReactChildren`, and
 provide a `.props()` builder for composition-heavy call sites.
 
+The portable package also exposes small composition helpers:
+
+```dart
+return section(children: [
+  when(isSignedIn, AccountSummary()),
+  unless(isSignedIn, LoginPrompt()),
+  ...each(rows, (row, index) => RowView(row: row, index: index)),
+]);
+```
+
+`joinClassNames` is available in the renderer-neutral package for libraries
+that need conditional class composition without depending on the Web package.
+The Web entrypoint additionally provides `classNames` and the typed `css`
+style-map helper.
+
+For generated or registered components, `ReactComponentFactory<P>` provides a
+typed portable invocation when a component ID is more convenient than a
+generated named-parameter wrapper:
+
+```dart
+final Greeting = component<GreetingProps>(
+  const ComponentId('package:example/greeting.dart#Greeting'),
+  metadata: const ReactComponentMetadata(name: 'Greeting'),
+);
+
+final node = Greeting(const GreetingProps(name: 'Ada'));
+```
+
+The factory creates the same `Component<P>` node consumed by browser, SSR, and
+test renderers. It does not register a component by itself; registration is
+still owned by `react_codegen` and `react_tool`.
+
 ## Node model
 
 Every render result is a `ReactNode`. The portable hierarchy includes:

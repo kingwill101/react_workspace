@@ -1140,6 +1140,39 @@ final class ReactBuilder {
         ..writeln('  children: children,')
         ..writeln(');')
         ..writeln();
+
+      final builderName = '${_pascalIdentifier(functionName)}PropsBuilder';
+      buffer.writeln('/// Mutable typed builder for `$functionName`.');
+      buffer.writeln('final class $builderName {');
+      for (final entry in component.props.entries) {
+        final parameter = _foreignParameter(entry.key);
+        final type = _foreignDartType(entry.value);
+        final required = !type.trim().endsWith('?');
+        buffer.writeln('  ${required ? 'late ' : ''}$type $parameter;');
+      }
+      buffer
+        ..writeln('  String? key;')
+        ..writeln('  List<react.ReactNode> children = const [];')
+        ..writeln()
+        ..writeln(
+          '  react.ReactNode call([List<react.ReactNode>? childValues]) {',
+        )
+        ..writeln('    return $functionName(');
+      for (final entry in component.props.entries) {
+        final parameter = _foreignParameter(entry.key);
+        buffer.writeln('      $parameter: $parameter,');
+      }
+      buffer
+        ..writeln('      key: key,')
+        ..writeln('      children: childValues ?? children,')
+        ..writeln('    );')
+        ..writeln('  }')
+        ..writeln('}')
+        ..writeln();
+      buffer.writeln(
+        '$builderName ${_lowerCamel(functionName)}Props() => $builderName();',
+      );
+      buffer.writeln();
     }
 
     final bindings = config.file(
@@ -1167,6 +1200,14 @@ final class ReactBuilder {
             .join();
     return RegExp(r'^[0-9]').hasMatch(result) ? '_$result' : result;
   }
+
+  String _pascalIdentifier(String value) {
+    if (value.isEmpty) return 'Component';
+    return value[0].toUpperCase() + value.substring(1);
+  }
+
+  String _lowerCamel(String value) =>
+      value.isEmpty ? value : value[0].toLowerCase() + value.substring(1);
 
   String _foreignDartType(String configuredType) {
     final type = configuredType.trim();
