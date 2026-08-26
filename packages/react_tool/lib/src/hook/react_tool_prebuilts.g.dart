@@ -9,8 +9,8 @@ const react_toolPrebuilts = PrebuiltManifest(
   artifacts: {
     'linux-x64': PrebuiltArtifact(
       archiveName: 'react_tool-linux-x64.tar.gz',
-      archiveSha256: 'af4bbd319549391e3c9f3f48687a89039a6f020d60812a29ce50edb30e27785a',
-      payloadSha256: '6a6896a3abeacecac76a38eb3daafb7e9ce95d8be4bce8df59a5026708d9a622',
+      archiveSha256: '0eb2a5c9d317b1a2066953070b2bc013c7d9b90cbd24a629110eb5b5efa1b5c1',
+      payloadSha256: '2abd9bc3d7f470298538ad888ecaf110d2acf50a0560168e2e266ac97a44fd3d',
       payload: DynamicLibraryPayload(libraryStem: 'react_ts_bindings', acceptVersionedNames: true),
     ),
   },
