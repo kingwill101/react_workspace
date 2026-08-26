@@ -28,6 +28,10 @@ testing, framework integrations, or still experimental:
 `react_router`, `react_server_routed`, `react_server_shelf`, `react_testing`,
 `react_tool`, `react_web_generator`, `react_zustand`, and `react_riverpod`.
 
+Deferred packages currently declare `publish_to: none`. To prepare one for a
+future release, remove that marker, add it to the approved publish set, and
+complete a separate readiness review.
+
 ## Firehose workflows
 
 `.github/workflows/health.yaml` runs Firehose PR health checks. It checks only
@@ -80,5 +84,5 @@ package archive must resolve its dependencies from pub.dev.
 5. Publish dependent packages in dependency order when releasing several
    packages: core primitives first, then adapters and higher-level packages.
 
-Do not tag deferred packages until they are removed from the ignore list and
-have their own release readiness review.
+Do not tag deferred packages until they are removed from `publish_to: none`
+and have their own release readiness review.

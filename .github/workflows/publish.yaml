@@ -26,7 +26,9 @@ jobs:
         packages/react_web_generator,
         packages/react_zustand,
         packages/react_riverpod,
-        examples/**
+        examples/**,
+        tool/vendor/**,
+        third_party/**
     permissions:
       id-token: write
       pull-requests: write

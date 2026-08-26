@@ -1,6 +1,7 @@
 name: react_zustand
 description: Typed bindings for the zustand state-management library.
 version: 0.0.1
+publish_to: none
 repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_zustand
 resolution: workspace
 environment:
