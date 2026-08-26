@@ -32,11 +32,9 @@ jobs:
       - name: Build and test react_tool from source
         working-directory: packages/react_tool
         run: dart test
-      - name: Stage native library
-        run: |
-          mkdir -p built-library/linux-x64
-          cp packages/react_tool/.dart_tool/lib/libreact_ts_bindings.so \
-            built-library/linux-x64/
+      - name: Build and stage native library
+        working-directory: packages/react_tool
+        run: dart run native_prebuilt build --target linux-x64 --from-source --output ../../built-library
       - uses: actions/upload-artifact@v6
         with:
           name: linux-x64-built-library
@@ -55,10 +53,14 @@ jobs:
           name: linux-x64-built-library
           path: built-library/
       - run: dart pub get
+      - name: Prepare manifest validation config
+        run: |
+          cp "$CONFIG" "$RUNNER_TEMP/native_prebuilt.yaml"
+          sed -i '/^source:/,/^build:/{ /^build:/!d; }' "$RUNNER_TEMP/native_prebuilt.yaml"
       - name: Verify native prebuilt manifest
         run: |
           dart run native_prebuilt manifest verify \
-            --config "$CONFIG" \
+            --config "$RUNNER_TEMP/native_prebuilt.yaml" \
             --output "$MANIFEST_OUTPUT" \
             --built-library-dir built-library
 
@@ -76,16 +78,20 @@ jobs:
           name: linux-x64-built-library
           path: built-library/
       - run: dart pub get
+      - name: Prepare manifest generation config
+        run: |
+          cp "$CONFIG" "$RUNNER_TEMP/native_prebuilt.yaml"
+          sed -i '/^source:/,/^build:/{ /^build:/!d; }' "$RUNNER_TEMP/native_prebuilt.yaml"
       - name: Generate manifest and release archive
         run: |
           dart run native_prebuilt manifest update \
-            --config "$CONFIG" \
+            --config "$RUNNER_TEMP/native_prebuilt.yaml" \
             --output "$MANIFEST_OUTPUT" \
             --built-library-dir built-library \
             --release-assets-dir release-assets \
             --tag "${{ inputs.tag }}"
           dart run native_prebuilt manifest verify \
-            --config "$CONFIG" \
+            --config "$RUNNER_TEMP/native_prebuilt.yaml" \
             --output "$MANIFEST_OUTPUT" \
             --built-library-dir built-library \
             --release-assets-dir release-assets \

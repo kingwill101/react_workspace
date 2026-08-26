@@ -123,7 +123,10 @@ func (m *ReactWorkspaceCi) qualityStage(
 		"bash",
 		"-c",
 		"set -euo pipefail\n" +
-			"dart format --output=none --set-exit-if-changed packages examples tool/web_idl\n" +
+			"find packages examples tool/web_idl -type f -name '*.dart' " +
+				"! -path '*/.dart_tool/*' " +
+				"! -path 'packages/react_tool/lib/src/hook/react_tool_prebuilts.g.dart' " +
+				"-print0 | xargs -0 dart format --output=none --set-exit-if-changed\n" +
 			"dart analyze --fatal-infos\n" +
 			"npm ci --prefix third_party/web/web_generator/lib/src --no-audit --no-fund\n" +
 			"dart run tool/web_idl/verify.dart --strict\n",
