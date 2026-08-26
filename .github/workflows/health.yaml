@@ -22,7 +22,6 @@ jobs:
         packages/react_codegen,
         packages/react_router,
         packages/react_server_routed,
-        packages/react_server_shelf,
         packages/react_testing,
         packages/react_tool,
         packages/react_web_generator,

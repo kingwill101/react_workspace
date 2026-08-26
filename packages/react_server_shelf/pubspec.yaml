@@ -1,7 +1,6 @@
 name: react_server_shelf
 description: Shelf integration for React Dart server applications.
 version: 0.1.0
-publish_to: none
 repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_server_shelf
 resolution: workspace
 

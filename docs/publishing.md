@@ -16,16 +16,18 @@ The first publish wave contains the portable runtime foundation:
 | `react_web` | Web API types, DOM factories, and browser adapters |
 | `react_dom` | React DOM mounting and hydration APIs |
 | `react_server` | Transport-neutral SSR and server-function primitives |
+| `react_server_shelf` | Shelf transport integration for React Dart servers |
 
-These packages are the smallest useful foundation. `react_server_routed` and
-`react_server_shelf` remain separate integrations and are intentionally not
-part of this wave.
+These packages are the smallest useful foundation. `react_server_routed` remains
+a separate integration and is intentionally not part of this wave.
+`react_server_shelf` is included because its dependencies are already available
+from pub.dev.
 
 The following packages are currently deferred because they are tooling,
 testing, framework integrations, or still experimental:
 
 `react_analysis`, `react_analyzer`, `react_bloc`, `react_codegen`,
-`react_router`, `react_server_routed`, `react_server_shelf`, `react_testing`,
+`react_router`, `react_server_routed`, `react_testing`,
 `react_tool`, `react_web_generator`, `react_zustand`, and `react_riverpod`.
 
 Deferred packages currently declare `publish_to: none`. To prepare one for a
