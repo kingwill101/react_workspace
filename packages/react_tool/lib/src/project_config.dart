@@ -277,6 +277,31 @@ final class ReactProjectConfig {
 
   File file(String relativePath) => File(p.join(root.path, relativePath));
 
+  /// Returns a copy with a different SSR host runtime.
+  ///
+  /// This is useful for test and build orchestration when the checked-in
+  /// project target is Fetch-based but a local Node worker is needed.
+  ReactProjectConfig copyWith({String? ssrRuntime}) => ReactProjectConfig(
+    root: root,
+    packageName: packageName,
+    clientEntrypoint: clientEntrypoint,
+    ssrEntrypoint: ssrEntrypoint,
+    ssrRuntime: ssrRuntime ?? this.ssrRuntime,
+    serverEntrypoint: serverEntrypoint,
+    staticDirectory: staticDirectory,
+    outputDirectory: outputDirectory,
+    styleEntrypoints: styleEntrypoints,
+    styleOutput: styleOutput,
+    foreignComponents: foreignComponents,
+    foreignDependencies: foreignDependencies,
+    foreignModules: foreignModules,
+    esbuildPath: esbuildPath,
+    foreignExternals: foreignExternals,
+    jsHostMode: jsHostMode,
+    bundlingBackend: bundlingBackend,
+    jsBindGroups: jsBindGroups,
+  );
+
   Directory directory(String relativePath) =>
       Directory(p.join(root.path, relativePath));
 

@@ -23,6 +23,9 @@ void main() {
     final testHarness = await ReactTestHarness.start(
       projectRoot: packageRoot,
       reactVersion: ReactVersionPolicy.compatibilityBaselines.last,
+      // The deployed example uses Fetch SSR for Cloudflare. The local
+      // integration harness boots a Node worker, so override only this build.
+      ssrRuntime: 'node',
     );
     harness = testHarness;
     final registry = ServerFunctionRegistry();
@@ -51,7 +54,7 @@ void main() {
     document.assertStatus(200).assertIsHtml();
     expect(document.body, contains('<h1>Hello from SSR</h1>'));
     expect(document.body, contains('Who should the server greet?'));
-    expect(document.body, contains('browser.entry.mjs'));
+    expect(document.body, contains('browser.js'));
 
     final browserModule = await client!.get('/browser.entry.mjs');
     browserModule.assertStatus(200);
