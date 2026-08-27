@@ -1,3 +1,9 @@
+# Changelog
+
+## Unreleased
+
+- Adds the compact CBOR action frame protocol and validation primitives.
+
 ## 0.1.0
 
 - Introduces browser-safe server-function references, codecs, clients, and invocation context.
