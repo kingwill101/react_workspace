@@ -271,6 +271,13 @@ final class PrerenderCommand extends Command<void> {
   @override
   Future<void> run() async {
     final config = ReactProjectConfig.load();
+    if (config.ssrRuntime == 'fetch') {
+      throw const ReactToolException(
+        '`react prerender` requires ssr.runtime: node. Fetch SSR entrypoints '
+        'are request handlers for an edge host and cannot be launched as a '
+        'local Node worker; deploy them through the configured server host.',
+      );
+    }
     final manifest = option('manifest') as String?;
     final routes = manifest == null
         ? _routes(option('routes') as String? ?? '/')

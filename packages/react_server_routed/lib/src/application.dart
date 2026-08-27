@@ -346,7 +346,7 @@ final class RoutedReactApplication {
     }
 
     final contentType = context.request.headers.value('content-type') ?? '';
-    if (contentType.startsWith(compactProtocolContentType)) {
+    if (_isCompactContentType(contentType)) {
       return _handleCompactAction(context);
     }
     if (!contentType.startsWith('application/json') &&
@@ -739,3 +739,6 @@ final class RoutedReactApplication {
   static Iterable<String> _emptyCacheTags(routed.EngineContext context) =>
       const <String>[];
 }
+
+bool _isCompactContentType(String contentType) =>
+    contentType.split(';').first.trim() == compactProtocolContentType;

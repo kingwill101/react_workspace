@@ -15,7 +15,7 @@ FutureOr<Response> Function(Request) createServerActionHandler(
     if (req.method != 'POST') return Response(405);
 
     final contentType = req.headers['content-type'] ?? '';
-    if (contentType.startsWith(compactProtocolContentType)) {
+    if (_isCompactContentType(contentType)) {
       return _handleCompactAction(
         req,
         registry,
@@ -346,6 +346,9 @@ Response _errorResponse(
 );
 
 Object? _noopAuthenticate(Request req) => null;
+
+bool _isCompactContentType(String contentType) =>
+    contentType.split(';').first.trim() == compactProtocolContentType;
 
 int _idCounter = 0;
 String _generateId() =>
