@@ -22,6 +22,41 @@ Use `client` for browser-only applications, `ssr` for Shelf-backed full-stack
 applications, and `routed` or `routed-minimal` for Shelf-free Routed hosts.
 Prefer `routed-minimal` when the authored starter surface should stay small.
 
+## Configure application entrypoints
+
+The tool reads `react.yaml`, or a `react:` section in `pubspec.yaml` when
+`react.yaml` is absent. Prefer the structured configuration:
+
+```yaml
+client:
+  entrypoint: web/client.dart
+ssr:
+  entrypoint: lib/ssr.dart
+  runtime: node
+server:
+  entrypoint: bin/server.dart
+styles:
+  entrypoints:
+    - web/styles.scss
+  output: styles.css
+
+static: web
+output: build/react
+```
+
+The conventional entrypoints are `web/client.dart`, `lib/ssr.dart`, and
+`bin/server.dart`. Missing conventional files are skipped. The compatible
+flat aliases are `clientEntrypoint`, `ssrEntrypoint`, and
+`serverEntrypoint`; use the structured form in new projects.
+`styles.entrypoints` accepts multiple CSS/Sass/SCSS files, while
+`styles.entrypoint` and the top-level `css` spelling are legacy aliases.
+
+`react doctor` reports the resolved entrypoints and output paths. The final
+deployable browser artifact is `build/react/browser.js`; the generated
+`browser.entry.mjs`, `ssr.entry.mjs`, `ssr_runtime.mjs`, and
+`bundle_manifest.json` are build/runtime artifacts and should not be authored
+by application code.
+
 For edge deployments, configure the SSR build explicitly:
 
 ```yaml
