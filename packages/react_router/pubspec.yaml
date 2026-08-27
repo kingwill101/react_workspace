@@ -44,5 +44,5 @@ react:
 dependencies:
   react_core: ^0.1.0
 dev_dependencies:
-  react_tool: ^0.1.0
+  react_tool: ^0.2.0
   test: ^1.31.2
