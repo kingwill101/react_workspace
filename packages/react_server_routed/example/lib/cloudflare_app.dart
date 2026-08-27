@@ -21,8 +21,20 @@ Future<Engine> createEngine() async {
     staticHandler: (context) => context.string('Not found', statusCode: 404),
     indexTemplate: '''<!doctype html>
 <html>
-  <head><meta charset="utf-8"><title>Routed React</title></head>
-  <body><div id="root">{{SSR}}</div><script type="application/json">{{PROPS}}</script></body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Routed React</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script type="importmap">
+    {"imports":{"react":"https://esm.sh/react@18.2.0","react-dom":"https://esm.sh/react-dom@18.2.0","react-dom/":"https://esm.sh/react-dom@18.2.0/"}}
+    </script>
+  </head>
+  <body>
+    <div id="app">{{SSR}}</div>
+    <script id="__props" type="application/json">{{PROPS}}</script>
+    <script type="module" src="/browser.entry.mjs"></script>
+  </body>
 </html>''',
     ssr: ReactSsrClient(endpoint: Uri.parse('/__react/ssr')),
     ssrEndpoint: (context) {
