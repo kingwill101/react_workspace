@@ -10,7 +10,10 @@ void main() {
 
   // Server-function calls run through this client.
   runWithServerFunctionClient(
-    HttpServerFunctionClient(endpoint: Uri.parse('/__react/actions')),
+    HttpServerFunctionClient(
+      endpoint: Uri.parse('/__react/actions'),
+      useCompactProtocol: true,
+    ),
     () {
       final root = getRoot('app');
       final props = getInitialProps();

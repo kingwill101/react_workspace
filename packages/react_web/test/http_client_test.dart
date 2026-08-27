@@ -84,6 +84,42 @@ class _MissingResultClient extends http.BaseClient {
 
 void main() {
   group('HttpServerFunctionClient', () {
+    test('sends and decodes compact protocol frames', () async {
+      http.BaseRequest? captured;
+      final client = HttpServerFunctionClient(
+        endpoint: Uri.parse('https://example.test/__react/actions'),
+        useCompactProtocol: true,
+        client: _CapturingClient((req) async {
+          captured = req;
+          final body = ReactFrame(
+            kind: ReactMessageKind.result,
+            actionId: compactActionId('test.echo'),
+            requestId: 1,
+            payload: {'ok': true, 'result': 'compact'},
+          ).encode();
+          return http.StreamedResponse(
+            Stream.value(body),
+            200,
+            headers: {'content-type': compactProtocolContentType},
+            request: req,
+          );
+        }),
+      );
+
+      expect(await client.invoke(_echoRef, 'hi'), 'compact');
+      expect(captured!.headers[serverFunctionProtocolHeader], '2');
+      expect(captured!.headers['content-type'], compactProtocolContentType);
+      final request = ReactFrame.decode(await captured!.finalize().toBytes());
+      expect(request.kind, ReactMessageKind.invoke);
+      expect(request.actionId, compactActionId('test.echo'));
+      expect(request.payload, {
+        'id': 'test.echo',
+        'contract': 'sha256:echo-v1',
+        'arguments': 'hi',
+      });
+      client.close();
+    });
+
     test('sends correct headers and body for successful invoke', () async {
       http.BaseRequest? captured;
       final client = HttpServerFunctionClient(

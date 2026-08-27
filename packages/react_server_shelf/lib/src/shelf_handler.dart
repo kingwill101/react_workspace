@@ -15,6 +15,15 @@ FutureOr<Response> Function(Request) createServerActionHandler(
     if (req.method != 'POST') return Response(405);
 
     final contentType = req.headers['content-type'] ?? '';
+    if (contentType.startsWith(compactProtocolContentType)) {
+      return _handleCompactAction(
+        req,
+        registry,
+        authenticate: authenticate,
+        requestTimeout: requestTimeout,
+        maxBodySize: maxBodySize,
+      );
+    }
     if (!contentType.startsWith('application/json') &&
         !contentType.startsWith(serverFunctionContentType)) {
       return Response(415);
@@ -155,6 +164,162 @@ FutureOr<Response> Function(Request) createServerActionHandler(
     }
   };
 }
+
+Future<Response> _handleCompactAction(
+  Request req,
+  ServerFunctionRegistry registry, {
+  required Object? Function(Request req) authenticate,
+  required Duration requestTimeout,
+  required int maxBodySize,
+}) async {
+  late CompactServerFunctionRequest request;
+  try {
+    final bytes = await req.read().fold<List<int>>(
+      <int>[],
+      (buffer, chunk) => buffer..addAll(chunk),
+    );
+    if (bytes.length > maxBodySize) {
+      return _compactErrorResponse(
+        req,
+        null,
+        'request_too_large',
+        'Request too large.',
+        413,
+      );
+    }
+    request = CompactServerFunctionRequest.decode(bytes);
+  } on FormatException catch (error) {
+    return _errorResponse('invalid_frame', error.message, 400);
+  }
+
+  final headerProtocol = req.headers[serverFunctionProtocolHeader];
+  if (headerProtocol != null && headerProtocol != '$compactProtocolVersion') {
+    return _compactErrorResponse(
+      req,
+      request,
+      'protocol_mismatch',
+      'The protocol header does not match the frame.',
+      400,
+    );
+  }
+  if (req.headers[serverFunctionIdHeader] case final headerId?
+      when headerId != request.id) {
+    return _compactErrorResponse(
+      req,
+      request,
+      'id_mismatch',
+      'The action header does not match the frame.',
+      400,
+    );
+  }
+  if (req.headers[serverFunctionContractHeader] case final headerContract?
+      when headerContract != request.contract) {
+    return _compactErrorResponse(
+      req,
+      request,
+      'contract_mismatch',
+      'The contract header does not match the frame.',
+      400,
+    );
+  }
+
+  final expectedHash = registry.contractHashFor(request.id);
+  if (expectedHash != null && request.contract != expectedHash) {
+    return _compactErrorResponse(
+      req,
+      request,
+      'contract_mismatch',
+      'The action contract has changed. Please reload the page.',
+      400,
+    );
+  }
+
+  final afterResponse = ReactAfterResponse();
+  final context = ServerFunctionContext(
+    requestId: 'req_${request.frame.requestId}',
+    principal: authenticate(req),
+    headers: req.headers,
+    requestUri: req.url,
+    deadline: DateTime.now().add(requestTimeout),
+    cancellation: CancellationToken(),
+    afterResponse: afterResponse,
+  );
+  try {
+    final result = await registry
+        .dispatch(request.id, request.arguments, context)
+        .timeout(requestTimeout);
+    return _compactResponse(req, 200, request.success(result));
+  } on TimeoutException {
+    return _compactErrorResponse(
+      req,
+      request,
+      'timeout',
+      'The action timed out.',
+      504,
+      requestId: context.requestId,
+    );
+  } on ServerFunctionFailure catch (error) {
+    return _compactResponse(
+      req,
+      error.statusCode,
+      request.failure(
+        ServerFunctionError(
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          requestId: context.requestId,
+        ),
+      ),
+    );
+  } on UnknownServerFunctionException catch (error) {
+    return _compactErrorResponse(
+      req,
+      request,
+      'unknown_function',
+      'Unknown function: ${error.id}.',
+      404,
+    );
+  } catch (_) {
+    return _compactErrorResponse(
+      req,
+      request,
+      'internal_error',
+      'Internal server error.',
+      500,
+      requestId: context.requestId,
+    );
+  } finally {
+    unawaited(Future<void>.delayed(Duration.zero, afterResponse.run));
+  }
+}
+
+Response _compactResponse(Request req, int statusCode, ReactFrame frame) =>
+    Response(
+      statusCode,
+      body: frame.encode(),
+      headers: {'content-type': compactProtocolContentType},
+    );
+
+Response _compactErrorResponse(
+  Request req,
+  CompactServerFunctionRequest? request,
+  String code,
+  String message,
+  int statusCode, {
+  String? requestId,
+}) => request == null
+    ? _errorResponse(code, message, statusCode, requestId: requestId)
+    : _compactResponse(
+        req,
+        statusCode,
+        request.failure(
+          ServerFunctionError(
+            code: code,
+            message: message,
+            requestId: requestId,
+          ),
+        ),
+      );
 
 Response _errorResponse(
   String code,

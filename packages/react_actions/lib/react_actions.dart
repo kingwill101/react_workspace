@@ -3,6 +3,7 @@ library;
 
 export 'src/annotations.dart';
 export 'src/client.dart';
+export 'src/compact_protocol.dart';
 export 'src/codec.dart';
 export 'src/exceptions.dart';
 export 'src/function_id.dart';

@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:react_actions/react_actions.dart';
 
-/// Browser-side [ServerFunctionClient] that uses `package:http` to POST
-/// JSON-encoded action requests to a same-origin endpoint.
+/// Browser-side [ServerFunctionClient] for server-function HTTP requests.
+///
+/// Compact CBOR frames can be enabled with [useCompactProtocol]. JSON remains
+/// the default for compatibility with existing deployments.
 ///
 /// The default [endpoint] is `/__react/actions`.
 ///
@@ -21,11 +23,13 @@ final class HttpServerFunctionClient implements ServerFunctionClient {
   final Uri endpoint;
   final http.Client client;
   final Duration requestTimeout;
+  final bool useCompactProtocol;
 
   HttpServerFunctionClient({
     Uri? endpoint,
     http.Client? client,
     this.requestTimeout = const Duration(seconds: 30),
+    this.useCompactProtocol = false,
   }) : endpoint = endpoint ?? Uri.parse('/__react/actions'),
        client = client ?? http.Client();
 
@@ -42,22 +46,41 @@ final class HttpServerFunctionClient implements ServerFunctionClient {
     late http.Response response;
 
     try {
+      final headers = {
+        'content-type': useCompactProtocol
+            ? compactProtocolContentType
+            : serverFunctionContentType,
+        'accept': useCompactProtocol
+            ? compactProtocolContentType
+            : serverFunctionContentType,
+        serverFunctionProtocolHeader: useCompactProtocol
+            ? '$compactProtocolVersion'
+            : '$serverFunctionProtocolVersion',
+        serverFunctionIdHeader: ref.id.value,
+        serverFunctionContractHeader: ref.contractHash,
+      };
+      final body = ref.argumentsCodec.encode(arguments);
       response = await client
           .post(
             endpoint,
-            headers: {
-              'content-type': serverFunctionContentType,
-              'accept': serverFunctionContentType,
-              serverFunctionProtocolHeader: '$serverFunctionProtocolVersion',
-              serverFunctionIdHeader: ref.id.value,
-              serverFunctionContractHeader: ref.contractHash,
-            },
-            body: jsonEncode({
-              'protocol': serverFunctionProtocolVersion,
-              'id': ref.id.value,
-              'contract': ref.contractHash,
-              'arguments': ref.argumentsCodec.encode(arguments),
-            }),
+            headers: headers,
+            body: useCompactProtocol
+                ? ReactFrame(
+                    kind: ReactMessageKind.invoke,
+                    actionId: compactActionId(ref.id.value),
+                    requestId: _nextRequestId(),
+                    payload: {
+                      'id': ref.id.value,
+                      'contract': ref.contractHash,
+                      'arguments': body,
+                    },
+                  ).encode()
+                : jsonEncode({
+                    'protocol': serverFunctionProtocolVersion,
+                    'id': ref.id.value,
+                    'contract': ref.contractHash,
+                    'arguments': body,
+                  }),
           )
           .timeout(requestTimeout);
     } catch (error) {
@@ -70,7 +93,9 @@ final class HttpServerFunctionClient implements ServerFunctionClient {
     // Validate HTTP status
     if (response.statusCode < 200 || response.statusCode >= 300) {
       // Try to parse structured error
-      final envelope = _tryParseErrorEnvelope(response.body);
+      final envelope = useCompactProtocol
+          ? _tryParseCompactErrorEnvelope(response.bodyBytes)
+          : _tryParseErrorEnvelope(response.body);
       if (envelope != null) {
         throw RemoteServerFunctionException(
           code: envelope.code,
@@ -85,23 +110,11 @@ final class HttpServerFunctionClient implements ServerFunctionClient {
       );
     }
 
-    // Parse response body
-    final Object? decoded;
-    try {
-      decoded = jsonDecode(response.body);
-    } catch (error) {
-      throw ServerFunctionTransportException(
-        'The server returned an invalid response.',
-        cause: error,
-      );
-    }
-
-    // Decode the structured envelope. A proxy or server error page can still
-    // be valid JSON without being a server-function response, so normalize
-    // envelope and codec failures as transport errors.
     late ServerFunctionResponse envelope;
     try {
-      envelope = ServerFunctionResponse.fromJson(decoded);
+      envelope = useCompactProtocol
+          ? _decodeCompactResponse(response.bodyBytes)
+          : ServerFunctionResponse.fromJson(jsonDecode(response.body));
     } catch (error) {
       throw ServerFunctionTransportException(
         'The server returned an invalid response envelope.',
@@ -127,6 +140,30 @@ final class HttpServerFunctionClient implements ServerFunctionClient {
         cause: error,
       );
     }
+  }
+}
+
+var _requestCounter = 0;
+int _nextRequestId() => ++_requestCounter;
+
+ServerFunctionResponse _decodeCompactResponse(List<int> bytes) {
+  final frame = ReactFrame.decode(bytes);
+  if (frame.kind != ReactMessageKind.result &&
+      frame.kind != ReactMessageKind.error) {
+    throw const FormatException('Unexpected compact response kind.');
+  }
+  return ServerFunctionResponse.fromJson(frame.payload);
+}
+
+ServerFunctionError? _tryParseCompactErrorEnvelope(List<int> bytes) {
+  try {
+    return ServerFunctionError.fromJson(
+      Map<String, dynamic>.from(
+        (ReactFrame.decode(bytes).payload as Map)['error'] as Map,
+      ),
+    );
+  } catch (_) {
+    return null;
   }
 }
 

@@ -78,20 +78,20 @@ It emits a module-style Fetch SSR endpoint using React's
 the JavaScript `ReactSsrClient` at its URL. The host application and the SSR
 service may be separate Workers or use different deployment targets.
 
-`routed_cli deploy --target cloudflare` understands the Routed engine factory
-convention and can embed the generated Fetch SSR artifact with
-`--react-ssr-entry`. The application must expose a `createEngine` or
-`createCloudflareEngine(CloudflareEnvironment)` factory and use
-`/__react/ssr` (or the configured route) as its SSR endpoint.
+The published `routed_cli: ^0.4.0` package understands the Routed engine
+factory convention and can embed the generated Fetch SSR artifact with
+`--ssr-entry`. The application must expose a `createEngine` or
+`createCloudflareEngine(CloudflareEnvironment)` factory and use `/__ssr` as
+its SSR endpoint.
 
 The example includes an edge-safe factory in
 `lib/cloudflare_app.dart`. From a Routed CLI checkout, its deployment shape is:
 
 ```bash
 dart run react_tool:react build --release
-routed deploy --target cloudflare \
+dart run routed_cli:routed deploy --target cloudflare \
   --entry package:react_server_routed_example/cloudflare_app.dart \
-  --react-ssr-entry build/react/ssr.entry.mjs \
+  --ssr-entry build/react/ssr.entry.mjs \
   --dry-run
 ```
 

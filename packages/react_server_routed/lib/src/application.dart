@@ -346,6 +346,9 @@ final class RoutedReactApplication {
     }
 
     final contentType = context.request.headers.value('content-type') ?? '';
+    if (contentType.startsWith(compactProtocolContentType)) {
+      return _handleCompactAction(context);
+    }
     if (!contentType.startsWith('application/json') &&
         !contentType.startsWith(serverFunctionContentType)) {
       return _actionError(
@@ -507,6 +510,130 @@ final class RoutedReactApplication {
     }
   }
 
+  Future<routed.Response> _handleCompactAction(
+    routed.EngineContext context,
+  ) async {
+    late CompactServerFunctionRequest request;
+    try {
+      final bytes = await context.bodyBytes;
+      if (bytes.length > maxActionBodySize) {
+        return _actionError(
+          context,
+          'request_too_large',
+          'Request too large.',
+          413,
+        );
+      }
+      request = CompactServerFunctionRequest.decode(bytes);
+    } on FormatException catch (error) {
+      return _actionError(context, 'invalid_frame', error.message, 400);
+    }
+
+    final headerProtocol = context.request.headers.value(
+      serverFunctionProtocolHeader,
+    );
+    if (headerProtocol != null && headerProtocol != '$compactProtocolVersion') {
+      return _compactActionError(
+        context,
+        request,
+        'protocol_mismatch',
+        'The protocol header does not match the frame.',
+        400,
+      );
+    }
+    final headerId = context.request.headers.value(serverFunctionIdHeader);
+    if (headerId != null && headerId != request.id) {
+      return _compactActionError(
+        context,
+        request,
+        'id_mismatch',
+        'The action header does not match the frame.',
+        400,
+      );
+    }
+    final headerContract = context.request.headers.value(
+      serverFunctionContractHeader,
+    );
+    if (headerContract != null && headerContract != request.contract) {
+      return _compactActionError(
+        context,
+        request,
+        'contract_mismatch',
+        'The contract header does not match the frame.',
+        400,
+      );
+    }
+
+    final expectedHash = actionRegistry.contractHashFor(request.id);
+    if (expectedHash != null && request.contract != expectedHash) {
+      return _compactActionError(
+        context,
+        request,
+        'contract_mismatch',
+        'The action contract has changed. Please reload the page.',
+        400,
+      );
+    }
+
+    final afterResponse = ReactAfterResponse();
+    final actionContext = ServerFunctionContext(
+      requestId: 'req_${request.frame.requestId}',
+      principal: authenticate?.call(context),
+      headers: _stringHeaders(context),
+      requestUri: context.requestedUri,
+      deadline: DateTime.now().add(requestTimeout),
+      cancellation: CancellationToken(),
+      afterResponse: afterResponse,
+    );
+    try {
+      final result = await actionRegistry
+          .dispatch(request.id, request.arguments, actionContext)
+          .timeout(requestTimeout);
+      return _compactActionResponse(context, 200, request.success(result));
+    } on TimeoutException {
+      return _compactActionError(
+        context,
+        request,
+        'timeout',
+        'The action timed out.',
+        504,
+        requestId: actionContext.requestId,
+      );
+    } on ServerFunctionFailure catch (error) {
+      return _compactActionResponse(
+        context,
+        error.statusCode,
+        request.failure(
+          ServerFunctionError(
+            code: error.code,
+            message: error.message,
+            details: error.details,
+            requestId: actionContext.requestId,
+          ),
+        ),
+      );
+    } on UnknownServerFunctionException catch (error) {
+      return _compactActionError(
+        context,
+        request,
+        'unknown_function',
+        'Unknown function: ${error.id}.',
+        404,
+      );
+    } catch (_) {
+      return _compactActionError(
+        context,
+        request,
+        'internal_error',
+        'Internal server error.',
+        500,
+        requestId: actionContext.requestId,
+      );
+    } finally {
+      unawaited(Future<void>.delayed(Duration.zero, afterResponse.run));
+    }
+  }
+
   static Map<String, String> _stringHeaders(routed.EngineContext context) {
     final headers = <String, String>{};
     context.request.headers.forEach((name, values) {
@@ -525,6 +652,32 @@ final class RoutedReactApplication {
     context.response.write(jsonEncode(payload));
     return context.response;
   }
+
+  static routed.Response _compactActionResponse(
+    routed.EngineContext context,
+    int statusCode,
+    ReactFrame frame,
+  ) {
+    context.response.statusCode = statusCode;
+    context.response.headers.set('content-type', compactProtocolContentType);
+    context.response.writeBytes(frame.encode());
+    return context.response;
+  }
+
+  static routed.Response _compactActionError(
+    routed.EngineContext context,
+    CompactServerFunctionRequest request,
+    String code,
+    String message,
+    int statusCode, {
+    String? requestId,
+  }) => _compactActionResponse(
+    context,
+    statusCode,
+    request.failure(
+      ServerFunctionError(code: code, message: message, requestId: requestId),
+    ),
+  );
 
   static routed.Response _actionError(
     routed.EngineContext context,

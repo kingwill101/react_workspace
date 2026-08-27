@@ -10,8 +10,8 @@ const _rootComponent = 'package:react_server_routed_example/lib/app.dart#App';
 /// Builds the edge-safe Routed engine used by `routed_cli deploy`.
 ///
 /// Static assets are intentionally delegated to the deployment layer in this
-/// minimal example. The React SSR endpoint is mounted by the generated
-/// Cloudflare wrapper at `/__react/ssr`.
+/// minimal example. The SSR endpoint is mounted by the generated Cloudflare
+/// wrapper at `/__ssr`.
 Future<Engine> createEngine() async {
   final actions = ServerFunctionRegistry();
   registerServerActions(registry: actions);
@@ -26,17 +26,15 @@ Future<Engine> createEngine() async {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Routed React</title>
     <link rel="stylesheet" href="/styles.css">
-    <script type="importmap">
-    {"imports":{"react":"https://esm.sh/react@18.2.0","react-dom":"https://esm.sh/react-dom@18.2.0","react-dom/":"https://esm.sh/react-dom@18.2.0/"}}
-    </script>
+    <link rel="icon" href="/assets/routed-mark.svg">
   </head>
   <body>
     <div id="app">{{SSR}}</div>
     <script id="__props" type="application/json">{{PROPS}}</script>
-    <script type="module" src="/browser.entry.mjs"></script>
+    <script type="module" src="/browser.js"></script>
   </body>
 </html>''',
-    ssr: ReactSsrClient(endpoint: Uri.parse('/__react/ssr')),
+    ssr: ReactSsrClient(endpoint: Uri.parse('/__ssr')),
     ssrEndpoint: (context) {
       final request = cloudflareRequestOf(context);
       return Uri.parse(request?.url ?? context.request.uri.toString());

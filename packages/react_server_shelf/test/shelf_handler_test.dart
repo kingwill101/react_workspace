@@ -54,4 +54,42 @@ void main() {
       'result': 42,
     });
   });
+
+  test('dispatches a compact frame through Shelf', () async {
+    final registry = ServerFunctionRegistry()
+      ..register(_incrementRef, (arguments, _) => arguments.value + 1);
+    final handler = createServerActionHandler(registry);
+    final request = ReactFrame(
+      kind: ReactMessageKind.invoke,
+      actionId: compactActionId(_incrementRef.id.value),
+      requestId: 9,
+      payload: {
+        'id': _incrementRef.id.value,
+        'contract': _incrementRef.contractHash,
+        'arguments': {'value': 41},
+      },
+    );
+
+    final response = await handler(
+      Request(
+        'POST',
+        Uri.parse('http://localhost/__react/actions'),
+        headers: {
+          'content-type': compactProtocolContentType,
+          serverFunctionProtocolHeader: '$compactProtocolVersion',
+          serverFunctionIdHeader: _incrementRef.id.value,
+          serverFunctionContractHeader: _incrementRef.contractHash,
+        },
+        body: request.encode(),
+      ),
+    );
+    expect(response.statusCode, 200);
+    final bytes = await response.read().fold<List<int>>(
+      <int>[],
+      (buffer, chunk) => buffer..addAll(chunk),
+    );
+    final frame = ReactFrame.decode(bytes);
+    expect(frame.kind, ReactMessageKind.result);
+    expect((frame.payload as Map)['result'], 42);
+  });
 }

@@ -7,6 +7,7 @@ import 'package:react_server_routed_example/.generated/greeting.action.g.dart'
 import 'package:react_server_routed_example/.generated/server_actions.g.dart';
 import 'package:path/path.dart' as p;
 import 'package:react_server/react_server.dart';
+import 'package:react_actions/react_actions.dart';
 import 'package:react_server_routed/react_server_routed.dart';
 import 'package:react_testing/react_testing.dart';
 import 'package:react_tool/react_tool.dart' show ReactVersionPolicy;
@@ -77,6 +78,37 @@ void main() {
       expect(payload['result'], contains('Hello, Ada!'));
     },
   );
+
+  test('dispatches a compact protocol frame through the full app', () async {
+    final request = ReactFrame(
+      kind: ReactMessageKind.invoke,
+      actionId: compactActionId(greetRef.id.value),
+      requestId: 7,
+      payload: {
+        'id': greetRef.id.value,
+        'contract': greetRef.contractHash,
+        'arguments': greetRef.argumentsCodec.encode((name: 'Compact')),
+      },
+    );
+    final response = await client!.post(
+      '/__react/actions',
+      request.encode(),
+      headers: {
+        'content-type': [compactProtocolContentType],
+        serverFunctionProtocolHeader: ['$compactProtocolVersion'],
+        serverFunctionIdHeader: [greetRef.id.value],
+        serverFunctionContractHeader: [greetRef.contractHash],
+      },
+    );
+
+    response.assertStatus(200);
+    final frame = ReactFrame.decode(response.bodyBytes);
+    expect(frame.kind, ReactMessageKind.result);
+    expect(frame.payload, isA<Map>());
+    final payload = Map<String, dynamic>.from(frame.payload! as Map);
+    expect(payload['ok'], isTrue);
+    expect(payload['result'], contains('Hello, Compact!'));
+  });
 }
 
 Future<Response> _serveStatic(
