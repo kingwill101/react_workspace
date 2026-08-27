@@ -2,7 +2,7 @@
 
 ## 0.0.2
 
-- Removes the unused `react_core` dependency from the package manifest.
+- Aligns the package with the portable React core runtime.
 
 ## 0.0.1
 

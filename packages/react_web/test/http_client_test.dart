@@ -52,6 +52,24 @@ class _ErrorClient extends http.BaseClient {
   }
 }
 
+class _CompactJsonErrorClient extends http.BaseClient {
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    final body = utf8.encode(
+      jsonEncode({
+        'ok': false,
+        'error': {'code': 'json_fallback', 'message': 'too large'},
+      }),
+    );
+    return http.StreamedResponse(
+      Stream.value(body),
+      413,
+      headers: {'content-type': serverFunctionContentType},
+      request: request,
+    );
+  }
+}
+
 class _TransportFailClient extends http.BaseClient {
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async =>
@@ -200,6 +218,25 @@ void main() {
             (e) => e.code,
             'code',
             'compact_bad',
+          ),
+        ),
+      );
+      client.close();
+    });
+
+    test('accepts JSON fallback errors for compact requests', () async {
+      final client = HttpServerFunctionClient(
+        client: _CompactJsonErrorClient(),
+        endpoint: Uri.parse('https://example.test/__react/actions'),
+        useCompactProtocol: true,
+      );
+      expect(
+        () => client.invoke(_echoRef, 'hi'),
+        throwsA(
+          isA<RemoteServerFunctionException>().having(
+            (e) => e.code,
+            'code',
+            'json_fallback',
           ),
         ),
       );

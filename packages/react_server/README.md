@@ -57,6 +57,11 @@ final document = await ssr.render(
 );
 ```
 
+Relative endpoints are resolved only against the `baseUri` supplied to
+`render` or `renderStream`. When using a relative endpoint, supply a trusted
+absolute origin; do not derive it from an untrusted request `Host` header.
+Using an absolute endpoint avoids the need for a base URI.
+
 `ReactSsrDocument` contains rendered HTML and serialized props. The HTTP
 adapter injects both into the configured index template.
 

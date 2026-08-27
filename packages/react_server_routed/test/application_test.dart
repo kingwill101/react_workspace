@@ -206,6 +206,30 @@ void main() {
       equals({'ok': true, 'result': 'echo:hello'}),
     );
   });
+
+  test('rejects an oversized action body before dispatch', () async {
+    final app = RoutedReactApplication(
+      actionRegistry: ServerFunctionRegistry(),
+      staticHandler: (context) => context.string('static'),
+      indexTemplate: '<main>{{SSR}}</main>',
+      maxActionBodySize: 4,
+    );
+    final testContext = _context(
+      'POST',
+      '/__react/actions',
+      headers: {'content-type': 'application/json'},
+      body: utf8.encode('12345'),
+    );
+
+    final response = await app.handler(testContext.context);
+    await response.close();
+
+    expect(response.statusCode, 413);
+    expect(
+      (jsonDecode(utf8.decode(testContext.adapter.bytes)) as Map)['error'],
+      isNotNull,
+    );
+  });
 }
 
 final class _StringCodec extends ServerFunctionJsonCodec<String> {

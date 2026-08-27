@@ -105,7 +105,13 @@ final class ReactSsrClient {
 
   void close() => _client.close(force: true);
 
-  Uri _resolveEndpoint(Uri? baseUri) => endpoint.isAbsolute || baseUri == null
-      ? endpoint
-      : baseUri.resolveUri(endpoint);
+  Uri _resolveEndpoint(Uri? baseUri) {
+    if (endpoint.isAbsolute) return endpoint;
+    if (baseUri == null || !baseUri.isAbsolute || baseUri.host.isEmpty) {
+      throw ArgumentError(
+        'A relative SSR endpoint requires a trusted absolute base URI.',
+      );
+    }
+    return baseUri.resolveUri(endpoint);
+  }
 }

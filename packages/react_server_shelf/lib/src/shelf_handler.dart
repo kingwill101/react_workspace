@@ -348,7 +348,8 @@ Response _errorResponse(
 Object? _noopAuthenticate(Request req) => null;
 
 bool _isCompactContentType(String contentType) =>
-    contentType.split(';').first.trim() == compactProtocolContentType;
+    contentType.split(';').first.trim().toLowerCase() ==
+    compactProtocolContentType;
 
 int _idCounter = 0;
 String _generateId() =>

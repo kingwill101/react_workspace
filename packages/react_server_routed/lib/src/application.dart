@@ -31,8 +31,8 @@ typedef RoutedReactPartialDocumentBuilder =
 /// Resolves the SSR endpoint base URI for a document request.
 ///
 /// This is useful for Fetch hosts whose portable request URI does not preserve
-/// the externally visible origin. The default is the URI on
-/// `EngineContext.request`.
+/// the externally visible origin. The returned URI must be a trusted absolute
+/// origin; it must not be derived from an untrusted Host header.
 typedef RoutedReactSsrEndpoint = Uri Function(routed.EngineContext context);
 
 /// Composes React document and server-action handlers into a Routed handler.
@@ -316,7 +316,7 @@ final class RoutedReactApplication {
     Map<String, dynamic> props,
     int marker,
     String template,
-    Uri baseUri,
+    Uri? baseUri,
   ) async* {
     final before = template.substring(0, marker);
     final after = template.substring(marker + '{{SSR}}'.length);
@@ -337,8 +337,7 @@ final class RoutedReactApplication {
     yield after.replaceAll('{{PROPS}}', jsonEncode(finalProps));
   }
 
-  Uri _ssrBaseUri(routed.EngineContext context) =>
-      ssrEndpoint?.call(context) ?? context.request.uri;
+  Uri? _ssrBaseUri(routed.EngineContext context) => ssrEndpoint?.call(context);
 
   Future<routed.Response> _handleAction(routed.EngineContext context) async {
     if (context.method != 'POST') {
@@ -359,8 +358,10 @@ final class RoutedReactApplication {
       );
     }
 
-    final body = await context.request.body();
-    if (utf8.encode(body).length > maxActionBodySize) {
+    late String body;
+    try {
+      body = utf8.decode(await _readActionBody(context, maxActionBodySize));
+    } on _RequestBodyTooLarge {
       return _actionError(
         context,
         'request_too_large',
@@ -524,16 +525,15 @@ final class RoutedReactApplication {
           413,
         );
       }
-      final bytes = await context.bodyBytes;
-      if (bytes.length > maxActionBodySize) {
-        return _actionError(
-          context,
-          'request_too_large',
-          'Request too large.',
-          413,
-        );
-      }
+      final bytes = await _readActionBody(context, maxActionBodySize);
       request = CompactServerFunctionRequest.decode(bytes);
+    } on _RequestBodyTooLarge {
+      return _actionError(
+        context,
+        'request_too_large',
+        'Request too large.',
+        413,
+      );
     } on FormatException catch (error) {
       return _actionError(context, 'invalid_frame', error.message, 400);
     }
@@ -741,4 +741,28 @@ final class RoutedReactApplication {
 }
 
 bool _isCompactContentType(String contentType) =>
-    contentType.split(';').first.trim() == compactProtocolContentType;
+    contentType.split(';').first.trim().toLowerCase() ==
+    compactProtocolContentType;
+
+final class _RequestBodyTooLarge implements Exception {
+  const _RequestBodyTooLarge();
+}
+
+Future<List<int>> _readActionBody(
+  routed.EngineContext context,
+  int maxBodySize,
+) async {
+  if (!context.request.hasNativeHttpRequest) {
+    final bytes = await context.bodyBytes;
+    if (bytes.length > maxBodySize) throw const _RequestBodyTooLarge();
+    return bytes;
+  }
+
+  final bytes = <int>[];
+  // ignore: deprecated_member_use
+  await for (final chunk in context.request.httpRequest) {
+    bytes.addAll(chunk);
+    if (bytes.length > maxBodySize) throw const _RequestBodyTooLarge();
+  }
+  return bytes;
+}

@@ -75,7 +75,8 @@ void main() {
         'POST',
         Uri.parse('http://localhost/__react/actions'),
         headers: {
-          'content-type': compactProtocolContentType,
+          'content-type':
+              '${compactProtocolContentType.toUpperCase()}; charset=binary',
           serverFunctionProtocolHeader: '$compactProtocolVersion',
           serverFunctionIdHeader: _incrementRef.id.value,
           serverFunctionContractHeader: _incrementRef.contractHash,

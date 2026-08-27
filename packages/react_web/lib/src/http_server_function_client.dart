@@ -94,7 +94,8 @@ final class HttpServerFunctionClient implements ServerFunctionClient {
     if (response.statusCode < 200 || response.statusCode >= 300) {
       // Try to parse structured error
       final envelope = useCompactProtocol
-          ? _tryParseCompactErrorEnvelope(response.bodyBytes)
+          ? _tryParseCompactErrorEnvelope(response.bodyBytes) ??
+                _tryParseErrorEnvelope(response.body)
           : _tryParseErrorEnvelope(response.body);
       if (envelope != null) {
         throw RemoteServerFunctionException(
