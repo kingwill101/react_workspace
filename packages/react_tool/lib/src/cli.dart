@@ -945,7 +945,7 @@ final class ServeCommand extends Command<void> {
       final workerFile = config.file(
         '${config.outputDirectory}/${manifest.ssrEntry ?? 'ssr.entry.mjs'}',
       );
-      if (!noSsr && workerFile.existsSync()) {
+      if (!noSsr && config.ssrRuntime == 'node' && workerFile.existsSync()) {
         worker = await Process.start(
           'node',
           [workerFile.path],

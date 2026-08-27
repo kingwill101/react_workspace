@@ -28,6 +28,13 @@ typedef RoutedReactCacheTags =
 typedef RoutedReactPartialDocumentBuilder =
     FutureOr<ReactPartialDocument?> Function(routed.EngineContext context);
 
+/// Resolves the SSR endpoint base URI for a document request.
+///
+/// This is useful for Fetch hosts whose portable request URI does not preserve
+/// the externally visible origin. The default is the URI on
+/// `EngineContext.request`.
+typedef RoutedReactSsrEndpoint = Uri Function(routed.EngineContext context);
+
 /// Composes React document and server-action handlers into a Routed handler.
 ///
 /// Non-document requests are delegated to [staticHandler]. Document requests
@@ -47,6 +54,7 @@ final class RoutedReactApplication {
     this.pageProps = _emptyPageProps,
     this.pageMetadata = _emptyPageMetadata,
     this.partialDocument,
+    this.ssrEndpoint,
     ReactDataCache? partialDataCache,
     this.routeManifest,
     this.streamingSsr = false,
@@ -87,6 +95,9 @@ final class RoutedReactApplication {
 
   /// Builds a shell and independently cached dynamic regions for PPR.
   final RoutedReactPartialDocumentBuilder? partialDocument;
+
+  /// Resolves the base URI used for relative [ssr] endpoints.
+  final RoutedReactSsrEndpoint? ssrEndpoint;
 
   /// Cache used by [partialDocument] shells and regions.
   final ReactDataCache partialDataCache;
@@ -207,6 +218,7 @@ final class RoutedReactApplication {
       final rendered = await ssr!.render(
         component: rootComponent!,
         props: props,
+        baseUri: _ssrBaseUri(context),
       );
       final html = template
           .replaceAll('{{SSR}}', rendered.html)
@@ -245,6 +257,7 @@ final class RoutedReactApplication {
       final rendered = await ssr!.render(
         component: rootComponent!,
         props: props,
+        baseUri: _ssrBaseUri(context),
       );
       final html = template
           .replaceAll('{{SSR}}', rendered.html)
@@ -278,6 +291,7 @@ final class RoutedReactApplication {
       final rendered = await ssr!.render(
         component: rootComponent!,
         props: props,
+        baseUri: _ssrBaseUri(context),
       );
       return context.html(
         template
@@ -288,7 +302,12 @@ final class RoutedReactApplication {
 
     context.response.headers.set('content-type', 'text/html; charset=utf-8');
     await context.response.addStream(
-      _documentStream(props, marker, template).map(utf8.encode),
+      _documentStream(
+        props,
+        marker,
+        template,
+        _ssrBaseUri(context),
+      ).map(utf8.encode),
     );
     return context.response;
   }
@@ -297,6 +316,7 @@ final class RoutedReactApplication {
     Map<String, dynamic> props,
     int marker,
     String template,
+    Uri baseUri,
   ) async* {
     final before = template.substring(0, marker);
     final after = template.substring(marker + '{{SSR}}'.length);
@@ -306,6 +326,7 @@ final class RoutedReactApplication {
     await for (final chunk in ssr!.renderStream(
       component: rootComponent!,
       props: props,
+      baseUri: baseUri,
     )) {
       if (chunk.done) {
         finalProps = chunk.props;
@@ -315,6 +336,9 @@ final class RoutedReactApplication {
     }
     yield after.replaceAll('{{PROPS}}', jsonEncode(finalProps));
   }
+
+  Uri _ssrBaseUri(routed.EngineContext context) =>
+      ssrEndpoint?.call(context) ?? context.request.uri;
 
   Future<routed.Response> _handleAction(routed.EngineContext context) async {
     if (context.method != 'POST') {

@@ -44,8 +44,10 @@ final class ReactSsrClient {
   Future<ReactSsrDocument> render({
     required String component,
     required Map<String, dynamic> props,
+    Uri? baseUri,
   }) async {
-    final request = await _client.postUrl(endpoint);
+    final resolvedEndpoint = _resolveEndpoint(baseUri);
+    final request = await _client.postUrl(resolvedEndpoint);
     request.headers.contentType = ContentType.json;
     request.write(jsonEncode({'component': component, 'props': props}));
     final response = await request.close();
@@ -54,7 +56,7 @@ final class ReactSsrClient {
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw HttpException(
         'SSR worker returned HTTP ${response.statusCode}: $body',
-        uri: endpoint,
+        uri: resolvedEndpoint,
       );
     }
 
@@ -80,8 +82,10 @@ final class ReactSsrClient {
   Stream<ReactSsrStreamChunk> renderStream({
     required String component,
     required Map<String, dynamic> props,
+    Uri? baseUri,
   }) async* {
-    final request = await _client.postUrl(endpoint);
+    final resolvedEndpoint = _resolveEndpoint(baseUri);
+    final request = await _client.postUrl(resolvedEndpoint);
     request.headers.contentType = ContentType.json;
     request.write(
       jsonEncode({'component': component, 'props': props, 'mode': 'stream'}),
@@ -92,7 +96,7 @@ final class ReactSsrClient {
       final body = await response.transform(utf8.decoder).join();
       throw HttpException(
         'SSR worker returned HTTP ${response.statusCode}: $body',
-        uri: endpoint,
+        uri: resolvedEndpoint,
       );
     }
 
@@ -131,4 +135,8 @@ final class ReactSsrClient {
   }
 
   void close() => _client.close(force: true);
+
+  Uri _resolveEndpoint(Uri? baseUri) => endpoint.isAbsolute || baseUri == null
+      ? endpoint
+      : baseUri.resolveUri(endpoint);
 }

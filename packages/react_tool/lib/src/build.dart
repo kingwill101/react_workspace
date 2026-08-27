@@ -1452,25 +1452,27 @@ final class ReactBuilder {
 
   Future<void> _writeSsrBootstrap(JsEnvironment? environment) async {
     final output = config.directory(config.outputDirectory);
-    var entry = _ssrEntry;
+    var entry = config.ssrRuntime == 'fetch' ? _ssrFetchEntry : _ssrEntry;
     if (environment != null) {
       // Import React through the environment's exact versions so the worker
       // shares one instance with the foreign bundle.
-      entry = entry
-          .replaceFirst(
-            "import React from 'react';",
-            "import React from '${environment.resolveForNode('react')}';",
-          )
-          .replaceFirst(
-            "import ReactDOMServer from 'react-dom/server';",
-            "import ReactDOMServer from "
-                "'${environment.resolveForNode('react-dom/server')}';",
-          )
-          .replaceFirst(
-            "globalThis.require ??= createRequire('./x.js');",
-            "globalThis.require ??= createRequire("
-                "${jsonEncode(p.join(environment.npmRoot, 'x.js'))});",
-          );
+      entry = config.ssrRuntime == 'fetch'
+          ? entry
+          : entry
+                .replaceFirst(
+                  "import React from 'react';",
+                  "import React from '${environment.resolveForNode('react')}';",
+                )
+                .replaceFirst(
+                  "import ReactDOMServer from 'react-dom/server';",
+                  "import ReactDOMServer from "
+                      "'${environment.resolveForNode('react-dom/server')}';",
+                )
+                .replaceFirst(
+                  "globalThis.require ??= createRequire('./x.js');",
+                  "globalThis.require ??= createRequire("
+                      "${jsonEncode(p.join(environment.npmRoot, 'x.js'))});",
+                );
     }
     if (!await _hasForeignSurface()) {
       entry = entry.replaceAll(
@@ -1479,11 +1481,18 @@ final class ReactBuilder {
             '}\n',
         '',
       );
+      entry = entry.replaceAll(
+        "if (globalThis.__REACT_FOREIGN_COMPONENTS__ !== false) {\n"
+            "  await import('./foreign/ssr/bundle.mjs');\n"
+            '}\n',
+        '',
+      );
+      entry = entry.replaceAll("  import('./foreign/ssr/bundle.mjs'),\n", '');
     }
     await File(p.join(output.path, 'ssr.entry.mjs')).writeAsString(entry);
-    await File(
-      p.join(output.path, 'ssr_runtime.mjs'),
-    ).writeAsString(_ssrRuntime);
+    await File(p.join(output.path, 'ssr_runtime.mjs')).writeAsString(
+      config.ssrRuntime == 'fetch' ? _ssrFetchRuntime : _ssrRuntime,
+    );
     log(
       'Generated ${p.join(config.outputDirectory, 'ssr.entry.mjs')} and '
       'ssr_runtime.mjs',
@@ -1755,6 +1764,31 @@ await import('./ssr.js');
 await import('./ssr_runtime.mjs');
 ''';
 
+/// Fetch-module bootstrap for edge runtimes such as Cloudflare Workers.
+/// Unlike [_ssrEntry], this module has no Node listener or process globals;
+/// the host owns the Fetch export and can bundle this module with Wrangler.
+const _ssrFetchEntry = r'''import React from 'react';
+import * as ReactDOMServer from 'react-dom/server.browser';
+
+globalThis.self ??= globalThis;
+globalThis.React = React;
+globalThis.ReactDOMServer = ReactDOMServer;
+
+const initialize = Promise.all([
+  import('./callback_trampoline.mjs'),
+  import('./foreign/ssr/bundle.mjs'),
+  import('./ssr.js'),
+]);
+const runtime = import('./ssr_runtime.mjs');
+
+export default {
+  async fetch(request, env, executionContext) {
+    await initialize;
+    return (await runtime).default.fetch(request, env, executionContext);
+  },
+};
+''';
+
 const _ssrRuntime = r'''import http from 'node:http';
 import { Writable } from 'node:stream';
 
@@ -1858,4 +1892,52 @@ function renderStreaming(renderRequest, res) {
     fail(error);
   }
 }
+''';
+
+const _ssrFetchRuntime = r'''const jsonHeaders = {
+  'content-type': 'application/json; charset=utf-8',
+};
+
+export default {
+  async fetch(request) {
+    try {
+      const payload = await request.json();
+      const renderRequest = {
+        id: payload.component ?? payload.id,
+        props: payload.props ?? {},
+      };
+      if (payload.mode === 'stream') {
+        return new Response(JSON.stringify({
+          error: 'Streaming SSR is not supported by the Fetch target yet.',
+        }), {status: 501, headers: jsonHeaders});
+      }
+
+      let html;
+      try {
+        const element = globalThis.__REACT_RENDER__(renderRequest);
+        const stream = await globalThis.ReactDOMServer.renderToReadableStream(element);
+        html = await new Response(stream).text();
+      } catch (error) {
+        const fallbackRenderer = globalThis.__REACT_RENDER_FALLBACK__;
+        if (!fallbackRenderer) throw error;
+        const fallbackElement = fallbackRenderer({
+          ...renderRequest,
+          error: String(error?.message ?? error),
+        });
+        const stream = await globalThis.ReactDOMServer.renderToReadableStream(fallbackElement);
+        html = await new Response(stream).text();
+        globalThis.__reactDartSSRBoundaryFallback = false;
+        globalThis.__reactDartSSRBoundaryError = undefined;
+      }
+      return new Response(JSON.stringify({html, props: renderRequest.props}), {
+       status: 200,
+        headers: jsonHeaders,
+      });
+    } catch (error) {
+      return new Response(JSON.stringify({
+        error: String(error?.message ?? error),
+      }), {status: 500, headers: jsonHeaders});
+    }
+  },
+};
 ''';

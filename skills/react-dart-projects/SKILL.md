@@ -22,6 +22,20 @@ Use `client` for browser-only applications, `ssr` for Shelf-backed full-stack
 applications, and `routed` or `routed-minimal` for Shelf-free Routed hosts.
 Prefer `routed-minimal` when the authored starter surface should stay small.
 
+For edge deployments, configure the SSR build explicitly:
+
+```yaml
+ssr:
+  entrypoint: lib/ssr.dart
+  runtime: fetch
+```
+
+The default `node` runtime emits the development/production SSR listener used
+by `react serve`. The experimental `fetch` runtime emits a module-style SSR
+endpoint using Web Fetch and `renderToReadableStream`; it is intended for a
+separately deployed Worker or another Fetch host. The application host can
+call that endpoint through the JavaScript `ReactSsrClient`.
+
 ## Resolve unpublished packages
 
 The React Dart packages are currently hosted on GitHub and are not available
@@ -126,6 +140,11 @@ dart analyze
 dart test
 dart run react_tool:react build
 ```
+
+When validating an edge SSR project, also inspect the generated
+`build/react/ssr.entry.mjs` and confirm it has no `node:http` listener. Do not
+run a Fetch entrypoint with `react serve`; that command starts the Node SSR
+worker only for projects using `ssr.runtime: node`.
 
 For full-stack behavior, compose `ReactTestHarness` with the application's
 `RoutedRequestHandler` or `ShelfRequestHandler`. Use harness-allocated ports;

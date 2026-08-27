@@ -832,6 +832,37 @@ globalThis.ReactDOM = ReactDOM;
     },
   );
 
+  test('generates a Fetch SSR module without a Node listener', () async {
+    await Directory('${root.path}/lib').create(recursive: true);
+    await File('${root.path}/lib/ssr.dart').writeAsString('void main() {}\n');
+    await File('${root.path}/react.yaml').writeAsString('''
+ssr:
+  runtime: fetch
+''');
+
+    final config = ReactProjectConfig.load(root);
+    final builder = ReactBuilder(
+      config: config,
+      release: false,
+      log: (_) {},
+      npmCommand: await writeNpmStub(root),
+    );
+
+    await builder.build();
+
+    final entry = await File(
+      '${root.path}/build/react/ssr.entry.mjs',
+    ).readAsString();
+    final runtime = await File(
+      '${root.path}/build/react/ssr_runtime.mjs',
+    ).readAsString();
+    expect(entry, contains("react-dom/server.browser"));
+    expect(entry, isNot(contains('node:module')));
+    expect(runtime, contains('export default'));
+    expect(runtime, contains('renderToReadableStream'));
+    expect(runtime, isNot(contains('http.createServer')));
+  });
+
   test('builds through the rolldown backend via the node driver', () async {
     await Directory('${root.path}/lib').create(recursive: true);
     await File(

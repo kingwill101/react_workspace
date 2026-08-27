@@ -1,4 +1,4 @@
-/// Browser placeholder for the native SSR worker response.
+/// Placeholder for runtimes without a supported SSR transport.
 final class ReactSsrDocument {
   final String html;
   final Map<String, dynamic> props;
@@ -26,6 +26,7 @@ final class ReactSsrClient {
   Future<ReactSsrDocument> render({
     required String component,
     required Map<String, dynamic> props,
+    Uri? baseUri,
   }) => throw UnsupportedError(
     'ReactSsrClient is only available on native Dart.',
   );
@@ -33,6 +34,7 @@ final class ReactSsrClient {
   Stream<ReactSsrStreamChunk> renderStream({
     required String component,
     required Map<String, dynamic> props,
+    Uri? baseUri,
   }) => throw UnsupportedError(
     'ReactSsrClient is only available on native Dart.',
   );

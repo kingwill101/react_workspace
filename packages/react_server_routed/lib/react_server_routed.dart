@@ -8,4 +8,5 @@ export 'src/application.dart'
         RoutedReactCacheKey,
         RoutedReactCacheTags,
         RoutedReactPageMetadata,
-        RoutedReactPageProps;
+        RoutedReactPageProps,
+        RoutedReactSsrEndpoint;

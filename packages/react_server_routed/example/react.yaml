@@ -2,6 +2,7 @@ client:
   entrypoint: web/client.dart
 ssr:
   entrypoint: lib/ssr.dart
+  runtime: fetch
 server:
   entrypoint: bin/server.dart
 styles:
