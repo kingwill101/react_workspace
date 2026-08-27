@@ -1,6 +1,6 @@
 name: react_actions
 description: Browser-safe protocol types for server function invocation.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_actions
 resolution: workspace
 environment:
