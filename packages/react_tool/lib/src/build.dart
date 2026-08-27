@@ -206,6 +206,9 @@ final class ReactBuilder {
       dartBrowserUsage: browserUsage,
       dartSsrUsage: ssrUsage,
     );
+    if (hasClient) {
+      await _bundleBrowserEntry(jsEnvironment);
+    }
 
     final serverBinary = server ? await _compileServer() : null;
 
@@ -963,6 +966,7 @@ final class ReactBuilder {
     required String target,
     required String entry,
     required String outfile,
+    bool includeReactExternals = true,
   }) async {
     final bundler = _bundler;
     if (environment == null || bundler == null) {
@@ -982,7 +986,7 @@ final class ReactBuilder {
         outputFile: outfile,
         workingDirectory: config.root.path,
         npmRoot: environment.npmRoot,
-        externals: await _mergedExternals(),
+        externals: await _mergedExternals(includeReact: includeReactExternals),
         conditions: [release ? 'production' : 'development'],
         minify: release,
         sourceMaps: !release,
@@ -1008,11 +1012,18 @@ final class ReactBuilder {
 
   /// Externals declared by the project and every wrapper (deduplicated),
   /// always including react and react-dom so they stay singletons.
-  Future<List<String>> _mergedExternals() async {
-    final result = <String>{'react', 'react-dom'};
+  Future<List<String>> _mergedExternals({bool includeReact = true}) async {
+    final result = <String>{
+      if (includeReact) 'react',
+      if (includeReact) 'react-dom',
+    };
     result.addAll(config.foreignExternals);
     for (final wrapper in await _discoverWrappers()) {
       result.addAll(wrapper.externals);
+    }
+    if (!includeReact) {
+      result.remove('react');
+      result.remove('react-dom');
     }
     return result.toList();
   }
@@ -1029,6 +1040,7 @@ final class ReactBuilder {
         config.foreignModules.isNotEmpty ||
         config.foreignDependencies.isNotEmpty ||
         additionalDependencies.isNotEmpty ||
+        config.clientEntrypoint != null ||
         // The SSR bootstrap always imports React and ReactDOM/server, so the
         // worker needs a JS environment even without foreign modules.
         config.ssrEntrypoint != null ||
@@ -1356,9 +1368,9 @@ final class ReactBuilder {
 
     // The entry absorbs the inline React bootstrap that used to live in
     // index.html: it sets globalThis.React/ReactDOM before importing the
-    // trampoline, the foreign bundle, and the Dart client output. The
-    // importmap stays in index.html because the browser resolves the bare
-    // react specifier, not esbuild.
+    // trampoline, the foreign bundle, and the Dart client output. This module
+    // is an intermediate bundler input; the final browser artifact is emitted
+    // by [_bundleBrowserEntry].
     //
     // The trampoline/foreign/client are loaded with dynamic imports: static
     // imports are hoisted and evaluated before this module's body runs, which
@@ -1394,47 +1406,55 @@ final class ReactBuilder {
       'src="/browser.entry.mjs"',
     );
 
-    // Pin the import map to the exact React version the environment resolved
-    // so browser and SSR always share one instance.
-    if (environment != null) {
-      source = source.replaceAllMapped(
-        RegExp(r'https://esm\.sh/(react(?:-dom)?)@[0-9.]+'),
-        (match) =>
-            'https://esm.sh/${match.group(1)}@${environment.reactVersion}',
-      );
-    }
-    if (source.contains('/browser.entry.mjs')) {
-      await index.writeAsString(source);
-      return;
-    }
+    await index.writeAsString(source);
+  }
 
-    // Replace the inline React bootstrap and the per-file module tags with a
-    // single entry module (idempotent; also handles fresh templates that only
-    // contain the inline bootstrap and the client tag).
+  /// Bundles the browser loader and all of its runtime dependencies into the
+  /// single artifact served by production hosts.
+  Future<void> _bundleBrowserEntry(JsEnvironment? environment) async {
+    final entry = File(
+      p.join(
+        config.directory(config.outputDirectory).path,
+        'browser.entry.mjs',
+      ),
+    );
+    final result = await _bundleTarget(
+      environment: environment,
+      target: 'browser',
+      entry: entry.path,
+      outfile: p.join(
+        config.directory(config.outputDirectory).path,
+        'browser.js',
+      ),
+      includeReactExternals: false,
+    );
+    log(
+      'Bundled browser entry (${_formatBytes(result.outputBytes)}) '
+      '→ ${p.join(config.outputDirectory, 'browser.js')}',
+    );
+
+    final index = File(
+      p.join(config.directory(config.outputDirectory).path, 'index.html'),
+    );
+    if (!index.existsSync()) return;
+    var source = await index.readAsString();
     source = source
+        .replaceAll(RegExp(r'<script\s+type="importmap">[\s\S]*?</script>'), '')
         .replaceAll(
-          RegExp(
-            r'<script[^>]*src="/?callback_trampoline\.mjs"[^>]*>\s*</script>',
-          ),
-          '',
-        )
-        .replaceAll(
-          RegExp(
-            r'<script[^>]*src="/?foreign/browser/bundle\.mjs"[^>]*>\s*</script>',
-          ),
+          RegExp(r'<script[^>]*src="/?browser\.entry\.mjs"[^>]*>\s*</script>'),
           '',
         )
         .replaceAll(
           RegExp(r'<script[^>]*src="/?client\.js"[^>]*>\s*</script>'),
           '',
+        )
+        .replaceAllMapped(
+          RegExp(r'<script[^>]*>([\s\S]*?)</script>'),
+          (match) => match.group(1)!.contains('globalThis.React')
+              ? ''
+              : match.group(0)!,
         );
-    source = source.replaceAllMapped(
-      RegExp(r'<script[^>]*>([\s\S]*?)</script>'),
-      (match) =>
-          match.group(1)!.contains('globalThis.React') ? '' : match.group(0)!,
-    );
-    const entryScript =
-        '<script type="module" src="/browser.entry.mjs"></script>';
+    const entryScript = '<script type="module" src="/browser.js"></script>';
     source = source.contains('</body>')
         ? source.replaceFirst('</body>', '$entryScript\n</body>')
         : '$source\n$entryScript';
@@ -1517,11 +1537,13 @@ final class ReactBuilder {
       final dart = File(p.join(output.path, 'client.js'));
       final foreign = File(p.join(output.path, 'foreign/browser/bundle.mjs'));
       manifest['browser'] = <String, Object?>{
-        'entry': 'browser.entry.mjs',
+        'entry': 'browser.js',
+        'loader': 'browser.entry.mjs',
         'dart': 'client.js',
         if (foreign.existsSync()) 'foreign': 'foreign/browser/bundle.mjs',
         'bytes': {
           'dart': await dart.length(),
+          'bundle': await File(p.join(output.path, 'browser.js')).length(),
           if (foreign.existsSync()) 'foreign': await foreign.length(),
         },
       };

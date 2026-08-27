@@ -34,25 +34,37 @@ ReactNode App(({String title}) props) {
 
   return div(
     className: classNames('app-shell', {'app-shell--pending': requestPending}),
-    style: css(
-      fontFamily: 'system-ui, sans-serif',
-      maxWidth: 640,
-      margin: '0 auto',
-      padding: '48px 24px',
-      textAlign: 'center',
-    ),
     additionalProps: dataAttributes({
       'state': requestPending ? 'busy' : 'idle',
     }),
     children: [
-      h1(key: 'title', children: [props.title]),
       div(
-        key: 'welcome',
-        children: ['Hello! — edit lib/app.dart to get started.'],
+        key: 'header',
+        className: 'app-header',
+        children: [
+          div(key: 'brand', className: 'brand-mark'),
+          div(key: 'wordmark', children: ['Routed × React']),
+        ],
       ),
       div(
-        key: 'instructions',
-        children: ['Edit lib/app.dart and rebuild to see changes.'],
+        key: 'content',
+        className: 'app-content',
+        children: [
+          div(
+            key: 'eyebrow',
+            className: 'eyebrow',
+            children: ['Edge-rendered interface'],
+          ),
+          h1(key: 'title', children: [props.title]),
+          div(
+            key: 'lede',
+            className: 'lede',
+            children: [
+              'A Dart React surface rendered at the edge, with static assets '
+                  'served by Cloudflare and actions handled by Routed.',
+            ],
+          ),
+        ],
       ),
       label(
         key: 'name-label',
@@ -73,6 +85,7 @@ ReactNode App(({String title}) props) {
       ),
       div(
         key: 'action',
+        className: 'action-panel',
         children: [
           button(
             key: 'greet',
@@ -88,7 +101,13 @@ ReactNode App(({String title}) props) {
           ),
           div(
             key: 'response',
+            className: 'server-response',
             children: [message ?? 'The server response will appear here.'],
+          ),
+          div(
+            key: 'asset-note',
+            className: 'asset-note',
+            children: ['Static SVG assets are served from /assets/.'],
           ),
         ],
       ),

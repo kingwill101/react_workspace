@@ -745,18 +745,19 @@ globalThis.ReactDOM = ReactDOM;
       );
       expect(browserEntry, contains("await import('./client.js');"));
 
+      final browserBundle = await File(
+        '${root.path}/build/react/browser.js',
+      ).readAsString();
+      expect(browserBundle, contains("import React from 'react';"));
+
       final index = await File(
         '${root.path}/build/react/index.html',
       ).readAsString();
-      expect(
-        index,
-        contains('<script type="module" src="/browser.entry.mjs">'),
-      );
+      expect(index, contains('<script type="module" src="/browser.js">'));
       expect(index, contains('href="/card.module.css"'));
       expect(index, isNot(contains('src="client.js"')));
       expect(index, isNot(contains('globalThis.React')));
-      expect(index, contains('react@18.3.1'));
-      expect(index, contains('react-dom@18.3.1'));
+      expect(index, isNot(contains('importmap')));
 
       final ssrEntry = await File(
         '${root.path}/build/react/ssr.entry.mjs',
@@ -784,7 +785,8 @@ globalThis.ReactDOM = ReactDOM;
       expect(manifest['bundler'], 'esbuild');
       expect(manifest['mode'], 'development');
       final browser = manifest['browser'] as Map;
-      expect(browser['entry'], 'browser.entry.mjs');
+      expect(browser['entry'], 'browser.js');
+      expect(browser['loader'], 'browser.entry.mjs');
       expect(browser['dart'], 'client.js');
       expect(browser['foreign'], 'foreign/browser/bundle.mjs');
       expect((browser['bytes'] as Map)['dart'], greaterThan(0));
@@ -796,7 +798,7 @@ globalThis.ReactDOM = ReactDOM;
 
       final parsed = BundleManifest.load(Directory('${root.path}/build/react'));
       expect(parsed.bundler, 'esbuild');
-      expect(parsed.browserEntry, 'browser.entry.mjs');
+      expect(parsed.browserEntry, 'browser.js');
       expect(parsed.ssrEntry, 'ssr.entry.mjs');
       expect(parsed.ssr?.runtime, 'ssr_runtime.mjs');
 
