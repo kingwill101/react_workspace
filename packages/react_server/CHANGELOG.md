@@ -1,4 +1,4 @@
-## Unreleased
+## 0.1.1
 
 - Adds Fetch-based SSR client support for JavaScript and edge runtimes.
 - Supports resolving relative SSR endpoints against an application base URI.
