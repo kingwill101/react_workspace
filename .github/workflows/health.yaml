@@ -15,10 +15,6 @@ jobs:
       # supported health check in the current reusable workflow.
       fail_on: "changelog,do-not-submit,unused-dependencies"
       warn_on: "license,breaking,leaking"
-      # Dart package validation requires build-hook imports in dependencies,
-      # while dependency_validator only inspects lib/ and reports them as
-      # unused. Keep this exception scoped to react_tool.
-      ignore_unuseddependencies: packages/react_tool
       ignore_packages: >-
         packages/react_analyzer,
         packages/react_codegen,

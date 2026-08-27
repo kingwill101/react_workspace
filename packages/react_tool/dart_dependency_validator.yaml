@@ -1,0 +1,6 @@
+# Dart package validation requires build-hook imports in dependencies, while
+# dependency_validator scans only the package's Dart library surface.
+ignore:
+  - code_assets
+  - hooks
+  - native_toolchain_rust
