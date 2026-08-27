@@ -1937,7 +1937,9 @@ export default {
       let html;
       try {
         const element = globalThis.__REACT_RENDER__(renderRequest);
-        const stream = await globalThis.ReactDOMServer.renderToReadableStream(element);
+        const stream = await globalThis.ReactDOMServer.renderToReadableStream(element, {
+          onError(error) { console.error(error); },
+        });
         html = await new Response(stream).text();
       } catch (error) {
         const fallbackRenderer = globalThis.__REACT_RENDER_FALLBACK__;
@@ -1946,7 +1948,9 @@ export default {
           ...renderRequest,
           error: String(error?.message ?? error),
         });
-        const stream = await globalThis.ReactDOMServer.renderToReadableStream(fallbackElement);
+        const stream = await globalThis.ReactDOMServer.renderToReadableStream(fallbackElement, {
+          onError(error) { console.error(error); },
+        });
         html = await new Response(stream).text();
         globalThis.__reactDartSSRBoundaryFallback = false;
         globalThis.__reactDartSSRBoundaryError = undefined;

@@ -48,6 +48,7 @@ void main() {
     expect(manifest.bundler, 'esbuild');
     expect(manifest.mode, 'development');
     expect(manifest.browserEntry, 'browser.js');
+    expect(manifest.browserLoader, 'browser.entry.mjs');
     expect(manifest.browser?.dart, 'client.js');
     expect(manifest.browser?.foreign, 'foreign/browser/bundle.mjs');
     expect(manifest.browser?.dartBytes, 1024);

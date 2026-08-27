@@ -176,10 +176,11 @@ dart test
 dart run react_tool:react build
 ```
 
-When validating an edge SSR project, also inspect the generated
-`build/react/ssr.entry.mjs` and confirm it has no `node:http` listener. Do not
-run a Fetch entrypoint with `react serve`; that command starts the Node SSR
-worker only for projects using `ssr.runtime: node`.
+When validating an edge SSR project, inspect both generated modules:
+`build/react/ssr.entry.mjs` and `build/react/ssr_runtime.mjs`. Confirm the
+entry uses `renderToReadableStream` and neither file has a `node:http` listener.
+Do not run a Fetch entrypoint with `react serve`; that command starts the Node
+SSR worker only for projects using `ssr.runtime: node`.
 
 For full-stack behavior, compose `ReactTestHarness` with the application's
 `RoutedRequestHandler` or `ShelfRequestHandler`. Use harness-allocated ports;

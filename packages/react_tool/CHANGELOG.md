@@ -1,3 +1,5 @@
+# Changelog
+
 ## 0.2.0
 
 - Documents structured client, SSR, server, and stylesheet entrypoints.

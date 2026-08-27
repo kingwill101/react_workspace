@@ -1126,11 +1126,11 @@ packages:
     dependency: transitive
     description:
       path: "packages/routed_io"
-      ref: master
-      resolved-ref: "1c656672e699b43e69be1621110c1c9252e9bdea"
+      ref: "routed_io-v0.1.2"
+      resolved-ref: "0f2cc02ff9fce9c6775cae85f52c8d1847fcd28a"
       url: "https://github.com/kingwill101/routed.git"
     source: git
-    version: "0.1.0"
+    version: "0.1.2"
   routed_logging:
     dependency: transitive
     description:
@@ -1143,7 +1143,7 @@ packages:
     dependency: transitive
     description:
       path: "packages/routed_node"
-      ref: master
+      ref: "routed_node-v0.2.1"
       resolved-ref: "0f2cc02ff9fce9c6775cae85f52c8d1847fcd28a"
       url: "https://github.com/kingwill101/routed.git"
     source: git

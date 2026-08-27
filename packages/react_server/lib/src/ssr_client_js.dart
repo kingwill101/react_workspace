@@ -1,33 +1,7 @@
 import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
-
-/// A rendered HTML document returned by the SSR worker.
-final class ReactSsrDocument {
-  const ReactSsrDocument({required this.html, required this.props});
-
-  final String html;
-  final Map<String, dynamic> props;
-}
-
-/// A chunk emitted by the generated streaming SSR worker.
-final class ReactSsrStreamChunk {
-  const ReactSsrStreamChunk._({
-    this.html = '',
-    this.props = const <String, dynamic>{},
-    this.done = false,
-  });
-
-  final String html;
-  final Map<String, dynamic> props;
-  final bool done;
-
-  factory ReactSsrStreamChunk.html(String html) =>
-      ReactSsrStreamChunk._(html: html);
-
-  factory ReactSsrStreamChunk.complete(Map<String, dynamic> props) =>
-      ReactSsrStreamChunk._(props: props, done: true);
-}
+import 'ssr_types.dart';
 
 /// Fetch-based client for an SSR service on JavaScript runtimes.
 ///

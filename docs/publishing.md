@@ -44,8 +44,9 @@ complete a separate readiness review.
 
 ## Firehose workflows
 
-`.github/workflows/health.yaml` runs Firehose PR health checks. It checks only
-the initial publish wave and ignores deferred packages.
+`.github/workflows/health.yaml` runs Firehose PR health checks for the initial
+publish wave and the approved state-management wave. It ignores deferred
+packages and tooling that are not yet release candidates.
 
 `.github/workflows/publish.yaml` runs Firehose’s package dry-run on pull
 requests and publishes a package when a matching package tag is pushed. In a

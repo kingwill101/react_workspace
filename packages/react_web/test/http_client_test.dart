@@ -171,6 +171,41 @@ void main() {
       client.close();
     });
 
+    test('throws RemoteServerFunctionException on compact error', () async {
+      final client = HttpServerFunctionClient(
+        client: _CapturingClient((request) async {
+          final body = ReactFrame(
+            kind: ReactMessageKind.error,
+            actionId: compactActionId(_echoRef.id.value),
+            requestId: 1,
+            payload: {
+              'ok': false,
+              'error': {'code': 'compact_bad', 'message': 'fail'},
+            },
+          ).encode();
+          return http.StreamedResponse(
+            Stream.value(body),
+            422,
+            headers: {'content-type': compactProtocolContentType},
+            request: request,
+          );
+        }),
+        endpoint: Uri.parse('https://example.test/__react/actions'),
+        useCompactProtocol: true,
+      );
+      expect(
+        () => client.invoke(_echoRef, 'hi'),
+        throwsA(
+          isA<RemoteServerFunctionException>().having(
+            (e) => e.code,
+            'code',
+            'compact_bad',
+          ),
+        ),
+      );
+      client.close();
+    });
+
     test(
       'throws ServerFunctionTransportException on transport failure',
       () async {

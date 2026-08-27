@@ -174,10 +174,19 @@ Future<Response> _handleCompactAction(
 }) async {
   late CompactServerFunctionRequest request;
   try {
-    final bytes = await req.read().fold<List<int>>(
-      <int>[],
-      (buffer, chunk) => buffer..addAll(chunk),
-    );
+    final bytes = <int>[];
+    await for (final chunk in req.read()) {
+      bytes.addAll(chunk);
+      if (bytes.length > maxBodySize) {
+        return _compactErrorResponse(
+          req,
+          null,
+          'request_too_large',
+          'Request too large.',
+          413,
+        );
+      }
+    }
     if (bytes.length > maxBodySize) {
       return _compactErrorResponse(
         req,
@@ -236,7 +245,7 @@ Future<Response> _handleCompactAction(
 
   final afterResponse = ReactAfterResponse();
   final context = ServerFunctionContext(
-    requestId: 'req_${request.frame.requestId}',
+    requestId: _generateId(),
     principal: authenticate(req),
     headers: req.headers,
     requestUri: req.url,

@@ -515,6 +515,15 @@ final class RoutedReactApplication {
   ) async {
     late CompactServerFunctionRequest request;
     try {
+      final declaredLength = context.request.headers.contentLength;
+      if (declaredLength > maxActionBodySize) {
+        return _actionError(
+          context,
+          'request_too_large',
+          'Request too large.',
+          413,
+        );
+      }
       final bytes = await context.bodyBytes;
       if (bytes.length > maxActionBodySize) {
         return _actionError(
@@ -577,7 +586,7 @@ final class RoutedReactApplication {
 
     final afterResponse = ReactAfterResponse();
     final actionContext = ServerFunctionContext(
-      requestId: 'req_${request.frame.requestId}',
+      requestId: _generateRequestId(),
       principal: authenticate?.call(context),
       headers: _stringHeaders(context),
       requestUri: context.requestedUri,

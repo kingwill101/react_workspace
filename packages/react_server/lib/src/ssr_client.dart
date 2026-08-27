@@ -1,37 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
-/// A rendered HTML document returned by the SSR worker.
-final class ReactSsrDocument {
-  final String html;
-  final Map<String, dynamic> props;
-
-  const ReactSsrDocument({required this.html, required this.props});
-}
-
-/// A chunk emitted by the generated streaming SSR worker.
-final class ReactSsrStreamChunk {
-  const ReactSsrStreamChunk._({
-    this.html = '',
-    this.props = const <String, dynamic>{},
-    this.done = false,
-  });
-
-  /// An HTML chunk. Empty for the terminal event.
-  final String html;
-
-  /// Serialized props included by the terminal event.
-  final Map<String, dynamic> props;
-
-  /// Whether this is the terminal event.
-  final bool done;
-
-  factory ReactSsrStreamChunk.html(String html) =>
-      ReactSsrStreamChunk._(html: html);
-
-  factory ReactSsrStreamChunk.complete(Map<String, dynamic> props) =>
-      ReactSsrStreamChunk._(props: props, done: true);
-}
+import 'ssr_types.dart';
 
 /// Native client for the generated Node SSR worker.
 final class ReactSsrClient {
@@ -126,7 +95,7 @@ final class ReactSsrClient {
         case 'error':
           throw HttpException(
             'SSR worker stream failed: ${decoded['error'] ?? 'unknown error'}',
-            uri: endpoint,
+            uri: resolvedEndpoint,
           );
         default:
           throw const FormatException('Unknown streaming SSR event.');

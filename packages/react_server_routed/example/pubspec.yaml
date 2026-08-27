@@ -16,17 +16,17 @@ dependencies:
   routed_core:
     git:
       url: https://github.com/kingwill101/routed.git
-      ref: master
+      ref: routed_core-v0.5.1
       path: packages/routed_core
   routed_io:
     git:
       url: https://github.com/kingwill101/routed.git
-      ref: master
+      ref: routed_io-v0.1.2
       path: packages/routed_io
   routed_node:
     git:
       url: https://github.com/kingwill101/routed.git
-      ref: master
+      ref: routed_node-v0.2.1
       path: packages/routed_node
   react_server_routed: ^0.1.0
   path: ^1.9.1

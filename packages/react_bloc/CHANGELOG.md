@@ -1,3 +1,5 @@
+# Changelog
+
 ## 0.0.2
 
 - Removes the unused `react_core` dependency from the package manifest.

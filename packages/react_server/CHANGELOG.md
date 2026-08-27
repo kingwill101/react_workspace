@@ -1,3 +1,5 @@
+# Changelog
+
 ## 0.1.1
 
 - Adds Fetch-based SSR client support for JavaScript and edge runtimes.

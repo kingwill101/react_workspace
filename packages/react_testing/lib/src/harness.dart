@@ -54,6 +54,13 @@ final class ReactTestHarness {
       );
     }
     final config = loadedConfig.copyWith(ssrRuntime: ssrRuntime);
+    if (ssr && config.ssrRuntime == 'fetch') {
+      throw const ReactToolException(
+        'ReactTestHarness cannot start a Fetch SSR entrypoint. '
+        'Use ssrRuntime: node for the local Node worker, or test the Fetch '
+        'entry through the application host.',
+      );
+    }
     final buildLogs = <String>[];
     try {
       await ReactBuilder(

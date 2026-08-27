@@ -57,7 +57,7 @@ void main() {
     expect(document.body, contains('Who should the server greet?'));
     expect(document.body, contains('browser.js'));
 
-    final browserModule = await client!.get('/browser.entry.mjs');
+    final browserModule = await client!.get('/browser.js');
     browserModule.assertStatus(200);
     expect(browserModule.body, isNotEmpty);
   });
