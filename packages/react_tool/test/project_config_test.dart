@@ -49,6 +49,38 @@ output: build/output
     expect(config.hasReactYaml, isTrue);
   });
 
+  test('reads the Fetch SSR runtime', () async {
+    await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
+    await File('${root.path}/react.yaml').writeAsString('''
+ssr:
+  entrypoint: lib/ssr.dart
+  runtime: fetch
+''');
+
+    final config = ReactProjectConfig.load(root);
+
+    expect(config.ssrRuntime, 'fetch');
+  });
+
+  test('rejects an unknown SSR runtime', () async {
+    await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
+    await File('${root.path}/react.yaml').writeAsString('''
+ssr:
+  runtime: deno
+''');
+
+    expect(
+      () => ReactProjectConfig.load(root),
+      throwsA(
+        isA<ReactToolException>().having(
+          (error) => error.message,
+          'message',
+          contains('Unsupported SSR runtime'),
+        ),
+      ),
+    );
+  });
+
   test('configures Sass entrypoints and output', () async {
     await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
     await File('${root.path}/react.yaml').writeAsString('''

@@ -11,4 +11,7 @@ export 'src/partial.dart';
 export 'src/routes.dart';
 export 'src/registry.dart';
 export 'src/server.dart' if (dart.library.io) 'src/server_stub.dart';
-export 'src/ssr_client_stub.dart' if (dart.library.io) 'src/ssr_client.dart';
+export 'src/ssr_types.dart';
+export 'src/ssr_client_stub.dart'
+    if (dart.library.io) 'src/ssr_client.dart'
+    if (dart.library.js_interop) 'src/ssr_client_js.dart';

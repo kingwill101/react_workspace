@@ -22,6 +22,55 @@ Use `client` for browser-only applications, `ssr` for Shelf-backed full-stack
 applications, and `routed` or `routed-minimal` for Shelf-free Routed hosts.
 Prefer `routed-minimal` when the authored starter surface should stay small.
 
+## Configure application entrypoints
+
+The tool reads `react.yaml`, or a `react:` section in `pubspec.yaml` when
+`react.yaml` is absent. Prefer the structured configuration:
+
+```yaml
+client:
+  entrypoint: web/client.dart
+ssr:
+  entrypoint: lib/ssr.dart
+  runtime: node
+server:
+  entrypoint: bin/server.dart
+styles:
+  entrypoints:
+    - web/styles.scss
+  output: styles.css
+
+static: web
+output: build/react
+```
+
+The conventional entrypoints are `web/client.dart`, `lib/ssr.dart`, and
+`bin/server.dart`. Missing conventional files are skipped. The compatible
+flat aliases are `clientEntrypoint`, `ssrEntrypoint`, and
+`serverEntrypoint`; use the structured form in new projects.
+`styles.entrypoints` accepts multiple CSS/Sass/SCSS files, while
+`styles.entrypoint` and the top-level `css` spelling are legacy aliases.
+
+`react doctor` reports the resolved entrypoints and output paths. The final
+deployable browser artifact is `build/react/browser.js`; the generated
+`browser.entry.mjs`, `ssr.entry.mjs`, `ssr_runtime.mjs`, and
+`bundle_manifest.json` are build/runtime artifacts and should not be authored
+by application code.
+
+For edge deployments, configure the SSR build explicitly:
+
+```yaml
+ssr:
+  entrypoint: lib/ssr.dart
+  runtime: fetch
+```
+
+The default `node` runtime emits the development/production SSR listener used
+by `react serve`. The experimental `fetch` runtime emits a module-style SSR
+endpoint using Web Fetch and `renderToReadableStream`; it is intended for a
+separately deployed Worker or another Fetch host. The application host can
+call that endpoint through the JavaScript `ReactSsrClient`.
+
 ## Resolve unpublished packages
 
 The React Dart packages are currently hosted on GitHub and are not available
@@ -126,6 +175,12 @@ dart analyze
 dart test
 dart run react_tool:react build
 ```
+
+When validating an edge SSR project, inspect both generated modules:
+`build/react/ssr.entry.mjs` and `build/react/ssr_runtime.mjs`. Confirm the
+entry uses `renderToReadableStream` and neither file has a `node:http` listener.
+Do not run a Fetch entrypoint with `react serve`; that command starts the Node
+SSR worker only for projects using `ssr.runtime: node`.
 
 For full-stack behavior, compose `ReactTestHarness` with the application's
 `RoutedRequestHandler` or `ShelfRequestHandler`. Use harness-allocated ports;

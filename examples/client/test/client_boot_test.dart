@@ -26,11 +26,11 @@ void main() {
     final response = await client.get('/');
     response.assertStatus(200);
     expect(response.body, contains('<div id="app"></div>'));
-    expect(response.body, contains('browser.entry.mjs'));
+    expect(response.body, contains('browser.js'));
   }, handler: handler);
 
   serverTest('serves the client JS bundle', (client, _) async {
-    final response = await client.get('/browser.entry.mjs');
+    final response = await client.get('/browser.js');
     response.assertStatus(200);
     expect(response.body, contains('React'));
   }, handler: handler);
@@ -41,11 +41,11 @@ void main() {
     expect(response.body, contains('body'));
   }, handler: handler);
 
-  serverTest('serves the importmap script tag', (client, _) async {
+  serverTest('does not require an import map', (client, _) async {
     final response = await client.get('/');
     response.assertStatus(200);
-    expect(response.body, contains('esm.sh/react'));
-    expect(response.body, contains('esm.sh/react-dom'));
+    expect(response.body, isNot(contains('importmap')));
+    expect(response.body, isNot(contains('esm.sh/react')));
   }, handler: handler);
 
   serverTest('SPA fallback serves index.html for unknown paths', (

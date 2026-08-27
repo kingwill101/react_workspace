@@ -28,7 +28,7 @@ workspace:
   - examples/superdesk
 dependencies:
   react_server: ^0.1.0
-  react_tool: ^0.1.0
+  react_tool: ^0.2.0
   example: any
   client: any
   superdesk: any

@@ -42,9 +42,25 @@ final class ReactTestHarness {
     bool ssr = true,
     bool runCodegen = true,
     String? reactVersion,
+    String? ssrRuntime,
     Duration buildTimeout = const Duration(minutes: 10),
   }) async {
-    final config = ReactProjectConfig.load(projectRoot);
+    final loadedConfig = ReactProjectConfig.load(projectRoot);
+    if (ssrRuntime != null && ssrRuntime != 'node' && ssrRuntime != 'fetch') {
+      throw ArgumentError.value(
+        ssrRuntime,
+        'ssrRuntime',
+        'Expected `node` or `fetch`.',
+      );
+    }
+    final config = loadedConfig.copyWith(ssrRuntime: ssrRuntime);
+    if (ssr && config.ssrRuntime == 'fetch') {
+      throw const ReactToolException(
+        'ReactTestHarness cannot start a Fetch SSR entrypoint. '
+        'Use ssrRuntime: node for the local Node worker, or test the Fetch '
+        'entry through the application host.',
+      );
+    }
     final buildLogs = <String>[];
     try {
       await ReactBuilder(
@@ -175,7 +191,7 @@ Future<void> _waitForPort(
       if (exit != -1) {
         throw ReactToolException(
           'SSR worker exited early with code $exit while waiting for port $port.\n'
-          'Output:\n${output?.toString().substring(0, 2000)}',
+          'Output:\n${_previewOutput(output)}',
         );
       }
     }
@@ -191,7 +207,7 @@ Future<void> _waitForPort(
   }
   throw ReactToolException(
     'Timed out waiting for SSR port $port after 60 attempts.\n'
-    'Worker output:\n${output?.toString().substring(0, 2000)}',
+    'Worker output:\n${_previewOutput(output)}',
   );
 }
 
@@ -211,7 +227,7 @@ Future<void> _waitForSsrHealth(
         if (exit != -1) {
           throw ReactToolException(
             'SSR worker exited before health check (code $exit).\n'
-            'Output:\n${output?.toString().substring(0, 2000)}',
+            'Output:\n${_previewOutput(output)}',
           );
         }
       }
@@ -227,9 +243,15 @@ Future<void> _waitForSsrHealth(
     }
     throw ReactToolException(
       'SSR health check failed for port $port after 30 attempts.\n'
-      'Worker output:\n${output?.toString().substring(0, 2000)}',
+      'Worker output:\n${_previewOutput(output)}',
     );
   } finally {
     client.close(force: true);
   }
+}
+
+String? _previewOutput(StringBuffer? output) {
+  final value = output?.toString();
+  if (value == null || value.length <= 2000) return value;
+  return value.substring(0, 2000);
 }

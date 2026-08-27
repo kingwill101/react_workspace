@@ -28,6 +28,13 @@ typedef RoutedReactCacheTags =
 typedef RoutedReactPartialDocumentBuilder =
     FutureOr<ReactPartialDocument?> Function(routed.EngineContext context);
 
+/// Resolves the SSR endpoint base URI for a document request.
+///
+/// This is useful for Fetch hosts whose portable request URI does not preserve
+/// the externally visible origin. The returned URI must be a trusted absolute
+/// origin; it must not be derived from an untrusted Host header.
+typedef RoutedReactSsrEndpoint = Uri Function(routed.EngineContext context);
+
 /// Composes React document and server-action handlers into a Routed handler.
 ///
 /// Non-document requests are delegated to [staticHandler]. Document requests
@@ -47,6 +54,7 @@ final class RoutedReactApplication {
     this.pageProps = _emptyPageProps,
     this.pageMetadata = _emptyPageMetadata,
     this.partialDocument,
+    this.ssrEndpoint,
     ReactDataCache? partialDataCache,
     this.routeManifest,
     this.streamingSsr = false,
@@ -87,6 +95,9 @@ final class RoutedReactApplication {
 
   /// Builds a shell and independently cached dynamic regions for PPR.
   final RoutedReactPartialDocumentBuilder? partialDocument;
+
+  /// Resolves the base URI used for relative [ssr] endpoints.
+  final RoutedReactSsrEndpoint? ssrEndpoint;
 
   /// Cache used by [partialDocument] shells and regions.
   final ReactDataCache partialDataCache;
@@ -207,6 +218,7 @@ final class RoutedReactApplication {
       final rendered = await ssr!.render(
         component: rootComponent!,
         props: props,
+        baseUri: _ssrBaseUri(context),
       );
       final html = template
           .replaceAll('{{SSR}}', rendered.html)
@@ -245,6 +257,7 @@ final class RoutedReactApplication {
       final rendered = await ssr!.render(
         component: rootComponent!,
         props: props,
+        baseUri: _ssrBaseUri(context),
       );
       final html = template
           .replaceAll('{{SSR}}', rendered.html)
@@ -278,6 +291,7 @@ final class RoutedReactApplication {
       final rendered = await ssr!.render(
         component: rootComponent!,
         props: props,
+        baseUri: _ssrBaseUri(context),
       );
       return context.html(
         template
@@ -288,7 +302,12 @@ final class RoutedReactApplication {
 
     context.response.headers.set('content-type', 'text/html; charset=utf-8');
     await context.response.addStream(
-      _documentStream(props, marker, template).map(utf8.encode),
+      _documentStream(
+        props,
+        marker,
+        template,
+        _ssrBaseUri(context),
+      ).map(utf8.encode),
     );
     return context.response;
   }
@@ -297,6 +316,7 @@ final class RoutedReactApplication {
     Map<String, dynamic> props,
     int marker,
     String template,
+    Uri? baseUri,
   ) async* {
     final before = template.substring(0, marker);
     final after = template.substring(marker + '{{SSR}}'.length);
@@ -306,6 +326,7 @@ final class RoutedReactApplication {
     await for (final chunk in ssr!.renderStream(
       component: rootComponent!,
       props: props,
+      baseUri: baseUri,
     )) {
       if (chunk.done) {
         finalProps = chunk.props;
@@ -316,12 +337,17 @@ final class RoutedReactApplication {
     yield after.replaceAll('{{PROPS}}', jsonEncode(finalProps));
   }
 
+  Uri? _ssrBaseUri(routed.EngineContext context) => ssrEndpoint?.call(context);
+
   Future<routed.Response> _handleAction(routed.EngineContext context) async {
     if (context.method != 'POST') {
       return _actionError(context, 'method_not_allowed', 'POST required.', 405);
     }
 
     final contentType = context.request.headers.value('content-type') ?? '';
+    if (_isCompactContentType(contentType)) {
+      return _handleCompactAction(context);
+    }
     if (!contentType.startsWith('application/json') &&
         !contentType.startsWith(serverFunctionContentType)) {
       return _actionError(
@@ -332,8 +358,10 @@ final class RoutedReactApplication {
       );
     }
 
-    final body = await context.request.body();
-    if (utf8.encode(body).length > maxActionBodySize) {
+    late String body;
+    try {
+      body = utf8.decode(await _readActionBody(context, maxActionBodySize));
+    } on _RequestBodyTooLarge {
       return _actionError(
         context,
         'request_too_large',
@@ -483,6 +511,138 @@ final class RoutedReactApplication {
     }
   }
 
+  Future<routed.Response> _handleCompactAction(
+    routed.EngineContext context,
+  ) async {
+    late CompactServerFunctionRequest request;
+    try {
+      final declaredLength = context.request.headers.contentLength;
+      if (declaredLength > maxActionBodySize) {
+        return _actionError(
+          context,
+          'request_too_large',
+          'Request too large.',
+          413,
+        );
+      }
+      final bytes = await _readActionBody(context, maxActionBodySize);
+      request = CompactServerFunctionRequest.decode(bytes);
+    } on _RequestBodyTooLarge {
+      return _actionError(
+        context,
+        'request_too_large',
+        'Request too large.',
+        413,
+      );
+    } on FormatException catch (error) {
+      return _actionError(context, 'invalid_frame', error.message, 400);
+    }
+
+    final headerProtocol = context.request.headers.value(
+      serverFunctionProtocolHeader,
+    );
+    if (headerProtocol != null && headerProtocol != '$compactProtocolVersion') {
+      return _compactActionError(
+        context,
+        request,
+        'protocol_mismatch',
+        'The protocol header does not match the frame.',
+        400,
+      );
+    }
+    final headerId = context.request.headers.value(serverFunctionIdHeader);
+    if (headerId != null && headerId != request.id) {
+      return _compactActionError(
+        context,
+        request,
+        'id_mismatch',
+        'The action header does not match the frame.',
+        400,
+      );
+    }
+    final headerContract = context.request.headers.value(
+      serverFunctionContractHeader,
+    );
+    if (headerContract != null && headerContract != request.contract) {
+      return _compactActionError(
+        context,
+        request,
+        'contract_mismatch',
+        'The contract header does not match the frame.',
+        400,
+      );
+    }
+
+    final expectedHash = actionRegistry.contractHashFor(request.id);
+    if (expectedHash != null && request.contract != expectedHash) {
+      return _compactActionError(
+        context,
+        request,
+        'contract_mismatch',
+        'The action contract has changed. Please reload the page.',
+        400,
+      );
+    }
+
+    final afterResponse = ReactAfterResponse();
+    final actionContext = ServerFunctionContext(
+      requestId: _generateRequestId(),
+      principal: authenticate?.call(context),
+      headers: _stringHeaders(context),
+      requestUri: context.requestedUri,
+      deadline: DateTime.now().add(requestTimeout),
+      cancellation: CancellationToken(),
+      afterResponse: afterResponse,
+    );
+    try {
+      final result = await actionRegistry
+          .dispatch(request.id, request.arguments, actionContext)
+          .timeout(requestTimeout);
+      return _compactActionResponse(context, 200, request.success(result));
+    } on TimeoutException {
+      return _compactActionError(
+        context,
+        request,
+        'timeout',
+        'The action timed out.',
+        504,
+        requestId: actionContext.requestId,
+      );
+    } on ServerFunctionFailure catch (error) {
+      return _compactActionResponse(
+        context,
+        error.statusCode,
+        request.failure(
+          ServerFunctionError(
+            code: error.code,
+            message: error.message,
+            details: error.details,
+            requestId: actionContext.requestId,
+          ),
+        ),
+      );
+    } on UnknownServerFunctionException catch (error) {
+      return _compactActionError(
+        context,
+        request,
+        'unknown_function',
+        'Unknown function: ${error.id}.',
+        404,
+      );
+    } catch (_) {
+      return _compactActionError(
+        context,
+        request,
+        'internal_error',
+        'Internal server error.',
+        500,
+        requestId: actionContext.requestId,
+      );
+    } finally {
+      unawaited(Future<void>.delayed(Duration.zero, afterResponse.run));
+    }
+  }
+
   static Map<String, String> _stringHeaders(routed.EngineContext context) {
     final headers = <String, String>{};
     context.request.headers.forEach((name, values) {
@@ -501,6 +661,32 @@ final class RoutedReactApplication {
     context.response.write(jsonEncode(payload));
     return context.response;
   }
+
+  static routed.Response _compactActionResponse(
+    routed.EngineContext context,
+    int statusCode,
+    ReactFrame frame,
+  ) {
+    context.response.statusCode = statusCode;
+    context.response.headers.set('content-type', compactProtocolContentType);
+    context.response.writeBytes(frame.encode());
+    return context.response;
+  }
+
+  static routed.Response _compactActionError(
+    routed.EngineContext context,
+    CompactServerFunctionRequest request,
+    String code,
+    String message,
+    int statusCode, {
+    String? requestId,
+  }) => _compactActionResponse(
+    context,
+    statusCode,
+    request.failure(
+      ServerFunctionError(code: code, message: message, requestId: requestId),
+    ),
+  );
 
   static routed.Response _actionError(
     routed.EngineContext context,
@@ -552,4 +738,31 @@ final class RoutedReactApplication {
 
   static Iterable<String> _emptyCacheTags(routed.EngineContext context) =>
       const <String>[];
+}
+
+bool _isCompactContentType(String contentType) =>
+    contentType.split(';').first.trim().toLowerCase() ==
+    compactProtocolContentType;
+
+final class _RequestBodyTooLarge implements Exception {
+  const _RequestBodyTooLarge();
+}
+
+Future<List<int>> _readActionBody(
+  routed.EngineContext context,
+  int maxBodySize,
+) async {
+  if (!context.request.hasNativeHttpRequest) {
+    final bytes = await context.bodyBytes;
+    if (bytes.length > maxBodySize) throw const _RequestBodyTooLarge();
+    return bytes;
+  }
+
+  final bytes = <int>[];
+  // ignore: deprecated_member_use
+  await for (final chunk in context.request.httpRequest) {
+    bytes.addAll(chunk);
+    if (bytes.length > maxBodySize) throw const _RequestBodyTooLarge();
+  }
+  return bytes;
 }

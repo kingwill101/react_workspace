@@ -44,6 +44,24 @@ Install the JavaScript toolchain in the project root:
 npm install
 ```
 
+The scaffold uses `react.yaml` for build inputs. The browser entrypoint is
+`client.entrypoint`; client-only projects normally leave SSR and server
+entrypoint files absent so those build steps are skipped. Styles are configured
+as a list so generated Tailwind output can be included alongside library CSS:
+
+```yaml
+client:
+  entrypoint: web/client.dart
+styles:
+  entrypoints:
+    - web/styles.generated.css
+  output: styles.css
+```
+
+The tool writes the final browser bundle to `build/react/browser.js`. Keep
+`lib/.generated/` and `build/react/` out of authored code and source control;
+the generated wrapper and bundle manifest are reproducible build output.
+
 ## Configure Tailwind
 
 Use Tailwind 3 with a project-local CSS source. The shadcn CLI expects
