@@ -14,13 +14,7 @@ jobs:
     with:
       sdk: stable
       ignore-packages: >-
-        packages/react_analyzer,
-        packages/react_codegen,
-        packages/react_router,
-        packages/react_server_routed,
-        packages/react_testing,
-        packages/react_web_generator,
-        packages/react_zustand,
+        packages/react_router_dom,
         examples/**,
         tool/vendor/**,
         third_party/**
