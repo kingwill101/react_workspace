@@ -26,7 +26,7 @@ from pub.dev.
 The following packages are currently deferred because they are tooling,
 testing, framework integrations, or still experimental:
 
-`react_analyzer`, `react_codegen`, `react_router`, `react_server_routed`,
+`react_analyzer`, `react_codegen`, `react_router_dom`, `react_server_routed`,
 `react_testing`, `react_web_generator`, and `react_zustand`.
 
 `react_bloc` and `react_riverpod` are the first state-management integration

@@ -14,7 +14,7 @@ capabilities supplied by the selected Dart server adapter.
 | Streaming SSR | Supported | Opt in with `streamingSsr: true`; uses `renderToPipeableStream` and progressively writes the document. |
 | Static prerendering | Supported | `react_tool prerender` renders explicit routes or a JSON route manifest into HTML files. |
 | Partial prerendering | Supported | `ReactPartialDocument` gives shells and dynamic regions independent cache keys and revalidation policies in both HTTP adapters. |
-| Deep-link SSR | Supported | The application root can use `react_router` server bindings and static routing. |
+| Deep-link SSR | Supported | The application root can use `react_router_dom` server bindings and static routing. |
 | Page metadata | Supported | `ReactPageMetadata` emits title, description, canonical, Open Graph, meta/link tags, and JSON-LD. |
 | Document caching | Supported | `ReactDocumentCache` provides TTL, bounded entries, tag invalidation, and stale-while-revalidate for buffered documents. |
 | Persistent document caching | Supported | `ReactDocumentStore` lets adapters use Redis, databases, disk, or edge KV storage with the same TTL/stale/tag contract. |

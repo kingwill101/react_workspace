@@ -7,4 +7,4 @@
 /// pure Dart that must compile on the VM.
 library;
 
-export 'react_router_hooks.g.dart';
+export 'react_router_dom_hooks.g.dart';

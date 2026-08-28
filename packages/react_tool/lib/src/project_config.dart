@@ -113,7 +113,7 @@ final class ReactProjectConfig {
   /// Side-effect module imports resolved into the foreign bundle.
   ///
   /// Each entry may be a relative path or a `package:` URI. Wrapper packages
-  /// (for example `react_router`) ship a self-registering `.mjs` shim here so
+  /// (for example `react_router_dom`) ship a self-registering `.mjs` shim here so
   /// projects never need to copy package-internal JavaScript by hand.
   final List<String> foreignModules;
 

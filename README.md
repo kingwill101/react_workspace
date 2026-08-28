@@ -55,7 +55,7 @@ The main boundaries are intentional:
 | [`react_testing`](packages/react_testing/README.md) | Native component, action, SSR, build, and fidelity harnesses. |
 | [`react_analysis`](packages/react_analysis/README.md) | Shared component, hook, SSR, import, and usage semantics. |
 | [`react_analyzer`](packages/react_analyzer/README.md) | Analysis-server diagnostics, fixes, and assists. |
-| [`react_router`](packages/react_router/README.md) | Generated React Router components, functions, and hooks. |
+| [`react_router_dom`](packages/react_router_dom/README.md) | Generated React Router components, functions, and hooks. |
 | [`react_bloc`](packages/react_bloc/README.md) | Portable Bloc context and external-store hooks. |
 | [`react_riverpod`](packages/react_riverpod/README.md) | Portable Riverpod scope and subscription hook. |
 | [`react_zustand`](packages/react_zustand/README.md) | Focused npm-backed Zustand wrapper. |
@@ -174,7 +174,7 @@ dart run react_tool:react js install
 dart run react_tool:react ts bind
 ```
 
-[`react_router`](packages/react_router/README.md) is the generated reference;
+[`react_router_dom`](packages/react_router_dom/README.md) is the generated reference;
 [`react_zustand`](packages/react_zustand/README.md) demonstrates a deliberately
 small handwritten bridge.
 

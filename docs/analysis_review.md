@@ -95,7 +95,7 @@ That means the collector cannot reliably discover:
 
 * `@ReactRuntimeSymbol`
 * `@ReactHook`
-* Hooks imported from `react_router`
+* Hooks imported from `react_router_dom`
 * Generated bindings imported through package URIs
 * Re-exported declarations
 * Parts
@@ -205,7 +205,7 @@ Components, ordinary functions and runtime values should receive their correspon
 The collector currently falls back to:
 
 ```dart
-if (uri.contains('react_router')) {
+if (uri.contains('react_router_dom')) {
   return 'reactRouter';
 }
 if (uri.contains('react_zustand')) {
@@ -385,7 +385,7 @@ browser/SSR manifest comparison
 
 The highest-value regression test is:
 
-> A client entry imports a component that imports `package:react_router/react_router.dart` and calls `useLocation()`. The browser usage manifest must contain `reactRouter.useLocation`, and the final browser shim must retain it.
+> A client entry imports a component that imports `package:react_router_dom/react_router_dom.dart` and calls `useLocation()`. The browser usage manifest must contain `reactRouter.useLocation`, and the final browser shim must retain it.
 
 # Smaller issues
 

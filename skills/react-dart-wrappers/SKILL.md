@@ -65,11 +65,11 @@ than pub.dev releases:
 
 ```yaml
 dependencies:
-  react_router:
+  react_router_dom:
     git:
       url: https://github.com/kingwill101/react_workspace.git
       ref: master
-      path: packages/react_router
+      path: packages/react_router_dom
 ```
 
 Use the same React workspace ref for all related Dart packages. Pin a commit

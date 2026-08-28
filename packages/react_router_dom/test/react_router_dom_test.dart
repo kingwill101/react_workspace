@@ -1,5 +1,5 @@
 import 'package:react_core/react.dart';
-import 'package:react_router/react_router.dart';
+import 'package:react_router_dom/react_router_dom.dart';
 import 'package:test/test.dart';
 
 void main() {

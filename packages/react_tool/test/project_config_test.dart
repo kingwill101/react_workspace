@@ -137,14 +137,14 @@ bundling:
 js:
   bind:
     - specifier: react-router-dom
-      output: lib/react_router_bindings.g.dart
-      shim: lib/react_router_bindings_shim.mjs
-      hooks: lib/react_router_hooks.g.dart
+      output: lib/react_router_dom_bindings.g.dart
+      shim: lib/react_router_dom_bindings_shim.mjs
+      hooks: lib/react_router_dom_hooks.g.dart
       namespace: reactRouter
       prefix: reactRouter
     - specifier: react-router-dom/server
       names: [StaticRouter]
-      output: lib/react_router_server_bindings.g.dart
+      output: lib/react_router_dom_server_bindings.g.dart
       exclude: [UNSAFE_Something]
 ''');
 
@@ -154,9 +154,9 @@ js:
     final main = config.jsBindGroups.first;
     expect(main.specifier, 'react-router-dom');
     expect(main.names, isEmpty);
-    expect(main.output, 'lib/react_router_bindings.g.dart');
-    expect(main.shim, 'lib/react_router_bindings_shim.mjs');
-    expect(main.hooks, 'lib/react_router_hooks.g.dart');
+    expect(main.output, 'lib/react_router_dom_bindings.g.dart');
+    expect(main.shim, 'lib/react_router_dom_bindings_shim.mjs');
+    expect(main.hooks, 'lib/react_router_dom_hooks.g.dart');
     expect(main.namespace, 'reactRouter');
     expect(main.prefix, 'reactRouter');
     final server = config.jsBindGroups.last;

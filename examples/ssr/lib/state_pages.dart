@@ -1,5 +1,5 @@
 import 'package:react_bloc/react_bloc.dart' show blocProvider;
-import 'package:react_router/react_router.dart';
+import 'package:react_router_dom/react_router_dom.dart';
 import 'package:react_riverpod/react_riverpod.dart' show riverpodScope;
 import 'package:react_web/react_web.dart' hide link;
 

@@ -1,8 +1,8 @@
-name: react_router
+name: react_router_dom
 description: Typed React Router bindings for React Dart applications.
 version: 0.0.1
 publish_to: none
-repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_router
+repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_router_dom
 resolution: workspace
 environment:
   sdk: ">=3.12.0 <4.0.0"
@@ -18,21 +18,21 @@ react:
     # itself, filtering out exports that don't return a React node.
     bind:
       - specifier: react-router-dom
-        output: lib/react_router_bindings.g.dart
-        shim: lib/react_router_bindings_shim.mjs
-        hooks: lib/react_router_hooks.g.dart
+        output: lib/react_router_dom_bindings.g.dart
+        shim: lib/react_router_dom_bindings_shim.mjs
+        hooks: lib/react_router_dom_hooks.g.dart
         namespace: reactRouter
         prefix: reactRouter
       - specifier: react-router-dom/server
-        output: lib/react_router_server_bindings.g.dart
-        shim: lib/react_router_server_shim.mjs
+        output: lib/react_router_dom_server_bindings.g.dart
+        shim: lib/react_router_dom_server_shim.mjs
         prefix: reactRouter
         # Keeps the server file's generated types distinct from the main
         # file's (both extract `FutureConfig` from react-router-dom).
         typePrefix: Server
     entries:
-      browser: lib/react_router_bindings_shim.mjs
-      ssr: lib/react_router_shim.mjs
+      browser: lib/react_router_dom_bindings_shim.mjs
+      ssr: lib/react_router_dom_shim.mjs
     dependencies:
       react-router-dom: ^6.26.2
     peers:

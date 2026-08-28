@@ -1,4 +1,4 @@
-# react_router
+# react_router_dom
 
 Generated typed bindings for `react-router-dom` 6.26.x components, functions,
 and hooks.
@@ -7,7 +7,7 @@ and hooks.
 
 ```yaml
 dependencies:
-  react_router: ^0.0.1
+  react_router_dom: ^0.0.1
 ```
 
 The package's `react.js` descriptor declares its npm dependency and browser/SSR
@@ -17,7 +17,7 @@ do not copy shims into `react.yaml`.
 ## Components
 
 ```dart
-import 'package:react_router/react_router.dart';
+import 'package:react_router_dom/react_router_dom.dart';
 import 'package:react_dom/react_dom.dart';
 
 ReactNode appRoutes() => browserRouter(
@@ -40,7 +40,7 @@ Hook bindings import `dart:js_interop` and run only in JavaScript targets
 (browser or Node SSR worker), so they use a separate entrypoint:
 
 ```dart
-import 'package:react_router/react_router_hooks.dart';
+import 'package:react_router_dom/react_router_dom_hooks.dart';
 import 'package:react_dom/react_dom.dart';
 
 @reactComponent
@@ -56,7 +56,7 @@ ReactNode LocationView(({}) props) {
 }
 ```
 
-`react_router.dart` remains VM-importable for portable component trees and
+`react_router_dom.dart` remains VM-importable for portable component trees and
 tests. `ReactRouterLocation.fullPath` combines pathname, query, and fragment.
 
 ## Regeneration

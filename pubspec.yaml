@@ -14,7 +14,7 @@ workspace:
   - packages/react_web_generator
   - packages/react_tool
   - packages/react_testing
-  - packages/react_router
+  - packages/react_router_dom
   - packages/react_zustand
   - packages/react_riverpod
   - packages/react_bloc

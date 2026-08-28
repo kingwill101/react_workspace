@@ -11,7 +11,7 @@ dependencies:
   react_server_shelf: ^0.1.0
   react_web: ^0.1.0
   react_actions: ^0.1.0
-  react_router: ^0.0.1
+  react_router_dom: ^0.0.1
   react_zustand: ^0.0.1
   react_riverpod: ^0.0.1
   react_bloc: ^0.0.1

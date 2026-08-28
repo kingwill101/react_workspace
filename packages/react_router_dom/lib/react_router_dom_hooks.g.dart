@@ -6,7 +6,7 @@
 
 import 'dart:js_interop';
 import 'package:react_core/react.dart';
-import 'react_router_bindings.g.dart';
+import 'react_router_dom_bindings.g.dart';
 
 // Hook bindings for `react-router-dom`. Each hook is only available
 // in JavaScript targets (browser client and Node SSR worker);

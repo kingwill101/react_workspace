@@ -78,7 +78,7 @@ So the fallback does not degrade gracefully. It produces an artifact likely to f
 For declared npm integrations, bundler failure should be fatal:
 
 ```text
-Could not build react_router browser adapter:
+Could not build react_router_dom browser adapter:
 esbuild is unavailable.
 
 Run:
@@ -200,7 +200,7 @@ react:
     schema: 1
 
     entries:
-      shared: lib/src/js/react_router.ts
+      shared: lib/src/js/react_router_dom.ts
 
     dependencies:
       react-router-dom: ^6.26.2
@@ -386,7 +386,7 @@ The framework:
 When missing:
 
 ```text
-react_router requires react-router-dom ^6.26.2.
+react_router_dom requires react-router-dom ^6.26.2.
 
 Install it with:
   pnpm add react-router-dom@^6.26.2
@@ -417,7 +417,7 @@ This can duplicate shared npm dependencies across outputs.
 Generate one aggregate browser entry:
 
 ```js
-import '/absolute/path/react_router/browser.ts';
+import '/absolute/path/react_router_dom/browser.ts';
 import '/absolute/path/zustand/browser.ts';
 import '/absolute/path/motion/browser.ts';
 ```
@@ -425,7 +425,7 @@ import '/absolute/path/motion/browser.ts';
 And one SSR entry:
 
 ```js
-import '/absolute/path/react_router/ssr.ts';
+import '/absolute/path/react_router_dom/ssr.ts';
 import '/absolute/path/zustand/ssr.ts';
 ```
 
@@ -563,8 +563,8 @@ The Dart package ships:
 
 ```text
 lib/
-├── react_router.dart
-└── src/js/react_router.ts
+├── react_router_dom.dart
+└── src/js/react_router_dom.ts
 ```
 
 The application build installs npm dependencies and bundles all wrapper sources together.
@@ -585,10 +585,10 @@ The Dart package ships:
 
 ```text
 lib/
-├── react_router.dart
+├── react_router_dom.dart
 └── src/js/
-    ├── react_router.browser.mjs
-    └── react_router.ssr.mjs
+    ├── react_router_dom.browser.mjs
+    └── react_router_dom.ssr.mjs
 ```
 
 Its npm dependency is already bundled, with React external.
@@ -599,8 +599,8 @@ Descriptor:
 react:
   js:
     prebuilt:
-      browser: lib/src/js/react_router.browser.mjs
-      ssr: lib/src/js/react_router.ssr.mjs
+      browser: lib/src/js/react_router_dom.browser.mjs
+      ssr: lib/src/js/react_router_dom.ssr.mjs
 
     peers:
       react: ">=18 <20"
@@ -629,7 +629,7 @@ Collect requirements with provenance:
 
 ```text
 react-router-dom
-  react_router ^6.26.2
+  react_router_dom ^6.26.2
 
 zustand
   react_zustand >=4.5.0 <6.0.0
@@ -654,7 +654,7 @@ React and ReactDOM belong in the framework runtime/peer category—not duplicate
 Implemented fields (schema 1): `schema`, `entries` (shared/browser/ssr, `false` to disable a target), `dependencies`, `peers`, `externals` (defaults to react/react-dom), `prebuilt` (accepted; no wrapper ships one yet). `capabilities` and `assets` are not yet parsed — reserved for the prebuilt/asset work.
 
 ```yaml
-name: react_router
+name: react_router_dom
 
 react:
   js:
@@ -776,7 +776,7 @@ Status (implemented):
 10. ✅ Prebuilt wrapper support — wrappers ship already-bundled per-target artifacts (`prebuilt.browser` / `prebuilt.ssr`); the build imports them into the aggregate and esbuild keeps react/react-dom external. A prebuilt-only wrapper contributes no npm `dependencies` (they are inlined by the wrapper author), so no installation is forced beyond the framework singletons. Verified end-to-end: the real pinned esbuild bundles a prebuilt file and the node-externals plugin rewrites its bare `react` import to the managed env path, loading against the same 18.3.1 instance.
 11. ✅ TypeScript module resolution for `.d.ts` discovery and binding generation — a native **oxc**-based extractor ships inside `react_tool` as a code asset (`native/`, built via `native_toolchain_rust` + `hook/build.dart`; crate `react-ts-bindings`, C ABI: `tsb_extract(requestJson, npmRoot)`). It resolves a package's types entry (`types`/`typings`/`exports["."]`), loads the `.d.ts` graph with `oxc_resolver::resolve_dts` (types-condition + relative/bare imports), and serializes requested exported declarations to a JSON IR (props, optionality, string/number/boolean/any/array/object/union/function/reactNode/literal kinds; `Partial<T>`, interface `extends`, unions-of-interfaces, and cross-file references resolved against the declaration store; depth/cycle guarded; named interface references carry their TS name). `react ts bind <specifier> <names...>` (CLI) pipes that IR through `generateBindings` (Dart) into **strongly-typed** helpers: components become `foreignComponent('prefix.Name', ...)` functions with a Dart class per object prop (nested members, `toJson()` for the JS bridge), literal unions become enums, callbacks become typedefs + `ReactCallback` factories, and prim aliases become typedefs. Verified end-to-end against `react-router-dom`: `MemoryRouter`/`Route`/`NavigateProps` extracted (10 type files); `examples/ssr/lib/reactRouterDom_bindings.g.dart` emits `FutureConfig`, `NavigateProps`, `NavigatePropsRelative`, analyzes clean, and a runtime smoke test exercises the helpers. The managed-JS `typescript`-package plan from the research phase was **rejected in favor of this Rust design** (user-directed): oxc gives a single dependency-free binary, no Node toolchain needed for the build tool, and it stays strictly inside `react_tool` — never in exposed packages, no FFI in browser contexts.
 
-    Subsequent hardening (all in `react_tool` + the `react_router` package, committed together):
+    Subsequent hardening (all in `react_tool` + the `react_router_dom` package, committed together):
 
     * **Subpath specifiers** — `react ts bind react-router-dom/server StaticRouter` resolves through the package `exports` map via `oxc_resolver` instead of reading the top-level types entry; the CLI validates the top-level package directory for `a/b` specifiers.
     * **`ForwardRefExoticComponent` / qualified type names** — `type_name_base` now returns the *rightmost* segment (`React.ForwardRefExoticComponent` → `ForwardRefExoticComponent`), so `export declare const Link: React.ForwardRefExoticComponent<LinkProps & …>` extracts as a component; the `__ref` intersection marker is flattened in `props_for_expr`.
@@ -785,7 +785,7 @@ Status (implemented):
     * **`--type-prefix`** — namespaces generated type names so a second extraction (e.g. the `react-router-dom/server` subpath, whose `FutureConfig` differs from react-router's) cannot collide with the first file.
     * **Children param** — a `children` prop of any non-function kind becomes the typed `List<ReactNode> children = const []` parameter instead of a props-map entry; enum values are decoded (`"path"` → `path`) so `.value` matches what the JS side expects.
 
-    **`react_router` is now generated**: `lib/react_router_bindings.g.dart` (BrowserRouter, MemoryRouter, Routes, Route, Link, NavLink, Outlet, Navigate) + `lib/react_router_server_bindings.g.dart` (StaticRouter, `--type-prefix Server`), with shims registered through the handwritten `react_router_shim.mjs` (which imports both generated shims and still owns the `__reactDartRouter` hook bridge for `react_router_hooks.dart`). `react_router.dart` re-exports the generated helpers; example callsites (`router_demo.dart`, `route_content.dart`, `route_item.dart`) and the package tests were migrated to the generated names. Verified: `react_router` 7/7 tests, SSR worker renders the router demo through the new bundles (`location: /`, route matching, `router-link` markup).
+    **`react_router_dom` is now generated**: `lib/react_router_dom_bindings.g.dart` (BrowserRouter, MemoryRouter, Routes, Route, Link, NavLink, Outlet, Navigate) + `lib/react_router_dom_server_bindings.g.dart` (StaticRouter, `--type-prefix Server`), with shims registered through the handwritten `react_router_dom_shim.mjs` (which imports both generated shims and still owns the `__reactDartRouter` hook bridge for `react_router_dom_hooks.dart`). `react_router_dom.dart` re-exports the generated helpers; example callsites (`router_demo.dart`, `route_content.dart`, `route_item.dart`) and the package tests were migrated to the generated names. Verified: `react_router_dom` 7/7 tests, SSR worker renders the router demo through the new bundles (`location: /`, route matching, `router-link` markup).
 
     **Dart helpers carry the bare component name** (`outlet()`, `navigate()`, `memoryRouter(children:, initialEntries:)`, `route(path:, element:)`, `link(to:, children:)`, …) — the `--prefix` value is used *only* for the JS registration keys (`reactRouter.*`) the shim registers and the Dart `foreignComponent('reactRouter.Name', …)` lookups reference; it never leaks into Dart function names, so generated APIs read like handwritten ones. (A `hide link` is still needed where `react_web`'s `<link>` element helper is imported alongside the router's `Link`.)
 
@@ -797,13 +797,13 @@ Post-12 roadmap (bundler recommendations, in order):
 
 14. ✅ Rolldown backend — `react.yaml bundling.backend: rolldown` selects `RolldownBundler` (esbuild stays the default); the managed environment pins `rolldown` as a devDependency and a tool-owned `rolldown_driver.mjs` drives it with the same request/response contract as the esbuild driver (JSON argv options, structured inputs/outputs summary). Browser keeps externals bare for the import map; the node target rewrites them to absolute paths through the environment's npm root. `backend: webpack` and friends are rejected at config load.
 
-15. ✅ Named shim imports — `generateShim()` imports only the referenced declarations as individual named imports aliased `__reactDart<Name>` (tree-shakeable) instead of `import * as …`; hook bridge bodies call the aliased imports. The `react_router` browser/server shims were regenerated through the CLI.
+15. ✅ Named shim imports — `generateShim()` imports only the referenced declarations as individual named imports aliased `__reactDart<Name>` (tree-shakeable) instead of `import * as …`; hook bridge bodies call the aliased imports. The `react_router_dom` browser/server shims were regenerated through the CLI.
 
 16. ✅ Per-target usage data — each `bundle_report.json` target now carries `usedComponents` (retained keys whose quoted literal appears in the compiled `client.js`/`ssr.js` Dart output) and `usedHooks` (`<namespace>.<hook>` paths from the `__reactDartBindings` JS-interop bridge). `dart compile js` preserves these string literals while tree-shaking unused helpers, so the scan reports what the app actually renders per target (verified on the example: browser uses `MemoryRouter/Routes/Route/Link/NavLink`, SSR additionally calls `useLocation`/`useParams`).
 
 17. ✅ Application-level DCE — the aggregate entry for each target now imports only the foreign surface the compiled Dart output references. The build runs the Dart compilation first, scans `client.js`/`ssr.js` for used component keys and hook paths, and:
     * rewrites generated wrapper shims (`parseForeignShim` + `pruneShim` in `react_tool/lib/src/bundler/shim_pruning.dart`) to import and register only the used subset — filtered import line, filtered `components`/`hooks` object literals, whole hook bridge dropped when unused — so the bundler tree-shakes the rest of the npm package;
-    * follows aggregator wrapper entries (files that only import local modules, like `react_router_shim.mjs`) recursively, materializing pruned copies under `foreign/<target>/<package>/`;
+    * follows aggregator wrapper entries (files that only import local modules, like `react_router_dom_shim.mjs`) recursively, materializing pruned copies under `foreign/<target>/<package>/`;
     * drops project-level `foreign.components` whose key never appears in the target's compiled output, and emits an empty bundle when everything is pruned so bootstraps and `bundle_report.json` still resolve `foreign/<target>/bundle.mjs`.
     Pruning is skipped for a target whose Dart entrypoint was not compiled (no scan → keep everything).
     Measured on the example release build: browser bundle 32.8 → 22.7 KiB (11.6 → 8.4 KiB gzip) and retained exports 8 → 5 (`MemoryRouter`/`Routes`/`Route`/`Link`/`NavLink`); SSR 156.3 → 149.6 KiB, dropping `StaticRouter` and all unused hooks. SSR gains are smaller because the router runtime dominates and is largely shared; browser gains come from tree-shaking the unused `use*` hooks out of `react-router-dom`. `server_boot_test` passes against the pruned bundles.
