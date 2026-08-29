@@ -78,6 +78,12 @@ build:
           working_directory: .
           commands:
             - [cargo, build, --release, --manifest-path, native/Cargo.toml]
+        - id: copy-artifact
+          type: command
+          working_directory: .
+          commands:
+            - [cmd, /c, mkdir, native/target/release]
+            - [cmd, /c, copy, /Y, D:/cargo-target/release/react_ts_bindings.dll, native/target/release/react_ts_bindings.dll]
         - id: export
           type: export_artifact
           artifact: react_ts_bindings
@@ -92,6 +98,12 @@ build:
           working_directory: .
           commands:
             - [cargo, build, --release, --target, aarch64-pc-windows-msvc, --manifest-path, native/Cargo.toml]
+        - id: copy-artifact
+          type: command
+          working_directory: .
+          commands:
+            - [cmd, /c, mkdir, native/target/aarch64-pc-windows-msvc/release]
+            - [cmd, /c, copy, /Y, D:/cargo-target/aarch64-pc-windows-msvc/release/react_ts_bindings.dll, native/target/aarch64-pc-windows-msvc/release/react_ts_bindings.dll]
         - id: export
           type: export_artifact
           artifact: react_ts_bindings
