@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.6
+
+- Adds DDC/DWDS client debugging with cached, accurately staged CSS, foreign
+  bundles, callback trampolines, and source maps.
+- Keeps debug and production browser entrypoints separate so production HTML
+  loads only the bundled `browser.js` entrypoint.
+- Makes generated client, Shelf, and Routed templates compatible with the
+  DDC toolchain by requiring Dart 3.13 or newer.
+
 ## 0.2.5
 
 - Propagates the Windows `npm.cmd` default through `ReactBuilder`, fixing the
@@ -14,7 +23,6 @@
   command fences.
 - Resolves the npm command as `npm.cmd` on Windows so managed JavaScript
   environment installation works without a shell wrapper.
-
 ## 0.2.3
 
 - Makes generated projects use the published React Dart packages by default.
