@@ -24,7 +24,7 @@ dart run react_tool:react serve
 The server runs on `http://localhost:8080` and the SSR worker on port
 `3001`. Server functions live in `lib/react/greeting.dart` and are called from
 the browser through the generated client
-(`lib/.generated/greeting.client.g.dart`).
+(`lib/.generated/react/greeting.client.g.dart`).
 
 For day-to-day iteration, focus on `lib/react/app.dart` and
 `lib/react/greeting.dart`.
@@ -44,11 +44,12 @@ dart test
 dart run react_tool:react test --coverage
 # or
 dart test --coverage
+```
 
 Tests use `react_testing`:
 
 - `ServerFunctionHarness` for server-function contract and dispatch checks.
-- `SsrTestHarness`/`InMemorySsrHarness` for SSR document assertions.
+- `InMemorySsrHarness` for SSR document assertions.
 - `ReactComponentHarness` for component behavior.
 - Transported full-stack checks can use `RoutedRequestHandler` from
   `routed_testing`.
