@@ -19,7 +19,7 @@ the Routed GitHub repository:
 
 ```yaml
 dependencies:
-  routed_core: ^0.4.0
+  routed_core: ">=0.4.0 <1.0.0"
 
 dependency_overrides:
   routed_core:
