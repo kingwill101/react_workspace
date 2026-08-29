@@ -5,7 +5,7 @@ import 'package:native_prebuilt/native_prebuilt.dart';
 
 const react_toolPrebuilts = PrebuiltManifest(
   schemaVersion: 2,
-  release: GitHubReleaseSource(owner: 'kingwill101', repository: 'react_workspace', tag: 'react_tool-native-v0.2.0'),
+  release: GitHubReleaseSource(owner: 'kingwill101', repository: 'react_workspace', tag: 'react_tool-native-v0.2.1'),
   artifacts: {
     'linux-x64': PrebuiltArtifact(
       archiveName: 'react_tool-linux-x64.tar.gz',
@@ -21,26 +21,26 @@ const react_toolPrebuilts = PrebuiltManifest(
     ),
     'macos-x64': PrebuiltArtifact(
       archiveName: 'react_tool-macos-x64.tar.gz',
-      archiveSha256: '75cb244d5ac0ef2714c90ab6667f1cc1d104b4912ca35338e200b37c6e91757c',
-      payloadSha256: 'f0d088ae8ce946d38364ae1dadf38939105de04aee8ce1feb885f71bf15fbad3',
+      archiveSha256: '832867be3ffd06885fccbdf22823c5da846c01f85f3c60651b5935b46c81784a',
+      payloadSha256: '2983de715a9a7231f33e04b10060e3e6299450f01cc315c0c02c068a142a731a',
       payload: DynamicLibraryPayload(libraryStem: 'react_ts_bindings', acceptVersionedNames: true),
     ),
     'macos-arm64': PrebuiltArtifact(
       archiveName: 'react_tool-macos-arm64.tar.gz',
-      archiveSha256: '034f23b7977fccb3a1417a1e0f8a30b87e33eed65e678e282e1ac59797fd9dd8',
-      payloadSha256: 'd7ed2732831c67d618f1bbb0bee6d42ef326577f8836ac2a76ccf13558689dcc',
+      archiveSha256: '2e8c70a493addc592dc94eab06b0b2a68ad7f5013481df3296f1443cdf9df167',
+      payloadSha256: '7a6b0cd355587dc38d8620e3645d23f45fdb0a4aab114d49e414789eca83ed07',
       payload: DynamicLibraryPayload(libraryStem: 'react_ts_bindings', acceptVersionedNames: true),
     ),
     'windows-x64': PrebuiltArtifact(
       archiveName: 'react_tool-windows-x64.tar.gz',
-      archiveSha256: 'ebe6ca95a34fa1117ae02f3e41d483b92bc86cf6b937a950679cc7ec10798a18',
-      payloadSha256: '5dad39761a85c61522c57b3d0d36cd5c5c23ce4d278d34eb21496267e6cfdb28',
+      archiveSha256: 'bf0a2e90d68ab0360c78ad0c8f7da2b9956ee5429c674aa528cf8c33e54fd2c7',
+      payloadSha256: '79da2f8a3d6824f23ed6004fd3da8a8dfb7f25e5123293679dd255f906bdbbdc',
       payload: DynamicLibraryPayload(libraryStem: 'react_ts_bindings', acceptVersionedNames: true),
     ),
     'windows-arm64': PrebuiltArtifact(
       archiveName: 'react_tool-windows-arm64.tar.gz',
-      archiveSha256: '157295ff55784180bd3d8114590e5c4a3315515185eb6ea5a3ba7d573d900cc0',
-      payloadSha256: '59ee5a9d77fbfb3225c0c757767dcf93851e235096640bfdbc970aa417fa7761',
+      archiveSha256: 'b15ccace5302359c1249066cdcf72e7beb12acda6b55d308ef50eeccf7c233ea',
+      payloadSha256: '867b1035f46fe3143c8d666b044da5e67bf0213cee134734ebb788d3118e3f1e',
       payload: DynamicLibraryPayload(libraryStem: 'react_ts_bindings', acceptVersionedNames: true),
     ),
   },
