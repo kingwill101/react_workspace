@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+- Ships verified native prebuilts for Linux, macOS, and Windows on x64 and
+  ARM64 hosts.
+- Widens the `artisanal` constraint so the published CLI resolves alongside
+  the native prebuilt toolchain.
+
 ## 0.2.0
 
 - Documents structured client, SSR, server, and stylesheet entrypoints.
