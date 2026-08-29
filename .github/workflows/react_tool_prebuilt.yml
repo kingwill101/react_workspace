@@ -41,9 +41,113 @@ jobs:
           path: built-library/
           if-no-files-found: error
 
+  build-linux-arm64:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: true
+      - uses: dart-lang/setup-dart@v1
+      - name: Install Rust build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential pkg-config
+      - run: dart pub get
+      - name: Build and test react_tool from source
+        working-directory: packages/react_tool
+        run: dart test
+      - name: Build and stage native library
+        working-directory: packages/react_tool
+        run: dart run native_prebuilt build --target linux-arm64 --from-source --output ../../built-library
+      - uses: actions/upload-artifact@v6
+        with:
+          name: linux-arm64-built-library
+          path: built-library/
+          if-no-files-found: error
+
+  build-macos-x64:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: true
+      - uses: dart-lang/setup-dart@v1
+      - run: dart pub get
+      - name: Build and test react_tool from source
+        working-directory: packages/react_tool
+        run: dart test
+      - name: Build and stage native library
+        working-directory: packages/react_tool
+        run: dart run native_prebuilt build --target macos-x64 --from-source --output ../../built-library
+      - uses: actions/upload-artifact@v6
+        with:
+          name: macos-x64-built-library
+          path: built-library/
+          if-no-files-found: error
+
+  build-macos-arm64:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: true
+      - uses: dart-lang/setup-dart@v1
+      - run: dart pub get
+      - name: Build and test react_tool from source
+        working-directory: packages/react_tool
+        run: dart test
+      - name: Build and stage native library
+        working-directory: packages/react_tool
+        run: dart run native_prebuilt build --target macos-arm64 --from-source --output ../../built-library
+      - uses: actions/upload-artifact@v6
+        with:
+          name: macos-arm64-built-library
+          path: built-library/
+          if-no-files-found: error
+
+  build-windows-x64:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: true
+      - uses: dart-lang/setup-dart@v1
+      - run: dart pub get
+      - name: Build and test react_tool from source
+        working-directory: packages/react_tool
+        run: dart test --concurrency=1
+      - name: Build and stage native library
+        working-directory: packages/react_tool
+        run: dart run native_prebuilt build --target windows-x64 --from-source --output ../../built-library
+      - uses: actions/upload-artifact@v6
+        with:
+          name: windows-x64-built-library
+          path: built-library/
+          if-no-files-found: error
+
+  build-windows-arm64:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: true
+      - uses: dart-lang/setup-dart@v1
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: arm64
+      - run: dart pub get
+      - name: Build and stage native library
+        working-directory: packages/react_tool
+        run: dart run native_prebuilt build --target windows-arm64 --from-source --output ../../built-library
+      - uses: actions/upload-artifact@v6
+        with:
+          name: windows-arm64-built-library
+          path: built-library/
+          if-no-files-found: error
+
   verify:
     if: github.event_name == 'pull_request'
-    needs: build-linux
+    needs: [build-linux, build-linux-arm64, build-macos-x64, build-macos-arm64, build-windows-x64, build-windows-arm64]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -51,6 +155,26 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: linux-x64-built-library
+          path: built-library/
+      - uses: actions/download-artifact@v7
+        with:
+          name: linux-arm64-built-library
+          path: built-library/
+      - uses: actions/download-artifact@v7
+        with:
+          name: macos-x64-built-library
+          path: built-library/
+      - uses: actions/download-artifact@v7
+        with:
+          name: macos-arm64-built-library
+          path: built-library/
+      - uses: actions/download-artifact@v7
+        with:
+          name: windows-x64-built-library
+          path: built-library/
+      - uses: actions/download-artifact@v7
+        with:
+          name: windows-arm64-built-library
           path: built-library/
       - run: dart pub get
       - name: Prepare manifest validation config
@@ -70,7 +194,7 @@ jobs:
 
   release:
     if: github.event_name == 'workflow_dispatch'
-    needs: build-linux
+    needs: [build-linux, build-linux-arm64, build-macos-x64, build-macos-arm64, build-windows-x64, build-windows-arm64]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -80,6 +204,26 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: linux-x64-built-library
+          path: built-library/
+      - uses: actions/download-artifact@v7
+        with:
+          name: linux-arm64-built-library
+          path: built-library/
+      - uses: actions/download-artifact@v7
+        with:
+          name: macos-x64-built-library
+          path: built-library/
+      - uses: actions/download-artifact@v7
+        with:
+          name: macos-arm64-built-library
+          path: built-library/
+      - uses: actions/download-artifact@v7
+        with:
+          name: windows-x64-built-library
+          path: built-library/
+      - uses: actions/download-artifact@v7
+        with:
+          name: windows-arm64-built-library
           path: built-library/
       - run: dart pub get
       - name: Prepare manifest generation config

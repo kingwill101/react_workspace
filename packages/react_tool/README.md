@@ -49,9 +49,10 @@ dart run native_prebuilt manifest verify \
 ```
 
 The repository workflow `.github/workflows/react_tool_prebuilt.yml` builds the
-Linux x64 artifact, verifies pull requests, and can publish a tagged GitHub
-release through `workflow_dispatch`. The generated manifest must be committed
-after the first release so consumers can use the verified artifact.
+native host matrix (Linux x64/ARM64, macOS x64/ARM64, and Windows x64/ARM64),
+verifies pull requests, and can publish a tagged GitHub release through
+`workflow_dispatch`. The generated manifest must be committed after the release
+so consumers can use the verified artifacts.
 
 ## CLI Commands
 
