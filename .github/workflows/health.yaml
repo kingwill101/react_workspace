@@ -18,7 +18,7 @@ jobs:
       ignore_packages: >-
         packages/react_analyzer,
         packages/react_codegen,
-        packages/react_router,
+        packages/react_router_dom,
         packages/react_server_routed,
         packages/react_tool,
         packages/react_testing,
