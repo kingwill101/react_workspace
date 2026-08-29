@@ -22,14 +22,14 @@ dart run react_tool:react serve
 ```
 
 The server runs on `http://localhost:8080` and the SSR worker on port
-`3001`. Server functions live in `lib/greeting.dart` and are called from
-`lib/app.dart` through the generated client
+`3001`. Server functions live in `lib/react/greeting.dart` and are called from
+`lib/react/app.dart` through the generated client
 (`lib/.generated/greeting.client.g.dart`).
 
 For day-to-day iteration, the scaffold focuses on:
 
-- `lib/app.dart`
-- `lib/greeting.dart`
+- `lib/react/app.dart`
+- `lib/react/greeting.dart`
 
 Generated output is in `lib/.generated/` and `build/react`.
 
@@ -43,10 +43,6 @@ default.
 # Fast unit tests (no build)
 dart test
 
-# Full-stack SSR + server-function integration (builds + boots Node worker)
-dart test -t integration
-```
-
 Tests use `react_testing`:
 
 - `ServerFunctionHarness` for server-function contract and dispatch checks.
@@ -54,6 +50,10 @@ Tests use `react_testing`:
 - `ReactComponentHarness` for component behavior.
 - Transported full-stack checks can use `RoutedRequestHandler` from
   `routed_testing`.
+
+The generated tests are fast harness tests. They do not build or boot the Node
+SSR worker; add a separate integration test when validating the deployed
+application stack.
 
 ## Analyze
 

@@ -8,19 +8,16 @@ The official build tool and CLI for React Dart applications.
 
 ## Installation
 
-The React Dart packages are currently consumed from GitHub because they are
-not yet published to pub.dev. Activate the CLI from the repository ref:
+The React Dart packages are published on pub.dev. Activate the CLI from the
+hosted package:
 
 ```console
-dart pub global activate --source git \
-  --git-ref master \
-  --git-path packages/react_tool \
-  https://github.com/kingwill101/react_workspace.git
+dart pub global activate react_tool
 ```
 
-Use an immutable commit ref for reproducible external applications. Once the
-package is published, the hosted command becomes `dart pub global activate
-react_tool`.
+For workspace development, use `react init --packages ../packages` to develop
+against local package directories. Use an immutable package version for
+reproducible applications.
 
 Alternatively, run it directly from your project via `dart run`:
 
@@ -59,7 +56,7 @@ so consumers can use the verified artifacts.
 The CLI provides commands to manage the full lifecycle of a React Dart project:
 
 - `react doctor` - Inspect the current React Dart project configuration and diagnostics.
-- `react init <project_name> [--template <ssr|client|routed|routed-minimal>]` - Scaffold a new project. `ssr` includes Shelf-based SSR defaults, `client` omits server code, and `routed` uses Routed (`react_server_routed` + `routed_io`) with no Shelf dependency; `routed-minimal` uses the same stack with reduced starter files.
+- `react init <project_name> [--template <ssr|client|routed|routed-minimal>] [--packages <path>]` - Scaffold a new project. `ssr` includes Shelf-based SSR defaults, `client` omits server code, and `routed` uses Routed (`react_server_routed` + `routed_io`) with no Shelf dependency; `routed-minimal` uses the same stack with reduced starter files. Add `--packages ../packages` when developing against a local workspace checkout.
 - `react generate` - Run Dart code generation and synchronize formatted sources into `lib/.generated/` without compiling bundles. Workspace orchestration may use `--sync-only` after one successful `build_runner build --workspace` invocation.
 - `react build [--watch] [--release] [--server]` - Generate code, compile client and SSR Dart bundles, compile Sass, bundle JS dependencies, and copy static assets.
 - `react prerender --routes /,/about [--output build/prerendered]` - Build the project, boot its real SSR server, and write selected routes as static HTML.

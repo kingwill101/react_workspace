@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.3
+
+- Makes generated projects use the published React Dart packages by default.
+- Adds `--packages` for local workspace overrides.
+- Organizes authored starter files under `lib/react/`.
+- Aligns generated README instructions and tests with the files the scaffold
+  actually creates.
+
 ## 0.2.2
 
 - Includes the gitignore and Docker ignore scaffold templates in the pub.dev

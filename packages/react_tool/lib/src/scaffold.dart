@@ -23,9 +23,9 @@ const _ssrTemplateOutputs = <String, String>{
   'web/index.html.liquid': 'web/index.html',
   'web/styles.scss.liquid': 'web/styles.scss',
   'web/client.dart.liquid': 'web/client.dart',
-  'lib/app.dart.liquid': 'lib/app.dart',
-  'lib/greeting.dart.liquid': 'lib/greeting.dart',
-  'lib/ssr.dart.liquid': 'lib/ssr.dart',
+  'lib/app.dart.liquid': 'lib/react/app.dart',
+  'lib/greeting.dart.liquid': 'lib/react/greeting.dart',
+  'lib/ssr.dart.liquid': 'lib/react/ssr.dart',
   'bin/server.dart.liquid': 'bin/server.dart',
   'Dockerfile.liquid': 'Dockerfile',
   'dockerignore.liquid': '.dockerignore',
@@ -45,8 +45,8 @@ const _clientTemplateOutputs = <String, String>{
   'web/index.client.html.liquid': 'web/index.html',
   'web/styles.scss.liquid': 'web/styles.scss',
   'web/client.dart.liquid': 'web/client.dart',
-  'lib/app.client.dart.liquid': 'lib/app.dart',
-  'lib/greeting.client.dart.liquid': 'lib/greeting.dart',
+  'lib/app.client.dart.liquid': 'lib/react/app.dart',
+  'lib/greeting.client.dart.liquid': 'lib/react/greeting.dart',
   'README.client.md.liquid': 'README.md',
   'test/app_test.client.dart.liquid': 'test/app_test.dart',
 };
@@ -68,9 +68,9 @@ const _routedMinimalTemplateOutputs = <String, String>{
   'web/index.html.liquid': 'web/index.html',
   'web/styles.scss.liquid': 'web/styles.scss',
   'web/client.dart.liquid': 'web/client.dart',
-  'lib/app.dart.liquid': 'lib/app.dart',
-  'lib/greeting.dart.liquid': 'lib/greeting.dart',
-  'lib/ssr.dart.liquid': 'lib/ssr.dart',
+  'lib/app.dart.liquid': 'lib/react/app.dart',
+  'lib/greeting.dart.liquid': 'lib/react/greeting.dart',
+  'lib/ssr.dart.liquid': 'lib/react/ssr.dart',
   'bin/server.routed.dart.liquid': 'bin/server.dart',
   'README.routed-minimal.md.liquid': 'README.md',
 };
@@ -104,6 +104,7 @@ final class ScaffoldGenerator {
     final data = <String, dynamic>{
       'name': name,
       'packagesPath': packagesPath,
+      'localPackages': packagesPath.trim().isNotEmpty,
       'title': _humanize(name),
       'reactVersion': ReactVersionPolicy.managedVersion,
     };
@@ -163,10 +164,9 @@ final class InitCommand extends Command<void> {
     argParser
       ..addOption(
         'packages',
-        defaultsTo: '../packages',
         help:
-            'Path to the react_* package directories referenced by the '
-            'generated pubspec (default: ../packages).',
+            'Use local react_* package directories instead of hosted pub.dev '
+            'packages (for example: --packages ../packages).',
       )
       ..addOption(
         'template',
@@ -198,7 +198,7 @@ final class InitCommand extends Command<void> {
     final name = arguments.first;
     _validateName(name);
 
-    final packagesPath = option('packages') as String? ?? '../packages';
+    final packagesPath = option('packages') as String? ?? '';
     final force = option('force') as bool? ?? false;
     final template = option('template') as String? ?? 'ssr';
     final target = Directory(p.join(_workingDirectory.path, name));
