@@ -318,10 +318,10 @@ class JsEnvironmentBuilder {
     this.configEsbuildPath,
     this.host = false,
     this.log = print,
-    this.npmCommand = 'npm',
+    String? npmCommand,
     this.managedReactVersion = ReactVersionPolicy.managedVersion,
     this.bundlingBackend = 'esbuild',
-  });
+  }) : npmCommand = npmCommand ?? (Platform.isWindows ? 'npm.cmd' : 'npm');
 
   /// Creates the environment, resolving exact versions and installing when
   /// the managed manifest changes. Returns null when nothing requires a JS

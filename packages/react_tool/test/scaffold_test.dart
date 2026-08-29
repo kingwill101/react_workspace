@@ -141,7 +141,7 @@ void main() {
     expect(pubspec, contains('react_core: ^0.1.0'));
     expect(pubspec, contains('react_codegen: ^0.1.0'));
     expect(pubspec, contains('react_server_shelf: ^0.1.1'));
-    expect(pubspec, contains('react_tool: ^0.2.2'));
+    expect(pubspec, contains('react_tool: ^0.2.4'));
     expect(pubspec, contains('react_core: {path: ../packages/react_core}'));
     expect(pubspec, contains('build_runner: ^2.15.3'));
 
@@ -159,7 +159,7 @@ void main() {
       client,
       isNot(contains("import 'package:react_web/react_web.dart'")),
     );
-    expect(client, contains('package:my_app/.generated/app.react.dart'));
+    expect(client, contains('package:my_app/.generated/react/app.react.dart'));
     expect(
       client,
       contains('package:my_app/.generated/react_components.g.dart'),
@@ -184,7 +184,7 @@ void main() {
     expect(greeting, contains('Future<String> greet'));
 
     final ssr = read('lib/react/ssr.dart');
-    expect(ssr, contains("import '.generated/app.react.dart';"));
+    expect(ssr, contains("package:my_app/.generated/react/app.react.dart"));
     expect(ssr, contains('SsrComponentRegistry.register'));
     expect(ssr, contains('registerGlobalRenderer'));
 
@@ -217,7 +217,7 @@ void main() {
       p.join(target.path, 'pubspec.yaml'),
     ).readAsStringSync();
     expect(pubspec, contains('react_core: ^0.1.0'));
-    expect(pubspec, contains('react_tool: ^0.2.2'));
+    expect(pubspec, contains('react_tool: ^0.2.4'));
     expect(pubspec, isNot(contains('dependency_overrides:')));
     expect(pubspec, isNot(contains('path: ../packages')));
   });
@@ -251,6 +251,11 @@ void main() {
     expect(pubspec, contains('routed_core'));
     expect(pubspec, contains('routed_io'));
     expect(pubspec, contains('routed_testing'));
+    expect(pubspec, contains('routed_core: ^0.5.1'));
+    expect(pubspec, contains('routed_io: ^0.1.2'));
+    expect(pubspec, contains('routed_testing: ^0.4.1'));
+    expect(pubspec, contains('path: ^1.9.1'));
+    expect(pubspec, isNot(contains('git:')));
     expect(pubspec, isNot(contains('\n  shelf:')));
 
     final server = await File(
@@ -303,12 +308,18 @@ void main() {
       );
       expect(File(p.join(appDir.path, 'README.md')).existsSync(), isTrue);
 
-      final notExpected = <String>[
+      for (final relative in <String>[
         'test/app_test.dart',
         'test/greeting_test.dart',
-        'Dockerfile',
-        '.dockerignore',
-      ];
+      ]) {
+        expect(
+          File(p.join(appDir.path, relative)).existsSync(),
+          isTrue,
+          reason: 'expected $relative',
+        );
+      }
+
+      final notExpected = <String>['Dockerfile', '.dockerignore'];
       for (final relative in notExpected) {
         expect(
           File(p.join(appDir.path, relative)).existsSync(),

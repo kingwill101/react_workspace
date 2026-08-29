@@ -10,7 +10,7 @@ void main() {
       final harness = ReactComponentHarness();
       final node = harness.run(() => App((title: 'Hello')));
       expect(node, isA<HostNode>());
-      harness.assertHostNode(node, namespace: 'web', name: 'div');
+      harness.assertHostNode(node, namespace: 'html', name: 'div');
     });
 
     test('renders SSR document via InMemorySsrHarness', () {
@@ -28,19 +28,6 @@ void main() {
         containsHtml: 'SSR: Hello',
         containsProps: {'title': 'Hello'},
       );
-    });
-
-    test('SSR mock via SsrTestHarness (no Node build)', () async {
-      final harness = SsrTestHarness(
-        indexTemplate: '<div>{% raw %}{{SSR}}{% endraw %}</div>',
-      );
-      harness.mockRender('<div>mocked</div>', props: {'title': 'Mock'});
-      await harness.start(rootComponent: 'package:{{ name }}/lib/react/app.dart#App');
-      final client = harness.createClient();
-      final response = await client.get('/');
-      response.assertStatus(200);
-      expect(response.body, contains('mocked'));
-      await harness.close();
     });
 
     test('TestRuntimes covers browser/server/test targets', () {

@@ -10,7 +10,7 @@ void main() {
       final harness = ReactComponentHarness();
       final node = harness.run(() => App((title: 'Hello')));
       expect(node, isA<HostNode>());
-      harness.assertHostNode(node, namespace: 'web', name: 'div');
+      harness.assertHostNode(node, namespace: 'html', name: 'div');
     });
 
     test('InMemorySsrHarness for shell (client-only)', () {

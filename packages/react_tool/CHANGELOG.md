@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.4
+
+- Fixes generated imports after authored React files moved under `lib/react/`.
+- Uses hosted Routed packages in Routed scaffolds.
+- Uses generated server-function references without duplicate handwritten refs.
+- Makes both Routed templates generate runnable tests and fixes their README
+  command fences.
+- Resolves the npm command as `npm.cmd` on Windows so managed JavaScript
+  environment installation works without a shell wrapper.
+
 ## 0.2.3
 
 - Makes generated projects use the published React Dart packages by default.
