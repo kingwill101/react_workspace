@@ -49,9 +49,10 @@ dart run native_prebuilt manifest verify \
 ```
 
 The repository workflow `.github/workflows/react_tool_prebuilt.yml` builds the
-Linux x64 artifact, verifies pull requests, and can publish a tagged GitHub
-release through `workflow_dispatch`. The generated manifest must be committed
-after the first release so consumers can use the verified artifact.
+native host matrix (Linux x64/ARM64, macOS x64/ARM64, and Windows x64/ARM64),
+verifies pull requests, and can publish a tagged GitHub release through
+`workflow_dispatch`. The generated manifest must be committed after the release
+so consumers can use the verified artifacts.
 
 ## CLI Commands
 
@@ -136,13 +137,21 @@ committed and reviewed.
 
 ## Configuration
 
-Configuration is defined in a `react.yaml` file (or a `react:` section in `pubspec.yaml`).
+Configuration is defined in a `react.yaml` file (or a `react:` section in
+`pubspec.yaml`). A standalone `react.yaml` takes precedence when both files
+contain configuration.
 
 ```yaml
 # react.yaml
-client: web/client.dart
-ssr: lib/ssr.dart
-server: bin/server.dart
+client:
+  entrypoint: web/client.dart
+
+ssr:
+  entrypoint: lib/ssr.dart
+  runtime: node
+
+server:
+  entrypoint: bin/server.dart
 
 static: web
 output: build/react
@@ -163,6 +172,120 @@ foreign:
         value: String
         disabled: bool?
 ```
+
+### Entrypoints and runtimes
+
+The tool has three Dart application entrypoints:
+
+| Configuration | Purpose | Default |
+| --- | --- | --- |
+| `client.entrypoint` | Browser application compiled to JavaScript | `web/client.dart` |
+| `ssr.entrypoint` | Server-rendered React document | `lib/ssr.dart` |
+| `server.entrypoint` | Dart HTTP server and server-function host | `bin/server.dart` |
+
+An entrypoint is optional in practice: if its conventional file does not
+exist, the corresponding build step is skipped. The structured form is
+recommended:
+
+```yaml
+client:
+  entrypoint: web/client.dart
+ssr:
+  entrypoint: lib/ssr.dart
+server:
+  entrypoint: bin/server.dart
+```
+
+The older flat spelling remains supported for compatibility:
+
+```yaml
+clientEntrypoint: web/client.dart
+ssrEntrypoint: lib/ssr.dart
+serverEntrypoint: bin/server.dart
+```
+
+`ssr.runtime` selects the host contract for the generated SSR module:
+
+- `node` (default) emits the Node SSR worker used by `react serve`.
+- `fetch` emits a Web Fetch module using `renderToReadableStream`, suitable
+  for Cloudflare Workers and other edge hosts. It is not started by the local
+  Node SSR worker.
+
+For example, a Cloudflare/Routed project uses:
+
+```yaml
+ssr:
+  entrypoint: lib/ssr.dart
+  runtime: fetch
+```
+
+### Styles, static files, and output
+
+`styles.entrypoints` accepts one or more CSS, Sass, or SCSS files. The
+stylesheet files are compiled into the configured output directory:
+
+```yaml
+styles:
+  entrypoints:
+    - web/styles.scss
+    - web/components/ui.css
+  output: styles.css
+```
+
+The singular `styles.entrypoint` spelling and the top-level `css` alias are
+also accepted. If styles are not configured, the tool looks for
+`web/styles.scss`, `web/styles.sass`, and CSS modules below `static`.
+
+`static` defaults to `web` and identifies files copied into the build. `output`
+defaults to `build/react`.
+
+The authored Dart entrypoints produce these build artifacts:
+
+| Artifact | Purpose |
+| --- | --- |
+| `browser.js` | Bundled browser application |
+| `browser.entry.mjs` | Browser loader/intermediate entry |
+| `ssr.entry.mjs` | SSR module entrypoint |
+| `ssr_runtime.mjs` | Shared SSR runtime module |
+| `bundle_manifest.json` | Machine-readable artifact manifest |
+| `server` | Optional native server binary when `react build --server` is used |
+
+The `browser.js`, SSR module, foreign bundles, and copied static assets are
+the deployable output. `browser.entry.mjs` is retained as an inspectable build
+intermediate; applications should reference the bundled `browser.js`.
+
+### Foreign modules and JavaScript configuration
+
+The foreign configuration controls local TSX/JavaScript components and their
+runtime bundles:
+
+```yaml
+foreign:
+  modules:
+    - web/components/ui/utils.ts
+  components:
+    - name: Button
+      module: web/components/ui/button.tsx
+      export: Button
+  dependencies:
+    class-variance-authority: ^0.7.1
+  externals:
+    - some-large-package
+  # Validate an existing npm project instead of the managed JS environment.
+  host: true
+```
+
+`js.bind` declares repeatable TypeScript binding groups for `react ts bind`.
+The default foreign bundler is `esbuild`; `rolldown` can be selected when the
+project has been configured for it:
+
+```yaml
+bundling:
+  backend: rolldown
+```
+
+All paths are relative to the package root. Run `react doctor` to see the
+resolved entrypoints and output paths for the current project.
 
 ### TypeScript Bindings
 

@@ -12,6 +12,9 @@ final class BundleManifestTarget {
   /// Dart-compiled application module for the target.
   final String dart;
 
+  /// Intermediate loader module, when the entry is a bundled artifact.
+  final String? loader;
+
   /// SSR runtime module, present for the SSR target only.
   final String? runtime;
 
@@ -25,6 +28,7 @@ final class BundleManifestTarget {
   const BundleManifestTarget({
     required this.entry,
     required this.dart,
+    this.loader,
     this.runtime,
     this.foreign,
     required this.dartBytes,
@@ -36,6 +40,7 @@ final class BundleManifestTarget {
     return BundleManifestTarget(
       entry: json['entry'] as String,
       dart: json['dart'] as String,
+      loader: json['loader'] as String?,
       runtime: json['runtime'] as String?,
       foreign: json['foreign'] as String?,
       dartBytes: (bytes['dart'] as num).toInt(),
@@ -99,4 +104,7 @@ final class BundleManifest {
   /// Entry module for the browser target relative to the output directory,
   /// when a client build was emitted.
   String? get browserEntry => browser?.entry;
+
+  /// Intermediate browser loader, when one was emitted.
+  String? get browserLoader => browser?.loader;
 }

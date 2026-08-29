@@ -1,12 +1,11 @@
 name: react_server
 description: Transport-neutral SSR and server-function primitives for React Dart.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_server
 resolution: workspace
 environment:
   sdk: ">=3.12.0 <4.0.0"
 dependencies:
-  react_core: ^0.1.0
   react_actions: ^0.1.0
   react_js: ^0.1.0
 dev_dependencies:

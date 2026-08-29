@@ -97,6 +97,9 @@ final class ReactProjectConfig {
   final String packageName;
   final String? clientEntrypoint;
   final String? ssrEntrypoint;
+
+  /// SSR host runtime: `node` (default) or `fetch` for Worker-style hosts.
+  final String ssrRuntime;
   final String? serverEntrypoint;
   final String staticDirectory;
   final String outputDirectory;
@@ -110,7 +113,7 @@ final class ReactProjectConfig {
   /// Side-effect module imports resolved into the foreign bundle.
   ///
   /// Each entry may be a relative path or a `package:` URI. Wrapper packages
-  /// (for example `react_router`) ship a self-registering `.mjs` shim here so
+  /// (for example `react_router_dom`) ship a self-registering `.mjs` shim here so
   /// projects never need to copy package-internal JavaScript by hand.
   final List<String> foreignModules;
 
@@ -140,6 +143,7 @@ final class ReactProjectConfig {
     required this.packageName,
     required this.clientEntrypoint,
     required this.ssrEntrypoint,
+    this.ssrRuntime = 'node',
     required this.serverEntrypoint,
     required this.staticDirectory,
     required this.outputDirectory,
@@ -179,6 +183,15 @@ final class ReactProjectConfig {
         _pathValue(explicit, 'ssr', 'entrypoint') ??
         _pathValue(explicit, 'ssrEntrypoint') ??
         'lib/ssr.dart';
+    final ssrRuntime =
+        _string(_map(explicit['ssr'])['runtime']) ??
+        _string(explicit['ssrRuntime']) ??
+        'node';
+    if (ssrRuntime != 'node' && ssrRuntime != 'fetch') {
+      throw ReactToolException(
+        'Unsupported SSR runtime "$ssrRuntime". Expected `node` or `fetch`.',
+      );
+    }
     final server =
         _pathValue(explicit, 'server', 'entrypoint') ??
         _pathValue(explicit, 'serverEntrypoint') ??
@@ -245,6 +258,7 @@ final class ReactProjectConfig {
       packageName: packageName,
       clientEntrypoint: client,
       ssrEntrypoint: ssr,
+      ssrRuntime: ssrRuntime,
       serverEntrypoint: server,
       staticDirectory: staticDirectory,
       outputDirectory: _string(explicit['output']) ?? 'build/react',
@@ -262,6 +276,31 @@ final class ReactProjectConfig {
   }
 
   File file(String relativePath) => File(p.join(root.path, relativePath));
+
+  /// Returns a copy with a different SSR host runtime.
+  ///
+  /// This is useful for test and build orchestration when the checked-in
+  /// project target is Fetch-based but a local Node worker is needed.
+  ReactProjectConfig copyWith({String? ssrRuntime}) => ReactProjectConfig(
+    root: root,
+    packageName: packageName,
+    clientEntrypoint: clientEntrypoint,
+    ssrEntrypoint: ssrEntrypoint,
+    ssrRuntime: ssrRuntime ?? this.ssrRuntime,
+    serverEntrypoint: serverEntrypoint,
+    staticDirectory: staticDirectory,
+    outputDirectory: outputDirectory,
+    styleEntrypoints: styleEntrypoints,
+    styleOutput: styleOutput,
+    foreignComponents: foreignComponents,
+    foreignDependencies: foreignDependencies,
+    foreignModules: foreignModules,
+    esbuildPath: esbuildPath,
+    foreignExternals: foreignExternals,
+    jsHostMode: jsHostMode,
+    bundlingBackend: bundlingBackend,
+    jsBindGroups: jsBindGroups,
+  );
 
   Directory directory(String relativePath) =>
       Directory(p.join(root.path, relativePath));
@@ -295,6 +334,7 @@ final class ReactProjectConfig {
     'name': packageName,
     'clientEntrypoint': clientEntrypoint,
     'ssrEntrypoint': ssrEntrypoint,
+    'ssrRuntime': ssrRuntime,
     'serverEntrypoint': serverEntrypoint,
     'staticDirectory': staticDirectory,
     'outputDirectory': outputDirectory,

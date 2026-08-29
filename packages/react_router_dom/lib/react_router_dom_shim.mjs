@@ -1,4 +1,4 @@
-// react_router shim — component + hook bridge wiring.
+// react_router_dom shim — component + hook bridge wiring.
 //
 // The generated shims (from `react ts bind --shim`) register the bound
 // components and the `globalThis.__reactDartBindings.reactRouter` hook bridge
@@ -7,5 +7,5 @@
 // follows the relative imports and inlines the generated shims, keeping
 // bare `react`/`react-dom` external.
 
-import './react_router_bindings_shim.mjs';
-import './react_router_server_shim.mjs';
+import './react_router_dom_bindings_shim.mjs';
+import './react_router_dom_server_shim.mjs';

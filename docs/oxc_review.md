@@ -227,14 +227,14 @@ behave differently from the original JavaScript library. Either preserve the JS 
 
 Your components remain portable `ReactNode` factories and can be loaded in VM tests. Generated hooks import `dart:js_interop`, so they are inherently JS-targeted.
 
-The latest commit summary says `react_router.dart` exports the generated hook file.  I would keep the public boundary as:
+The latest commit summary says `react_router_dom.dart` exports the generated hook file.  I would keep the public boundary as:
 
 ```dart
 // Portable component API
-import 'package:react_router/react_router.dart';
+import 'package:react_router_dom/react_router_dom.dart';
 
 // JS-targeted hook API
-import 'package:react_router/react_router_hooks.dart';
+import 'package:react_router_dom/react_router_dom_hooks.dart';
 ```
 
 This lets:
@@ -246,14 +246,14 @@ This lets:
 
 ## Move from “one extraction command” to “one wrapper specification”
 
-You have reduced manual shim writing, but `react_router` still needs several coordinated extraction commands and a tiny handwritten aggregate shim.
+You have reduced manual shim writing, but `react_router_dom` still needs several coordinated extraction commands and a tiny handwritten aggregate shim.
 
 The next major improvement should be a package-level binding specification:
 
 ```yaml
 # react_bindings.yaml
 
-package: react_router
+package: react_router_dom
 namespace: reactRouter
 
 sources:
@@ -281,9 +281,9 @@ sources:
     typePrefix: Server
 
 outputs:
-  library: lib/react_router.dart
-  hooksLibrary: lib/react_router_hooks.dart
-  shim: lib/react_router_shim.g.mjs
+  library: lib/react_router_dom.dart
+  hooksLibrary: lib/react_router_dom_hooks.dart
+  shim: lib/react_router_dom_shim.g.mjs
 ```
 
 Then:
@@ -295,12 +295,12 @@ react ts generate react_bindings.yaml
 would emit:
 
 ```text
-react_router_bindings.g.dart
-react_router_server_bindings.g.dart
-react_router_hooks.g.dart
-react_router.dart
-react_router_hooks.dart
-react_router_shim.g.mjs
+react_router_dom_bindings.g.dart
+react_router_dom_server_bindings.g.dart
+react_router_dom_hooks.g.dart
+react_router_dom.dart
+react_router_dom_hooks.dart
+react_router_dom_shim.g.mjs
 ```
 
 The wrapper descriptor would point to the generated package-level shim:
@@ -309,7 +309,7 @@ The wrapper descriptor would point to the generated package-level shim:
 react:
   js:
     entries:
-      shared: lib/react_router_shim.g.mjs
+      shared: lib/react_router_dom_shim.g.mjs
 ```
 
 That removes the remaining handcrafted aggregator and ensures all outputs are generated from one declarative source.

@@ -28,6 +28,7 @@ dart pub get
 
 The React packages use local paths, while Routed is resolved from the GitHub
 `master` ref through the dependency override in `pubspec.yaml`.
+The deployment CLI is the published `routed_cli: ^0.4.0` package.
 
 ## Build
 
@@ -82,6 +83,22 @@ dart run react_tool:react analyze --verbose
 ```
 
 Uses `react_analysis` for component, hook and SSR diagnostics (same engine as the IDE plugin). Run `dart run react_tool:react doctor` to check setup.
+
+## Cloudflare deployment
+
+Build the Fetch-compatible SSR entry and deploy it with the published Routed
+CLI:
+
+```sh
+dart run react_tool:react build --release
+dart run routed_cli:routed deploy --target cloudflare \
+  --entry package:react_server_routed_example/cloudflare_app.dart \
+  --ssr-entry build/react/ssr.entry.mjs \
+  --name react-routed-demo
+```
+
+The CLI embeds the complete `build/react` directory, mounts the SSR entry at
+`/__ssr`, and serves the browser bundle, CSS, and assets through the Worker.
 
 ## Docker
 

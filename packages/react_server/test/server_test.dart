@@ -72,6 +72,15 @@ void main() {
       await server.close(force: true);
     });
 
+    test('requires an absolute base for a relative endpoint', () async {
+      final client = ReactSsrClient(endpoint: Uri.parse('/__react/ssr'));
+      await expectLater(
+        client.render(component: 'app#Root', props: const {}),
+        throwsA(isA<ArgumentError>()),
+      );
+      client.close();
+    });
+
     test('renderStream decodes progressive HTML chunks', () async {
       final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
       server.listen((request) async {

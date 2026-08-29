@@ -1,13 +1,134 @@
-schema: 1
+schema: 2
 package: react_tool
 asset_name: src/ts_bindings.g.dart
 library_stem: react_ts_bindings
 release:
   provider: github
   repository: kingwill101/react_workspace
-  tag: react_tool-native-v0.1.0
+  tag: react_tool-native-v0.2.1
+source:
+  type: git
+  repository: https://github.com/kingwill101/react_workspace.git
+  revision: 9b73ae3abc6196b7673bab0e16c09813cf7245dd
+  subdirectory: packages/react_tool
+build:
+  recipes:
+    - target:
+        os: linux
+        architecture: x64
+      steps:
+        - id: cargo-build
+          type: command
+          working_directory: .
+          commands:
+            - [cargo, build, --release, --manifest-path, native/Cargo.toml]
+        - id: export
+          type: export_artifact
+          artifact: react_ts_bindings
+          kind: dynamic_library
+          primary: native/target/release/libreact_ts_bindings.so
+    - target:
+        os: linux
+        architecture: arm64
+      steps:
+        - id: cargo-build
+          type: command
+          working_directory: .
+          commands:
+            - [cargo, build, --release, --manifest-path, native/Cargo.toml]
+        - id: export
+          type: export_artifact
+          artifact: react_ts_bindings
+          kind: dynamic_library
+          primary: native/target/release/libreact_ts_bindings.so
+    - target:
+        os: macos
+        architecture: x64
+      steps:
+        - id: cargo-build
+          type: command
+          working_directory: .
+          commands:
+            - [cargo, build, --release, --manifest-path, native/Cargo.toml]
+        - id: export
+          type: export_artifact
+          artifact: react_ts_bindings
+          kind: dynamic_library
+          primary: native/target/release/libreact_ts_bindings.dylib
+    - target:
+        os: macos
+        architecture: arm64
+      steps:
+        - id: cargo-build
+          type: command
+          working_directory: .
+          commands:
+            - [cargo, build, --release, --manifest-path, native/Cargo.toml]
+        - id: export
+          type: export_artifact
+          artifact: react_ts_bindings
+          kind: dynamic_library
+          primary: native/target/release/libreact_ts_bindings.dylib
+    - target:
+        os: windows
+        architecture: x64
+      steps:
+        - id: cargo-build
+          type: command
+          working_directory: .
+          commands:
+            - [cargo, build, --release, --manifest-path, native/Cargo.toml]
+        - id: copy-artifact
+          type: command
+          working_directory: .
+          commands:
+            - [pwsh, -NoProfile, -Command, "New-Item -ItemType Directory -Force -Path 'native/target/release'; Copy-Item -Force 'D:/cargo-target/release/react_ts_bindings.dll' 'native/target/release/react_ts_bindings.dll'"]
+        - id: export
+          type: export_artifact
+          artifact: react_ts_bindings
+          kind: dynamic_library
+          primary: native/target/release/react_ts_bindings.dll
+    - target:
+        os: windows
+        architecture: arm64
+      steps:
+        - id: cargo-build
+          type: command
+          working_directory: .
+          commands:
+            - [cargo, build, --release, --target, aarch64-pc-windows-msvc, --manifest-path, native/Cargo.toml]
+        - id: copy-artifact
+          type: command
+          working_directory: .
+          commands:
+            - [pwsh, -NoProfile, -Command, "New-Item -ItemType Directory -Force -Path 'native/target/aarch64-pc-windows-msvc/release'; Copy-Item -Force 'D:/cargo-target/aarch64-pc-windows-msvc/release/react_ts_bindings.dll' 'native/target/aarch64-pc-windows-msvc/release/react_ts_bindings.dll'"]
+        - id: export
+          type: export_artifact
+          artifact: react_ts_bindings
+          kind: dynamic_library
+          primary: native/target/aarch64-pc-windows-msvc/release/react_ts_bindings.dll
 artifacts:
   linux-x64:
     archive: react_tool-linux-x64.tar.gz
+    payload:
+      type: dynamic_library
+  linux-arm64:
+    archive: react_tool-linux-arm64.tar.gz
+    payload:
+      type: dynamic_library
+  macos-x64:
+    archive: react_tool-macos-x64.tar.gz
+    payload:
+      type: dynamic_library
+  macos-arm64:
+    archive: react_tool-macos-arm64.tar.gz
+    payload:
+      type: dynamic_library
+  windows-x64:
+    archive: react_tool-windows-x64.tar.gz
+    payload:
+      type: dynamic_library
+  windows-arm64:
+    archive: react_tool-windows-arm64.tar.gz
     payload:
       type: dynamic_library

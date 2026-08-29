@@ -49,6 +49,38 @@ output: build/output
     expect(config.hasReactYaml, isTrue);
   });
 
+  test('reads the Fetch SSR runtime', () async {
+    await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
+    await File('${root.path}/react.yaml').writeAsString('''
+ssr:
+  entrypoint: lib/ssr.dart
+  runtime: fetch
+''');
+
+    final config = ReactProjectConfig.load(root);
+
+    expect(config.ssrRuntime, 'fetch');
+  });
+
+  test('rejects an unknown SSR runtime', () async {
+    await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
+    await File('${root.path}/react.yaml').writeAsString('''
+ssr:
+  runtime: deno
+''');
+
+    expect(
+      () => ReactProjectConfig.load(root),
+      throwsA(
+        isA<ReactToolException>().having(
+          (error) => error.message,
+          'message',
+          contains('Unsupported SSR runtime'),
+        ),
+      ),
+    );
+  });
+
   test('configures Sass entrypoints and output', () async {
     await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
     await File('${root.path}/react.yaml').writeAsString('''
@@ -105,14 +137,14 @@ bundling:
 js:
   bind:
     - specifier: react-router-dom
-      output: lib/react_router_bindings.g.dart
-      shim: lib/react_router_bindings_shim.mjs
-      hooks: lib/react_router_hooks.g.dart
+      output: lib/react_router_dom_bindings.g.dart
+      shim: lib/react_router_dom_bindings_shim.mjs
+      hooks: lib/react_router_dom_hooks.g.dart
       namespace: reactRouter
       prefix: reactRouter
     - specifier: react-router-dom/server
       names: [StaticRouter]
-      output: lib/react_router_server_bindings.g.dart
+      output: lib/react_router_dom_server_bindings.g.dart
       exclude: [UNSAFE_Something]
 ''');
 
@@ -122,9 +154,9 @@ js:
     final main = config.jsBindGroups.first;
     expect(main.specifier, 'react-router-dom');
     expect(main.names, isEmpty);
-    expect(main.output, 'lib/react_router_bindings.g.dart');
-    expect(main.shim, 'lib/react_router_bindings_shim.mjs');
-    expect(main.hooks, 'lib/react_router_hooks.g.dart');
+    expect(main.output, 'lib/react_router_dom_bindings.g.dart');
+    expect(main.shim, 'lib/react_router_dom_bindings_shim.mjs');
+    expect(main.hooks, 'lib/react_router_dom_hooks.g.dart');
     expect(main.namespace, 'reactRouter');
     expect(main.prefix, 'reactRouter');
     final server = config.jsBindGroups.last;

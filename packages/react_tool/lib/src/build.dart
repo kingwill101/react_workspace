@@ -206,6 +206,9 @@ final class ReactBuilder {
       dartBrowserUsage: browserUsage,
       dartSsrUsage: ssrUsage,
     );
+    if (hasClient) {
+      await _bundleBrowserEntry(jsEnvironment);
+    }
 
     final serverBinary = server ? await _compileServer() : null;
 
@@ -963,6 +966,7 @@ final class ReactBuilder {
     required String target,
     required String entry,
     required String outfile,
+    bool includeReactExternals = true,
   }) async {
     final bundler = _bundler;
     if (environment == null || bundler == null) {
@@ -982,7 +986,7 @@ final class ReactBuilder {
         outputFile: outfile,
         workingDirectory: config.root.path,
         npmRoot: environment.npmRoot,
-        externals: await _mergedExternals(),
+        externals: await _mergedExternals(includeReact: includeReactExternals),
         conditions: [release ? 'production' : 'development'],
         minify: release,
         sourceMaps: !release,
@@ -1008,11 +1012,18 @@ final class ReactBuilder {
 
   /// Externals declared by the project and every wrapper (deduplicated),
   /// always including react and react-dom so they stay singletons.
-  Future<List<String>> _mergedExternals() async {
-    final result = <String>{'react', 'react-dom'};
+  Future<List<String>> _mergedExternals({bool includeReact = true}) async {
+    final result = <String>{
+      if (includeReact) 'react',
+      if (includeReact) 'react-dom',
+    };
     result.addAll(config.foreignExternals);
     for (final wrapper in await _discoverWrappers()) {
       result.addAll(wrapper.externals);
+    }
+    if (!includeReact) {
+      result.remove('react');
+      result.remove('react-dom');
     }
     return result.toList();
   }
@@ -1029,6 +1040,7 @@ final class ReactBuilder {
         config.foreignModules.isNotEmpty ||
         config.foreignDependencies.isNotEmpty ||
         additionalDependencies.isNotEmpty ||
+        config.clientEntrypoint != null ||
         // The SSR bootstrap always imports React and ReactDOM/server, so the
         // worker needs a JS environment even without foreign modules.
         config.ssrEntrypoint != null ||
@@ -1356,9 +1368,9 @@ final class ReactBuilder {
 
     // The entry absorbs the inline React bootstrap that used to live in
     // index.html: it sets globalThis.React/ReactDOM before importing the
-    // trampoline, the foreign bundle, and the Dart client output. The
-    // importmap stays in index.html because the browser resolves the bare
-    // react specifier, not esbuild.
+    // trampoline, the foreign bundle, and the Dart client output. This module
+    // is an intermediate bundler input; the final browser artifact is emitted
+    // by [_bundleBrowserEntry].
     //
     // The trampoline/foreign/client are loaded with dynamic imports: static
     // imports are hoisted and evaluated before this module's body runs, which
@@ -1394,47 +1406,55 @@ final class ReactBuilder {
       'src="/browser.entry.mjs"',
     );
 
-    // Pin the import map to the exact React version the environment resolved
-    // so browser and SSR always share one instance.
-    if (environment != null) {
-      source = source.replaceAllMapped(
-        RegExp(r'https://esm\.sh/(react(?:-dom)?)@[0-9.]+'),
-        (match) =>
-            'https://esm.sh/${match.group(1)}@${environment.reactVersion}',
-      );
-    }
-    if (source.contains('/browser.entry.mjs')) {
-      await index.writeAsString(source);
-      return;
-    }
+    await index.writeAsString(source);
+  }
 
-    // Replace the inline React bootstrap and the per-file module tags with a
-    // single entry module (idempotent; also handles fresh templates that only
-    // contain the inline bootstrap and the client tag).
+  /// Bundles the browser loader and all of its runtime dependencies into the
+  /// single artifact served by production hosts.
+  Future<void> _bundleBrowserEntry(JsEnvironment? environment) async {
+    final entry = File(
+      p.join(
+        config.directory(config.outputDirectory).path,
+        'browser.entry.mjs',
+      ),
+    );
+    final result = await _bundleTarget(
+      environment: environment,
+      target: 'browser',
+      entry: entry.path,
+      outfile: p.join(
+        config.directory(config.outputDirectory).path,
+        'browser.js',
+      ),
+      includeReactExternals: false,
+    );
+    log(
+      'Bundled browser entry (${_formatBytes(result.outputBytes)}) '
+      '→ ${p.join(config.outputDirectory, 'browser.js')}',
+    );
+
+    final index = File(
+      p.join(config.directory(config.outputDirectory).path, 'index.html'),
+    );
+    if (!index.existsSync()) return;
+    var source = await index.readAsString();
     source = source
+        .replaceAll(RegExp(r'<script\s+type="importmap">[\s\S]*?</script>'), '')
         .replaceAll(
-          RegExp(
-            r'<script[^>]*src="/?callback_trampoline\.mjs"[^>]*>\s*</script>',
-          ),
-          '',
-        )
-        .replaceAll(
-          RegExp(
-            r'<script[^>]*src="/?foreign/browser/bundle\.mjs"[^>]*>\s*</script>',
-          ),
+          RegExp(r'<script[^>]*src="/?browser\.entry\.mjs"[^>]*>\s*</script>'),
           '',
         )
         .replaceAll(
           RegExp(r'<script[^>]*src="/?client\.js"[^>]*>\s*</script>'),
           '',
+        )
+        .replaceAllMapped(
+          RegExp(r'<script[^>]*>([\s\S]*?)</script>'),
+          (match) => match.group(1)!.contains('globalThis.React')
+              ? ''
+              : match.group(0)!,
         );
-    source = source.replaceAllMapped(
-      RegExp(r'<script[^>]*>([\s\S]*?)</script>'),
-      (match) =>
-          match.group(1)!.contains('globalThis.React') ? '' : match.group(0)!,
-    );
-    const entryScript =
-        '<script type="module" src="/browser.entry.mjs"></script>';
+    const entryScript = '<script type="module" src="/browser.js"></script>';
     source = source.contains('</body>')
         ? source.replaceFirst('</body>', '$entryScript\n</body>')
         : '$source\n$entryScript';
@@ -1452,25 +1472,27 @@ final class ReactBuilder {
 
   Future<void> _writeSsrBootstrap(JsEnvironment? environment) async {
     final output = config.directory(config.outputDirectory);
-    var entry = _ssrEntry;
+    var entry = config.ssrRuntime == 'fetch' ? _ssrFetchEntry : _ssrEntry;
     if (environment != null) {
       // Import React through the environment's exact versions so the worker
       // shares one instance with the foreign bundle.
-      entry = entry
-          .replaceFirst(
-            "import React from 'react';",
-            "import React from '${environment.resolveForNode('react')}';",
-          )
-          .replaceFirst(
-            "import ReactDOMServer from 'react-dom/server';",
-            "import ReactDOMServer from "
-                "'${environment.resolveForNode('react-dom/server')}';",
-          )
-          .replaceFirst(
-            "globalThis.require ??= createRequire('./x.js');",
-            "globalThis.require ??= createRequire("
-                "${jsonEncode(p.join(environment.npmRoot, 'x.js'))});",
-          );
+      entry = config.ssrRuntime == 'fetch'
+          ? entry
+          : entry
+                .replaceFirst(
+                  "import React from 'react';",
+                  "import React from '${environment.resolveForNode('react')}';",
+                )
+                .replaceFirst(
+                  "import ReactDOMServer from 'react-dom/server';",
+                  "import ReactDOMServer from "
+                      "'${environment.resolveForNode('react-dom/server')}';",
+                )
+                .replaceFirst(
+                  "globalThis.require ??= createRequire('./x.js');",
+                  "globalThis.require ??= createRequire("
+                      "${jsonEncode(p.join(environment.npmRoot, 'x.js'))});",
+                );
     }
     if (!await _hasForeignSurface()) {
       entry = entry.replaceAll(
@@ -1479,11 +1501,18 @@ final class ReactBuilder {
             '}\n',
         '',
       );
+      entry = entry.replaceAll(
+        "if (globalThis.__REACT_FOREIGN_COMPONENTS__ !== false) {\n"
+            "  await import('./foreign/ssr/bundle.mjs');\n"
+            '}\n',
+        '',
+      );
+      entry = entry.replaceAll("  import('./foreign/ssr/bundle.mjs'),\n", '');
     }
     await File(p.join(output.path, 'ssr.entry.mjs')).writeAsString(entry);
-    await File(
-      p.join(output.path, 'ssr_runtime.mjs'),
-    ).writeAsString(_ssrRuntime);
+    await File(p.join(output.path, 'ssr_runtime.mjs')).writeAsString(
+      config.ssrRuntime == 'fetch' ? _ssrFetchRuntime : _ssrRuntime,
+    );
     log(
       'Generated ${p.join(config.outputDirectory, 'ssr.entry.mjs')} and '
       'ssr_runtime.mjs',
@@ -1508,11 +1537,13 @@ final class ReactBuilder {
       final dart = File(p.join(output.path, 'client.js'));
       final foreign = File(p.join(output.path, 'foreign/browser/bundle.mjs'));
       manifest['browser'] = <String, Object?>{
-        'entry': 'browser.entry.mjs',
+        'entry': 'browser.js',
+        'loader': 'browser.entry.mjs',
         'dart': 'client.js',
         if (foreign.existsSync()) 'foreign': 'foreign/browser/bundle.mjs',
         'bytes': {
           'dart': await dart.length(),
+          'bundle': await File(p.join(output.path, 'browser.js')).length(),
           if (foreign.existsSync()) 'foreign': await foreign.length(),
         },
       };
@@ -1755,6 +1786,31 @@ await import('./ssr.js');
 await import('./ssr_runtime.mjs');
 ''';
 
+/// Fetch-module bootstrap for edge runtimes such as Cloudflare Workers.
+/// Unlike [_ssrEntry], this module has no Node listener or process globals;
+/// the host owns the Fetch export and can bundle this module with Wrangler.
+const _ssrFetchEntry = r'''import React from 'react';
+import * as ReactDOMServer from 'react-dom/server.browser';
+
+globalThis.self ??= globalThis;
+globalThis.React = React;
+globalThis.ReactDOMServer = ReactDOMServer;
+
+const initialize = Promise.all([
+  import('./callback_trampoline.mjs'),
+  import('./foreign/ssr/bundle.mjs'),
+  import('./ssr.js'),
+]);
+const runtime = import('./ssr_runtime.mjs');
+
+export default {
+  async fetch(request, env, executionContext) {
+    await initialize;
+    return (await runtime).default.fetch(request, env, executionContext);
+  },
+};
+''';
+
 const _ssrRuntime = r'''import http from 'node:http';
 import { Writable } from 'node:stream';
 
@@ -1858,4 +1914,56 @@ function renderStreaming(renderRequest, res) {
     fail(error);
   }
 }
+''';
+
+const _ssrFetchRuntime = r'''const jsonHeaders = {
+  'content-type': 'application/json; charset=utf-8',
+};
+
+export default {
+  async fetch(request) {
+    try {
+      const payload = await request.json();
+      const renderRequest = {
+        id: payload.component ?? payload.id,
+        props: payload.props ?? {},
+      };
+      if (payload.mode === 'stream') {
+        return new Response(JSON.stringify({
+          error: 'Streaming SSR is not supported by the Fetch target yet.',
+        }), {status: 501, headers: jsonHeaders});
+      }
+
+      let html;
+      try {
+        const element = globalThis.__REACT_RENDER__(renderRequest);
+        const stream = await globalThis.ReactDOMServer.renderToReadableStream(element, {
+          onError(error) { console.error(error); },
+        });
+        html = await new Response(stream).text();
+      } catch (error) {
+        const fallbackRenderer = globalThis.__REACT_RENDER_FALLBACK__;
+        if (!fallbackRenderer) throw error;
+        const fallbackElement = fallbackRenderer({
+          ...renderRequest,
+          error: String(error?.message ?? error),
+        });
+        const stream = await globalThis.ReactDOMServer.renderToReadableStream(fallbackElement, {
+          onError(error) { console.error(error); },
+        });
+        html = await new Response(stream).text();
+        globalThis.__reactDartSSRBoundaryFallback = false;
+        globalThis.__reactDartSSRBoundaryError = undefined;
+      }
+      return new Response(JSON.stringify({html, props: renderRequest.props}), {
+       status: 200,
+        headers: jsonHeaders,
+      });
+    } catch (error) {
+      return new Response(JSON.stringify({
+        error: String(error?.message ?? error),
+      }), {status: 500, headers: jsonHeaders});
+    }
+  },
+};
 ''';

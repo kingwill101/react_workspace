@@ -27,7 +27,8 @@ void main() {
       'bundler': 'esbuild',
       'mode': 'development',
       'browser': {
-        'entry': 'browser.entry.mjs',
+        'entry': 'browser.js',
+        'loader': 'browser.entry.mjs',
         'dart': 'client.js',
         'foreign': 'foreign/browser/bundle.mjs',
         'bytes': {'dart': 1024, 'foreign': 2048},
@@ -46,7 +47,8 @@ void main() {
     expect(manifest.schema, 1);
     expect(manifest.bundler, 'esbuild');
     expect(manifest.mode, 'development');
-    expect(manifest.browserEntry, 'browser.entry.mjs');
+    expect(manifest.browserEntry, 'browser.js');
+    expect(manifest.browserLoader, 'browser.entry.mjs');
     expect(manifest.browser?.dart, 'client.js');
     expect(manifest.browser?.foreign, 'foreign/browser/bundle.mjs');
     expect(manifest.browser?.dartBytes, 1024);
@@ -71,7 +73,7 @@ void main() {
       'bundler': 'none',
       'mode': 'release',
       'browser': {
-        'entry': 'browser.entry.mjs',
+        'entry': 'browser.js',
         'dart': 'client.js',
         'bytes': {'dart': 8192},
       },

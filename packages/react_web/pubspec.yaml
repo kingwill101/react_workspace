@@ -1,6 +1,6 @@
 name: react_web
 description: Portable Web API types, DOM factories, and browser runtime adapters for React Dart.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_web
 resolution: workspace
 environment:

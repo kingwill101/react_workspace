@@ -52,6 +52,24 @@ class _ErrorClient extends http.BaseClient {
   }
 }
 
+class _CompactJsonErrorClient extends http.BaseClient {
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    final body = utf8.encode(
+      jsonEncode({
+        'ok': false,
+        'error': {'code': 'json_fallback', 'message': 'too large'},
+      }),
+    );
+    return http.StreamedResponse(
+      Stream.value(body),
+      413,
+      headers: {'content-type': serverFunctionContentType},
+      request: request,
+    );
+  }
+}
+
 class _TransportFailClient extends http.BaseClient {
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async =>
@@ -84,6 +102,42 @@ class _MissingResultClient extends http.BaseClient {
 
 void main() {
   group('HttpServerFunctionClient', () {
+    test('sends and decodes compact protocol frames', () async {
+      http.BaseRequest? captured;
+      final client = HttpServerFunctionClient(
+        endpoint: Uri.parse('https://example.test/__react/actions'),
+        useCompactProtocol: true,
+        client: _CapturingClient((req) async {
+          captured = req;
+          final body = ReactFrame(
+            kind: ReactMessageKind.result,
+            actionId: compactActionId('test.echo'),
+            requestId: 1,
+            payload: {'ok': true, 'result': 'compact'},
+          ).encode();
+          return http.StreamedResponse(
+            Stream.value(body),
+            200,
+            headers: {'content-type': compactProtocolContentType},
+            request: req,
+          );
+        }),
+      );
+
+      expect(await client.invoke(_echoRef, 'hi'), 'compact');
+      expect(captured!.headers[serverFunctionProtocolHeader], '2');
+      expect(captured!.headers['content-type'], compactProtocolContentType);
+      final request = ReactFrame.decode(await captured!.finalize().toBytes());
+      expect(request.kind, ReactMessageKind.invoke);
+      expect(request.actionId, compactActionId('test.echo'));
+      expect(request.payload, {
+        'id': 'test.echo',
+        'contract': 'sha256:echo-v1',
+        'arguments': 'hi',
+      });
+      client.close();
+    });
+
     test('sends correct headers and body for successful invoke', () async {
       http.BaseRequest? captured;
       final client = HttpServerFunctionClient(
@@ -129,6 +183,60 @@ void main() {
             (e) => e.code,
             'code',
             'bad',
+          ),
+        ),
+      );
+      client.close();
+    });
+
+    test('throws RemoteServerFunctionException on compact error', () async {
+      final client = HttpServerFunctionClient(
+        client: _CapturingClient((request) async {
+          final body = ReactFrame(
+            kind: ReactMessageKind.error,
+            actionId: compactActionId(_echoRef.id.value),
+            requestId: 1,
+            payload: {
+              'ok': false,
+              'error': {'code': 'compact_bad', 'message': 'fail'},
+            },
+          ).encode();
+          return http.StreamedResponse(
+            Stream.value(body),
+            422,
+            headers: {'content-type': compactProtocolContentType},
+            request: request,
+          );
+        }),
+        endpoint: Uri.parse('https://example.test/__react/actions'),
+        useCompactProtocol: true,
+      );
+      expect(
+        () => client.invoke(_echoRef, 'hi'),
+        throwsA(
+          isA<RemoteServerFunctionException>().having(
+            (e) => e.code,
+            'code',
+            'compact_bad',
+          ),
+        ),
+      );
+      client.close();
+    });
+
+    test('accepts JSON fallback errors for compact requests', () async {
+      final client = HttpServerFunctionClient(
+        client: _CompactJsonErrorClient(),
+        endpoint: Uri.parse('https://example.test/__react/actions'),
+        useCompactProtocol: true,
+      );
+      expect(
+        () => client.invoke(_echoRef, 'hi'),
+        throwsA(
+          isA<RemoteServerFunctionException>().having(
+            (e) => e.code,
+            'code',
+            'json_fallback',
           ),
         ),
       );

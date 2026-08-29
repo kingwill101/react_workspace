@@ -77,14 +77,14 @@ Consequently:
 
 ### Case study: the UMD-inlining regression
 
-Per-target entry selection is not academic. `react_router` originally wired one `shared` shim entry that imported both the browser bindings and `react-router-dom/server` (the SSR-only StaticRouter shim). `react-router-dom` has no `exports` map, so esbuild resolves a `require("react-router-dom")` from the CJS `server.js` subpath through the package `main` field — the **UMD dev build** — and the deduplicated package ends up inlined in the **browser** bundle too. The UMD wrapper calls `require("react")`, which esbuild must keep as a dynamic require:
+Per-target entry selection is not academic. `react_router_dom` originally wired one `shared` shim entry that imported both the browser bindings and `react-router-dom/server` (the SSR-only StaticRouter shim). `react-router-dom` has no `exports` map, so esbuild resolves a `require("react-router-dom")` from the CJS `server.js` subpath through the package `main` field — the **UMD dev build** — and the deduplicated package ends up inlined in the **browser** bundle too. The UMD wrapper calls `require("react")`, which esbuild must keep as a dynamic require:
 
 ```text
 Uncaught Error: Dynamic require of "react" is not supported
 Bad state: Foreign React component not registered: reactRouter.MemoryRouter
 ```
 
-The fix was to split the wrapper into per-target entries (`browser: react_router_bindings_shim.mjs`, `ssr: react_router_shim.mjs`) so the browser graph resolves the ESM `dist/index.js` and never sees `react-router-dom/server`. The packaging layer must keep this property: browser bundles must not pull in SSR-only modules, and both must resolve React through a single external instance.
+The fix was to split the wrapper into per-target entries (`browser: react_router_dom_bindings_shim.mjs`, `ssr: react_router_dom_shim.mjs`) so the browser graph resolves the ESM `dist/index.js` and never sees `react-router-dom/server`. The packaging layer must keep this property: browser bundles must not pull in SSR-only modules, and both must resolve React through a single external instance.
 
 ## Goal
 

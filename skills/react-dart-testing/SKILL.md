@@ -81,6 +81,12 @@ allocate ports.
 Add durable tests to the relevant package or example. Do not create temporary
 external scripts or fixed-port smoke tests.
 
+For packages with native code assets, package tests should exercise the source
+fallback in a workspace checkout. Native prebuilt release workflows are a
+separate CI concern: verify the staged library and generated manifest there,
+then test published-package resolution against immutable release metadata. Do
+not make ordinary workspace tests download a release artifact.
+
 If a behavior cannot be represented by the native harnesses, state the missing
 capability first and prefer extending `react_testing` or `server_testing`
 before introducing browser automation.

@@ -1,23 +1,4 @@
-/// Browser placeholder for the native SSR worker response.
-final class ReactSsrDocument {
-  final String html;
-  final Map<String, dynamic> props;
-
-  const ReactSsrDocument({required this.html, required this.props});
-}
-
-/// Browser placeholder for a native streaming SSR chunk.
-final class ReactSsrStreamChunk {
-  const ReactSsrStreamChunk({
-    this.html = '',
-    this.props = const <String, dynamic>{},
-    this.done = false,
-  });
-
-  final String html;
-  final Map<String, dynamic> props;
-  final bool done;
-}
+import 'ssr_types.dart';
 
 /// Browser placeholder for the native SSR worker client.
 final class ReactSsrClient {
@@ -26,6 +7,7 @@ final class ReactSsrClient {
   Future<ReactSsrDocument> render({
     required String component,
     required Map<String, dynamic> props,
+    Uri? baseUri,
   }) => throw UnsupportedError(
     'ReactSsrClient is only available on native Dart.',
   );
@@ -33,6 +15,7 @@ final class ReactSsrClient {
   Stream<ReactSsrStreamChunk> renderStream({
     required String component,
     required Map<String, dynamic> props,
+    Uri? baseUri,
   }) => throw UnsupportedError(
     'ReactSsrClient is only available on native Dart.',
   );

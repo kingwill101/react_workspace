@@ -65,11 +65,11 @@ than pub.dev releases:
 
 ```yaml
 dependencies:
-  react_router:
+  react_router_dom:
     git:
       url: https://github.com/kingwill101/react_workspace.git
       ref: master
-      path: packages/react_router
+      path: packages/react_router_dom
 ```
 
 Use the same React workspace ref for all related Dart packages. Pin a commit
@@ -104,3 +104,27 @@ dart run react_tool:react build
 
 Confirm the wrapper is retained in both browser and SSR bundle reports when it
 is used. Unused project-local foreign declarations are intentionally pruned.
+
+## Native-backed wrapper packages
+
+If a wrapper package also ships a Rust or C code asset, keep native delivery
+separate from its JavaScript descriptor. Use `native_prebuilt` in
+`hook/build.dart` with a generated manifest, and provide a source fallback for
+workspace and offline development. The normal loop is:
+
+```console
+dart test
+dart run native_prebuilt manifest update \
+  --config native_prebuilt.yaml \
+  --output lib/src/hook/<package>_prebuilts.g.dart \
+  --built-library-dir <staged-build-directory> \
+  --release-assets-dir <release-assets-directory>
+dart run native_prebuilt manifest verify \
+  --config native_prebuilt.yaml \
+  --output lib/src/hook/<package>_prebuilts.g.dart
+```
+
+The generated manifest is checked in, while native binaries and release
+archives are not. Keep GitHub release tags and artifact hashes versioned and
+reproducible; do not silently replace a published artifact behind an existing
+tag.

@@ -12,7 +12,7 @@
 Two maintenance goals drive this work, both reducing handcrafting:
 
 1. **Hooks properly translated by `react ts bind`, and the `.mjs` glue auto-generated** —
-   so wrapper packages like `react_router` stop being hand-maintained and are instead
+   so wrapper packages like `react_router_dom` stop being hand-maintained and are instead
    (re)generated from the npm package's `.d.ts` declarations.
 2. **Proper bundling / minimization** — the tool's builder should collapse the many
    `.mjs` shim modules into a small number of minified release bundles (and, ideally,
@@ -48,33 +48,33 @@ Outputs (per invocation):
   - registers `globalThis.__reactDartHooks = { useX: (…)=>{…}, … }` with `toPairs`
     decode logic in JS.
 
-`react_router` is now ~fully generated:
-- `packages/react_router/lib/react_router_bindings.g.dart`
-- `packages/react_router/lib/react_router_server_bindings.g.dart` (subpath
+`react_router_dom` is now ~fully generated:
+- `packages/react_router_dom/lib/react_router_dom_bindings.g.dart`
+- `packages/react_router_dom/lib/react_router_dom_server_bindings.g.dart` (subpath
   `react-router-dom/server`, `--type-prefix Server` to avoid `FutureConfig` collisions)
-- `packages/react_router/lib/react_router_hooks.g.dart`
-- `packages/react_router/lib/react_router_bindings_shim.mjs`
-- `packages/react_router/lib/react_router_server_shim.mjs`
+- `packages/react_router_dom/lib/react_router_dom_hooks.g.dart`
+- `packages/react_router_dom/lib/react_router_dom_bindings_shim.mjs`
+- `packages/react_router_dom/lib/react_router_dom_server_shim.mjs`
 
 ### 1.2 What is still handcrafted
 
-1. **`packages/react_router/lib/react_router.dart`** — public library wrapper. Today it
+1. **`packages/react_router_dom/lib/react_router_dom.dart`** — public library wrapper. Today it
    is only `export` lines + the generation command in the doc comment. Trivial to
    generate, but still a hand-maintained file.
-2. **`packages/react_router/lib/react_router_shim.mjs`** — a 10-line glue module that
+2. **`packages/react_router_dom/lib/react_router_dom_shim.mjs`** — a 10-line glue module that
    just imports the two generated shims:
    ```js
-   import './react_router_bindings_shim.mjs';
-   import './react_router_server_shim.mjs';
+   import './react_router_dom_bindings_shim.mjs';
+   import './react_router_dom_server_shim.mjs';
    ```
    It exists because `react.js` `entries.shared` points at one entry, while `--shim`
    emits one `.mjs` per extraction. Auto-generatable, or collapsible into one entry.
-3. **Docs / command lines** embedded in `react_router.dart` — easy to drift from the
+3. **Docs / command lines** embedded in `react_router_dom.dart` — easy to drift from the
    actual `react ts bind` invocation.
 
 ## 2. Track 1 — Fix the current breakages → green tests
 
-`dart test packages/react_router/test/react_router_test.dart` currently **fails to
+`dart test packages/react_router_dom/test/react_router_dom_test.dart` currently **fails to
 compile**. Confirmed errors and root causes:
 
 ### 2.1 A — `route()` wrongly requires `index` (generator bug)
@@ -110,12 +110,12 @@ a union-merge artifact (dedupe missing).
   preserve union structure across the `Foo<Props & RefAttributes<…>>` wrapper.
 - Dedupe literals in the boolean-union before emitting (`false | false | true` →
   `false | true` → `bool`).
-- Regenerate `react_router_bindings.g.dart`; `route(path:, element:)` should compile
+- Regenerate `react_router_dom_bindings.g.dart`; `route(path:, element:)` should compile
   with `index` optional.
 
 ### 2.2 B — stale test reference `LinkRelative` → `RelativeRoutingType`
 
-Error: `Undefined name 'LinkRelative'` at `react_router_test.dart:83`. The enum is
+Error: `Undefined name 'LinkRelative'` at `react_router_dom_test.dart:83`. The enum is
 now generated as `RelativeRoutingType` (and imported transitively). Update the test:
 ```dart
 relative: RelativeRoutingType.path,
@@ -124,17 +124,17 @@ relative: RelativeRoutingType.path,
 ### 2.3 C — `dart:js_interop` leaks to non-JS targets
 
 Error: `Dart library 'dart:js_interop' is not available on this platform` when the
-VM `dart test` loads `react_router.dart`, because it `export`s
-`react_router_hooks.g.dart`, which `import 'dart:js_interop'`.
+VM `dart test` loads `react_router_dom.dart`, because it `export`s
+`react_router_dom_hooks.g.dart`, which `import 'dart:js_interop'`.
 
 Hooks only run in JS targets (browser client, Node SSR worker). Exporting them from
 the package root forces every consumer — including VM tests and any non-JS tooling —
 to (fail to) compile them.
 
 **Options (pick one for the plan):**
-1. _(recommended)_ Keep hooks behind an explicit library: `react_router.dart` exports
+1. _(recommended)_ Keep hooks behind an explicit library: `react_router_dom.dart` exports
    only the component bindings; hooks move to a separate entry (e.g.
-   `react_router_hooks.dart` that re-exports the `.g.dart`). Consumers that render
+   `react_router_dom_hooks.dart` that re-exports the `.g.dart`). Consumers that render
    with hooks import the hooks entry explicitly, and only from JS-targeted Dart.
    The example (`route_content.dart`, `route_item.dart`) and `ssr.dart` would import
    it explicitly. The package test stops importing hooks and only exercises the pure
@@ -148,7 +148,7 @@ declare a per-package library entry, and the generated/public files can be wired
 `export` it only where requested (`--hooks` already exists; add a generated hooks
 library re-export).
 
-**Definition of done for Track 1:** `dart test packages/react_router` (bindings only
+**Definition of done for Track 1:** `dart test packages/react_router_dom` (bindings only
 path) passes; the example still renders the router demo through the generated bundles
 (client + SSR worker); `route(path:…, element:…)` compiles without `index`.
 
@@ -160,8 +160,8 @@ public package files are artifacts, not hand edits.
 
 ### 3.1 Auto-generate the shared shim / collapse to one entry
 
-Today: `react_router_shim.mjs` (hand) imports two generated shims (auto). The
-`react.js` descriptor entry is `entries.shared: lib/react_router_shim.mjs`.
+Today: `react_router_dom_shim.mjs` (hand) imports two generated shims (auto). The
+`react.js` descriptor entry is `entries.shared: lib/react_router_dom_shim.mjs`.
 
 Plan:
 - Add an `--aggregate-shim` mode (or make `--shim` idempotently merge all generated
@@ -173,13 +173,13 @@ Plan:
 ### 3.2 Auto-generate the public library file
 
 Plan:
-- Add `--library <path>` (and/or have `react ts bind` emit a `react_router.dart`
+- Add `--library <path>` (and/or have `react ts bind` emit a `react_router_dom.dart`
   alongside) generating:
   - the doc header with the exact regeneration command,
   - `export '…_bindings.g.dart';`,
   - `export '…_server_bindings.g.dart';` when a subpath extraction was requested,
   - `export '…_hooks.dart';` (or hooks library) **only** when `--hooks`.
-- This kills the last handwritten wrapper for `react_router`.
+- This kills the last handwritten wrapper for `react_router_dom`.
 
 ### 3.3 Keep generated value classes close to the JS shape
 
@@ -193,7 +193,7 @@ worth scheduling:
 - **`index`-style optionality** (#2.1) applies to hooks too — keep an eye on it.
 - Dedupe boolean-literal unions, and normalize `false | true` → `bool`.
 
-**Definition of done for Track 2:** `react_router` has *zero* handwritten `.dart`/`.mjs`
+**Definition of done for Track 2:** `react_router_dom` has *zero* handwritten `.dart`/`.mjs`
 files for the router itself; regenerating the package from scratch reproduces the same
 committed tree (modulo whitespace), so maintenance is "re-run the command in the header".
 
@@ -286,7 +286,7 @@ is reproducible across rebuilds.
 1. **Track 1** first — it unblocks red tests and directly improves "hooks properly
    translated". Fast win: fix `index` optionality (A), update the stale test (B),
    adopt the hooks-behind-explicit-library split (C).
-2. **Track 2** — remove the last handwritten `react_router.dart` + `react_router_shim.mjs`
+2. **Track 2** — remove the last handwritten `react_router_dom.dart` + `react_router_dom_shim.mjs`
    by extending `--shim`/adding `--library`.
 3. **Track 3** — audit-then-improve bundling (options A → B → C), with rolldown as the
    oxc-native direction the team prefers.

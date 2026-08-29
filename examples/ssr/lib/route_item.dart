@@ -1,5 +1,5 @@
-import 'package:react_router/react_router.dart';
-import 'package:react_router/react_router_hooks.dart'; // JS-only hooks (useParams)
+import 'package:react_router_dom/react_router_dom.dart';
+import 'package:react_router_dom/react_router_dom_hooks.dart'; // JS-only hooks (useParams)
 import 'package:react_web/react_web.dart'
     hide link; // <link> collides with router Link
 
