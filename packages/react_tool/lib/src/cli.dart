@@ -8,6 +8,7 @@ import 'build.dart';
 import 'bundler/dart_usage.dart';
 import 'bundler/bundle_manifest.dart';
 import 'component.dart';
+import 'js_environment.dart';
 import 'project_config.dart';
 import 'scaffold.dart';
 import 'shadcn.dart';
@@ -890,6 +891,12 @@ final class ServeCommand extends Command<void> {
         'watch',
         defaultsTo: false,
         help: 'Rebuild and restart the server when project files change.',
+      )
+      ..addFlag(
+        'debug',
+        defaultsTo: false,
+        help:
+            'Use webdev/DDC with DWDS for client debugging and IDE breakpoints.',
       );
   }
 
@@ -899,9 +906,20 @@ final class ServeCommand extends Command<void> {
     final release = option('release') as bool? ?? false;
     final noSsr = option('no-ssr') as bool? ?? false;
     final watch = option('watch') as bool? ?? false;
+    final debug = option('debug') as bool? ?? false;
     final port = _parsePort('port');
     final ssrPort = _parsePort('ssr-port');
     final builder = ReactBuilder(config: config, release: release, log: line);
+
+    if (debug) {
+      if (release || noSsr || watch) {
+        usageException(
+          '--debug cannot be combined with --release, --no-ssr, or --watch.',
+        );
+      }
+      await _runDebugServer(config, builder, port);
+      return;
+    }
 
     await builder.build();
 
@@ -936,6 +954,395 @@ final class ServeCommand extends Command<void> {
       await _stopProcess(processes.worker);
       await _stopProcess(processes.server);
     }
+  }
+
+  Future<void> _runDebugServer(
+    ReactProjectConfig config,
+    ReactBuilder builder,
+    int port,
+  ) async {
+    final client = config.clientEntrypoint;
+    if (client == null || !config.file(client).existsSync()) {
+      usageException('--debug requires a client entrypoint.');
+    }
+    final hasServer =
+        config.serverEntrypoint != null &&
+        config.file(config.serverEntrypoint!).existsSync();
+    final hasSsr =
+        config.ssrEntrypoint != null &&
+        config.file(config.ssrEntrypoint!).existsSync();
+    if (hasServer || hasSsr) {
+      usageException(
+        '--debug currently supports client-only projects. Full-stack debug '
+        'proxying for SSR and server actions is not enabled yet; use '
+        '`react serve` for the production-style full stack.',
+      );
+    }
+
+    // Keep the normal foreign-component contract available while DDC owns the
+    // Dart entrypoint. webdev does not know about react_tool's npm bundler.
+    // Cache this prebuild so starting the debugger does not repeat the full
+    // production build when its TSX/config inputs are unchanged.
+    final environment = await builder.ensureJsEnvironment();
+    final index = config.file('web/index.html');
+    if (!index.existsSync()) {
+      usageException('--debug requires web/index.html.');
+    }
+    if (p.normalize(config.staticDirectory) != 'web') {
+      usageException(
+        '--debug currently serves the webdev `web` directory. Set `static: web` '
+        'for accurate debug asset serving, or use `react serve` for a custom '
+        'static directory.',
+      );
+    }
+    final originalIndex = await index.readAsString();
+    try {
+      final hasForeignSurface = await builder.hasForeignSurface();
+      if (await _debugGeneratedAssetsAreStale(
+        config,
+        hasForeignSurface: hasForeignSurface,
+      )) {
+        await builder.build();
+        await _prepareDebugGeneratedAssets(config);
+      } else {
+        info('Reusing cached generated browser assets for DDC.');
+      }
+      await _writeDebugImportMap(config, environment);
+      await _removeMissingDebugForeignScript(config);
+      await _prepareDebugStylesheet(config);
+      if (!index.readAsStringSync().contains('client.dart.js')) {
+        warn(
+          'web/index.html does not reference /client.dart.js. Add '
+          '`<script defer src="/client.dart.js"></script>` for DDC.',
+        );
+      }
+
+      final arguments = <String>[
+        'run',
+        'webdev:webdev',
+        'serve',
+        '--debug',
+        '--launch-in-chrome',
+        '--hostname',
+        '127.0.0.1',
+        'web:$port',
+      ];
+      info('Starting webdev/DDC with DWDS on http://127.0.0.1:$port');
+      info(
+        'Attach your IDE to the Dart web target, or open the URL in Chrome.',
+      );
+      final process = await Process.start(
+        Platform.resolvedExecutable,
+        arguments,
+        workingDirectory: config.root.path,
+        mode: ProcessStartMode.inheritStdio,
+      );
+      try {
+        await process.exitCode;
+      } finally {
+        await _stopProcess(process);
+      }
+    } finally {
+      await index.writeAsString(originalIndex);
+    }
+  }
+
+  Future<void> _prepareDebugGeneratedAssets(ReactProjectConfig config) async {
+    await _prepareDebugForeignBundle(config);
+    await _prepareDebugStylesheet(config);
+    final manifest = config.file('.dart_tool/react/debug_assets.json');
+    await manifest.parent.create(recursive: true);
+    final assets = <String>[];
+    final foreign = config.file('web/react-debug/foreign.mjs');
+    if (foreign.existsSync()) assets.add('foreign.mjs');
+    final foreignMap = config.file('web/react-debug/foreign.mjs.map');
+    if (foreignMap.existsSync()) assets.add('foreign.mjs.map');
+    final trampoline = config.file('web/react-debug/callback_trampoline.mjs');
+    if (trampoline.existsSync()) assets.add('callback_trampoline.mjs');
+    for (final outputName in _debugStylesheetOutputNames(config)) {
+      if (config.file(p.join('web/react-debug', outputName)).existsSync()) {
+        assets.add(outputName);
+      }
+    }
+    await manifest.writeAsString(
+      '${const JsonEncoder.withIndent('  ').convert({'schema': 1, 'source': config.outputDirectory, 'assets': assets})}\n',
+    );
+    info('Prepared ${assets.length} generated browser assets for DDC.');
+  }
+
+  Future<void> _prepareDebugForeignBundle(ReactProjectConfig config) async {
+    final source = config.file(
+      '${config.outputDirectory}/foreign/browser/bundle.mjs',
+    );
+    final targetDirectory = config.directory('web/react-debug');
+    await targetDirectory.create(recursive: true);
+    final target = config.file('web/react-debug/foreign.mjs');
+    final targetMap = config.file('web/react-debug/foreign.mjs.map');
+    if (source.existsSync()) {
+      var sourceText = await source.readAsString();
+      final sourceMap = File('${source.path}.map');
+      if (sourceMap.existsSync()) {
+        sourceText = sourceText.replaceFirst(
+          RegExp(r'//# sourceMappingURL=.*$'),
+          '//# sourceMappingURL=foreign.mjs.map',
+        );
+        await sourceMap.copy(targetMap.path);
+      } else if (targetMap.existsSync()) {
+        await targetMap.delete();
+      }
+      await target.writeAsString(sourceText);
+    } else {
+      if (target.existsSync()) await target.delete();
+      if (targetMap.existsSync()) await targetMap.delete();
+    }
+    final trampoline = config.file(
+      '${config.outputDirectory}/callback_trampoline.mjs',
+    );
+    if (trampoline.existsSync()) {
+      await trampoline.copy(
+        config.file('web/react-debug/callback_trampoline.mjs').path,
+      );
+    } else {
+      final staged = config.file('web/react-debug/callback_trampoline.mjs');
+      if (staged.existsSync()) await staged.delete();
+    }
+    final stamp = config.file('.dart_tool/react/debug_foreign_bundle.json');
+    await stamp.parent.create(recursive: true);
+    await stamp.writeAsString(
+      '${jsonEncode(await _debugForeignInputs(config))}\n',
+    );
+    info('Prepared browser foreign bundle for DDC.');
+  }
+
+  Future<void> _writeDebugImportMap(
+    ReactProjectConfig config,
+    JsEnvironment? environment,
+  ) async {
+    final bundle = config.file('web/react-debug/foreign.mjs');
+    final index = config.file('web/index.html');
+    if (!bundle.existsSync() || !index.existsSync()) return;
+    final imports = <String>{};
+    final bundleSource = bundle
+        .readAsStringSync()
+        .split('//# sourceMappingURL=')
+        .first
+        .replaceAll(RegExp(r'/\*[\s\S]*?\*/'), '');
+    final importLine = RegExp(r'''^\s*import\b.*?['"]([^'"]+)['"]''');
+    for (final line in bundleSource.split('\n')) {
+      final match = importLine.firstMatch(line);
+      if (match == null) continue;
+      final specifier = match.group(1)!;
+      if (!specifier.startsWith('.') &&
+          !specifier.startsWith('/') &&
+          !specifier.contains('://')) {
+        imports.add(specifier);
+      }
+    }
+    if (imports.isEmpty) return;
+    if (environment == null) {
+      throw const ReactToolException(
+        'The debug foreign bundle has runtime imports, but no managed JS '
+        'environment is available.',
+      );
+    }
+
+    final map = <String, String>{};
+    for (final specifier in imports.toList()..sort()) {
+      final package = _npmPackageName(specifier);
+      final version = environment.installedVersions[package];
+      if (version == null) {
+        throw ReactToolException(
+          'Missing browser runtime dependency "$specifier".\n\n'
+          'Required by the generated foreign bundle. Add "$package" to '
+          'foreign.dependencies or install it in the managed JS environment.',
+        );
+      }
+      final base = 'https://esm.sh/$package@$version';
+      map[specifier] = specifier == package
+          ? base
+          : '$base/${specifier.substring(package.length + 1)}';
+      if (specifier == package || specifier.startsWith('$package/')) {
+        map['$package/'] = '$base/';
+      }
+    }
+
+    final source = await index.readAsString();
+    const start = '<!-- react_tool:debug-importmap:start -->';
+    const end = '<!-- react_tool:debug-importmap:end -->';
+    final startIndex = source.indexOf(start);
+    final endIndex = source.indexOf(end);
+    final block =
+        '''$start
+<script type="importmap">
+${const JsonEncoder.withIndent('  ').convert({'imports': map})}
+</script>
+$end''';
+    final updated = switch ((startIndex, endIndex)) {
+      (final startAt, final endAt) when startAt >= 0 && endAt >= startAt =>
+        source.substring(0, startAt) +
+            block +
+            source.substring(endAt + end.length),
+      _ => _replaceOrInsertImportMap(source, block),
+    };
+    if (updated != source) await index.writeAsString(updated);
+  }
+
+  Future<void> _removeMissingDebugForeignScript(
+    ReactProjectConfig config,
+  ) async {
+    final bundle = config.file('web/react-debug/foreign.mjs');
+    if (bundle.existsSync()) return;
+    final index = config.file('web/index.html');
+    if (!index.existsSync()) return;
+    final source = await index.readAsString();
+    final updated = source.replaceAll(
+      RegExp(r'<script[^>]*src="/?react-debug/foreign\.mjs"[^>]*>\s*</script>'),
+      '',
+    );
+    if (updated != source) await index.writeAsString(updated);
+  }
+
+  String _replaceOrInsertImportMap(String source, String block) {
+    final importMapStart = source.indexOf('<script type="importmap">');
+    final importMapEnd = source.indexOf('</script>', importMapStart);
+    if (importMapStart >= 0 && importMapEnd >= importMapStart) {
+      return source.substring(0, importMapStart) +
+          block +
+          source.substring(importMapEnd + '</script>'.length);
+    }
+    final headEnd = source.indexOf('</head>');
+    final insertion = '$block\n';
+    return headEnd >= 0
+        ? '${source.substring(0, headEnd)}$insertion${source.substring(headEnd)}'
+        : '$insertion$source';
+  }
+
+  String _npmPackageName(String specifier) {
+    final parts = specifier.split('/');
+    if (specifier.startsWith('@') && parts.length >= 2) {
+      return '${parts[0]}/${parts[1]}';
+    }
+    return parts.first;
+  }
+
+  Future<bool> _debugForeignBundleIsStale(
+    ReactProjectConfig config, {
+    required bool hasForeignSurface,
+  }) async {
+    final generatedBundle = config.file(
+      '${config.outputDirectory}/foreign/browser/bundle.mjs',
+    );
+    // Client-only projects without a foreign surface do not emit this asset.
+    // Treat that as a valid cached state; stylesheet/manifest checks below
+    // still cause the one required initial build.
+    if (!generatedBundle.existsSync()) return hasForeignSurface;
+    final stamp = config.file('.dart_tool/react/debug_foreign_bundle.json');
+    if (!stamp.existsSync()) {
+      return true;
+    }
+    final bundle = config.file('web/react-debug/foreign.mjs');
+    if (generatedBundle.existsSync() != bundle.existsSync()) return true;
+    final sourceMap = config.file('web/react-debug/foreign.mjs.map');
+    final expectedSourceMap = config.file(
+      '${config.outputDirectory}/foreign/browser/bundle.mjs.map',
+    );
+    if (expectedSourceMap.existsSync() != sourceMap.existsSync()) return true;
+    final generatedTrampoline = config.file(
+      '${config.outputDirectory}/callback_trampoline.mjs',
+    );
+    final stagedTrampoline = config.file(
+      'web/react-debug/callback_trampoline.mjs',
+    );
+    if (generatedTrampoline.existsSync() != stagedTrampoline.existsSync()) {
+      return true;
+    }
+    if (generatedTrampoline.existsSync() &&
+        await generatedTrampoline.length() != await stagedTrampoline.length()) {
+      return true;
+    }
+    try {
+      final saved = jsonDecode(await stamp.readAsString());
+      if (saved is! Map) return true;
+      return jsonEncode(saved) != jsonEncode(await _debugForeignInputs(config));
+    } catch (_) {
+      return true;
+    }
+  }
+
+  Future<Map<String, Object?>> _debugForeignInputs(
+    ReactProjectConfig config,
+  ) async {
+    final paths = <String>{
+      'react.yaml',
+      'package.json',
+      'package-lock.json',
+      ...config.styleEntrypoints,
+      for (final component in config.foreignComponents) component.module,
+    };
+    final result = <String, Object?>{};
+    for (final relative in paths.toList()..sort()) {
+      final file = config.file(relative);
+      if (!file.existsSync()) {
+        result[relative] = null;
+        continue;
+      }
+      final stat = await file.stat();
+      result[relative] = <String, Object?>{
+        'modified': stat.modified.microsecondsSinceEpoch,
+        'size': stat.size,
+      };
+    }
+    return result;
+  }
+
+  Future<void> _prepareDebugStylesheet(ReactProjectConfig config) async {
+    if (config.styleEntrypoints.isEmpty) return;
+    var index = await config.file('web/index.html').readAsString();
+    for (final stylesheet in config.styleEntrypoints) {
+      final outputName =
+          config.styleOutput != null && config.styleEntrypoints.length == 1
+          ? config.styleOutput!
+          : '${p.basenameWithoutExtension(stylesheet)}.css';
+      final compiled = config.file(p.join(config.outputDirectory, outputName));
+      if (!compiled.existsSync()) continue;
+      final debugFile = config.file(p.join('web/react-debug', outputName));
+      await debugFile.parent.create(recursive: true);
+      await compiled.copy(debugFile.path);
+      final debugHref = '/react-debug/$outputName';
+      index = index.replaceAll('href="/$outputName"', 'href="$debugHref"');
+      index = index.replaceAll('href="$outputName"', 'href="$debugHref"');
+    }
+    await config.file('web/index.html').writeAsString(index);
+  }
+
+  List<String> _debugStylesheetOutputNames(ReactProjectConfig config) => [
+    for (final stylesheet in config.styleEntrypoints)
+      config.styleOutput != null && config.styleEntrypoints.length == 1
+          ? config.styleOutput!
+          : '${p.basenameWithoutExtension(stylesheet)}.css',
+  ];
+
+  Future<bool> _debugGeneratedAssetsAreStale(
+    ReactProjectConfig config, {
+    required bool hasForeignSurface,
+  }) async {
+    if (await _debugForeignBundleIsStale(
+      config,
+      hasForeignSurface: hasForeignSurface,
+    )) {
+      return true;
+    }
+    for (final outputName in _debugStylesheetOutputNames(config)) {
+      final compiled = config.file(p.join(config.outputDirectory, outputName));
+      final staged = config.file(p.join('web/react-debug', outputName));
+      if (compiled.existsSync() != staged.existsSync()) return true;
+      if (compiled.existsSync() &&
+          await compiled.length() != await staged.length()) {
+        return true;
+      }
+    }
+    final manifest = config.file('.dart_tool/react/debug_assets.json');
+    return !manifest.existsSync();
   }
 
   Future<({Process? worker, Process server})> _startProcesses(

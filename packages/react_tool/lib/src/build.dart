@@ -68,6 +68,10 @@ final class ReactBuilder {
     Map<String, String> additionalDependencies = const {},
   }) => _prepareJsEnvironment(additionalDependencies: additionalDependencies);
 
+  /// Whether the configured project or one of its wrapper dependencies emits
+  /// a foreign browser bundle.
+  Future<bool> hasForeignSurface() => _hasForeignSurface();
+
   /// Runs Dart code generation and syncs every generated source into the
   /// hidden `lib/.generated/` tree without compiling browser or SSR bundles.
   Future<void> generateSources() async {
@@ -1441,6 +1445,18 @@ final class ReactBuilder {
     var source = await index.readAsString();
     source = source
         .replaceAll(RegExp(r'<script\s+type="importmap">[\s\S]*?</script>'), '')
+        .replaceAll(
+          RegExp(r'<link\s+rel="stylesheet"\s+href="/?react-debug/[^\"]+"\s*>'),
+          '',
+        )
+        .replaceAll(
+          RegExp(r'<script[^>]*src="/?react-debug/[^\"]+"[^>]*>\s*</script>'),
+          '',
+        )
+        .replaceAll(
+          RegExp(r'<script[^>]*src="/?client\.dart\.js"[^>]*>\s*</script>'),
+          '',
+        )
         .replaceAll(
           RegExp(r'<script[^>]*src="/?browser\.entry\.mjs"[^>]*>\s*</script>'),
           '',

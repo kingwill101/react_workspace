@@ -57,3 +57,17 @@ npm run serve
 ```
 
 The server runs on `http://localhost:8080` and serves the client bundle statically.
+
+## Debug in VS Code
+
+Open this `examples/client` directory as the VS Code workspace, then run the
+`React Tool: debug client` launch configuration. The command starts our CLI,
+webdev in DDC/DWDS mode, launches Chromium with a debug port, and watches Dart
+sources. Use Chromium DevTools for that CLI validation path. For breakpoints
+managed directly by the Dart extension, use the `Dart: webdev IDE debugging`
+configuration instead. Generated files under `lib/.generated/` and
+`.dart_tool/` are hidden from the Explorer and search.
+
+The first DDC build can take a few minutes because it compiles the complete
+Dart web dependency graph. The debug page is served at
+`http://127.0.0.1:8080`.

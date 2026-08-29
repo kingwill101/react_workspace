@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "React Tool: debug client",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "dart run react_tool:react serve --debug --port 8080",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Dart: webdev IDE debugging",
+      "type": "dart",
+      "request": "launch",
+      "program": "web"
+    }
+  ]
+}

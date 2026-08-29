@@ -61,6 +61,7 @@ The CLI provides commands to manage the full lifecycle of a React Dart project:
 - `react build [--watch] [--release] [--server]` - Generate code, compile client and SSR Dart bundles, compile Sass, bundle JS dependencies, and copy static assets.
 - `react prerender --routes /,/about [--output build/prerendered]` - Build the project, boot its real SSR server, and write selected routes as static HTML.
 - `react serve [--watch] [--release] [--no-ssr]` - Build the project and run the Dart server (and SSR worker if configured) locally.
+- `react serve --debug` - Run a client-only project through `webdev`, DDC, and DWDS for source maps, breakpoints, hot reload, and Dart DevTools support. It launches Chrome with a debug port; use the Dart web debugger from your IDE to attach. The React foreign prebuild is cached under `.dart_tool/react` and is rebuilt only when its TSX, React configuration, or npm lock inputs change.
 - `react clean` - Remove `build/react/`, `lib/.generated/`, and other React-owned generated outputs.
 - `react component add <name> <module> [<prop:type> ...] [--infer] [--style <path>]` - Add a local or npm foreign React component, generate its wrapper, and validate the bundle. Bare npm modules may omit `<name>` and derive it from `--export`; use `--no-validate` for declaration-only workflows.
 - `react shadcn add <component> [--infer] [--style <path>]` - Add a component from the conventional `web/components/ui` shadcn layout.

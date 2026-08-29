@@ -43,6 +43,12 @@ void main() {
     expect(command.argParser.options['ssr-port'], isNotNull);
   });
 
+  test('serve command exposes the webdev debug mode', () {
+    final command = ServeCommand();
+    expect(command.argParser.options['debug'], isNotNull);
+    expect(command.argParser.options['debug']!.help, contains('webdev'));
+  });
+
   test('generates the full project skeleton', () async {
     final target = Directory(p.join(root.path, 'my_app'));
     await ScaffoldGenerator().generate(
@@ -138,6 +144,7 @@ void main() {
 
     final pubspec = read('pubspec.yaml');
     expect(pubspec, contains('name: my_app'));
+    expect(pubspec, contains('sdk: ">=3.13.0 <4.0.0"'));
     expect(pubspec, contains('react_core: ^0.1.0'));
     expect(pubspec, contains('react_codegen: ^0.1.0'));
     expect(pubspec, contains('react_server_shelf: ^0.1.1'));
@@ -150,6 +157,7 @@ void main() {
 
     final html = read('web/index.html');
     expect(html, contains('<title>My App</title>'));
+    expect(html, contains('<script defer src="/client.dart.js"></script>'));
     expect(html, contains('{{SSR}}'));
     expect(html, contains('{{PROPS}}'));
 

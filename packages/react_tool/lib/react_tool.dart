@@ -5,7 +5,8 @@ export 'src/bundler/bundle_manifest.dart'
     show BundleManifest, BundleManifestTarget;
 export 'src/bundler/bundle_report.dart' show BundleReport, BundleReportTarget;
 export 'src/build.dart' show ReactBuilder;
-export 'src/cli.dart' show PrerenderCommand, ReactCommandRunner, runReactTool;
+export 'src/cli.dart'
+    show PrerenderCommand, ReactCommandRunner, ServeCommand, runReactTool;
 export 'src/js_environment.dart'
     show JsDependencyConflict, JsEnvironmentException;
 export 'src/project_config.dart'

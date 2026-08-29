@@ -1,5 +1,6 @@
 # Dart build cache
 .dart_tool/
+.deslop/
 .packages
 build/
 
@@ -12,6 +13,8 @@ node_modules/
 # IDE
 .idea/
 .vscode/
+!examples/client/.vscode/
+!examples/client/.vscode/*.json
 *.swp
 *.swo
 *~
