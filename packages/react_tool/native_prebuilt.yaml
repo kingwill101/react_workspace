@@ -82,8 +82,7 @@ build:
           type: command
           working_directory: .
           commands:
-            - [cmd, /c, mkdir, native/target/release]
-            - [cmd, /c, copy, /Y, D:/cargo-target/release/react_ts_bindings.dll, native/target/release/react_ts_bindings.dll]
+            - [pwsh, -NoProfile, -Command, "New-Item -ItemType Directory -Force -Path 'native/target/release'; Copy-Item -Force 'D:/cargo-target/release/react_ts_bindings.dll' 'native/target/release/react_ts_bindings.dll'"]
         - id: export
           type: export_artifact
           artifact: react_ts_bindings
@@ -102,8 +101,7 @@ build:
           type: command
           working_directory: .
           commands:
-            - [cmd, /c, mkdir, native/target/aarch64-pc-windows-msvc/release]
-            - [cmd, /c, copy, /Y, D:/cargo-target/aarch64-pc-windows-msvc/release/react_ts_bindings.dll, native/target/aarch64-pc-windows-msvc/release/react_ts_bindings.dll]
+            - [pwsh, -NoProfile, -Command, "New-Item -ItemType Directory -Force -Path 'native/target/aarch64-pc-windows-msvc/release'; Copy-Item -Force 'D:/cargo-target/aarch64-pc-windows-msvc/release/react_ts_bindings.dll' 'native/target/aarch64-pc-windows-msvc/release/react_ts_bindings.dll'"]
         - id: export
           type: export_artifact
           artifact: react_ts_bindings
