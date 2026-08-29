@@ -135,6 +135,8 @@ jobs:
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: arm64
+      - name: Install Rust Windows ARM64 target
+        run: rustup target add aarch64-pc-windows-msvc
       - run: dart pub get
       - name: Build and stage native library
         working-directory: packages/react_tool
