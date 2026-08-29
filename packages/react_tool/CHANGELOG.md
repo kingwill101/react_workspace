@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.5
+
+- Propagates the Windows `npm.cmd` default through `ReactBuilder`, fixing the
+  managed JavaScript environment in `react build` on Windows.
+
 ## 0.2.4
 
 - Fixes generated imports after authored React files moved under `lib/react/`.

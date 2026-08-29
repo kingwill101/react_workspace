@@ -38,7 +38,8 @@ final class ReactBuilder {
   final void Function(String message) log;
 
   /// Package manager command used to provision missing npm dependencies
-  /// (defaults to `npm`; may be an absolute path for testing).
+  /// (defaults to `npm.cmd` on Windows and `npm` elsewhere; may be an absolute
+  /// path for testing).
   final String npmCommand;
 
   /// Overrides the managed React and React DOM version.
@@ -57,9 +58,9 @@ final class ReactBuilder {
     required this.release,
     this.server = false,
     this.log = print,
-    this.npmCommand = 'npm',
+    String? npmCommand,
     this.managedReactVersion,
-  });
+  }) : npmCommand = npmCommand ?? (Platform.isWindows ? 'npm.cmd' : 'npm');
 
   /// Provisions (or validates) the JS environment for wrapper packages.
   /// Public so `react js install` can surface provisioning errors early.

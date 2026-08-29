@@ -86,6 +86,14 @@ exit 0
 }
 
 void main() {
+  test('ReactBuilder selects the platform npm executable by default', () {
+    final builder = ReactBuilder(
+      config: ReactProjectConfig.load(Directory.current),
+      release: false,
+    );
+    expect(builder.npmCommand, Platform.isWindows ? 'npm.cmd' : 'npm');
+  });
+
   test('esbuild resolves managed packages from npmRoot/node_modules', () {
     expect(esbuildNodePaths('/managed/js'), [
       p.join('/managed/js', 'node_modules'),
