@@ -95,6 +95,26 @@ checks. For example, `useOptimistic` and `useActionState` throw a descriptive
 The React version used by Docusaurus under `.site/` is unrelated to the Dart
 runtime support policy.
 
+## Maintain development and production entrypoints
+
+The two browser serving modes intentionally have different asset contracts:
+
+| Mode | HTML entrypoint | Runtime assets |
+| --- | --- | --- |
+| `react serve --debug` | `/client.dart.js` from webdev/DDC | `web/react-debug/` staged assets plus `web/` static files |
+| `react build` / normal `serve` | `/browser.js` | bundled React, Dart client, trampoline, foreign bundle, and `styles.css` |
+
+Do not add production scripts to the debug HTML or debug scripts to the
+generated production HTML. When changing either path, verify the generated
+HTML and request each referenced asset. Debug generated assets are disposable;
+the cache manifest is `.dart_tool/react/debug_assets.json` and the foreign
+fingerprint is `.dart_tool/react/debug_foreign_bundle.json`.
+
+The debug prebuild must invalidate when a foreign surface appears after a
+previous client-only run. It must also stage source maps and every configured
+stylesheet output. Keep `static: web` as the supported webdev boundary until
+webdev support for custom static roots is deliberately designed.
+
 When changing React support:
 
 1. Update `ReactVersionPolicy`.

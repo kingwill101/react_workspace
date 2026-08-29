@@ -5,6 +5,9 @@ description: Build and maintain React Dart applications in the react_workspace e
 
 # React Dart projects
 
+Scaffolded applications currently require Dart `>=3.13.0 <4.0.0`, because the
+DDC toolchain uses `build_web_compilers: ^4.8.10`.
+
 Use this skill when creating or modifying a React Dart application or scaffold.
 
 ## Start from the CLI
@@ -181,6 +184,13 @@ When validating an edge SSR project, inspect both generated modules:
 entry uses `renderToReadableStream` and neither file has a `node:http` listener.
 Do not run a Fetch entrypoint with `react serve`; that command starts the Node
 SSR worker only for projects using `ssr.runtime: node`.
+
+For client-only IDE debugging, use `react serve --debug`. It serves DDC's
+`/client.dart.js` and stages the generated callback trampoline, foreign browser
+bundle, source maps, and compiled CSS under `web/react-debug/`. The staged
+assets are cached in `.dart_tool/react/`; adding a foreign component must
+invalidate a cache created by a previously foreign-free run. Production builds
+must reference only `/browser.js`, which contains the bundled browser runtime.
 
 For full-stack behavior, compose `ReactTestHarness` with the application's
 `RoutedRequestHandler` or `ShelfRequestHandler`. Use harness-allocated ports;

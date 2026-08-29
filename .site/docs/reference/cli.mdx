@@ -185,6 +185,29 @@ server. Client-only projects use the built-in static server.
 - `--watch` rebuilds and restarts after successful changes.
 - `--release` builds optimized client output.
 
+### `react serve --debug`
+
+```console
+dart run react_tool:react serve --debug [--port 8080]
+```
+
+Debug mode is for client-only applications. It runs `webdev` with DDC and
+DWDS, so the browser loads the Dart entrypoint as `/client.dart.js` and IDE
+breakpoints can attach to Dart source. The tool stages the generated callback
+trampoline, browser foreign bundle, foreign source map, and compiled styles
+under `web/react-debug/`; authored static files continue to come from `web/`.
+
+The first run performs the React foreign/CSS prebuild. Its inputs are cached in
+`.dart_tool/react/` and subsequent runs reuse the staged assets until the
+React configuration, TSX modules, npm lockfiles, or stylesheet inputs change.
+Adding a foreign component invalidates the cache automatically. Debug mode
+requires `static: web` and currently does not proxy full-stack SSR or server
+actions; use ordinary `react serve` for that flow.
+
+Production mode has a separate entrypoint: `build/react/index.html` references
+only `/browser.js`. That bundle owns React bootstrap, the Dart client module,
+the callback trampoline, and the retained foreign browser bundle.
+
 For tests, use `ReactTestHarness` rather than fixed ports; it allocates isolated
 ports and composes with the selected `server_testing` adapter.
 

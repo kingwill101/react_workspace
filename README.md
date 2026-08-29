@@ -1,6 +1,6 @@
 # React Dart workspace
 
-A typed React component and full-stack application ecosystem for Dart 3.12+.
+A typed React component and full-stack application ecosystem for Dart 3.13+.
 
 React Dart keeps the UI contract portable while using React itself for browser
 rendering and Node server-side rendering. Server functions, Web bindings,
@@ -63,7 +63,7 @@ The main boundaries are intentional:
 
 ## Requirements
 
-- Dart SDK `>=3.12.0 <4.0.0`;
+- Dart SDK `>=3.13.0 <4.0.0`;
 - Node.js and npm for React dependencies, bundling, and the SSR worker;
 - the Rust toolchain required by `packages/react_tool/native/Cargo.toml` when
   building the native TypeScript declaration extractor.
@@ -151,6 +151,18 @@ dart run react_tool:react build --release
 
 The build writes browser, SSR, CSS, static, foreign-module, manifest, and report
 artifacts under `build/react/`.
+
+For client-only source debugging, use the dedicated DDC/DWDS path:
+
+```console
+dart run react_tool:react serve --debug
+```
+
+This serves `web/client.dart` as `client.dart.js` through `webdev`, stages the
+generated callback trampoline, foreign browser bundle, source maps, and CSS
+under `web/react-debug/`, and caches those generated assets under
+`.dart_tool/react/`. Production builds do not use those debug files: their
+single browser entrypoint is `build/react/browser.js`.
 
 Tests use `react_testing` on top of `server_testing`:
 

@@ -62,6 +62,14 @@ The tool writes the final browser bundle to `build/react/browser.js`. Keep
 `lib/.generated/` and `build/react/` out of authored code and source control;
 the generated wrapper and bundle manifest are reproducible build output.
 
+For source-level client debugging, run `dart run react_tool:react serve
+--debug`. The tool prebuilds and stages the browser foreign bundle, callback
+trampoline, source map, and compiled styles under `web/react-debug/`, while
+webdev/DDC serves `web/client.dart` as `/client.dart.js`. The prebuild is
+cached, but adding a new foreign component invalidates a cache from a previous
+foreign-free run. Production uses only `build/react/browser.js` and does not
+load the debug assets.
+
 ## Configure Tailwind
 
 Use Tailwind 3 with a project-local CSS source. The shadcn CLI expects
