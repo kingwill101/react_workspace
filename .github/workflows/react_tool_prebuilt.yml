@@ -15,6 +15,9 @@ permissions:
 env:
   CONFIG: packages/react_tool/native_prebuilt.yaml
   MANIFEST_OUTPUT: packages/react_tool/lib/src/hook/react_tool_prebuilts.g.dart
+  # The Git source cache path is long on Windows. Keep Cargo's build-script
+  # outputs out of that path so MSVC can open the generated executables.
+  CARGO_TARGET_DIR: D:\\cargo-target
 
 jobs:
   build-linux:
