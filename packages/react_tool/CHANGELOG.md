@@ -7,6 +7,8 @@
 - Uses generated server-function references without duplicate handwritten refs.
 - Makes both Routed templates generate runnable tests and fixes their README
   command fences.
+- Resolves the npm command as `npm.cmd` on Windows so managed JavaScript
+  environment installation works without a shell wrapper.
 
 ## 0.2.3
 
