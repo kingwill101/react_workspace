@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2
+
+- Includes the gitignore and Docker ignore scaffold templates in the pub.dev
+  archive so `react init` works from the hosted package.
+
 ## 0.2.1
 
 - Ships verified native prebuilts for Linux, macOS, and Windows on x64 and
