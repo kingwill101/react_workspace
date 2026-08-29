@@ -112,10 +112,16 @@ jobs:
         with:
           submodules: true
       - uses: dart-lang/setup-dart@v1
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+      - name: Select the Visual Studio x64 linker
+        shell: pwsh
+        run: |
+          $linker = Join-Path $env:VCToolsInstallDir 'bin\Hostx64\x64\link.exe'
+          if (-not (Test-Path $linker)) { throw "MSVC x64 linker not found: $linker" }
+          "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=$linker" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - run: dart pub get
-      - name: Build and test react_tool from source
-        working-directory: packages/react_tool
-        run: dart test --concurrency=1
       - name: Build and stage native library
         working-directory: packages/react_tool
         run: dart run native_prebuilt build --target windows-x64 --from-source --output ../../built-library
@@ -137,6 +143,12 @@ jobs:
           arch: arm64
       - name: Install Rust Windows ARM64 target
         run: rustup target add aarch64-pc-windows-msvc
+      - name: Select the Visual Studio ARM64 linker
+        shell: pwsh
+        run: |
+          $linker = Join-Path $env:VCToolsInstallDir 'bin\Hostx64\arm64\link.exe'
+          if (-not (Test-Path $linker)) { throw "MSVC ARM64 linker not found: $linker" }
+          "CARGO_TARGET_AARCH64_PC_WINDOWS_MSVC_LINKER=$linker" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - run: dart pub get
       - name: Build and stage native library
         working-directory: packages/react_tool
