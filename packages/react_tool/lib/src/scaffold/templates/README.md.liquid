@@ -21,11 +21,12 @@ dart run react_tool:react serve
 ```
 
 The server runs on `http://localhost:8080` and the SSR worker on port
-`3001`. Server functions live in `lib/greeting.dart` and are called from
+`3001`. Server functions live in `lib/react/greeting.dart` and are called from
 the browser through the generated client
 (`lib/.generated/greeting.client.g.dart`).
 
-For day-to-day iteration, focus on `lib/app.dart` and `lib/greeting.dart`.
+For day-to-day iteration, focus on `lib/react/app.dart` and
+`lib/react/greeting.dart`.
 Generated output is in `lib/.generated/` and `build/react`.
 
 VS Code users get `.vscode/settings.json` preconfigured to hide generated and
@@ -43,14 +44,13 @@ dart run react_tool:react test --coverage
 # or
 dart test --coverage
 
-# Full-stack SSR + server-function integration (builds + boots Node worker)
-dart test -t integration
 ```
 
 Tests use `react_testing`: `ServerFunctionHarness` for server functions,
-`SsrTestHarness`/`InMemorySsrHarness` for SSR documents and
+`SsrTestHarness`/`InMemorySsrHarness` for SSR documents, and
 `ReactComponentHarness` for components. See `test/app_test.dart` and
-`test/greeting_test.dart`.
+`test/greeting_test.dart`. These are fast harness tests; they do not build or
+boot the Node SSR worker.
 
 ## Analyze
 

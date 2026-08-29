@@ -1,13 +1,13 @@
 import 'package:react_testing/react_testing.dart';
 import 'package:test/test.dart';
 
-import 'package:{{ name }}/greeting.dart';
+import 'package:{{ name }}/react/greeting.dart';
 
 void main() {
   group('greet server function (ServerFunctionHarness)', () {
     test('dispatch directly (no HTTP)', () async {
       final harness = ServerFunctionHarness();
-      // Register the real greet handler from lib/greeting.dart
+      // Register the real greet handler from lib/react/greeting.dart
       // In a real project this would be generated: registerGreeting(registry)
       // For the starter we wire it manually:
       harness.registry.register(

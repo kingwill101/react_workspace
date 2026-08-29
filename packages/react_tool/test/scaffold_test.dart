@@ -60,9 +60,9 @@ void main() {
       'web/index.html',
       'web/styles.scss',
       'web/client.dart',
-      'lib/app.dart',
-      'lib/greeting.dart',
-      'lib/ssr.dart',
+      'lib/react/app.dart',
+      'lib/react/greeting.dart',
+      'lib/react/ssr.dart',
       'bin/server.dart',
       'Dockerfile',
       '.dockerignore',
@@ -97,8 +97,8 @@ void main() {
       'web/index.html',
       'web/styles.scss',
       'web/client.dart',
-      'lib/app.dart',
-      'lib/greeting.dart',
+      'lib/react/app.dart',
+      'lib/react/greeting.dart',
       'README.md',
       'test/app_test.dart',
     ];
@@ -111,7 +111,7 @@ void main() {
     }
 
     final notExpected = <String>[
-      'lib/ssr.dart',
+      'lib/react/ssr.dart',
       'bin/server.dart',
       'Dockerfile',
       '.dockerignore',
@@ -138,16 +138,11 @@ void main() {
 
     final pubspec = read('pubspec.yaml');
     expect(pubspec, contains('name: my_app'));
+    expect(pubspec, contains('react_core: ^0.1.0'));
+    expect(pubspec, contains('react_codegen: ^0.1.0'));
+    expect(pubspec, contains('react_server_shelf: ^0.1.1'));
+    expect(pubspec, contains('react_tool: ^0.2.2'));
     expect(pubspec, contains('react_core: {path: ../packages/react_core}'));
-    expect(
-      pubspec,
-      contains('react_codegen: {path: ../packages/react_codegen}'),
-    );
-    expect(
-      pubspec,
-      contains('react_server_shelf: {path: ../packages/react_server_shelf}'),
-    );
-    expect(pubspec, contains('react_tool: {path: ../packages/react_tool}'));
     expect(pubspec, contains('build_runner: ^2.15.3'));
 
     final gitignore = read('.gitignore');
@@ -175,7 +170,7 @@ void main() {
     expect(server, contains('_defaultRootComponent'));
     expect(server, contains("'title': 'Hello from SSR'"));
 
-    final app = read('lib/app.dart');
+    final app = read('lib/react/app.dart');
     expect(app, contains("import 'package:react_dom/react_dom.dart';"));
     expect(app, isNot(contains("import 'package:react_core/react.dart';")));
     expect(app, contains("fontFamily: 'system-ui, sans-serif'"));
@@ -184,11 +179,11 @@ void main() {
     expect(app, contains('@reactComponent'));
     expect(app, contains("greetAction(name: 'world')"));
 
-    final greeting = read('lib/greeting.dart');
+    final greeting = read('lib/react/greeting.dart');
     expect(greeting, contains('@serverFunction'));
     expect(greeting, contains('Future<String> greet'));
 
-    final ssr = read('lib/ssr.dart');
+    final ssr = read('lib/react/ssr.dart');
     expect(ssr, contains("import '.generated/app.react.dart';"));
     expect(ssr, contains('SsrComponentRegistry.register'));
     expect(ssr, contains('registerGlobalRenderer'));
@@ -200,11 +195,31 @@ void main() {
 
     final readme = read('README.md');
     expect(readme, contains('# My App'));
+    expect(readme, contains('lib/react/app.dart'));
+    expect(readme, isNot(contains('dart test -t integration')));
 
     final vscodeSettings = read('.vscode/settings.json');
     expect(vscodeSettings, contains('"files.exclude"'));
     expect(vscodeSettings, contains('.generated'));
     expect(vscodeSettings, contains('build'));
+  });
+
+  test('uses hosted packages by default', () async {
+    final target = Directory(p.join(root.path, 'hosted_app'));
+    final generator = ScaffoldGenerator();
+    await generator.generate(
+      name: 'hosted_app',
+      packagesPath: '',
+      target: target,
+    );
+
+    final pubspec = File(
+      p.join(target.path, 'pubspec.yaml'),
+    ).readAsStringSync();
+    expect(pubspec, contains('react_core: ^0.1.0'));
+    expect(pubspec, contains('react_tool: ^0.2.2'));
+    expect(pubspec, isNot(contains('dependency_overrides:')));
+    expect(pubspec, isNot(contains('path: ../packages')));
   });
 
   test('init command with --template routed scaffolds a routed app', () async {
@@ -221,7 +236,9 @@ void main() {
       isTrue,
     );
     expect(
-      File(p.join(root.path, 'routed_app', 'lib', 'ssr.dart')).existsSync(),
+      File(
+        p.join(root.path, 'routed_app', 'lib', 'react', 'ssr.dart'),
+      ).existsSync(),
       isTrue,
     );
 
@@ -280,7 +297,10 @@ void main() {
       final appDir = Directory(p.join(root.path, 'routed_mini'));
       expect(File(p.join(appDir.path, 'pubspec.yaml')).existsSync(), isTrue);
       expect(File(p.join(appDir.path, 'bin/server.dart')).existsSync(), isTrue);
-      expect(File(p.join(appDir.path, 'lib', 'ssr.dart')).existsSync(), isTrue);
+      expect(
+        File(p.join(appDir.path, 'lib', 'react', 'ssr.dart')).existsSync(),
+        isTrue,
+      );
       expect(File(p.join(appDir.path, 'README.md')).existsSync(), isTrue);
 
       final notExpected = <String>[
@@ -385,7 +405,9 @@ void main() {
         isFalse,
       );
       expect(
-        File(p.join(root.path, 'client_app', 'lib', 'ssr.dart')).existsSync(),
+        File(
+          p.join(root.path, 'client_app', 'lib', 'react', 'ssr.dart'),
+        ).existsSync(),
         isFalse,
       );
       final pubspec = await File(
@@ -408,7 +430,7 @@ void main() {
         isNot(contains("import 'package:react_web/react_web.dart'")),
       );
       final appSource = await File(
-        p.join(root.path, 'client_app', 'lib', 'app.dart'),
+        p.join(root.path, 'client_app', 'lib', 'react', 'app.dart'),
       ).readAsString();
       expect(appSource, contains("import 'package:react_dom/react_dom.dart';"));
       expect(
@@ -420,6 +442,11 @@ void main() {
       ).readAsString();
       expect(reactYaml, isNot(contains('ssr:')));
       expect(reactYaml, isNot(contains('server:')));
+      final clientReadme = await File(
+        p.join(root.path, 'client_app', 'README.md'),
+      ).readAsString();
+      expect(clientReadme, contains('lib/react/app.dart'));
+      expect(clientReadme, isNot(contains('lib/greeting.dart')));
       final vscodeSettings = await File(
         p.join(root.path, 'client_app', '.vscode', 'settings.json'),
       ).readAsString();

@@ -20,7 +20,7 @@ dart run react_tool:react build
 dart run react_tool:react serve
 ```
 
-For day-to-day iteration, focus on `lib/app.dart` and `lib/greeting.dart`.
+For day-to-day iteration, focus on `lib/react/app.dart`.
 Generated output is in `lib/.generated/` and `build/`.
 
 VS Code users get `.vscode/settings.json` preconfigured to hide generated and
@@ -35,7 +35,8 @@ dart run react_tool:react test --coverage
 ```
 
 Tests use `react_testing` (`ReactComponentHarness`, `InMemorySsrHarness`)
-— see `test/app_test.dart`.
+— see `test/app_test.dart`. The client-only scaffold does not include a
+server-function file or server-function tests.
 
 ## Analyze
 

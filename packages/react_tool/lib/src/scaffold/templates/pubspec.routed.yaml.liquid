@@ -6,14 +6,13 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  react_core: {path: {{ packagesPath }}/react_core}
-  react_js: {path: {{ packagesPath }}/react_js}
-  react_dom: {path: {{ packagesPath }}/react_dom}
-  react_web: {path: {{ packagesPath }}/react_web}
-  react_actions: {path: {{ packagesPath }}/react_actions}
-  react_server: {path: {{ packagesPath }}/react_server}
-  react_server_routed:
-    path: {{ packagesPath }}/react_server_routed
+  react_core: ^0.1.0
+  react_js: ^0.1.0
+  react_dom: ^0.1.0
+  react_web: ^0.1.1
+  react_actions: ^0.1.1
+  react_server: ^0.1.1
+  react_server_routed: ^0.1.1
   routed_core:
     git:
       url: https://github.com/kingwill101/routed.git
@@ -27,9 +26,9 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.15.3
-  react_codegen: {path: {{ packagesPath }}/react_codegen}
-  react_tool: {path: {{ packagesPath }}/react_tool}
-  react_testing: {path: {{ packagesPath }}/react_testing}
+  react_codegen: ^0.1.0
+  react_tool: ^0.2.2
+  react_testing: ^0.1.0
   lints: ^6.1.0
   test: ^1.31.2
   server_testing: ^0.4.0
@@ -39,9 +38,8 @@ dev_dependencies:
       ref: master
       path: packages/server_testing/routed_testing
 
-# The react_* packages are not published yet, so every package depends on
-# them by path. The overrides keep a path package (for example react_dom's
-# bare `react:` entry) resolving against the local copies.
+{% if localPackages %}
+# Local workspace overrides are enabled when `--packages` is supplied.
 dependency_overrides:
   react_core: {path: {{ packagesPath }}/react_core}
   react_js: {path: {{ packagesPath }}/react_js}
@@ -50,3 +48,5 @@ dependency_overrides:
   react_actions: {path: {{ packagesPath }}/react_actions}
   react_server: {path: {{ packagesPath }}/react_server}
   react_testing: {path: {{ packagesPath }}/react_testing}
+  react_server_routed: {path: {{ packagesPath }}/react_server_routed}
+{% endif %}
