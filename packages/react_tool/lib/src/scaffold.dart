@@ -16,7 +16,7 @@ const _templatesPackageUri = 'package:react_tool/src/scaffold/templates/';
 const _ssrTemplateOutputs = <String, String>{
   'pubspec.yaml.liquid': 'pubspec.yaml',
   'analysis_options.yaml.liquid': 'analysis_options.yaml',
-  '.gitignore.liquid': '.gitignore',
+  'gitignore.liquid': '.gitignore',
   'vscode_settings.json.liquid': '.vscode/settings.json',
   'react.yaml.liquid': 'react.yaml',
   'package.json.liquid': 'package.json',
@@ -28,7 +28,7 @@ const _ssrTemplateOutputs = <String, String>{
   'lib/ssr.dart.liquid': 'lib/ssr.dart',
   'bin/server.dart.liquid': 'bin/server.dart',
   'Dockerfile.liquid': 'Dockerfile',
-  '.dockerignore.liquid': '.dockerignore',
+  'dockerignore.liquid': '.dockerignore',
   'README.md.liquid': 'README.md',
   'test/app_test.dart.liquid': 'test/app_test.dart',
   'test/greeting_test.dart.liquid': 'test/greeting_test.dart',
@@ -38,7 +38,7 @@ const _ssrTemplateOutputs = <String, String>{
 const _clientTemplateOutputs = <String, String>{
   'pubspec.client.yaml.liquid': 'pubspec.yaml',
   'analysis_options.yaml.liquid': 'analysis_options.yaml',
-  '.gitignore.liquid': '.gitignore',
+  'gitignore.liquid': '.gitignore',
   'vscode_settings.json.liquid': '.vscode/settings.json',
   'react.client.yaml.liquid': 'react.yaml',
   'package.json.liquid': 'package.json',
@@ -61,7 +61,7 @@ const _routedTemplateOutputs = <String, String>{
 const _routedMinimalTemplateOutputs = <String, String>{
   'pubspec.routed.yaml.liquid': 'pubspec.yaml',
   'analysis_options.yaml.liquid': 'analysis_options.yaml',
-  '.gitignore.liquid': '.gitignore',
+  'gitignore.liquid': '.gitignore',
   'vscode_settings.json.liquid': '.vscode/settings.json',
   'react.yaml.liquid': 'react.yaml',
   'package.json.liquid': 'package.json',
