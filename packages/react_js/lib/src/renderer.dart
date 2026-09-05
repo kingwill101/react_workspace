@@ -259,11 +259,17 @@ class JsRenderer extends ReactRenderer {
     if (jsChildren.isEmpty) {
       return _react.callMethod('createElement'.toJS, type, keyedProps) as JSAny;
     }
-    return _react.callMethod(
-          'createElement'.toJS,
-          type,
-          keyedProps,
-          jsChildren.toJS,
+    // `createElement(type, props, childrenArray)` makes React treat the
+    // complete child list as one array. React then requires keys for every
+    // sibling, including ordinary static children such as a heading and a
+    // paragraph. The JavaScript API is variadic, so apply the arguments as
+    // `createElement(type, props, child1, child2, ...)` instead.
+    final createElement =
+        _react.getProperty('createElement'.toJS) as JSFunction;
+    return _reflectApply(
+          createElement,
+          null,
+          <JSAny?>[type, keyedProps, ...jsChildren].toJS,
         )
         as JSAny;
   }
@@ -307,6 +313,13 @@ external JSAny get _strictMode;
 
 @JS('React.Suspense')
 external JSAny get _suspense;
+
+@JS('Reflect.apply')
+external JSAny? _reflectApply(
+  JSFunction target,
+  JSAny? thisArgument,
+  JSArray<JSAny?> arguments,
+);
 
 @JS('globalThis.__reactDartResolveComponent')
 external JSAny? _resolveForeignComponent(JSString name);

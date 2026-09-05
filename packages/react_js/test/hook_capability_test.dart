@@ -90,4 +90,57 @@ void main() {
       2,
     );
   });
+
+  test('hook dependencies accept raw Dart values by stable identity', () {
+    _eval(
+      '''globalThis.React.useMemo = function(factory, dependencies) {
+        globalThis.__reactDartMemoDependencies = dependencies;
+        return factory();
+      };'''
+          .toJS,
+    );
+
+    int callback(int value) => value + 1;
+    final model = Object();
+    expect(
+      JsBinding().useMemo(() => 'computed', [callback, model]),
+      'computed',
+    );
+
+    final dependencies =
+        _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
+    expect(dependencies.length, 2);
+  });
+
+  test('renderer passes children as variadic createElement arguments', () {
+    _eval(
+      '''globalThis.React.createElement = function() {
+        globalThis.__reactDartCreateElementArguments = Array.from(arguments);
+        return {};
+      };'''
+          .toJS,
+    );
+
+    runWithReactRuntime(
+      ReactRuntime(
+        target: ReactRenderTarget.test,
+        capabilities: ReactRuntimeCapabilities.browser,
+        binding: JsBinding(),
+        renderer: JsRenderer(),
+      ),
+      () => JsRenderer().render(
+        div(
+          children: [
+            div(key: 'first'),
+            div(key: 'second'),
+          ],
+        ),
+      ),
+    );
+
+    final arguments =
+        _globalThis.getProperty('__reactDartCreateElementArguments'.toJS)
+            as JSArray;
+    expect(arguments.length, 4);
+  });
 }

@@ -331,8 +331,16 @@ class JsBinding extends ReactBinding {
     _useEffect(jsFn, _depsToJS(deps));
   }
 
+  /// Encodes hook dependencies by identity rather than as React properties.
+  ///
+  /// Dependency values are compared by React with `Object.is`. They may be
+  /// arbitrary Dart values, including callbacks and model objects, so using
+  /// [toReactJS] here is incorrect: that encoder deliberately rejects raw
+  /// Dart functions when they are passed as React props. The snapshot cache
+  /// gives each non-primitive Dart value a stable JavaScript box while still
+  /// allowing primitive values to use their normal JavaScript representation.
   JSAny? _depsToJS(List<Object?>? deps) =>
-      deps?.map((d) => toReactJS(d)).toList().toJS;
+      deps?.map(_toSnapshotJS).toList().toJS;
 }
 
 JSFunction _requireReactHook(JSAny? candidate, String name) {
