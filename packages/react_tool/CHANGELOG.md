@@ -6,6 +6,10 @@
   not compile the web entrypoint before generated imports exist.
 - Makes `generateSources` use `--config react` for new projects and build
   output filters as a fallback for existing projects without that config.
+- Seeds the workspace build cache before synchronizing generated sources so
+  clean checkouts can compile web entrypoints reliably.
+- Preserves current build-cache output when stale legacy generated files use
+  the same path.
 
 ## 0.2.6
 
