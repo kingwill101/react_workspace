@@ -124,9 +124,9 @@ func (m *ReactWorkspaceCi) qualityStage(
 		"-c",
 		"set -euo pipefail\n" +
 			"find packages examples tool/web_idl -type f -name '*.dart' " +
-				"! -path '*/.dart_tool/*' " +
-				"! -path 'packages/react_tool/lib/src/hook/react_tool_prebuilts.g.dart' " +
-				"-print0 | xargs -0 dart format --output=none --set-exit-if-changed\n" +
+			"! -path '*/.dart_tool/*' " +
+			"! -path 'packages/react_tool/lib/src/hook/react_tool_prebuilts.g.dart' " +
+			"-print0 | xargs -0 dart format --output=none --set-exit-if-changed\n" +
 			"dart analyze --fatal-infos\n" +
 			"npm ci --prefix third_party/web/web_generator/lib/src --no-audit --no-fund\n" +
 			"dart run tool/web_idl/verify.dart --strict\n",
@@ -136,24 +136,28 @@ func (m *ReactWorkspaceCi) qualityStage(
 func (m *ReactWorkspaceCi) testsStage(
 	prepared *dagger.Container,
 ) *dagger.Container {
-	return prepared.WithExec([]string{
-		"bash",
-		"-c",
-		"set -euo pipefail\n" +
-			"for package in packages/*; do\n" +
-			"  if [ -d \"$package/test\" ]; then\n" +
-			"    echo \"==> dart test $package\"\n" +
-			"    (cd \"$package\" && dart test --concurrency=1)\n" +
-			"  fi\n" +
-			"done\n" +
-			"for example in examples/client examples/plugin_validation examples/ssr examples/superdesk examples/workflow_companion_dart packages/react_server_routed/example; do\n" +
-			"  mapfile -d '' tests < <(cd \"$example\" && find test -type f -name '*_test.dart' -not -path 'test/browser/*' -print0 | sort -z)\n" +
-			"  if [ \"${#tests[@]}\" -gt 0 ]; then\n" +
-			"    echo \"==> dart test $example (${#tests[@]} files)\"\n" +
-			"    (cd \"$example\" && dart test --concurrency=1 \"${tests[@]}\")\n" +
-			"  fi\n" +
-			"done\n",
-	})
+	// preparedContainer has already run workspace-wide code generation. Keep
+	// example harnesses from invoking build_runner again for every test file.
+	return prepared.
+		WithEnvVariable("REACT_TESTING_PREGENERATED", "true").
+		WithExec([]string{
+			"bash",
+			"-c",
+			"set -euo pipefail\n" +
+				"for package in packages/*; do\n" +
+				"  if [ -d \"$package/test\" ]; then\n" +
+				"    echo \"==> dart test $package\"\n" +
+				"    (cd \"$package\" && dart test --concurrency=1)\n" +
+				"  fi\n" +
+				"done\n" +
+				"for example in examples/client examples/plugin_validation examples/ssr examples/superdesk examples/workflow_companion_dart packages/react_server_routed/example; do\n" +
+				"  mapfile -d '' tests < <(cd \"$example\" && find test -type f -name '*_test.dart' -not -path 'test/browser/*' -print0 | sort -z)\n" +
+				"  if [ \"${#tests[@]}\" -gt 0 ]; then\n" +
+				"    echo \"==> dart test $example (${#tests[@]} files)\"\n" +
+				"    (cd \"$example\" && dart test --concurrency=1 \"${tests[@]}\")\n" +
+				"  fi\n" +
+				"done\n",
+		})
 }
 
 func (m *ReactWorkspaceCi) docsStage(

@@ -14,6 +14,7 @@ void main() {
       projectRoot: Directory.current,
       release: true,
       ssr: false,
+      runCodegen: Platform.environment['REACT_TESTING_PREGENERATED'] != 'true',
     );
     await handler.startServer();
   });

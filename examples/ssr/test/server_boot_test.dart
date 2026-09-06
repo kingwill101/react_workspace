@@ -34,6 +34,7 @@ void main() {
   setUpAll(() async {
     final testHarness = await ReactTestHarness.start(
       projectRoot: Directory.current,
+      runCodegen: Platform.environment['REACT_TESTING_PREGENERATED'] != 'true',
     );
     harness = testHarness;
     final registry = ServerFunctionRegistry();

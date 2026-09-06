@@ -24,6 +24,7 @@ void main() {
     final testHarness = await ReactTestHarness.start(
       projectRoot: packageRoot,
       reactVersion: ReactVersionPolicy.compatibilityBaselines.last,
+      runCodegen: Platform.environment['REACT_TESTING_PREGENERATED'] != 'true',
       // The deployed example uses Fetch SSR for Cloudflare. The local
       // integration harness boots a Node worker, so override only this build.
       ssrRuntime: 'node',
