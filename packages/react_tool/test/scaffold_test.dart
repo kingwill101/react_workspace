@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:artisanal/args.dart';
 import 'package:path/path.dart' as p;
+import 'package:yaml/yaml.dart';
 
 import 'package:react_tool/react_tool.dart';
 import 'package:test/test.dart';
@@ -503,13 +504,26 @@ void main() {
   );
 }
 
-/// Asserts the scaffolded codegen-only build config exists and disables the
-/// web compilers, so `react generate` never compiles `web/` before generated
-/// imports exist. An empty or incorrect template must fail this check.
+/// Asserts the scaffolded codegen-only build config exists and disables every
+/// web compiler, so `react generate` never compiles `web/` before generated
+/// imports exist. Each entry is checked in its own section, so an enabled DDC
+/// builder alongside another disabled builder cannot pass.
 void _expectCodegenOnlyBuildConfig(Directory target) {
   final config = File(p.join(target.path, 'build.react.yaml'));
   expect(config.existsSync(), isTrue, reason: 'expected build.react.yaml');
-  final content = config.readAsStringSync();
-  expect(content, contains('build_web_compilers:ddc:'));
-  expect(content, contains('enabled: false'));
+  final document = loadYaml(config.readAsStringSync()) as YamlMap;
+  final builders =
+      ((document['targets'] as YamlMap)['\$default'] as YamlMap)['builders']
+          as YamlMap;
+  final webCompilers = builders.keys
+      .where((key) => '$key'.startsWith('build_web_compilers:'))
+      .toList();
+  expect(webCompilers, isNotEmpty, reason: 'expected web compiler entries');
+  for (final key in webCompilers) {
+    expect(
+      (builders[key] as YamlMap)['enabled'],
+      isFalse,
+      reason: 'expected $key to be disabled',
+    );
+  }
 }
