@@ -143,14 +143,14 @@ func (m *ReactWorkspaceCi) testsStage(
 			"for package in packages/*; do\n" +
 			"  if [ -d \"$package/test\" ]; then\n" +
 			"    echo \"==> dart test $package\"\n" +
-			"    (cd \"$package\" && dart test)\n" +
+			"    (cd \"$package\" && dart test --concurrency=1)\n" +
 			"  fi\n" +
 			"done\n" +
 			"for example in examples/client examples/plugin_validation examples/ssr examples/superdesk examples/workflow_companion_dart packages/react_server_routed/example; do\n" +
 			"  mapfile -d '' tests < <(cd \"$example\" && find test -type f -name '*_test.dart' -not -path 'test/browser/*' -print0 | sort -z)\n" +
 			"  if [ \"${#tests[@]}\" -gt 0 ]; then\n" +
 			"    echo \"==> dart test $example (${#tests[@]} files)\"\n" +
-			"    (cd \"$example\" && dart test \"${tests[@]}\")\n" +
+			"    (cd \"$example\" && dart test --concurrency=1 \"${tests[@]}\")\n" +
 			"  fi\n" +
 			"done\n",
 	})
