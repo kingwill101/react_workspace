@@ -30,7 +30,14 @@ final class _RefBox {
 /// contracts are finalized for both browser and SSR.
 class JsBinding extends ReactBinding {
   final _contexts = <ReactContext<Object?>, JSObject>{};
-  final _snapshotCache = <Object, JSAny>{};
+
+  /// Stable JavaScript boxes for hook dependencies, keyed by object identity.
+  ///
+  /// React compares dependencies with `Object.is`, so each distinct Dart
+  /// object needs its own box. An identity-keyed [Expando] (rather than a
+  /// `Map`, which would merge distinct-but-equal value objects) also avoids
+  /// retaining replaced callbacks or models for the binding lifetime.
+  final _snapshotCache = Expando<JSAny>('ReactSnapshotJS');
   final _callbackCache = <JSFunction, Function>{};
   final _refCache = Expando<Object>('ReactRefJSObject');
   final _jsRefs = <Object, JSObject>{};
@@ -293,7 +300,14 @@ class JsBinding extends ReactBinding {
     if (value == null || value is String || value is bool || value is num) {
       return toReactJS(value);
     }
-    return _snapshotCache.putIfAbsent(value, () => _toStateJS(value));
+    // Records cannot be Expando keys; encode them without caching. The fresh
+    // box reads as changed on every render, which is safe but never memoizes.
+    if (value is Record) return _toStateJS(value);
+    final cached = _snapshotCache[value];
+    if (cached != null) return cached;
+    final snapshot = _toStateJS(value);
+    _snapshotCache[value] = snapshot;
+    return snapshot;
   }
 
   T _fromStateJS<T>(JSAny? value) {

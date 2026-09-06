@@ -84,6 +84,7 @@ void main() {
         reason: 'expected $relative',
       );
     }
+    _expectCodegenOnlyBuildConfig(target);
   });
 
   test('generates a client-only project skeleton', () async {
@@ -131,6 +132,7 @@ void main() {
         reason: 'did not expect $relative',
       );
     }
+    _expectCodegenOnlyBuildConfig(target);
   });
 
   test('interpolates project data and preserves SSR placeholders', () async {
@@ -300,6 +302,7 @@ void main() {
       File(p.join(root.path, 'routed_app', '.dockerignore')).existsSync(),
       isTrue,
     );
+    _expectCodegenOnlyBuildConfig(Directory(p.join(root.path, 'routed_app')));
   });
 
   test(
@@ -360,6 +363,7 @@ void main() {
       expect(readme, contains('Routed'));
       expect(readme, isNot(contains('Dockerfile')));
       expect(readme, isNot(contains('docker build')));
+      _expectCodegenOnlyBuildConfig(appDir);
 
       await appDir.delete(recursive: true);
     },
@@ -497,4 +501,15 @@ void main() {
       expect(Directory(p.join(root.path, 'bad_app')).existsSync(), isFalse);
     },
   );
+}
+
+/// Asserts the scaffolded codegen-only build config exists and disables the
+/// web compilers, so `react generate` never compiles `web/` before generated
+/// imports exist. An empty or incorrect template must fail this check.
+void _expectCodegenOnlyBuildConfig(Directory target) {
+  final config = File(p.join(target.path, 'build.react.yaml'));
+  expect(config.existsSync(), isTrue, reason: 'expected build.react.yaml');
+  final content = config.readAsStringSync();
+  expect(content, contains('build_web_compilers:ddc:'));
+  expect(content, contains('enabled: false'));
 }

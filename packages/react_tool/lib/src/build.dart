@@ -93,14 +93,18 @@ final class ReactBuilder {
         // fallback for existing projects that do not have that config yet.
         if (!codegenConfig.existsSync()) ...[
           '--build-filter=lib/**/*.react.dart',
+          '--build-filter=lib/**/*.react.g.dart',
           '--build-filter=lib/**/*.action.g.dart',
           '--build-filter=lib/**/*.client.g.dart',
+          '--build-filter=lib/**/*.registry.g.dart',
           '--build-filter=lib/**/react_components.g.dart',
           '--build-filter=lib/**/ssr_registry.g.dart',
           '--build-filter=lib/**/server_actions.g.dart',
           '--build-filter=bin/**/*.react.dart',
+          '--build-filter=bin/**/*.react.g.dart',
           '--build-filter=bin/**/*.action.g.dart',
           '--build-filter=bin/**/*.client.g.dart',
+          '--build-filter=bin/**/*.registry.g.dart',
         ],
       ]);
     } else {

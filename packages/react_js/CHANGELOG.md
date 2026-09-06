@@ -1,3 +1,5 @@
+# Changelog
+
 ## 0.1.1
 
 - Fixes hook dependency encoding to use stable snapshot identity instead of

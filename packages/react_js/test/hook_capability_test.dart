@@ -102,14 +102,47 @@ void main() {
 
     int callback(int value) => value + 1;
     final model = Object();
+    // One binding across renders, as in a mounted component: the same Dart
+    // values must reuse the same boxes so React sees stable dependencies.
+    final binding = JsBinding();
     expect(
-      JsBinding().useMemo(() => 'computed', [callback, model]),
+      binding.useMemo(() => 'computed', [callback, model]),
       'computed',
     );
 
-    final dependencies =
+    final first =
         _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
-    expect(dependencies.length, 2);
+    expect(first.length, 2);
+
+    expect(
+      binding.useMemo(() => 'computed', [callback, model]),
+      'computed',
+    );
+    final second =
+        _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
+    expect(second.length, 2);
+    expect(second[0], same(first[0]));
+    expect(second[1], same(first[1]));
+
+    // Distinct-but-equal value objects must not share a box, or React would
+    // treat the dependency as unchanged when the Dart instance is replaced.
+    final firstTwin = _EqualModel(1);
+    final secondTwin = _EqualModel(1);
+    expect(firstTwin == secondTwin, isTrue);
+    expect(identical(firstTwin, secondTwin), isFalse);
+    expect(
+      binding.useMemo(() => 'computed', [firstTwin]),
+      'computed',
+    );
+    final twinFirst =
+        _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
+    expect(
+      binding.useMemo(() => 'computed', [secondTwin]),
+      'computed',
+    );
+    final twinSecond =
+        _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
+    expect(twinSecond[0], isNot(same(twinFirst[0])));
   });
 
   test('renderer passes children as variadic createElement arguments', () {
@@ -143,4 +176,17 @@ void main() {
             as JSArray;
     expect(arguments.length, 4);
   });
+}
+
+/// Value object with structural equality for dependency-identity tests.
+final class _EqualModel {
+  final int id;
+
+  _EqualModel(this.id);
+
+  @override
+  bool operator ==(Object other) => other is _EqualModel && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
