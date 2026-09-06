@@ -124,9 +124,9 @@ func (m *ReactWorkspaceCi) qualityStage(
 		"-c",
 		"set -euo pipefail\n" +
 			"find packages examples tool/web_idl -type f -name '*.dart' " +
-				"! -path '*/.dart_tool/*' " +
-				"! -path 'packages/react_tool/lib/src/hook/react_tool_prebuilts.g.dart' " +
-				"-print0 | xargs -0 dart format --output=none --set-exit-if-changed\n" +
+			"! -path '*/.dart_tool/*' " +
+			"! -path 'packages/react_tool/lib/src/hook/react_tool_prebuilts.g.dart' " +
+			"-print0 | xargs -0 dart format --output=none --set-exit-if-changed\n" +
 			"dart analyze --fatal-infos\n" +
 			"npm ci --prefix third_party/web/web_generator/lib/src --no-audit --no-fund\n" +
 			"dart run tool/web_idl/verify.dart --strict\n",
@@ -136,24 +136,28 @@ func (m *ReactWorkspaceCi) qualityStage(
 func (m *ReactWorkspaceCi) testsStage(
 	prepared *dagger.Container,
 ) *dagger.Container {
-	return prepared.WithExec([]string{
-		"bash",
-		"-c",
-		"set -euo pipefail\n" +
-			"for package in packages/*; do\n" +
-			"  if [ -d \"$package/test\" ]; then\n" +
-			"    echo \"==> dart test $package\"\n" +
-			"    (cd \"$package\" && dart test)\n" +
-			"  fi\n" +
-			"done\n" +
-			"for example in examples/client examples/plugin_validation examples/ssr examples/superdesk packages/react_server_routed/example; do\n" +
-			"  mapfile -d '' tests < <(cd \"$example\" && find test -type f -name '*_test.dart' -not -path 'test/browser/*' -print0 | sort -z)\n" +
-			"  if [ \"${#tests[@]}\" -gt 0 ]; then\n" +
-			"    echo \"==> dart test $example (${#tests[@]} files)\"\n" +
-			"    (cd \"$example\" && dart test \"${tests[@]}\")\n" +
-			"  fi\n" +
-			"done\n",
-	})
+	// preparedContainer has already run workspace-wide code generation. Keep
+	// example harnesses from invoking build_runner again for every test file.
+	return prepared.
+		WithEnvVariable("REACT_TESTING_PREGENERATED", "true").
+		WithExec([]string{
+			"bash",
+			"-c",
+			"set -euo pipefail\n" +
+				"for package in packages/*; do\n" +
+				"  if [ -d \"$package/test\" ]; then\n" +
+				"    echo \"==> dart test $package\"\n" +
+				"    (cd \"$package\" && dart test --concurrency=1)\n" +
+				"  fi\n" +
+				"done\n" +
+				"for example in examples/client examples/plugin_validation examples/ssr examples/superdesk examples/workflow_companion_dart packages/react_server_routed/example; do\n" +
+				"  mapfile -d '' tests < <(cd \"$example\" && find test -type f -name '*_test.dart' -not -path 'test/browser/*' -print0 | sort -z)\n" +
+				"  if [ \"${#tests[@]}\" -gt 0 ]; then\n" +
+				"    echo \"==> dart test $example (${#tests[@]} files)\"\n" +
+				"    (cd \"$example\" && dart test --concurrency=1 \"${tests[@]}\")\n" +
+				"  fi\n" +
+				"done\n",
+		})
 }
 
 func (m *ReactWorkspaceCi) docsStage(
@@ -270,10 +274,17 @@ func (m *ReactWorkspaceCi) preparedContainer(
 			"-c",
 			"set -euo pipefail\n" +
 				"dart pub get\n" +
-				"dart run build_runner build --workspace\n" +
-				"for project in examples/client examples/plugin_validation examples/ssr examples/superdesk packages/react_server_routed/example; do\n" +
+				// On a clean checkout the web entrypoints import `lib/.generated/`
+				// sources that do not exist yet. Seed the build cache first: the
+				// codegen phases complete before `build_web_compilers` fails on
+				// those imports, so this pass is allowed to fail. The sync loop
+				// then materializes the sources and the final build validates
+				// everything, including web compilation.
+				"dart run build_runner build --workspace || true\n" +
+				"for project in examples/client examples/plugin_validation examples/ssr examples/superdesk examples/workflow_companion_dart packages/react_server_routed/example; do\n" +
 				"  echo \"==> react generate --sync-only $project\"\n" +
 				"  (cd \"$project\" && dart run react_tool:react generate --sync-only)\n" +
-				"done\n",
+				"done\n" +
+				"dart run build_runner build --workspace\n",
 		})
 }

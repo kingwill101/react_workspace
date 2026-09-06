@@ -105,19 +105,13 @@ void main() {
     // One binding across renders, as in a mounted component: the same Dart
     // values must reuse the same boxes so React sees stable dependencies.
     final binding = JsBinding();
-    expect(
-      binding.useMemo(() => 'computed', [callback, model]),
-      'computed',
-    );
+    expect(binding.useMemo(() => 'computed', [callback, model]), 'computed');
 
     final first =
         _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
     expect(first.length, 2);
 
-    expect(
-      binding.useMemo(() => 'computed', [callback, model]),
-      'computed',
-    );
+    expect(binding.useMemo(() => 'computed', [callback, model]), 'computed');
     final second =
         _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
     expect(second.length, 2);
@@ -130,16 +124,10 @@ void main() {
     final secondTwin = _EqualModel(1);
     expect(firstTwin == secondTwin, isTrue);
     expect(identical(firstTwin, secondTwin), isFalse);
-    expect(
-      binding.useMemo(() => 'computed', [firstTwin]),
-      'computed',
-    );
+    expect(binding.useMemo(() => 'computed', [firstTwin]), 'computed');
     final twinFirst =
         _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
-    expect(
-      binding.useMemo(() => 'computed', [secondTwin]),
-      'computed',
-    );
+    expect(binding.useMemo(() => 'computed', [secondTwin]), 'computed');
     final twinSecond =
         _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
     expect(twinSecond[0], isNot(same(twinFirst[0])));

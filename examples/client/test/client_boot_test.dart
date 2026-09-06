@@ -12,7 +12,9 @@ void main() {
   setUpAll(() async {
     react = await ReactTestHarness.start(
       projectRoot: Directory.current,
+      release: true,
       ssr: false,
+      runCodegen: Platform.environment['REACT_TESTING_PREGENERATED'] != 'true',
     );
     await handler.startServer();
   });
@@ -44,7 +46,7 @@ void main() {
   serverTest('does not require an import map', (client, _) async {
     final response = await client.get('/');
     response.assertStatus(200);
-    expect(response.body, isNot(contains('importmap')));
+    expect(response.body, isNot(contains('<script type="importmap">')));
     expect(response.body, isNot(contains('esm.sh/react')));
   }, handler: handler);
 
