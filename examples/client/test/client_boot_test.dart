@@ -12,6 +12,7 @@ void main() {
   setUpAll(() async {
     react = await ReactTestHarness.start(
       projectRoot: Directory.current,
+      release: true,
       ssr: false,
     );
     await handler.startServer();
