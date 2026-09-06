@@ -291,40 +291,42 @@ const actionName = 'card';
     expect(logs, contains(contains('Synced 2 generated sources')));
   });
 
-  test('prefers build-cache outputs over legacy in-source generated files',
-      () async {
-    await Directory('${root.path}/lib/pages').create(recursive: true);
-    final generated = Directory(
-      '${root.path}/.dart_tool/build/generated/sample/lib/pages',
-    );
-    await generated.create(recursive: true);
-    await File('${generated.path}/card.react.dart').writeAsString('''
+  test(
+    'prefers build-cache outputs over legacy in-source generated files',
+    () async {
+      await Directory('${root.path}/lib/pages').create(recursive: true);
+      final generated = Directory(
+        '${root.path}/.dart_tool/build/generated/sample/lib/pages',
+      );
+      await generated.create(recursive: true);
+      await File('${generated.path}/card.react.dart').writeAsString('''
 const generatedTitle = 'cache';
 ''');
-    // Stale migration residue beside the authored sources must not clobber
-    // the current builder output under the same relative path.
-    await File('${root.path}/lib/pages/card.react.dart').writeAsString('''
+      // Stale migration residue beside the authored sources must not clobber
+      // the current builder output under the same relative path.
+      await File('${root.path}/lib/pages/card.react.dart').writeAsString('''
 const generatedTitle = 'legacy';
 ''');
-    final builder = ReactBuilder(
-      config: ReactProjectConfig.load(root),
-      release: false,
-      log: (_) {},
-    );
+      final builder = ReactBuilder(
+        config: ReactProjectConfig.load(root),
+        release: false,
+        log: (_) {},
+      );
 
-    await builder.syncGeneratedSources();
+      await builder.syncGeneratedSources();
 
-    final synchronized = File(
-      '${root.path}/lib/.generated/pages/card.react.dart',
-    );
-    expect(synchronized.existsSync(), isTrue);
-    expect(await synchronized.readAsString(), contains("'cache'"));
-    // Legacy residue is still self-cleaned.
-    expect(
-      File('${root.path}/lib/pages/card.react.dart').existsSync(),
-      isFalse,
-    );
-  });
+      final synchronized = File(
+        '${root.path}/lib/.generated/pages/card.react.dart',
+      );
+      expect(synchronized.existsSync(), isTrue);
+      expect(await synchronized.readAsString(), contains("'cache'"));
+      // Legacy residue is still self-cleaned.
+      expect(
+        File('${root.path}/lib/pages/card.react.dart').existsSync(),
+        isFalse,
+      );
+    },
+  );
 
   test('compiles configured Sass into the React output', () async {
     final config = ReactProjectConfig.load(root);

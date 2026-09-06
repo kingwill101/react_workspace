@@ -76,9 +76,7 @@ final class ReactBuilder {
   /// hidden `lib/.generated/` tree without compiling browser or SSR bundles.
   Future<void> generateSources() async {
     if (config.hasBuildRunner) {
-      final codegenConfig = File(
-        p.join(config.root.path, 'build.react.yaml'),
-      );
+      final codegenConfig = File(p.join(config.root.path, 'build.react.yaml'));
       await _runDart([
         'run',
         'build_runner',
