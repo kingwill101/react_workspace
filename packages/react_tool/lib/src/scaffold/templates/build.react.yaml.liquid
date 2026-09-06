@@ -1,0 +1,25 @@
+# Code-generation-only configuration used by `react_tool`.
+#
+# The normal build.yaml configuration remains available to webdev for DDC.
+# React codegen runs before the CLI has synchronized generated imports into
+# lib/.generated/, so compiling the web entrypoint in the same build-runner
+# invocation creates a circular bootstrap dependency.
+targets:
+  $default:
+    builders:
+      build_web_compilers:entrypoint_marker:
+        enabled: false
+      build_web_compilers:entrypoint:
+        enabled: false
+      build_web_compilers:sdk_js:
+        enabled: false
+      build_web_compilers:module_library:
+        enabled: false
+      build_web_compilers:dart2js_modules:
+        enabled: false
+      build_web_compilers:dart2wasm_modules:
+        enabled: false
+      build_web_compilers:ddc_modules:
+        enabled: false
+      build_web_compilers:ddc:
+        enabled: false

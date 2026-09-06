@@ -76,11 +76,36 @@ final class ReactBuilder {
   /// hidden `lib/.generated/` tree without compiling browser or SSR bundles.
   Future<void> generateSources() async {
     if (config.hasBuildRunner) {
+      final codegenConfig = File(
+        p.join(config.root.path, 'build.react.yaml'),
+      );
       await _runDart([
         'run',
         'build_runner',
         'build',
         if (_isWorkspaceRoot) '--workspace',
+        if (codegenConfig.existsSync()) ...['--config', 'react'],
+        // The browser/server entrypoints import synchronized generated files.
+        // On a clean checkout those files do not exist until this invocation
+        // finishes, so asking build_runner to analyze `web/` first creates a
+        // circular bootstrap failure. New scaffolds use build.react.yaml to
+        // disable the web compiler for this pass. Keep output filters as a
+        // fallback for existing projects that do not have that config yet.
+        if (!codegenConfig.existsSync()) ...[
+          '--build-filter=lib/**/*.react.dart',
+          '--build-filter=lib/**/*.react.g.dart',
+          '--build-filter=lib/**/*.action.g.dart',
+          '--build-filter=lib/**/*.client.g.dart',
+          '--build-filter=lib/**/*.registry.g.dart',
+          '--build-filter=lib/**/react_components.g.dart',
+          '--build-filter=lib/**/ssr_registry.g.dart',
+          '--build-filter=lib/**/server_actions.g.dart',
+          '--build-filter=bin/**/*.react.dart',
+          '--build-filter=bin/**/*.react.g.dart',
+          '--build-filter=bin/**/*.action.g.dart',
+          '--build-filter=bin/**/*.client.g.dart',
+          '--build-filter=bin/**/*.registry.g.dart',
+        ],
       ]);
     } else {
       log('Skipping build_runner: build_runner is not declared.');

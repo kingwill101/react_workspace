@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.7
+
+- Scaffolds a code-generation-only `build.react.yaml` so `react generate` does
+  not compile the web entrypoint before generated imports exist.
+- Makes `generateSources` use `--config react` for new projects and build
+  output filters as a fallback for existing projects without that config.
+
 ## 0.2.6
 
 - Adds DDC/DWDS client debugging with cached, accurately staged CSS, foreign

@@ -30,7 +30,14 @@ final class _RefBox {
 /// contracts are finalized for both browser and SSR.
 class JsBinding extends ReactBinding {
   final _contexts = <ReactContext<Object?>, JSObject>{};
-  final _snapshotCache = <Object, JSAny>{};
+
+  /// Stable JavaScript boxes for hook dependencies, keyed by object identity.
+  ///
+  /// React compares dependencies with `Object.is`, so each distinct Dart
+  /// object needs its own box. An identity-keyed [Expando] (rather than a
+  /// `Map`, which would merge distinct-but-equal value objects) also avoids
+  /// retaining replaced callbacks or models for the binding lifetime.
+  final _snapshotCache = Expando<JSAny>('ReactSnapshotJS');
   final _callbackCache = <JSFunction, Function>{};
   final _refCache = Expando<Object>('ReactRefJSObject');
   final _jsRefs = <Object, JSObject>{};
@@ -293,7 +300,14 @@ class JsBinding extends ReactBinding {
     if (value == null || value is String || value is bool || value is num) {
       return toReactJS(value);
     }
-    return _snapshotCache.putIfAbsent(value, () => _toStateJS(value));
+    // Records cannot be Expando keys; encode them without caching. The fresh
+    // box reads as changed on every render, which is safe but never memoizes.
+    if (value is Record) return _toStateJS(value);
+    final cached = _snapshotCache[value];
+    if (cached != null) return cached;
+    final snapshot = _toStateJS(value);
+    _snapshotCache[value] = snapshot;
+    return snapshot;
   }
 
   T _fromStateJS<T>(JSAny? value) {
@@ -331,8 +345,16 @@ class JsBinding extends ReactBinding {
     _useEffect(jsFn, _depsToJS(deps));
   }
 
+  /// Encodes hook dependencies by identity rather than as React properties.
+  ///
+  /// Dependency values are compared by React with `Object.is`. They may be
+  /// arbitrary Dart values, including callbacks and model objects, so using
+  /// [toReactJS] here is incorrect: that encoder deliberately rejects raw
+  /// Dart functions when they are passed as React props. The snapshot cache
+  /// gives each non-primitive Dart value a stable JavaScript box while still
+  /// allowing primitive values to use their normal JavaScript representation.
   JSAny? _depsToJS(List<Object?>? deps) =>
-      deps?.map((d) => toReactJS(d)).toList().toJS;
+      deps?.map(_toSnapshotJS).toList().toJS;
 }
 
 JSFunction _requireReactHook(JSAny? candidate, String name) {

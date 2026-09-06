@@ -90,4 +90,103 @@ void main() {
       2,
     );
   });
+
+  test('hook dependencies accept raw Dart values by stable identity', () {
+    _eval(
+      '''globalThis.React.useMemo = function(factory, dependencies) {
+        globalThis.__reactDartMemoDependencies = dependencies;
+        return factory();
+      };'''
+          .toJS,
+    );
+
+    int callback(int value) => value + 1;
+    final model = Object();
+    // One binding across renders, as in a mounted component: the same Dart
+    // values must reuse the same boxes so React sees stable dependencies.
+    final binding = JsBinding();
+    expect(
+      binding.useMemo(() => 'computed', [callback, model]),
+      'computed',
+    );
+
+    final first =
+        _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
+    expect(first.length, 2);
+
+    expect(
+      binding.useMemo(() => 'computed', [callback, model]),
+      'computed',
+    );
+    final second =
+        _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
+    expect(second.length, 2);
+    expect(second[0], same(first[0]));
+    expect(second[1], same(first[1]));
+
+    // Distinct-but-equal value objects must not share a box, or React would
+    // treat the dependency as unchanged when the Dart instance is replaced.
+    final firstTwin = _EqualModel(1);
+    final secondTwin = _EqualModel(1);
+    expect(firstTwin == secondTwin, isTrue);
+    expect(identical(firstTwin, secondTwin), isFalse);
+    expect(
+      binding.useMemo(() => 'computed', [firstTwin]),
+      'computed',
+    );
+    final twinFirst =
+        _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
+    expect(
+      binding.useMemo(() => 'computed', [secondTwin]),
+      'computed',
+    );
+    final twinSecond =
+        _globalThis.getProperty('__reactDartMemoDependencies'.toJS) as JSArray;
+    expect(twinSecond[0], isNot(same(twinFirst[0])));
+  });
+
+  test('renderer passes children as variadic createElement arguments', () {
+    _eval(
+      '''globalThis.React.createElement = function() {
+        globalThis.__reactDartCreateElementArguments = Array.from(arguments);
+        return {};
+      };'''
+          .toJS,
+    );
+
+    runWithReactRuntime(
+      ReactRuntime(
+        target: ReactRenderTarget.test,
+        capabilities: ReactRuntimeCapabilities.browser,
+        binding: JsBinding(),
+        renderer: JsRenderer(),
+      ),
+      () => JsRenderer().render(
+        div(
+          children: [
+            div(key: 'first'),
+            div(key: 'second'),
+          ],
+        ),
+      ),
+    );
+
+    final arguments =
+        _globalThis.getProperty('__reactDartCreateElementArguments'.toJS)
+            as JSArray;
+    expect(arguments.length, 4);
+  });
+}
+
+/// Value object with structural equality for dependency-identity tests.
+final class _EqualModel {
+  final int id;
+
+  _EqualModel(this.id);
+
+  @override
+  bool operator ==(Object other) => other is _EqualModel && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
