@@ -305,7 +305,9 @@ final class ReactBuilder {
 
     // Include legacy source outputs in the hidden boundary as well. Current
     // react_codegen versions write every output to build_runner's cache, but
-    // this keeps migration from older generated trees self-cleaning.
+    // this keeps migration from older generated trees self-cleaning. The
+    // cache holds the current builder output, so residue beside the sources
+    // fills only gaps instead of clobbering it under the same relative path.
     final libRoot = Directory(p.join(config.root.path, 'lib'));
     if (libRoot.existsSync()) {
       await for (final entity in libRoot.list(recursive: true)) {
@@ -315,7 +317,7 @@ final class ReactBuilder {
             !_isGeneratedSource(relative)) {
           continue;
         }
-        files[relative] = entity;
+        files.putIfAbsent(relative, () => entity);
         sourceGeneratedFiles.add(entity);
       }
     }

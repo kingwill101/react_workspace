@@ -270,9 +270,13 @@ func (m *ReactWorkspaceCi) preparedContainer(
 			"-c",
 			"set -euo pipefail\n" +
 				"dart pub get\n" +
-				// The web entrypoints import `lib/.generated/` sources that do not
-				// exist on a clean checkout, so the full workspace build cannot
-				// run first: sync codegen output before compiling.
+				// On a clean checkout the web entrypoints import `lib/.generated/`
+				// sources that do not exist yet. Seed the build cache first: the
+				// codegen phases complete before `build_web_compilers` fails on
+				// those imports, so this pass is allowed to fail. The sync loop
+				// then materializes the sources and the final build validates
+				// everything, including web compilation.
+				"dart run build_runner build --workspace || true\n" +
 				"for project in examples/client examples/plugin_validation examples/ssr examples/superdesk packages/react_server_routed/example; do\n" +
 				"  echo \"==> react generate --sync-only $project\"\n" +
 				"  (cd \"$project\" && dart run react_tool:react generate --sync-only)\n" +
