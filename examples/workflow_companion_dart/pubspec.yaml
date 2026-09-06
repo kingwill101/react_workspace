@@ -1,0 +1,38 @@
+name: workflow_companion_dart
+description: A React Dart application (client-only).
+publish_to: none
+
+environment:
+  sdk: ">=3.13.0 <4.0.0"
+
+dependencies:
+  react_core: ^0.1.0
+  react_js: ^0.1.0
+  react_dom: ^0.1.0
+  react_web: ^0.1.1
+  react_router_dom: ^0.0.1
+
+dev_dependencies:
+  build_runner: ^2.15.3
+  build_web_compilers: ^4.8.10
+  webdev: ^4.0.2
+  react_codegen: ^0.1.0
+  react_tool: ^0.2.6
+  react_testing: ^0.1.0
+  lints: ^6.1.0
+  test: ^1.31.2
+
+
+dependency_overrides:
+  # react_tool's native_prebuilt dependency still advertises artisanal ^0.4,
+  # while the current server_testing harness uses ^0.5. The APIs used by the
+  # tool are compatible; keep the example resolvable until native_prebuilt
+  # widens its constraint.
+  artisanal: ^0.5.0
+  react_core: {path: ../../packages/react_core}
+  react_js: {path: ../../packages/react_js}
+  react_dom: {path: ../../packages/react_dom}
+  react_web: {path: ../../packages/react_web}
+  react_router_dom: {path: ../../packages/react_router_dom}
+  react_testing: {path: ../../packages/react_testing}
+  react_tool: {path: ../../packages/react_tool}
