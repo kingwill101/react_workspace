@@ -1,4 +1,5 @@
 name: workflow_companion_dart
+resolution: workspace
 description: A React Dart application (client-only).
 publish_to: none
 
