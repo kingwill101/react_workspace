@@ -146,7 +146,7 @@ func (m *ReactWorkspaceCi) testsStage(
 			"    (cd \"$package\" && dart test)\n" +
 			"  fi\n" +
 			"done\n" +
-			"for example in examples/client examples/plugin_validation examples/ssr examples/superdesk packages/react_server_routed/example; do\n" +
+			"for example in examples/client examples/plugin_validation examples/ssr examples/superdesk examples/workflow_companion_dart packages/react_server_routed/example; do\n" +
 			"  mapfile -d '' tests < <(cd \"$example\" && find test -type f -name '*_test.dart' -not -path 'test/browser/*' -print0 | sort -z)\n" +
 			"  if [ \"${#tests[@]}\" -gt 0 ]; then\n" +
 			"    echo \"==> dart test $example (${#tests[@]} files)\"\n" +
@@ -277,7 +277,7 @@ func (m *ReactWorkspaceCi) preparedContainer(
 				// then materializes the sources and the final build validates
 				// everything, including web compilation.
 				"dart run build_runner build --workspace || true\n" +
-				"for project in examples/client examples/plugin_validation examples/ssr examples/superdesk packages/react_server_routed/example; do\n" +
+				"for project in examples/client examples/plugin_validation examples/ssr examples/superdesk examples/workflow_companion_dart packages/react_server_routed/example; do\n" +
 				"  echo \"==> react generate --sync-only $project\"\n" +
 				"  (cd \"$project\" && dart run react_tool:react generate --sync-only)\n" +
 				"done\n" +

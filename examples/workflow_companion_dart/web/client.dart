@@ -6,10 +6,5 @@ import 'package:workflow_companion_dart/.generated/react_components.g.dart';
 void main() {
   initReact();
   registerReactComponents();
-  mount(
-    getRoot('app'),
-    AppShell(
-      children: [App(title: 'Workflow Companion')],
-    ),
-  );
+  mount(getRoot('app'), AppShell(children: [App(title: 'Workflow Companion')]));
 }

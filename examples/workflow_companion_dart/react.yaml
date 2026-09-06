@@ -2,4 +2,4 @@ client:
   entrypoint: web/client.dart
 styles:
   entrypoints:
-    - web/styles.css
+    - web/styles.scss

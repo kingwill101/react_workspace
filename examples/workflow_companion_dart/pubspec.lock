@@ -909,7 +909,7 @@ packages:
       path: "../../packages/react_js"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.1.1"
   react_router_dom:
     dependency: "direct main"
     description:
@@ -938,7 +938,7 @@ packages:
       path: "../../packages/react_tool"
       relative: true
     source: path
-    version: "0.2.6"
+    version: "0.2.7"
   react_web:
     dependency: "direct main"
     description:
