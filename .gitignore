@@ -3,6 +3,7 @@
 .deslop/
 .packages
 build/
+coverage/
 
 # Node
 node_modules/

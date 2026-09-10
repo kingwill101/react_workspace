@@ -35,6 +35,9 @@ dependency_overrides:
   artisanal: ^0.5.0
 {% if localPackages %}
   # Local React workspace overrides enabled by `--packages`.
+  react_codegen: {path: {{ packagesPath }}/react_codegen}
+  react_tool: {path: {{ packagesPath }}/react_tool}
+  react_analysis: {path: {{ packagesPath }}/react_analysis}
   react_core: {path: {{ packagesPath }}/react_core}
   react_js: {path: {{ packagesPath }}/react_js}
   react_dom: {path: {{ packagesPath }}/react_dom}

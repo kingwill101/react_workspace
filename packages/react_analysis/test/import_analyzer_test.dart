@@ -5,6 +5,19 @@ import 'package:test/test.dart';
 void main() {
   const analyzer = ServerClientImportAnalyzer();
 
+  test('allows portable React DOM host factories in shared and SSR code', () {
+    final unit = parseString(
+      content: "import 'package:react_dom/react_dom.dart';",
+    ).unit;
+    for (final path in [
+      'lib/react/app.dart',
+      'lib/ssr.dart',
+      'bin/server.dart',
+    ]) {
+      expect(analyzer.analyzeFile(path, unit), isEmpty, reason: path);
+    }
+  });
+
   test('does not confuse package prefixes with browser packages', () {
     final unit = parseString(
       content: "import 'package:react_web_generator/react_web_generator.dart';",
@@ -30,6 +43,16 @@ void main() {
 
     expect(
       diagnostics.map((diagnostic) => diagnostic.code),
+      contains(ReactDiagnosticCode.browserImportInServer),
+    );
+  });
+
+  test('still rejects direct browser mounting implementation imports', () {
+    final unit = parseString(
+      content: "import 'package:react_dom/src/mount.dart';",
+    ).unit;
+    expect(
+      analyzer.analyzeFile('lib/ssr.dart', unit).map((d) => d.code),
       contains(ReactDiagnosticCode.browserImportInServer),
     );
   });

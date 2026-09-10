@@ -13,6 +13,12 @@ import 'project_config.dart';
 import 'scaffold.dart';
 import 'shadcn.dart';
 import 'ts_bindings.dart';
+import 'test_runner.dart';
+import 'project_setup.dart';
+import 'doctor.dart';
+import 'debug_proxy.dart';
+import 'debug_environment.dart';
+import 'process_readiness.dart';
 
 /// Runs the React CLI programmatically.
 Future<void> runReactTool(List<String> args) async {
@@ -23,6 +29,7 @@ class ReactCommandRunner extends CommandRunner<void> {
   ReactCommandRunner()
     : super('react', 'Build and run React Dart applications.') {
     addCommand(DoctorCommand());
+    addCommand(SetupCommand());
     addCommand(InitCommand());
     addCommand(GenerateCommand());
     addCommand(BuildCommand());
@@ -35,6 +42,31 @@ class ReactCommandRunner extends CommandRunner<void> {
     addCommand(TsCommand());
     addCommand(AnalyzeCommand());
     addCommand(TestCommand());
+  }
+}
+
+/// Enables editor diagnostics for an existing application or workspace.
+final class SetupCommand extends Command<void> {
+  SetupCommand() {
+    argParser.addOption('packages', help: 'Local React packages directory.');
+  }
+
+  @override
+  String get name => 'setup';
+
+  @override
+  String get description =>
+      'Enable React analyzer diagnostics at the analysis root.';
+
+  @override
+  Future<void> run() async {
+    final config = ReactProjectConfig.load();
+    final file = enableReactAnalyzer(
+      config.root,
+      packagesPath: option('packages') as String?,
+    );
+    info('React diagnostics configured in ${file.path}.');
+    line('Restart the Dart analysis server or run dart analyze.');
   }
 }
 
@@ -72,97 +104,32 @@ final class GenerateCommand extends Command<void> {
 }
 
 final class DoctorCommand extends Command<void> {
+  DoctorCommand() {
+    argParser.addFlag(
+      'json',
+      negatable: false,
+      help: 'Emit structured diagnostics.',
+    );
+  }
   @override
   String get name => 'doctor';
-
   @override
-  String get description => 'Inspect the current React Dart project.';
-
+  String get description =>
+      'Check resolved packages, tools, and project readiness.';
   @override
   Future<void> run() async {
-    final config = ReactProjectConfig.load();
-    line('React Dart project: ${config.packageName}');
-    line('Root: ${config.root.path}');
-    line(
-      'Configuration: ${config.hasReactYaml ? 'react.yaml' : 'pubspec.yaml defaults'}',
-    );
-    _reportFile(config, config.clientEntrypoint, 'client');
-    _reportFile(config, config.ssrEntrypoint, 'SSR');
-    _reportFile(config, config.serverEntrypoint, 'server');
-    for (final stylesheet in config.styleEntrypoints) {
-      _reportFile(config, stylesheet, 'style');
+    final findings = await inspectReactProject(ReactProjectConfig.load());
+    if (option('json') == true) {
+      line(jsonEncode(findings.map((finding) => finding.toJson()).toList()));
+    } else {
+      for (final finding in findings) {
+        line('[${finding.status}] ${finding.message}');
+        if (finding.fix != null) line('  ${finding.fix}');
+      }
     }
-    _reportDirectory(config, config.staticDirectory, 'static');
-    line('Output: ${config.pathFor(config.outputDirectory)}');
-
-    if (!config.hasBuildRunner) {
-      warn(
-        'build_runner is not declared; generated components will not rebuild.',
-      );
+    if (findings.any((finding) => finding.status == 'error')) {
+      throw const ReactToolException('Project readiness checks failed.');
     }
-    if (!config.hasNodePackageManifest) {
-      warn(
-        'package.json is missing; the generated SSR worker expects React packages from Node.',
-      );
-    }
-
-    // Analysis and testing readiness (new facilities)
-    _reportAnalysis(config);
-    _reportTesting(config);
-  }
-
-  void _reportAnalysis(ReactProjectConfig config) {
-    final hasAnalysis = config.file('analysis_options.yaml').existsSync();
-    final hasAnalyzerPlugin = config
-        .file('pubspec.yaml')
-        .readAsStringSync()
-        .contains('react_analyzer');
-    line(
-      '  analysis: ${hasAnalysis ? '✓ analysis_options.yaml' : '✗ missing'} ${hasAnalyzerPlugin ? '+ react_analyzer' : ''}',
-    );
-    if (!hasAnalysis) {
-      info(
-        '    Run `dart run react_tool:react analyze` or add analysis_options.yaml for live diagnostics.',
-      );
-    }
-    // Check for react_analysis import usage
-    final hasReactAnalysisDep = config
-        .file('pubspec.yaml')
-        .readAsStringSync()
-        .contains('react_analysis');
-    if (!hasReactAnalysisDep) {
-      info('    Tip: add react_analysis for component/hook/SSR diagnostics.');
-    }
-  }
-
-  void _reportTesting(ReactProjectConfig config) {
-    final hasTestDir = config.directory('test').existsSync();
-    final pubspec = config.file('pubspec.yaml').readAsStringSync();
-    final hasReactTesting = pubspec.contains('react_testing');
-    final hasTestPackage =
-        pubspec.contains(' test:') || pubspec.contains('test:');
-    line(
-      '  testing: ${hasTestDir ? '✓ test/' : '✗ no test/'} ${hasReactTesting ? '+ react_testing' : ''} ${hasTestPackage ? '+ test' : ''}',
-    );
-    if (!hasTestDir || !hasReactTesting) {
-      info(
-        '    Run `dart test` — scaffold now includes react_testing examples (see test/app_test.dart).',
-      );
-    }
-  }
-
-  void _reportFile(ReactProjectConfig config, String? relative, String label) {
-    final exists = relative != null && config.file(relative).existsSync();
-    line('  $label: ${relative ?? '(not configured)'} ${exists ? '✓' : '✗'}');
-  }
-
-  void _reportDirectory(
-    ReactProjectConfig config,
-    String relative,
-    String label,
-  ) {
-    final exists = config.directory(relative).existsSync();
-    line('  $label: $relative ${exists ? '✓' : '✗'}');
   }
 }
 
@@ -320,7 +287,11 @@ final class PrerenderCommand extends Command<void> {
         mode: ProcessStartMode.inheritStdio,
         environment: {...Platform.environment, 'REACT_SSR_PORT': '$ssrPort'},
       );
-      await _waitForPort(ssrPort);
+      await waitForLocalPort(
+        ssrPort,
+        exitCode: worker.exitCode,
+        service: 'SSR worker',
+      );
       server = await Process.start(
         Platform.resolvedExecutable,
         ['run', config.serverEntrypoint!],
@@ -332,7 +303,11 @@ final class PrerenderCommand extends Command<void> {
           'REACT_SSR_URL': 'http://127.0.0.1:$ssrPort/',
         },
       );
-      await _waitForPort(port);
+      await waitForLocalPort(
+        port,
+        exitCode: server.exitCode,
+        service: 'Dart server',
+      );
 
       final outputDirectory = config.directory(output);
       if (outputDirectory.existsSync()) {
@@ -813,38 +788,41 @@ final class TestCommand extends Command<void> {
       )
       ..addOption(
         'path',
-        defaultsTo: 'test',
-        help: 'Test path to run (default: test).',
+        help:
+            'Test path (default: Dart test discovery). Pass Dart options after --.',
       );
   }
 
   @override
   Future<void> run() async {
     final coverage = option('coverage') as bool? ?? false;
-    final path = option('path') as String? ?? 'test';
+    final path = option('path') as String?;
     final config = ReactProjectConfig.load();
-    final args = <String>['test', path];
-    if (coverage) {
-      args.addAll(['--coverage', 'coverage']);
-      line('Running tests with coverage…');
-    } else {
-      line('Running tests…');
-    }
-    final result = await Process.run(
-      'dart',
-      args,
-      workingDirectory: config.root.path,
-    );
-    line(result.stdout.toString());
-    if (result.stderr.toString().trim().isNotEmpty) {
-      warn(result.stderr.toString());
-    }
-    if (result.exitCode != 0) {
-      throw ReactToolException('Tests failed (exit ${result.exitCode}).');
-    }
-    info('All tests passed.');
-    if (coverage) {
-      line('Coverage: coverage/lcov.info');
+    final rawCoverage = coverage
+        ? await Directory.systemTemp.createTemp('react_test_coverage_')
+        : null;
+    try {
+      final process = await Process.start(
+        Platform.resolvedExecutable,
+        dartTestArguments(
+          path: path,
+          forwarded: argResults!.rest,
+          coverageDirectory: rawCoverage?.path,
+        ),
+        workingDirectory: config.root.path,
+        mode: ProcessStartMode.inheritStdio,
+      );
+      final code = await process.exitCode;
+      if (code != 0) {
+        throw ReactToolException('Tests failed (exit $code).');
+      }
+      if (rawCoverage != null) {
+        final report = await writeTestLcov(rawCoverage, config.root);
+        line('Coverage: ${report.path}');
+      }
+      info('All tests passed.');
+    } finally {
+      if (rawCoverage != null) await rawCoverage.delete(recursive: true);
     }
     // Hint about harnesses
     if (!config.file('test/app_test.dart').existsSync() &&
@@ -893,6 +871,22 @@ final class ServeCommand extends Command<void> {
         help: 'Rebuild and restart the server when project files change.',
       )
       ..addFlag(
+        'poll',
+        defaultsTo: false,
+        help:
+            'Poll DDC sources on filesystems with unreliable native events. Requires --debug.',
+      )
+      ..addFlag(
+        'launch-browser',
+        defaultsTo: true,
+        help:
+            'Launch Chrome for debug sessions; disable for remote IDE attachment.',
+      )
+      ..addOption(
+        'chrome-debug-port',
+        help: 'Connect DWDS to an existing Chrome remote-debugging port.',
+      )
+      ..addFlag(
         'debug',
         defaultsTo: false,
         help:
@@ -907,16 +901,26 @@ final class ServeCommand extends Command<void> {
     final noSsr = option('no-ssr') as bool? ?? false;
     final watch = option('watch') as bool? ?? false;
     final debug = option('debug') as bool? ?? false;
+    final poll = option('poll') as bool? ?? false;
+    if (poll && !debug) usageException('--poll requires --debug.');
     final port = _parsePort('port');
     final ssrPort = _parsePort('ssr-port');
     final builder = ReactBuilder(config: config, release: release, log: line);
 
     if (debug) {
+      if (!(option('launch-browser') as bool? ?? true) &&
+          option('chrome-debug-port') == null) {
+        usageException(
+          '--no-launch-browser requires --chrome-debug-port for an existing Chrome instance.',
+        );
+      }
+      if (option('chrome-debug-port') != null) _parsePort('chrome-debug-port');
       if (release || noSsr || watch) {
         usageException(
           '--debug cannot be combined with --release, --no-ssr, or --watch.',
         );
       }
+      if (poll) await ensurePollingSupport(config.root);
       await _runDebugServer(config, builder, port);
       return;
     }
@@ -971,11 +975,9 @@ final class ServeCommand extends Command<void> {
     final hasSsr =
         config.ssrEntrypoint != null &&
         config.file(config.ssrEntrypoint!).existsSync();
-    if (hasServer || hasSsr) {
+    if (hasSsr && (!hasServer || config.ssrRuntime != 'node')) {
       usageException(
-        '--debug currently supports client-only projects. Full-stack debug '
-        'proxying for SSR and server actions is not enabled yet; use '
-        '`react serve` for the production-style full stack.',
+        'SSR debugging requires a Dart server and ssr.runtime: node.',
       );
     }
 
@@ -996,12 +998,20 @@ final class ServeCommand extends Command<void> {
       );
     }
     final originalIndex = await index.readAsString();
+    final builtIndex = config.file('${config.outputDirectory}/index.html');
+    String? originalBuiltIndex;
+    Process? webdev;
+    ({Process? worker, Process server})? application;
+    ReactDebugProxy? proxy;
+    final stopped = Completer<void>();
+    final signals = <StreamSubscription<ProcessSignal>>[];
     try {
       final hasForeignSurface = await builder.hasForeignSurface();
-      if (await _debugGeneratedAssetsAreStale(
-        config,
-        hasForeignSurface: hasForeignSurface,
-      )) {
+      if (hasServer ||
+          await _debugGeneratedAssetsAreStale(
+            config,
+            hasForeignSurface: hasForeignSurface,
+          )) {
         await builder.build();
         await _prepareDebugGeneratedAssets(config);
       } else {
@@ -1010,6 +1020,46 @@ final class ServeCommand extends Command<void> {
       await _writeDebugImportMap(config, environment);
       await _removeMissingDebugForeignScript(config);
       await _prepareDebugStylesheet(config);
+      final webdevPort = hasServer ? await _availablePort() : port;
+      if (hasServer) {
+        final appPort = await _availablePort();
+        final workerPort = await _availablePort();
+        originalBuiltIndex = await builtIndex.readAsString();
+        // The Dart application still renders SSR and props into its normal
+        // template, but loads DDC instead of the production browser bundle.
+        final debugTemplate = await index.readAsString();
+        await builtIndex.writeAsString(debugTemplate);
+        application = await _startProcesses(
+          config,
+          false,
+          appPort,
+          workerPort,
+          debug: true,
+        );
+        await waitForLocalPort(
+          appPort,
+          exitCode: application.server.exitCode,
+          service: 'Dart server',
+        );
+        proxy = await ReactDebugProxy.start(
+          application: Uri.parse('http://127.0.0.1:$appPort'),
+          webdev: Uri.parse('http://127.0.0.1:$webdevPort'),
+          webDirectory: config.directory('web'),
+          port: port,
+        );
+        // webdev launches Chrome on its own origin. Send that initial tab to
+        // the gateway so SSR and server actions share the browser origin.
+        await index.writeAsString(
+          debugTemplate.replaceFirst(
+            '<head>',
+            '<head><script>if(location.port!=="$port")'
+                '{location.replace("http://127.0.0.1:$port"+location.pathname+'
+                'location.search+location.hash);}</script>',
+          ),
+        );
+        info('Full-stack debug gateway: http://127.0.0.1:$port');
+        info('Attach the Dart server debugger using its VM service URL below.');
+      }
       if (!index.readAsStringSync().contains('client.dart.js')) {
         warn(
           'web/index.html does not reference /client.dart.js. Add '
@@ -1022,27 +1072,70 @@ final class ServeCommand extends Command<void> {
         'webdev:webdev',
         'serve',
         '--debug',
-        '--launch-in-chrome',
+        '--auto=refresh',
+        if (option('launch-browser') as bool? ?? true)
+          '--launch-in-chrome'
+        else
+          '--no-launch-in-chrome',
+        if (option('chrome-debug-port') != null)
+          '--chrome-debug-port=${option('chrome-debug-port')}',
         '--hostname',
         '127.0.0.1',
-        'web:$port',
+        '--',
+        'web:$webdevPort',
+        ...debugBuildOptions(poll: option('poll') as bool? ?? false),
       ];
-      info('Starting webdev/DDC with DWDS on http://127.0.0.1:$port');
+      info('Starting webdev/DDC with DWDS on http://127.0.0.1:$webdevPort');
       info(
         'Attach your IDE to the Dart web target, or open the URL in Chrome.',
       );
-      final process = await Process.start(
+      info(
+        'After the page loads, press Alt+D (Option+D on macOS) to start '
+        'the browser debug service. Use its printed URI for IDE attachment.',
+      );
+      webdev = await Process.start(
         Platform.resolvedExecutable,
         arguments,
         workingDirectory: config.root.path,
+        environment: debugEnvironment(),
         mode: ProcessStartMode.inheritStdio,
       );
-      try {
-        await process.exitCode;
-      } finally {
-        await _stopProcess(process);
+      for (final signal in [ProcessSignal.sigint, ProcessSignal.sigterm]) {
+        if (Platform.isWindows && signal == ProcessSignal.sigterm) continue;
+        signals.add(
+          signal.watch().listen((_) {
+            if (!stopped.isCompleted) stopped.complete();
+          }),
+        );
       }
+      final ended = await Future.any<String?>([
+        stopped.future.then((_) => null),
+        webdev.exitCode.then((code) => 'webdev exited with code $code'),
+        if (application != null)
+          application.server.exitCode.then(
+            (code) => 'Dart server exited with code $code',
+          ),
+        if (application?.worker != null)
+          application!.worker!.exitCode.then(
+            (code) => 'SSR worker exited with code $code',
+          ),
+      ]);
+      if (ended != null) throw ReactToolException(ended);
     } finally {
+      for (final signal in signals) {
+        await signal.cancel();
+      }
+      await proxy?.close();
+      await _stopProcess(webdev);
+      await _stopProcess(application?.server);
+      await _stopProcess(application?.worker);
+      if (application != null) {
+        final service = config.file('.dart_tool/react/server_vm_service.json');
+        if (service.existsSync()) await service.delete();
+      }
+      if (originalBuiltIndex != null) {
+        await builtIndex.writeAsString(originalBuiltIndex);
+      }
       await index.writeAsString(originalIndex);
     }
   }
@@ -1120,10 +1213,9 @@ final class ServeCommand extends Command<void> {
   ) async {
     final bundle = config.file('web/react-debug/foreign.mjs');
     final index = config.file('web/index.html');
-    if (!bundle.existsSync() || !index.existsSync()) return;
-    final imports = <String>{};
-    final bundleSource = bundle
-        .readAsStringSync()
+    if (!index.existsSync()) return;
+    final imports = <String>{'react', 'react-dom', 'react-dom/client'};
+    final bundleSource = (bundle.existsSync() ? bundle.readAsStringSync() : '')
         .split('//# sourceMappingURL=')
         .first
         .replaceAll(RegExp(r'/\*[\s\S]*?\*/'), '');
@@ -1138,7 +1230,6 @@ final class ServeCommand extends Command<void> {
         imports.add(specifier);
       }
     }
-    if (imports.isEmpty) return;
     if (environment == null) {
       throw const ReactToolException(
         'The debug foreign bundle has runtime imports, but no managed JS '
@@ -1149,11 +1240,13 @@ final class ServeCommand extends Command<void> {
     final map = <String, String>{};
     for (final specifier in imports.toList()..sort()) {
       final package = _npmPackageName(specifier);
-      final version = environment.installedVersions[package];
+      final version = package == 'react' || package == 'react-dom'
+          ? environment.reactVersion
+          : environment.installedVersions[package];
       if (version == null) {
         throw ReactToolException(
           'Missing browser runtime dependency "$specifier".\n\n'
-          'Required by the generated foreign bundle. Add "$package" to '
+          'Required by the debug runtime. Add "$package" to '
           'foreign.dependencies or install it in the managed JS environment.',
         );
       }
@@ -1349,8 +1442,9 @@ $end''';
     ReactProjectConfig config,
     bool noSsr,
     int port,
-    int ssrPort,
-  ) async {
+    int ssrPort, {
+    bool debug = false,
+  }) async {
     Process? worker;
     try {
       final manifest = BundleManifest.load(
@@ -1367,12 +1461,22 @@ $end''';
           mode: ProcessStartMode.inheritStdio,
           environment: {...Platform.environment, 'REACT_SSR_PORT': '$ssrPort'},
         );
-        await _waitForPort(ssrPort);
+        await waitForLocalPort(
+          ssrPort,
+          exitCode: worker.exitCode,
+          service: 'SSR worker',
+        );
       }
 
       final serverEntrypoint = config.serverEntrypoint;
       if (serverEntrypoint != null &&
           config.file(serverEntrypoint).existsSync()) {
+        if (debug) {
+          final service = config.file(
+            '.dart_tool/react/server_vm_service.json',
+          );
+          if (service.existsSync()) await service.delete();
+        }
         final environment = <String, String>{
           ...Platform.environment,
           'PORT': '$port',
@@ -1380,7 +1484,13 @@ $end''';
         };
         final server = await Process.start(
           Platform.resolvedExecutable,
-          ['run', serverEntrypoint],
+          [
+            if (debug) '--enable-vm-service=0/127.0.0.1',
+            if (debug)
+              '--write-service-info=.dart_tool/react/server_vm_service.json',
+            'run',
+            serverEntrypoint,
+          ],
           workingDirectory: config.root.path,
           mode: ProcessStartMode.inheritStdio,
           environment: environment,
@@ -1502,6 +1612,13 @@ ContentType _contentType(String ext) {
   }
 }
 
+Future<int> _availablePort() async {
+  final socket = await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);
+  final port = socket.port;
+  await socket.close();
+  return port;
+}
+
 Future<void> _stopProcess(Process? process) async {
   if (process == null) return;
   process.kill(ProcessSignal.sigterm);
@@ -1595,19 +1712,6 @@ bool _isWatchable(ReactProjectConfig config, String path) {
     return false;
   }
   return true;
-}
-
-Future<void> _waitForPort(int port) async {
-  for (var attempt = 0; attempt < 100; attempt++) {
-    try {
-      final socket = await Socket.connect('127.0.0.1', port);
-      await socket.close();
-      return;
-    } on SocketException {
-      await Future<void>.delayed(const Duration(milliseconds: 100));
-    }
-  }
-  throw ReactToolException('Timed out waiting for port $port.');
 }
 
 List<String> _routes(String value) {

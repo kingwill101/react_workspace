@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "React: attach browser",
+      "type": "dart",
+      "request": "attach",
+      "vmServiceUri": "${input:reactBrowserService}"
+    }{% if hasServer %},
+    {
+      "name": "React: attach server",
+      "type": "dart",
+      "request": "attach",
+      "vmServiceInfoFile": "${workspaceFolder}/.dart_tool/react/server_vm_service.json",
+      "deleteServiceInfoFile": false
+    }{% endif %}
+  ],
+  "inputs": [
+    {
+      "id": "reactBrowserService",
+      "type": "promptString",
+      "description": "Browser DWDS VM service URI printed after Alt+D (Option+D on macOS) in the app"
+    }
+  ]{% if hasServer %},
+  "compounds": [
+    {
+      "name": "React: attach full stack",
+      "configurations": ["React: attach browser", "React: attach server"],
+      "stopAll": true
+    }
+  ]{% endif %}
+}

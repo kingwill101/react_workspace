@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:artisanal/args.dart';
 import 'package:path/path.dart' as p;
@@ -48,6 +49,8 @@ void main() {
     final command = ServeCommand();
     expect(command.argParser.options['debug'], isNotNull);
     expect(command.argParser.options['debug']!.help, contains('webdev'));
+    expect(command.argParser.options['poll']!.defaultsTo, isFalse);
+    expect(command.argParser.options['poll']!.help, contains('--debug'));
   });
 
   test('generates the full project skeleton', () async {
@@ -234,6 +237,91 @@ void main() {
     expect(pubspec, isNot(contains('dependency_overrides:')));
     expect(pubspec, isNot(contains('path: ../packages')));
   });
+
+  for (final template in ['client', 'ssr', 'routed', 'routed-minimal']) {
+    test(
+      '$template uses local generators with local runtime packages',
+      () async {
+        final target = Directory(p.join(root.path, 'local_app'));
+        await ScaffoldGenerator().generate(
+          name: 'local_app',
+          packagesPath: '../packages',
+          target: target,
+          template: template,
+        );
+        final spec =
+            loadYaml(
+                  File(p.join(target.path, 'pubspec.yaml')).readAsStringSync(),
+                )
+                as YamlMap;
+        final overrides = spec['dependency_overrides'] as YamlMap;
+        final launch =
+            jsonDecode(
+                  File(
+                    p.join(target.path, '.vscode/launch.json'),
+                  ).readAsStringSync(),
+                )
+                as Map;
+        expect(
+          (launch['configurations'] as List).length,
+          template == 'client' ? 1 : 2,
+        );
+        expect(launch.containsKey('compounds'), template != 'client');
+        final tasks =
+            jsonDecode(
+                  File(
+                    p.join(target.path, '.vscode/tasks.json'),
+                  ).readAsStringSync(),
+                )
+                as Map;
+        expect(tasks['tasks'][0]['args'], [
+          'run',
+          'react_tool:react',
+          'serve',
+          '--debug',
+        ]);
+        final analysis =
+            loadYaml(
+                  File(
+                    p.join(target.path, 'analysis_options.yaml'),
+                  ).readAsStringSync(),
+                )
+                as YamlMap;
+        expect(
+          analysis['plugins']['react_analyzer']['path'],
+          p.normalize(
+            p.join(target.absolute.path, '../packages/react_analyzer'),
+          ),
+        );
+        expect(analysis['plugins']['react_analyzer']['diagnostics'], {
+          'invalid_hook_call': 'error',
+          'invalid_react_component': 'error',
+        });
+        expect(
+          analysis['plugins']['dependency_overrides']['react_analysis']['path'],
+          p.normalize(
+            p.join(target.absolute.path, '../packages/react_analysis'),
+          ),
+        );
+        expect(
+          analysis['analyzer']['errors'].containsKey('invalid_hook_call'),
+          isFalse,
+        );
+        for (final package in [
+          'react_core',
+          'react_tool',
+          'react_codegen',
+          'react_analysis',
+          'react_testing',
+        ]) {
+          expect(
+            (overrides[package] as YamlMap)['path'],
+            '../packages/$package',
+          );
+        }
+      },
+    );
+  }
 
   test('init command with --template routed scaffolds a routed app', () async {
     final runner = CommandRunner<void>('react', '')

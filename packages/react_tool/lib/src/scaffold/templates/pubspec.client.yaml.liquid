@@ -6,6 +6,7 @@ environment:
   sdk: ">=3.13.0 <4.0.0"
 
 dependencies:
+  react_actions: ^0.1.1
   react_core: ^0.1.0
   react_js: ^0.1.0
   react_dom: ^0.1.0
@@ -23,6 +24,11 @@ dev_dependencies:
 
 {% if localPackages %}
 dependency_overrides:
+  react_actions: {path: {{ packagesPath }}/react_actions}
+  artisanal: ^0.5.0
+  react_codegen: {path: {{ packagesPath }}/react_codegen}
+  react_tool: {path: {{ packagesPath }}/react_tool}
+  react_analysis: {path: {{ packagesPath }}/react_analysis}
   react_core: {path: {{ packagesPath }}/react_core}
   react_js: {path: {{ packagesPath }}/react_js}
   react_dom: {path: {{ packagesPath }}/react_dom}

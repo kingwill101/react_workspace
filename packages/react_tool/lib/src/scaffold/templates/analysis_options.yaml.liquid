@@ -1,5 +1,24 @@
 include: package:lints/recommended.yaml
 
+plugins:
+{% if localPackages %}
+  react_analyzer:
+    path: {{ analyzerPath }}
+{% else %}
+  react_analyzer:
+    version: ^0.1.0
+{% endif %}
+    diagnostics:
+      invalid_hook_call: error
+      invalid_react_component: error
+{% if localPackages %}
+  dependency_overrides:
+    react_analysis:
+      path: {{ analysisPath }}
+{% endif %}
+
 analyzer:
+  errors:
+    non_constant_identifier_names: ignore
   exclude:
     - lib/.generated/**

@@ -6,6 +6,7 @@ A React Dart application with server-side rendering and server functions.
 
 ```sh
 dart pub get
+dart run react_tool:react generate
 ```
 
 ## Build
@@ -55,12 +56,20 @@ boot the Node SSR worker.
 ## Analyze
 
 ```sh
+dart analyze
 dart run react_tool:react analyze
 # verbose
 dart run react_tool:react analyze --verbose
 ```
 
 Uses `react_analysis` for component, hook and SSR diagnostics (same engine as the IDE plugin). Run `dart run react_tool:react doctor` to check setup.
+
+## Debug
+
+Run `dart run react_tool:react serve --debug`, or the VS Code **React: debug
+session** task. Use **React: attach full stack** to attach both debuggers; paste
+the browser DWDS service URI when prompted. Browser source edits rebuild and
+refresh the page. Server/SSR edits require restarting the CLI session.
 
 ## Docker
 

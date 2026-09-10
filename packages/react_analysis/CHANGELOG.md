@@ -1,3 +1,8 @@
+## Unreleased
+
+- Accept the portable `react_dom/react_dom.dart` entrypoint in shared and SSR
+  code while continuing to flag direct browser implementation imports.
+
 ## 0.1.1
 
 - Removes unused analyzer-engine dependencies from the published package.

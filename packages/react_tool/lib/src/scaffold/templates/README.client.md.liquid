@@ -6,6 +6,7 @@ A React Dart application (client-only, no SSR).
 
 ```sh
 dart pub get
+dart run react_tool:react generate
 ```
 
 ## Build
@@ -43,6 +44,7 @@ server-function file or server-function tests.
 ```sh
 dart run react_tool:react analyze
 ```
-```
+
+Ordinary `dart analyze` also runs the configured React analyzer plugin.
 
 The server runs on `http://localhost:8080` and serves the client bundle statically.
