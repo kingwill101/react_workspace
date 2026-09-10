@@ -19,24 +19,12 @@ cd client
 dart pub get
 ```
 
-Because the React Dart packages are currently unpublished, make sure the
-project's `pubspec.yaml` uses Git dependencies from the React workspace with a
-consistent ref. The scaffolded workspace example uses path dependencies; an
-external application should use:
-
-```yaml
-dependencies:
-  react_core:
-    git:
-      url: https://github.com/kingwill101/react_workspace.git
-      ref: master
-      path: packages/react_core
-  react_dom:
-    git:
-      url: https://github.com/kingwill101/react_workspace.git
-      ref: master
-      path: packages/react_dom
-```
+Scaffolds use hosted React Dart dependencies by default. For local generator and
+runtime development, add `--packages /absolute/path/to/react_workspace/packages`
+to `react init`, and use `--workspace` when registering in a Dart workspace.
+If Git dependencies are explicitly requested, use one immutable repository ref
+for all related runtime, generator, analyzer, tooling, and testing packages.
+Do not replace hosted dependencies merely because the app is outside this repo.
 
 Install the JavaScript toolchain in the project root:
 
@@ -69,6 +57,11 @@ webdev/DDC serves `web/client.dart` as `/client.dart.js`. The prebuild is
 cached, but adding a new foreign component invalidates a cache from a previous
 foreign-free run. Production uses only `build/react/browser.js` and does not
 load the debug assets.
+Press Alt+D (Option+D on macOS) after loading the page to start the browser debug
+service. For unreliable filesystem notifications, `--debug --poll` is opt-in
+and requires a matching generator capability; it does not rebuild the foreign
+TSX bundle or SSR worker automatically. Restart after changing foreign TSX or
+SSR sources. See `docs/debugging.md` for the full debugging boundary.
 
 ## Configure Tailwind
 

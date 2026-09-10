@@ -4,7 +4,7 @@
 
 Before working on a matching task, read the focused repository skill:
 
-- `skills/react-dart-projects/SKILL.md` for scaffolding, unpublished Git refs,
+- `skills/react-dart-projects/SKILL.md` for scaffolding, dependency sources,
   package boundaries, and generated sources;
 - `skills/react-dart-testing/SKILL.md` for native harness selection and
   Routed/Shelf adapter tests;
@@ -13,9 +13,13 @@ Before working on a matching task, read the focused repository skill:
 - `skills/react-dart-foreign-components/SKILL.md` for shadcn-style local TSX
   export discovery, prop inference, wrapper generation, and bundle retention.
 
-React Dart packages are currently consumed from the GitHub repository with an
-explicit ref. Routed dependencies and Routed testing adapters likewise use the
-same ref from `https://github.com/kingwill101/routed.git` until publication.
+React Dart and Routed packages are published on pub.dev; scaffolds use hosted
+dependencies by default. Use `react init --packages` for local React workspace
+development. When explicitly choosing Git dependencies, use the same immutable
+ref across each repository's runtime, tooling, and testing adapters.
+
+Keep `third_party/web` as an unmodified submodule used for stub generation.
+Change generators in this repository, not the upstream submodule's source.
 
 ## Use the native test stack first
 

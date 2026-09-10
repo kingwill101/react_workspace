@@ -115,18 +115,16 @@ bridges.
 
 ## Naming and package split
 
-Before publication, the current package name `react` should be evaluated
-against a publishable family name. `react_core` is the leading candidate:
+The portable runtime is published as `react_core`, within this package family:
 
 ```text
 react_core, react_dom, react_js, react_web, react_server, react_testing
 ```
 
-That rename should be done as one deliberate migration after the API is stable,
-because generated imports, Git dependencies, descriptors, examples, and
-documentation all need to move together. Until then, the workspace package
-name remains `react` and consumers use the explicit Git reference documented in
-the repository.
+The migration from `react` is complete. Authored and generated imports should
+use `package:react_core/react.dart`. Scaffolds use hosted dependencies by default;
+use `react init --packages /absolute/path/to/react_workspace/packages` when
+developing against this checkout so runtime and tooling resolve together.
 
 ## What is intentionally not copied from OverReact
 

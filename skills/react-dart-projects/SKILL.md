@@ -1,6 +1,6 @@
 ---
 name: react-dart-projects
-description: Build and maintain React Dart applications in the react_workspace ecosystem. Use for scaffolding projects, choosing client/Shelf/Routed templates, resolving unpublished packages from Git refs, respecting package boundaries, handling generated sources, and maintaining native code-asset prebuilts.
+description: Build and maintain React Dart applications in react_workspace. Use for scaffolding, package and analyzer setup, workspace integration, full-stack debugging, generated sources, and native code-asset delivery.
 ---
 
 # React Dart projects
@@ -74,45 +74,65 @@ endpoint using Web Fetch and `renderToReadableStream`; it is intended for a
 separately deployed Worker or another Fetch host. The application host can
 call that endpoint through the JavaScript `ReactSsrClient`.
 
-## Resolve unpublished packages
+## Resolve package sources consistently
 
-The React Dart packages are currently hosted on GitHub and are not available
-from pub.dev as released packages. Consumer applications must use the
-workspace Git repository with an explicit ref until publication:
+React Dart and Routed packages are published on pub.dev. New scaffolds use
+hosted dependencies by default. For local React development, pass
+`--packages /absolute/path/to/react_workspace/packages` to `react init` so the
+runtime, CLI, generator, analysis library, and analyzer plugin use this checkout.
+Use `--workspace /absolute/path/to/workspace` to register the generated app in
+an existing Dart workspace and relocate shared overrides/plugins to its root.
+
+For an existing app, `react setup` enables analyzer diagnostics; add `--packages`
+to select a local analyzer plugin. Run `react doctor --json` to inspect resolved
+packages, analyzer activation, entrypoints, tools, and generated-source freshness.
+Freshness is a timestamp heuristic, not proof that all generator inputs match.
+
+Analyzer configuration belongs at the package/workspace analysis root. React
+diagnostics use top-level `plugins.react_analyzer.diagnostics`, not
+`analyzer.errors`. Local analyzer plugins resolve in a separate package context:
+keep `plugins.dependency_overrides.react_analysis` aligned with the local engine.
+Preserve existing includes, rules, comments, and deliberate plugin choices.
+
+Resolve a standalone consumer's own `.dart_tool/package_config.json`; only an
+explicit `resolution: workspace` member may share its ancestor's configuration.
+This also applies to npm cache ownership: an unresolved nested fixture must not
+borrow or rewrite the enclosing checkout's managed JavaScript environment.
+
+When a consumer explicitly needs an unreleased Git revision, use this shape:
 
 ```yaml
 dependencies:
   react_core:
     git:
       url: https://github.com/kingwill101/react_workspace.git
-      ref: master
+      ref: <immutable-react-commit>
       path: packages/react_core
   react_dom:
     git:
       url: https://github.com/kingwill101/react_workspace.git
-      ref: master
+      ref: <immutable-react-commit>
       path: packages/react_dom
 ```
 
 Repeat the same Git dependency shape for every React Dart package the
-application imports. Use the same ref for all packages. Prefer an immutable
-commit ref for reproducible external applications; use `master` only for
-workspace-edge development.
+application imports. Replace the placeholder with the same immutable commit
+for runtime, tooling, and testing packages from that repository. Use
+`--packages` for local workspace development instead of mutable Git refs.
 
-Routed applications also need the unpublished Routed packages from the same
-Routed ref:
+When choosing Git for Routed, use one Routed ref for its packages and adapter:
 
 ```yaml
 dependencies:
   routed_core:
     git:
       url: https://github.com/kingwill101/routed.git
-      ref: master
+      ref: <immutable-routed-commit>
       path: packages/routed_core
   routed_io:
     git:
       url: https://github.com/kingwill101/routed.git
-      ref: master
+      ref: <immutable-routed-commit>
       path: packages/routed_io
 ```
 
@@ -156,6 +176,9 @@ sync with the GitHub release.
 
 ## Generated source rules
 
+Keep `third_party/web` an unmodified, pinned submodule used for Web API stub
+generation. Change generators in this repository, never the upstream sources.
+
 Treat `lib/.generated/` and `build/react/` as disposable output. Change the
 generator, scaffold template, descriptor, or authored source, then regenerate:
 
@@ -185,12 +208,37 @@ entry uses `renderToReadableStream` and neither file has a `node:http` listener.
 Do not run a Fetch entrypoint with `react serve`; that command starts the Node
 SSR worker only for projects using `ssr.runtime: node`.
 
-For client-only IDE debugging, use `react serve --debug`. It serves DDC's
+For IDE debugging, use `react serve --debug`. It serves DDC's
 `/client.dart.js` and stages the generated callback trampoline, foreign browser
 bundle, source maps, and compiled CSS under `web/react-debug/`. The staged
 assets are cached in `.dart_tool/react/`; adding a foreign component must
 invalidate a cache created by a previously foreign-free run. Production builds
 must reference only `/browser.js`, which contains the bundled browser runtime.
+
+Full-stack Node SSR projects also start a VM-enabled Dart server and a loopback
+gateway for pages, server actions, DDC assets, and debugger connections. New
+scaffolds provide VS Code task/attach configurations. Browser source edits
+rebuild and refresh the page; server and SSR edits require restarting the CLI.
+After the page loads, press Alt+D (Option+D on macOS) to start webdev's browser
+VM service, then use the printed URI for browser attachment. Server attachment
+uses `.dart_tool/react/server_vm_service.json`. Do not mistake a listening HTTP
+port for a ready browser debugger. Keep webdev's PATH-based SDK discovery aligned
+with `Platform.resolvedExecutable`, including when PATH contains SDK wrappers.
+
+For unreliable native filesystem notifications, use `react serve --debug --poll`.
+Polling is opt-in, increases filesystem activity, and requires a resolved
+`react_codegen` advertising `polling_watcher` in `react_tooling.json`. Use matching
+local packages for unreleased capabilities; do not change hosted scaffold defaults
+to an unavailable version. Encode watcher selection in builder options so a
+daemon with different options cannot silently reuse the wrong watcher mode.
+
+Stop the session to restore its temporary HTML templates; do not edit those
+templates while debugging. Refresh reruns SSR and resets browser-local state.
+For an existing Chrome instance, use
+`--no-launch-browser --chrome-debug-port <port>`; DWDS requires that port when
+the CLI does not launch Chrome itself. See `docs/debugging.md` for limitations
+and the current validation status. A passing breakpoint test does not establish
+expression-evaluation support.
 
 For full-stack behavior, compose `ReactTestHarness` with the application's
 `RoutedRequestHandler` or `ShelfRequestHandler`. Use harness-allocated ports;
