@@ -12,7 +12,7 @@ void main() {
     final bloc = CounterBloc();
     addTearDown(bloc.close);
     final scope = blocProvider(bloc, const []);
-    expect(scope, isA<ContextProvider<Bloc?>>());
+    expect(scope, isA<ContextProvider<BlocBase?>>());
   });
 
   test('useBloc outside blocProvider fails explicitly', () {

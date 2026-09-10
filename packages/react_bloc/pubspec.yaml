@@ -13,4 +13,5 @@ dependencies:
   bloc: ^9.2.1
   react_core: ^0.1.0
 dev_dependencies:
+  react_testing: ^0.1.0
   test: ^1.31.2

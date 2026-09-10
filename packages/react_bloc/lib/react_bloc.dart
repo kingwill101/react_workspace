@@ -16,19 +16,19 @@ import 'package:react_core/react.dart';
 ///
 /// The default is `null`; components that call [useBloc] must render under a
 /// [blocProvider].
-const ReactContext<Bloc?> blocScopeContext = ReactContext<Bloc?>(null);
+const ReactContext<BlocBase?> blocScopeContext = ReactContext<BlocBase?>(null);
 
 /// Wraps [children] so they can resolve [bloc] through [useBloc].
 ///
 /// Mirrors `BlocProvider` from flutter_bloc:
 /// https://bloclibrary.dev/blocs/#accessing-data.
-ReactNode blocProvider<T extends Bloc>(T bloc, List<ReactNode> children) =>
+ReactNode blocProvider<T extends BlocBase>(T bloc, List<ReactNode> children) =>
     blocScopeContext.provider(bloc, children);
 
 /// Returns the nearest bloc from [blocProvider].
 ///
 /// See https://bloclibrary.dev/blocs/#accessing-data.
-T useBloc<T extends Bloc<dynamic, dynamic>>() {
+T useBloc<T extends BlocBase<dynamic>>() {
   final bloc = useContext(blocScopeContext);
   if (bloc == null) {
     throw StateError(
@@ -47,7 +47,7 @@ T useBloc<T extends Bloc<dynamic, dynamic>>() {
 ///
 /// Mirrors `BlocBuilder` from flutter_bloc:
 /// https://bloclibrary.dev/blocs/#blocbuilder.
-S useBlocState<B extends Bloc<dynamic, S>, S>(B bloc) {
+S useBlocState<B extends BlocBase<S>, S>(B bloc) {
   return useSyncExternalStore<S>(
     (onChange) {
       final subscription = bloc.stream.listen((_) => onChange());
@@ -63,7 +63,7 @@ S useBlocState<B extends Bloc<dynamic, S>, S>(B bloc) {
 /// Keep [selector] pure and return a value with stable equality semantics.
 /// React's external-store comparison can then skip renders when unrelated
 /// state changes leave the selected value unchanged.
-T useBlocSelector<B extends Bloc<dynamic, S>, S, T>(
+T useBlocSelector<B extends BlocBase<S>, S, T>(
   B bloc,
   T Function(S state) selector,
 ) {

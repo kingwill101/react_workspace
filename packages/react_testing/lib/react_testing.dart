@@ -14,3 +14,4 @@ export 'src/server_function_harness.dart'
 export 'src/ssr_harness.dart'
     show InMemorySsrHarness, SsrResponseAssertions, SsrTestHarness;
 export 'src/test_runtime.dart' show TestRuntimes;
+export 'src/hook_harness.dart' show HookTestHarness;

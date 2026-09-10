@@ -1,3 +1,8 @@
+## Unreleased
+
+- Adds portable Future/Stream hooks with async snapshots, source replacement,
+  cleanup, and deterministic SSR initial values.
+
 ## 0.1.0
 
 - Introduces portable React nodes, components, hooks, refs, callbacks, and runtime capabilities.
