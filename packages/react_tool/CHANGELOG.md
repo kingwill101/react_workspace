@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.2.8
+
+- Coordinate DDC/DWDS, VM-enabled Dart servers, and Node SSR through a loopback
+  debug gateway, with scaffolded VS Code tasks and attach configurations.
+- Forward existing Chrome debug ports and reject invalid headless attachment
+  options before building. Use resolved React versions for debug import maps.
+- Align webdev's PATH-based SDK discovery with the Dart executable running the
+  CLI, including when PATH contains SDK-manager wrappers.
+- Allow cold service startup for up to a minute while failing immediately if
+  the server or SSR worker exits, and close readiness probe connections fully.
+- Registers scaffolded applications with existing Dart workspaces and relocates
+  shared overrides and analyzer plugin declarations with conflict checks.
+- Keep unresolved standalone projects from borrowing an enclosing workspace's
+  package configuration or writing managed npm artifacts into its cache.
+- Replaces doctor file-presence hints with actionable resolved-package/tool
+  checks, explicit-entrypoint errors, generated-source age warnings, and JSON.
+
+- Enable React analyzer diagnostics in new scaffolds and add `react setup`
+  for existing projects, configuring workspace members at their analysis root.
+
+- Keep local CLI, code generation, and analysis dependencies alongside local
+  runtime packages when scaffolding with `--packages`, including the analyzer
+  plugin's separate analysis-engine dependency context.
+- Stream native test output and accept Dart test arguments after `--`.
+- Generate an actual LCOV report for `react test --coverage`, including
+  checkouts reached through symlinks.
+
 ## 0.2.7
 
 - Scaffolds a code-generation-only `build.react.yaml` so `react generate` does

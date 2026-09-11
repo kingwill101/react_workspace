@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.3
+
+- Accept `BlocBase` in providers and hooks so Cubit works alongside Bloc.
+
 ## 0.0.2
 
 - Aligns the package with the portable React core runtime.

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:artisanal/args.dart';
@@ -6,6 +7,7 @@ import 'package:liquify/liquify.dart';
 import 'package:path/path.dart' as p;
 
 import 'project_config.dart';
+import 'project_setup.dart';
 import 'react_versions.dart';
 
 const _templatesPackageUri = 'package:react_tool/src/scaffold/templates/';
@@ -18,6 +20,8 @@ const _ssrTemplateOutputs = <String, String>{
   'analysis_options.yaml.liquid': 'analysis_options.yaml',
   'gitignore.liquid': '.gitignore',
   'vscode_settings.json.liquid': '.vscode/settings.json',
+  'vscode_launch.json.liquid': '.vscode/launch.json',
+  'vscode_tasks.json.liquid': '.vscode/tasks.json',
   'build.react.yaml.liquid': 'build.react.yaml',
   'react.yaml.liquid': 'react.yaml',
   'package.json.liquid': 'package.json',
@@ -41,6 +45,8 @@ const _clientTemplateOutputs = <String, String>{
   'analysis_options.yaml.liquid': 'analysis_options.yaml',
   'gitignore.liquid': '.gitignore',
   'vscode_settings.json.liquid': '.vscode/settings.json',
+  'vscode_launch.json.liquid': '.vscode/launch.json',
+  'vscode_tasks.json.liquid': '.vscode/tasks.json',
   'build.react.yaml.liquid': 'build.react.yaml',
   'react.client.yaml.liquid': 'react.yaml',
   'package.json.liquid': 'package.json',
@@ -65,6 +71,8 @@ const _routedMinimalTemplateOutputs = <String, String>{
   'analysis_options.yaml.liquid': 'analysis_options.yaml',
   'gitignore.liquid': '.gitignore',
   'vscode_settings.json.liquid': '.vscode/settings.json',
+  'vscode_launch.json.liquid': '.vscode/launch.json',
+  'vscode_tasks.json.liquid': '.vscode/tasks.json',
   'build.react.yaml.liquid': 'build.react.yaml',
   'react.yaml.liquid': 'react.yaml',
   'package.json.liquid': 'package.json',
@@ -98,6 +106,7 @@ final class ScaffoldGenerator {
     required Directory target,
     bool force = false,
     String template = 'ssr',
+    Directory? workspace,
   }) async {
     if (target.existsSync() && !force) {
       throw ReactToolException(
@@ -108,8 +117,19 @@ final class ScaffoldGenerator {
     final templatesDir = await _templatesDirectory();
     final data = <String, dynamic>{
       'name': name,
+      'hasServer': template != 'client',
       'packagesPath': packagesPath,
       'localPackages': packagesPath.trim().isNotEmpty,
+      'analyzerPath': jsonEncode(
+        p.normalize(
+          p.join(target.absolute.path, packagesPath, 'react_analyzer'),
+        ),
+      ),
+      'analysisPath': jsonEncode(
+        p.normalize(
+          p.join(target.absolute.path, packagesPath, 'react_analysis'),
+        ),
+      ),
       'title': _humanize(name),
       'reactVersion': ReactVersionPolicy.managedVersion,
     };
@@ -121,13 +141,26 @@ final class ScaffoldGenerator {
       _ => _ssrTemplateOutputs,
     };
 
+    final files = <String, String>{};
     for (final entry in outputs.entries) {
       final source = File(p.join(templatesDir.path, entry.key));
       final rendered = Template.parse(source.readAsStringSync(), data: data);
-      final output = File(p.join(target.path, entry.value));
-      output.parent.createSync(recursive: true);
-      output.writeAsStringSync(rendered.render());
+      files[entry.value] = rendered.render();
     }
+    if (workspace != null) {
+      registerWorkspaceMember(
+        target,
+        workspace,
+        generatedFiles: files,
+        dryRun: true,
+      );
+    }
+    for (final entry in files.entries) {
+      final output = File(p.join(target.path, entry.key));
+      output.parent.createSync(recursive: true);
+      output.writeAsStringSync(entry.value);
+    }
+    if (workspace != null) registerWorkspaceMember(target, workspace);
   }
 
   Future<Directory> _templatesDirectory() async {
@@ -167,6 +200,10 @@ final class InitCommand extends Command<void> {
   InitCommand({Directory? workingDirectory})
     : _workingDirectory = workingDirectory ?? Directory.current {
     argParser
+      ..addOption(
+        'workspace',
+        help: 'Register the new app in this existing Dart workspace.',
+      )
       ..addOption(
         'packages',
         help:
@@ -214,6 +251,11 @@ final class InitCommand extends Command<void> {
       target: target,
       force: force,
       template: template,
+      workspace: option('workspace') == null
+          ? null
+          : Directory(
+              p.absolute(_workingDirectory.path, option('workspace') as String),
+            ),
     );
 
     info('Created $name/.');

@@ -16,6 +16,7 @@ import 'bundler/rolldown_bundler.dart';
 import 'bundler/shim_pruning.dart';
 import 'bundler/usage_scan.dart';
 import 'js_environment.dart';
+import 'package_resolution.dart';
 import 'project_config.dart';
 import 'react_versions.dart';
 import 'styles.dart';
@@ -1337,11 +1338,11 @@ final class ReactBuilder {
     return package.root.toFilePath();
   }
 
-  /// Loads the workspace package configuration (walking up from the project
-  /// root), caching it for the duration of the build. Returns null when no
+  /// Loads the project's package configuration (walking up only for workspace
+  /// members), caching it for the duration of the build. Returns null when no
   /// configuration file exists.
   Future<({PackageConfig config, File file})?> _loadPackageConfig() {
-    return _cachedPackageConfig ??= findPackageConfigAndFile(config.root);
+    return _cachedPackageConfig ??= findProjectPackageConfig(config.root);
   }
 
   Future<({PackageConfig config, File file})?>? _cachedPackageConfig;

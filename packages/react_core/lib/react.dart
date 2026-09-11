@@ -7,6 +7,7 @@ export 'src/dom.dart';
 export 'src/runtime_symbol.dart';
 export 'src/component_id.dart';
 export 'src/hooks.dart';
+export 'src/async_hooks.dart';
 export 'src/internal.dart';
 export 'src/node.dart';
 export 'src/runtime_features.dart';

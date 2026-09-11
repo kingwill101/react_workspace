@@ -1,3 +1,5 @@
+# Changelog
+
 ## 0.1.0
 
 - Introduces builders for typed component factories, JavaScript bridges, and server functions.

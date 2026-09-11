@@ -1,7 +1,7 @@
 name: react_testing
 resolution: workspace
 description: Test harnesses for React Dart client, SSR, and server functions.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/kingwill101/react_workspace/tree/master/packages/react_testing
 
 environment:
@@ -16,5 +16,4 @@ dependencies:
   server_testing: ^0.4.0
 
 dev_dependencies:
-  lints: ^6.0.0
   test: ^1.31.2

@@ -105,6 +105,7 @@ void main() {
   setUp(() async {
     root = await Directory.systemTemp.createTemp('react_tool_build_test_');
     await File('${root.path}/pubspec.yaml').writeAsString('name: sample\n');
+    await File('${root.path}/analysis_options.yaml').writeAsString('{}\n');
     await File('${root.path}/react.yaml').writeAsString('''
 styles:
   - web/theme.scss
@@ -704,9 +705,10 @@ react:
     expect((manifest['dependencies'] as Map)['fake-widget-lib'], '2.1.0');
   });
 
-  test('fails loudly when bundling without a JS environment', () async {
-    // Force host mode with no host JS project present: validation must fail
-    // with a clear message instead of a fallback copy.
+  test('fails loudly when the host lacks required JS packages', () async {
+    // Establish this fixture as its own host, even when TMP is nested under a
+    // Node workspace. An incomplete host must fail rather than silently copy.
+    await File('${root.path}/package.json').writeAsString('{}\n');
     await File('${root.path}/react.yaml').writeAsString('''
 foreign:
   host: true

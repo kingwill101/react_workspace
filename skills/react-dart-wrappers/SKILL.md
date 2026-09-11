@@ -58,22 +58,19 @@ React and React DOM remain peers/externals. Do not bundle a second React
 instance. Keep npm dependencies in the descriptor rather than asking each
 consumer to edit its own `package.json`.
 
-## Handle unpublished Dart packages
+## Resolve Dart package sources
 
-The React Dart wrapper packages are currently consumed from GitHub refs rather
-than pub.dev releases:
+Do not assume React Dart packages are unpublished. Prefer a wrapper's hosted
+release when available, checking the specific package/version before changing
+dependency sources. For local React development, scaffold with
+`react init --packages /absolute/path/to/react_workspace/packages`.
+When Git is explicitly selected for unreleased work, use the same immutable
+commit across the runtime, wrapper, tooling, and testing packages from this
+repository; do not introduce mutable `master` dependencies.
 
-```yaml
-dependencies:
-  react_router_dom:
-    git:
-      url: https://github.com/kingwill101/react_workspace.git
-      ref: master
-      path: packages/react_router_dom
-```
-
-Use the same React workspace ref for all related Dart packages. Pin a commit
-instead of `master` when reproducibility matters.
+Keep `third_party/web` an unmodified submodule for stub generation. Fix host-type
+handling in this repository's generator and validate it with
+`GeneratorFidelityHarness`, rather than patching upstream bindings.
 
 ## Manual facade exception
 

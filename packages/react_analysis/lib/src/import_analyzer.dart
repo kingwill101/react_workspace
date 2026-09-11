@@ -14,7 +14,8 @@ import 'model/runtime_symbol.dart';
 ///
 /// Classification of an import [uri]:
 /// - `dart:js_interop`, `dart:js_interop_unsafe` → jsInterop
-/// - `package:react_js`, `package:react_dom`, `package:react_web`, `package:web` → browserPackage
+/// - `package:react_js`, `package:react_web`, `package:web` → browserPackage
+/// - `package:react_dom/react_dom.dart` → portable host factories (ok)
 /// - `*.react.g.dart`, `*.client.g.dart`, `*.registry.g.dart` → generatedBridge
 /// - `*.react.dart` → publicApi (ok)
 ///
@@ -135,7 +136,8 @@ final class ServerClientImportAnalyzer {
 
   bool _isBrowserPackageUri(String uri) =>
       _isPackageUri(uri, 'react_js') ||
-      _isPackageUri(uri, 'react_dom') ||
+      (_isPackageUri(uri, 'react_dom') &&
+          uri != 'package:react_dom/react_dom.dart') ||
       _isPackageUri(uri, 'react_web') ||
       _isPackageUri(uri, 'web');
 

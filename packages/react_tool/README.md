@@ -56,12 +56,18 @@ so consumers can use the verified artifacts.
 The CLI provides commands to manage the full lifecycle of a React Dart project:
 
 - `react doctor` - Inspect the current React Dart project configuration and diagnostics.
+  Use `--json` for structured findings. Errors fail the command; missing optional
+  render targets are reported separately. Findings include corrective commands.
+- `react setup [--packages <path>]` - Enable React analyzer diagnostics for an
+  existing project. Workspace members configure the workspace root; existing
+  plugin settings and unrelated analysis rules are preserved. Restart the Dart
+  analysis server after setup. `--packages` selects a local analyzer package.
 - `react init <project_name> [--template <ssr|client|routed|routed-minimal>] [--packages <path>]` - Scaffold a new project. `ssr` includes Shelf-based SSR defaults, `client` omits server code, and `routed` uses Routed (`react_server_routed` + `routed_io`) with no Shelf dependency; `routed-minimal` uses the same stack with reduced starter files. Add `--packages ../packages` when developing against a local workspace checkout.
 - `react generate` - Run Dart code generation and synchronize formatted sources into `lib/.generated/` without compiling bundles. Workspace orchestration may use `--sync-only` after one successful `build_runner build --workspace` invocation.
 - `react build [--watch] [--release] [--server]` - Generate code, compile client and SSR Dart bundles, compile Sass, bundle JS dependencies, and copy static assets.
 - `react prerender --routes /,/about [--output build/prerendered]` - Build the project, boot its real SSR server, and write selected routes as static HTML.
 - `react serve [--watch] [--release] [--no-ssr]` - Build the project and run the Dart server (and SSR worker if configured) locally.
-- `react serve --debug` - Run a client-only project through `webdev`, DDC, and DWDS for source maps, breakpoints, hot reload, and Dart DevTools support. It launches Chrome with a debug port; use the Dart web debugger from your IDE to attach. The React foreign prebuild is cached under `.dart_tool/react` and is rebuilt only when its TSX, React configuration, or npm lock inputs change.
+- `react serve --debug` - Run webdev/DDC and DWDS, plus the Dart application and Node SSR worker when configured. A loopback gateway keeps SSR pages, browser assets, and server actions on one origin. The Dart server exposes an authenticated VM service on an allocated loopback port. Chrome launches by default; use `--no-launch-browser --chrome-debug-port <port>` for an existing browser. Client-only foreign prebuilds are cached under `.dart_tool/react`; full-stack sessions rebuild SSR before startup.
 - `react clean` - Remove `build/react/`, `lib/.generated/`, and other React-owned generated outputs.
 - `react component add <name> <module> [<prop:type> ...] [--infer] [--style <path>]` - Add a local or npm foreign React component, generate its wrapper, and validate the bundle. Bare npm modules may omit `<name>` and derive it from `--export`; use `--no-validate` for declaration-only workflows.
 - `react shadcn add <component> [--infer] [--style <path>]` - Add a component from the conventional `web/components/ui` shadcn layout.
@@ -71,7 +77,29 @@ The CLI provides commands to manage the full lifecycle of a React Dart project:
 - `react analyze [--path <project>]` - Run Dart analysis and preview resolved React usage.
 - `react test [--path <test-path>] [--coverage]` - Run the native Dart test stack.
 
+Pass native Dart test arguments after `--`, for example:
+
+```console
+react test -- --name 'updates state' --reporter expanded --concurrency=1
+react test --coverage -- test/counter_test.dart
+```
+
+Test output streams directly to the terminal. `--coverage` converts the
+current run's coverage to `coverage/lcov.info`, reporting application `lib/`
+sources. Failed tests fail the command; they do not announce a new report.
+
 ### Scaffolding
+
+Use `react init my_app --workspace /path/to/workspace` from a directory inside
+an existing Dart workspace to register the generated application. The command
+sets `resolution: workspace`, adds the member to the root workspace list, and
+moves package overrides and analyzer plugin declarations to the root. Conflicting
+root settings are reported before the registration files are written.
+Member analysis options inherit the root configuration while retaining existing
+includes and local rules, so workspace diagnostics remain active.
+With `--packages`, the plugin's separate dependency context also overrides
+`react_analysis` to this checkout; application dependency overrides alone do not
+control the analyzer plugin's resolution.
 
 ```console
 # Shelf-backed SSR project (default)

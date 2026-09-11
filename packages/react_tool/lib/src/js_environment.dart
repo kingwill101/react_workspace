@@ -12,9 +12,9 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:package_config/package_config.dart';
 import 'package:path/path.dart' as p;
 
+import 'package_resolution.dart';
 import 'react_versions.dart';
 
 /// The JavaScript contract of one wrapper package (`react.js` in pubspec).
@@ -616,7 +616,7 @@ class JsEnvironmentBuilder {
 
   /// The workspace root holding `.dart_tool` (found via package_config).
   Future<Directory> _findToolRoot() async {
-    final found = await findPackageConfigAndFile(projectRoot);
+    final found = await findProjectPackageConfig(projectRoot);
     if (found == null) return projectRoot;
     // package_config.json lives at <root>/.dart_tool/package_config.json.
     return found.file.parent.parent;
