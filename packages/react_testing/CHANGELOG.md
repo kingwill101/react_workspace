@@ -1,4 +1,6 @@
-## Unreleased
+# Changelog
+
+## 0.1.1
 
 - Adds HookTestHarness for single-component state/effect lifecycle tests,
   including rerenders, cleanup, disposal, and suppressed SSR effects.

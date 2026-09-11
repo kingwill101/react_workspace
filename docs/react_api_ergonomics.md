@@ -78,7 +78,7 @@ Both forms call the same renderer binding and obey the normal Rules of Hooks.
 ## Styling
 
 `react_web` owns the Web-specific `classNames` and typed inline `css` style
-map. Portable libraries can use `joinClassNames` from `react` when they must
+map. Portable libraries can use `joinClassNames` from `react_core` when they must
 remain independent of Web bindings.
 
 ```dart

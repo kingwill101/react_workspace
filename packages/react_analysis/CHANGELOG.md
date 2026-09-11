@@ -1,4 +1,6 @@
-## Unreleased
+# Changelog
+
+## 0.1.2
 
 - Accept the portable `react_dom/react_dom.dart` entrypoint in shared and SSR
   code while continuing to flag direct browser implementation imports.

@@ -26,11 +26,28 @@ Directory analysisRoot(Directory project) {
 }
 
 Map<dynamic, dynamic> _readMap(File file) {
-  final value = loadYaml(file.readAsStringSync());
+  final value = _readEditor(file).parseAt([]).value;
   if (value is! Map) {
     throw ReactToolException('Expected a YAML mapping in ${file.path}.');
   }
   return value;
+}
+
+YamlEditor _readEditor(File file, {String? content, bool allowEmpty = false}) {
+  try {
+    final editor = YamlEditor(content ?? file.readAsStringSync());
+    if (allowEmpty && editor.parseAt([]).value == null) {
+      editor.update([], <String, Object>{});
+    }
+    if (editor.parseAt([]).value is! Map) {
+      throw ReactToolException('Expected a YAML mapping in ${file.path}.');
+    }
+    return editor;
+  } on FileSystemException catch (error) {
+    throw ReactToolException('Cannot read ${file.path}: ${error.message}');
+  } on YamlException catch (error) {
+    throw ReactToolException('Invalid YAML in ${file.path}: $error');
+  }
 }
 
 void _inheritWorkspaceOptions(YamlEditor editor, File member, File root) {
@@ -91,7 +108,8 @@ File enableReactAnalyzer(Directory project, {String? packagesPath}) {
     throw ReactToolException('Expected a plugins mapping in ${file.path}.');
   }
   final plugins = document['plugins'] as Map?;
-  if (plugins?.containsKey('react_analyzer') ?? false) {
+  final local = packagesPath != null && packagesPath.isNotEmpty;
+  if ((plugins?.containsKey('react_analyzer') ?? false) && !local) {
     if (member != null) memberFile.writeAsStringSync(member.toString());
     return file;
   }
@@ -102,12 +120,15 @@ File enableReactAnalyzer(Directory project, {String? packagesPath}) {
       'invalid_react_component': 'error',
     },
   };
-  if (packagesPath != null && packagesPath.isNotEmpty) {
+  final existingPlugin = plugins?['react_analyzer'];
+  if (local) {
     final path = p.normalize(p.absolute(packagesPath, 'react_analyzer'));
     if (!File(p.join(path, 'pubspec.yaml')).existsSync()) {
       throw ReactToolException('React analyzer package not found at $path.');
     }
     plugin.remove('version');
+    plugin.remove('git');
+    plugin.remove('hosted');
     plugin['path'] = path;
     final enginePath = p.normalize(p.absolute(packagesPath, 'react_analysis'));
     if (!File(p.join(enginePath, 'pubspec.yaml')).existsSync()) {
@@ -121,20 +142,7 @@ File enableReactAnalyzer(Directory project, {String? packagesPath}) {
         'Expected plugin dependency_overrides mapping.',
       );
     }
-    final existingEngine = overrides is Map
-        ? overrides['react_analysis']
-        : null;
-    if (existingEngine != null &&
-        !(existingEngine is Map &&
-            existingEngine['path'] is String &&
-            p.normalize(
-                  p.join(root.absolute.path, existingEngine['path'] as String),
-                ) ==
-                enginePath)) {
-      throw const ReactToolException(
-        'Conflicting plugin override for react_analysis.',
-      );
-    }
+    // An explicit source choice switches both the plugin and its engine.
     if (plugins == null) editor.update(['plugins'], <String, Object>{});
     if (overrides == null) {
       editor.update(['plugins', 'dependency_overrides'], <String, Object>{});
@@ -147,7 +155,16 @@ File enableReactAnalyzer(Directory project, {String? packagesPath}) {
   if (editor.parseAt([]).value['plugins'] == null) {
     editor.update(['plugins'], <String, Object>{});
   }
-  editor.update(['plugins', 'react_analyzer'], plugin);
+  if (existingPlugin is Map && local) {
+    for (final key in ['version', 'git', 'hosted']) {
+      if (existingPlugin.containsKey(key)) {
+        editor.remove(['plugins', 'react_analyzer', key]);
+      }
+    }
+    editor.update(['plugins', 'react_analyzer', 'path'], plugin['path']);
+  } else {
+    editor.update(['plugins', 'react_analyzer'], plugin);
+  }
   file.writeAsStringSync(editor.toString());
   if (member != null) memberFile.writeAsStringSync(member.toString());
   return file;
@@ -158,7 +175,15 @@ File enableReactAnalyzer(Directory project, {String? packagesPath}) {
 /// Shared overrides and plugin declarations move to the workspace root. All
 /// conflicts are checked before writing, and relative package paths retain
 /// their original meaning after relocation.
-void registerWorkspaceMember(Directory project, Directory workspace) {
+///
+/// Scaffolds supply [generatedFiles] and [dryRun] to preflight the rendered
+/// configuration in memory before creating or overwriting the application.
+void registerWorkspaceMember(
+  Directory project,
+  Directory workspace, {
+  Map<String, String>? generatedFiles,
+  bool dryRun = false,
+}) {
   final memberPath = p.normalize(project.absolute.path);
   final rootPath = p.normalize(workspace.absolute.path);
   if (!p.isWithin(rootPath, memberPath)) {
@@ -168,8 +193,11 @@ void registerWorkspaceMember(Directory project, Directory workspace) {
   }
   final rootSpec = File(p.join(rootPath, 'pubspec.yaml'));
   final memberSpec = File(p.join(memberPath, 'pubspec.yaml'));
-  final root = YamlEditor(rootSpec.readAsStringSync());
-  final member = YamlEditor(memberSpec.readAsStringSync());
+  final root = _readEditor(rootSpec);
+  final member = _readEditor(
+    memberSpec,
+    content: generatedFiles?['pubspec.yaml'],
+  );
   final rootMap = root.parseAt([]).value as Map;
   final memberMap = member.parseAt([]).value as Map;
   final members = rootMap['workspace'];
@@ -265,16 +293,23 @@ void registerWorkspaceMember(Directory project, Directory workspace) {
   final rootOptions = File(p.join(rootPath, 'analysis_options.yaml'));
   YamlEditor? memberAnalysis;
   YamlEditor? rootAnalysis;
-  if (memberOptions.existsSync()) {
-    memberAnalysis = YamlEditor(memberOptions.readAsStringSync());
+  if (generatedFiles?.containsKey('analysis_options.yaml') ??
+      memberOptions.existsSync()) {
+    memberAnalysis = _readEditor(
+      memberOptions,
+      content: generatedFiles?['analysis_options.yaml'],
+      allowEmpty: true,
+    );
     final options = memberAnalysis.parseAt([]).value;
     if (options is Map && options['plugins'] != null) {
       final plugins = options['plugins'];
       if (plugins is! Map) {
         throw const ReactToolException('Expected a plugins mapping.');
       }
-      rootAnalysis = YamlEditor(
-        rootOptions.existsSync() ? rootOptions.readAsStringSync() : '{}\n',
+      rootAnalysis = _readEditor(
+        rootOptions,
+        content: rootOptions.existsSync() ? null : '{}\n',
+        allowEmpty: true,
       );
       if (rootAnalysis.parseAt([]).value == null) {
         rootAnalysis.update([], <String, Object>{});
@@ -300,6 +335,7 @@ void registerWorkspaceMember(Directory project, Directory workspace) {
     _inheritWorkspaceOptions(memberAnalysis, memberOptions, rootOptions);
   }
   // Write only after all configuration conflicts have been checked.
+  if (dryRun) return;
   rootSpec.writeAsStringSync(root.toString());
   memberSpec.writeAsStringSync(member.toString());
   if (rootAnalysis != null) {

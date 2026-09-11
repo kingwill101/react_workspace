@@ -11,10 +11,14 @@ void main() {
     () async {
       final root = await Directory.systemTemp.createTemp('react_cdp_test_');
       addTearDown(() => root.delete(recursive: true));
-      final short = await Directory('/tmp').createTemp('rcdp_');
-      addTearDown(() => short.delete(recursive: true));
-      final alias = Link('${short.path}/r');
-      await alias.create(root.path);
+      var runtimePath = root.path;
+      if (!Platform.isWindows) {
+        final short = await Directory('/tmp').createTemp('rcdp_');
+        addTearDown(() => short.delete(recursive: true));
+        final alias = Link('${short.path}/r');
+        await alias.create(root.path);
+        runtimePath = alias.path;
+      }
       final chrome = await Process.start(
         Platform.environment['CHROME_EXECUTABLE'] ?? 'chromium',
         [
@@ -23,7 +27,7 @@ void main() {
           '--user-data-dir=${root.path}/profile',
           'about:blank',
         ],
-        environment: {'TMPDIR': alias.path, 'TMP': alias.path},
+        environment: {'TMPDIR': runtimePath, 'TMP': runtimePath},
       );
       final errors = StringBuffer();
       final stdout = chrome.stdout.listen((_) {});

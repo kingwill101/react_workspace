@@ -101,23 +101,56 @@ void main() {
     expect(file.readAsStringSync(), '# original\n{}\n');
   });
 
-  test('local setup preserves conflicting plugin-engine configuration', () {
-    write('pubspec.yaml', 'name: app\n');
-    write('packages/react_analyzer/pubspec.yaml', 'name: react_analyzer\n');
-    write('packages/react_analysis/pubspec.yaml', 'name: react_analysis\n');
-    final options = write('analysis_options.yaml', '''
+  test(
+    'explicit local setup switches plugin and engine while preserving diagnostics',
+    () {
+      write('pubspec.yaml', 'name: app\n');
+      write('packages/react_analyzer/pubspec.yaml', 'name: react_analyzer\n');
+      write('packages/react_analysis/pubspec.yaml', 'name: react_analysis\n');
+      final options = write('analysis_options.yaml', '''
 # Preserve my engine source
 plugins:
+  react_analyzer:
+    version: ^0.1.0
+    diagnostics: {invalid_hook_call: warning}
   dependency_overrides:
     react_analysis: {path: another_checkout}
 ''');
-    final original = options.readAsStringSync();
-    expect(
-      () => enableReactAnalyzer(root, packagesPath: '${root.path}/packages'),
-      throwsA(isA<ReactToolException>()),
-    );
-    expect(options.readAsStringSync(), original);
-  });
+      enableReactAnalyzer(root, packagesPath: '${root.path}/packages');
+      final plugins = loadYaml(options.readAsStringSync())['plugins'];
+      expect(plugins['react_analyzer']['version'], isNull);
+      expect(
+        plugins['react_analyzer']['path'],
+        '${root.path}/packages/react_analyzer',
+      );
+      expect(
+        plugins['react_analyzer']['diagnostics']['invalid_hook_call'],
+        'warning',
+      );
+      expect(
+        plugins['dependency_overrides']['react_analysis']['path'],
+        '${root.path}/packages/react_analysis',
+      );
+      final updated = options.readAsStringSync();
+      expect(
+        () => enableReactAnalyzer(root, packagesPath: '${root.path}/missing'),
+        throwsA(isA<ReactToolException>()),
+      );
+      expect(options.readAsStringSync(), updated);
+    },
+  );
+
+  for (final invalid in [null, '', '[not, a, map]', 'workspace: [']) {
+    test('workspace registration reports invalid root pubspec: $invalid', () {
+      if (invalid != null) write('pubspec.yaml', invalid);
+      final member = write('app/pubspec.yaml', 'name: app\n');
+      expect(
+        () => registerWorkspaceMember(member.parent, root),
+        throwsA(isA<ReactToolException>()),
+      );
+      expect(member.readAsStringSync(), 'name: app\n');
+    });
+  }
 
   test('workspace plugin-engine conflicts do not register the member', () {
     final rootSpec = write('pubspec.yaml', 'name: root\nworkspace: []\n');

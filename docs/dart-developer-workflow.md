@@ -85,7 +85,7 @@ stale completions, errors, cancellation, disposal, and deterministic SSR.
 rejects changes to hook count. It is not a concurrent/browser scheduler.
 The combined core/Bloc/Cubit/async/harness regression run passes 97 tests.
 
-### Full-stack debugging: validated with polling
+### Full-stack debugging: prior polling validation
 
 The loopback gateway has five native HTTP/WebSocket tests covering SSR/props,
 action requests/cookies, DDC modules and maps, shutdown, unavailable upstreams,
@@ -93,19 +93,20 @@ and delivery of small SSE frames before the upstream stream closes.
 The CLI starts the Dart VM-enabled server, Node SSR worker, and webdev together.
 Scaffolds provide VS Code task and browser/server attach configurations.
 
-The complete Chromium gate passes SSR HTML, incremental DDC output, hydration,
+Before the polling implementation was removed, the complete Chromium gate passed
+SSR HTML, incremental DDC output, hydration,
 browser events, a Dart server breakpoint and action response, a browser Dart
 breakpoint, hydrated manual reload, source-triggered automatic refresh, template
 restoration, and closure of every reported service port. The final run took
 3 minutes 51 seconds using the retained fixture's build cache and unmodified
 published build_runner. The JSON report records `success: true`.
 
-Native source notifications failed on this host. Opt-in `--poll` uses the
-generator's public watcher registration and builder options, with an early
-resolved-generator capability check. Native watching remains the default;
-polling increases filesystem activity. No diagnostic dependency override or
-upstream source modification is shipped. The 30-test generator suite and eight
-environment/compatibility tests pass.
+Native source notifications failed on this host. The experimental polling
+implementation was removed from PR #16 because global watcher registration can
+conflict with other builders. The CLI now uses native watching only; restart
+the session if source notifications are not delivered. The earlier successful
+polling run does not establish native source-refresh support. No diagnostic
+dependency override or upstream source modification is shipped.
 
 Disabling proxy response buffering fixed the DWDS SSE handshake; a native test
 covers it. SDK discovery uses the running CLI's SDK, resolving the FVM outline

@@ -33,13 +33,4 @@ void main() {
       {'PATH': '/sdk/bin'},
     );
   });
-
-  test('encodes polling in daemon options only when explicitly selected', () {
-    expect(debugBuildOptions(poll: false), isEmpty);
-    expect(debugBuildOptions(poll: true), [
-      '--define=react_codegen|component=watcher=polling',
-      '--define=react_codegen|aggregate=watcher=polling',
-      '--define=react_codegen|server_function=watcher=polling',
-    ]);
-  });
 }

@@ -8,7 +8,8 @@ void main() {
   test('Cubit provider resolves through the native component harness', () {
     final cubit = _Counter();
     addTearDown(cubit.close);
-    final provider = blocProvider(cubit, const []) as ContextProvider<BlocBase?>;
+    final provider =
+        blocProvider(cubit, const []) as ContextProvider<BlocBase?>;
     final harness = ReactComponentHarness();
     harness.binding.setContext(blocScopeContext, provider.value);
     expect(harness.run(() => useBloc<_Counter>()), same(cubit));
@@ -45,9 +46,10 @@ void main() {
       final binding = _StoreBinding();
       final harness = ReactComponentHarness(binding: binding);
       expect(
-      harness.run(() => useBlocSelector(cubit, (int n) => n.isEven)),
+        harness.run(() => useBlocSelector(cubit, (int n) => n.isEven)),
         isTrue,
       );
+      expect(binding.serverSnapshot(), isTrue);
       addTearDown(() => binding.unsubscribe());
       cubit.increment();
       await pumpEventQueue();

@@ -58,10 +58,10 @@ cached, but adding a new foreign component invalidates a cache from a previous
 foreign-free run. Production uses only `build/react/browser.js` and does not
 load the debug assets.
 Press Alt+D (Option+D on macOS) after loading the page to start the browser debug
-service. For unreliable filesystem notifications, `--debug --poll` is opt-in
-and requires a matching generator capability; it does not rebuild the foreign
-TSX bundle or SSR worker automatically. Restart after changing foreign TSX or
-SSR sources. See `docs/debugging.md` for the full debugging boundary.
+service. Source refresh relies on native filesystem notifications; restart the
+session if the filesystem does not deliver them. Restart after changing foreign
+TSX or SSR sources, which are not rebuilt automatically. See `docs/debugging.md`
+for the full debugging boundary.
 
 ## Configure Tailwind
 

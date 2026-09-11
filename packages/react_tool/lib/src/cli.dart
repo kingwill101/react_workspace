@@ -18,6 +18,7 @@ import 'project_setup.dart';
 import 'doctor.dart';
 import 'debug_proxy.dart';
 import 'debug_environment.dart';
+import 'debug_import_map.dart';
 import 'process_readiness.dart';
 
 /// Runs the React CLI programmatically.
@@ -118,7 +119,7 @@ final class DoctorCommand extends Command<void> {
       'Check resolved packages, tools, and project readiness.';
   @override
   Future<void> run() async {
-    final findings = await inspectReactProject(ReactProjectConfig.load());
+    final findings = await inspectReactProject(null);
     if (option('json') == true) {
       line(jsonEncode(findings.map((finding) => finding.toJson()).toList()));
     } else {
@@ -871,12 +872,6 @@ final class ServeCommand extends Command<void> {
         help: 'Rebuild and restart the server when project files change.',
       )
       ..addFlag(
-        'poll',
-        defaultsTo: false,
-        help:
-            'Poll DDC sources on filesystems with unreliable native events. Requires --debug.',
-      )
-      ..addFlag(
         'launch-browser',
         defaultsTo: true,
         help:
@@ -901,8 +896,6 @@ final class ServeCommand extends Command<void> {
     final noSsr = option('no-ssr') as bool? ?? false;
     final watch = option('watch') as bool? ?? false;
     final debug = option('debug') as bool? ?? false;
-    final poll = option('poll') as bool? ?? false;
-    if (poll && !debug) usageException('--poll requires --debug.');
     final port = _parsePort('port');
     final ssrPort = _parsePort('ssr-port');
     final builder = ReactBuilder(config: config, release: release, log: line);
@@ -920,7 +913,6 @@ final class ServeCommand extends Command<void> {
           '--debug cannot be combined with --release, --no-ssr, or --watch.',
         );
       }
-      if (poll) await ensurePollingSupport(config.root);
       await _runDebugServer(config, builder, port);
       return;
     }
@@ -1083,7 +1075,6 @@ final class ServeCommand extends Command<void> {
         '127.0.0.1',
         '--',
         'web:$webdevPort',
-        ...debugBuildOptions(poll: option('poll') as bool? ?? false),
       ];
       info('Starting webdev/DDC with DWDS on http://127.0.0.1:$webdevPort');
       info(
@@ -1232,8 +1223,8 @@ final class ServeCommand extends Command<void> {
     }
     if (environment == null) {
       throw const ReactToolException(
-        'The debug foreign bundle has runtime imports, but no managed JS '
-        'environment is available.',
+        'The debug runtime requires a managed JS environment. '
+        'Run react js install first.',
       );
     }
 
@@ -1260,23 +1251,7 @@ final class ServeCommand extends Command<void> {
     }
 
     final source = await index.readAsString();
-    const start = '<!-- react_tool:debug-importmap:start -->';
-    const end = '<!-- react_tool:debug-importmap:end -->';
-    final startIndex = source.indexOf(start);
-    final endIndex = source.indexOf(end);
-    final block =
-        '''$start
-<script type="importmap">
-${const JsonEncoder.withIndent('  ').convert({'imports': map})}
-</script>
-$end''';
-    final updated = switch ((startIndex, endIndex)) {
-      (final startAt, final endAt) when startAt >= 0 && endAt >= startAt =>
-        source.substring(0, startAt) +
-            block +
-            source.substring(endAt + end.length),
-      _ => _replaceOrInsertImportMap(source, block),
-    };
+    final updated = updateDebugImportMap(source, map);
     if (updated != source) await index.writeAsString(updated);
   }
 
@@ -1293,21 +1268,6 @@ $end''';
       '',
     );
     if (updated != source) await index.writeAsString(updated);
-  }
-
-  String _replaceOrInsertImportMap(String source, String block) {
-    final importMapStart = source.indexOf('<script type="importmap">');
-    final importMapEnd = source.indexOf('</script>', importMapStart);
-    if (importMapStart >= 0 && importMapEnd >= importMapStart) {
-      return source.substring(0, importMapStart) +
-          block +
-          source.substring(importMapEnd + '</script>'.length);
-    }
-    final headEnd = source.indexOf('</head>');
-    final insertion = '$block\n';
-    return headEnd >= 0
-        ? '${source.substring(0, headEnd)}$insertion${source.substring(headEnd)}'
-        : '$insertion$source';
   }
 
   String _npmPackageName(String specifier) {

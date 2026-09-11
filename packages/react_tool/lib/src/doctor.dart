@@ -25,11 +25,72 @@ final class DoctorFinding {
 
 /// Checks the current project without installing tools or modifying files.
 Future<List<DoctorFinding>> inspectReactProject(
-  ReactProjectConfig config, {
+  ReactProjectConfig? config, {
+  Directory? root,
   Future<ProcessResult> Function(String, List<String>)? probe,
 }) async {
   final findings = <DoctorFinding>[];
-  final owner = analysisRoot(config.root);
+  Map readConfiguration(File file, {bool optional = false}) {
+    if (optional && !file.existsSync()) return const {};
+    try {
+      final value = loadYaml(file.readAsStringSync());
+      if (value is Map) return value;
+      if (optional && value == null) return const {};
+      throw const FormatException('Expected a YAML mapping.');
+    } catch (error) {
+      findings.add(
+        DoctorFinding(
+          'configuration:${file.path}',
+          'error',
+          'Cannot read ${file.path}: $error',
+          'Correct the YAML mapping in ${file.path}.',
+        ),
+      );
+      return const {};
+    }
+  }
+
+  if (config == null) {
+    final directory = root ?? Directory.current;
+    try {
+      config = ReactProjectConfig.load(directory);
+    } on ReactToolException catch (error) {
+      findings.add(
+        DoctorFinding(
+          'configuration',
+          'error',
+          '$error',
+          'Correct pubspec.yaml or react.yaml and run doctor again.',
+        ),
+      );
+      // Continue independent checks without pretending invalid settings loaded.
+      config = ReactProjectConfig(
+        root: directory,
+        packageName: '',
+        clientEntrypoint: null,
+        ssrEntrypoint: null,
+        serverEntrypoint: null,
+        staticDirectory: 'web',
+        outputDirectory: 'build/react',
+        styleEntrypoints: const [],
+        styleOutput: 'styles.css',
+        foreignComponents: const [],
+      );
+    }
+  }
+  var owner = config.root;
+  try {
+    owner = analysisRoot(config.root);
+  } on ReactToolException catch (error) {
+    findings.add(
+      DoctorFinding(
+        'workspace',
+        'error',
+        '$error',
+        'Correct the package or workspace pubspec.yaml.',
+      ),
+    );
+  }
   final packageFile = File(
     p.join(owner.path, '.dart_tool/package_config.json'),
   );
@@ -117,10 +178,9 @@ Future<List<DoctorFinding>> inspectReactProject(
     }
   }
   var entries = 0;
-  final pubspec =
-      loadYaml(config.file('pubspec.yaml').readAsStringSync()) as Map;
+  final pubspec = readConfiguration(config.file('pubspec.yaml'));
   final settingsValue = config.file('react.yaml').existsSync()
-      ? loadYaml(config.file('react.yaml').readAsStringSync())
+      ? readConfiguration(config.file('react.yaml'), optional: true)
       : pubspec['react'];
   final settings = settingsValue is Map ? settingsValue : const {};
   for (final entry in {
@@ -165,15 +225,19 @@ Future<List<DoctorFinding>> inspectReactProject(
     );
   }
   final options = File(p.join(owner.path, 'analysis_options.yaml'));
-  final yaml = options.existsSync()
-      ? loadYaml(options.readAsStringSync())
-      : null;
-  final plugins = yaml is Map ? yaml['plugins'] : null;
+  final yaml = readConfiguration(options, optional: true);
+  final plugins = yaml['plugins'];
   final memberOptions = config.file('analysis_options.yaml');
   final inheritsRoot =
       p.equals(owner.absolute.path, config.root.absolute.path) ||
       !memberOptions.existsSync() ||
-      _includesOptions(memberOptions, options, resolved, <String>{});
+      _includesOptions(
+        memberOptions,
+        options,
+        resolved,
+        <String>{},
+        (file) => readConfiguration(file, optional: true),
+      );
   final enabled =
       plugins is Map && plugins.containsKey('react_analyzer') && inheritsRoot;
   final plugin = enabled ? plugins['react_analyzer'] : null;
@@ -268,7 +332,9 @@ Future<List<DoctorFinding>> inspectReactProject(
           : stale
           ? 'Authored Dart files are newer than generated sources.'
           : 'Generated sources exist with no newer authored Dart files. Run generate to verify all build inputs.',
-      'Run dart run react_tool:react generate.',
+      newestOutput != null && !stale
+          ? null
+          : 'Run dart run react_tool:react generate.',
     ),
   );
   final run =
@@ -313,12 +379,13 @@ bool _includesOptions(
   File target,
   Map<String, String> packages,
   Set<String> seen,
+  Map Function(File) readConfiguration,
 ) {
   final path = p.normalize(file.absolute.path);
   if (path == p.normalize(target.absolute.path)) return true;
   if (!seen.add(path) || !file.existsSync()) return false;
-  final document = loadYaml(file.readAsStringSync());
-  final includes = document is Map ? document['include'] : null;
+  final document = readConfiguration(file);
+  final includes = document['include'];
   for (final value in includes is List ? includes : [includes]) {
     if (value is! String) continue;
     final uri = Uri.parse(value);
@@ -331,7 +398,13 @@ bool _includesOptions(
       included = p.join(file.parent.path, value);
     }
     if (included != null &&
-        _includesOptions(File(included), target, packages, seen)) {
+        _includesOptions(
+          File(included),
+          target,
+          packages,
+          seen,
+          readConfiguration,
+        )) {
       return true;
     }
   }

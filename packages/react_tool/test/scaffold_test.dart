@@ -35,6 +35,77 @@ void main() {
     );
   });
 
+  for (final spec in [
+    null,
+    '',
+    'workspace: [',
+    'name: root\n',
+    'name: root\nworkspace: []\ndependency_overrides:\n  react_core: ^99.0.0\n',
+  ]) {
+    test('invalid workspace leaves no generated tree: $spec', () async {
+      if (spec != null) {
+        File('${root.path}/pubspec.yaml').writeAsStringSync(spec);
+      }
+      final target = Directory('${root.path}/app');
+      await expectLater(
+        ScaffoldGenerator(log: (_) {}).generate(
+          name: 'app',
+          packagesPath: '../../packages',
+          target: target,
+          workspace: root,
+        ),
+        throwsA(isA<ReactToolException>()),
+      );
+      expect(target.existsSync(), isFalse);
+      if (spec != null) {
+        expect(File('${root.path}/pubspec.yaml').readAsStringSync(), spec);
+      }
+    });
+  }
+
+  test(
+    'client README and launch configuration omit full-stack attachment',
+    () async {
+      final target = Directory('${root.path}/client');
+      await ScaffoldGenerator(log: (_) {}).generate(
+        name: 'client',
+        packagesPath: '',
+        target: target,
+        template: 'client',
+      );
+      for (final path in ['README.md', '.vscode/launch.json']) {
+        expect(
+          File('${target.path}/$path').readAsStringSync(),
+          isNot(contains('attach full stack')),
+        );
+      }
+    },
+  );
+
+  test('workspace preflight preserves an existing target with force', () async {
+    File(
+      '${root.path}/pubspec.yaml',
+    ).writeAsStringSync('name: root\nworkspace: []\n');
+    File(
+      '${root.path}/analysis_options.yaml',
+    ).writeAsStringSync('plugins: [invalid]\n');
+    final target = Directory('${root.path}/app')..createSync();
+    final original = File('${target.path}/pubspec.yaml')
+      ..writeAsStringSync('name: original\n');
+    await expectLater(
+      ScaffoldGenerator(log: (_) {}).generate(
+        name: 'app',
+        packagesPath: '',
+        target: target,
+        workspace: root,
+        force: true,
+      ),
+      throwsA(isA<ReactToolException>()),
+    );
+    expect(original.readAsStringSync(), 'name: original\n');
+    expect(target.listSync().length, 1);
+  });
+
   test('prerender command exposes route and output options', () {
     final command = PrerenderCommand();
     expect(command.name, 'prerender');
@@ -49,8 +120,7 @@ void main() {
     final command = ServeCommand();
     expect(command.argParser.options['debug'], isNotNull);
     expect(command.argParser.options['debug']!.help, contains('webdev'));
-    expect(command.argParser.options['poll']!.defaultsTo, isFalse);
-    expect(command.argParser.options['poll']!.help, contains('--debug'));
+    expect(command.argParser.options.containsKey('poll'), isFalse);
   });
 
   test('generates the full project skeleton', () async {
@@ -303,10 +373,9 @@ void main() {
             p.join(target.absolute.path, '../packages/react_analysis'),
           ),
         );
-        expect(
-          analysis['analyzer']['errors'].containsKey('invalid_hook_call'),
-          isFalse,
-        );
+        final errors =
+            (analysis['analyzer'] as YamlMap?)?['errors'] as YamlMap?;
+        expect(errors?.containsKey('invalid_hook_call') ?? false, isFalse);
         for (final package in [
           'react_core',
           'react_tool',

@@ -141,12 +141,24 @@ final class ScaffoldGenerator {
       _ => _ssrTemplateOutputs,
     };
 
+    final files = <String, String>{};
     for (final entry in outputs.entries) {
       final source = File(p.join(templatesDir.path, entry.key));
       final rendered = Template.parse(source.readAsStringSync(), data: data);
-      final output = File(p.join(target.path, entry.value));
+      files[entry.value] = rendered.render();
+    }
+    if (workspace != null) {
+      registerWorkspaceMember(
+        target,
+        workspace,
+        generatedFiles: files,
+        dryRun: true,
+      );
+    }
+    for (final entry in files.entries) {
+      final output = File(p.join(target.path, entry.key));
       output.parent.createSync(recursive: true);
-      output.writeAsStringSync(rendered.render());
+      output.writeAsStringSync(entry.value);
     }
     if (workspace != null) registerWorkspaceMember(target, workspace);
   }

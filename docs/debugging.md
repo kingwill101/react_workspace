@@ -12,17 +12,10 @@ go to the application; DDC modules, source maps, and debugger connections go to
 webdev. The application keeps rendering SSR and injecting its own initial props.
 Internal ports are allocated automatically; `--port` selects the public gateway.
 
-For filesystems where native change notifications are unreliable, add `--poll`:
-
-```sh
-dart run react_tool:react serve --debug --poll
-```
-
-Polling is opt-in and increases filesystem activity, including for local path
-dependencies. It requires a matching `react_codegen` with the polling capability;
-the CLI checks the resolved generator before starting. Until that generator is
-published, use matching local `--packages` dependencies. Native watching remains
-the default. Add `--poll` to the generated VS Code task if your filesystem needs it.
+Source refresh uses webdev/build_runner's native filesystem watcher. If native
+notifications are unreliable, restart the session after source edits. The
+experimental polling option was removed during review because its global
+watcher registration could conflict with other builders.
 
 New scaffolds include a VS Code **React: debug session** task. Run that task,
 wait for the application to load, and press **Alt+D** (**Option+D** on macOS)
@@ -41,13 +34,14 @@ Stop the CLI session with Ctrl-C to stop its children and restore the normal
 HTML templates. Debug sessions temporarily stage DDC templates in `web/index.html`
 and the build output; do not edit these templates during a session.
 
-DDC rebuilds browser changes and refreshes the page automatically; the complete
-end-to-end gate passes using `--poll`. Server and SSR source changes require
+DDC rebuilds browser changes and refreshes the page when native notifications
+are delivered. Server and SSR source changes require
 restarting the session; `--watch` is not combined with `--debug`. A full page
 reload reruns SSR and resets browser-local state. Do not assume React state
 preservation from DDC reload support alone.
 
-The gateway has native HTTP/WebSocket coverage. The real-browser gate has
+The gateway has native HTTP/WebSocket coverage. Before polling was removed,
+the real-browser gate
 verified hydration, actions, server and browser Dart breakpoints, manual and
 automatic refresh, template restoration, and closed service ports. Webdev's SDK
 discovery uses the same SDK as the running CLI instead of a PATH wrapper. The
@@ -63,8 +57,8 @@ REACT_BROWSER_TESTS=1 dart test test/debug_session_integration_test.dart
 ```
 
 It uses an isolated headless Chromium profile and allocated ports.
-The gate selects polling explicitly to cover filesystems with unreliable native
-notifications; it does not certify native watching on every filesystem. Set
+The gate now uses native notifications. Earlier polling-based results do not
+certify native watching on this host or other filesystems. Set
 `CHROME_EXECUTABLE` if the executable is not named `chromium`. Ordinary test
 runs skip this browser-only gate; they retain native proxy routing and cleanup tests.
 

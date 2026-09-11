@@ -1,8 +1,4 @@
-## Unreleased
-
-- Support opt-in polling through builder options for React debug sessions, using
-  the public watcher extension point without modifying upstream dependencies.
-- Advertise supported tooling capabilities for compatible CLI resolution.
+# Changelog
 
 ## 0.1.0
 

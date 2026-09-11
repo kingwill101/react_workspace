@@ -92,7 +92,9 @@ Analyzer configuration belongs at the package/workspace analysis root. React
 diagnostics use top-level `plugins.react_analyzer.diagnostics`, not
 `analyzer.errors`. Local analyzer plugins resolve in a separate package context:
 keep `plugins.dependency_overrides.react_analysis` aligned with the local engine.
-Preserve existing includes, rules, comments, and deliberate plugin choices.
+Preserve existing includes, rules, comments, and diagnostics. Preserve plugin
+sources unless the user explicitly supplies `--packages`; that switches both
+the analyzer plugin and its analysis engine to the selected checkout.
 
 Resolve a standalone consumer's own `.dart_tool/package_config.json`; only an
 explicit `resolution: workspace` member may share its ancestor's configuration.
@@ -225,12 +227,9 @@ uses `.dart_tool/react/server_vm_service.json`. Do not mistake a listening HTTP
 port for a ready browser debugger. Keep webdev's PATH-based SDK discovery aligned
 with `Platform.resolvedExecutable`, including when PATH contains SDK wrappers.
 
-For unreliable native filesystem notifications, use `react serve --debug --poll`.
-Polling is opt-in, increases filesystem activity, and requires a resolved
-`react_codegen` advertising `polling_watcher` in `react_tooling.json`. Use matching
-local packages for unreleased capabilities; do not change hosted scaffold defaults
-to an unavailable version. Encode watcher selection in builder options so a
-daemon with different options cannot silently reuse the wrong watcher mode.
+Debug source refresh uses webdev/build_runner's native watcher. If filesystem
+notifications are unreliable, restart the session after edits; do not register
+a global custom watcher from a builder. Polling is not supported by this CLI.
 
 Stop the session to restore its temporary HTML templates; do not edit those
 templates while debugging. Refresh reruns SSR and resets browser-local state.

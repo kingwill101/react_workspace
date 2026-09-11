@@ -28,11 +28,17 @@ final class ReactDebugProxy {
       server,
       HttpClient()..autoUncompress = false,
     );
-    server.listen((request) {
-      final task = proxy._forward(request, application, webdev, webDirectory);
-      proxy._requests.add(task);
-      unawaited(task.whenComplete(() => proxy._requests.remove(task)));
-    });
+    server.listen(
+      (request) {
+        final task = proxy._forward(request, application, webdev, webDirectory);
+        proxy._requests.add(task);
+        unawaited(task.whenComplete(() => proxy._requests.remove(task)));
+      },
+      onError: (Object error, StackTrace stack) {
+        // A failed incoming connection must not escape into the CLI's zone.
+        // HttpServer keeps accepting subsequent connections after stream errors.
+      },
+    );
     return proxy;
   }
 
@@ -79,14 +85,14 @@ final class ReactDebugProxy {
       if (WebSocketTransformer.isUpgradeRequest(request)) {
         final upstream = await WebSocket.connect(
           target.replace(scheme: 'ws').toString(),
-          protocols: request.headers
-              .value('sec-websocket-protocol')
-              ?.split(',')
-              .map((value) => value.trim()),
+          protocols: _headerTokens(request.headers, 'sec-websocket-protocol'),
+          headers: _forwardHeaders(request.headers, websocket: true),
         );
         final downstream = await WebSocketTransformer.upgrade(
           request,
-          protocolSelector: (_) => upstream.protocol,
+          protocolSelector: upstream.protocol == null
+              ? null
+              : (_) => upstream.protocol!,
         );
         _sockets.addAll([upstream, downstream]);
         void dispose() {
@@ -140,6 +146,19 @@ final class ReactDebugProxy {
 }
 
 void _copyHeaders(HttpHeaders source, HttpHeaders target) {
+  _forwardHeaders(source).forEach(target.set);
+}
+
+Iterable<String> _headerTokens(HttpHeaders headers, String name) =>
+    (headers[name] ?? const <String>[])
+        .expand((value) => value.split(','))
+        .map((value) => value.trim())
+        .where((value) => value.isNotEmpty);
+
+Map<String, List<String>> _forwardHeaders(
+  HttpHeaders source, {
+  bool websocket = false,
+}) {
   final excluded = <String>{
     'connection',
     'keep-alive',
@@ -150,12 +169,19 @@ void _copyHeaders(HttpHeaders source, HttpHeaders target) {
     'transfer-encoding',
     'upgrade',
     'host',
-    ...?source
-        .value('connection')
-        ?.split(',')
-        .map((v) => v.trim().toLowerCase()),
+    ..._headerTokens(source, 'connection').map((v) => v.toLowerCase()),
+    if (websocket) ...{
+      'sec-websocket-key',
+      'sec-websocket-version',
+      'sec-websocket-protocol',
+      'sec-websocket-extensions',
+      'sec-websocket-accept',
+      'content-length',
+    },
   };
+  final headers = <String, List<String>>{};
   source.forEach((name, values) {
-    if (!excluded.contains(name.toLowerCase())) target.set(name, values);
+    if (!excluded.contains(name.toLowerCase())) headers[name] = values;
   });
+  return headers;
 }

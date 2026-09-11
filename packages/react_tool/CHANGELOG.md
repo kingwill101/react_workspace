@@ -1,9 +1,7 @@
 # Changelog
 
-## Unreleased
+## 0.2.8
 
-- Add `react serve --debug --poll` for unreliable native filesystem events,
-  with an early compatibility check against the resolved generator.
 - Coordinate DDC/DWDS, VM-enabled Dart servers, and Node SSR through a loopback
   debug gateway, with scaffolded VS Code tasks and attach configurations.
 - Forward existing Chrome debug ports and reject invalid headless attachment

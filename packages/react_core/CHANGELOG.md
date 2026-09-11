@@ -1,4 +1,6 @@
-## Unreleased
+# Changelog
+
+## 0.1.1
 
 - Adds portable Future/Stream hooks with async snapshots, source replacement,
   cleanup, and deterministic SSR initial values.

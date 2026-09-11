@@ -117,8 +117,10 @@ and destroy successful probe sockets; fail if a port remains listening.
 Separate incremental compilation from browser refresh by inspecting the emitted
 module before debugger attachment. Match the changed string literal, not a
 substring that could also occur in an identifier such as `setCount`.
-The gate explicitly uses polling; it does not validate native watching on every
-filesystem. Keep third-party dependencies unmodified when recording final proof.
+The gate uses the native watcher. Earlier results obtained with the removed
+polling implementation do not validate native source refresh. Report a native
+watch failure separately from debugger attachment, and keep third-party
+dependencies unmodified when recording final proof.
 
 `REACT_KEEP_DEBUG_FIXTURE=1` retains a marked fixture; reuse it through
 `REACT_DEBUG_FIXTURE=/absolute/path` only for diagnosis/cached validation. Report

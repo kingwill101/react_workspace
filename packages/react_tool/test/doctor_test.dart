@@ -46,6 +46,63 @@ void main() {
   Future<ProcessResult> available(String executable, List<String> args) async =>
       ProcessResult(0, 0, 'version', '');
 
+  for (final path in ['pubspec.yaml', 'react.yaml', 'analysis_options.yaml']) {
+    for (final content in ['value: [', '[not, a, mapping]']) {
+      test(
+        'doctor reports invalid $path and continues tool checks: $content',
+        () async {
+          File('${root.path}/$path').writeAsStringSync(content);
+          final findings = await inspectReactProject(
+            null,
+            root: root,
+            probe: available,
+          );
+          expect(
+            findings.where(
+              (f) => f.id.startsWith('configuration') && f.status == 'error',
+            ),
+            isNotEmpty,
+          );
+          expect(findings.singleWhere((f) => f.id == 'tool:node').status, 'ok');
+          expect(
+            () => jsonEncode(findings.map((f) => f.toJson()).toList()),
+            returnsNormally,
+          );
+        },
+      );
+    }
+  }
+
+  test('empty pubspec produces structured findings', () async {
+    File('${root.path}/pubspec.yaml').writeAsStringSync('');
+    final findings = await inspectReactProject(
+      null,
+      root: root,
+      probe: available,
+    );
+    expect(
+      findings.any(
+        (f) => f.status == 'error' && f.id.startsWith('configuration'),
+      ),
+      isTrue,
+    );
+    expect(findings.any((f) => f.id == 'tool:dart'), isTrue);
+  });
+
+  test('fresh codegen has no redundant fix', () async {
+    final generated = File('${root.path}/lib/.generated/app.dart');
+    generated.parent.createSync(recursive: true);
+    generated.writeAsStringSync('// generated');
+    final findings = await inspectReactProject(
+      null,
+      root: root,
+      probe: available,
+    );
+    final codegen = findings.singleWhere((f) => f.id == 'codegen');
+    expect(codegen.status, 'ok');
+    expect(codegen.fix, isNull);
+  });
+
   test('missing resolution and tools produce actionable findings', () async {
     final findings = await inspectReactProject(
       ReactProjectConfig.load(root),

@@ -12,28 +12,19 @@ import 'src/output/public_api_emitter.dart';
 import 'src/builder/component_builder.dart';
 import 'src/builder/server_function_builder.dart';
 import 'src/aggregate.dart';
-import 'src/build_watcher.dart';
 
 /// Creates the per-library React component builder.
-Builder componentBuilder(BuilderOptions options) {
-  configureReactBuildWatcher(polling: options.config['watcher'] == 'polling');
-  return const ReactComponentBuilder(
-    ReactCompiler(
-      reader: ReactComponentReader(typeReader: ReactTypeReader()),
-      publicApiEmitter: PublicApiEmitter(),
-      jsBridgeEmitter: JsBridgeEmitter(callbackEmitter: CallbackEmitter()),
-    ),
-  );
-}
+Builder componentBuilder(BuilderOptions options) => const ReactComponentBuilder(
+  ReactCompiler(
+    reader: ReactComponentReader(typeReader: ReactTypeReader()),
+    publicApiEmitter: PublicApiEmitter(),
+    jsBridgeEmitter: JsBridgeEmitter(callbackEmitter: CallbackEmitter()),
+  ),
+);
 
 /// Creates the package-wide component and action registry builder.
-Builder aggregateBuilder(BuilderOptions options) {
-  configureReactBuildWatcher(polling: options.config['watcher'] == 'polling');
-  return AggregateBuilder();
-}
+Builder aggregateBuilder(BuilderOptions options) => AggregateBuilder();
 
 /// Creates the per-library server-function builder.
-Builder serverFunctionBuilder(BuilderOptions options) {
-  configureReactBuildWatcher(polling: options.config['watcher'] == 'polling');
-  return const ServerFunctionBuilder();
-}
+Builder serverFunctionBuilder(BuilderOptions options) =>
+    const ServerFunctionBuilder();

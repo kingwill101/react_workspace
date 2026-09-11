@@ -85,10 +85,14 @@ ReactNode App(({String title}) props) {
       // but use a short alias for the socket path in long workspace locations.
       final chromeRuntime = Directory('${temporary.path}/chrome_runtime')
         ..createSync();
-      final shortRuntime = await Directory('/tmp').createTemp('react_cdp_');
-      addTearDown(() => shortRuntime.delete(recursive: true));
-      final runtimeAlias = Link('${shortRuntime.path}/r');
-      await runtimeAlias.create(chromeRuntime.path);
+      var runtimePath = chromeRuntime.path;
+      if (!Platform.isWindows) {
+        final shortRuntime = await Directory('/tmp').createTemp('react_cdp_');
+        addTearDown(() => shortRuntime.delete(recursive: true));
+        final runtimeAlias = Link('${shortRuntime.path}/r');
+        await runtimeAlias.create(chromeRuntime.path);
+        runtimePath = runtimeAlias.path;
+      }
       final chrome = await Process.start(
         Platform.environment['CHROME_EXECUTABLE'] ?? 'chromium',
         [
@@ -98,7 +102,7 @@ ReactNode App(({String title}) props) {
           '--user-data-dir=${chromeProfile.path}',
           'about:blank',
         ],
-        environment: {'TMP': runtimeAlias.path, 'TMPDIR': runtimeAlias.path},
+        environment: {'TMP': runtimePath, 'TMPDIR': runtimePath},
       );
       final chromeOutput = StringBuffer();
       final chromeStreams = [
@@ -133,7 +137,6 @@ ReactNode App(({String title}) props) {
         'react_tool:react',
         'serve',
         '--debug',
-        '--poll',
         '--no-launch-browser',
         '--chrome-debug-port',
         chromePort,
@@ -317,15 +320,20 @@ ReactNode App(({String title}) props) {
       final greeting = await File(
         '${project.path}/lib/react/greeting.dart',
       ).readAsLines();
-      final nativeBreakpoint = await serverVm.call(
-        'addBreakpointWithScriptUri',
-        {
-          'isolateId': nativeIsolate,
-          'scriptUri': 'package:debug_consumer/react/greeting.dart',
-          'line':
-              greeting.indexWhere((line) => line.contains("return 'Hello")) + 1,
-        },
+      final greetingLine = greeting.indexWhere(
+        (line) => line.contains("return 'Hello"),
       );
+      expect(
+        greetingLine,
+        isNonNegative,
+        reason: 'greeting.dart no longer contains the expected return line',
+      );
+      final nativeBreakpoint = await serverVm
+          .call('addBreakpointWithScriptUri', {
+            'isolateId': nativeIsolate,
+            'scriptUri': 'package:debug_consumer/react/greeting.dart',
+            'line': greetingLine + 1,
+          });
       final nativePaused = serverVm.events.stream
           .firstWhere(
             (event) =>
