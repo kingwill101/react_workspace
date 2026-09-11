@@ -32,6 +32,7 @@ final class DebugProtocol {
   final events = StreamController<Map<String, dynamic>>.broadcast();
   int sequence = 0;
   Object? _failure;
+  Future<void>? _eventsClosed;
 
   void _failPending(Object error, [StackTrace? stackTrace]) {
     _failure ??= error;
@@ -40,6 +41,7 @@ final class DebugProtocol {
     for (final reply in replies) {
       if (!reply.isCompleted) reply.completeError(error, stackTrace);
     }
+    _eventsClosed ??= events.close();
   }
 
   static Future<DebugProtocol> connect(
@@ -76,6 +78,6 @@ final class DebugProtocol {
     _failPending(StateError('Debug transport closed locally.'));
     await subscription.cancel();
     await socket.close();
-    await events.close();
+    await _eventsClosed;
   }
 }

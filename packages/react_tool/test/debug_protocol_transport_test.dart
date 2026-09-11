@@ -22,6 +22,7 @@ void main() {
         final peer = await connected.future;
         addTearDown(peer.close);
         final received = peer.first;
+        final eventsDone = expectLater(protocol.events.stream, emitsDone);
         final result = expectLater(
           protocol.call('pending'),
           throwsA(isA<StateError>()),
@@ -33,6 +34,7 @@ void main() {
           await peer.close();
         }
         await result.timeout(const Duration(seconds: 2));
+        await eventsDone.timeout(const Duration(seconds: 2));
         expect(protocol.pending, isEmpty);
         await expectLater(
           protocol.call('afterClose'),

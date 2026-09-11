@@ -89,6 +89,30 @@ void main() {
     expect(findings.any((f) => f.id == 'tool:dart'), isTrue);
   });
 
+  test('malformed include is safe for text and JSON output', () async {
+    File(
+      '${root.path}/analysis_options.yaml',
+    ).writeAsStringSync('include: "%"\n');
+    final findings = await inspectReactProject(
+      null,
+      root: root,
+      probe: available,
+    );
+
+    final text = findings
+        .map(
+          (finding) =>
+              '[${finding.status}] ${finding.message}${finding.fix == null ? '' : '\n  ${finding.fix}'}',
+        )
+        .join('\n');
+    expect(text, contains('React analyzer is not configured'));
+
+    final json = jsonEncode(
+      findings.map((finding) => finding.toJson()).toList(),
+    );
+    expect(jsonDecode(json), isA<List<dynamic>>());
+  });
+
   test('fresh codegen has no redundant fix', () async {
     final generated = File('${root.path}/lib/.generated/app.dart');
     generated.parent.createSync(recursive: true);

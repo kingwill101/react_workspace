@@ -388,7 +388,8 @@ bool _includesOptions(
   final includes = document['include'];
   for (final value in includes is List ? includes : [includes]) {
     if (value is! String) continue;
-    final uri = Uri.parse(value);
+    final uri = Uri.tryParse(value);
+    if (uri == null) continue;
     String? included;
     if (uri.scheme == 'package') {
       final parts = uri.pathSegments;

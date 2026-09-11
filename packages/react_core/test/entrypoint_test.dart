@@ -6,7 +6,7 @@ void main() {
   test('both entrypoints expose identical portable types', () {
     expect(canonical.ReactNode, legacy.ReactNode);
     expect(canonical.ReactRef, legacy.ReactRef);
-    final canonical.ReactNode node = legacy.Text('compatible');
+    const canonical.ReactNode node = legacy.Text('compatible');
     expect(node, isA<canonical.Text>());
   });
 }

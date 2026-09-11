@@ -43,4 +43,18 @@ void main() {
       throwsA(isA<ReactToolException>()),
     );
   });
+
+  test(
+    'matches an uppercase closing head tag without moving before doctype',
+    () {
+      const source = '<!doctype html>\n<HEAD></HEAD><body></body>';
+      final result = updateDebugImportMap(source, {'react': '/react.js'});
+
+      expect(result, startsWith('<!doctype html>\n<HEAD>'));
+      expect(
+        result,
+        contains('</script>\n<!-- react_tool:debug-importmap:end -->\n</HEAD>'),
+      );
+    },
+  );
 }

@@ -42,7 +42,10 @@ $end''';
     return source.replaceRange(startAt, endAt + end.length, block);
   }
   if (match != null) return source.replaceRange(match.start, match.end, block);
-  final headEnd = source.indexOf('</head>');
-  final insertion = headEnd >= 0 ? headEnd : 0;
+  final headEnd = RegExp(
+    r'</head\s*>',
+    caseSensitive: false,
+  ).firstMatch(source);
+  final insertion = headEnd?.start ?? 0;
   return source.replaceRange(insertion, insertion, '$block\n');
 }
