@@ -57,4 +57,13 @@ void main() {
       );
     },
   );
+
+  test('fallback inserts after a doctype without a closing head tag', () {
+    const source = '<!DOCTYPE html>\n<body></body>';
+    final result = updateDebugImportMap(source, {'react': '/react.js'});
+    final marker = result.indexOf('<!-- react_tool:debug-importmap:start -->');
+
+    expect(marker, greaterThan(source.indexOf('<!DOCTYPE html>')));
+    expect(marker, lessThan(result.indexOf('<body>')));
+  });
 }

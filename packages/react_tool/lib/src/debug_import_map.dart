@@ -46,6 +46,10 @@ $end''';
     r'</head\s*>',
     caseSensitive: false,
   ).firstMatch(source);
-  final insertion = headEnd?.start ?? 0;
+  final doctypeEnd = RegExp(
+    r'<!doctype\s+html\s*>',
+    caseSensitive: false,
+  ).firstMatch(source);
+  final insertion = headEnd?.start ?? doctypeEnd?.end ?? 0;
   return source.replaceRange(insertion, insertion, '$block\n');
 }
